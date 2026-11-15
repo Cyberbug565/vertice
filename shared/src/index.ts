@@ -5,3 +5,4 @@ export * from './zonegrid.js';
 export * from './nav.js';
 export * from './protocol.js';
 export * from './content-validate.js';
+export * from './surgery.js';

@@ -152,8 +152,8 @@ describe('hito 1 · corte jugable de Ferro', () => {
     const rewardB = bruno.waitFor((m) => m.t === 'reward', 5000, 'recompensa');
     await bruno.choose('give_market');
     const rb = await rewardB as any;
-    expect(rb.lines.join(' ')).toMatch(/50 %/); // Bruno no aportó un objetivo compartido → 40 en vez de 80
-    expect(bruno.sheet!.money).toBe(moneyB + 40);
+    expect(rb.lines.join(' ')).not.toMatch(/50 %/); // el hackeo del Netrunner cuenta como aportación al equipo → cobra los 80
+    expect(bruno.sheet!.money).toBe(moneyB + 80);
 
     // Al volver, la fixer y la comerciante reaccionan distinto a cada uno.
     ana.dialog = undefined;
@@ -173,14 +173,21 @@ describe('hito 1 · corte jugable de Ferro', () => {
     if (h >= 19 && h < 23) { /* en el bar */ } else if (h >= 7 && h < 19) { await bruno.enterDoor('Salida'); await bruno.moveAndArrive(18.5, 30.5); } else return; // de noche descansa
     const d = await bruno.interactAndDialog('Lin');
     expect(d.text).toMatch(/amigo/);
+    const shop = bruno.waitFor((m) => m.t === 'shop', 4000, 'puesto de Lin');
+    await bruno.choose('shop');
+    const sv = (await shop as any).view;
+    const fideos = sv.items.find((i: any) => i.item === 'fideos-krill');
+    expect(fideos.discount).toBe(20); // precio de amigo por aliarse con el mercado
     const before = bruno.sheet!.money;
     const opId = randomUUID().replace(/-/g, '');
-    await bruno.choose('buy', 0, opId);
-    await bruno.until(() => bruno.sheet!.money === before - 12, 3000, 'compra');
-    const again = await bruno.cmd({ t: 'choose', dialog: bruno.dialog!.dialog, option: 'buy', luck: 0, opId });
-    expect(again.info).toMatch(/ya aplicada/);
+    const a1 = await bruno.cmd({ t: 'buy', shop: 'puesto-lin', item: 'fideos-krill', qty: 1, opId });
+    expect(a1.ok).toBe(true);
+    await bruno.until(() => bruno.sheet!.money === before - fideos.price, 3000, 'compra');
+    const again = await bruno.cmd({ t: 'buy', shop: 'puesto-lin', item: 'fideos-krill', qty: 1, opId });
+    expect(again.ok).toBe(false);
+    expect(again.reason).toMatch(/ya procesada/);
     await new Promise((r) => setTimeout(r, 200));
-    expect(bruno.sheet!.money).toBe(before - 12);
+    expect(bruno.sheet!.money).toBe(before - fideos.price);
   });
 
   it('persistencia y reconexión: misma vida, zona, dinero y diario', async () => {

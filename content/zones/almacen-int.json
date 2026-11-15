@@ -1,0 +1,119 @@
+{
+ "id": "almacen-int",
+ "name": "Almacén del muelle",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#3a3f5c",
+ "blocks": [],
+ "props": [
+  {
+   "type": "crate",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    3,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    2,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    6,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    7,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    6,
+    7
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    7,
+    7
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    10,
+    3
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-almacen-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     10,
+     14
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-almacen-carga",
+   "name": "Puesto: Zona de carga del almacén",
+   "at": [
+    4,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-almacen-carga"
+  },
+  {
+   "id": "obj-wp-almacen-chatarra",
+   "name": "Puesto: Desguace del almacén",
+   "at": [
+    11,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-almacen-chatarra"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

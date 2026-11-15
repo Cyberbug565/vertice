@@ -19,6 +19,24 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('chat'), seq, channel: z.enum(['local']), text: z.string().min(1).max(200) }),
   z.object({ t: z.literal('ping'), seq, ct: z.number() }),
   z.object({ t: z.literal('retreat'), seq }),
+  // ---- v0.2
+  z.object({ t: z.literal('sleep'), seq }),
+  z.object({ t: z.literal('wake'), seq }),
+  z.object({ t: z.literal('autonomy'), seq, autoNeeds: z.boolean() }),
+  z.object({ t: z.literal('buy'), seq, shop: z.string().max(64), item: z.string().max(64), qty: z.number().int().min(1).max(20), opId }),
+  z.object({ t: z.literal('sell'), seq, shop: z.string().max(64), item: z.string().max(64), qty: z.number().int().min(1).max(20), opId }),
+  z.object({ t: z.literal('steal'), seq, shop: z.string().max(64), item: z.string().max(64), opId }),
+  z.object({ t: z.literal('market'), seq }),
+  z.object({ t: z.literal('jobs'), seq }),
+  z.object({ t: z.literal('jobAccept'), seq, job: z.string().max(64) }),
+  z.object({ t: z.literal('jobStart'), seq }),
+  z.object({ t: z.literal('jobQuit'), seq }),
+  z.object({ t: z.literal('profession'), seq, profession: z.string().max(64), opId }),
+  z.object({ t: z.literal('clinicDo'), seq, doc: z.string().max(64), action: z.enum(['install', 'remove']), source: z.enum(['stock', 'stolen', 'inventory', 'installed']), ref: z.string().max(64), opId }),
+  z.object({ t: z.literal('bounties'), seq }),
+  z.object({ t: z.literal('bountyPlace'), seq, kind: z.enum(['player', 'npc']), target: z.string().min(1).max(64), amount: z.number().int().min(100).max(1_000_000), reason: z.string().min(1).max(120), opId }),
+  z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim']), opId }),
+  z.object({ t: z.literal('rescue'), seq, target: z.number().int().nonnegative(), opId }),
 ]);
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
@@ -27,7 +45,37 @@ export interface Appearance { skin: string; hair: string; jacket: string; accent
 export interface EntitySpawn {
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;
   appearance?: Appearance; role?: string; label?: string; interactive: boolean; objKind?: string; danger?: string;
+  bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; fugitive?: boolean;
 }
+
+export interface ShopView {
+  shop: string; name: string; owner: string; ownerName: string; security: number; fence: boolean; money: number;
+  items: { item: string; name: string; desc: string; category: string; price: number; base: number; stock: number; trend: number; stealChance: number; discount: number }[];
+  sell: { item: string; name: string; qty: number; price: number }[];
+}
+export interface MarketView {
+  corps: { id: string; name: string; motto: string; categories: string[]; markup: number; trend: number }[];
+  bulletin: { at: string; text: string }[];
+  table: { item: string; name: string; category: string; base: number; prices: { shop: string; shopName: string; price: number; stock: number }[] }[];
+  nextPolicyInMin: number;
+}
+export interface JobsView {
+  profession: string; rank: number; xp: number; activeJob: string | null;
+  professions: { id: string; name: string; kind: string; desc: string; perk: string }[];
+  jobs: { id: string; title: string; desc: string; profession: string; professionName: string; employer: string; place: string; zone: string; zoneName: string; seconds: number; pay: number; chance: number; minRank: number; legal: boolean; risk: number; available: boolean; reason?: string; cooldownMin?: number }[];
+}
+export interface ClinicOffer {
+  source: 'stock' | 'stolen' | 'inventory' | 'installed'; ref: string; action: 'install' | 'remove'; def: string; name: string; grade: number; slot: string; family: string; desc: string; stolen: boolean;
+  capacity: number; humanity: number; price: number; survival: number; clean: number; theft: number; danger: string; humanityAfter: number; capacityAfter: number; blocked?: string; replaces?: string;
+}
+export interface ClinicView { doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[] }
+export interface BountyView {
+  money: number;
+  active: { id: string; targetName: string; kind: 'player' | 'npc'; amount: number; poster: string; reason: string; zone?: string; online?: boolean; mine: boolean; onMe: boolean }[];
+  targets: { kind: 'player' | 'npc'; id: string; name: string }[];
+}
+export interface TargetMenuView { target: number; name: string; options: { id: 'rob' | 'beat' | 'claim' | 'rescue'; label: string; chance?: number; disabled?: string; detail?: string }[] }
+export interface DeathSummary { name: string; role: string; profession: string; level: number; cause: string; place: string; money: number; minutesAlive: number; jobs: number; contracts: number }
 
 export interface CharacterSheet {
   id: string; name: string; role: string; origin: string; level: number; xp: number; xpNext: number; roleRank: number;
@@ -37,6 +85,12 @@ export interface CharacterSheet {
   money: number; streetRep: number; reputation: Record<string, number>;
   inventory: { def: string; name: string; qty: number }[];
   appearance: Appearance; stance: 'avoid' | 'defend' | 'aggressive';
+  baseAttributes: Record<string, number>;
+  needs: { hunger: number; thirst: number; fatigue: number }; needsMult: { hunger: number; thirst: number; fatigue: number };
+  status: 'alive' | 'downed'; downedLeft: number; sleeping: { quality: number; where: string } | null; wanted: number; autoNeeds: boolean;
+  profession: string; professionName: string; professionRank: number; professionXp: number; activeJob: string | null;
+  cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean }[];
+  bonuses: { confront: number; defense: number; steal: number; surgery: number };
 }
 
 export interface JournalEntry {
@@ -57,7 +111,14 @@ export type ServerMsg =
   | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
   | { t: 'spawn'; e: EntitySpawn[] }
   | { t: 'despawn'; ids: number[] }
-  | { t: 'label'; id: number; label: string }
+  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping' }
+  | { t: 'shop'; view: ShopView }
+  | { t: 'market'; view: MarketView }
+  | { t: 'jobs'; view: JobsView }
+  | { t: 'clinic'; view: ClinicView }
+  | { t: 'bounties'; view: BountyView }
+  | { t: 'targetMenu'; view: TargetMenuView }
+  | { t: 'death'; summary: DeathSummary }
   | { t: 'ack'; seq: number; ok: boolean; reason?: string; path?: [number, number][]; info?: string }
   | { t: 'dialog'; view: DialogView }
   | { t: 'dialogClose' }

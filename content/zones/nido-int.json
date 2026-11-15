@@ -1,0 +1,156 @@
+{
+ "id": "nido-int",
+ "name": "Hotel Cápsula Nido",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#3e3550",
+ "blocks": [],
+ "props": [],
+ "doors": [
+  {
+   "id": "salida-nido-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     18,
+     21
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "nido-int-capsula-1",
+   "name": "Cápsula 1 (40 €$/noche)",
+   "at": [
+    2,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "nido-int-capsula-2",
+   "name": "Cápsula 2 (40 €$/noche)",
+   "at": [
+    4,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "nido-int-capsula-3",
+   "name": "Cápsula 3 (40 €$/noche)",
+   "at": [
+    6,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "nido-int-capsula-4",
+   "name": "Cápsula 4 (40 €$/noche)",
+   "at": [
+    8,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "nido-int-capsula-5",
+   "name": "Cápsula 5 (40 €$/noche)",
+   "at": [
+    10,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "nido-int-capsula-6",
+   "name": "Cápsula 6 (40 €$/noche)",
+   "at": [
+    12,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "nido-int-capsula-7",
+   "name": "Cápsula 7 (40 €$/noche)",
+   "at": [
+    2,
+    9
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "nido-int-capsula-8",
+   "name": "Cápsula 8 (40 €$/noche)",
+   "at": [
+    4,
+    9
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.95,
+    "price": 40
+   }
+  },
+  {
+   "id": "obj-wp-recepcion-nido",
+   "name": "Puesto: Recepción del Nido",
+   "at": [
+    13,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-recepcion-nido"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

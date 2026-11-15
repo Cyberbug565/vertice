@@ -1,90 +1,1626 @@
 {
-  "id": "ferro", "name": "Ferro", "kind": "exterior", "width": 96, "height": 64, "chunkSize": 32, "danger": "public", "base": "sidewalk",
-  "ground": [
-    { "type": "water", "rect": [0, 0, 96, 5] },
-    { "type": "deck", "rect": [0, 5, 96, 3] },
-    { "type": "water", "rect": [60, 0, 3, 64] },
-    { "type": "bridge", "rect": [60, 20, 3, 3] },
-    { "type": "bridge", "rect": [60, 44, 3, 3] },
-    { "type": "asphalt", "rect": [0, 20, 60, 3] }, { "type": "asphalt", "rect": [63, 20, 33, 3] },
-    { "type": "asphalt", "rect": [0, 44, 60, 3] }, { "type": "asphalt", "rect": [63, 44, 33, 3] },
-    { "type": "asphalt", "rect": [10, 8, 3, 56] }, { "type": "asphalt", "rect": [30, 8, 3, 56] }, { "type": "asphalt", "rect": [50, 8, 3, 56] },
-    { "type": "asphalt", "rect": [72, 8, 3, 56] }, { "type": "asphalt", "rect": [88, 8, 3, 56] },
-    { "type": "crosswalk", "rect": [10, 19, 3, 1] }, { "type": "crosswalk", "rect": [30, 19, 3, 1] }, { "type": "crosswalk", "rect": [50, 19, 3, 1] },
-    { "type": "crosswalk", "rect": [10, 43, 3, 1] }, { "type": "crosswalk", "rect": [30, 43, 3, 1] }, { "type": "crosswalk", "rect": [50, 43, 3, 1] },
-    { "type": "crosswalk", "rect": [72, 19, 3, 1] }, { "type": "crosswalk", "rect": [88, 43, 3, 1] },
-    { "type": "market", "rect": [14, 24, 15, 19] },
-    { "type": "plaza", "rect": [64, 33, 7, 1] },
-    { "type": "gravel", "rect": [34, 48, 15, 15] }
+ "id": "ferro",
+ "name": "Ferro",
+ "kind": "exterior",
+ "width": 96,
+ "height": 64,
+ "chunkSize": 32,
+ "danger": "public",
+ "base": "sidewalk",
+ "ground": [
+  {
+   "type": "water",
+   "rect": [
+    0,
+    0,
+    96,
+    5
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    0,
+    5,
+    96,
+    3
+   ]
+  },
+  {
+   "type": "water",
+   "rect": [
+    60,
+    0,
+    3,
+    64
+   ]
+  },
+  {
+   "type": "bridge",
+   "rect": [
+    60,
+    20,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "bridge",
+   "rect": [
+    60,
+    44,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    20,
+    60,
+    3
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    63,
+    20,
+    33,
+    3
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    44,
+    60,
+    3
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    63,
+    44,
+    33,
+    3
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    10,
+    8,
+    3,
+    56
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    30,
+    8,
+    3,
+    56
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    50,
+    8,
+    3,
+    56
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    72,
+    8,
+    3,
+    56
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    88,
+    8,
+    3,
+    56
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    10,
+    19,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    30,
+    19,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    50,
+    19,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    10,
+    43,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    30,
+    43,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    50,
+    43,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    72,
+    19,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    88,
+    43,
+    3,
+    1
+   ]
+  },
+  {
+   "type": "market",
+   "rect": [
+    14,
+    24,
+    15,
+    19
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    64,
+    33,
+    7,
+    1
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    34,
+    48,
+    15,
+    15
+   ]
+  }
+ ],
+ "blocks": [
+  {
+   "type": "fence",
+   "rect": [
+    34,
+    48,
+    7,
+    1
+   ]
+  },
+  {
+   "type": "fence",
+   "rect": [
+    43,
+    48,
+    6,
+    1
+   ]
+  },
+  {
+   "type": "fence",
+   "rect": [
+    34,
+    49,
+    1,
+    14
+   ]
+  },
+  {
+   "type": "fence",
+   "rect": [
+    48,
+    49,
+    1,
+    14
+   ]
+  },
+  {
+   "type": "fence",
+   "rect": [
+    35,
+    62,
+    13,
+    1
+   ]
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    0,
+    4,
+    60,
+    1
+   ],
+   "height": 0.4
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    63,
+    4,
+    33,
+    1
+   ],
+   "height": 0.4
+  }
+ ],
+ "buildings": [
+  {
+   "id": "almacen-muelle",
+   "rect": [
+    1,
+    9,
+    8,
+    10
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#3a3f5c",
+   "name": "Almacén del muelle",
+   "sign": "MUELLE 3",
+   "signColor": "#ffd23f"
+  },
+  {
+   "id": "torre-halcon",
+   "name": "Torre Halcón",
+   "rect": [
+    14,
+    9,
+    15,
+    10
+   ],
+   "height": 30,
+   "style": "spire",
+   "color": "#2e3550",
+   "sign": "HALCÓN",
+   "signColor": "#43f3ff"
+  },
+  {
+   "id": "hotel-koi",
+   "name": "Hotel Koi",
+   "rect": [
+    34,
+    9,
+    15,
+    10
+   ],
+   "height": 16,
+   "style": "glass",
+   "color": "#4a3a5c",
+   "sign": "HOTEL KOI",
+   "signColor": "#ff4fa0"
+  },
+  {
+   "id": "nave-norte",
+   "rect": [
+    53,
+    9,
+    6,
+    10
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#4b4a44"
+  },
+  {
+   "id": "bloque-oeste",
+   "rect": [
+    1,
+    24,
+    8,
+    19
+   ],
+   "height": 20,
+   "style": "mega",
+   "color": "#3c4660"
+  },
+  {
+   "id": "bloque9",
+   "name": "Bloque 9",
+   "rect": [
+    34,
+    24,
+    14,
+    10
+   ],
+   "height": 28,
+   "style": "arcology",
+   "color": "#5a4b6e",
+   "sign": "BLOQUE 9",
+   "signColor": "#ffd23f"
+  },
+  {
+   "id": "bar-rele",
+   "name": "Bar El Relé",
+   "rect": [
+    34,
+    37,
+    8,
+    6
+   ],
+   "height": 4,
+   "style": "club",
+   "color": "#2b2d42",
+   "sign": "EL RELÉ",
+   "signColor": "#ff3fa4"
+  },
+  {
+   "id": "tienda-24h",
+   "rect": [
+    44,
+    37,
+    5,
+    6
+   ],
+   "height": 4,
+   "style": "shop",
+   "color": "#405a5a",
+   "sign": "AURORA 24H",
+   "signColor": "#7dff7a",
+   "name": "Aurora 24H"
+  },
+  {
+   "id": "bloque-canal",
+   "rect": [
+    53,
+    24,
+    6,
+    19
+   ],
+   "height": 18,
+   "style": "glass",
+   "color": "#3b4e63"
+  },
+  {
+   "id": "nave-sur",
+   "rect": [
+    1,
+    48,
+    8,
+    15
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#4a4640"
+  },
+  {
+   "id": "clinica-sato",
+   "name": "Clínica Sato",
+   "rect": [
+    14,
+    48,
+    8,
+    6
+   ],
+   "height": 5,
+   "style": "clinic",
+   "color": "#2f5d62",
+   "sign": "CLÍNICA SATO",
+   "signColor": "#5affc8"
+  },
+  {
+   "id": "bloque-sur",
+   "rect": [
+    14,
+    56,
+    15,
+    7
+   ],
+   "height": 13,
+   "style": "mega",
+   "color": "#4a3f50"
+  },
+  {
+   "id": "taller-sur",
+   "rect": [
+    24,
+    48,
+    5,
+    6
+   ],
+   "height": 4,
+   "style": "shop",
+   "color": "#574a3a",
+   "sign": "PRÓTESIS",
+   "signColor": "#ff8a3d",
+   "name": "Prótesis Ruiz"
+  },
+  {
+   "id": "bloque-sureste",
+   "rect": [
+    53,
+    48,
+    6,
+    15
+   ],
+   "height": 16,
+   "style": "glass",
+   "color": "#3a4a5a"
+  },
+  {
+   "id": "club-voltio",
+   "name": "Club Voltio",
+   "rect": [
+    64,
+    9,
+    7,
+    10
+   ],
+   "height": 11,
+   "style": "club",
+   "color": "#3a2f55",
+   "sign": "VOLTIO",
+   "signColor": "#b46cff"
+  },
+  {
+   "id": "torre-okami",
+   "name": "Torre Okami",
+   "rect": [
+    76,
+    9,
+    11,
+    10
+   ],
+   "height": 34,
+   "style": "spire",
+   "color": "#2c3a4f",
+   "sign": "OKAMI",
+   "signColor": "#ff5a5a"
+  },
+  {
+   "id": "kanal-ne",
+   "rect": [
+    92,
+    9,
+    3,
+    10
+   ],
+   "height": 12,
+   "style": "glass",
+   "color": "#444a5a"
+  },
+  {
+   "id": "karaoke",
+   "rect": [
+    64,
+    24,
+    7,
+    9
+   ],
+   "height": 10,
+   "style": "club",
+   "color": "#45385a",
+   "sign": "KARAOKE",
+   "signColor": "#ff8a3d"
+  },
+  {
+   "id": "kanal-m2",
+   "rect": [
+    64,
+    34,
+    7,
+    9
+   ],
+   "height": 14,
+   "style": "mega",
+   "color": "#3d4250"
+  },
+  {
+   "id": "ramen-kanal",
+   "rect": [
+    76,
+    24,
+    11,
+    8
+   ],
+   "height": 5,
+   "style": "shop",
+   "color": "#3d5250",
+   "sign": "RAMEN",
+   "signColor": "#ffd23f",
+   "name": "Ramen Kanal"
+  },
+  {
+   "id": "bloque-kanal",
+   "rect": [
+    76,
+    35,
+    11,
+    8
+   ],
+   "height": 24,
+   "style": "arcology",
+   "color": "#4c4060",
+   "name": "Bloque Kanal · Clínica Iruka",
+   "sign": "IRUKA",
+   "signColor": "#5affc8"
+  },
+  {
+   "id": "kanal-e",
+   "rect": [
+    92,
+    24,
+    3,
+    19
+   ],
+   "height": 16,
+   "style": "glass",
+   "color": "#3a4152"
+  },
+  {
+   "id": "nave-kanal",
+   "rect": [
+    64,
+    48,
+    7,
+    15
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#4b463d"
+  },
+  {
+   "id": "pachinko",
+   "rect": [
+    76,
+    48,
+    11,
+    15
+   ],
+   "height": 12,
+   "style": "club",
+   "color": "#39465a",
+   "sign": "PACHINKO",
+   "signColor": "#43f3ff",
+   "name": "Pachinko Estrella"
+  },
+  {
+   "id": "kanal-se",
+   "rect": [
+    92,
+    48,
+    3,
+    15
+   ],
+   "height": 15,
+   "style": "clinic",
+   "color": "#3f4655",
+   "name": "El Carnicero",
+   "sign": "CARNICERO",
+   "signColor": "#ff5a5a"
+  }
+ ],
+ "props": [
+  {
+   "type": "stall",
+   "at": [
+    17,
+    28
+   ],
+   "color": "#ffd23f"
+  },
+  {
+   "type": "stall",
+   "at": [
+    21,
+    28
+   ],
+   "color": "#ff4fa0"
+  },
+  {
+   "type": "stall",
+   "at": [
+    25,
+    28
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "stall",
+   "at": [
+    17,
+    33
+   ],
+   "color": "#7dff7a"
+  },
+  {
+   "type": "stall",
+   "at": [
+    21,
+    33
+   ],
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "stall",
+   "at": [
+    25,
+    33
+   ],
+   "color": "#b46cff"
+  },
+  {
+   "type": "stall",
+   "at": [
+    17,
+    37
+   ],
+   "color": "#ff5a5a"
+  },
+  {
+   "type": "stall",
+   "at": [
+    21,
+    37
+   ],
+   "color": "#ffd23f"
+  },
+  {
+   "type": "stall",
+   "at": [
+    25,
+    37
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "bench",
+   "at": [
+    20,
+    41
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    24,
+    41
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    9,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    29,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    49,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    9,
+    43
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    29,
+    43
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    49,
+    43
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    71,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    87,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    71,
+    43
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    87,
+    43
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    29,
+    23
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    13,
+    23
+   ]
+  },
+  {
+   "type": "car",
+   "at": [
+    11,
+    30
+   ],
+   "color": "#ffd23f"
+  },
+  {
+   "type": "car",
+   "at": [
+    73,
+    36
+   ],
+   "color": "#ff5a5a"
+  },
+  {
+   "type": "car",
+   "at": [
+    31,
+    53
+   ],
+   "color": "#7dd3fc"
+  },
+  {
+   "type": "crate",
+   "at": [
+    36,
+    50
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    37,
+    50
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    36,
+    51
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    45,
+    58
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    46,
+    58
+   ]
+  },
+  {
+   "type": "car",
+   "at": [
+    46,
+    49
+   ],
+   "color": "#8a7a5a"
+  },
+  {
+   "type": "plant",
+   "at": [
+    33,
+    35
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    49,
+    33
+   ]
+  },
+  {
+   "type": "pipe",
+   "at": [
+    59,
+    30
+   ]
+  },
+  {
+   "type": "pipe",
+   "at": [
+    63,
+    30
+   ]
+  },
+  {
+   "type": "holo",
+   "at": [
+    51,
+    30
+   ],
+   "blocking": false,
+   "color": "#ff3fa4",
+   "text": "OKAMI · VIVE MÁS",
+   "z": 9
+  },
+  {
+   "type": "holo",
+   "at": [
+    74,
+    26
+   ],
+   "blocking": false,
+   "color": "#43f3ff",
+   "text": "TESELIA NEURAL",
+   "z": 7
+  },
+  {
+   "type": "holo",
+   "at": [
+    31,
+    26
+   ],
+   "blocking": false,
+   "color": "#ffd23f",
+   "text": "AURORA · SIEMPRE ABIERTO",
+   "z": 6
+  },
+  {
+   "type": "holo",
+   "at": [
+    89,
+    50
+   ],
+   "blocking": false,
+   "color": "#7dff7a",
+   "text": "HALCÓN PROTEGE",
+   "z": 8
+  },
+  {
+   "type": "antenna",
+   "at": [
+    21,
+    14
+   ],
+   "blocking": false,
+   "z": 30
+  },
+  {
+   "type": "antenna",
+   "at": [
+    81,
+    14
+   ],
+   "blocking": false,
+   "z": 34
+  },
+  {
+   "type": "antenna",
+   "at": [
+    40,
+    28
+   ],
+   "blocking": false,
+   "z": 28
+  },
+  {
+   "type": "antenna",
+   "at": [
+    81,
+    38
+   ],
+   "blocking": false,
+   "z": 24
+  }
+ ],
+ "doors": [
+  {
+   "id": "puerta-bloque9",
+   "name": "Bloque 9 · Vestíbulo",
+   "at": [
+    41,
+    34
+   ],
+   "to": {
+    "zone": "bloque9",
+    "at": [
+     8,
+     9
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-rele",
+   "name": "Bar El Relé",
+   "at": [
+    42,
+    40
+   ],
+   "to": {
+    "zone": "bar-rele",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-clinica",
+   "name": "Clínica Sato",
+   "at": [
+    22,
+    51
+   ],
+   "to": {
+    "zone": "clinica-sato",
+    "at": [
+     9,
+     5
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-24h",
+   "name": "Aurora 24H",
+   "at": [
+    46,
+    43
+   ],
+   "to": {
+    "zone": "tienda-24h-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-ramen",
+   "name": "Ramen Kanal",
+   "at": [
+    80,
+    32
+   ],
+   "to": {
+    "zone": "ramen-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-voltio",
+   "name": "Club Voltio",
+   "at": [
+    67,
+    19
+   ],
+   "to": {
+    "zone": "voltio-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "puerta-pachinko",
+   "name": "Pachinko Estrella",
+   "at": [
+    87,
+    55
+   ],
+   "to": {
+    "zone": "pachinko-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "puerta-carnicero",
+   "name": "El Carnicero (matasanos)",
+   "at": [
+    95,
+    52
+   ],
+   "to": {
+    "zone": "carnicero-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "puerta-iruka",
+   "name": "Clínica de Mama Iruka",
+   "at": [
+    80,
+    43
+   ],
+   "to": {
+    "zone": "iruka-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-ruiz",
+   "name": "Prótesis Ruiz",
+   "at": [
+    26,
+    54
+   ],
+   "to": {
+    "zone": "ruiz-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-koi",
+   "name": "Hotel Koi · Cápsulas",
+   "at": [
+    41,
+    19
+   ],
+   "to": {
+    "zone": "koi-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-almacen",
+   "name": "Almacén del muelle",
+   "at": [
+    9,
+    14
+   ],
+   "to": {
+    "zone": "almacen-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "hacia-cenit",
+   "name": "Avenida hacia Cénit (distrito corporativo)",
+   "at": [
+    95,
+    21
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     2,
+     31
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "generador-lumen",
+   "name": "Generador del mercado",
+   "at": [
+    27,
+    25
+   ],
+   "kind": "generator",
+   "dialog": "generador"
+  },
+  {
+   "id": "terminal-desguace",
+   "name": "Terminal de inventario",
+   "at": [
+    46,
+    52
+   ],
+   "kind": "terminal",
+   "dialog": "terminal-desguace"
+  },
+  {
+   "id": "cajas-desguace",
+   "name": "Pila de cajas",
+   "at": [
+    37,
+    58
+   ],
+   "kind": "crates",
+   "dialog": "cajas"
+  },
+  {
+   "id": "tablon-lumen",
+   "name": "Tablón del mercado",
+   "at": [
+    14,
+    25
+   ],
+   "kind": "board",
+   "dialog": "tablon"
+  },
+  {
+   "id": "vending-ferro-1",
+   "name": "Máquina Aurora",
+   "at": [
+    43,
+    35
+   ],
+   "kind": "vending",
+   "shop": "aurora-vending"
+  },
+  {
+   "id": "vending-ferro-2",
+   "name": "Máquina Aurora",
+   "at": [
+    49,
+    36
+   ],
+   "kind": "vending",
+   "shop": "aurora-vending"
+  },
+  {
+   "id": "vending-ferro-3",
+   "name": "Máquina Aurora",
+   "at": [
+    71,
+    30
+   ],
+   "kind": "vending",
+   "shop": "aurora-vending"
+  },
+  {
+   "id": "empleo-lumen",
+   "name": "Bolsa de empleo de Ferro",
+   "at": [
+    14,
+    42
+   ],
+   "kind": "jobboard"
+  },
+  {
+   "id": "recompensas-ferro",
+   "name": "Tablón de recompensas (PCV)",
+   "at": [
+    29,
+    47
+   ],
+   "kind": "bountyboard"
+  },
+  {
+   "id": "terminal-mercado-ferro",
+   "name": "Terminal de la red de mercado",
+   "at": [
+    14,
+    33
+   ],
+   "kind": "marketterm"
+  },
+  {
+   "id": "basura-1",
+   "name": "Contenedor de basura",
+   "at": [
+    13,
+    47
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "basura-2",
+   "name": "Contenedor de basura",
+   "at": [
+    49,
+    47
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "basura-3",
+   "name": "Contenedor de basura",
+   "at": [
+    71,
+    47
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "basura-4",
+   "name": "Contenedor de basura",
+   "at": [
+    9,
+    23
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "basura-5",
+   "name": "Contenedor de basura",
+   "at": [
+    87,
+    23
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "basura-6",
+   "name": "Contenedor de basura",
+   "at": [
+    33,
+    7
+   ],
+   "kind": "trash"
+  }
+ ],
+ "sectors": [
+  {
+   "chunk": [
+    0,
+    0
+   ],
+   "name": "Ferro · Lumen Norte y Torre Halcón"
+  },
+  {
+   "chunk": [
+    1,
+    0
+   ],
+   "name": "Ferro · Bloque 9 y Hotel Koi"
+  },
+  {
+   "chunk": [
+    2,
+    0
+   ],
+   "name": "Ferro · Kanal Norte"
+  },
+  {
+   "chunk": [
+    0,
+    1
+   ],
+   "name": "Ferro · Mercado Lumen Sur y Clínica"
+  },
+  {
+   "chunk": [
+    1,
+    1
+   ],
+   "name": "Ferro · El Relé y Desguace"
+  },
+  {
+   "chunk": [
+    2,
+    1
+   ],
+   "name": "Ferro · Kanal Sur"
+  }
+ ],
+ "waypoints": [
+  [
+   5,
+   21
   ],
-  "blocks": [
-    { "type": "fence", "rect": [34, 48, 7, 1] }, { "type": "fence", "rect": [43, 48, 6, 1] },
-    { "type": "fence", "rect": [34, 49, 1, 14] }, { "type": "fence", "rect": [48, 49, 1, 14] }, { "type": "fence", "rect": [35, 62, 13, 1] },
-    { "type": "barrier", "rect": [0, 4, 60, 1], "height": 0.4 }, { "type": "barrier", "rect": [63, 4, 33, 1], "height": 0.4 }
+  [
+   20,
+   21
   ],
-  "buildings": [
-    { "id": "almacen-muelle", "rect": [1, 9, 8, 10], "height": 4, "style": "industrial", "color": "#3a3f5c" },
-    { "id": "torre-halcon", "name": "Torre Halcón", "rect": [14, 9, 15, 10], "height": 11, "style": "tower", "color": "#2e3550", "sign": "HALCÓN", "signColor": "#43f3ff" },
-    { "id": "hotel-koi", "name": "Hotel Koi", "rect": [34, 9, 15, 10], "height": 6, "style": "block", "color": "#4a3a5c", "sign": "HOTEL KOI", "signColor": "#ff4fa0" },
-    { "id": "nave-norte", "rect": [53, 9, 6, 10], "height": 3, "style": "industrial", "color": "#4b4a44" },
-    { "id": "bloque-oeste", "rect": [1, 24, 8, 19], "height": 7, "style": "mega", "color": "#3c4660" },
-    { "id": "bloque9", "name": "Bloque 9", "rect": [34, 24, 14, 10], "height": 12, "style": "mega", "color": "#5a4b6e", "sign": "BLOQUE 9", "signColor": "#ffd23f" },
-    { "id": "bar-rele", "name": "Bar El Relé", "rect": [34, 37, 8, 6], "height": 3, "style": "club", "color": "#2b2d42", "sign": "EL RELÉ", "signColor": "#ff3fa4" },
-    { "id": "tienda-24h", "rect": [44, 37, 5, 6], "height": 2, "style": "shop", "color": "#405a5a", "sign": "24H", "signColor": "#7dff7a" },
-    { "id": "bloque-canal", "rect": [53, 24, 6, 19], "height": 5, "style": "block", "color": "#3b4e63" },
-    { "id": "nave-sur", "rect": [1, 48, 8, 15], "height": 3, "style": "industrial", "color": "#4a4640" },
-    { "id": "clinica-sato", "name": "Clínica Sato", "rect": [14, 48, 8, 6], "height": 3, "style": "clinic", "color": "#2f5d62", "sign": "CLÍNICA SATO", "signColor": "#5affc8" },
-    { "id": "bloque-sur", "rect": [14, 56, 15, 7], "height": 4, "style": "block", "color": "#4a3f50" },
-    { "id": "taller-sur", "rect": [24, 48, 5, 6], "height": 2, "style": "shop", "color": "#574a3a", "sign": "TALLER", "signColor": "#ff8a3d" },
-    { "id": "bloque-sureste", "rect": [53, 48, 6, 15], "height": 5, "style": "block", "color": "#3a4a5a" },
-    { "id": "club-voltio", "name": "Club Voltio", "rect": [64, 9, 7, 10], "height": 6, "style": "club", "color": "#3a2f55", "sign": "VOLTIO", "signColor": "#b46cff" },
-    { "id": "torre-okami", "name": "Torre Okami", "rect": [76, 9, 11, 10], "height": 10, "style": "tower", "color": "#2c3a4f", "sign": "OKAMI", "signColor": "#ff5a5a" },
-    { "id": "kanal-ne", "rect": [92, 9, 3, 10], "height": 3, "style": "block", "color": "#444a5a" },
-    { "id": "karaoke", "rect": [64, 24, 7, 9], "height": 5, "style": "club", "color": "#45385a", "sign": "KARAOKE", "signColor": "#ff8a3d" },
-    { "id": "kanal-m2", "rect": [64, 34, 7, 9], "height": 4, "style": "block", "color": "#3d4250" },
-    { "id": "ramen-kanal", "rect": [76, 24, 11, 8], "height": 4, "style": "shop", "color": "#3d5250", "sign": "RAMEN", "signColor": "#ffd23f" },
-    { "id": "bloque-kanal", "rect": [76, 35, 11, 8], "height": 8, "style": "mega", "color": "#4c4060" },
-    { "id": "kanal-e", "rect": [92, 24, 3, 19], "height": 4, "style": "block", "color": "#3a4152" },
-    { "id": "nave-kanal", "rect": [64, 48, 7, 15], "height": 3, "style": "industrial", "color": "#4b463d" },
-    { "id": "pachinko", "rect": [76, 48, 11, 15], "height": 6, "style": "club", "color": "#39465a", "sign": "PACHINKO", "signColor": "#43f3ff" },
-    { "id": "kanal-se", "rect": [92, 48, 3, 15], "height": 4, "style": "block", "color": "#3f4655" }
+  [
+   40,
+   21
   ],
-  "props": [
-    { "type": "stall", "at": [17, 28], "color": "#ffd23f" }, { "type": "stall", "at": [21, 28], "color": "#ff4fa0" }, { "type": "stall", "at": [25, 28], "color": "#43f3ff" },
-    { "type": "stall", "at": [17, 33], "color": "#7dff7a" }, { "type": "stall", "at": [21, 33], "color": "#ff8a3d" }, { "type": "stall", "at": [25, 33], "color": "#b46cff" },
-    { "type": "stall", "at": [17, 37], "color": "#ff5a5a" }, { "type": "stall", "at": [21, 37], "color": "#ffd23f" }, { "type": "stall", "at": [25, 37], "color": "#43f3ff" },
-    { "type": "bench", "at": [20, 41] }, { "type": "bench", "at": [24, 41] },
-    { "type": "lamp", "at": [9, 19] }, { "type": "lamp", "at": [29, 19] }, { "type": "lamp", "at": [49, 19] }, { "type": "lamp", "at": [9, 43] },
-    { "type": "lamp", "at": [29, 43] }, { "type": "lamp", "at": [49, 43] }, { "type": "lamp", "at": [71, 19] }, { "type": "lamp", "at": [87, 19] },
-    { "type": "lamp", "at": [71, 43] }, { "type": "lamp", "at": [87, 43] }, { "type": "lamp", "at": [29, 23] }, { "type": "lamp", "at": [13, 23] },
-    { "type": "vending", "at": [43, 35], "color": "#43f3ff" }, { "type": "vending", "at": [49, 36], "color": "#ff4fa0" },
-    { "type": "car", "at": [11, 30], "color": "#ffd23f" }, { "type": "car", "at": [73, 36], "color": "#ff5a5a" }, { "type": "car", "at": [31, 53], "color": "#7dd3fc" },
-    { "type": "crate", "at": [36, 50] }, { "type": "crate", "at": [37, 50] }, { "type": "crate", "at": [36, 51] }, { "type": "crate", "at": [45, 58] }, { "type": "crate", "at": [46, 58] },
-    { "type": "car", "at": [46, 49], "color": "#8a7a5a" },
-    { "type": "plant", "at": [33, 35] }, { "type": "plant", "at": [49, 33] },
-    { "type": "pipe", "at": [59, 30] }, { "type": "pipe", "at": [63, 30] }
+  [
+   55,
+   21
   ],
-  "doors": [
-    { "id": "puerta-bloque9", "name": "Bloque 9 · Vestíbulo", "at": [41, 34], "to": { "zone": "bloque9", "at": [8, 9] }, "danger": "protected" },
-    { "id": "puerta-rele", "name": "Bar El Relé", "at": [42, 40], "to": { "zone": "bar-rele", "at": [11, 5] }, "danger": "protected" },
-    { "id": "puerta-clinica", "name": "Clínica Sato", "at": [22, 51], "to": { "zone": "clinica-sato", "at": [9, 5] }, "danger": "protected" }
+  [
+   68,
+   21
   ],
-  "objects": [
-    { "id": "generador-lumen", "name": "Generador del mercado", "at": [27, 25], "kind": "generator", "dialog": "generador" },
-    { "id": "terminal-desguace", "name": "Terminal de inventario", "at": [46, 52], "kind": "terminal", "dialog": "terminal-desguace" },
-    { "id": "cajas-desguace", "name": "Pila de cajas", "at": [37, 58], "kind": "crates", "dialog": "cajas" },
-    { "id": "tablon-lumen", "name": "Tablón del mercado", "at": [14, 25], "kind": "board", "dialog": "tablon" }
+  [
+   80,
+   21
   ],
-  "sectors": [
-    { "chunk": [0, 0], "name": "Ferro · Lumen Norte y Torre Halcón" }, { "chunk": [1, 0], "name": "Ferro · Bloque 9 y Hotel Koi" },
-    { "chunk": [2, 0], "name": "Ferro · Kanal Norte" }, { "chunk": [0, 1], "name": "Ferro · Mercado Lumen Sur y Clínica" },
-    { "chunk": [1, 1], "name": "Ferro · El Relé y Desguace" }, { "chunk": [2, 1], "name": "Ferro · Kanal Sur" }
+  [
+   93,
+   21
   ],
-  "waypoints": [
-    [5, 21], [20, 21], [40, 21], [55, 21], [68, 21], [80, 21], [93, 21], [5, 45], [20, 45], [40, 45], [55, 45], [68, 45], [80, 45], [93, 45],
-    [11, 15], [31, 15], [51, 15], [73, 15], [89, 15], [11, 35], [31, 35], [51, 35], [73, 30], [89, 30], [11, 55], [31, 58], [51, 55], [73, 55], [89, 55],
-    [20, 26], [24, 35], [18, 40], [27, 40], [10, 6], [30, 6], [50, 6], [70, 6], [90, 6], [43, 42], [23, 50]
+  [
+   5,
+   45
   ],
-  "safePoint": [41, 36],
-  "spawn": [41, 36]
+  [
+   20,
+   45
+  ],
+  [
+   40,
+   45
+  ],
+  [
+   55,
+   45
+  ],
+  [
+   68,
+   45
+  ],
+  [
+   80,
+   45
+  ],
+  [
+   93,
+   45
+  ],
+  [
+   11,
+   15
+  ],
+  [
+   31,
+   15
+  ],
+  [
+   51,
+   15
+  ],
+  [
+   73,
+   15
+  ],
+  [
+   89,
+   15
+  ],
+  [
+   11,
+   35
+  ],
+  [
+   31,
+   35
+  ],
+  [
+   51,
+   35
+  ],
+  [
+   73,
+   30
+  ],
+  [
+   89,
+   30
+  ],
+  [
+   11,
+   55
+  ],
+  [
+   31,
+   58
+  ],
+  [
+   51,
+   55
+  ],
+  [
+   73,
+   55
+  ],
+  [
+   89,
+   55
+  ],
+  [
+   20,
+   26
+  ],
+  [
+   24,
+   35
+  ],
+  [
+   18,
+   40
+  ],
+  [
+   27,
+   40
+  ],
+  [
+   10,
+   6
+  ],
+  [
+   30,
+   6
+  ],
+  [
+   50,
+   6
+  ],
+  [
+   70,
+   6
+  ],
+  [
+   90,
+   6
+  ],
+  [
+   43,
+   42
+  ],
+  [
+   23,
+   50
+  ]
+ ],
+ "safePoint": [
+  41,
+  36
+ ],
+ "spawn": [
+  41,
+  36
+ ],
+ "skybridges": [
+  {
+   "from": [
+    47,
+    28
+   ],
+   "to": [
+    53,
+    28
+   ],
+   "z": 15,
+   "color": "#43f3ff"
+  },
+  {
+   "from": [
+    87,
+    13
+   ],
+   "to": [
+    92,
+    13
+   ],
+   "z": 9,
+   "color": "#ff3fa4"
+  },
+  {
+   "from": [
+    70,
+    38
+   ],
+   "to": [
+    76,
+    38
+   ],
+   "z": 10,
+   "color": "#b46cff"
+  },
+  {
+   "from": [
+    29,
+    13
+   ],
+   "to": [
+    34,
+    13
+   ],
+   "z": 14,
+   "color": "#ffd23f"
+  }
+ ],
+ "ambient": 24,
+ "sleepQuality": 0.35
 }

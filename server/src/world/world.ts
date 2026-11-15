@@ -15,6 +15,7 @@ import { activeCharacterId, buildJournal, buildSheet, loadPlayer, savePlayerVita
 import { FactService, InstanceService } from '../game/services.js';
 import { EffectEngine, GameError, type EffectOutcome } from '../game/effects.js';
 import { allOk, buildView, checkNumbers, entryNode } from '../game/dialog.js';
+import { Survival } from './survival.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
@@ -47,11 +48,13 @@ export class World {
   readonly inst: InstanceService;
   readonly effects: EffectEngine;
   private saving = false;
+  readonly survival: Survival;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
     this.facts = new FactService(db);
     this.inst = new InstanceService(db, c);
     this.effects = new EffectEngine(db, c, this.facts, this.inst);
+    this.survival = new Survival(this);
   }
 
   // ---------------------------------------------------------------- arranque
@@ -64,27 +67,57 @@ export class World {
         const target = this.zones.get(d.to.zone)!;
         this.addEntity(z, { kind: 'door', name: d.name, x: d.at[0] + 0.5, y: d.at[1] + 0.5, interactive: true, doorTo: { zone: d.to.zone, at: d.to.at }, danger: d.danger ?? target.def.danger, label: 'Puerta' });
       }
-      for (const o of z.def.objects) this.addEntity(z, { kind: 'object', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, objKind: o.kind, dialog: o.dialog, label: '' });
+      for (const o of z.def.objects) this.addEntity(z, { kind: 'object', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, objKind: o.kind, dialog: o.dialog, label: '', shop: o.shop, sleep: o.sleep, workplace: o.workplace });
     }
     const h = this.cityHour();
     for (const n of this.c.npcs) {
       const entry = n.schedule.find((s) => (s.from <= s.to ? h >= s.from && h < s.to : h >= s.from || h < s.to))!;
-      const e = this.addEntity(this.zones.get(entry.zone)!, { kind: 'npc', name: n.name, title: n.title, x: entry.at[0] + 0.5, y: entry.at[1] + 0.5, interactive: true, dialog: n.dialog, appearance: n.appearance, label: entry.label, speed: 2.2 });
+      const e = this.addEntity(this.zones.get(entry.zone)!, { kind: 'npc', name: n.name, title: n.title, x: entry.at[0] + 0.5, y: entry.at[1] + 0.5, interactive: true, dialog: n.dialog, appearance: n.appearance, label: entry.label, speed: 2.2, npcShop: n.shop });
       e.npc = scheduledBrain(n, this.cfg.seed + e.id);
     }
     const rng = seededRng(this.cfg.seed);
     const pick = <T,>(a: T[]) => a[Math.floor(rng() * a.length)];
-    const ferro = this.zones.get(this.c.manifest.startZone === 'ferro' ? 'ferro' : this.c.zones.find((z) => z.kind === 'exterior')!.id)!;
-    const mkAmbient = (x: number, y: number, home?: [number, number], radius?: number) => {
-      const e = this.addEntity(ferro, { kind: 'npc', name: pick(AMBIENT_NAMES), title: 'Transeúnte', x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.6 + rng() * 0.8,
+    const exteriors = [...this.zones.values()].filter((z) => z.def.kind === 'exterior' && z.def.ambient > 0);
+    const ref = this.zones.get('ferro')?.def.ambient || exteriors.reduce((acc, z) => acc + z.def.ambient, 0) || 1;
+    const mkAmbient = (zone: Zone, x: number, y: number, home?: [number, number], radius?: number) => {
+      const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES), title: 'Transeúnte', x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.6 + rng() * 0.8,
         appearance: { skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
       e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
       e.npc.nextThink = Math.floor(rng() * 20);
     };
-    for (let i = 0; i < this.cfg.ambientNpcs; i++) { const wp = pick(ferro.def.waypoints); mkAmbient(wp[0] + 0.5, wp[1] + 0.5); }
+    for (const zone of exteriors) {
+      // AMBIENT_NPCS es la población de Ferro; el resto de zonas escala por su peso relativo.
+      const n = Math.round((this.cfg.ambientNpcs * zone.def.ambient) / ref);
+      for (let i = 0; i < n; i++) { const wp = pick(zone.def.waypoints); mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); }
+    }
+    const crowdZone = this.zones.get('ferro') ?? exteriors[0];
     for (let i = 0; i < this.cfg.crowdNpcs; i++) {
-      const p = nearestWalkable(ferro.grid, this.cfg.crowdAt[0] + (rng() * 2 - 1) * 8, this.cfg.crowdAt[1] + (rng() * 2 - 1) * 8, 4) ?? { x: this.cfg.crowdAt[0] + 0.5, y: this.cfg.crowdAt[1] + 0.5 };
-      mkAmbient(p.x, p.y, this.cfg.crowdAt, 9);
+      const p = nearestWalkable(crowdZone.grid, this.cfg.crowdAt[0] + (rng() * 2 - 1) * 8, this.cfg.crowdAt[1] + (rng() * 2 - 1) * 8, 4) ?? { x: this.cfg.crowdAt[0] + 0.5, y: this.cfg.crowdAt[1] + 0.5 };
+      mkAmbient(crowdZone, p.x, p.y, this.cfg.crowdAt, 9);
+    }
+    await this.survival.init();
+  }
+
+  /** Crea un PNJ (lo usa la supervivencia para los fugitivos). */
+  spawnNpc(z: Zone, o: { name: string; title: string; x: number; y: number; appearance: Entity['appearance']; label: string; speed: number }): Entity {
+    return this.addEntity(z, { kind: 'npc', interactive: true, ...o });
+  }
+  removeEntity(e: Entity) { e.zone.remove(e); this.entities.delete(e.id); }
+  playerOf(e: Entity): PlayerState | undefined {
+    if (e.kind !== 'player') return undefined;
+    if (e.conn?.p) return e.conn.p;
+    for (const l of this.lingering.values()) if (l.e === e) return l.p;
+    return undefined;
+  }
+  /** Retira de la simulación a un personaje fallecido y cierra su sesión. */
+  removeDead(p: PlayerState, e: Entity) {
+    this.removeEntity(e);
+    for (const [k, l] of this.lingering) if (l.p === p) { clearTimeout(l.timer); this.lingering.delete(k); }
+    const c = e.conn;
+    if (c) {
+      if (this.conns.get(c.accountId) === c) this.conns.delete(c.accountId);
+      c.closed = true;
+      try { c.ws.close(4005, 'dead'); } catch {}
     }
   }
 
@@ -139,6 +172,7 @@ export class World {
     }
     // Instantáneas escalonadas: cada cliente recibe una cada `snapshotEveryTicks` ticks, repartidos entre ticks consecutivos.
     { const every = RULES.snapshotEveryTicks, phase = this.tick % every; let i = 0; for (const c of this.conns.values()) { if ((i++ % every) === phase) this.snapshot(c); } }
+    if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } }
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
     this.metrics.tick.push(performance.now() - t0);
@@ -205,6 +239,7 @@ export class World {
       if (tk.rep >= tk.def.repeat) {
         e.task = undefined;
         e.label = ''; e.labelVer++;
+        if (tk.onDone) { tk.onDone(); return; }
         if (conn?.p) this.enqueue(conn, async () => {
           try { const out = await this.effects.apply(conn.p!, tk.def.onComplete, { opId: tk.opId, kind: 'task' }); this.handleOutcome(conn, out); }
           catch (err) { this.reportError(conn, err); }
@@ -214,7 +249,7 @@ export class World {
     }
   }
 
-  private cancelActivity(e: Entity, reason?: string) {
+  cancelActivity(e: Entity, reason?: string) {
     const had = !!(e.task || e.channel || e.path.length);
     e.task = undefined; e.channel = undefined; e.path = []; e.pendingInteract = undefined; e.moving = false;
     if (e.conn) {
@@ -243,14 +278,14 @@ export class World {
     const vis = e.zone.query(e.x, e.y, this.cfg.viewRadius);
     const visIds = new Set<number>();
     const spawns: EntitySpawn[] = [];
-    const labels: { id: number; label: string }[] = [];
+    const labels: { id: number; label: string; bounty: number; state: 'alive' | 'downed' | 'sleeping' }[] = [];
     let np = 0;
     const NEAR2 = 12 * 12;
     for (const v of vis) {
       visIds.add(v.id);
       const k = c.known.get(v.id);
       if (!k) { spawns.push(spawnOf(v)); c.known.set(v.id, { lv: v.labelVer, sent: this.tick }); continue; }
-      if (k.lv !== v.labelVer) { k.lv = v.labelVer; labels.push({ id: v.id, label: v.label }); }
+      if (k.lv !== v.labelVer) { k.lv = v.labelVer; labels.push({ id: v.id, label: v.label, bounty: v.bounty ?? 0, state: v.state ?? 'alive' }); }
       if (skipPos || v.lastMoveTick <= k.sent) continue;
       // Interés por distancia: cerca a 10 Hz; lejos a 5 Hz. La posición final al detenerse siempre se entrega.
       const dx = v.x - e.x, dy = v.y - e.y;
@@ -258,7 +293,7 @@ export class World {
       if (np >= MAX_POS) continue;
       const o = 7 + np * 9;
       POS_DV.setUint32(o, v.id); POS_DV.setUint16(o + 4, Math.max(0, Math.min(65535, Math.round(v.x * POS_SCALE)))); POS_DV.setUint16(o + 6, Math.max(0, Math.min(65535, Math.round(v.y * POS_SCALE))));
-      POS_DV.setUint8(o + 8, (v.moving ? 1 : 0) | (v.facing << 1) | (v.task || v.channel ? 16 : 0));
+      POS_DV.setUint8(o + 8, (v.moving ? 1 : 0) | (v.facing << 1) | (v.task || v.channel ? 16 : 0) | (v.state === 'sleeping' ? 32 : 0) | (v.state === 'downed' ? 64 : 0) | (v.bounty ? 128 : 0));
       np++;
       k.sent = this.tick;
     }
@@ -271,7 +306,7 @@ export class World {
     try {
       if (gone.length) this.send(c, { t: 'despawn', ids: gone });
       if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
-      for (const l of labels) this.send(c, { t: 'label', id: l.id, label: l.label });
+      for (const l of labels) this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty, state: l.state });
       if (np) {
         POS_DV.setUint8(0, BIN_POSITIONS); POS_DV.setUint32(1, this.tick >>> 0); POS_DV.setUint16(5, np);
         const buf = Buffer.from(POS_BUF.subarray(0, 7 + np * 9)); // copia: el búfer compartido se reutiliza
@@ -283,7 +318,7 @@ export class World {
     c.lastSnapTick = this.tick;
   }
 
-  private enqueue(c: PlayerConn, fn: () => Promise<void>) {
+  enqueue(c: PlayerConn, fn: () => Promise<void>) {
     c.queue = c.queue.then(fn).catch((err) => this.reportError(c, err));
   }
   private reportError(c: PlayerConn, err: unknown) {
@@ -303,8 +338,10 @@ export class World {
 
   private async attachInner(ws: WebSocket, accountId: string, username: string): Promise<PlayerConn | null> {
     const conn: PlayerConn = { ws, accountId, username, known: new Map(), lastSnapTick: 0, queue: Promise.resolve(), chatTimes: [], closed: false, bytesOut: 0 };
-    const old = this.conns.get(accountId);
-    const ling = this.lingering.get(accountId);
+    const old0 = this.conns.get(accountId);
+    const old = old0 && !(old0.p as any)?.dead ? old0 : undefined;
+    const ling0 = this.lingering.get(accountId);
+    const ling = ling0 && !(ling0.p as any).dead ? ling0 : undefined;
     if (old) {
       // Reconexión desde otra pestaña: la nueva sesión toma el control de la MISMA entidad; la anterior se cierra.
       old.closed = true;
@@ -389,13 +426,23 @@ export class World {
     await this.persistAll();
   }
 
-  private journal(p: PlayerState) { return buildJournal(this.c, p, (id) => this.inst.participants(id)); }
+  journal(p: PlayerState) { return buildJournal(this.c, p, (id) => this.inst.participants(id)); }
 
   // ---------------------------------------------------------------- intenciones
   handle(c: PlayerConn, m: ClientMsg) {
     const e = c.e;
     if (!e || !c.p) return;
     this.metrics.inc('msgsIn');
+    const p = c.p, sv = this.survival;
+    // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
+    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy'];
+    if (p.status === 'downed' && !passive.includes(m.t)) { if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás derribado: espera a que alguien te estabilice.' }); return; }
+    // Cualquier orden activa despierta al personaje.
+    if (p.sleeping && ['move', 'interact', 'retreat', 'stop', 'jobStart', 'useItem'].includes(m.t)) sv.wake(c, 'Te despiertas.');
+    const guarded = (seq: number, fn: () => Promise<void>) => this.enqueue(c, async () => {
+      try { await fn(); this.send(c, { t: 'ack', seq, ok: true }); }
+      catch (err) { if (err instanceof GameError) this.send(c, { t: 'ack', seq, ok: false, reason: err.message }); else throw err; }
+    });
     switch (m.t) {
       case 'ping': this.send(c, { t: 'pong', seq: m.seq, ct: m.ct, st: Date.now() }); return;
       case 'move': return this.onMove(c, e, m.seq, m.x, m.y);
@@ -403,10 +450,27 @@ export class World {
       case 'interact': return this.onInteract(c, e, m.seq, m.target);
       case 'retreat': return this.onRetreat(c, e, m.seq);
       case 'closeDialog': this.closeDialog(c); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
-      case 'stance': c.p.stance = m.stance; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, c.p) }); return;
+      case 'stance': p.stance = m.stance; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
       case 'chat': return this.onChat(c, e, m.seq, m.text);
       case 'choose': this.enqueue(c, () => this.onChoose(c, m)); return;
-      case 'useItem': this.enqueue(c, () => this.onUseItem(c, m.seq, m.item, m.opId)); return;
+      case 'useItem': return guarded(m.seq, () => sv.consume(c, m.item, m.opId));
+      case 'sleep': return guarded(m.seq, () => sv.sleepCmd(c, -1));
+      case 'wake': sv.wake(c, 'Te despiertas.'); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'autonomy': p.autoNeeds = m.autoNeeds; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
+      case 'buy': return guarded(m.seq, () => sv.buy(c, m));
+      case 'sell': return guarded(m.seq, () => sv.sell(c, m));
+      case 'steal': return guarded(m.seq, () => sv.steal(c, m));
+      case 'market': this.send(c, { t: 'market', view: { ...sv.market.view(), nextPolicyInMin: Math.round(((this.c.market.policyEveryGameHours - ((Date.now() / this.c.manifest.cityHourMs + this.cfg.cityHourOffset) % this.c.market.policyEveryGameHours)) * this.c.manifest.cityHourMs) / 60000) } }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'jobs': return guarded(m.seq, async () => this.send(c, { t: 'jobs', view: await sv.jobsView(c) }));
+      case 'jobAccept': return guarded(m.seq, async () => { await sv.jobAccept(c, m.job); this.send(c, { t: 'jobs', view: await sv.jobsView(c) }); });
+      case 'jobStart': return guarded(m.seq, () => sv.jobStart(c));
+      case 'jobQuit': p.activeJob = null; if (e.task?.def.id.startsWith('job:')) this.cancelActivity(e, 'Turno abandonado: no cobras.'); this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
+      case 'profession': return guarded(m.seq, () => sv.changeProfession(c, m.profession, m.opId));
+      case 'clinicDo': return guarded(m.seq, () => sv.clinicDo(c, m));
+      case 'bounties': this.send(c, { t: 'bounties', view: sv.bountyView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'bountyPlace': return guarded(m.seq, () => sv.placeBounty(c, m));
+      case 'hostile': this.enqueue(c, async () => { try { await sv.hostile(c, m); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: err.message }); else throw err; } }); return;
+      case 'rescue': this.enqueue(c, async () => { try { await sv.rescue(c, m.seq, m.target, m.opId); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: err.message }); else throw err; } }); return;
       case 'hello': return;
     }
   }
@@ -422,7 +486,7 @@ export class World {
     this.send(c, { t: 'ack', seq, ok: true, path: e.path });
   }
 
-  private playerPath(e: Entity, x: number, y: number): { ok: true } | { ok: false; reason: string } {
+  playerPath(e: Entity, x: number, y: number): { ok: true } | { ok: false; reason: string } {
     this.metrics.inc('pathRequests');
     const r = findPath(e.zone.grid, e.x, e.y, x, y, 9000);
     this.metrics.inc('pathExpanded', r.expanded);
@@ -455,7 +519,17 @@ export class World {
     if (e.transit) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Cruzando una puerta…' });
     const target = this.entities.get(targetId);
     if (!target || target.zone !== e.zone || !target.interactive || target === e) return this.send(c, { t: 'ack', seq, ok: false, reason: 'No puedes interactuar con eso.' });
-    if (target.kind === 'player') return this.send(c, { t: 'ack', seq, ok: false, reason: `${target.name} es otra persona: salúdala por el chat local.` });
+    if (target.kind === 'player' || target.fugitive) {
+      // Menú de acciones sobre personas: se calcula en el servidor con probabilidades y bloqueos.
+      if (Math.hypot(target.x - e.x, target.y - e.y) > 2.6) {
+        const r = this.playerPath(e, target.x, target.y);
+        if (!r.ok) return this.send(c, { t: 'ack', seq, ok: false, reason: r.reason });
+        e.path = e.path.slice(0, -1);
+        if (e.path.length === 0) e.path = [[target.x, target.y]];
+      }
+      this.send(c, { t: 'targetMenu', view: this.survival.targetMenu(c, target) });
+      return this.send(c, { t: 'ack', seq, ok: true, path: e.path.length ? e.path : undefined });
+    }
     this.cancelActivity(e);
     this.closeDialog(c);
     if (this.tryInteract(c, target, 0)) return this.send(c, { t: 'ack', seq, ok: true });
@@ -487,6 +561,8 @@ export class World {
       return true;
     }
     if (d > INTERACT_RANGE) { if (retries > 0) this.reapproach(c, target, retries); return false; }
+    if (target.kind === 'object' && target.objKind && !target.dialog) { this.objectAction(c, target); return true; }
+    if (target.kind === 'npc' && !target.dialog && target.npcShop) { this.survival.openShop(c, target.npcShop, target); return true; }
     this.openDialog(c, target);
     return true;
   }
@@ -581,6 +657,27 @@ export class World {
     this.metrics.inc('npcTransfers');
   }
 
+  /** Objetos con función propia (tiendas, camas, basura, tablones, puestos de trabajo). */
+  private objectAction(c: PlayerConn, o: Entity) {
+    const sv = this.survival;
+    const run = (fn: () => Promise<void> | void) => this.enqueue(c, async () => { try { await fn(); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'notice', kind: 'warn', text: err.message }); else throw err; } });
+    switch (o.objKind) {
+      case 'vending': case 'shop': return sv.openShop(c, o.shop!, o);
+      case 'bed': return run(() => sv.sleepInBed(c, o));
+      case 'trash': return run(() => sv.rummage(c, o));
+      case 'jobboard': return run(async () => this.send(c, { t: 'jobs', view: await sv.jobsView(c) }));
+      case 'bountyboard': return this.send(c, { t: 'bounties', view: sv.bountyView(c.p!) });
+      case 'marketterm': return this.handle(c, { t: 'market', seq: 0 });
+      case 'workplace': {
+        const p = c.p!;
+        const job = p.activeJob ? this.c.jobs.find((j) => j.id === p.activeJob) : undefined;
+        if (job && job.workplace === o.workplace) return run(() => sv.jobStart(c));
+        return run(async () => { this.send(c, { t: 'notice', kind: 'info', text: `${o.name}. Acepta un empleo de este puesto en la bolsa de empleo (J → Empleos).` }); this.send(c, { t: 'jobs', view: await sv.jobsView(c) }); });
+      }
+    }
+    this.send(c, { t: 'notice', kind: 'info', text: `${o.name}: no hay nada que hacer aquí.` });
+  }
+
   // ---------------------------------------------------------------- diálogos
   private openDialog(c: PlayerConn, target: Entity) {
     if (!target.dialog) return this.send(c, { t: 'notice', kind: 'info', text: `${target.name}: no hay nada que hacer aquí.` });
@@ -596,7 +693,7 @@ export class World {
     const target = this.entities.get(d.targetId);
     this.send(c, { t: 'dialog', view: buildView(this.c, c.p!, this.facts, this.c.dialogs[d.dialogId], d.node, d.no, { name: target?.name ?? '', title: target?.title }) });
   }
-  private closeDialog(c: PlayerConn) {
+  closeDialog(c: PlayerConn) {
     if (!c.dialog) return;
     const target = this.entities.get(c.dialog.targetId);
     if (target?.talkingUntil) target.talkingUntil = this.tick + RULES.tickRate;
@@ -662,7 +759,7 @@ export class World {
     else this.closeDialog(c);
   }
 
-  private handleOutcome(c: PlayerConn, out: EffectOutcome) {
+  handleOutcome(c: PlayerConn, out: EffectOutcome) {
     const p = c.p!;
     this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) });
     if (out.completed) this.send(c, { t: 'reward', title: `Encargo completado: ${out.completed.title}`, lines: out.lines });
@@ -685,6 +782,15 @@ export class World {
     }
     if (out.factsChanged) this.broadcastFacts();
     for (const tk of out.startTasks) this.startTask(c, tk);
+    if (out.wanted) void this.survival.addWanted(c, out.wanted, 'delito');
+    if (out.open) {
+      const src = c.dialog ? this.entities.get(c.dialog.targetId) : undefined;
+      this.closeDialog(c);
+      if (out.open.kind === 'shop' && src) this.survival.openShop(c, out.open.id!, src);
+      else if (out.open.kind === 'clinic' && src) this.survival.openClinic(c, out.open.id!, src);
+      else if (out.open.kind === 'jobs') void this.survival.jobsView(c).then((v) => this.send(c, { t: 'jobs', view: v }));
+      else if (out.open.kind === 'bounties') this.send(c, { t: 'bounties', view: this.survival.bountyView(c.p!) });
+    }
   }
 
   private startTask(c: PlayerConn, taskId: string) {
@@ -693,17 +799,6 @@ export class World {
     this.cancelActivity(e);
     e.task = { def, step: 0, rep: 0, waitUntil: 0, started: false, opId: `task-${randomUUID()}` };
     this.send(c, { t: 'notice', kind: 'info', text: `Tarea iniciada: ${t(this.c, def.label)}. Tu personaje la hará solo; cualquier clic la cancela.` });
-  }
-
-  private async onUseItem(c: PlayerConn, seq: number, item: string, opId: string) {
-    const p = c.p!;
-    const def = this.c.items.find((i) => i.id === item);
-    if (!def?.consumable) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Ese objeto no se puede usar.' });
-    if ((p.inventory.get(item) ?? 0) < 1) return this.send(c, { t: 'ack', seq, ok: false, reason: 'No te quedan.' });
-    if (await this.effects.isProcessed(opId)) return this.send(c, { t: 'ack', seq, ok: true, info: 'Operación ya aplicada' });
-    const out = await this.effects.apply(p, [{ item, qty: -1 }, { heal: def.consumable.restore, amount: def.consumable.amount }], { opId, kind: 'useItem' });
-    this.handleOutcome(c, out);
-    this.send(c, { t: 'ack', seq, ok: true });
   }
 
   broadcastFacts() {

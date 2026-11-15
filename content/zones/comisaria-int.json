@@ -1,0 +1,109 @@
+{
+ "id": "comisaria-int",
+ "name": "Comisaría PCV Cénit",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2c3a52",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    4,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    7,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    4,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    7,
+    7
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#60a5fa"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-comisaria-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     60,
+     49
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "recompensas-comisaria",
+   "name": "Tablón de recompensas de la comisaría",
+   "at": [
+    10,
+    1
+   ],
+   "kind": "bountyboard"
+  },
+  {
+   "id": "obj-wp-comisaria",
+   "name": "Puesto: Mostrador de denuncias",
+   "at": [
+    12,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-comisaria"
+  },
+  {
+   "id": "obj-wp-comisaria-calabozos",
+   "name": "Puesto: Calabozos",
+   "at": [
+    2,
+    9
+   ],
+   "kind": "workplace",
+   "workplace": "wp-comisaria-calabozos"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

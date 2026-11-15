@@ -1,15 +1,281 @@
 [
-  { "id": "nadia", "name": "Nadia «Bisagra» Ortuño", "title": "Fixer", "dialog": "nadia", "appearance": { "skin": "#b07a5a", "hair": "#d9d9e3", "jacket": "#6b2140", "accent": "#ff3fa4" },
-    "schedule": [ { "from": 0, "to": 24, "zone": "bar-rele", "at": [3, 6], "state": "work", "label": "Negocia en su reservado" } ] },
-  { "id": "lin", "name": "Lin Bao", "title": "Comerciante", "dialog": "lin", "appearance": { "skin": "#e0b48c", "hair": "#1a1a1a", "jacket": "#2f6b4f", "accent": "#ffd23f" },
-    "schedule": [
-      { "from": 7, "to": 19, "zone": "ferro", "at": [17, 29], "state": "work", "label": "Atiende su puesto de fideos" },
-      { "from": 19, "to": 23, "zone": "bar-rele", "at": [10, 7], "state": "talk", "label": "Charla en El Relé" },
-      { "from": 23, "to": 7, "zone": "bloque9", "at": [15, 6], "state": "rest", "label": "Descansa en el Bloque 9" } ] },
-  { "id": "tomas", "name": "Tomás «Chatarra» Ibarra", "title": "Dueño del desguace", "dialog": "tomas", "appearance": { "skin": "#8a5a3c", "hair": "#5a5a5a", "jacket": "#7a5b2a", "accent": "#ff8a3d" },
-    "schedule": [ { "from": 0, "to": 24, "zone": "ferro", "at": [42, 54], "state": "work", "label": "Vigila su desguace" } ] },
-  { "id": "sato", "name": "Doc Sato", "title": "Cirujana de implantes", "dialog": "sato", "appearance": { "skin": "#f0c8a8", "hair": "#3a2a6a", "jacket": "#e8e8f0", "accent": "#5affc8" },
-    "schedule": [ { "from": 0, "to": 24, "zone": "clinica-sato", "at": [4, 4], "state": "work", "label": "Atiende la clínica" } ] },
-  { "id": "reme", "name": "Reme", "title": "Conserje del Bloque 9", "dialog": "reme", "appearance": { "skin": "#c89070", "hair": "#c0c0c0", "jacket": "#40506a", "accent": "#7dd3fc" },
-    "schedule": [ { "from": 0, "to": 24, "zone": "bloque9", "at": [12, 2], "state": "work", "label": "Vigila el vestíbulo" } ] }
+ {
+  "id": "nadia",
+  "name": "Nadia «Bisagra» Ortuño",
+  "title": "Fixer",
+  "dialog": "nadia",
+  "appearance": {
+   "skin": "#b07a5a",
+   "hair": "#d9d9e3",
+   "jacket": "#6b2140",
+   "accent": "#ff3fa4"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "bar-rele",
+    "at": [
+     3,
+     6
+    ],
+    "state": "work",
+    "label": "Negocia en su reservado"
+   }
+  ]
+ },
+ {
+  "id": "lin",
+  "name": "Lin Bao",
+  "title": "Comerciante",
+  "dialog": "lin",
+  "appearance": {
+   "skin": "#e0b48c",
+   "hair": "#1a1a1a",
+   "jacket": "#2f6b4f",
+   "accent": "#ffd23f"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 19,
+    "zone": "ferro",
+    "at": [
+     17,
+     29
+    ],
+    "state": "work",
+    "label": "Atiende su puesto de fideos"
+   },
+   {
+    "from": 19,
+    "to": 23,
+    "zone": "bar-rele",
+    "at": [
+     10,
+     7
+    ],
+    "state": "talk",
+    "label": "Charla en El Relé"
+   },
+   {
+    "from": 23,
+    "to": 7,
+    "zone": "bloque9",
+    "at": [
+     15,
+     6
+    ],
+    "state": "rest",
+    "label": "Descansa en el Bloque 9"
+   }
+  ],
+  "shop": "puesto-lin"
+ },
+ {
+  "id": "tomas",
+  "name": "Tomás «Chatarra» Ibarra",
+  "title": "Dueño del desguace",
+  "dialog": "tomas",
+  "appearance": {
+   "skin": "#8a5a3c",
+   "hair": "#5a5a5a",
+   "jacket": "#7a5b2a",
+   "accent": "#ff8a3d"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "ferro",
+    "at": [
+     42,
+     54
+    ],
+    "state": "work",
+    "label": "Vigila su desguace"
+   }
+  ],
+  "shop": "chatarreria-tomas"
+ },
+ {
+  "id": "sato",
+  "name": "Doc Sato",
+  "title": "Cirujana de implantes",
+  "dialog": "sato",
+  "appearance": {
+   "skin": "#f0c8a8",
+   "hair": "#3a2a6a",
+   "jacket": "#e8e8f0",
+   "accent": "#5affc8"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "clinica-sato",
+    "at": [
+     4,
+     4
+    ],
+    "state": "work",
+    "label": "Atiende la clínica"
+   }
+  ]
+ },
+ {
+  "id": "reme",
+  "name": "Reme",
+  "title": "Conserje del Bloque 9",
+  "dialog": "reme",
+  "appearance": {
+   "skin": "#c89070",
+   "hair": "#c0c0c0",
+   "jacket": "#40506a",
+   "accent": "#7dd3fc"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "bloque9",
+    "at": [
+     12,
+     2
+    ],
+    "state": "work",
+    "label": "Vigila el vestíbulo"
+   }
+  ]
+ },
+ {
+  "id": "brann",
+  "name": "Brann «El Carnicero»",
+  "title": "Matasanos sin escrúpulos",
+  "dialog": "matasanos-brann",
+  "appearance": {
+   "skin": "#d8b090",
+   "hair": "#5a1a1a",
+   "jacket": "#7a2a2a",
+   "accent": "#ff5a5a"
+  },
+  "generated": true,
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "carnicero-int",
+    "at": [
+     4,
+     4
+    ],
+    "state": "work",
+    "label": "Atiende la consulta"
+   }
+  ]
+ },
+ {
+  "id": "iruka",
+  "name": "Mama Iruka",
+  "title": "Matasanos de barrio",
+  "dialog": "matasanos-iruka",
+  "appearance": {
+   "skin": "#a8805a",
+   "hair": "#e8e8e8",
+   "jacket": "#2f6b4f",
+   "accent": "#5affc8"
+  },
+  "generated": true,
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "iruka-int",
+    "at": [
+     4,
+     4
+    ],
+    "state": "work",
+    "label": "Atiende la consulta"
+   }
+  ]
+ },
+ {
+  "id": "ruiz",
+  "name": "Ernesto Ruiz",
+  "title": "Protésico",
+  "dialog": "matasanos-ruiz",
+  "appearance": {
+   "skin": "#c89070",
+   "hair": "#3a3a3a",
+   "jacket": "#574a3a",
+   "accent": "#ff8a3d"
+  },
+  "generated": true,
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "ruiz-int",
+    "at": [
+     4,
+     4
+    ],
+    "state": "work",
+    "label": "Atiende la consulta"
+   }
+  ]
+ },
+ {
+  "id": "ito",
+  "name": "Dra. Hanae Ito",
+  "title": "Cirujana de la Clínica Okami",
+  "dialog": "matasanos-ito",
+  "appearance": {
+   "skin": "#f0d0b0",
+   "hair": "#1a1a1a",
+   "jacket": "#e8f0f0",
+   "accent": "#5affc8"
+  },
+  "generated": true,
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "clinica-okami-int",
+    "at": [
+     5,
+     3
+    ],
+    "state": "work",
+    "label": "Atiende la consulta"
+   }
+  ]
+ },
+ {
+  "id": "vex",
+  "name": "Dr. Vex",
+  "title": "Matasanos clandestino",
+  "dialog": "matasanos-vex",
+  "appearance": {
+   "skin": "#b0a0c0",
+   "hair": "#b46cff",
+   "jacket": "#3a3040",
+   "accent": "#b46cff"
+  },
+  "generated": true,
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "vex-int",
+    "at": [
+     4,
+     4
+    ],
+    "state": "work",
+    "label": "Atiende la consulta"
+   }
+  ]
+ }
 ]

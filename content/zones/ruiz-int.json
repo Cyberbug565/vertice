@@ -1,0 +1,75 @@
+{
+ "id": "ruiz-int",
+ "name": "Prótesis Ruiz",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#574a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    7,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    8,
+    1
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#ff8a3d"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-ruiz-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     26,
+     55
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-ruiz",
+   "name": "Puesto: Banco de prótesis de Ruiz",
+   "at": [
+    5,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-ruiz"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

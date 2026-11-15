@@ -1,0 +1,87 @@
+{
+ "id": "clinica-okami-int",
+ "name": "Clínica Okami",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#26404a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#5affc8"
+  },
+  {
+   "type": "bed",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#5affc8"
+  },
+  {
+   "type": "screen",
+   "at": [
+    4,
+    1
+   ],
+   "blocking": false,
+   "color": "#5affc8"
+  },
+  {
+   "type": "screen",
+   "at": [
+    7,
+    1
+   ],
+   "blocking": false,
+   "color": "#5affc8"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-clinica-okami-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     39,
+     28
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-clinica-okami",
+   "name": "Puesto: Quirófano de la Clínica Okami",
+   "at": [
+    9,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-clinica-okami"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

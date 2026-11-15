@@ -1,0 +1,112 @@
+{
+ "id": "tienda-24h-int",
+ "name": "Aurora 24H",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#405a5a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    5,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    6
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-tienda-24h-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     46,
+     44
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-24h",
+   "name": "Caja de Aurora 24H",
+   "at": [
+    7,
+    3
+   ],
+   "kind": "shop",
+   "shop": "aurora-24h"
+  },
+  {
+   "id": "obj-wp-tienda-24h",
+   "name": "Puesto: Reponedor de Aurora 24H",
+   "at": [
+    8,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-tienda-24h"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

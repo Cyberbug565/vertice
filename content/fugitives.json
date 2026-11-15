@@ -1,0 +1,6 @@
+[
+ { "id": "rata-mendez", "name": "«Rata» Méndez", "crime": "Robo de cromo a mano armada", "zone": "ferro", "area": [40, 56, 6], "bounty": 400, "hp": 45, "defense": 12, "poster": "pcv", "appearance": { "skin": "#b07a5a", "hair": "#2a2a2a", "jacket": "#5a3a1a", "accent": "#ff5a5a" } },
+ { "id": "viuda-okoro", "name": "«La Viuda» Okoro", "crime": "Extorsión en Kanal", "zone": "ferro", "area": [73, 40, 8], "bounty": 650, "hp": 55, "defense": 14, "poster": "halcon", "appearance": { "skin": "#6a4028", "hair": "#d9d9e3", "jacket": "#1a1a2a", "accent": "#b46cff" } },
+ { "id": "chispas-lund", "name": "«Chispas» Lund", "crime": "Sabotaje de grúas en el muelle", "zone": "ferro", "area": [20, 6, 10], "bounty": 300, "hp": 40, "defense": 11, "poster": "pcv", "appearance": { "skin": "#f0c8a8", "hair": "#ffd23f", "jacket": "#40506a", "accent": "#ffd23f" } },
+ { "id": "dex-varga", "name": "Dex Varga", "crime": "Robo de datos a Teselia", "zone": "cenit", "area": [34, 58, 6], "bounty": 900, "hp": 60, "defense": 15, "poster": "teselia", "appearance": { "skin": "#c89070", "hair": "#43f3ff", "jacket": "#26304a", "accent": "#43f3ff" } }
+]

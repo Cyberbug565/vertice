@@ -1,0 +1,344 @@
+[
+ {
+  "id": "wp-muelles-ferro",
+  "name": "Muelles de Ferro",
+  "zone": "ferro",
+  "at": [
+   30,
+   6
+  ]
+ },
+ {
+  "id": "wp-mercado-lumen",
+  "name": "Mercado Lumen",
+  "zone": "ferro",
+  "at": [
+   22,
+   35
+  ]
+ },
+ {
+  "id": "wp-desguace",
+  "name": "Desguace de Tomás",
+  "zone": "ferro",
+  "at": [
+   40,
+   55
+  ]
+ },
+ {
+  "id": "wp-generador",
+  "name": "Generador del mercado",
+  "zone": "ferro",
+  "at": [
+   26,
+   26
+  ]
+ },
+ {
+  "id": "wp-esquina-kanal",
+  "name": "Esquina de Kanal",
+  "zone": "ferro",
+  "at": [
+   73,
+   40
+  ]
+ },
+ {
+  "id": "wp-bar-rele",
+  "name": "Barra de El Relé",
+  "zone": "bar-rele",
+  "at": [
+   5,
+   3
+  ]
+ },
+ {
+  "id": "wp-clinica-sato",
+  "name": "Consulta de Doc Sato",
+  "zone": "clinica-sato",
+  "at": [
+   6,
+   5
+  ]
+ },
+ {
+  "id": "wp-plaza-cenit",
+  "name": "Plaza Teselia",
+  "zone": "cenit",
+  "at": [
+   84,
+   22
+  ]
+ },
+ {
+  "id": "wp-avenida-cenit",
+  "name": "Avenida central de Cénit",
+  "zone": "cenit",
+  "at": [
+   40,
+   32
+  ]
+ },
+ {
+  "id": "wp-tienda-24h",
+  "name": "Reponedor de Aurora 24H",
+  "zone": "tienda-24h-int",
+  "at": [
+   8,
+   2
+  ]
+ },
+ {
+  "id": "wp-cocina-ramen",
+  "name": "Cocina de Ramen Kanal",
+  "zone": "ramen-int",
+  "at": [
+   9,
+   2
+  ]
+ },
+ {
+  "id": "wp-sala-ramen",
+  "name": "Sala de Ramen Kanal",
+  "zone": "ramen-int",
+  "at": [
+   9,
+   6
+  ]
+ },
+ {
+  "id": "wp-escenario-voltio",
+  "name": "Escenario del Voltio",
+  "zone": "voltio-int",
+  "at": [
+   11,
+   2
+  ]
+ },
+ {
+  "id": "wp-barra-voltio",
+  "name": "Barra del Voltio",
+  "zone": "voltio-int",
+  "at": [
+   2,
+   2
+  ]
+ },
+ {
+  "id": "wp-puerta-voltio",
+  "name": "Puerta del Voltio",
+  "zone": "voltio-int",
+  "at": [
+   14,
+   8
+  ]
+ },
+ {
+  "id": "wp-sala-pachinko",
+  "name": "Sala de juego del Pachinko",
+  "zone": "pachinko-int",
+  "at": [
+   10,
+   2
+  ]
+ },
+ {
+  "id": "wp-trastienda",
+  "name": "Trastienda del Pachinko",
+  "zone": "pachinko-int",
+  "at": [
+   4,
+   7
+  ]
+ },
+ {
+  "id": "wp-iruka",
+  "name": "Consulta de Mama Iruka",
+  "zone": "iruka-int",
+  "at": [
+   7,
+   2
+  ]
+ },
+ {
+  "id": "wp-ruiz",
+  "name": "Banco de prótesis de Ruiz",
+  "zone": "ruiz-int",
+  "at": [
+   5,
+   2
+  ]
+ },
+ {
+  "id": "wp-recepcion-koi",
+  "name": "Recepción del Hotel Koi",
+  "zone": "koi-int",
+  "at": [
+   12,
+   8
+  ]
+ },
+ {
+  "id": "wp-almacen-carga",
+  "name": "Zona de carga del almacén",
+  "zone": "almacen-int",
+  "at": [
+   3,
+   8
+  ]
+ },
+ {
+  "id": "wp-almacen-chatarra",
+  "name": "Desguace del almacén",
+  "zone": "almacen-int",
+  "at": [
+   10,
+   8
+  ]
+ },
+ {
+  "id": "wp-recepcion-nido",
+  "name": "Recepción del Nido",
+  "zone": "nido-int",
+  "at": [
+   12,
+   8
+  ]
+ },
+ {
+  "id": "wp-okami-super",
+  "name": "Reposición de Okami Market",
+  "zone": "okami-super-int",
+  "at": [
+   8,
+   2
+  ]
+ },
+ {
+  "id": "wp-clinica-okami",
+  "name": "Quirófano de la Clínica Okami",
+  "zone": "clinica-okami-int",
+  "at": [
+   9,
+   2
+  ]
+ },
+ {
+  "id": "wp-armeria",
+  "name": "Almacén de la Armería",
+  "zone": "armeria-int",
+  "at": [
+   8,
+   2
+  ]
+ },
+ {
+  "id": "wp-halcon-oficina",
+  "name": "Despachos de Halcón",
+  "zone": "oficinas-halcon-int",
+  "at": [
+   10,
+   2
+  ]
+ },
+ {
+  "id": "wp-halcon-seguridad",
+  "name": "Control de seguridad de Halcón",
+  "zone": "oficinas-halcon-int",
+  "at": [
+   12,
+   8
+  ]
+ },
+ {
+  "id": "wp-halcon-red",
+  "name": "Sala de red de Halcón",
+  "zone": "oficinas-halcon-int",
+  "at": [
+   1,
+   2
+  ]
+ },
+ {
+  "id": "wp-teselia-red",
+  "name": "Granja de servidores Teselia",
+  "zone": "teselia-int",
+  "at": [
+   11,
+   2
+  ]
+ },
+ {
+  "id": "wp-teselia-lab",
+  "name": "Laboratorio neural Teselia",
+  "zone": "teselia-int",
+  "at": [
+   11,
+   8
+  ]
+ },
+ {
+  "id": "wp-teselia-oficina",
+  "name": "Oficinas Teselia",
+  "zone": "teselia-int",
+  "at": [
+   1,
+   2
+  ]
+ },
+ {
+  "id": "wp-comisaria",
+  "name": "Mostrador de denuncias",
+  "zone": "comisaria-int",
+  "at": [
+   11,
+   8
+  ]
+ },
+ {
+  "id": "wp-comisaria-calabozos",
+  "name": "Calabozos",
+  "zone": "comisaria-int",
+  "at": [
+   2,
+   8
+  ]
+ },
+ {
+  "id": "wp-lab-okami",
+  "name": "Bancada de Laboratorios Okami",
+  "zone": "laboratorio-int",
+  "at": [
+   11,
+   2
+  ]
+ },
+ {
+  "id": "wp-lab-ensayos",
+  "name": "Sala de ensayos clínicos",
+  "zone": "laboratorio-int",
+  "at": [
+   11,
+   8
+  ]
+ },
+ {
+  "id": "wp-logistica-muelle",
+  "name": "Muelle de carga Aurora",
+  "zone": "logistica-int",
+  "at": [
+   6,
+   8
+  ]
+ },
+ {
+  "id": "wp-logistica-reparto",
+  "name": "Mostrador de reparto Aurora",
+  "zone": "logistica-int",
+  "at": [
+   11,
+   2
+  ]
+ }
+]

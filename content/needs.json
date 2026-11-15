@@ -1,0 +1,11 @@
+{
+ "perGameHour": { "hunger": 4.5, "thirst": 6, "fatigue": 5 },
+ "workMultiplier": 2,
+ "autoThreshold": 60,
+ "warnThreshold": 80,
+ "damagePerGameHourAtMax": 6,
+ "sleepRecoverPerGameHour": 16,
+ "streetEventChancePerGameHour": 0.25,
+ "downedSeconds": 30,
+ "wantedDecayPerGameHour": 0.5
+}

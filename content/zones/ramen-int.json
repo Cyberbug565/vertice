@@ -1,0 +1,98 @@
+{
+ "id": "ramen-int",
+ "name": "Ramen Kanal",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#3d5250",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    2,
+    2,
+    5,
+    1
+   ],
+   "color": "#3d5250"
+  }
+ ],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    3,
+    6
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    6
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-ramen-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     80,
+     33
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-ramen",
+   "name": "Barra de Ramen Kanal",
+   "at": [
+    7,
+    2
+   ],
+   "kind": "shop",
+   "shop": "ramen-kanal"
+  },
+  {
+   "id": "obj-wp-cocina-ramen",
+   "name": "Puesto: Cocina de Ramen Kanal",
+   "at": [
+    9,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-cocina-ramen"
+  },
+  {
+   "id": "obj-wp-sala-ramen",
+   "name": "Puesto: Sala de Ramen Kanal",
+   "at": [
+    9,
+    7
+   ],
+   "kind": "workplace",
+   "workplace": "wp-sala-ramen"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

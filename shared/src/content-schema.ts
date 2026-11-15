@@ -25,17 +25,27 @@ export const ZoneSchema = z.object({
   blocks: z.array(z.object({ type: z.enum(['fence', 'wall', 'barrier', 'counter', 'furniture']), rect, height: z.number().default(1), color: z.string().optional() })).default([]),
   buildings: z.array(z.object({
     id: z.string(), name: z.string().optional(), rect, height: z.number().positive(),
-    style: z.enum(['mega', 'block', 'shop', 'club', 'clinic', 'industrial', 'tower']),
+    style: z.enum(['mega', 'block', 'shop', 'club', 'clinic', 'industrial', 'tower', 'arcology', 'spire', 'glass']),
     color: z.string(), sign: z.string().optional(), signColor: z.string().optional(),
   })).default([]),
-  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe']), at: xy, blocking: z.boolean().default(true), color: z.string().optional() })).default([]),
+  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
+  skybridges: z.array(z.object({ from: xy, to: xy, z: z.number(), color: z.string().optional() })).default([]),
   doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional() })).default([]),
-  objects: z.array(z.object({ id: z.string(), name: z.string(), at: xy, kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board']), dialog: z.string() })).default([]),
+  objects: z.array(z.object({
+    id: z.string(), name: z.string(), at: xy,
+    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm']),
+    dialog: z.string().optional(), shop: z.string().optional(), workplace: z.string().optional(),
+    sleep: z.object({ quality: z.number().min(0).max(1), price: z.number().int().nonnegative().default(0) }).optional(),
+  })).default([]),
   sectors: z.array(z.object({ chunk: xy, name: z.string() })).default([]),
   dangerAreas: z.array(z.object({ rect, level: DangerLevel })).default([]),
   waypoints: z.array(xy).default([]),
   safePoint: xy,
   spawn: xy.optional(),
+  /** Calidad del sueño al dormir en el suelo de esta zona (si no se indica: protegida 0,6, pública 0,35, disputada 0,25). */
+  sleepQuality: z.number().min(0).max(1).optional(),
+  /** Peso de transeúntes ambientales para esta zona exterior. */
+  ambient: z.number().int().nonnegative().default(0),
 });
 export type ZoneDef = z.infer<typeof ZoneSchema>;
 
@@ -67,6 +77,9 @@ const Effect = z.union([
   z.object({ restore: z.enum(['stamina', 'hp', 'all']) }),
   z.object({ heal: z.enum(['stamina', 'hp']), amount: z.number().int().positive() }),
   z.object({ notice: z.string() }),
+  z.object({ contribute: z.string() }),
+  z.object({ open: z.enum(['shop', 'clinic', 'jobs', 'bounties', 'market']), id: z.string().optional() }),
+  z.object({ wanted: z.number().int() }),
 ]);
 export type Effect = z.infer<typeof Effect>;
 
@@ -123,6 +136,8 @@ export const NpcSchema = z.object({
   name: z.string(),
   title: z.string(),
   dialog: z.string().optional(),
+  faction: z.string().optional(),
+  shop: z.string().optional(),
   appearance: z.object({ skin: z.string(), hair: z.string(), jacket: z.string(), accent: z.string() }),
   schedule: z.array(z.object({ from: z.number().min(0).max(24), to: z.number().min(0).max(24), zone: z.string(), at: xy, state: z.enum(['rest', 'work', 'talk']), label: z.string() })).min(1),
 });
@@ -136,8 +151,81 @@ export const RoleSchema = z.object({
 });
 export type RoleDef = z.infer<typeof RoleSchema>;
 
-export const ItemSchema = z.object({ id: z.string(), name: z.string(), desc: z.string(), weight: z.number(), price: z.number().int().optional(), consumable: z.object({ restore: z.enum(['stamina', 'hp']), amount: z.number() }).optional() });
+export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'herramienta', 'arma', 'ropa', 'chatarra', 'mision', 'equipo', 'contrabando'] as const;
+export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
+export const ItemSchema = z.object({
+  id: z.string(), name: z.string(), desc: z.string(), weight: z.number(), price: z.number().int().optional(),
+  category: z.enum(ITEM_CATEGORIES).default('equipo'),
+  consumable: z.object({ restore: z.enum(['stamina', 'hp']).optional(), amount: z.number().default(0), hunger: z.number().default(0), thirst: z.number().default(0), fatigue: z.number().default(0) }).optional(),
+  confront: z.number().int().optional(),
+});
 export type ItemDef = z.infer<typeof ItemSchema>;
+
+export const NeedsSchema = z.object({
+  perGameHour: z.object({ hunger: z.number(), thirst: z.number(), fatigue: z.number() }),
+  workMultiplier: z.number(),
+  autoThreshold: z.number(),
+  warnThreshold: z.number(),
+  damagePerGameHourAtMax: z.number(),
+  sleepRecoverPerGameHour: z.number(),
+  streetEventChancePerGameHour: z.number(),
+  downedSeconds: z.number(),
+  wantedDecayPerGameHour: z.number(),
+});
+export type NeedsConfig = z.infer<typeof NeedsSchema>;
+
+export const MarketSchema = z.object({
+  corps: z.array(z.object({ id: z.string(), categories: z.array(z.enum(ITEM_CATEGORIES)), markup: z.number(), minMarkup: z.number(), maxMarkup: z.number(), volatility: z.number(), motto: z.string() })),
+  elasticity: z.number(), minFactor: z.number(), maxFactor: z.number(), sellRatio: z.number(), restockPerGameHour: z.number(), policyEveryGameHours: z.number(),
+});
+export type MarketDef = z.infer<typeof MarketSchema>;
+
+export const ShopSchema = z.object({
+  id: z.string(), name: z.string(), owner: z.string(), zone: z.string(),
+  stock: z.record(z.string(), z.number().int().nonnegative()),
+  buys: z.array(z.enum(ITEM_CATEGORIES)).default([]),
+  priceMult: z.number().default(1),
+  security: z.number().int().min(8).max(25),
+  fence: z.boolean().default(false),
+  discounts: z.array(z.object({ flag: z.string(), pct: z.number() })).default([]),
+});
+export type ShopDef = z.infer<typeof ShopSchema>;
+
+export const CyberwareSchema = z.object({
+  id: z.string(), name: z.string(), family: z.string(), slot: z.string(), grade: z.number().int().min(1).max(5),
+  capacity: z.number().int(), humanity: z.number().int(), price: z.number().int(), maker: z.string(), desc: z.string(),
+  effects: z.object({
+    attrs: z.record(z.string(), z.number()).default({}), skills: z.record(z.string(), z.number()).default({}),
+    needs: z.object({ hunger: z.number().default(1), thirst: z.number().default(1), fatigue: z.number().default(1) }).optional(),
+    hpMax: z.number().default(0), confront: z.number().default(0), steal: z.number().default(0), surgery: z.number().default(0),
+  }).prefault({}),
+  prosthetic: z.boolean().default(false),
+});
+export type CyberwareDef = z.infer<typeof CyberwareSchema>;
+
+export const RipperdocSchema = z.object({
+  id: z.string(), name: z.string(), npc: z.string(), zone: z.string(), skill: z.number().int().min(1).max(5), priceMult: z.number(),
+  morality: z.enum(['estricta', 'flexible', 'sin_escrupulos']), danger: z.number().min(0).max(1), faction: z.string().optional(),
+  stock: z.array(z.string()), stolenStock: z.array(z.string()).default([]), maxGrade: z.number().int().min(1).max(5), desc: z.string(),
+});
+export type RipperdocDef = z.infer<typeof RipperdocSchema>;
+
+export const ProfessionSchema = z.object({
+  id: z.string(), name: z.string(), kind: z.enum(['empleo', 'libre', 'ilegal']), desc: z.string(), skill: z.string(), attr: z.enum(ATTRIBUTE_IDS), perk: z.string(),
+  mods: z.object({ confront: z.number().default(0), steal: z.number().default(0), sleepStreet: z.number().default(0), rescue: z.boolean().default(false), corpDiscount: z.number().default(0), speed: z.number().default(0), bounty: z.number().default(0), rummage: z.number().default(0) }).prefault({}),
+});
+export type ProfessionDef = z.infer<typeof ProfessionSchema>;
+
+export const WorkplaceSchema = z.object({ id: z.string(), name: z.string(), zone: z.string(), at: xy });
+export const JobSchema = z.object({
+  id: z.string(), title: z.string(), desc: z.string(), profession: z.string(), employer: z.string(), workplace: z.string(),
+  seconds: z.number().positive(), pay: z.number().int().positive(), dv: z.number().int(), minRank: z.number().int().min(0), legal: z.boolean(), cooldownGameHours: z.number(),
+  risk: z.number().min(0).max(1).default(0),
+});
+export type JobDef = z.infer<typeof JobSchema>;
+
+export const FugitiveSchema = z.object({ id: z.string(), name: z.string(), crime: z.string(), zone: z.string(), area: z.tuple([z.number(), z.number(), z.number()]), bounty: z.number().int(), hp: z.number().int(), defense: z.number().int(), poster: z.string(), appearance: z.object({ skin: z.string(), hair: z.string(), jacket: z.string(), accent: z.string() }) });
+export type FugitiveDef = z.infer<typeof FugitiveSchema>;
 
 export const ContentSchema = z.object({
   manifest: z.object({ version: z.string(), edition: z.string(), city: z.string(), startZone: z.string(), startAt: xy, cityHourMs: z.number().int().positive() }),
@@ -153,5 +241,14 @@ export const ContentSchema = z.object({
   tasks: z.array(TaskSchema),
   contracts: z.array(ContractSchema),
   locale: z.record(z.string(), z.string()),
+  needs: NeedsSchema,
+  market: MarketSchema,
+  shops: z.array(ShopSchema),
+  cyberware: z.array(CyberwareSchema),
+  ripperdocs: z.array(RipperdocSchema),
+  professions: z.array(ProfessionSchema),
+  workplaces: z.array(WorkplaceSchema),
+  jobs: z.array(JobSchema),
+  fugitives: z.array(FugitiveSchema),
 });
 export type Content = z.infer<typeof ContentSchema>;

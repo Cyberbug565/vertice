@@ -1,0 +1,135 @@
+{
+ "id": "teselia-int",
+ "name": "Torre de Datos Teselia",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#262c48",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    3,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    3,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    7
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    3,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    9,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-teselia-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     34,
+     49
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-teselia-red",
+   "name": "Puesto: Granja de servidores Teselia",
+   "at": [
+    12,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-teselia-red"
+  },
+  {
+   "id": "obj-wp-teselia-lab",
+   "name": "Puesto: Laboratorio neural Teselia",
+   "at": [
+    12,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-teselia-lab"
+  },
+  {
+   "id": "obj-wp-teselia-oficina",
+   "name": "Puesto: Oficinas Teselia",
+   "at": [
+    2,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-teselia-oficina"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

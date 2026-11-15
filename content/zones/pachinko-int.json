@@ -1,0 +1,109 @@
+{
+ "id": "pachinko-int",
+ "name": "Pachinko Estrella",
+ "kind": "interior",
+ "width": 14,
+ "height": 10,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#39465a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "screen",
+   "at": [
+    2,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    4,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff4fa0"
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    1
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "screen",
+   "at": [
+    8,
+    1
+   ],
+   "blocking": false,
+   "color": "#7dff7a"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-pachinko-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    13,
+    5
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     88,
+     55
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "trastienda-perista",
+   "name": "Trastienda del perista",
+   "at": [
+    2,
+    7
+   ],
+   "kind": "shop",
+   "shop": "perista-pachinko"
+  },
+  {
+   "id": "obj-wp-sala-pachinko",
+   "name": "Puesto: Sala de juego del Pachinko",
+   "at": [
+    10,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-sala-pachinko"
+  },
+  {
+   "id": "obj-wp-trastienda",
+   "name": "Puesto: Trastienda del Pachinko",
+   "at": [
+    4,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-trastienda"
+  }
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ]
+ ],
+ "safePoint": [
+  11,
+  5
+ ]
+}

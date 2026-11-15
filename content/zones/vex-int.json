@@ -1,0 +1,59 @@
+{
+ "id": "vex-int",
+ "name": "Consulta del Dr. Vex",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#3a3040",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#ff5a5a"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-vex-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     32,
+     58
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

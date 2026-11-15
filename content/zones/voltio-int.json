@@ -1,0 +1,133 @@
+{
+ "id": "voltio-int",
+ "name": "Club Voltio",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#3a2f55",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    2,
+    3,
+    1,
+    5
+   ],
+   "color": "#3a2f55"
+  }
+ ],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    7,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    10,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    7,
+    3
+   ]
+  },
+  {
+   "type": "neon",
+   "at": [
+    6,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "neon",
+   "at": [
+    11,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-voltio-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     67,
+     20
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-voltio",
+   "name": "Barra del Voltio",
+   "at": [
+    3,
+    8
+   ],
+   "kind": "shop",
+   "shop": "voltio-barra"
+  },
+  {
+   "id": "obj-wp-escenario-voltio",
+   "name": "Puesto: Escenario del Voltio",
+   "at": [
+    12,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-escenario-voltio"
+  },
+  {
+   "id": "obj-wp-barra-voltio",
+   "name": "Puesto: Barra del Voltio",
+   "at": [
+    3,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-barra-voltio"
+  },
+  {
+   "id": "obj-wp-puerta-voltio",
+   "name": "Puesto: Puerta del Voltio",
+   "at": [
+    14,
+    9
+   ],
+   "kind": "workplace",
+   "workplace": "wp-puerta-voltio"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

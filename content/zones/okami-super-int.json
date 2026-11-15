@@ -1,0 +1,126 @@
+{
+ "id": "okami-super-int",
+ "name": "Supermercado Okami",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#3a2e44",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    5,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    6,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    5
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    5
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    5
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-okami-super-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     28,
+     28
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-okami",
+   "name": "Caja de Okami Market",
+   "at": [
+    8,
+    6
+   ],
+   "kind": "shop",
+   "shop": "okami-super"
+  },
+  {
+   "id": "obj-wp-okami-super",
+   "name": "Puesto: Reposición de Okami Market",
+   "at": [
+    8,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-okami-super"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

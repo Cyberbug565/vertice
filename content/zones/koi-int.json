@@ -1,0 +1,130 @@
+{
+ "id": "koi-int",
+ "name": "Hotel Koi · Cápsulas",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#4a3a5c",
+ "blocks": [],
+ "props": [],
+ "doors": [
+  {
+   "id": "salida-koi-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     41,
+     20
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "koi-int-capsula-1",
+   "name": "Cápsula 1 (25 €$/noche)",
+   "at": [
+    2,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.9,
+    "price": 25
+   }
+  },
+  {
+   "id": "koi-int-capsula-2",
+   "name": "Cápsula 2 (25 €$/noche)",
+   "at": [
+    4,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.9,
+    "price": 25
+   }
+  },
+  {
+   "id": "koi-int-capsula-3",
+   "name": "Cápsula 3 (25 €$/noche)",
+   "at": [
+    6,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.9,
+    "price": 25
+   }
+  },
+  {
+   "id": "koi-int-capsula-4",
+   "name": "Cápsula 4 (25 €$/noche)",
+   "at": [
+    8,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.9,
+    "price": 25
+   }
+  },
+  {
+   "id": "koi-int-capsula-5",
+   "name": "Cápsula 5 (25 €$/noche)",
+   "at": [
+    10,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.9,
+    "price": 25
+   }
+  },
+  {
+   "id": "koi-int-capsula-6",
+   "name": "Cápsula 6 (25 €$/noche)",
+   "at": [
+    12,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.9,
+    "price": 25
+   }
+  },
+  {
+   "id": "obj-wp-recepcion-koi",
+   "name": "Puesto: Recepción del Hotel Koi",
+   "at": [
+    13,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-recepcion-koi"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

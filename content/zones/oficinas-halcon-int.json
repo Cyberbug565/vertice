@@ -1,0 +1,133 @@
+{
+ "id": "oficinas-halcon-int",
+ "name": "Oficinas Halcón",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2c3444",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    3,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    3,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    7
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    4,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    8,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-oficinas-halcon-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     66,
+     28
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-halcon-oficina",
+   "name": "Puesto: Despachos de Halcón",
+   "at": [
+    11,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-halcon-oficina"
+  },
+  {
+   "id": "obj-wp-halcon-seguridad",
+   "name": "Puesto: Control de seguridad de Halcón",
+   "at": [
+    13,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-halcon-seguridad"
+  },
+  {
+   "id": "obj-wp-halcon-red",
+   "name": "Puesto: Sala de red de Halcón",
+   "at": [
+    2,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-halcon-red"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

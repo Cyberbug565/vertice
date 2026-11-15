@@ -17,7 +17,7 @@ function loadDotEnv() {
 export interface Config {
   port: number; host: string; databaseUrl?: string; pgliteDir: string; staticDir: string;
   ambientNpcs: number; crowdNpcs: number; crowdAt: [number, number]; adminToken: string; cityHourOffset: number;
-  lingerSeconds: number; viewRadius: number; seed: number; logLevel: 'info' | 'warn'; speedScale: number;
+  lingerSeconds: number; viewRadius: number; seed: number; logLevel: 'info' | 'warn'; speedScale: number; needsScale: number; downedSeconds?: number; jobTimeScale: number;
 }
 
 export function loadConfig(overrides: Partial<Config> = {}): Config {
@@ -40,6 +40,9 @@ export function loadConfig(overrides: Partial<Config> = {}): Config {
     seed: Number(e.WORLD_SEED ?? 1337),
     logLevel: (e.LOG_LEVEL as 'info' | 'warn') ?? 'info',
     speedScale: Number(e.SPEED_SCALE ?? 1), // solo para pruebas automatizadas
+    needsScale: Number(e.NEEDS_SCALE ?? 1), // acelera hambre, sed y sueño (pruebas)
+    downedSeconds: e.DOWNED_SECONDS ? Number(e.DOWNED_SECONDS) : undefined,
+    jobTimeScale: Number(e.JOB_TIME_SCALE ?? 1),
     ...overrides,
   };
 }

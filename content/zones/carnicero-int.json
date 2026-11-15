@@ -1,0 +1,59 @@
+{
+ "id": "carnicero-int",
+ "name": "El Carnicero",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#5a2a2a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#ff5a5a"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff5a5a"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-carnicero-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     95,
+     53
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

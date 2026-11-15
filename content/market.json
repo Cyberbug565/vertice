@@ -1,0 +1,14 @@
+{
+ "corps": [
+  { "id": "okami", "categories": ["comida", "medicina"], "markup": 1.0, "minMarkup": 0.8, "maxMarkup": 1.6, "volatility": 0.08, "motto": "Okami · Vive más" },
+  { "id": "aurora", "categories": ["bebida", "ropa", "equipo"], "markup": 1.0, "minMarkup": 0.8, "maxMarkup": 1.5, "volatility": 0.06, "motto": "Aurora · Todo llega" },
+  { "id": "halcon", "categories": ["arma", "herramienta"], "markup": 1.1, "minMarkup": 0.9, "maxMarkup": 1.8, "volatility": 0.1, "motto": "Halcón protege" },
+  { "id": "teselia", "categories": ["ciberware"], "markup": 1.0, "minMarkup": 0.85, "maxMarkup": 1.7, "volatility": 0.09, "motto": "Teselia · Piensa más rápido" }
+ ],
+ "elasticity": 0.6,
+ "minFactor": 0.6,
+ "maxFactor": 2.5,
+ "sellRatio": 0.5,
+ "restockPerGameHour": 0.12,
+ "policyEveryGameHours": 6
+}

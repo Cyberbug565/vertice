@@ -1,11 +1,74 @@
 [
-  { "id": "calle", "name": "Reputación callejera", "kind": "neighborhood", "desc": "Reconocimiento general en la calle" },
-  { "id": "red-bisagra", "name": "Red de Nadia «Bisagra»", "kind": "contact", "desc": "Contactos y encargos de la fixer de El Relé" },
-  { "id": "asociacion-lumen", "name": "Asociación del Mercado Lumen", "kind": "neighborhood", "desc": "Comerciantes y vecinos del mercado" },
-  { "id": "chatarreros", "name": "Los Chatarreros", "kind": "gang", "desc": "Banda de desguaces y piezas robadas del sur de Ferro" },
-  { "id": "hojas-rojas", "name": "Hojas Rojas", "kind": "gang", "desc": "Banda de Kanal que controla clubs y apuestas" },
-  { "id": "pcv", "name": "Policía de Ciudad Vértice", "kind": "authority", "desc": "Fuerza policial municipal" },
-  { "id": "ambar", "name": "Rescate Ámbar", "kind": "service", "desc": "Servicio privado de extracción médica" },
-  { "id": "halcon", "name": "Halcón Dynamics", "kind": "corp", "desc": "Corporación de seguridad y armamento" },
-  { "id": "okami", "name": "Grupo Okami", "kind": "corp", "desc": "Conglomerado de biotecnología e implantes" }
+ {
+  "id": "calle",
+  "name": "Reputación callejera",
+  "kind": "neighborhood",
+  "desc": "Reconocimiento general en la calle"
+ },
+ {
+  "id": "red-bisagra",
+  "name": "Red de Nadia «Bisagra»",
+  "kind": "contact",
+  "desc": "Contactos y encargos de la fixer de El Relé"
+ },
+ {
+  "id": "asociacion-lumen",
+  "name": "Asociación del Mercado Lumen",
+  "kind": "neighborhood",
+  "desc": "Comerciantes y vecinos del mercado"
+ },
+ {
+  "id": "chatarreros",
+  "name": "Los Chatarreros",
+  "kind": "gang",
+  "desc": "Banda de desguaces y piezas robadas del sur de Ferro"
+ },
+ {
+  "id": "hojas-rojas",
+  "name": "Hojas Rojas",
+  "kind": "gang",
+  "desc": "Banda de Kanal que controla clubs y apuestas"
+ },
+ {
+  "id": "pcv",
+  "name": "Policía de Ciudad Vértice",
+  "kind": "authority",
+  "desc": "Fuerza policial municipal"
+ },
+ {
+  "id": "ambar",
+  "name": "Rescate Ámbar",
+  "kind": "service",
+  "desc": "Servicio privado de extracción médica"
+ },
+ {
+  "id": "halcon",
+  "name": "Halcón Dynamics",
+  "kind": "corp",
+  "desc": "Seguridad, armas y ciberware militar"
+ },
+ {
+  "id": "okami",
+  "name": "Grupo Okami",
+  "kind": "corp",
+  "desc": "Alimentación sintética, medicina y biotecnología"
+ },
+ {
+  "id": "teselia",
+  "name": "Teselia Neural",
+  "kind": "corp",
+  "desc": "Ciberware civil, redes y licencias neurales"
+ },
+ {
+  "id": "aurora",
+  "name": "Aurora Logística",
+  "kind": "corp",
+  "desc": "Bebidas, consumo, reparto y logística"
+ },
+ {
+  "id": "independiente",
+  "name": "Comercio independiente",
+  "kind": "neighborhood",
+  "desc": "Locales sin corporación detrás"
+ }
 ]

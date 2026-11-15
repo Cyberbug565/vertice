@@ -11,6 +11,8 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
     manifest: get('manifest.json'), attributes: get('attributes.json'), skills: get('skills.json'), roles: get('roles.json'),
     origins: get('origins.json'), factions: get('factions.json'), items: get('items.json'), npcs: get('npcs.json'),
     zones, dialogs: get('dialogs.json'), tasks: get('tasks.json'), contracts: get('contracts.json'), locale: get('locale/es.json'),
+    needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: get('cyberware.json'), ripperdocs: get('ripperdocs.json'),
+    professions: get('professions.json'), workplaces: get('workplaces.json'), jobs: get('jobs.json'), fugitives: get('fugitives.json'),
   };
   const parsed = ContentSchema.safeParse(raw);
   if (!parsed.success) throw new Error('Contenido inválido:\n' + parsed.error.issues.slice(0, 20).map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n'));
@@ -50,7 +52,7 @@ export function validateContent(c: Content): string[] {
       if (!back) errs.push(`${z.id}/${d.id}: la zona ${d.to.zone} no tiene puerta de regreso`);
     }
     for (const o of z.objects) {
-      if (!(o.dialog in c.dialogs)) errs.push(`${z.id}/${o.id}: diálogo ${o.dialog} desconocido`);
+      if (o.dialog && !(o.dialog in c.dialogs)) errs.push(`${z.id}/${o.id}: diálogo ${o.dialog} desconocido`);
       const adj = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => isWalkable(g, o.at[0] + dx + 0.5, o.at[1] + dy + 0.5));
       if (!adj) errs.push(`${z.id}/${o.id}: sin acceso transitable`);
     }
@@ -108,6 +110,50 @@ export function validateContent(c: Content): string[] {
     loc(t.label, `tarea ${t.id}`);
   }
   for (const k of c.contracts) { loc(k.title, k.id); loc(k.summary, k.id); k.objectives.forEach((o) => loc(o.text, `${k.id}/${o.id}`)); }
+
+  // ---- Sistemas de la v0.2: mercado, tiendas, ciberware, matasanos, oficios, empleos y fugitivos.
+  const shopIds = new Set(c.shops.map((x) => x.id));
+  const cyberIds = new Set(c.cyberware.map((x) => x.id));
+  const profIds = new Set(c.professions.map((x) => x.id));
+  const wpIds = new Set(c.workplaces.map((x) => x.id));
+  const npcIds = new Set(c.npcs.map((x) => x.id));
+  const docIds = new Set(c.ripperdocs.map((x) => x.id));
+  for (const corp of c.market.corps) if (!factionIds.has(corp.id)) errs.push(`mercado: corporación ${corp.id} no es una facción`);
+  for (const sh of c.shops) {
+    if (sh.zone !== '*' && !zoneIds.has(sh.zone)) errs.push(`tienda ${sh.id}: zona ${sh.zone}`);
+    if (!factionIds.has(sh.owner)) errs.push(`tienda ${sh.id}: dueño ${sh.owner}`);
+    for (const it of Object.keys(sh.stock)) { const d = c.items.find((i) => i.id === it); if (!d) errs.push(`tienda ${sh.id}: objeto ${it}`); else if (!d.price) errs.push(`tienda ${sh.id}: ${it} sin precio base`); }
+  }
+  for (const z of c.zones) for (const o of z.objects) {
+    if ((o.kind === 'shop' || o.kind === 'vending') && (!o.shop || !shopIds.has(o.shop))) errs.push(`${z.id}/${o.id}: tienda ${o.shop}`);
+    if (o.kind === 'workplace' && (!o.workplace || !wpIds.has(o.workplace))) errs.push(`${z.id}/${o.id}: puesto ${o.workplace}`);
+    if (o.kind === 'bed' && !o.sleep) errs.push(`${z.id}/${o.id}: cama sin calidad de sueño`);
+    if (['generator', 'terminal', 'crates', 'board'].includes(o.kind) && !o.dialog) errs.push(`${z.id}/${o.id}: necesita diálogo`);
+  }
+  for (const w of c.workplaces) walk(w.zone, w.at, `puesto ${w.id}`);
+  for (const cw of c.cyberware) if (!factionIds.has(cw.maker)) errs.push(`ciberware ${cw.id}: fabricante ${cw.maker}`);
+  for (const d of c.ripperdocs) {
+    if (!npcIds.has(d.npc)) errs.push(`matasanos ${d.id}: PNJ ${d.npc}`);
+    if (!zoneIds.has(d.zone)) errs.push(`matasanos ${d.id}: zona ${d.zone}`);
+    for (const x of [...d.stock, ...d.stolenStock]) if (!cyberIds.has(x)) errs.push(`matasanos ${d.id}: ciberware ${x}`);
+  }
+  for (const [id, dg] of Object.entries(c.dialogs)) for (const n of Object.values(dg.nodes)) for (const o of n.options) for (const e of [...o.effects, ...o.fail]) {
+    if ('open' in e && e.open === 'shop' && (!e.id || !shopIds.has(e.id))) errs.push(`diálogo ${id}: tienda ${e.id}`);
+    if ('open' in e && e.open === 'clinic' && (!e.id || !docIds.has(e.id))) errs.push(`diálogo ${id}: matasanos ${e.id}`);
+    if ('contribute' in e && !objectiveIds.has(e.contribute)) errs.push(`diálogo ${id}: objetivo ${e.contribute}`);
+  }
+  for (const j of c.jobs) {
+    if (!profIds.has(j.profession)) errs.push(`empleo ${j.id}: oficio ${j.profession}`);
+    if (!wpIds.has(j.workplace)) errs.push(`empleo ${j.id}: puesto ${j.workplace}`);
+    if (!factionIds.has(j.employer)) errs.push(`empleo ${j.id}: empleador ${j.employer}`);
+  }
+  if (c.jobs.length < 100) errs.push(`Se esperan al menos 100 empleos, hay ${c.jobs.length}`);
+  for (const p of c.professions) if (!skillIds.has(p.skill)) errs.push(`oficio ${p.id}: habilidad ${p.skill}`);
+  for (const f of c.fugitives) {
+    if (!zoneIds.has(f.zone)) errs.push(`fugitivo ${f.id}: zona ${f.zone}`);
+    else walk(f.zone, [f.area[0], f.area[1]], `fugitivo ${f.id}`);
+    if (!factionIds.has(f.poster)) errs.push(`fugitivo ${f.id}: anunciante ${f.poster}`);
+  }
   return errs;
 }
 

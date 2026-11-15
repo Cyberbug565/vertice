@@ -1,0 +1,77 @@
+{
+ "id": "iruka-int",
+ "name": "Clínica de Mama Iruka",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2f5d62",
+ "blocks": [],
+ "props": [
+  {
+   "type": "plant",
+   "at": [
+    10,
+    7
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#5affc8"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#5affc8"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-iruka-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     80,
+     44
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-iruka",
+   "name": "Puesto: Consulta de Mama Iruka",
+   "at": [
+    7,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-iruka"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

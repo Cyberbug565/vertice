@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import { maxHp, maxStamina, t, RULES, type Content, type Effect } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
-import { recomputeLevel, type PlayerState } from './player.js';
+import { effective, recomputeLevel, type PlayerState } from './player.js';
 import type { FactService, InstanceService } from './services.js';
 
 export class GameError extends Error {}
@@ -11,6 +11,8 @@ export interface EffectOutcome {
   lines: string[]; notices: string[]; startTasks: string[]; factsChanged: boolean; journalChanged: boolean;
   completed?: { contract: string; title: string; outcome: string }; levelUp?: number;
   objectiveDone: { instanceId: string; objective: string; shared: boolean }[];
+  open?: { kind: 'shop' | 'clinic' | 'jobs' | 'bounties' | 'market'; id?: string };
+  wanted?: number;
 }
 
 export interface OpContext { opId: string; kind: string; dialogId?: string; nodeId?: string; optionId?: string; extra?: Record<string, unknown> }
@@ -47,7 +49,7 @@ export class EffectEngine {
             const contributed = ins && Object.values(ins.contributors).some((arr) => arr.includes(p.charId));
             if (!contributed) { delta = Math.floor(delta / 2); out.lines.push('Pago reducido al 50 %: no consta tu contribución directa'); }
           }
-          if (money + delta < 0) throw new GameError('No tienes suficientes eurocréditos');
+          if (money + delta < 0) throw new GameError('No tienes suficientes eurodólares');
           money += delta;
           await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${ctx.opId}:m${i}`, p.charId, delta, money, e.reason]);
           out.lines.push(`${delta >= 0 ? '+' : ''}${delta} €$ · ${e.reason}`);
@@ -142,17 +144,30 @@ export class EffectEngine {
         } else if ('task' in e) {
           out.startTasks.push(e.task);
         } else if ('restore' in e) {
-          if (e.restore === 'hp' || e.restore === 'all') hp = maxHp(p.attributes);
+          if (e.restore === 'hp' || e.restore === 'all') hp = effective(this.c, p).hpMax;
           if (e.restore === 'stamina' || e.restore === 'all') stamina = maxStamina(p.attributes);
           if (e.restore === 'all') luck = p.attributes.LUCK;
         } else if ('heal' in e) {
-          if (e.heal === 'hp') hp = Math.min(maxHp(p.attributes), hp + e.amount); else stamina = Math.min(maxStamina(p.attributes), stamina + e.amount);
+          if (e.heal === 'hp') hp = Math.min(effective(this.c, p).hpMax, hp + e.amount); else stamina = Math.min(maxStamina(p.attributes), stamina + e.amount);
           out.lines.push(`+${e.amount} ${e.heal === 'hp' ? 'salud' : 'aguante'}`);
         } else if ('notice' in e) {
           out.notices.push(t(this.c, e.notice));
+        } else if ('contribute' in e) {
+          // Contribución verificable sin completar el objetivo (p. ej. el Netrunner que consigue la prueba).
+          const cp = [...contracts.values()].find((x) => x.state === 'active');
+          if (cp) {
+            await q.query(`UPDATE contract_instances SET contributors = jsonb_set(contributors, $2, COALESCE(contributors->$3, '[]'::jsonb) || $4::jsonb) WHERE id = $1`,
+              [cp.instanceId, `{${e.contribute}}`, e.contribute, JSON.stringify([p.charId])]);
+            mem.push(() => { const m = this.inst.byId.get(cp.instanceId); if (m) (m.contributors[e.contribute] ??= []).push(p.charId); });
+            out.lines.push('Tu aportación cuenta para el reparto del equipo');
+          }
+        } else if ('open' in e) {
+          out.open = { kind: e.open, id: e.id };
+        } else if ('wanted' in e) {
+          out.wanted = (out.wanted ?? 0) + e.wanted;
         }
       }
-      await q.query('UPDATE characters SET money=$2, xp=$3, hp=$4, stamina=$5, luck=$6 WHERE id=$1', [p.charId, money, xp, hp, stamina, luck]);
+      await q.query('UPDATE characters SET money=$2, xp=$3, hp=$4, stamina=$5, luck=$6 WHERE id=$1', [p.charId, money, xp, Math.round(hp), Math.round(stamina), luck]);
       if (ctx.dialogId && effects.length) {
         await q.query(`INSERT INTO decisions (op_id, character_id, dialog_id, node_id, option_id, contract_id, contract_version, instance_id, result, rules_version)
                        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,

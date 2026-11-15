@@ -1,0 +1,119 @@
+{
+ "id": "logistica-int",
+ "name": "Centro Logístico Aurora",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#3a4038",
+ "blocks": [],
+ "props": [
+  {
+   "type": "crate",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    3,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    4,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    2,
+    7
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    3,
+    7
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    9,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    10,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    9,
+    7
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-logistica-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     61,
+     63
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-logistica-muelle",
+   "name": "Puesto: Muelle de carga Aurora",
+   "at": [
+    6,
+    9
+   ],
+   "kind": "workplace",
+   "workplace": "wp-logistica-muelle"
+  },
+  {
+   "id": "obj-wp-logistica-reparto",
+   "name": "Puesto: Mostrador de reparto Aurora",
+   "at": [
+    12,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-logistica-reparto"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

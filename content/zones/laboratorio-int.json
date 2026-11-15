@@ -1,0 +1,110 @@
+{
+ "id": "laboratorio-int",
+ "name": "Laboratorios Okami",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2e3a46",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    3,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    4
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    3,
+    8
+   ],
+   "color": "#5affc8"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#5affc8"
+  },
+  {
+   "type": "screen",
+   "at": [
+    9,
+    1
+   ],
+   "blocking": false,
+   "color": "#5affc8"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-laboratorio-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     11,
+     63
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "obj-wp-lab-okami",
+   "name": "Puesto: Bancada de Laboratorios Okami",
+   "at": [
+    12,
+    2
+   ],
+   "kind": "workplace",
+   "workplace": "wp-lab-okami"
+  },
+  {
+   "id": "obj-wp-lab-ensayos",
+   "name": "Puesto: Sala de ensayos clínicos",
+   "at": [
+    12,
+    8
+   ],
+   "kind": "workplace",
+   "workplace": "wp-lab-ensayos"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

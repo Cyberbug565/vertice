@@ -1,0 +1,98 @@
+{
+ "id": "armeria-int",
+ "name": "Armería Halcón",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#2e3a44",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    5,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-armeria-int",
+   "name": "Salida a la calle (Cénit)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "cenit",
+    "at": [
+     56,
+     28
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-armeria",
+   "name": "Mostrador de la Armería Halcón",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "armeria-halcon"
+  },
+  {
+   "id": "obj-wp-armeria",
+   "name": "Puesto: Almacén de la Armería",
+   "at": [
+    8,
+    1
+   ],
+   "kind": "workplace",
+   "workplace": "wp-armeria"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}
