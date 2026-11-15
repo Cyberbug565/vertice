@@ -35,7 +35,7 @@ Para desarrollo con recarga en caliente, ejecuta `npm run dev` y abre http://loc
 | Acción | Ratón | Teclado / alternativa accesible |
 | --- | --- | --- |
 | Moverse | Clic izquierdo en el suelo | — |
-| Hablar, entrar o examinar | Clic en la persona, puerta u objeto. El personaje se acerca solo | Opciones de diálogo con 1–9 |
+| Hablar, entrar o examinar | Clic en la persona, puerta u objeto. El personaje se acerca solo | `Tab` / `Mayús+Tab` selecciona lo cercano y `E` o `Espacio` interactúa. Opciones de diálogo con 1–9 |
 | Cancelar la orden | Clic derecho | `S` o el botón **Cancelar** |
 | Retirada al refugio protegido más cercano | — | `R` o el botón **Retirada** |
 | Diario, ficha, inventario, mapa | — | `J`, `C`, `I`, `M` |

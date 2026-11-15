@@ -81,3 +81,16 @@ El motor no contiene ningún dato de mundo en el código. Si en el futuro se con
 2. Decidir si las pruebas o el apoyo (como el hackeo del Netrunner) deben contar como contribución al reparto de un encargo de grupo.
 3. Fijar la duración del día de juego: ahora 24 minutos reales, y una sesión de 10–20 minutos recorre casi un día entero.
 4. Decidir cómo se repiten los encargos de distrito: ahora una vez por personaje.
+
+## Pendiente que afecta al hito 1
+
+- **Medir en el entorno de referencia**: servidor de 4 vCPU y 8 GiB con el generador en otra máquina, y cliente con GPU integrada a 1280 × 720. Las mediciones actuales son de un contenedor sin GPU y con el generador en la misma máquina (ver `docs/PRUEBAS.md`).
+- **Cobertura de PNJ en la prueba de navegador**: la e2e no recorre todavía el encargo completo (lo cubre la integración por protocolo). Falta comprobar en navegador la canalización del Netrunner y la recompensa.
+- **Reloj de la ciudad**: Lin solo está en el mercado de 7 a 19 h de juego (12 minutos reales de cada 24). Si alguien llega de noche, el diálogo con ella queda en el Bloque 9.
+
+## Siguiente hito (2 · sistemas de supervivencia), en orden propuesto
+
+1. Ficha completa y ciberware: catálogo de grados I–V, instancias equipadas con historial, cirugía transaccional en la Clínica Sato, carga de Humanidad e inestabilidad.
+2. Combate automático en el servidor con posturas, cobertura y retirada. Derribo con ventana de rescate de 30 s, Medtech estabilizando y muerte definitiva idempotente. Pruebas de daño duplicado, muerte al cruzar un sector, curación y golpe fatal en el mismo tick, y botín disputado.
+3. Acelerador neural (equivalente original del Sandevistan), cyberdeck con RAM y cola, quickhacks sobre una red de 3–5 nodos y protección neural.
+4. Zonas disputadas con confirmación individual y rutas por defecto que las evitan.

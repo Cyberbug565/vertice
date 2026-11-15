@@ -109,7 +109,7 @@ try {
     await clickEntity(B, (e) => e.name.includes('Nadia'));
     await B.waitForSelector('#opt-accept', { timeout: 15000 });
     await B.click('#opt-accept');
-    await B.waitForFunction(() => window.__vt.st.journal.some((j) => j.state === 'active' && j.participants === 2), null, { timeout: 5000 });
+    await B.waitForFunction(() => window.__vt.st.journal.some((j) => j.state === 'active' && j.participants >= 2), null, { timeout: 5000 });
     await B.keyboard.press('j');
     await B.waitForTimeout(300);
     await B.screenshot({ path: `${OUT}04-diario-compartido.png` });

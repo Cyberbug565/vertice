@@ -223,6 +223,8 @@ export async function startGame(token: string, onExit: (reason?: string) => void
   };
   view.onContextLost = (lost) => { ctxOverlay.style.display = lost ? 'flex' : 'none'; };
 
+  // Tab y Espacio solo actúan sobre el mundo si el foco no está en un control del HUD (para no romper la navegación por teclado).
+  const onWorld = () => { const a = document.activeElement; return !a || a === document.body || a.tagName === 'CANVAS'; };
   const keys = (e: KeyboardEvent) => {
     if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
     const k = e.key.toLowerCase();
@@ -234,6 +236,19 @@ export async function startGame(token: string, onExit: (reason?: string) => void
     else if (k === 'i') inventoryPanel();
     else if (k === 'm') bigMap();
     else if (k === 'enter') { e.preventDefault(); chatIn.focus(); }
+    else if (k === 'tab' && onWorld()) {
+      // Selección accesible: recorre las entidades interactivas cercanas por distancia.
+      e.preventDefault();
+      const near = [...view.ents.values()].filter((x) => x.s.interactive && x.s.id !== view.meId && Math.hypot(x.x - view.me.x, x.y - view.me.y) < 14)
+        .sort((a, b) => Math.hypot(a.x - view.me.x, a.y - view.me.y) - Math.hypot(b.x - view.me.x, b.y - view.me.y));
+      if (!near.length) { toast('No hay nada cerca con lo que interactuar.'); return; }
+      const idx = near.indexOf(view.hovered as CEnt);
+      const next = near[(idx + (e.shiftKey ? near.length - 1 : 1)) % near.length];
+      view.hovered = next;
+      const sp = view.world.toGlobal(worldToScreen(next.x, next.y));
+      view.onHover(next, sp.x, sp.y);
+    }
+    else if ((k === 'e' || k === ' ') && onWorld() && view.hovered && !st.dialog) { e.preventDefault(); view.onEntityClick(view.hovered); }
     else if (k === '+' || k === '=') view.setZoom(view.zoom * 1.1);
     else if (k === '-') view.setZoom(view.zoom / 1.1);
     else if (st.dialog && /^[1-9]$/.test(k)) document.getElementById(`opt-${st.dialog.options[Number(k) - 1]?.id}`)?.click();

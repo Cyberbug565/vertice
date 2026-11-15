@@ -1,0 +1,827 @@
+{
+  "scenario": "crowd",
+  "bots": 40,
+  "durationS": 1200,
+  "warmupS": 30,
+  "base": "http://localhost:8080",
+  "run": "hc2r",
+  "at": "2026-11-15T20:51:15.985Z",
+  "note": "Generador y servidor en la misma máquina salvo que se indique lo contrario. Población: bots = clientes sintéticos; PNJ según /api/metrics.",
+  "server": {
+    "tickMs": {
+      "n": 12000,
+      "avg": 1.6183681865833253,
+      "p50": 1.5353119999635965,
+      "p95": 2.2310770000331104,
+      "p99": 2.9425840000621974,
+      "max": 23.643472999916412
+    },
+    "dbWriteMs": {
+      "n": 3210,
+      "avg": 0.9263681725861191,
+      "p50": 0.6068110000342131,
+      "p95": 2.0003150000120513,
+      "p99": 9.347612000070512,
+      "max": 17.52644600000349
+    },
+    "world": {
+      "tick": 24719,
+      "cityHour": 3.27,
+      "connections": 40,
+      "lingering": 0,
+      "zones": {
+        "bar-rele": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "bloque9": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 2
+        },
+        "clinica-sato": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "ferro": {
+          "entities": 132,
+          "players": 40,
+          "npcs": 85
+        }
+      }
+    },
+    "counters": {
+      "msgsIn": 12782,
+      "msgsRejected": 0,
+      "bytesOut": 352357101,
+      "bytesOutPositions": 326792757,
+      "bytesOutJson": 25564344,
+      "snapshotsSkipped": 0,
+      "sectorCrossings": 4961,
+      "zoneTransfers": 2,
+      "npcTransfers": 3,
+      "pathRequests": 24424,
+      "pathFailures": 0,
+      "pathExpanded": 583253,
+      "pathCacheHits": 125,
+      "kicks": 0,
+      "slowClientDrops": 0,
+      "reconnects": 0,
+      "lateTicks": 0
+    },
+    "memoryMiB": {
+      "rss": 216,
+      "heapUsed": 34
+    },
+    "db": "postgres"
+  },
+  "client": {
+    "recvKiBps": {
+      "avg": 7.14,
+      "p50": 7.15,
+      "p95": 7.94,
+      "p99": 8.31,
+      "max": 9.49
+    },
+    "moveAckMs": {
+      "p50": 0.6,
+      "p95": 1,
+      "p99": 2.1,
+      "n": 10313
+    },
+    "initialLoadKiB": 255.4
+  },
+  "activity": {
+    "moves": 10546,
+    "doorCrossings": 0,
+    "dialogs": 1059,
+    "purchases": 0,
+    "reconnects": 0,
+    "errors": 0,
+    "sampleErrors": []
+  },
+  "timeline": [
+    {
+      "t": 42,
+      "tickP95": 2.18,
+      "conns": 40,
+      "rss": 187
+    },
+    {
+      "t": 52,
+      "tickP95": 2.15,
+      "conns": 40,
+      "rss": 187
+    },
+    {
+      "t": 62,
+      "tickP95": 2.08,
+      "conns": 40,
+      "rss": 188
+    },
+    {
+      "t": 72,
+      "tickP95": 1.96,
+      "conns": 40,
+      "rss": 188
+    },
+    {
+      "t": 82,
+      "tickP95": 1.96,
+      "conns": 40,
+      "rss": 188
+    },
+    {
+      "t": 92,
+      "tickP95": 1.95,
+      "conns": 40,
+      "rss": 188
+    },
+    {
+      "t": 102,
+      "tickP95": 1.96,
+      "conns": 40,
+      "rss": 189
+    },
+    {
+      "t": 112,
+      "tickP95": 2.15,
+      "conns": 41,
+      "rss": 165
+    },
+    {
+      "t": 122,
+      "tickP95": 2.25,
+      "conns": 41,
+      "rss": 165
+    },
+    {
+      "t": 132,
+      "tickP95": 2.53,
+      "conns": 41,
+      "rss": 165
+    },
+    {
+      "t": 142,
+      "tickP95": 2.57,
+      "conns": 41,
+      "rss": 165
+    },
+    {
+      "t": 152,
+      "tickP95": 2.58,
+      "conns": 41,
+      "rss": 169
+    },
+    {
+      "t": 162,
+      "tickP95": 2.59,
+      "conns": 40,
+      "rss": 169
+    },
+    {
+      "t": 172,
+      "tickP95": 2.57,
+      "conns": 40,
+      "rss": 169
+    },
+    {
+      "t": 182,
+      "tickP95": 2.55,
+      "conns": 40,
+      "rss": 169
+    },
+    {
+      "t": 192,
+      "tickP95": 2.5,
+      "conns": 40,
+      "rss": 169
+    },
+    {
+      "t": 202,
+      "tickP95": 2.56,
+      "conns": 41,
+      "rss": 185
+    },
+    {
+      "t": 212,
+      "tickP95": 2.65,
+      "conns": 41,
+      "rss": 181
+    },
+    {
+      "t": 222,
+      "tickP95": 2.67,
+      "conns": 41,
+      "rss": 181
+    },
+    {
+      "t": 232,
+      "tickP95": 2.69,
+      "conns": 41,
+      "rss": 181
+    },
+    {
+      "t": 242,
+      "tickP95": 2.81,
+      "conns": 41,
+      "rss": 181
+    },
+    {
+      "t": 252,
+      "tickP95": 2.8,
+      "conns": 40,
+      "rss": 185
+    },
+    {
+      "t": 262,
+      "tickP95": 2.74,
+      "conns": 40,
+      "rss": 185
+    },
+    {
+      "t": 272,
+      "tickP95": 2.68,
+      "conns": 40,
+      "rss": 185
+    },
+    {
+      "t": 282,
+      "tickP95": 2.66,
+      "conns": 40,
+      "rss": 185
+    },
+    {
+      "t": 292,
+      "tickP95": 2.63,
+      "conns": 40,
+      "rss": 186
+    },
+    {
+      "t": 302,
+      "tickP95": 2.62,
+      "conns": 40,
+      "rss": 186
+    },
+    {
+      "t": 312,
+      "tickP95": 2.6,
+      "conns": 40,
+      "rss": 186
+    },
+    {
+      "t": 322,
+      "tickP95": 2.58,
+      "conns": 40,
+      "rss": 186
+    },
+    {
+      "t": 332,
+      "tickP95": 2.54,
+      "conns": 40,
+      "rss": 187
+    },
+    {
+      "t": 342,
+      "tickP95": 2.5,
+      "conns": 40,
+      "rss": 190
+    },
+    {
+      "t": 352,
+      "tickP95": 2.47,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 362,
+      "tickP95": 2.45,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 372,
+      "tickP95": 2.42,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 382,
+      "tickP95": 2.41,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 392,
+      "tickP95": 2.39,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 402,
+      "tickP95": 2.37,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 412,
+      "tickP95": 2.35,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 422,
+      "tickP95": 2.34,
+      "conns": 40,
+      "rss": 193
+    },
+    {
+      "t": 432,
+      "tickP95": 2.33,
+      "conns": 40,
+      "rss": 194
+    },
+    {
+      "t": 442,
+      "tickP95": 2.31,
+      "conns": 40,
+      "rss": 194
+    },
+    {
+      "t": 452,
+      "tickP95": 2.3,
+      "conns": 40,
+      "rss": 194
+    },
+    {
+      "t": 462,
+      "tickP95": 2.29,
+      "conns": 40,
+      "rss": 195
+    },
+    {
+      "t": 472,
+      "tickP95": 2.27,
+      "conns": 40,
+      "rss": 195
+    },
+    {
+      "t": 482,
+      "tickP95": 2.26,
+      "conns": 40,
+      "rss": 195
+    },
+    {
+      "t": 492,
+      "tickP95": 2.26,
+      "conns": 40,
+      "rss": 195
+    },
+    {
+      "t": 502,
+      "tickP95": 2.26,
+      "conns": 40,
+      "rss": 195
+    },
+    {
+      "t": 512,
+      "tickP95": 2.25,
+      "conns": 40,
+      "rss": 196
+    },
+    {
+      "t": 522,
+      "tickP95": 2.25,
+      "conns": 40,
+      "rss": 196
+    },
+    {
+      "t": 532,
+      "tickP95": 2.25,
+      "conns": 40,
+      "rss": 196
+    },
+    {
+      "t": 542,
+      "tickP95": 2.24,
+      "conns": 40,
+      "rss": 196
+    },
+    {
+      "t": 552,
+      "tickP95": 2.24,
+      "conns": 40,
+      "rss": 196
+    },
+    {
+      "t": 562,
+      "tickP95": 2.24,
+      "conns": 40,
+      "rss": 207
+    },
+    {
+      "t": 572,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 582,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 592,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 602,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 612,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 622,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 632,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 642,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 652,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 662,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 210
+    },
+    {
+      "t": 672,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 682,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 692,
+      "tickP95": 2.25,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 702,
+      "tickP95": 2.25,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 712,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 722,
+      "tickP95": 2.2,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 732,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 742,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 752,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 762,
+      "tickP95": 2.16,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 772,
+      "tickP95": 2.16,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 782,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 792,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 802,
+      "tickP95": 2.16,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 812,
+      "tickP95": 2.14,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 822,
+      "tickP95": 2.13,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 832,
+      "tickP95": 2.13,
+      "conns": 40,
+      "rss": 211
+    },
+    {
+      "t": 842,
+      "tickP95": 2.11,
+      "conns": 40,
+      "rss": 212
+    },
+    {
+      "t": 852,
+      "tickP95": 2.11,
+      "conns": 40,
+      "rss": 213
+    },
+    {
+      "t": 862,
+      "tickP95": 2.12,
+      "conns": 40,
+      "rss": 214
+    },
+    {
+      "t": 872,
+      "tickP95": 2.13,
+      "conns": 40,
+      "rss": 214
+    },
+    {
+      "t": 882,
+      "tickP95": 2.13,
+      "conns": 40,
+      "rss": 214
+    },
+    {
+      "t": 892,
+      "tickP95": 2.13,
+      "conns": 40,
+      "rss": 215
+    },
+    {
+      "t": 902,
+      "tickP95": 2.13,
+      "conns": 40,
+      "rss": 215
+    },
+    {
+      "t": 912,
+      "tickP95": 2.14,
+      "conns": 40,
+      "rss": 215
+    },
+    {
+      "t": 922,
+      "tickP95": 2.15,
+      "conns": 40,
+      "rss": 215
+    },
+    {
+      "t": 932,
+      "tickP95": 2.15,
+      "conns": 40,
+      "rss": 215
+    },
+    {
+      "t": 942,
+      "tickP95": 2.16,
+      "conns": 40,
+      "rss": 215
+    },
+    {
+      "t": 952,
+      "tickP95": 2.16,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 962,
+      "tickP95": 2.16,
+      "conns": 40,
+      "rss": 215
+    },
+    {
+      "t": 972,
+      "tickP95": 2.16,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 982,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 992,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1002,
+      "tickP95": 2.18,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1012,
+      "tickP95": 2.18,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1022,
+      "tickP95": 2.2,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1032,
+      "tickP95": 2.2,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1042,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1052,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1062,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1072,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1082,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1092,
+      "tickP95": 2.21,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1102,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1112,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1122,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1132,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1142,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1152,
+      "tickP95": 2.22,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1162,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1172,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1182,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1192,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1202,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1212,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1222,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    },
+    {
+      "t": 1232,
+      "tickP95": 2.23,
+      "conns": 40,
+      "rss": 216
+    }
+  ]
+}

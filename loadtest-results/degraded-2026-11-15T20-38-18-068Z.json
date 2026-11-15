@@ -1,0 +1,48 @@
+{
+  "target": 8081,
+  "at": "2026-11-15T20:38:18.068Z",
+  "results": [
+    {
+      "rttMs": 50,
+      "bandwidthKiBps": 64,
+      "moveAckMsMedian": 53,
+      "zoneAfterCut": "clinica-sato",
+      "retries": [
+        "temprano: aplicada en el reintento",
+        "tardío: Operación ya aplicada"
+      ],
+      "moneyDelta": -80,
+      "stimsCharged": 2,
+      "ok": true,
+      "positionDriftAfterReconnect": 0
+    },
+    {
+      "rttMs": 150,
+      "bandwidthKiBps": 64,
+      "moveAckMsMedian": 152,
+      "zoneAfterCut": "clinica-sato",
+      "retries": [
+        "temprano: aplicada en el reintento",
+        "tardío: Operación ya aplicada"
+      ],
+      "moneyDelta": -80,
+      "stimsCharged": 2,
+      "ok": true,
+      "positionDriftAfterReconnect": 0
+    },
+    {
+      "rttMs": 250,
+      "bandwidthKiBps": 64,
+      "moveAckMsMedian": 252,
+      "zoneAfterCut": "clinica-sato",
+      "retries": [
+        "temprano: aplicada en el reintento",
+        "tardío: Operación ya aplicada"
+      ],
+      "moneyDelta": -80,
+      "stimsCharged": 2,
+      "ok": true,
+      "positionDriftAfterReconnect": 0
+    }
+  ]
+}
