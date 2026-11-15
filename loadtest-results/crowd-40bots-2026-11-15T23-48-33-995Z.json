@@ -1,0 +1,279 @@
+{
+  "scenario": "crowd",
+  "bots": 40,
+  "durationS": 120,
+  "warmupS": 15,
+  "base": "http://localhost:8080",
+  "run": "gt67",
+  "at": "2026-11-15T23:48:33.987Z",
+  "note": "Generador y servidor en la misma máquina salvo que se indique lo contrario. Población: bots = clientes sintéticos; PNJ según /api/metrics.",
+  "server": {
+    "tickMs": {
+      "n": 2454,
+      "avg": 1.6087079164628988,
+      "p50": 1.49948700000823,
+      "p95": 2.3811960000020918,
+      "p99": 3.4010200000047917,
+      "max": 7.042291000019759
+    },
+    "dbWriteMs": {
+      "n": 320,
+      "avg": 1.0054737374999605,
+      "p50": 0.7629610000003595,
+      "p95": 1.565930999997363,
+      "p99": 9.312142000002495,
+      "max": 14.45183000000543
+    },
+    "world": {
+      "tick": 2921,
+      "cityHour": 12.57,
+      "connections": 40,
+      "lingering": 0,
+      "zones": {
+        "almacen-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "armeria-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "bar-rele": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "bloque9": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "carnicero-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "cenit": {
+          "entities": 37,
+          "players": 0,
+          "npcs": 19
+        },
+        "clinica-okami-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "clinica-sato": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "comisaria-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "ferro": {
+          "entities": 158,
+          "players": 40,
+          "npcs": 89
+        },
+        "iruka-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "koi-int": {
+          "entities": 8,
+          "players": 0,
+          "npcs": 0
+        },
+        "laboratorio-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "logistica-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "nido-int": {
+          "entities": 10,
+          "players": 0,
+          "npcs": 0
+        },
+        "oficinas-halcon-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "okami-super-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "pachinko-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "ramen-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "ruiz-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "teselia-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "tienda-24h-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "vex-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "voltio-int": {
+          "entities": 5,
+          "players": 0,
+          "npcs": 0
+        }
+      }
+    },
+    "counters": {
+      "msgsIn": 1279,
+      "msgsRejected": 0,
+      "bytesOut": 38701787,
+      "bytesOutPositions": 33067983,
+      "bytesOutJson": 5633804,
+      "snapshotsSkipped": 0,
+      "sectorCrossings": 517,
+      "zoneTransfers": 0,
+      "npcTransfers": 0,
+      "pathRequests": 2685,
+      "pathFailures": 0,
+      "pathExpanded": 82897,
+      "pathCacheHits": 7,
+      "kicks": 0,
+      "slowClientDrops": 0,
+      "reconnects": 0,
+      "lateTicks": 0
+    },
+    "memoryMiB": {
+      "rss": 183,
+      "heapUsed": 23
+    },
+    "db": "postgres"
+  },
+  "client": {
+    "recvKiBps": {
+      "avg": 7.71,
+      "p50": 7.57,
+      "p95": 9.3,
+      "p99": 9.77,
+      "max": 10.5
+    },
+    "moveAckMs": {
+      "p50": 0.7,
+      "p95": 1.1,
+      "p99": 2.1,
+      "n": 1039
+    },
+    "initialLoadKiB": 152.4
+  },
+  "activity": {
+    "moves": 1141,
+    "doorCrossings": 0,
+    "dialogs": 110,
+    "purchases": 0,
+    "reconnects": 0,
+    "errors": 0,
+    "sampleErrors": []
+  },
+  "timeline": [
+    {
+      "t": 27,
+      "tickP95": 2.25,
+      "conns": 40,
+      "rss": 206
+    },
+    {
+      "t": 37,
+      "tickP95": 2.37,
+      "conns": 40,
+      "rss": 206
+    },
+    {
+      "t": 47,
+      "tickP95": 2.27,
+      "conns": 40,
+      "rss": 206
+    },
+    {
+      "t": 57,
+      "tickP95": 2.2,
+      "conns": 40,
+      "rss": 207
+    },
+    {
+      "t": 67,
+      "tickP95": 2.17,
+      "conns": 40,
+      "rss": 207
+    },
+    {
+      "t": 77,
+      "tickP95": 2.14,
+      "conns": 40,
+      "rss": 207
+    },
+    {
+      "t": 87,
+      "tickP95": 2.13,
+      "conns": 40,
+      "rss": 207
+    },
+    {
+      "t": 97,
+      "tickP95": 2.1,
+      "conns": 40,
+      "rss": 208
+    },
+    {
+      "t": 107,
+      "tickP95": 2.15,
+      "conns": 40,
+      "rss": 183
+    },
+    {
+      "t": 117,
+      "tickP95": 2.2,
+      "conns": 40,
+      "rss": 183
+    },
+    {
+      "t": 127,
+      "tickP95": 2.36,
+      "conns": 40,
+      "rss": 183
+    },
+    {
+      "t": 137,
+      "tickP95": 2.38,
+      "conns": 40,
+      "rss": 183
+    }
+  ]
+}

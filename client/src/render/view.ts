@@ -7,12 +7,13 @@ import {
 } from '@vertice/shared';
 import { content } from '../content';
 import { settings } from '../settings';
-import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, glowTexture, makeCharacter, makeSign, shade, type Occl } from './art';
+import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSign, shade, type Occl } from './art';
 
 interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; ent?: CEnt; depth: number; mark: number }
 export interface CEnt {
   s: EntitySpawn; x: number; y: number; samples: { t: number; x: number; y: number }[]; flags: number; moving: boolean;
   view: Container; legs?: Graphics; body?: Container; visor?: Graphics; label?: Text; obj: SortObj; phase: number;
+  charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
 }
 
 const INTERP_DELAY = 110;
@@ -29,6 +30,11 @@ export class GameView {
   lightsLayer = new Container();
   labels = new Container();
   rain = new Graphics();
+  sky = new Container();
+  private beaconG = new Graphics();
+  private beacons: { x: number; y: number }[] = [];
+  private holos: Container[] = [];
+  private cars: { lane: number; t: number; v: number; g: Graphics }[] = [];
   zone?: ZoneDef;
   grid?: ZoneGrid;
   ents = new Map<number, CEnt>();
@@ -41,7 +47,7 @@ export class GameView {
   private hoverG = new Graphics();
   private marketLights = new Graphics();
   private powered = false;
-  zoom = 1;
+  zoom = 0.85;
   cam = { x: 0, y: 0 };
   hovered: CEnt | null = null;
   onGroundClick: (x: number, y: number) => void = () => {};
@@ -63,7 +69,7 @@ export class GameView {
     await this.app.init({ resizeTo: window, background: 0x07070f, antialias: false, preference: 'webgl', resolution: (window.devicePixelRatio || 1) * settings.resScale, autoDensity: true, powerPreference: 'high-performance' });
     parent.appendChild(this.app.canvas);
     this.app.stage.addChild(this.world, this.nightOverlay, this.lightsLayer, this.rain, this.labels);
-    this.world.addChild(this.ground, this.backdrop, this.markers, this.objects);
+    this.world.addChild(this.ground, this.backdrop, this.markers, this.objects, this.sky);
     this.markers.addChild(this.pathG, this.hoverG);
     this.lightsLayer.blendMode = 'add';
     this.lightsLayer.addChild(this.marketLights);
@@ -91,7 +97,7 @@ export class GameView {
     this.rebuild();
   }
 
-  setZoom(z: number) { this.zoom = Math.max(0.55, Math.min(1.7, z)); }
+  setZoom(z: number) { this.zoom = Math.max(0.4, Math.min(1.7, z)); }
 
   // ------------------------------------------------------------------ zona
   setZone(zoneId: string, x: number, y: number) {
@@ -115,7 +121,9 @@ export class GameView {
     this.statics = [];
     this.stallObjs = [];
     this.lightsLayer.removeChildren();
-    this.lightsLayer.addChild(this.marketLights);
+    this.lightsLayer.addChild(this.marketLights, this.beaconG);
+    this.sky.removeChildren().forEach((c) => c.destroy({ children: true }));
+    this.beacons = []; this.holos = []; this.cars = [];
     const z = this.zone, q = settings.quality;
     if (z.kind === 'interior') {
       // Paredes del fondo (siempre detrás) y barandilla frontal baja con huecos en las puertas.
@@ -148,7 +156,7 @@ export class GameView {
       const [x0, y0, w, h] = b.rect;
       const lights = new Graphics();
       const occl = this.occluder(x0, y0, x0 + w, y0 + h);
-      const obj = this.addStatic(x0, y0, w, h, (g) => drawBuilding(b, g, lights, q, occl), true);
+      const obj = this.addStatic(x0, y0, w, h, (g) => { this.beacons.push(...drawBuilding(b, g, lights, q, occl)); }, true);
       const sign = makeSign(b, q);
       if (sign) obj.view.addChild(sign);
       this.lightsLayer.addChild(lights);
@@ -162,8 +170,31 @@ export class GameView {
       else this.addStatic(x0, y0, w, h, (g) => drawBox(g, x0, y0, w, h, 0, H, col));
     }
     const propLights = new Graphics();
+    // Pasarelas aéreas, hologramas y antenas: elementos elevados que se dibujan por encima de la calle.
+    const skyG = new Graphics(), skyL = new Graphics();
+    for (const sb of z.skybridges) drawSkybridge(skyG, skyL, sb);
+    this.sky.addChild(skyG);
+    this.lightsLayer.addChild(skyL);
     for (const p of z.props) {
-      if (p.type === 'stall') continue;
+      if (p.type === 'holo') { const h = makeHolo(p, q); this.holos.push(h); this.lightsLayer.addChild(h); continue; }
+      if (p.type === 'antenna') {
+        const a = worldToScreen(p.at[0] + 0.5, p.at[1] + 0.5, p.z ?? 20), t = worldToScreen(p.at[0] + 0.5, p.at[1] + 0.5, (p.z ?? 20) + 4);
+        skyG.moveTo(a.x, a.y).lineTo(t.x, t.y).stroke({ width: 2, color: 0x8890a8 });
+        this.beacons.push(t);
+        continue;
+      }
+    }
+    if (z.kind === 'exterior' && q === 'high') {
+      // Tráfico aéreo decorativo: vehículos voladores con luces en carriles elevados.
+      for (let i = 0; i < 14; i++) {
+        const g = new Graphics();
+        g.roundRect(-9, -3, 18, 6, 3).fill(0x2a2a3a); g.rect(6, -2, 4, 4).fill(0xfff1c0); g.rect(-10, -2, 3, 4).fill(0xff3040);
+        this.sky.addChild(g);
+        this.cars.push({ lane: i, t: Math.random(), v: 0.02 + Math.random() * 0.03, g });
+      }
+    }
+    for (const p of z.props) {
+      if (p.type === 'stall' || p.type === 'holo' || p.type === 'antenna') continue;
       this.addStatic(p.at[0], p.at[1], 1, 1, (g) => drawProp(g, propLights, p, true, this.occluder(p.at[0], p.at[1], p.at[0] + 1, p.at[1] + 1)));
     }
     this.lightsLayer.addChild(propLights);
@@ -230,7 +261,10 @@ export class GameView {
     if (s.kind === 'player' || s.kind === 'npc') {
       const ch = makeCharacter(s.appearance, s.kind);
       view.addChild(ch.root);
-      ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor;
+      ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor; ent.charRoot = ch.root;
+      ent.zz = new Text({ text: 'Zz', style: { fontFamily: 'system-ui', fontSize: 14, fontWeight: '700', fill: 0x9ad8ff, stroke: { color: 0x000000, width: 3 } } });
+      ent.zz.anchor.set(0.5); ent.zz.position.set(14, -30); ent.zz.visible = false;
+      view.addChild(ent.zz);
       if (s.kind === 'player') {
         ent.label = new Text({ text: s.name, style: { fontFamily: 'system-ui, sans-serif', fontSize: 12, fill: s.id === this.meId ? 0xffd23f : 0xffffff, stroke: { color: 0x000000, width: 3 } } });
         ent.label.anchor.set(0.5, 1);
@@ -270,6 +304,19 @@ export class GameView {
       rel((g) => { drawBox(g, fx + 0.05, fy + 0.05, 0.9, 0.9, 0, 0.6, 0x7a5b3a); drawBox(g, fx + 0.2, fy + 0.2, 0.6, 0.6, 0.6, 0.5, 0x8a6b4a); });
     } else if (s.objKind === 'elevator') {
       rel((g) => { const a = worldToScreen(fx + 0.1, fy + 1, 0), b = worldToScreen(fx + 0.9, fy + 1, 0), c = worldToScreen(fx + 0.9, fy + 1, 1.8), d = worldToScreen(fx + 0.1, fy + 1, 1.8); g.poly([a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y]).fill(0x8890a8).stroke({ width: 2, color: 0x43f3ff }); });
+    } else if (s.objKind === 'vending') {
+      rel((g) => { drawBox(g, fx + 0.15, fy + 0.2, 0.7, 0.6, 0, 1.7, 0x22222e); const t = worldToScreen(fx + 0.5, fy + 0.8, 1.0); g.rect(t.x - 8, t.y - 16, 16, 22).fill(0x43f3ff); g.rect(t.x - 8, t.y - 16, 16, 4).fill(0xff3fa4); });
+    } else if (s.objKind === 'shop') {
+      rel((g) => { drawBox(g, fx, fy + 0.1, 1, 0.8, 0, 0.9, 0x3a3a50); const t = worldToScreen(fx + 0.5, fy + 0.5, 1.2); g.rect(t.x - 7, t.y - 6, 14, 8).fill(0x7dff7a); });
+    } else if (s.objKind === 'jobboard' || s.objKind === 'bountyboard' || s.objKind === 'marketterm') {
+      const col = s.objKind === 'jobboard' ? 0x43f3ff : s.objKind === 'bountyboard' ? 0xff3040 : 0xffd23f;
+      rel((g) => { drawBox(g, fx + 0.4, fy + 0.4, 0.2, 0.2, 0, 1.3, 0x333340); drawBox(g, fx + 0.05, fy + 0.35, 0.9, 0.3, 1.1, 1.0, 0x1a1a28); const t = worldToScreen(fx + 0.5, fy + 0.65, 1.6); g.rect(t.x - 14, t.y - 10, 28, 16).fill({ color: col, alpha: 0.85 }); });
+    } else if (s.objKind === 'bed') {
+      rel((g) => { drawBox(g, fx + 0.05, fy + 0.1, 0.9, 0.8, 0, 0.5, 0x3a4a6a); drawBox(g, fx + 0.1, fy + 0.15, 0.8, 0.7, 0.5, 0.35, 0x8890c8, 0.8); });
+    } else if (s.objKind === 'trash') {
+      rel((g) => { drawBox(g, fx + 0.15, fy + 0.2, 0.7, 0.6, 0, 0.8, 0x2f5a3a); drawBox(g, fx + 0.1, fy + 0.15, 0.8, 0.7, 0.8, 0.08, 0x3d7a4a); });
+    } else if (s.objKind === 'workplace') {
+      rel((g) => { const m = worldToScreen(fx + 0.5, fy + 0.5); g.circle(m.x, m.y - 14, 7).fill({ color: 0xffd23f, alpha: 0.9 }); g.rect(m.x - 2, m.y - 18, 4, 8).fill(0x1a1a28); });
     } else if (s.objKind === 'board') {
       rel((g) => { drawBox(g, fx + 0.45, fy + 0.45, 0.1, 0.1, 0, 1.2, 0x333340); drawBox(g, fx + 0.1, fy + 0.4, 0.8, 0.2, 1.0, 0.8, 0xd8c8a0); });
     }
@@ -278,7 +325,39 @@ export class GameView {
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
   private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); if (this.hovered === e) this.hovered = null; }
-  setLabel(id: number, label: string) { const e = this.ents.get(id); if (e) e.s.label = label; }
+  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping') {
+    const e = this.ents.get(id);
+    if (!e) return;
+    e.s.label = label;
+    if (bounty !== undefined) e.s.bounty = bounty || undefined;
+    if (state !== undefined) e.s.state = state === 'alive' ? undefined : state;
+  }
+  /** Recompensa visible sobre la cabeza y postura tumbada al dormir o caer derribado. */
+  private statusVisuals(e: CEnt, now: number) {
+    if (!e.charRoot) return;
+    const sleeping = e.s.state === 'sleeping' || (e.flags & 32) === 32;
+    const downed = e.s.state === 'downed' || (e.flags & 64) === 64;
+    const lying = sleeping || downed;
+    e.charRoot.rotation = lying ? -Math.PI / 2 : 0;
+    e.charRoot.position.set(lying ? -18 : 0, lying ? -4 : 0);
+    if (e.zz) { e.zz.visible = sleeping; e.zz.y = -30 - (settings.reduceMotion ? 0 : (now / 120) % 10); }
+    if (downed) e.charRoot.alpha = settings.reduceFlashes ? 0.7 : 0.55 + 0.35 * Math.abs(Math.sin(now / 300));
+    else e.charRoot.alpha = 1;
+    const amt = e.s.bounty ?? 0;
+    if (amt !== (e.markerAmt ?? 0)) {
+      e.marker?.destroy({ children: true }); e.marker = undefined; e.markerAmt = amt;
+      if (amt > 0) {
+        const m = new Container();
+        const t = new Text({ text: `${amt} €$`, style: { fontFamily: 'system-ui', fontSize: 11, fontWeight: '700', fill: 0xffffff } });
+        t.anchor.set(0.5);
+        const bg = new Graphics().roundRect(-t.width / 2 - 14, -9, t.width + 20, 18, 4).fill(0xb01030).stroke({ width: 1, color: 0xff5a5a });
+        const icon = new Graphics().poly([-t.width / 2 - 9, 0, -t.width / 2 - 5, -5, -t.width / 2 - 1, 0, -t.width / 2 - 5, 5]).fill(0xffffff);
+        m.addChild(bg, icon, t); t.x = 3;
+        m.position.set(0, -62);
+        e.view.addChild(m); e.marker = m;
+      }
+    }
+  }
 
   positions(ents: { id: number; x: number; y: number; flags: number }[]) {
     const now = performance.now();
@@ -405,8 +484,9 @@ export class GameView {
         e.x = nx; e.y = ny;
       }
       this.place(e);
+      this.statusVisuals(e, now);
       // Animación corta: piernas alternas y balanceo; se desactiva con «reducir movimiento».
-      if (e.legs && e.body) {
+      if (e.legs && e.body && !(e.charRoot && e.charRoot.rotation !== 0)) {
         e.phase += dt * (e.moving ? 12 : 2);
         const bob = settings.reduceMotion ? 0 : e.moving ? Math.abs(Math.sin(e.phase)) * 1.5 : Math.sin(e.phase) * 0.4;
         e.body.y = -bob;
@@ -438,6 +518,27 @@ export class GameView {
     this.drawHover();
     this.drawNight();
     this.drawRain(dt);
+    this.animateSky(now, dt);
+  }
+
+  private animateSky(now: number, dt: number) {
+    const g = this.beaconG; g.clear();
+    const on = settings.reduceFlashes ? true : Math.floor(now / 700) % 2 === 0;
+    for (const b of this.beacons) g.circle(b.x, b.y, on ? 5 : 3).fill({ color: 0xff3040, alpha: on ? 0.95 : 0.4 });
+    for (const [i, h] of this.holos.entries()) h.alpha = settings.reduceFlashes ? 0.85 : 0.75 + 0.25 * Math.abs(Math.sin(now / 900 + i)) * (Math.random() < 0.02 ? 0.2 : 1);
+    if (!this.zone) return;
+    const W = this.zone.width, Hh = this.zone.height;
+    for (const c of this.cars) {
+      c.t += c.v * dt * (settings.reduceMotion ? 0.3 : 1);
+      if (c.t > 1) c.t -= 1;
+      const along = c.lane % 2 === 0;
+      const lanePos = 8 + ((c.lane * 13) % (along ? Hh - 16 : W - 16));
+      const z = 16 + (c.lane % 4) * 5;
+      const x = along ? c.t * W : lanePos, y = along ? lanePos : c.t * Hh;
+      const p = worldToScreen(x, y, z);
+      c.g.position.set(p.x, p.y);
+      c.g.scale.x = along ? 1 : -1;
+    }
   }
 
   private face(e: CEnt, dx: number, dy: number) {

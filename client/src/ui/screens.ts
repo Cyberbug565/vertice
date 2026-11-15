@@ -68,9 +68,9 @@ const ACCENT = ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'
 
 export function creationScreen(onDone: () => void, onCancel: () => void) {
   clearUi();
-  const st = { step: 0, name: '', origin: 'callejero', role: 'solo', appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0] },
+  const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0] },
     attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes };
-  const STEPS = ['Identidad', 'Origen', 'Rol', 'Atributos', 'Revisión'];
+  const STEPS = ['Identidad', 'Origen', 'Rol', 'Oficio', 'Atributos', 'Revisión'];
   const card = h('div', { class: 'card' });
   $ui().append(h('div', { class: 'screen' }, card));
   const spent = () => ATTRIBUTE_IDS.reduce((s, k) => s + st.attributes[k], 0);
@@ -82,7 +82,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   const render = () => {
     const nav = h('div', { class: 'row', style: { marginTop: '16px' } },
       h('button', { class: 'btn', onclick: () => (st.step === 0 ? onCancel() : (st.step--, render())) }, st.step === 0 ? 'Cancelar' : 'Atrás'),
-      st.step < 4 ? h('button', { class: 'btn primary', id: 'btn-next', onclick: () => { const e = validate(); if (e) { err.textContent = e; return; } err.textContent = ''; st.step++; render(); } }, 'Siguiente')
+      st.step < 5 ? h('button', { class: 'btn primary', id: 'btn-next', onclick: () => { const e = validate(); if (e) { err.textContent = e; return; } err.textContent = ''; st.step++; render(); } }, 'Siguiente')
         : h('button', { class: 'btn primary', id: 'btn-create-final', onclick: submit }, 'Crear y entrar'));
     let body: HTMLElement;
     if (st.step === 0) {
@@ -100,6 +100,11 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
         h('h4', {}, `${r.name} · ${r.ability}`), h('p', {}, r.abilityDesc), h('p', {}, `Ingresos: ${r.income}`), h('p', {}, `Primer trabajo: ${r.firstJob}`), h('p', {}, `En grupo: ${r.groupContribution}`),
         r.m1Option ? h('p', { style: { color: 'var(--yellow)' } }, `Disponible ya en Ferro: ${r.m1Option}`) : h('p', {}, 'En el hito 1 resuelve el encargo por la ruta común (pagar o trabajar).'))));
     } else if (st.step === 3) {
+      const kinds: Record<string, string> = { empleo: 'Empleo', libre: 'Libre', ilegal: 'Ilegal' };
+      body = h('div', { class: 'col' }, h('p', { class: 'muted' }, 'Tu oficio decide qué empleos puedes coger (5 por oficio, 100 en total) y te da una ventaja. El rol es tu especialidad de combate y técnica; el oficio, cómo te ganas la vida. Podrás cambiarlo en la bolsa de empleo.'),
+        h('div', { class: 'grid2' }, ...content.professions.map((pr) => h('button', { class: 'choice', id: `prof-${pr.id}`, 'aria-pressed': String(st.profession === pr.id), onclick: () => { st.profession = pr.id; render(); } },
+          h('h4', {}, `${pr.name} · ${kinds[pr.kind]}`), h('p', {}, pr.desc), h('p', { style: { color: 'var(--yellow)' } }, `Ventaja: ${pr.perk}`)))));
+    } else if (st.step === 4) {
       const a = st.attributes;
       const left = RULES.creationPoints - spent();
       body = h('div', { class: 'col' },
@@ -112,21 +117,21 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
           h('small', {}, `${d.represents}. ${d.effect}. Ej.: ${d.example}`))),
         h('p', { class: 'mono' }, `Salud ${maxHp(a)} (25 + 5×BODY + 3×WILL) · Aguante ${maxStamina(a)} · Carga ${carryCapacity(a)} kg · Capacidad de cromo ${chromeCapacity(a)} (18 + 2×TECH + BODY) · Humanidad ${humanityBase(a.EMP)} (10×EMP) · Marcha ${walkSpeed(a).toFixed(2)} m/s`));
     } else {
-      const r = content.roles.find((x) => x.id === st.role)!, o = content.origins.find((x) => x.id === st.origin)!;
-      body = h('div', { class: 'col' }, h('h3', {}, st.name || '(sin nombre)'), h('p', {}, `${o.name} · ${r.name} (${r.ability})`),
+      const r = content.roles.find((x) => x.id === st.role)!, o = content.origins.find((x) => x.id === st.origin)!, pf = content.professions.find((x) => x.id === st.profession)!;
+      body = h('div', { class: 'col' }, h('h3', {}, st.name || '(sin nombre)'), h('p', {}, `${o.name} · ${r.name} (${r.ability}) · oficio ${pf.name}`),
         h('p', { class: 'mono' }, ATTRIBUTE_IDS.map((k) => `${k} ${st.attributes[k]}`).join(' · ')),
-        h('p', {}, `Empiezas en el vestíbulo del Bloque 9 (zona protegida) con ${fmtMoney(o.startMoney)}, agente personal, chaqueta, navaja y unos fideos.`),
+        h('p', {}, `Empiezas en el vestíbulo del Bloque 9 (zona protegida) con ${fmtMoney(o.startMoney)}, agente personal, chaqueta, navaja, dos raciones de fideos y dos de agua. Tendrás que comer, beber y dormir.`),
         h('p', { class: 'muted' }, 'Recuerda: una sola vida. Si tu personaje muere, se pierde su progreso; la cuenta conserva ajustes, amigos y el memorial.'));
     }
     card.replaceChildren(h('h2', {}, 'Crear personaje'), h('div', { class: 'steps' }, ...STEPS.map((s, i) => h('span', { class: i === st.step ? 'on' : '' }, `${i + 1}. ${s}`))), body, err, nav);
   };
   const validate = (): string | null => {
     if (st.step === 0 && !/^[\p{L}0-9 _'.-]{3,20}$/u.test(st.name.trim())) return 'El nombre debe tener entre 3 y 20 caracteres.';
-    if (st.step === 3 && spent() !== RULES.creationPoints) return `Te faltan o sobran puntos: llevas ${spent()} de ${RULES.creationPoints}.`;
+    if (st.step === 4 && spent() !== RULES.creationPoints) return `Te faltan o sobran puntos: llevas ${spent()} de ${RULES.creationPoints}.`;
     return null;
   };
   const submit = async () => {
-    try { await api('/api/characters', { name: st.name.trim(), origin: st.origin, role: st.role, attributes: st.attributes, appearance: st.appearance }); blip('good'); onDone(); }
+    try { await api('/api/characters', { name: st.name.trim(), origin: st.origin, role: st.role, profession: st.profession, attributes: st.attributes, appearance: st.appearance }); blip('good'); onDone(); }
     catch (e: any) { err.textContent = e.message; blip('bad'); }
   };
   render();
@@ -150,6 +155,6 @@ export function settingsPanel(onChange?: () => void) {
       h('label', { class: 'row' }, h('input', { type: 'checkbox', checked: s.showNames, onchange: (e: any) => set({ showNames: e.target.checked }) }), 'Mostrar nombres de jugadores'),
       h('label', { class: 'row' }, h('span', { style: { width: '9em' } }, 'Tamaño de texto'), h('select', { onchange: (e: any) => set({ textSize: e.target.value }) }, h('option', { value: 'normal', selected: s.textSize === 'normal' }, 'Normal'), h('option', { value: 'large', selected: s.textSize === 'large' }, 'Grande'), h('option', { value: 'xl', selected: s.textSize === 'xl' }, 'Muy grande'))),
       range('music', 'Música'), range('ambient', 'Ambiente'), range('sfx', 'Efectos'), range('ui', 'Interfaz'),
-      h('p', { class: 'muted' }, 'Controles: clic izquierdo para moverte o interactuar · clic derecho o S para cancelar · Tab/Mayús+Tab seleccionar lo cercano · E o Espacio interactuar · R retirada · J diario · C ficha · I inventario · M mapa · Enter chat · rueda o +/− zoom.')));
+      h('p', { class: 'muted' }, 'Controles: clic izquierdo para moverte o interactuar · clic derecho o S para cancelar · Tab/Mayús+Tab seleccionar lo cercano · E o Espacio interactuar · R retirada · Z dormir · O empleos · K mercado · B recompensas · J diario · C ficha · I inventario · M mapa · Enter chat · rueda o +/− zoom.')));
   $ui().append(panel);
 }

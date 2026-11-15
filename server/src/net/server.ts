@@ -103,7 +103,7 @@ export function startServer(cfg: Config, db: Db, world: World, metrics: Metrics)
         if (!body) {
           const raw = await readFile(file);
           body = compressible && enc === 'br' ? brotliCompressSync(raw, { params: { [zc.BROTLI_PARAM_QUALITY]: 9 } }) : compressible && enc === 'gzip' ? gzipSync(raw, { level: 9 }) : raw;
-          if (immutable || file.endsWith('index.html')) staticCache.set(key, body);
+          if (immutable) staticCache.set(key, body);
         }
         res.writeHead(200, { 'content-type': type, 'cache-control': immutable ? 'public, max-age=31536000, immutable' : 'no-cache', vary: 'accept-encoding', ...(compressible && enc ? { 'content-encoding': enc } : {}) });
         res.end(body);

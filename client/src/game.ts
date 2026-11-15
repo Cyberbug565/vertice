@@ -8,6 +8,7 @@ import { blip, initAudio, setAmbientActive } from './audio';
 import { $ui, clearUi, fmtMoney, h } from './ui/dom';
 import { Minimap, renderZoneMap } from './ui/minimap';
 import { settingsPanel } from './ui/screens';
+import { bountyPanel, clinicPanel, deathScreen, jobsPanel, marketPanel, shopPanel, targetMenu, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Protegida', public: 'Pública', disputed: 'Disputada (PvP)' };
 const STANCES = [
@@ -16,7 +17,10 @@ const STANCES = [
   { id: 'aggressive', label: 'Agresiva', desc: 'Agresiva: ataca objetivos elegibles dentro de la orden seleccionada, gastando munición y cromo autorizados.' },
 ] as const;
 
-export async function startGame(token: string, onExit: (reason?: string) => void) {
+export async function startGame(token: string, onExit0: (reason?: string) => void) {
+  const timers: number[] = [];
+  let exited = false;
+  const onExit = (reason?: string) => { if (exited) return; exited = true; window.removeEventListener('keydown', keys); for (const t of timers) clearInterval(t); net.close(); try { view.app.destroy(true); } catch {} onExit0(reason); };
   clearUi();
   initAudio();
   const view = new GameView();
@@ -33,12 +37,19 @@ export async function startGame(token: string, onExit: (reason?: string) => void
 
   // ---------------------------------------------------------------- HUD
   const hpBar = h('i', { style: { background: 'var(--red)' } }), stBar = h('i', { style: { background: 'var(--green)' } });
+  const needBar = (color: string) => h('i', { style: { background: color } });
+  const hgBar = needBar('#ff8a3d'), thBar = needBar('#43a8ff'), ftBar = needBar('#b46cff');
+  const needsEl = h('div', { style: { display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 6px', alignItems: 'center', fontSize: '0.8em', margin: '2px 0 4px' } },
+    h('span', {}, 'Hambre'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Hambre' }, hgBar),
+    h('span', {}, 'Sed'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sed' }, thBar),
+    h('span', {}, 'Sueño'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sueño' }, ftBar));
+  const statusEl = h('div', { style: { fontSize: '0.85em', minHeight: '1.2em' }, 'aria-live': 'polite' });
   const nameEl = h('div', {}), moneyEl = h('div', { class: 'mono' }), statsEl = h('div', { class: 'muted', style: { fontSize: '0.85em' } });
   const hpTxt = h('span', { class: 'mono' }), stTxt = h('span', { class: 'mono' });
   const tl = h('div', { class: 'hud hud-tl', 'aria-label': 'Estado del personaje' }, nameEl,
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Salud'), hpTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Salud' }, hpBar),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Aguante'), stTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Aguante' }, stBar),
-    moneyEl, statsEl);
+    needsEl, statusEl, moneyEl, statsEl);
   const mm = h('canvas', { id: 'minimap', title: 'Mapa grande (M)', onclick: () => bigMap() }) as HTMLCanvasElement;
   const minimap = new Minimap(mm);
   const sectorEl = h('div', { style: { fontWeight: '600', marginTop: '4px' } }), dangerEl = h('span', { class: 'badge' }), clockEl = h('span', { class: 'mono' }), netEl = h('span', { class: 'mono' });
@@ -54,6 +65,10 @@ export async function startGame(token: string, onExit: (reason?: string) => void
     h('button', { class: 'btn', id: 'btn-journal', onclick: () => journalPanel() }, 'Diario ', h('kbd', {}, 'J')),
     h('button', { class: 'btn', id: 'btn-sheet', onclick: () => sheetPanel() }, 'Ficha ', h('kbd', {}, 'C')),
     h('button', { class: 'btn', onclick: () => inventoryPanel() }, 'Inventario ', h('kbd', {}, 'I')),
+    h('button', { class: 'btn', id: 'btn-sleep', onclick: () => toggleSleep(), title: 'Dormir donde estás o despertar (Z). En la calle descansas peor y te pueden robar.' }, 'Dormir ', h('kbd', {}, 'Z')),
+    h('button', { class: 'btn', onclick: () => net.send({ t: 'jobs' } as any) }, 'Empleos ', h('kbd', {}, 'O')),
+    h('button', { class: 'btn', onclick: () => net.send({ t: 'market' } as any) }, 'Mercado ', h('kbd', {}, 'K')),
+    h('button', { class: 'btn', onclick: () => net.send({ t: 'bounties' } as any) }, 'Recompensas ', h('kbd', {}, 'B')),
     h('button', { class: 'btn', onclick: () => settingsPanel(() => view.applySettings()) }, 'Ajustes')));
   const toasts = h('div', { class: 'toasts', 'aria-live': 'polite' });
   const chatLog = h('div', { class: 'log', 'aria-live': 'polite' });
@@ -92,7 +107,17 @@ export async function startGame(token: string, onExit: (reason?: string) => void
     hpBar.style.width = `${(100 * s.hp) / s.hpMax}%`; stBar.style.width = `${(100 * s.stamina) / s.staminaMax}%`;
     hpTxt.textContent = `${s.hp}/${s.hpMax}`; stTxt.textContent = `${s.stamina}/${s.staminaMax}`;
     moneyEl.textContent = `${fmtMoney(s.money)} · Rep. calle ${s.streetRep}`;
-    statsEl.textContent = `Suerte ${s.luck}/${s.luckMax} · XP ${s.xp}/${s.xpNext} · Carga ${s.carry}/${s.carryMax} kg`;
+    statsEl.textContent = `${s.professionName} (rango ${s.professionRank}) · Suerte ${s.luck}/${s.luckMax} · XP ${s.xp}/${s.xpNext}`;
+    hgBar.style.width = `${s.needs.hunger}%`; thBar.style.width = `${s.needs.thirst}%`; ftBar.style.width = `${s.needs.fatigue}%`;
+    for (const [b, v] of [[hgBar, s.needs.hunger], [thBar, s.needs.thirst], [ftBar, s.needs.fatigue]] as [HTMLElement, number][]) b.style.filter = v >= 80 ? 'saturate(2) brightness(1.3)' : '';
+    const st2: (string | HTMLElement)[] = [];
+    if (s.status === 'downed') st2.push(h('b', { class: 'netbad' }, `DERRIBADO · ${s.downedLeft} s`));
+    if (s.sleeping) st2.push(h('span', { class: 'cy' }, `Durmiendo (${Math.round(s.sleeping.quality * 100)} %) `));
+    if (s.wanted >= 1) st2.push(h('span', { class: 'netbad' }, ` Buscado ${'★'.repeat(Math.min(5, Math.floor(s.wanted)))}`));
+    if (s.activeJob) st2.push(h('span', { class: 'netmid' }, ' · empleo aceptado'));
+    if (!s.autoNeeds) st2.push(h('span', { class: 'muted' }, ' · autonomía apagada'));
+    statusEl.replaceChildren(...st2);
+    const sb = document.getElementById('btn-sleep'); if (sb) sb.firstChild!.textContent = s.sleeping ? 'Despertar ' : 'Dormir ';
     renderStance();
     view.setMyAttributes(s.attributes as any);
   };
@@ -135,7 +160,8 @@ export async function startGame(token: string, onExit: (reason?: string) => void
   };
 
   // ---------------------------------------------------------------- paneles
-  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu']) document.getElementById(id)?.remove(); };
+  const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
     const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕'), h('h2', {}, title), ...body);
@@ -160,6 +186,15 @@ export async function startGame(token: string, onExit: (reason?: string) => void
         row('Suerte', `${s.luck}/${s.luckMax}`, 'Se gasta en tiradas elegidas; se recarga al descansar'), row('Humanidad', `${s.humanity}/${s.humanityMax}`, '10×EMP; el cromo instalado reduce el máximo (hito 2)'),
         row('Capacidad de cromo', `${s.chromeUsed}/${s.chromeCapacity}`, '18 + 2×TECH + BODY'), row('Carga', `${s.carry}/${s.carryMax} kg`, '20 + 6×BODY'), row('RAM', '—', 'Requiere cyberdeck (hito 2)')),
       h('h3', {}, 'Habilidades'), h('p', { class: 'mono' }, Object.entries(s.skills).filter(([, v]) => v > 0).map(([k, v]) => `${content.skills.find((x) => x.id === k)?.name ?? k} ${v}`).join(' · ')),
+      h('h3', {}, 'Necesidades'),
+      h('p', {}, `Hambre ${s.needs.hunger} · Sed ${s.needs.thirst} · Sueño ${s.needs.fatigue} (0 = satisfecho, 100 = crítico). Ritmo por implantes: hambre ×${s.needsMult.hunger.toFixed(2)}, sed ×${s.needsMult.thirst.toFixed(2)}, sueño ×${s.needsMult.fatigue.toFixed(2)}.`),
+      h('label', { class: 'row' }, h('input', { type: 'checkbox', checked: s.autoNeeds, onchange: (e: any) => net.send({ t: 'autonomy', autoNeeds: e.target.checked } as any) }), 'Autonomía: comer, beber y comprar comida solo cuando haga falta'),
+      h('h3', {}, 'Oficio y riesgo'),
+      h('p', {}, `${s.professionName} · rango ${s.professionRank} · ${s.professionXp} XP de oficio · nivel de búsqueda ${s.wanted}`),
+      h('p', { class: 'muted' }, `Bonificaciones: enfrentamiento +${s.bonuses.confront}, defensa +${s.bonuses.defense}, robo +${s.bonuses.steal}, supervivencia quirúrgica +${s.bonuses.surgery} %`),
+      h('h3', {}, `Ciberware · ${s.chromeUsed}/${s.chromeCapacity} de capacidad · Humanidad ${s.humanity}/${s.humanityMax}`),
+      s.cyber.length ? h('table', { class: 'sheet' }, ...s.cyber.map((c) => h('tr', {}, h('td', {}, h('b', {}, c.name), ` · grado ${['I', 'II', 'III', 'IV', 'V'][c.grade - 1]}${c.stolen ? ' · robado' : ''}`), h('td', {}, `${c.location === 'installed' ? 'Instalado' : 'En la mochila'} · ranura ${c.slot}`),
+        h('td', { class: 'muted' }, `${c.desc} Capacidad ${c.capacity}, Humanidad −${c.humanity}. ${c.family}.`)))) : h('p', { class: 'muted' }, 'Sin implantes. Los matasanos instalan y retiran cromo: Doc Sato, Mama Iruka, El Carnicero, Ruiz, la Clínica Okami y el Dr. Vex.'),
       h('h3', {}, 'Reputación'), h('p', {}, `Callejera: ${s.streetRep}`), h('ul', {}, ...Object.entries(s.reputation).map(([k, v]) => h('li', {}, `${factionName(k)}: ${v > 0 ? '+' : ''}${v}`))));
   };
   const row = (a: string, b: string, c: string) => h('tr', {}, h('td', {}, a), h('td', { class: 'mono' }, b), h('td', { class: 'muted' }, c));
@@ -235,6 +270,10 @@ export async function startGame(token: string, onExit: (reason?: string) => void
     else if (k === 'c') sheetPanel();
     else if (k === 'i') inventoryPanel();
     else if (k === 'm') bigMap();
+    else if (k === 'z') toggleSleep();
+    else if (k === 'o') net.send({ t: 'jobs' } as any);
+    else if (k === 'k') net.send({ t: 'market' } as any);
+    else if (k === 'b') net.send({ t: 'bounties' } as any);
     else if (k === 'enter') { e.preventDefault(); chatIn.focus(); }
     else if (k === 'tab' && onWorld()) {
       // Selección accesible: recorre las entidades interactivas cercanas por distancia.
@@ -258,6 +297,7 @@ export async function startGame(token: string, onExit: (reason?: string) => void
 
   // ---------------------------------------------------------------- red
   net.onPositions = (p) => view.positions(p.ents);
+  const life: LifeCtx = { net, toast };
   net.onStatus = (s, detail) => {
     if (s === 'offline') {
       if (detail === 'auth' || detail === 'no_character') return onExit(detail);
@@ -282,7 +322,14 @@ export async function startGame(token: string, onExit: (reason?: string) => void
         break;
       case 'spawn': for (const e of m.e) view.upsert(e); break;
       case 'despawn': for (const id of m.ids) view.remove(id); break;
-      case 'label': view.setLabel(m.id, m.label); break;
+      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state); break;
+      case 'shop': shopPanel(life, m.view); break;
+      case 'market': marketPanel(life, m.view); break;
+      case 'jobs': jobsPanel(life, m.view); break;
+      case 'clinic': clinicPanel(life, m.view); break;
+      case 'bounties': bountyPanel(life, m.view); break;
+      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp); break; }
+      case 'death': net.close(); deathScreen(m.summary, () => onExit('dead')); break;
       case 'ack': { const cb = st.pending.get(m.seq); st.pending.delete(m.seq); if (cb) cb(m); else if (!m.ok && m.reason) toast(m.reason, 'warn'); else if (m.ok && m.path && m.seq === 0) view.confirmPath(m.path); if (m.info && m.ok && !cb) toast(m.info); break; }
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;
       case 'dialogClose': st.dialog = null; renderDialog(); break;
@@ -312,15 +359,15 @@ export async function startGame(token: string, onExit: (reason?: string) => void
 
   // Indicadores periódicos: reloj, red, minimapa.
   let lastBytes = 0;
-  setInterval(() => {
+  timers.push(window.setInterval(() => {
     const hr = cityHour();
     clockEl.textContent = `${String(Math.floor(hr)).padStart(2, '0')}:${String(Math.floor((hr % 1) * 60)).padStart(2, '0')}`;
     const kbs = (net.bytesIn - lastBytes) / 1024; lastBytes = net.bytesIn;
     const cls = net.status !== 'online' ? 'netbad' : net.rtt > 200 ? 'netmid' : 'netok';
     netEl.className = `mono ${cls}`;
     netEl.textContent = net.status === 'online' ? `${Math.round(net.rtt)} ms · ${kbs.toFixed(1)} KiB/s · ${Math.round(view.app.ticker.FPS)} FPS · CPU ${view.frameMs.toFixed(1)} ms` : net.status;
-  }, 1000);
-  setInterval(() => minimap.draw(view.me, [...view.ents.values()].filter((e) => e.s.id !== view.meId).map((e) => ({ x: e.x, y: e.y, kind: e.s.kind }))), 250);
+  }, 1000));
+  timers.push(window.setInterval(() => minimap.draw(view.me, [...view.ents.values()].filter((e) => e.s.id !== view.meId).map((e) => ({ x: e.x, y: e.y, kind: e.s.kind }))), 250));
   document.addEventListener('visibilitychange', () => setAmbientActive(!document.hidden));
 
   // Ganchos de depuración para pruebas automatizadas en navegador.

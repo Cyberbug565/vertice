@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa, hito 1)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.2)
+
+Novedades y guía de pruebas de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md).
 
 RPG de ambientación cyberpunk que se juega en el navegador. Es persistente, multijugador, con cámara isométrica 2.5D y control por clic. El servidor es autoritativo: Node.js con WebSocket y PostgreSQL. El cliente usa TypeScript, Vite y PixiJS 8 sobre WebGL 2.
 
@@ -39,6 +41,9 @@ Para desarrollo con recarga en caliente, ejecuta `npm run dev` y abre http://loc
 | Cancelar la orden | Clic derecho | `S` o el botón **Cancelar** |
 | Retirada al refugio protegido más cercano | — | `R` o el botón **Retirada** |
 | Diario, ficha, inventario, mapa | — | `J`, `C`, `I`, `M` |
+| Dormir o despertar | — | `Z` o el botón **Dormir** |
+| Empleos, mercado, recompensas | — | `O`, `K`, `B` |
+| Robar, agredir, cobrar recompensa o estabilizar | Clic sobre otra persona o un fugitivo | Menú de acciones con probabilidades |
 | Chat local | — | `Enter` |
 | Zoom | Rueda | `+` / `−` |
 
