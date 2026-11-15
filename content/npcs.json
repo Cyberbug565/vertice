@@ -1,0 +1,15 @@
+[
+  { "id": "nadia", "name": "Nadia «Bisagra» Ortuño", "title": "Fixer", "dialog": "nadia", "appearance": { "skin": "#b07a5a", "hair": "#d9d9e3", "jacket": "#6b2140", "accent": "#ff3fa4" },
+    "schedule": [ { "from": 0, "to": 24, "zone": "bar-rele", "at": [3, 6], "state": "work", "label": "Negocia en su reservado" } ] },
+  { "id": "lin", "name": "Lin Bao", "title": "Comerciante", "dialog": "lin", "appearance": { "skin": "#e0b48c", "hair": "#1a1a1a", "jacket": "#2f6b4f", "accent": "#ffd23f" },
+    "schedule": [
+      { "from": 7, "to": 19, "zone": "ferro", "at": [17, 29], "state": "work", "label": "Atiende su puesto de fideos" },
+      { "from": 19, "to": 23, "zone": "bar-rele", "at": [10, 7], "state": "talk", "label": "Charla en El Relé" },
+      { "from": 23, "to": 7, "zone": "bloque9", "at": [15, 6], "state": "rest", "label": "Descansa en el Bloque 9" } ] },
+  { "id": "tomas", "name": "Tomás «Chatarra» Ibarra", "title": "Dueño del desguace", "dialog": "tomas", "appearance": { "skin": "#8a5a3c", "hair": "#5a5a5a", "jacket": "#7a5b2a", "accent": "#ff8a3d" },
+    "schedule": [ { "from": 0, "to": 24, "zone": "ferro", "at": [42, 54], "state": "work", "label": "Vigila su desguace" } ] },
+  { "id": "sato", "name": "Doc Sato", "title": "Cirujana de implantes", "dialog": "sato", "appearance": { "skin": "#f0c8a8", "hair": "#3a2a6a", "jacket": "#e8e8f0", "accent": "#5affc8" },
+    "schedule": [ { "from": 0, "to": 24, "zone": "clinica-sato", "at": [4, 4], "state": "work", "label": "Atiende la clínica" } ] },
+  { "id": "reme", "name": "Reme", "title": "Conserje del Bloque 9", "dialog": "reme", "appearance": { "skin": "#c89070", "hair": "#c0c0c0", "jacket": "#40506a", "accent": "#7dd3fc" },
+    "schedule": [ { "from": 0, "to": 24, "zone": "bloque9", "at": [12, 2], "state": "work", "label": "Vigila el vestíbulo" } ] }
+]

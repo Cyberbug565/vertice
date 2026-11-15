@@ -1,0 +1,10 @@
+[
+  { "id": "agente", "name": "Agente personal", "desc": "Teléfono y agenda de contactos.", "weight": 0.2 },
+  { "id": "chaqueta", "name": "Chaqueta reforzada", "desc": "Ropa de calle con forro balístico ligero.", "weight": 2 },
+  { "id": "navaja", "name": "Navaja", "desc": "Herramienta y último recurso.", "weight": 0.3 },
+  { "id": "pulsera-interfaz", "name": "Pulsera de interfaz", "desc": "Conector provisional para terminales (Netrunner).", "weight": 0.2 },
+  { "id": "kit-herramientas", "name": "Kit de herramientas", "desc": "Llaves, soldador y multímetro.", "weight": 3 },
+  { "id": "fideos-krill", "name": "Fideos de krill", "desc": "Recupera 25 de aguante.", "weight": 0.5, "price": 15, "consumable": { "restore": "stamina", "amount": 25 } },
+  { "id": "estim", "name": "Estimulante médico", "desc": "Recupera 20 de salud.", "weight": 0.1, "price": 40, "consumable": { "restore": "hp", "amount": 20 } },
+  { "id": "acoplamiento", "name": "Acoplamiento de potencia", "desc": "Pieza para el generador del Mercado Lumen.", "weight": 4 }
+]

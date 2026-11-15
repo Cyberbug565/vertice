@@ -1,0 +1,18 @@
+{
+  "name": "@vertice/server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "start": "tsx src/main.ts",
+    "migrate": "tsx src/db/migrate-cli.ts"
+  },
+  "dependencies": {
+    "@vertice/shared": "*",
+    "@electric-sql/pglite": "0.5.11",
+    "pg": "8.23.1",
+    "ws": "8.22.0"
+  },
+  "devDependencies": { "@types/pg": "8.23.1", "@types/ws": "8.18.2" }
+}

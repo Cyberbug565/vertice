@@ -1,0 +1,5 @@
+[
+  { "id": "callejero", "name": "Callejero", "desc": "Creciste en los bloques de Ferro. Conoces a los comerciantes y desconfías de los uniformes.", "contact": "Lin, la del puesto de fideos del Mercado Lumen", "startMoney": 150 },
+  { "id": "corporativo", "name": "Corporativo", "desc": "Saliste de una corporación con algo de dinero y muchas preguntas sin responder.", "contact": "Nadia «Bisagra» Ortuño, fixer en el bar El Relé", "startMoney": 300 },
+  { "id": "nomada", "name": "Nómada", "desc": "Llegaste de las rutas exteriores. Sabes arreglar motores y no dejar a nadie atrás.", "contact": "Tomás, el dueño del desguace", "startMoney": 120 }
+]

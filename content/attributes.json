@@ -1,0 +1,12 @@
+[
+  { "id": "INT", "name": "Inteligencia", "represents": "Análisis, observación y conocimiento", "effect": "Descubrir pistas, valorar información y reconocer la estructura de las redes", "example": "Netrunner: INT + Interfaz para entrar en el terminal del desguace" },
+  { "id": "REF", "name": "Reflejos", "represents": "Rapidez de reacción y puntería", "effect": "Adquisición de objetivo, reacción y precisión a distancia", "example": "Combate a distancia (hito 2)" },
+  { "id": "DEX", "name": "Destreza", "represents": "Coordinación y agilidad", "effect": "Sigilo, esquiva, maniobras cercanas y recuperación tras moverse", "example": "Sigilo y cuerpo a cuerpo (hito 2)" },
+  { "id": "TECH", "name": "Técnica", "represents": "Trabajo con herramientas y máquinas", "effect": "Reparación, fabricación, mantenimiento y mecanismos; aumenta la capacidad de cromo", "example": "Tech: instalación limpia del generador (TECH + Reparación)" },
+  { "id": "COOL", "name": "Temple", "represents": "Compostura, persuasión bajo presión y presencia", "effect": "Resistir intimidación, negociar y mantener la calma con estrés", "example": "Solo: leer la amenaza y negociar con Tomás (COOL + Negociación)" },
+  { "id": "WILL", "name": "Voluntad", "represents": "Determinación y tolerancia a fatiga y presión neural", "effect": "Aguante, resistencia al pánico y umbral de inestabilidad", "example": "Cada punto suma 3 de salud máxima y 2 de aguante" },
+  { "id": "LUCK", "name": "Suerte", "represents": "Oportunidades bajo tu control", "effect": "Reserva visible que puedes gastar en tiradas elegidas; se recarga al descansar", "example": "Reservar 2 de Suerte convierte un 50 % en un 70 %" },
+  { "id": "MOVE", "name": "Movimiento", "represents": "Capacidad de desplazamiento", "effect": "Velocidad de marcha y retirada, con límites del servidor", "example": "Cada punto sobre 5 añade 0,12 losetas/s" },
+  { "id": "BODY", "name": "Constitución", "represents": "Fuerza y resistencia física", "effect": "Salud máxima, carga, acciones físicas y tolerancia a heridas; aumenta la capacidad de cromo", "example": "Cada punto suma 5 de salud y 6 kg de carga" },
+  { "id": "EMP", "name": "Empatía", "represents": "Conexión con otras personas", "effect": "Leer intenciones, confianza social y Humanidad inicial (10 × EMP)", "example": "EMP 6 → Humanidad base 60" }
+]

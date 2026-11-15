@@ -1,0 +1,90 @@
+{
+  "id": "ferro", "name": "Ferro", "kind": "exterior", "width": 96, "height": 64, "chunkSize": 32, "danger": "public", "base": "sidewalk",
+  "ground": [
+    { "type": "water", "rect": [0, 0, 96, 5] },
+    { "type": "deck", "rect": [0, 5, 96, 3] },
+    { "type": "water", "rect": [60, 0, 3, 64] },
+    { "type": "bridge", "rect": [60, 20, 3, 3] },
+    { "type": "bridge", "rect": [60, 44, 3, 3] },
+    { "type": "asphalt", "rect": [0, 20, 60, 3] }, { "type": "asphalt", "rect": [63, 20, 33, 3] },
+    { "type": "asphalt", "rect": [0, 44, 60, 3] }, { "type": "asphalt", "rect": [63, 44, 33, 3] },
+    { "type": "asphalt", "rect": [10, 8, 3, 56] }, { "type": "asphalt", "rect": [30, 8, 3, 56] }, { "type": "asphalt", "rect": [50, 8, 3, 56] },
+    { "type": "asphalt", "rect": [72, 8, 3, 56] }, { "type": "asphalt", "rect": [88, 8, 3, 56] },
+    { "type": "crosswalk", "rect": [10, 19, 3, 1] }, { "type": "crosswalk", "rect": [30, 19, 3, 1] }, { "type": "crosswalk", "rect": [50, 19, 3, 1] },
+    { "type": "crosswalk", "rect": [10, 43, 3, 1] }, { "type": "crosswalk", "rect": [30, 43, 3, 1] }, { "type": "crosswalk", "rect": [50, 43, 3, 1] },
+    { "type": "crosswalk", "rect": [72, 19, 3, 1] }, { "type": "crosswalk", "rect": [88, 43, 3, 1] },
+    { "type": "market", "rect": [14, 24, 15, 19] },
+    { "type": "plaza", "rect": [64, 33, 7, 1] },
+    { "type": "gravel", "rect": [34, 48, 15, 15] }
+  ],
+  "blocks": [
+    { "type": "fence", "rect": [34, 48, 7, 1] }, { "type": "fence", "rect": [43, 48, 6, 1] },
+    { "type": "fence", "rect": [34, 49, 1, 14] }, { "type": "fence", "rect": [48, 49, 1, 14] }, { "type": "fence", "rect": [35, 62, 13, 1] },
+    { "type": "barrier", "rect": [0, 4, 60, 1], "height": 0.4 }, { "type": "barrier", "rect": [63, 4, 33, 1], "height": 0.4 }
+  ],
+  "buildings": [
+    { "id": "almacen-muelle", "rect": [1, 9, 8, 10], "height": 4, "style": "industrial", "color": "#3a3f5c" },
+    { "id": "torre-halcon", "name": "Torre Halcón", "rect": [14, 9, 15, 10], "height": 11, "style": "tower", "color": "#2e3550", "sign": "HALCÓN", "signColor": "#43f3ff" },
+    { "id": "hotel-koi", "name": "Hotel Koi", "rect": [34, 9, 15, 10], "height": 6, "style": "block", "color": "#4a3a5c", "sign": "HOTEL KOI", "signColor": "#ff4fa0" },
+    { "id": "nave-norte", "rect": [53, 9, 6, 10], "height": 3, "style": "industrial", "color": "#4b4a44" },
+    { "id": "bloque-oeste", "rect": [1, 24, 8, 19], "height": 7, "style": "mega", "color": "#3c4660" },
+    { "id": "bloque9", "name": "Bloque 9", "rect": [34, 24, 14, 10], "height": 12, "style": "mega", "color": "#5a4b6e", "sign": "BLOQUE 9", "signColor": "#ffd23f" },
+    { "id": "bar-rele", "name": "Bar El Relé", "rect": [34, 37, 8, 6], "height": 3, "style": "club", "color": "#2b2d42", "sign": "EL RELÉ", "signColor": "#ff3fa4" },
+    { "id": "tienda-24h", "rect": [44, 37, 5, 6], "height": 2, "style": "shop", "color": "#405a5a", "sign": "24H", "signColor": "#7dff7a" },
+    { "id": "bloque-canal", "rect": [53, 24, 6, 19], "height": 5, "style": "block", "color": "#3b4e63" },
+    { "id": "nave-sur", "rect": [1, 48, 8, 15], "height": 3, "style": "industrial", "color": "#4a4640" },
+    { "id": "clinica-sato", "name": "Clínica Sato", "rect": [14, 48, 8, 6], "height": 3, "style": "clinic", "color": "#2f5d62", "sign": "CLÍNICA SATO", "signColor": "#5affc8" },
+    { "id": "bloque-sur", "rect": [14, 56, 15, 7], "height": 4, "style": "block", "color": "#4a3f50" },
+    { "id": "taller-sur", "rect": [24, 48, 5, 6], "height": 2, "style": "shop", "color": "#574a3a", "sign": "TALLER", "signColor": "#ff8a3d" },
+    { "id": "bloque-sureste", "rect": [53, 48, 6, 15], "height": 5, "style": "block", "color": "#3a4a5a" },
+    { "id": "club-voltio", "name": "Club Voltio", "rect": [64, 9, 7, 10], "height": 6, "style": "club", "color": "#3a2f55", "sign": "VOLTIO", "signColor": "#b46cff" },
+    { "id": "torre-okami", "name": "Torre Okami", "rect": [76, 9, 11, 10], "height": 10, "style": "tower", "color": "#2c3a4f", "sign": "OKAMI", "signColor": "#ff5a5a" },
+    { "id": "kanal-ne", "rect": [92, 9, 3, 10], "height": 3, "style": "block", "color": "#444a5a" },
+    { "id": "karaoke", "rect": [64, 24, 7, 9], "height": 5, "style": "club", "color": "#45385a", "sign": "KARAOKE", "signColor": "#ff8a3d" },
+    { "id": "kanal-m2", "rect": [64, 34, 7, 9], "height": 4, "style": "block", "color": "#3d4250" },
+    { "id": "ramen-kanal", "rect": [76, 24, 11, 8], "height": 4, "style": "shop", "color": "#3d5250", "sign": "RAMEN", "signColor": "#ffd23f" },
+    { "id": "bloque-kanal", "rect": [76, 35, 11, 8], "height": 8, "style": "mega", "color": "#4c4060" },
+    { "id": "kanal-e", "rect": [92, 24, 3, 19], "height": 4, "style": "block", "color": "#3a4152" },
+    { "id": "nave-kanal", "rect": [64, 48, 7, 15], "height": 3, "style": "industrial", "color": "#4b463d" },
+    { "id": "pachinko", "rect": [76, 48, 11, 15], "height": 6, "style": "club", "color": "#39465a", "sign": "PACHINKO", "signColor": "#43f3ff" },
+    { "id": "kanal-se", "rect": [92, 48, 3, 15], "height": 4, "style": "block", "color": "#3f4655" }
+  ],
+  "props": [
+    { "type": "stall", "at": [17, 28], "color": "#ffd23f" }, { "type": "stall", "at": [21, 28], "color": "#ff4fa0" }, { "type": "stall", "at": [25, 28], "color": "#43f3ff" },
+    { "type": "stall", "at": [17, 33], "color": "#7dff7a" }, { "type": "stall", "at": [21, 33], "color": "#ff8a3d" }, { "type": "stall", "at": [25, 33], "color": "#b46cff" },
+    { "type": "stall", "at": [17, 37], "color": "#ff5a5a" }, { "type": "stall", "at": [21, 37], "color": "#ffd23f" }, { "type": "stall", "at": [25, 37], "color": "#43f3ff" },
+    { "type": "bench", "at": [20, 41] }, { "type": "bench", "at": [24, 41] },
+    { "type": "lamp", "at": [9, 19] }, { "type": "lamp", "at": [29, 19] }, { "type": "lamp", "at": [49, 19] }, { "type": "lamp", "at": [9, 43] },
+    { "type": "lamp", "at": [29, 43] }, { "type": "lamp", "at": [49, 43] }, { "type": "lamp", "at": [71, 19] }, { "type": "lamp", "at": [87, 19] },
+    { "type": "lamp", "at": [71, 43] }, { "type": "lamp", "at": [87, 43] }, { "type": "lamp", "at": [29, 23] }, { "type": "lamp", "at": [13, 23] },
+    { "type": "vending", "at": [43, 35], "color": "#43f3ff" }, { "type": "vending", "at": [49, 36], "color": "#ff4fa0" },
+    { "type": "car", "at": [11, 30], "color": "#ffd23f" }, { "type": "car", "at": [73, 36], "color": "#ff5a5a" }, { "type": "car", "at": [31, 53], "color": "#7dd3fc" },
+    { "type": "crate", "at": [36, 50] }, { "type": "crate", "at": [37, 50] }, { "type": "crate", "at": [36, 51] }, { "type": "crate", "at": [45, 58] }, { "type": "crate", "at": [46, 58] },
+    { "type": "car", "at": [46, 49], "color": "#8a7a5a" },
+    { "type": "plant", "at": [33, 35] }, { "type": "plant", "at": [49, 33] },
+    { "type": "pipe", "at": [59, 30] }, { "type": "pipe", "at": [63, 30] }
+  ],
+  "doors": [
+    { "id": "puerta-bloque9", "name": "Bloque 9 · Vestíbulo", "at": [41, 34], "to": { "zone": "bloque9", "at": [8, 9] }, "danger": "protected" },
+    { "id": "puerta-rele", "name": "Bar El Relé", "at": [42, 40], "to": { "zone": "bar-rele", "at": [11, 5] }, "danger": "protected" },
+    { "id": "puerta-clinica", "name": "Clínica Sato", "at": [22, 51], "to": { "zone": "clinica-sato", "at": [9, 5] }, "danger": "protected" }
+  ],
+  "objects": [
+    { "id": "generador-lumen", "name": "Generador del mercado", "at": [27, 25], "kind": "generator", "dialog": "generador" },
+    { "id": "terminal-desguace", "name": "Terminal de inventario", "at": [46, 52], "kind": "terminal", "dialog": "terminal-desguace" },
+    { "id": "cajas-desguace", "name": "Pila de cajas", "at": [37, 58], "kind": "crates", "dialog": "cajas" },
+    { "id": "tablon-lumen", "name": "Tablón del mercado", "at": [14, 25], "kind": "board", "dialog": "tablon" }
+  ],
+  "sectors": [
+    { "chunk": [0, 0], "name": "Ferro · Muelles y Torre Halcón" }, { "chunk": [1, 0], "name": "Ferro · Lumen Norte" },
+    { "chunk": [2, 0], "name": "Ferro · Kanal Norte" }, { "chunk": [0, 1], "name": "Ferro · Mercado Lumen Sur" },
+    { "chunk": [1, 1], "name": "Ferro · Desguace" }, { "chunk": [2, 1], "name": "Ferro · Kanal Sur" }
+  ],
+  "waypoints": [
+    [5, 21], [20, 21], [40, 21], [55, 21], [68, 21], [80, 21], [93, 21], [5, 45], [20, 45], [40, 45], [55, 45], [68, 45], [80, 45], [93, 45],
+    [11, 15], [31, 15], [51, 15], [73, 15], [89, 15], [11, 35], [31, 35], [51, 35], [73, 30], [89, 30], [11, 55], [31, 58], [51, 55], [73, 55], [89, 55],
+    [20, 26], [24, 35], [18, 40], [27, 40], [10, 6], [30, 6], [50, 6], [70, 6], [90, 6], [43, 42], [23, 50]
+  ],
+  "safePoint": [41, 36],
+  "spawn": [41, 36]
+}

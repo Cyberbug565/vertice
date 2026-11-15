@@ -1,0 +1,8 @@
+node_modules/
+dist/
+data/
+.pgdata/
+*.log
+loadtest-results/*.tmp
+e2e/out/
+.env

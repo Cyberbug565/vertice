@@ -1,0 +1,9 @@
+{
+  "name": "@vertice/loadtest",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": { "run": "tsx src/run.ts" },
+  "dependencies": { "@vertice/shared": "*", "ws": "8.22.0" },
+  "devDependencies": { "@types/ws": "8.18.2" }
+}

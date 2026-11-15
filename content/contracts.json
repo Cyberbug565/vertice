@@ -1,0 +1,9 @@
+[
+  { "id": "generador-lumen", "version": 1, "title": "contract.gen.title", "summary": "contract.gen.summary", "giver": "nadia", "legal": true, "shared": true,
+    "objectives": [
+      { "id": "coupling", "text": "contract.gen.obj.coupling", "shared": true },
+      { "id": "install", "text": "contract.gen.obj.install", "shared": true },
+      { "id": "report", "text": "contract.gen.obj.report", "shared": false }
+    ],
+    "closedWhileFact": { "fact": "lumen_power", "is": true } }
+]

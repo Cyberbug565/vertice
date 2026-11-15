@@ -1,0 +1,181 @@
+{
+  "nadia": {
+    "speaker": "nadia",
+    "entries": [
+      { "if": [ { "contract": "generador-lumen", "state": "completed" }, { "flag": "nadia_trusted", "is": true } ], "node": "after_fixer" },
+      { "if": [ { "contract": "generador-lumen", "state": "completed" }, { "flag": "lumen_ally", "is": true } ], "node": "after_market" },
+      { "if": [ { "contract": "generador-lumen", "state": "active" }, { "objective": "install", "done": true } ], "node": "report" },
+      { "if": [ { "contract": "generador-lumen", "state": "active" } ], "node": "active" },
+      { "if": [ { "fact": "lumen_power", "is": true } ], "node": "closed" },
+      { "if": [], "node": "offer" }
+    ],
+    "nodes": {
+      "offer": { "text": "nadia.offer", "options": [
+        { "id": "accept", "text": "nadia.opt.accept", "effects": [ { "acceptContract": "generador-lumen" } ], "goto": "accepted" },
+        { "id": "details", "text": "nadia.opt.details", "goto": "details" },
+        { "id": "leave", "text": "opt.leave_later" } ] },
+      "details": { "text": "nadia.details", "options": [
+        { "id": "accept", "text": "nadia.opt.accept", "effects": [ { "acceptContract": "generador-lumen" } ], "goto": "accepted" },
+        { "id": "leave", "text": "opt.leave_later" } ] },
+      "accepted": { "text": "nadia.accepted", "options": [ { "id": "ok", "text": "opt.ok" } ] },
+      "active": { "text": "nadia.active", "options": [
+        { "id": "abandon", "text": "nadia.opt.abandon", "effects": [ { "abandonContract": "generador-lumen" }, { "rep": "red-bisagra", "delta": -2 } ], "goto": "abandoned" },
+        { "id": "leave", "text": "opt.leave" } ] },
+      "abandoned": { "text": "nadia.abandoned", "options": [ { "id": "ok", "text": "opt.ok" } ] },
+      "report": { "text": "nadia.report", "options": [
+        { "id": "give_fixer", "text": "nadia.opt.give_fixer", "effects": [
+          { "completeObjective": "report" }, { "money": 200, "reason": "Pago de Nadia: generador del Mercado Lumen", "byContribution": true },
+          { "rep": "red-bisagra", "delta": 10 }, { "rep": "calle", "delta": 5 }, { "flag": "nadia_trusted", "value": true }, { "xp": 60 },
+          { "completeContract": "generador-lumen", "outcome": "fixer" } ], "goto": "report_fixer" },
+        { "id": "give_market", "text": "nadia.opt.give_market", "effects": [
+          { "completeObjective": "report" }, { "money": 80, "reason": "Pago de la Asociación del Mercado Lumen", "byContribution": true },
+          { "rep": "asociacion-lumen", "delta": 15 }, { "rep": "red-bisagra", "delta": -5 }, { "rep": "calle", "delta": 8 }, { "flag": "lumen_ally", "value": true }, { "xp": 60 },
+          { "completeContract": "generador-lumen", "outcome": "market" } ], "goto": "report_market" },
+        { "id": "leave", "text": "opt.think" } ] },
+      "report_fixer": { "text": "nadia.report_fixer", "options": [ { "id": "ok", "text": "opt.ok" } ] },
+      "report_market": { "text": "nadia.report_market", "options": [ { "id": "ok", "text": "opt.ok" } ] },
+      "after_fixer": { "text": "nadia.after_fixer", "options": [ { "id": "ok", "text": "opt.leave" } ] },
+      "after_market": { "text": "nadia.after_market", "options": [ { "id": "ok", "text": "opt.leave" } ] },
+      "closed": { "text": "nadia.closed", "options": [ { "id": "ok", "text": "opt.leave" } ] }
+    }
+  },
+  "tomas": {
+    "speaker": "tomas",
+    "entries": [
+      { "if": [ { "contract": "generador-lumen", "state": "active" }, { "objective": "coupling", "done": false } ], "node": "deal" },
+      { "if": [ { "contract": "generador-lumen", "state": "active" } ], "node": "done" },
+      { "if": [], "node": "idle" }
+    ],
+    "nodes": {
+      "idle": { "text": "tomas.idle", "options": [ { "id": "leave", "text": "opt.leave" } ] },
+      "done": { "text": "tomas.done", "options": [ { "id": "leave", "text": "opt.leave" } ] },
+      "deal": { "text": "tomas.deal", "options": [
+        { "id": "buy", "text": "tomas.opt.buy", "if": [ { "flag": "tomas_price_up", "is": false } ], "require": [ { "money": 120 } ], "requireText": "req.money",
+          "effects": [ { "money": -120, "reason": "Compra: acoplamiento de potencia" }, { "item": "acoplamiento", "qty": 1 }, { "completeObjective": "coupling" }, { "xp": 10 } ], "goto": "bought" },
+        { "id": "buy_high", "text": "tomas.opt.buy_high", "if": [ { "flag": "tomas_price_up", "is": true } ], "require": [ { "money": 180 } ], "requireText": "req.money",
+          "effects": [ { "money": -180, "reason": "Compra: acoplamiento de potencia (precio inflado)" }, { "item": "acoplamiento", "qty": 1 }, { "completeObjective": "coupling" }, { "xp": 10 } ], "goto": "bought" },
+        { "id": "solo", "text": "tomas.opt.solo", "if": [ { "role": "solo" }, { "flag": "tomas_price_up", "is": false } ],
+          "check": { "attr": "COOL", "skill": "negociacion", "dv": 15, "key": "tomas-solo", "roleBonus": { "role": "solo", "bonus": 2 } },
+          "effects": [ { "item": "acoplamiento", "qty": 1 }, { "completeObjective": "coupling" }, { "xp": 30 }, { "rep": "chatarreros", "delta": 2 }, { "rep": "calle", "delta": 2 } ], "goto": "solo_win",
+          "fail": [ { "flag": "tomas_price_up", "value": true }, { "xp": 5 } ], "failGoto": "deal", "failText": "tomas.solo_fail" },
+        { "id": "evidence", "text": "tomas.opt.evidence", "if": [ { "flag": "evidence_coupling", "is": true } ],
+          "effects": [ { "item": "acoplamiento", "qty": 1 }, { "completeObjective": "coupling" }, { "xp": 30 }, { "rep": "chatarreros", "delta": -5 }, { "rep": "asociacion-lumen", "delta": 3 } ], "goto": "evidence" },
+        { "id": "work", "text": "tomas.opt.work", "effects": [ { "task": "cargar-cajas" } ] },
+        { "id": "leave", "text": "opt.leave_later" } ] },
+      "bought": { "text": "tomas.bought", "options": [ { "id": "ok", "text": "opt.ok" } ] },
+      "solo_win": { "text": "tomas.solo_win", "options": [ { "id": "ok", "text": "opt.ok" } ] },
+      "evidence": { "text": "tomas.evidence", "options": [ { "id": "ok", "text": "opt.ok" } ] }
+    }
+  },
+  "terminal-desguace": {
+    "speaker": "terminal",
+    "entries": [
+      { "if": [ { "contract": "generador-lumen", "state": "active" }, { "objective": "coupling", "done": false }, { "flag": "evidence_coupling", "is": false } ], "node": "locked" },
+      { "if": [], "node": "idle" }
+    ],
+    "nodes": {
+      "idle": { "text": "terminal.idle", "options": [ { "id": "leave", "text": "opt.disconnect" } ] },
+      "locked": { "text": "terminal.locked", "options": [
+        { "id": "hack", "text": "terminal.opt.hack", "require": [ { "role": "netrunner" } ], "requireText": "terminal.need_netrunner",
+          "check": { "attr": "INT", "skill": "interfaz", "dv": 16, "key": "terminal-hack", "roleBonus": { "role": "netrunner", "bonus": 2 } },
+          "channel": { "seconds": 3, "label": "task.hacking" },
+          "effects": [ { "flag": "evidence_coupling", "value": true }, { "xp": 25 }, { "notice": "notice.evidence" } ], "goto": "hacked",
+          "fail": [ { "flag": "tomas_price_up", "value": true }, { "xp": 5 }, { "notice": "notice.traced" } ], "failText": "terminal.traced" },
+        { "id": "leave", "text": "opt.disconnect" } ] },
+      "hacked": { "text": "terminal.hacked", "options": [ { "id": "ok", "text": "opt.disconnect" } ] }
+    }
+  },
+  "generador": {
+    "speaker": "generador",
+    "entries": [
+      { "if": [ { "fact": "lumen_power", "is": true } ], "node": "working" },
+      { "if": [ { "contract": "generador-lumen", "state": "active" }, { "objective": "coupling", "done": true }, { "hasItem": "acoplamiento" } ], "node": "install" },
+      { "if": [ { "contract": "generador-lumen", "state": "active" } ], "node": "missing" },
+      { "if": [], "node": "broken" }
+    ],
+    "nodes": {
+      "working": { "text": "gen.working", "options": [ { "id": "leave", "text": "opt.leave" } ] },
+      "broken": { "text": "gen.broken", "options": [ { "id": "leave", "text": "opt.leave" } ] },
+      "missing": { "text": "gen.missing", "options": [ { "id": "leave", "text": "opt.leave" } ] },
+      "install": { "text": "gen.install", "options": [
+        { "id": "install", "text": "gen.opt.install", "channel": { "seconds": 4, "label": "task.installing" },
+          "effects": [ { "item": "acoplamiento", "qty": -1 }, { "completeObjective": "install" }, { "fact": "lumen_power", "value": true, "ttlMinutes": 90 }, { "xp": 25 }, { "rep": "asociacion-lumen", "delta": 3 }, { "notice": "notice.power_on" } ] },
+        { "id": "tech", "text": "gen.opt.tech", "if": [ { "role": "tech" } ],
+          "check": { "attr": "TECH", "skill": "reparacion", "dv": 13, "key": "gen-tech", "roleBonus": { "role": "tech", "bonus": 2 } },
+          "channel": { "seconds": 2.5, "label": "task.installing_clean" },
+          "effects": [ { "item": "acoplamiento", "qty": -1 }, { "completeObjective": "install" }, { "fact": "lumen_power", "value": true, "ttlMinutes": 120 }, { "xp": 40 }, { "money": 30, "reason": "Propina de los comerciantes por una instalación limpia" }, { "rep": "asociacion-lumen", "delta": 6 }, { "notice": "notice.power_on" } ],
+          "fail": [ { "item": "acoplamiento", "qty": -1 }, { "completeObjective": "install" }, { "fact": "lumen_power", "value": true, "ttlMinutes": 90 }, { "xp": 25 }, { "rep": "asociacion-lumen", "delta": 3 }, { "notice": "notice.power_on" } ], "failText": "gen.tech_fail" },
+        { "id": "leave", "text": "opt.leave_later" } ] }
+    }
+  },
+  "lin": {
+    "speaker": "lin",
+    "entries": [
+      { "if": [ { "flag": "lumen_ally", "is": true } ], "node": "friend" },
+      { "if": [ { "fact": "lumen_power", "is": true } ], "node": "lit" },
+      { "if": [], "node": "default" }
+    ],
+    "nodes": {
+      "default": { "text": "lin.default", "options": [
+        { "id": "buy", "text": "lin.opt.buy", "require": [ { "money": 15 } ], "requireText": "req.money", "effects": [ { "money": -15, "reason": "Compra: fideos de krill" }, { "item": "fideos-krill", "qty": 1 } ], "goto": "default" },
+        { "id": "rumor", "text": "lin.opt.rumor", "goto": "rumor" },
+        { "id": "leave", "text": "opt.leave" } ] },
+      "lit": { "text": "lin.lit", "options": [
+        { "id": "buy", "text": "lin.opt.buy", "require": [ { "money": 15 } ], "requireText": "req.money", "effects": [ { "money": -15, "reason": "Compra: fideos de krill" }, { "item": "fideos-krill", "qty": 1 } ], "goto": "lit" },
+        { "id": "leave", "text": "opt.leave" } ] },
+      "friend": { "text": "lin.friend", "options": [
+        { "id": "buy", "text": "lin.opt.buy_friend", "require": [ { "money": 12 } ], "requireText": "req.money", "effects": [ { "money": -12, "reason": "Compra: fideos de krill (precio de amigo)" }, { "item": "fideos-krill", "qty": 1 } ], "goto": "friend" },
+        { "id": "leave", "text": "opt.leave" } ] },
+      "rumor": { "text": "lin.rumor", "options": [ { "id": "back", "text": "opt.back", "goto": "default" }, { "id": "leave", "text": "opt.leave" } ] }
+    }
+  },
+  "sato": {
+    "speaker": "sato",
+    "entries": [ { "if": [], "node": "root" } ],
+    "nodes": {
+      "root": { "text": "sato.root", "options": [
+        { "id": "checkup", "text": "sato.opt.checkup", "if": [ { "flag": "clinic_checkup", "is": false } ], "effects": [ { "restore": "all" }, { "flag": "clinic_checkup", "value": true }, { "notice": "notice.checkup" } ], "goto": "checked" },
+        { "id": "stim", "text": "sato.opt.stim", "require": [ { "money": 40 } ], "requireText": "req.money", "effects": [ { "money": -40, "reason": "Compra: estimulante médico" }, { "item": "estim", "qty": 1 } ], "goto": "root" },
+        { "id": "chrome", "text": "sato.opt.chrome", "goto": "chrome" },
+        { "id": "leave", "text": "opt.leave" } ] },
+      "checked": { "text": "sato.checked", "options": [ { "id": "back", "text": "opt.back", "goto": "root" } ] },
+      "chrome": { "text": "sato.chrome", "options": [ { "id": "back", "text": "opt.back", "goto": "root" } ] }
+    }
+  },
+  "reme": {
+    "speaker": "reme",
+    "entries": [ { "if": [], "node": "root" } ],
+    "nodes": {
+      "root": { "text": "reme.root", "options": [ { "id": "tips", "text": "reme.opt.tips", "goto": "tips" }, { "id": "leave", "text": "opt.leave" } ] },
+      "tips": { "text": "reme.tips", "options": [ { "id": "leave", "text": "opt.thanks" } ] }
+    }
+  },
+  "ascensor": {
+    "speaker": "ascensor",
+    "entries": [ { "if": [], "node": "root" } ],
+    "nodes": { "root": { "text": "elev.root", "options": [
+      { "id": "rest", "text": "elev.opt.rest", "channel": { "seconds": 3, "label": "task.resting" }, "effects": [ { "restore": "all" }, { "notice": "notice.rested" } ] },
+      { "id": "leave", "text": "opt.leave" } ] } }
+  },
+  "cajas": {
+    "speaker": "cajas",
+    "entries": [ { "if": [], "node": "root" } ],
+    "nodes": { "root": { "text": "cajas.root", "options": [ { "id": "leave", "text": "opt.leave" } ] } }
+  },
+  "tablon": {
+    "speaker": "tablon",
+    "entries": [ { "if": [ { "fact": "lumen_power", "is": true } ], "node": "lit" }, { "if": [], "node": "root" } ],
+    "nodes": {
+      "root": { "text": "tablon.root", "options": [ { "id": "leave", "text": "opt.leave" } ] },
+      "lit": { "text": "tablon.lit", "options": [ { "id": "leave", "text": "opt.leave" } ] }
+    }
+  },
+  "transeunte": {
+    "speaker": "transeunte",
+    "entries": [ { "if": [ { "fact": "lumen_power", "is": true } ], "node": "lit" }, { "if": [], "node": "root" } ],
+    "nodes": {
+      "root": { "text": "walker.root", "options": [ { "id": "leave", "text": "opt.leave" } ] },
+      "lit": { "text": "walker.lit", "options": [ { "id": "leave", "text": "opt.leave" } ] }
+    }
+  }
+}
