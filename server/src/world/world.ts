@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  RULES, encodePositions, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  RULES, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption,
 } from '@vertice/shared';
 import type { Config } from '../config.js';
@@ -18,11 +18,14 @@ import { allOk, buildView, checkNumbers, entryNode } from '../game/dialog.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
-  known: Map<number, number>; lastSnapTick: number; dialog?: { no: number; dialogId: string; node: string; targetId: number };
+  known: Map<number, { lv: number; sent: number }>; lastSnapTick: number; dialog?: { no: number; dialogId: string; node: string; targetId: number };
   queue: Promise<void>; chatTimes: number[]; closed: boolean; lastSector?: string; lastDanger?: string; bytesOut: number;
 }
 
 const INTERACT_RANGE = 2.3;
+const MAX_POS = 4000;
+const POS_BUF = new Uint8Array(7 + MAX_POS * 9);
+const POS_DV = new DataView(POS_BUF.buffer);
 const DOOR_RANGE = 1.3;
 const AMBIENT_NAMES = ['Repartidor', 'Vecina del Bloque 9', 'Estibador', 'Turista perdido', 'Estudiante', 'Mensajera', 'Jubilado', 'Guardia de turno', 'Camarera', 'Mecánico'];
 const PALETTE = { skin: ['#f0c8a8', '#e0b48c', '#c89070', '#b07a5a', '#8a5a3c', '#6a4028'], hair: ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#c0c0c0'], jacket: ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a'], accent: ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'] };
@@ -134,7 +137,8 @@ export class World {
         }
       }
     }
-    if (this.tick % RULES.snapshotEveryTicks === 0) for (const c of this.conns.values()) this.snapshot(c);
+    // Instantáneas escalonadas: cada cliente recibe una cada `snapshotEveryTicks` ticks, repartidos entre ticks consecutivos.
+    { const every = RULES.snapshotEveryTicks, phase = this.tick % every; let i = 0; for (const c of this.conns.values()) { if ((i++ % every) === phase) this.snapshot(c); } }
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
     this.metrics.tick.push(performance.now() - t0);
@@ -233,30 +237,49 @@ export class World {
     if (!e || c.closed || c.ws.readyState !== 1) return;
     const buffered = c.ws.bufferedAmount;
     if (buffered > 2_000_000) { this.metrics.inc('slowClientDrops'); c.ws.close(4008, 'Cliente demasiado lento'); return; }
+    // Contrapresión: las posiciones son el último estado; si el cliente va atrasado no se envían y se reenviarán después.
+    const skipPos = buffered > 256_000;
+    if (skipPos) this.metrics.inc('snapshotsSkipped');
     const vis = e.zone.query(e.x, e.y, this.cfg.viewRadius);
     const visIds = new Set<number>();
     const spawns: EntitySpawn[] = [];
-    const pos: { id: number; x: number; y: number; flags: number }[] = [];
+    const labels: { id: number; label: string }[] = [];
+    let np = 0;
+    const NEAR2 = 12 * 12;
     for (const v of vis) {
       visIds.add(v.id);
-      const known = c.known.get(v.id);
-      if (known === undefined) { spawns.push(spawnOf(v)); c.known.set(v.id, v.labelVer); continue; }
-      if (known !== v.labelVer) { c.known.set(v.id, v.labelVer); this.send(c, { t: 'label', id: v.id, label: v.label }); }
-      if (v.lastMoveTick > c.lastSnapTick) pos.push({ id: v.id, x: v.x, y: v.y, flags: (v.moving ? 1 : 0) | (v.facing << 1) | (v.task || v.channel ? 16 : 0) });
+      const k = c.known.get(v.id);
+      if (!k) { spawns.push(spawnOf(v)); c.known.set(v.id, { lv: v.labelVer, sent: this.tick }); continue; }
+      if (k.lv !== v.labelVer) { k.lv = v.labelVer; labels.push({ id: v.id, label: v.label }); }
+      if (skipPos || v.lastMoveTick <= k.sent) continue;
+      // Interés por distancia: cerca a 10 Hz; lejos a 5 Hz. La posición final al detenerse siempre se entrega.
+      const dx = v.x - e.x, dy = v.y - e.y;
+      if (v !== e && dx * dx + dy * dy > NEAR2 && this.tick - k.sent < 4 && v.moving) continue;
+      if (np >= MAX_POS) continue;
+      const o = 7 + np * 9;
+      POS_DV.setUint32(o, v.id); POS_DV.setUint16(o + 4, Math.max(0, Math.min(65535, Math.round(v.x * POS_SCALE)))); POS_DV.setUint16(o + 6, Math.max(0, Math.min(65535, Math.round(v.y * POS_SCALE))));
+      POS_DV.setUint8(o + 8, (v.moving ? 1 : 0) | (v.facing << 1) | (v.task || v.channel ? 16 : 0));
+      np++;
+      k.sent = this.tick;
     }
     const gone: number[] = [];
     for (const id of c.known.keys()) if (!visIds.has(id)) gone.push(id);
     for (const id of gone) c.known.delete(id);
-    if (gone.length) this.send(c, { t: 'despawn', ids: gone });
-    if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
-    if (pos.length) {
-      // Contrapresión: las posiciones son el último estado; si el cliente va atrasado se descartan y se reenviarán.
-      if (buffered > 256_000) { this.metrics.inc('snapshotsSkipped'); return; }
-      const buf = encodePositions(this.tick, pos);
-      c.ws.send(buf);
-      c.bytesOut += buf.byteLength;
-      this.metrics.inc('bytesOut', buf.byteLength); this.metrics.inc('bytesOutPositions', buf.byteLength);
-    }
+    // Agrupar las escrituras de esta instantánea en una sola llamada al sistema.
+    const sock = (c.ws as any)._socket as { cork?: () => void; uncork?: () => void } | undefined;
+    sock?.cork?.();
+    try {
+      if (gone.length) this.send(c, { t: 'despawn', ids: gone });
+      if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
+      for (const l of labels) this.send(c, { t: 'label', id: l.id, label: l.label });
+      if (np) {
+        POS_DV.setUint8(0, BIN_POSITIONS); POS_DV.setUint32(1, this.tick >>> 0); POS_DV.setUint16(5, np);
+        const buf = Buffer.from(POS_BUF.subarray(0, 7 + np * 9)); // copia: el búfer compartido se reutiliza
+        c.ws.send(buf);
+        c.bytesOut += buf.byteLength;
+        this.metrics.inc('bytesOut', buf.byteLength); this.metrics.inc('bytesOutPositions', buf.byteLength);
+      }
+    } finally { sock?.uncork?.(); }
     c.lastSnapTick = this.tick;
   }
 

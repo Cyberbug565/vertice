@@ -29,9 +29,9 @@ export class BotClient {
 
   constructor(readonly base: string, readonly name = 'bot') {}
 
-  static async api(base: string, path: string, body?: unknown, token?: string) {
+  static async api(base: string, path: string, body?: unknown, token?: string): Promise<any> {
     const r = await fetch(base + path, { method: body ? 'POST' : 'GET', headers: { 'content-type': 'application/json', ...(token ? { authorization: `Bearer ${token}` } : {}) }, body: body ? JSON.stringify(body) : undefined });
-    const j = await r.json();
+    const j: any = await r.json();
     if (!r.ok) throw new Error(`${path}: ${r.status} ${j.error}`);
     return j;
   }
@@ -39,7 +39,7 @@ export class BotClient {
     let token: string;
     try { token = (await BotClient.api(base, '/api/register', { username, password: 'password1' })).token; }
     catch { token = (await BotClient.api(base, '/api/login', { username, password: 'password1' })).token; }
-    const me = await BotClient.api(base, '/api/me', undefined, token);
+    const me: any = await BotClient.api(base, '/api/me', undefined, token);
     if (!me.character) {
       const attributes = { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6, ...extra };
       await BotClient.api(base, '/api/characters', { name: username.slice(0, 20), origin, role, attributes, appearance: { skin: '#c89070', hair: '#1a1a1a', jacket: '#40506a', accent: '#43f3ff' } }, token);
@@ -113,6 +113,7 @@ export class BotClient {
   }
   findEntity(pred: (e: EntitySpawn) => boolean) { return [...this.entities.values()].find(pred); }
   async interactAndDialog(name: string, timeoutMs = 60000): Promise<DialogView> {
+    await this.until(() => !!this.findEntity((e) => e.name.includes(name)), 4000, `ver a ${name}`).catch(() => {});
     const ent = this.findEntity((e) => e.name.includes(name));
     if (!ent) throw new Error(`[${this.name}] no veo a ${name} en ${this.zone}`);
     this.dialog = undefined;
@@ -122,6 +123,7 @@ export class BotClient {
     return this.dialog!;
   }
   async enterDoor(name: string, timeoutMs = 60000) {
+    await this.until(() => !!this.findEntity((e) => e.kind === 'door' && e.name.includes(name)), 4000, `ver la puerta ${name}`).catch(() => {});
     const ent = this.findEntity((e) => e.kind === 'door' && e.name.includes(name));
     if (!ent) throw new Error(`[${this.name}] no veo la puerta ${name}`);
     const from = this.zone;

@@ -76,9 +76,9 @@
     { "id": "tablon-lumen", "name": "Tablón del mercado", "at": [14, 25], "kind": "board", "dialog": "tablon" }
   ],
   "sectors": [
-    { "chunk": [0, 0], "name": "Ferro · Muelles y Torre Halcón" }, { "chunk": [1, 0], "name": "Ferro · Lumen Norte" },
-    { "chunk": [2, 0], "name": "Ferro · Kanal Norte" }, { "chunk": [0, 1], "name": "Ferro · Mercado Lumen Sur" },
-    { "chunk": [1, 1], "name": "Ferro · Desguace" }, { "chunk": [2, 1], "name": "Ferro · Kanal Sur" }
+    { "chunk": [0, 0], "name": "Ferro · Lumen Norte y Torre Halcón" }, { "chunk": [1, 0], "name": "Ferro · Bloque 9 y Hotel Koi" },
+    { "chunk": [2, 0], "name": "Ferro · Kanal Norte" }, { "chunk": [0, 1], "name": "Ferro · Mercado Lumen Sur y Clínica" },
+    { "chunk": [1, 1], "name": "Ferro · El Relé y Desguace" }, { "chunk": [2, 1], "name": "Ferro · Kanal Sur" }
   ],
   "waypoints": [
     [5, 21], [20, 21], [40, 21], [55, 21], [68, 21], [80, 21], [93, 21], [5, 45], [20, 45], [40, 45], [55, 45], [68, 45], [80, 45], [93, 45],

@@ -1,0 +1,199 @@
+{
+  "scenario": "spread",
+  "bots": 500,
+  "durationS": 120,
+  "warmupS": 40,
+  "base": "http://localhost:8080",
+  "run": "x8lx",
+  "at": "2026-11-15T20:18:37.519Z",
+  "note": "Generador y servidor en la misma máquina salvo que se indique lo contrario. Población: bots = clientes sintéticos; PNJ según /api/metrics.",
+  "server": {
+    "tickMs": {
+      "n": 2875,
+      "avg": 21.93792935582594,
+      "p50": 22.777302000002237,
+      "p95": 57.83665199999814,
+      "p99": 67.3938380000036,
+      "max": 85.87772699998459
+    },
+    "dbWriteMs": {
+      "n": 5000,
+      "avg": 5.028176458599965,
+      "p50": 0.5999129999836441,
+      "p95": 42.64717300000484,
+      "p99": 60.05911699999706,
+      "max": 90.22199099999852
+    },
+    "world": {
+      "tick": 4362,
+      "cityHour": 18.63,
+      "connections": 500,
+      "lingering": 0,
+      "zones": {
+        "bar-rele": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "bloque9": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "clinica-sato": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "ferro": {
+          "entities": 533,
+          "players": 500,
+          "npcs": 26
+        }
+      }
+    },
+    "counters": {
+      "msgsIn": 6900,
+      "msgsRejected": 0,
+      "bytesOut": 1138095988,
+      "bytesOutPositions": 843679177,
+      "bytesOutJson": 294416811,
+      "snapshotsSkipped": 0,
+      "sectorCrossings": 4916,
+      "zoneTransfers": 1709,
+      "npcTransfers": 0,
+      "pathRequests": 5484,
+      "pathFailures": 0,
+      "pathExpanded": 622139,
+      "pathCacheHits": 2,
+      "kicks": 0,
+      "slowClientDrops": 0,
+      "reconnects": 133,
+      "lateTicks": 0
+    },
+    "memoryMiB": {
+      "rss": 224,
+      "heapUsed": 31
+    },
+    "db": "postgres"
+  },
+  "client": {
+    "recvKiBps": {
+      "avg": 14.47,
+      "p50": 15.56,
+      "p95": 28.71,
+      "p99": 46.25,
+      "max": 97.37
+    },
+    "moveAckMs": {
+      "p50": 2,
+      "p95": 40.5,
+      "p99": 55.2,
+      "n": 4230
+    },
+    "initialLoadKiB": 899.4
+  },
+  "activity": {
+    "moves": 6510,
+    "doorCrossings": 2348,
+    "dialogs": 380,
+    "purchases": 380,
+    "reconnects": 224,
+    "errors": 7,
+    "sampleErrors": [
+      "[botx8lxx492] no veo la puerta Clínica",
+      "[botx8lxx491] no veo la puerta Bloque 9",
+      "[botx8lxx26] no veo la puerta Relé",
+      "[botx8lxx165] no veo la puerta Clínica",
+      "[botx8lxx273] no veo la puerta Clínica",
+      "[botx8lxx96] no veo la puerta Clínica",
+      "[botx8lxx394] no veo la puerta Relé"
+    ]
+  },
+  "timeline": [
+    {
+      "t": 80,
+      "tickP95": 55.51,
+      "conns": 498,
+      "rss": 223
+    },
+    {
+      "t": 90,
+      "tickP95": 61.57,
+      "conns": 498,
+      "rss": 223
+    },
+    {
+      "t": 100,
+      "tickP95": 60.32,
+      "conns": 499,
+      "rss": 223
+    },
+    {
+      "t": 110,
+      "tickP95": 58.03,
+      "conns": 497,
+      "rss": 223
+    },
+    {
+      "t": 120,
+      "tickP95": 57.13,
+      "conns": 500,
+      "rss": 223
+    },
+    {
+      "t": 130,
+      "tickP95": 59.05,
+      "conns": 499,
+      "rss": 224
+    },
+    {
+      "t": 140,
+      "tickP95": 59.05,
+      "conns": 498,
+      "rss": 224
+    },
+    {
+      "t": 150,
+      "tickP95": 59.02,
+      "conns": 499,
+      "rss": 224
+    },
+    {
+      "t": 160,
+      "tickP95": 59.16,
+      "conns": 499,
+      "rss": 224
+    },
+    {
+      "t": 170,
+      "tickP95": 59.17,
+      "conns": 498,
+      "rss": 224
+    },
+    {
+      "t": 180,
+      "tickP95": 59.17,
+      "conns": 499,
+      "rss": 224
+    },
+    {
+      "t": 190,
+      "tickP95": 58.9,
+      "conns": 500,
+      "rss": 224
+    },
+    {
+      "t": 200,
+      "tickP95": 58.52,
+      "conns": 500,
+      "rss": 224
+    },
+    {
+      "t": 210,
+      "tickP95": 57.89,
+      "conns": 500,
+      "rss": 224
+    }
+  ]
+}

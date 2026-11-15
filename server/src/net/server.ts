@@ -2,6 +2,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
+import { brotliCompressSync, gzipSync, constants as zc } from 'node:zlib';
 import { WebSocketServer, type WebSocket } from 'ws';
 import { ClientMsg, MAX_CLIENT_MESSAGE_BYTES, PROTOCOL_VERSION } from '@vertice/shared';
 import type { Config } from '../config.js';
@@ -36,6 +37,7 @@ class IpLimiter {
 }
 
 export function startServer(cfg: Config, db: Db, world: World, metrics: Metrics) {
+  const staticCache = new Map<string, Buffer>();
   const authLimiter = new IpLimiter(Number(process.env.AUTH_RATE_LIMIT ?? 30), 60_000);
 
   const http = createServer(async (req, res) => {
@@ -91,10 +93,20 @@ export function startServer(cfg: Config, db: Db, world: World, metrics: Metrics)
       let file = join(cfg.staticDir, rel || 'index.html');
       try { if ((await stat(file)).isDirectory()) file = join(file, 'index.html'); } catch { file = join(cfg.staticDir, 'index.html'); }
       try {
-        const data = await readFile(file);
         const immutable = rel.startsWith('assets/');
-        res.writeHead(200, { 'content-type': MIME[extname(file)] ?? 'application/octet-stream', 'cache-control': immutable ? 'public, max-age=31536000, immutable' : 'no-cache' });
-        res.end(data);
+        const type = MIME[extname(file)] ?? 'application/octet-stream';
+        const accept = String(req.headers['accept-encoding'] ?? '');
+        const enc = /\bbr\b/.test(accept) ? 'br' : /\bgzip\b/.test(accept) ? 'gzip' : null;
+        const compressible = /text|javascript|json|svg/.test(type);
+        const key = `${file}|${enc}`;
+        let body = staticCache.get(key);
+        if (!body) {
+          const raw = await readFile(file);
+          body = compressible && enc === 'br' ? brotliCompressSync(raw, { params: { [zc.BROTLI_PARAM_QUALITY]: 9 } }) : compressible && enc === 'gzip' ? gzipSync(raw, { level: 9 }) : raw;
+          if (immutable || file.endsWith('index.html')) staticCache.set(key, body);
+        }
+        res.writeHead(200, { 'content-type': type, 'cache-control': immutable ? 'public, max-age=31536000, immutable' : 'no-cache', vary: 'accept-encoding', ...(compressible && enc ? { 'content-encoding': enc } : {}) });
+        res.end(body);
       } catch {
         res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
         res.end('Cliente no compilado. Ejecuta "npm run build" o usa "npm run dev" y abre http://localhost:5173');

@@ -1,0 +1,215 @@
+{
+  "scenario": "crowd",
+  "bots": 40,
+  "durationS": 180,
+  "warmupS": 20,
+  "base": "http://localhost:8080",
+  "run": "sl8k",
+  "at": "2026-11-15T20:14:52.277Z",
+  "note": "Generador y servidor en la misma máquina salvo que se indique lo contrario. Población: bots = clientes sintéticos; PNJ según /api/metrics.",
+  "server": {
+    "tickMs": {
+      "n": 3667,
+      "avg": 1.2372457892010578,
+      "p50": 1.1574839999957476,
+      "p95": 3.11307599999418,
+      "p99": 4.023033999998006,
+      "max": 9.245539999996254
+    },
+    "dbWriteMs": {
+      "n": 480,
+      "avg": 0.8691033708338334,
+      "p50": 0.6144130000029691,
+      "p95": 1.1244519999891054,
+      "p99": 9.188513000000967,
+      "max": 12.71938500000033
+    },
+    "world": {
+      "tick": 4195,
+      "cityHour": 14.87,
+      "connections": 40,
+      "lingering": 0,
+      "zones": {
+        "bar-rele": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "bloque9": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "clinica-sato": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "ferro": {
+          "entities": 133,
+          "players": 40,
+          "npcs": 86
+        }
+      }
+    },
+    "counters": {
+      "msgsIn": 1928,
+      "msgsRejected": 0,
+      "bytesOut": 55830265,
+      "bytesOutPositions": 52045962,
+      "bytesOutJson": 3784303,
+      "snapshotsSkipped": 0,
+      "sectorCrossings": 762,
+      "zoneTransfers": 0,
+      "npcTransfers": 0,
+      "pathRequests": 3745,
+      "pathFailures": 0,
+      "pathExpanded": 91023,
+      "pathCacheHits": 9,
+      "kicks": 0,
+      "slowClientDrops": 0,
+      "reconnects": 0,
+      "lateTicks": 0
+    },
+    "memoryMiB": {
+      "rss": 146,
+      "heapUsed": 23
+    },
+    "db": "postgres"
+  },
+  "client": {
+    "recvKiBps": {
+      "avg": 7.44,
+      "p50": 7.44,
+      "p95": 8.21,
+      "p99": 8.67,
+      "max": 9.95
+    },
+    "moveAckMs": {
+      "p50": 0.8,
+      "p95": 1.1,
+      "p99": 2.3,
+      "n": 1553
+    },
+    "initialLoadKiB": 194.6
+  },
+  "activity": {
+    "moves": 1700,
+    "doorCrossings": 0,
+    "dialogs": 175,
+    "purchases": 0,
+    "reconnects": 0,
+    "errors": 0,
+    "sampleErrors": []
+  },
+  "timeline": [
+    {
+      "t": 32,
+      "tickP95": 2.65,
+      "conns": 40,
+      "rss": 197
+    },
+    {
+      "t": 42,
+      "tickP95": 2.82,
+      "conns": 40,
+      "rss": 197
+    },
+    {
+      "t": 52,
+      "tickP95": 2.7,
+      "conns": 40,
+      "rss": 197
+    },
+    {
+      "t": 62,
+      "tickP95": 2.7,
+      "conns": 40,
+      "rss": 165
+    },
+    {
+      "t": 72,
+      "tickP95": 2.75,
+      "conns": 40,
+      "rss": 165
+    },
+    {
+      "t": 82,
+      "tickP95": 2.75,
+      "conns": 40,
+      "rss": 165
+    },
+    {
+      "t": 92,
+      "tickP95": 2.73,
+      "conns": 40,
+      "rss": 165
+    },
+    {
+      "t": 102,
+      "tickP95": 2.78,
+      "conns": 40,
+      "rss": 166
+    },
+    {
+      "t": 112,
+      "tickP95": 2.79,
+      "conns": 40,
+      "rss": 166
+    },
+    {
+      "t": 122,
+      "tickP95": 2.88,
+      "conns": 40,
+      "rss": 141
+    },
+    {
+      "t": 132,
+      "tickP95": 3,
+      "conns": 40,
+      "rss": 141
+    },
+    {
+      "t": 142,
+      "tickP95": 3.06,
+      "conns": 40,
+      "rss": 141
+    },
+    {
+      "t": 152,
+      "tickP95": 3.1,
+      "conns": 40,
+      "rss": 145
+    },
+    {
+      "t": 162,
+      "tickP95": 3.12,
+      "conns": 40,
+      "rss": 146
+    },
+    {
+      "t": 172,
+      "tickP95": 3.12,
+      "conns": 40,
+      "rss": 146
+    },
+    {
+      "t": 182,
+      "tickP95": 3.12,
+      "conns": 40,
+      "rss": 146
+    },
+    {
+      "t": 192,
+      "tickP95": 3.1,
+      "conns": 40,
+      "rss": 146
+    },
+    {
+      "t": 202,
+      "tickP95": 3.1,
+      "conns": 40,
+      "rss": 146
+    }
+  ]
+}

@@ -6,3 +6,4 @@ data/
 loadtest-results/*.tmp
 e2e/out/
 .env
+e2e/out/*.png

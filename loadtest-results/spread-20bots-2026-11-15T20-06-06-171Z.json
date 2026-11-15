@@ -1,0 +1,136 @@
+{
+  "scenario": "spread",
+  "bots": 20,
+  "durationS": 30,
+  "warmupS": 8,
+  "base": "http://localhost:8080",
+  "run": "kq0c",
+  "at": "2026-11-15T20:06:06.169Z",
+  "note": "Generador y servidor en la misma máquina salvo que se indique lo contrario. Población: bots = clientes sintéticos; PNJ según /api/metrics.",
+  "server": {
+    "tickMs": {
+      "n": 750,
+      "avg": 0.4439907653333333,
+      "p50": 0.4239360000065062,
+      "p95": 0.9298310000012862,
+      "p99": 1.4477980000010575,
+      "max": 2.5979440000010072
+    },
+    "dbWriteMs": {
+      "n": 80,
+      "avg": 1.4810783124997442,
+      "p50": 0.7628380000023753,
+      "p95": 3.8429140000007465,
+      "p99": 9.361539999998058,
+      "max": 9.361539999998058
+    },
+    "world": {
+      "tick": 1014,
+      "cityHour": 6.1,
+      "connections": 20,
+      "lingering": 0,
+      "zones": {
+        "bar-rele": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "bloque9": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 2
+        },
+        "clinica-sato": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "ferro": {
+          "entities": 52,
+          "players": 20,
+          "npcs": 25
+        }
+      }
+    },
+    "counters": {
+      "msgsIn": 63,
+      "msgsRejected": 0,
+      "bytesOut": 1107973,
+      "bytesOutPositions": 838374,
+      "bytesOutJson": 269599,
+      "snapshotsSkipped": 0,
+      "sectorCrossings": 51,
+      "zoneTransfers": 20,
+      "npcTransfers": 0,
+      "pathRequests": 101,
+      "pathFailures": 0,
+      "pathExpanded": 15316,
+      "pathCacheHits": 0,
+      "kicks": 0,
+      "slowClientDrops": 0,
+      "reconnects": 0,
+      "lateTicks": 0
+    },
+    "memoryMiB": {
+      "rss": 156,
+      "heapUsed": 19
+    },
+    "db": "postgres"
+  },
+  "client": {
+    "recvKiBps": {
+      "avg": 1.45,
+      "p50": 1.45,
+      "p95": 2.59,
+      "p99": 5.82,
+      "max": 7.09
+    },
+    "moveAckMs": {
+      "p50": 0.9,
+      "p95": 1.4,
+      "p99": 1.8,
+      "n": 41
+    },
+    "initialLoadKiB": 32
+  },
+  "activity": {
+    "moves": 61,
+    "doorCrossings": 22,
+    "dialogs": 0,
+    "purchases": 0,
+    "reconnects": 2,
+    "errors": 11,
+    "sampleErrors": [
+      "[botkq0cx2] no veo la puerta Clínica",
+      "[botkq0cx9] no veo la puerta Clínica",
+      "[botkq0cx0] no veo la puerta Bloque 9",
+      "[botkq0cx5] no veo la puerta Clínica",
+      "[botkq0cx4] no veo la puerta Clínica",
+      "[botkq0cx12] no veo la puerta Clínica",
+      "[botkq0cx12] no veo la puerta Bloque 9",
+      "[botkq0cx17] no veo la puerta Clínica",
+      "[botkq0cx14] no veo la puerta Bloque 9",
+      "[botkq0cx18] no veo la puerta Clínica"
+    ]
+  },
+  "timeline": [
+    {
+      "t": 19,
+      "tickP95": 1.1,
+      "conns": 20,
+      "rss": 156
+    },
+    {
+      "t": 29,
+      "tickP95": 0.96,
+      "conns": 20,
+      "rss": 156
+    },
+    {
+      "t": 39,
+      "tickP95": 0.94,
+      "conns": 20,
+      "rss": 156
+    }
+  ]
+}

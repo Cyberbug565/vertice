@@ -1,0 +1,230 @@
+{
+  "scenario": "spread",
+  "bots": 100,
+  "durationS": 180,
+  "warmupS": 15,
+  "base": "http://localhost:8080",
+  "run": "nkda",
+  "at": "2026-11-15T20:11:14.174Z",
+  "note": "Generador y servidor en la misma máquina salvo que se indique lo contrario. Población: bots = clientes sintéticos; PNJ según /api/metrics.",
+  "server": {
+    "tickMs": {
+      "n": 4020,
+      "avg": 2.0416273616910323,
+      "p50": 2.2767599999788217,
+      "p95": 5.124514999974053,
+      "p99": 6.4990340000076685,
+      "max": 11.653622000012547
+    },
+    "dbWriteMs": {
+      "n": 1759,
+      "avg": 1.4178075434903226,
+      "p50": 0.6089300000166986,
+      "p95": 5.6103710000170395,
+      "p99": 8.269371000002138,
+      "max": 46.80087499995716
+    },
+    "world": {
+      "tick": 7174,
+      "cityHour": 11.24,
+      "connections": 100,
+      "lingering": 0,
+      "zones": {
+        "bar-rele": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "bloque9": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "clinica-sato": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "ferro": {
+          "entities": 133,
+          "players": 100,
+          "npcs": 26
+        }
+      }
+    },
+    "counters": {
+      "msgsIn": 2037,
+      "msgsRejected": 0,
+      "bytesOut": 84583587,
+      "bytesOutPositions": 62970375,
+      "bytesOutJson": 21613212,
+      "snapshotsSkipped": 0,
+      "sectorCrossings": 1505,
+      "zoneTransfers": 459,
+      "npcTransfers": 0,
+      "pathRequests": 1741,
+      "pathFailures": 0,
+      "pathExpanded": 229904,
+      "pathCacheHits": 8,
+      "kicks": 0,
+      "slowClientDrops": 0,
+      "reconnects": 54,
+      "lateTicks": 0
+    },
+    "memoryMiB": {
+      "rss": 196,
+      "heapUsed": 25
+    },
+    "db": "postgres"
+  },
+  "client": {
+    "recvKiBps": {
+      "avg": 3.76,
+      "p50": 4.1,
+      "p95": 7.19,
+      "p99": 10.68,
+      "max": 26.02
+    },
+    "moveAckMs": {
+      "p50": 0.7,
+      "p95": 1.6,
+      "p99": 3.3,
+      "n": 1245
+    },
+    "initialLoadKiB": 111.6
+  },
+  "activity": {
+    "moves": 1451,
+    "doorCrossings": 508,
+    "dialogs": 101,
+    "purchases": 101,
+    "reconnects": 62,
+    "errors": 2,
+    "sampleErrors": [
+      "[botnkdax33] no veo la puerta Relé",
+      "[botnkdax75] no veo la puerta Clínica"
+    ]
+  },
+  "timeline": [
+    {
+      "t": 31,
+      "tickP95": 5.9,
+      "conns": 100,
+      "rss": 215
+    },
+    {
+      "t": 41,
+      "tickP95": 5.92,
+      "conns": 100,
+      "rss": 216
+    },
+    {
+      "t": 51,
+      "tickP95": 5.75,
+      "conns": 100,
+      "rss": 216
+    },
+    {
+      "t": 61,
+      "tickP95": 5.33,
+      "conns": 100,
+      "rss": 217
+    },
+    {
+      "t": 71,
+      "tickP95": 5.26,
+      "conns": 99,
+      "rss": 217
+    },
+    {
+      "t": 81,
+      "tickP95": 5.25,
+      "conns": 99,
+      "rss": 225
+    },
+    {
+      "t": 91,
+      "tickP95": 5.26,
+      "conns": 100,
+      "rss": 225
+    },
+    {
+      "t": 101,
+      "tickP95": 5.25,
+      "conns": 99,
+      "rss": 225
+    },
+    {
+      "t": 111,
+      "tickP95": 5.25,
+      "conns": 100,
+      "rss": 225
+    },
+    {
+      "t": 121,
+      "tickP95": 5.25,
+      "conns": 100,
+      "rss": 225
+    },
+    {
+      "t": 131,
+      "tickP95": 5.18,
+      "conns": 99,
+      "rss": 193
+    },
+    {
+      "t": 141,
+      "tickP95": 5.16,
+      "conns": 100,
+      "rss": 194
+    },
+    {
+      "t": 151,
+      "tickP95": 5.12,
+      "conns": 100,
+      "rss": 194
+    },
+    {
+      "t": 161,
+      "tickP95": 5.16,
+      "conns": 100,
+      "rss": 195
+    },
+    {
+      "t": 171,
+      "tickP95": 5.2,
+      "conns": 100,
+      "rss": 195
+    },
+    {
+      "t": 181,
+      "tickP95": 5.18,
+      "conns": 99,
+      "rss": 196
+    },
+    {
+      "t": 191,
+      "tickP95": 5.2,
+      "conns": 100,
+      "rss": 196
+    },
+    {
+      "t": 201,
+      "tickP95": 5.2,
+      "conns": 99,
+      "rss": 196
+    },
+    {
+      "t": 211,
+      "tickP95": 5.16,
+      "conns": 100,
+      "rss": 196
+    },
+    {
+      "t": 221,
+      "tickP95": 5.14,
+      "conns": 100,
+      "rss": 196
+    }
+  ]
+}
