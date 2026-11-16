@@ -5,6 +5,9 @@ import { content } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
+import { ACCESSORIES, BUILDS, CHROME_PARTS, EYE_COLORS, FACIALS, HAIR_STYLES, LABELS, TOPS } from '@vertice/shared';
+import { Application, Container } from 'pixi.js';
+import { makeCharacter } from '../render/art';
 
 export function loginScreen(onDone: () => void) {
   clearUi();
@@ -25,7 +28,7 @@ export function loginScreen(onDone: () => void) {
     h('label', { for: 'username' }, 'Usuario'), user, h('label', { for: 'password' }, 'Contraseña'), pass, err,
     h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'submit', id: 'btn-login' }, 'Entrar'), h('button', { class: 'btn', type: 'button', id: 'btn-register', onclick: () => go('register') }, 'Crear cuenta')));
   $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card narrow' },
-    h('h1', { class: 'logo neon' }, 'VÉRTICE'), h('p', { class: 'muted' }, 'Ciudad Vértice · Distrito Ferro. Edición de universo original. Alfa del hito 1.'), form)));
+    h('h1', { class: 'logo neon' }, 'VÉRTICE'), h('p', { class: 'muted' }, 'Ciudad Vértice · megápolis de siete distritos. Edición de universo original. Alfa v0.3.'), form)));
   user.focus();
 }
 
@@ -65,46 +68,91 @@ const SKIN = ['#f0c8a8', '#e0b48c', '#c89070', '#b07a5a', '#8a5a3c', '#6a4028'];
 const HAIR = ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#ffd23f'];
 const JACKET = ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a', '#8a2a2a'];
 const ACCENT = ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'];
+const PANTS = ['#1a1a24', '#2a2a3a', '#3a2a1a', '#24384a', '#4a1a2a', '#5a5a64', '#1a3a2a'];
+const TATTOO = ['', '#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#1a1a1a'];
+const pick = <T,>(l: readonly T[]) => l[Math.floor(Math.random() * l.length)];
+
+/** Vista previa en vivo del personaje (Pixi), a escala grande para apreciar facciones, ropa y cromo. */
+class Preview {
+  app = new Application(); ready: Promise<void>; holder = new Container(); el = h('div', { class: 'preview' });
+  constructor() {
+    this.ready = this.app.init({ width: 240, height: 300, backgroundAlpha: 0, antialias: true, resolution: window.devicePixelRatio || 1, autoDensity: true }).then(() => {
+      this.el.append(this.app.canvas); this.app.stage.addChild(this.holder);
+    });
+  }
+  async show(ap: any, chrome: string[]) {
+    await this.ready;
+    this.holder.removeChildren().forEach((c) => c.destroy({ children: true }));
+    const ch = makeCharacter(ap, 'player', chrome);
+    ch.root.scale.set(3.6); ch.root.position.set(120, 262);
+    this.holder.addChild(ch.root);
+  }
+  destroy() { void this.ready.then(() => this.app.destroy(true, { children: true })); }
+}
 
 export function creationScreen(onDone: () => void, onCancel: () => void) {
   clearUi();
-  const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0] },
+  const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
+    appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '' },
     attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes };
-  const STEPS = ['Identidad', 'Origen', 'Rol', 'Oficio', 'Atributos', 'Revisión'];
+  const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Rol', 'Oficio', 'Atributos', 'Revisión'];
+  const LAST = STEPS.length - 1;
+  const preview = new Preview();
+  const leave = (fn: () => void) => () => { preview.destroy(); fn(); };
+  onDone = leave(onDone); onCancel = leave(onCancel);
   const card = h('div', { class: 'card' });
   $ui().append(h('div', { class: 'screen' }, card));
   const spent = () => ATTRIBUTE_IDS.reduce((s, k) => s + st.attributes[k], 0);
   const err = h('div', { class: 'error', role: 'alert' });
 
   const swatchRow = (label: string, key: keyof typeof st.appearance, colors: string[]) => h('div', { class: 'col' }, h('span', {}, label),
-    h('div', { class: 'swatches', role: 'group', 'aria-label': label }, ...colors.map((c) => h('button', { class: 'swatch', style: { background: c }, 'aria-label': `${label} ${c}`, 'aria-pressed': String(st.appearance[key] === c), onclick: () => { st.appearance[key] = c; render(); } }))));
+    h('div', { class: 'swatches', role: 'group', 'aria-label': label }, ...colors.map((c) => h('button', { class: `swatch${c ? '' : ' none'}`, style: { background: c || 'transparent' }, title: c ? c : 'Sin tatuaje', 'aria-label': `${label} ${c || 'ninguno'}`, 'aria-pressed': String(st.appearance[key] === c), onclick: () => { (st.appearance as any)[key] = c; render(); } }))));
+  const optRow = (label: string, key: keyof typeof st.appearance, opts: readonly string[]) => h('div', { class: 'col' }, h('span', {}, label),
+    h('div', { class: 'seg wrap', role: 'group', 'aria-label': label }, ...opts.map((o) => h('button', { class: 'segbtn', 'aria-pressed': String(st.appearance[key] === o), onclick: () => { (st.appearance as any)[key] = o; render(); } }, LABELS[o] ?? o))));
+  const randomize = () => {
+    Object.assign(st.appearance, { skin: pick(SKIN), hair: pick(HAIR), jacket: pick(JACKET), accent: pick(ACCENT), eyes: pick(EYE_COLORS), pants: pick(PANTS),
+      build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(TOPS), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO) });
+    render();
+  };
 
   const render = () => {
     const nav = h('div', { class: 'row', style: { marginTop: '16px' } },
       h('button', { class: 'btn', onclick: () => (st.step === 0 ? onCancel() : (st.step--, render())) }, st.step === 0 ? 'Cancelar' : 'Atrás'),
-      st.step < 5 ? h('button', { class: 'btn primary', id: 'btn-next', onclick: () => { const e = validate(); if (e) { err.textContent = e; return; } err.textContent = ''; st.step++; render(); } }, 'Siguiente')
+      st.step < LAST ? h('button', { class: 'btn primary', id: 'btn-next', onclick: () => { const e = validate(); if (e) { err.textContent = e; return; } err.textContent = ''; st.step++; render(); } }, 'Siguiente')
         : h('button', { class: 'btn primary', id: 'btn-create-final', onclick: submit }, 'Crear y entrar'));
     let body: HTMLElement;
     if (st.step === 0) {
       const name = h('input', { id: 'char-name', value: st.name, maxLength: 20, placeholder: 'Nombre del personaje', oninput: (e: any) => (st.name = e.target.value) });
       body = h('div', { class: 'col' }, h('label', { for: 'char-name' }, 'Nombre (3–20 caracteres, único entre los vivos)'), name,
-        swatchRow('Piel', 'skin', SKIN), swatchRow('Pelo', 'hair', HAIR), swatchRow('Chaqueta', 'jacket', JACKET), swatchRow('Cromo y acentos', 'accent', ACCENT),
-        h('p', { class: 'muted' }, 'La ropa y el cromo se superponen como capas sobre el mismo cuerpo.'));
+        h('p', { class: 'muted' }, 'En el siguiente paso eliges su aspecto: complexión, peinado, ojos, ropa, accesorios y tatuajes.'));
       setTimeout(() => name.focus());
     } else if (st.step === 1) {
+      void preview.show(st.appearance, st.previewChrome ? [...CHROME_PARTS] : []);
+      const controls = h('div', { class: 'col appearance-controls' },
+        optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), swatchRow('Ojos', 'eyes', [...EYE_COLORS]),
+        optRow('Peinado', 'hairStyle', HAIR_STYLES), swatchRow('Color de pelo', 'hair', HAIR), optRow('Vello facial', 'facial', FACIALS),
+        optRow('Ropa', 'top', TOPS), swatchRow('Color de la prenda', 'jacket', JACKET), swatchRow('Pantalón', 'pants', PANTS),
+        optRow('Accesorio', 'accessory', ACCESSORIES), swatchRow('Tatuaje facial', 'tattoo', TATTOO), swatchRow('Acento (luces y cromo)', 'accent', ACCENT));
+      body = h('div', { class: 'creator' },
+        h('div', { class: 'col preview-col' }, preview.el,
+          h('div', { class: 'row' }, h('button', { class: 'btn small', onclick: randomize }, '🎲 Aleatorio'),
+            h('button', { class: 'btn small', 'aria-pressed': String(st.previewChrome), onclick: () => { st.previewChrome = !st.previewChrome; render(); } }, st.previewChrome ? 'Quitar cromo' : 'Probar cromo')),
+          h('p', { class: 'muted small' }, 'El cromo se ve por partes: cabeza, ojos, torso, brazos y piernas. Empiezas sin implantes; los verás aparecer al operarte.')),
+        controls);
+    } else if (st.step === 2) {
       body = h('div', { class: 'grid2' }, ...content.origins.map((o) => h('button', { class: 'choice', 'aria-pressed': String(st.origin === o.id), onclick: () => { st.origin = o.id; render(); } },
         h('h4', {}, o.name), h('p', {}, o.desc), h('p', {}, `Contacto inicial: ${o.contact}`), h('p', {}, `Fondos: ${fmtMoney(o.startMoney)}`))));
       body = h('div', { class: 'col' }, h('p', { class: 'muted' }, 'El origen cambia tus contactos y opciones de diálogo. Es independiente del rol (puedes ser de origen nómada sin ser Nómada).'), body);
-    } else if (st.step === 2) {
+    } else if (st.step === 3) {
       body = h('div', { class: 'grid2' }, ...content.roles.map((r) => h('button', { class: 'choice', id: `role-${r.id}`, 'aria-pressed': String(st.role === r.id), onclick: () => { st.role = r.id; render(); }, style: { borderLeft: `4px solid ${r.accent}` } },
         h('h4', {}, `${r.name} · ${r.ability}`), h('p', {}, r.abilityDesc), h('p', {}, `Ingresos: ${r.income}`), h('p', {}, `Primer trabajo: ${r.firstJob}`), h('p', {}, `En grupo: ${r.groupContribution}`),
         r.m1Option ? h('p', { style: { color: 'var(--yellow)' } }, `Disponible ya en Ferro: ${r.m1Option}`) : h('p', {}, 'En el hito 1 resuelve el encargo por la ruta común (pagar o trabajar).'))));
-    } else if (st.step === 3) {
+    } else if (st.step === 4) {
       const kinds: Record<string, string> = { empleo: 'Empleo', libre: 'Libre', ilegal: 'Ilegal' };
       body = h('div', { class: 'col' }, h('p', { class: 'muted' }, 'Tu oficio decide qué empleos puedes coger (5 por oficio, 100 en total) y te da una ventaja. El rol es tu especialidad de combate y técnica; el oficio, cómo te ganas la vida. Podrás cambiarlo en la bolsa de empleo.'),
         h('div', { class: 'grid2' }, ...content.professions.map((pr) => h('button', { class: 'choice', id: `prof-${pr.id}`, 'aria-pressed': String(st.profession === pr.id), onclick: () => { st.profession = pr.id; render(); } },
           h('h4', {}, `${pr.name} · ${kinds[pr.kind]}`), h('p', {}, pr.desc), h('p', { style: { color: 'var(--yellow)' } }, `Ventaja: ${pr.perk}`)))));
-    } else if (st.step === 4) {
+    } else if (st.step === 5) {
       const a = st.attributes;
       const left = RULES.creationPoints - spent();
       body = h('div', { class: 'col' },
@@ -127,7 +175,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   };
   const validate = (): string | null => {
     if (st.step === 0 && !/^[\p{L}0-9 _'.-]{3,20}$/u.test(st.name.trim())) return 'El nombre debe tener entre 3 y 20 caracteres.';
-    if (st.step === 4 && spent() !== RULES.creationPoints) return `Te faltan o sobran puntos: llevas ${spent()} de ${RULES.creationPoints}.`;
+    if (st.step === 5 && spent() !== RULES.creationPoints) return `Te faltan o sobran puntos: llevas ${spent()} de ${RULES.creationPoints}.`;
     return null;
   };
   const submit = async () => {

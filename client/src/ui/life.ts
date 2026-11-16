@@ -1,5 +1,7 @@
 // Paneles de la v0.2: tienda, red de mercado, empleos, matasanos, recompensas, menú de acciones y pantalla de muerte.
-import type { BountyView, ClinicOffer, ClinicView, DeathSummary, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
+import type { AmbarView, BountyView, ClinicOffer, ClinicView, DeathSummary, FactionsView, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
+import { content } from '../content';
+import { renderZoneMap } from './minimap';
 import type { Net } from '../net';
 import { newOpId } from '../net';
 import { $ui, fmtMoney, h } from './dom';
@@ -14,8 +16,8 @@ const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medici
 export function showPanel(id: string, title: string, ...body: (Node | string | null)[]) {
   const old = document.getElementById(id);
   const scroll = old?.scrollTop ?? 0;
-  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel']) if (pid !== id) document.getElementById(pid)?.remove();
-  const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕'), h('h2', {}, title), ...body.filter(Boolean) as Node[]);
+  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel']) if (pid !== id) document.getElementById(pid)?.remove();
+  const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body.filter(Boolean) as Node[]);
   if (old) old.replaceWith(p); else $ui().append(p);
   p.scrollTop = scroll;
   return p;
@@ -113,34 +115,108 @@ export function bountyPanel(ctx: LifeCtx, v: BountyView) {
   const other = h('input', { placeholder: 'Nombre del personaje', maxLength: 20 });
   const amount = h('input', { type: 'number', min: 100, step: 50, value: 200, style: { width: '7em' } });
   const reason = h('input', { placeholder: 'Motivo (visible para todos)', maxLength: 120, style: { width: '18em' } });
+  const alive = h('input', { type: 'checkbox' }) as HTMLInputElement;
   showPanel('bounty-panel', 'Recompensas',
     h('p', { class: 'muted' }, 'Cualquiera puede poner precio a la cabeza de un jugador o de un fugitivo. El dinero queda retenido hasta que alguien lo cobre; si el objetivo muere sin que nadie cobre, se te devuelve. Cobrar una recompensa no es delito. En zonas protegidas no se puede atacar.'),
     h('table', { class: 'sheet' }, h('tr', {}, h('th', {}, 'Objetivo'), h('th', {}, 'Recompensa'), h('th', {}, 'Anunciante y motivo'), h('th', {}, 'Último lugar')),
       ...v.active.map((b) => h('tr', { style: b.onMe ? { background: 'rgba(176,16,48,0.25)' } : {} }, h('td', {}, h('b', {}, b.targetName), b.kind === 'npc' ? ' (fugitivo)' : '', b.onMe ? h('span', { class: 'netbad' }, ' · ¡eres tú!') : '', b.mine ? h('span', { class: 'cy' }, ' · la tuya') : ''),
-        h('td', { class: 'mono' }, `${b.amount} €$`), h('td', { style: { fontSize: '0.85em' } }, `${b.poster}: ${b.reason}`), h('td', { class: 'muted' }, b.zone ?? (b.online === false ? 'desconectado' : '—'))))),
+        h('td', { class: 'mono' }, `${b.amount} €$`, b.aliveOnly ? h('div', { class: 'chip', style: { background: '#2a6a3a' } }, 'VIVO') : h('div', { class: 'chip', style: { background: '#6a1a2a' } }, 'VIVO O MUERTO')), h('td', { style: { fontSize: '0.85em' } }, `${b.poster}: ${b.reason}`), h('td', { class: 'muted' }, b.zone ?? (b.online === false ? 'desconectado' : '—'))))),
     h('h3', {}, 'Poner una recompensa'),
     h('div', { class: 'row' }, tsel, other, amount, reason,
       h('button', { class: 'btn primary', onclick: () => {
         const [kind, id] = tsel.value.split('|');
         const target = id === '__otro' ? other.value.trim() : kind === 'player' ? id : id;
         if (!target) return ctx.toast('Elige un objetivo.', 'warn');
-        ctx.net.send({ t: 'bountyPlace', kind, target, amount: Number(amount.value), reason: reason.value.trim() || 'Sin motivo declarado', opId: newOpId() } as any);
+        ctx.net.send({ t: 'bountyPlace', kind, target, amount: Number(amount.value), reason: reason.value.trim() || 'Sin motivo declarado', aliveOnly: alive.checked, opId: newOpId() } as any);
       } }, 'Publicar')),
+    h('label', { class: 'row' }, alive, 'Lo quiero VIVO (solo cobra quien lo deje KO; si muere, se te devuelve el dinero)'),
     h('p', { class: 'muted' }, `Tu saldo: ${fmtMoney(v.money)}`));
 }
 
-export function targetMenu(ctx: LifeCtx, v: TargetMenuView, at: { x: number; y: number }) {
+const GROUPS: Record<string, { label: string; color: string }> = { social: { label: 'Social', color: '#43f3ff' }, ayuda: { label: 'Ayuda', color: '#5affc8' }, combate: { label: 'Combate', color: '#ff3040' }, red: { label: 'Red (hackeo)', color: '#b46cff' } };
+export function targetMenu(ctx: LifeCtx, v: TargetMenuView, at: { x: number; y: number }, onInteract?: (id: string) => void) {
   document.getElementById('target-menu')?.remove();
-  const m = h('div', { class: 'hud', id: 'target-menu', role: 'menu', style: { position: 'fixed', left: `${Math.min(window.innerWidth - 300, at.x + 12)}px`, top: `${Math.min(window.innerHeight - 220, at.y)}px`, width: '290px', zIndex: '30' } },
-    h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, v.name), h('button', { class: 'btn small', onclick: () => m.remove() }, '✕')),
-    ...(v.options.length ? v.options.map((o) => h('div', { style: { marginTop: '6px' } },
-      h('button', { class: 'btn small', disabled: !!o.disabled, style: { width: '100%', textAlign: 'left' }, onclick: () => {
-        ctx.net.send(o.id === 'rescue' ? { t: 'rescue', target: v.target, opId: newOpId() } as any : { t: 'hostile', target: v.target, action: o.id, opId: newOpId() } as any);
+  const groups = ['social', 'ayuda', 'combate', 'red'].map((g) => [g, v.options.filter((o) => o.group === g)] as const).filter(([, l]) => l.length);
+  const m = h('div', { class: 'ctx-menu', id: 'target-menu', role: 'menu', style: { left: `${Math.min(window.innerWidth - 330, at.x + 12)}px`, top: `${Math.max(10, Math.min(window.innerHeight - 420, at.y - 40))}px`, borderColor: v.color ?? 'var(--line)' } },
+    h('div', { class: 'ctx-head', style: { background: `linear-gradient(90deg, ${v.color ?? '#3a1440'}55, transparent)` } }, h('div', {}, h('b', {}, v.name), v.subtitle ? h('div', { class: 'muted', style: { fontSize: '0.8em' } }, v.subtitle) : null), h('button', { class: 'btn small', onclick: () => m.remove() }, '✕')),
+    ...(groups.length ? groups.map(([g, list]) => h('div', { class: 'ctx-group' }, h('div', { class: 'ctx-glabel', style: { color: GROUPS[g].color } }, GROUPS[g].label),
+      ...list.map((o) => h('button', { class: `ctx-opt${o.danger ? ' danger' : ''}`, role: 'menuitem', disabled: !!o.disabled, style: { borderLeftColor: GROUPS[g].color }, title: o.disabled ?? o.detail ?? '', onclick: () => {
+        if (o.kind === 'interact') onInteract?.(o.id);
+        else if (o.kind === 'hack') ctx.net.send({ t: 'hack', target: v.target, hack: o.id.slice(5), opId: newOpId() } as any);
+        else if (o.id === 'rescue') ctx.net.send({ t: 'rescue', target: v.target, opId: newOpId() } as any);
+        else if (o.id === 'drop') ctx.net.send({ t: 'drop' } as any);
+        else if (o.id === 'bribe') ctx.net.send({ t: 'bribe', opId: newOpId() } as any);
+        else ctx.net.send({ t: 'hostile', target: v.target, action: o.id, opId: newOpId() } as any);
         m.remove(); blip();
-      } }, `${o.label}${o.chance !== undefined ? ` · ${pct(o.chance)}` : ''}`),
-      h('div', { class: 'muted', style: { fontSize: '0.8em' } }, o.disabled ?? o.detail ?? ''))) : [h('p', { class: 'muted' }, 'No hay acciones posibles.')]));
+      } }, h('span', {}, o.label), o.chance !== undefined ? h('span', { class: 'ctx-chance', style: { color: o.chance >= 0.7 ? 'var(--green)' : o.chance >= 0.4 ? 'var(--yellow)' : 'var(--red)' } }, pct(o.chance)) : null,
+        h('div', { class: 'ctx-detail' }, o.disabled ?? o.detail ?? ''))))) : [h('p', { class: 'muted' }, 'No hay acciones posibles.')]));
   $ui().append(m);
-  setTimeout(() => m.remove(), 12000);
+  const close = (e: MouseEvent) => { if (!m.contains(e.target as Node)) { m.remove(); window.removeEventListener('mousedown', close, true); } };
+  setTimeout(() => window.addEventListener('mousedown', close, true), 50);
+}
+
+export function factionsPanel(_ctx: LifeCtx, v: FactionsView) {
+  const kinds: Record<string, string> = { gang: 'Banda', corp: 'Corporación', authority: 'Autoridad', service: 'Servicio', contact: 'Contacto', neighborhood: 'Vecinos' };
+  const order = ['gang', 'corp', 'authority', 'service', 'contact', 'neighborhood'];
+  const list = [...v.factions].sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+  showPanel('factions-panel', 'Facciones de Ciudad Vértice',
+    h('p', { class: 'muted' }, 'Tu relación con cada facción cambia con lo que haces. Ayudar o atacar a una facción afecta también, a la mitad, a sus aliados y enemigos. Por debajo de su umbral de hostilidad, sus miembros te atacarán en su territorio.'),
+    h('div', { class: 'cards' }, ...list.map((f) => {
+      const pctRep = Math.max(0, Math.min(100, (f.rep + 100) / 2));
+      return h('div', { class: 'fcard', style: { borderTopColor: f.color } },
+        h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', { style: { color: f.color } }, f.name), h('span', { class: 'chip', style: { background: f.color + '33', color: f.color } }, kinds[f.kind] ?? f.kind)),
+        f.archetype ? h('div', { class: 'muted', style: { fontSize: '0.82em' } }, f.archetype) : null,
+        h('p', { style: { fontSize: '0.86em', margin: '6px 0' } }, f.desc),
+        h('div', { class: 'repbar' }, h('i', { style: { width: `${pctRep}%`, background: f.rep >= 20 ? 'var(--green)' : f.rep > -30 ? 'var(--yellow)' : 'var(--red)' } })),
+        h('div', { class: 'row', style: { justifyContent: 'space-between', fontSize: '0.82em' } }, h('span', {}, `Tu relación: ${f.rep > 0 ? '+' : ''}${f.rep}`), h('b', {}, f.standing)),
+        f.territory.length ? h('div', { style: { fontSize: '0.8em' } }, '📍 ', f.territory.join(', ')) : null,
+        f.allies.length ? h('div', { style: { fontSize: '0.8em', color: 'var(--green)' } }, '🤝 ', f.allies.join(', ')) : null,
+        f.enemies.length ? h('div', { style: { fontSize: '0.8em', color: 'var(--red)' } }, '⚔ ', f.enemies.join(', ')) : null);
+    })));
+}
+
+export function ambarPanel(ctx: LifeCtx, v: AmbarView) {
+  showPanel('ambar-panel', 'Rescate Ámbar · suscripciones',
+    h('p', {}, 'Si caes herido de muerte, un equipo armado de Ámbar acude a estabilizarte… solo si eres cliente y estás en su zona de cobertura. Nadie más vendrá a por ti.'),
+    v.active ? h('div', { class: 'fcard', style: { borderTopColor: '#ffbf00' } }, h('b', {}, `Plan activo: ${v.active.name}`), h('div', {}, `Rescates restantes: ${v.active.usesLeft} · caduca en ${v.active.expiresInMin} min reales`)) : h('p', { class: 'netbad' }, 'No tienes suscripción activa.'),
+    h('div', { class: 'cards' }, ...v.plans.map((pl) => h('div', { class: 'fcard', style: { borderTopColor: pl.color } },
+      h('h3', { style: { color: pl.color, margin: '0 0 4px' } }, pl.name), h('p', { style: { fontSize: '0.88em' } }, pl.desc),
+      h('ul', { style: { fontSize: '0.85em', paddingLeft: '1.1em' } }, h('li', {}, `Llegada: ~${pl.arrival} s`), h('li', {}, `Rescates: ${pl.uses >= 99 ? 'ilimitados' : pl.uses}`), h('li', {}, `Te dejan al ${Math.round(pl.revive * 100)} % de salud`), h('li', {}, `Cobertura: ${pl.zones.join(', ')}`), h('li', {}, `Duración: ${pl.days} días de juego`)),
+      h('button', { class: 'btn primary', disabled: v.money < pl.price, onclick: () => { if (confirm(`Contratar ${pl.name} por ${pl.price} €$?`)) ctx.net.send({ t: 'ambar', plan: pl.id, opId: newOpId() } as any); } }, `Contratar · ${fmtMoney(pl.price)}`)))),
+    h('p', { class: 'muted' }, `Tu saldo: ${fmtMoney(v.money)}`));
+}
+
+/** Mapa global: distritos de la megápolis colocados como en un mapa de juego. */
+export function worldMapPanel(current: string) {
+  const W = content.world;
+  const maxX = Math.max(...W.districts.map((d) => d.gx)), maxY = Math.max(...W.districts.map((d) => d.gy));
+  const exteriorOf = (zid: string) => { const z = content.zones.find((x) => x.id === zid); if (!z || z.kind === 'exterior') return zid; return z.doors[0]?.to.zone ?? zid; };
+  const here = exteriorOf(current);
+  const facName = (id: string) => content.factions.find((f) => f.id === id);
+  const info = h('div', { class: 'fcard', style: { minHeight: '120px' } });
+  const showInfo = (zid: string) => {
+    const d = W.districts.find((x) => x.zone === zid)!;
+    const z = content.zones.find((x) => x.id === zid)!;
+    const places = z.doors.filter((x) => !content.zones.find((y) => y.id === x.to.zone && y.kind === 'exterior')).map((x) => x.name);
+    const exits = z.doors.filter((x) => content.zones.find((y) => y.id === x.to.zone && y.kind === 'exterior')).map((x) => x.name);
+    info.replaceChildren(...([h('h3', { style: { color: d.color, margin: '0 0 4px' } }, z.name, zid === here ? ' · estás aquí' : ''), h('p', { style: { margin: '4px 0' } }, d.desc),
+      h('div', {}, '👮 Presencia policial: ', h('b', {}, d.police)),
+      h('div', { class: 'row', style: { gap: '4px', margin: '6px 0' } }, ...d.factions.map((f) => { const fd = facName(f); return h('span', { class: 'chip', style: { background: (fd?.color ?? '#888') + '33', color: fd?.color } }, fd?.name ?? f); })),
+      places.length ? h('div', { style: { fontSize: '0.85em' } }, '🚪 ', places.join(' · ')) : null,
+      exits.length ? h('div', { style: { fontSize: '0.85em', color: 'var(--cyan)' } }, '➜ ', exits.join(' · ')) : null] as (Node | null)[]).filter((x): x is Node => !!x));
+  };
+  const grid = h('div', { class: 'worldgrid', style: { gridTemplateColumns: `repeat(${maxX + 1}, 1fr)` } });
+  for (let gy = 0; gy <= maxY; gy++) for (let gx = 0; gx <= maxX; gx++) {
+    const d = W.districts.find((x) => x.gx === gx && x.gy === gy);
+    if (!d) { grid.append(h('div', { class: 'wcell empty' })); continue; }
+    const z = content.zones.find((x) => x.id === d.zone)!;
+    const cv = h('canvas', {}) as HTMLCanvasElement;
+    renderZoneMap(z, cv, z.width > 100 ? 1.0 : 1.3);
+    grid.append(h('button', { class: `wcell${d.zone === here ? ' here' : ''}`, style: { borderColor: d.color }, onclick: () => showInfo(d.zone) },
+      cv, h('div', { class: 'wname', style: { color: d.color } }, z.name, d.zone === here ? ' ●' : '')));
+  }
+  showInfo(here);
+  showPanel('world-panel', `Mapa de ${W.name}`, h('p', { class: 'muted' }, 'Los distritos se conectan por avenidas en sus bordes. Haz clic en un distrito para ver sus facciones, locales y salidas.'), grid, info);
 }
 
 export function deathScreen(s: DeathSummary, onNew: () => void) {

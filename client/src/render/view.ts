@@ -12,11 +12,12 @@ import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, g
 interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; ent?: CEnt; depth: number; mark: number }
 export interface CEnt {
   s: EntitySpawn; x: number; y: number; samples: { t: number; x: number; y: number }[]; flags: number; moving: boolean;
-  view: Container; legs?: Graphics; body?: Container; visor?: Graphics; label?: Text; obj: SortObj; phase: number;
+  view: Container; legs?: Container; body?: Container; visor?: Graphics; hpBar?: Graphics; tag?: Graphics; bubble?: Container; bubbleUntil?: number; label?: Text; obj: SortObj; phase: number;
   charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
 }
 
 const INTERP_DELAY = 110;
+const FACTION_COLORS: Record<string, number> = { engranajes: 0xff3040, kitsune: 0xb46cff, 'hermandad-sol': 0xffb347, furias: 0xff4fa0, 'voces-vacio': 0x43f3ff, 'nomadas-polvo': 0xd9a066, saqueadores: 0x8a6a3a, pcv: 0x60a5fa, 'unidad-hierro': 0x1e3a8a, ambar: 0xffbf00, chatarreros: 0xff8a3d, 'hojas-rojas': 0xff5a5a };
 const CHUNK = 16;
 
 export class GameView {
@@ -80,7 +81,7 @@ export class GameView {
     this.app.stage.hitArea = this.app.screen;
     this.app.stage.on('pointertap', (ev: FederatedPointerEvent) => this.onTap(ev));
     this.app.stage.on('pointermove', (ev: FederatedPointerEvent) => this.onMove(ev));
-    this.app.canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); this.onRightClick(); });
+    this.app.canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); const r = this.app.canvas.getBoundingClientRect(); this.hovered = this.pick(e.clientX - r.left, e.clientY - r.top); this.onRightClick(); });
     this.app.canvas.addEventListener('wheel', (e) => { e.preventDefault(); this.setZoom(this.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); }, { passive: false });
     // Pérdida del contexto gráfico: aviso y reconstrucción de la escena al recuperarlo.
     this.app.canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.onContextLost(true); });
@@ -123,7 +124,7 @@ export class GameView {
     this.lightsLayer.removeChildren();
     this.lightsLayer.addChild(this.marketLights, this.beaconG);
     this.sky.removeChildren().forEach((c) => c.destroy({ children: true }));
-    this.beacons = []; this.holos = []; this.cars = [];
+    this.beacons = []; this.holos = []; this.cars = []; this.traffic = [];
     const z = this.zone, q = settings.quality;
     if (z.kind === 'interior') {
       // Paredes del fondo (siempre detrás) y barandilla frontal baja con huecos en las puertas.
@@ -193,6 +194,9 @@ export class GameView {
         this.cars.push({ lane: i, t: Math.random(), v: 0.02 + Math.random() * 0.03, g });
       }
     }
+    for (const t of this.traffic) t.g.destroy();
+    this.traffic = [];
+    this.buildTraffic();
     for (const p of z.props) {
       if (p.type === 'stall' || p.type === 'holo' || p.type === 'antenna') continue;
       this.addStatic(p.at[0], p.at[1], 1, 1, (g) => drawProp(g, propLights, p, true, this.occluder(p.at[0], p.at[1], p.at[0] + 1, p.at[1] + 1)));
@@ -259,7 +263,7 @@ export class GameView {
     const view = new Container();
     const ent: CEnt = { s, x: s.x, y: s.y, samples: [{ t: performance.now(), x: s.x, y: s.y }], flags: 0, moving: false, view, obj: null as any, phase: Math.random() * 6 };
     if (s.kind === 'player' || s.kind === 'npc') {
-      const ch = makeCharacter(s.appearance, s.kind);
+      const ch = makeCharacter(s.appearance, s.kind, s.chrome ?? []);
       view.addChild(ch.root);
       ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor; ent.charRoot = ch.root;
       ent.zz = new Text({ text: 'Zz', style: { fontFamily: 'system-ui', fontSize: 14, fontWeight: '700', fill: 0x9ad8ff, stroke: { color: 0x000000, width: 3 } } });
@@ -325,15 +329,58 @@ export class GameView {
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
   private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); if (this.hovered === e) this.hovered = null; }
-  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping') {
+  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean) {
     const e = this.ents.get(id);
     if (!e) return;
+    if (hpPct !== undefined) e.s.hpPct = hpPct;
+    if (carried !== undefined) e.s.carried = carried || undefined;
+    if (chrome !== undefined && (chrome ?? []).join() !== (e.s.chrome ?? []).join()) { e.s.chrome = chrome; this.upsert({ ...e.s, x: e.x, y: e.y }); return; }
     e.s.label = label;
     if (bounty !== undefined) e.s.bounty = bounty || undefined;
     if (state !== undefined) e.s.state = state === 'alive' ? undefined : state;
   }
   /** Recompensa visible sobre la cabeza y postura tumbada al dormir o caer derribado. */
+  /** Bocadillo de diálogo sobre una entidad durante unos segundos. */
+  say(id: number, text: string) {
+    const e = this.ents.get(id);
+    if (!e) return;
+    e.bubble?.destroy({ children: true });
+    const t = new Text({ text, style: { fontFamily: 'system-ui', fontSize: 12, fill: 0x101018, wordWrap: true, wordWrapWidth: 180 } });
+    const bg = new Graphics().roundRect(-t.width / 2 - 8, -t.height - 10, t.width + 16, t.height + 10, 6).fill(0xf4f4fa).stroke({ width: 1.5, color: 0x43f3ff });
+    bg.poly([-5, -1, 5, -1, 0, 6]).fill(0xf4f4fa);
+    t.position.set(-t.width / 2, -t.height - 5);
+    const c = new Container(); c.addChild(bg, t);
+    this.labels.addChild(c);
+    e.bubble = c; e.bubbleUntil = performance.now() + 4500;
+  }
+  /** Trazadoras de disparos, impactos y líneas de hackeo. */
+  private fxList: { g: Graphics; until: number }[] = [];
+  fx(kind: 'shot' | 'hit' | 'hack' | 'ko', from: number, to: number) {
+    const a = this.ents.get(from), b = this.ents.get(to);
+    if (!a || !b || settings.reduceFlashes && kind === 'shot') return;
+    const pa = worldToScreen(a.x, a.y, 1.1), pb = worldToScreen(b.x, b.y, 1.1);
+    const g = new Graphics();
+    if (kind === 'shot') g.moveTo(pa.x, pa.y).lineTo(pb.x, pb.y).stroke({ width: 2, color: 0xfff1a0, alpha: 0.9 });
+    if (kind === 'hack') g.moveTo(pa.x, pa.y).lineTo(pb.x, pb.y).stroke({ width: 1.5, color: 0x43f3ff, alpha: 0.8 }).circle(pb.x, pb.y, 10).stroke({ width: 1.5, color: 0x43f3ff });
+    if (kind === 'hit' || kind === 'shot') g.circle(pb.x, pb.y, 6).fill({ color: 0xff3040, alpha: 0.6 });
+    this.lightsLayer.addChild(g);
+    this.fxList.push({ g, until: performance.now() + (kind === 'hack' ? 600 : 160) });
+  }
   private statusVisuals(e: CEnt, now: number) {
+    if (e.bubble) {
+      if (now > (e.bubbleUntil ?? 0)) { e.bubble.destroy({ children: true }); e.bubble = undefined; }
+      else { const g = this.world.toGlobal(worldToScreen(e.x, e.y, 2.3)); e.bubble.position.set(g.x, g.y); }
+    }
+    // Barra de salud de PNJ heridos y marca de facción.
+    if (e.s.npcType && e.s.npcType !== 'essential' && e.s.hpPct !== undefined && e.s.hpPct < 100) {
+      if (!e.hpBar) { e.hpBar = new Graphics(); e.view.addChild(e.hpBar); }
+      e.hpBar.clear().rect(-12, -68, 24, 3).fill(0x301018).rect(-12, -68, 24 * Math.max(0, e.s.hpPct) / 100, 3).fill(0xff3040);
+    }
+    if (e.s.factionColor === undefined && e.s.faction && !e.tag && e.s.npcType !== 'civil' && e.s.npcType !== 'essential') {
+      const col = FACTION_COLORS[e.s.faction] ?? 0x9a9ac0;
+      e.tag = new Graphics().poly([0, -64, 4, -60, 0, -56, -4, -60]).fill(col).stroke({ width: 1, color: 0x000000, alpha: 0.6 });
+      e.view.addChild(e.tag);
+    }
     if (!e.charRoot) return;
     const sleeping = e.s.state === 'sleeping' || (e.flags & 32) === 32;
     const downed = e.s.state === 'downed' || (e.flags & 64) === 64;
@@ -343,6 +390,7 @@ export class GameView {
     if (e.zz) { e.zz.visible = sleeping; e.zz.y = -30 - (settings.reduceMotion ? 0 : (now / 120) % 10); }
     if (downed) e.charRoot.alpha = settings.reduceFlashes ? 0.7 : 0.55 + 0.35 * Math.abs(Math.sin(now / 300));
     else e.charRoot.alpha = 1;
+    if (e.s.carried) { e.charRoot.rotation = -Math.PI / 2; e.charRoot.position.set(-6, -26); }
     const amt = e.s.bounty ?? 0;
     if (amt !== (e.markerAmt ?? 0)) {
       e.marker?.destroy({ children: true }); e.marker = undefined; e.markerAmt = amt;
@@ -411,7 +459,7 @@ export class GameView {
       if (!e.s.interactive || e.s.id === this.meId) continue;
       const p = worldToScreen(e.x, e.y);
       const dx = l.x - p.x, dy = l.y - p.y;
-      const hit = e.s.kind === 'door' ? Math.abs(dx) < 24 && dy > -36 && dy < 14 : e.s.kind === 'object' ? Math.abs(dx) < 22 && dy > -44 && dy < 14 : Math.abs(dx) < 12 && dy > -48 && dy < 6;
+      const hit = e.s.kind === 'door' ? Math.abs(dx) < 24 && dy > -36 && dy < 14 : e.s.kind === 'object' ? Math.abs(dx) < 22 && dy > -44 && dy < 14 : Math.abs(dx) < 16 && dy > -62 && dy < 8;
       if (hit && e.view.zIndex > bestDepth) { best = e; bestDepth = e.view.zIndex; }
     }
     return best;
@@ -521,7 +569,43 @@ export class GameView {
     this.animateSky(now, dt);
   }
 
+  /** Tráfico rodado: coches que circulan por las calzadas anchas del distrito. */
+  private traffic: { g: Graphics; ax: number; ay: number; bx: number; by: number; t: number; v: number }[] = [];
+  private buildTraffic() {
+    if (!this.zone || this.zone.kind !== 'exterior') return;
+    const lanes = this.zone.ground.filter((gr) => gr.type === 'asphalt' && (gr.rect[2] >= 3 || gr.rect[3] >= 3) && Math.max(gr.rect[2], gr.rect[3]) >= 20);
+    const n = settings.quality === 'high' ? 3 : 1;
+    const cols = [0xffd23f, 0xff5a5a, 0x43f3ff, 0xe8e8f0, 0x2a2a3a, 0xb46cff, 0x7dff7a];
+    for (const [i, l] of lanes.entries()) for (let k = 0; k < n; k++) {
+      const [x, y, w, h] = l.rect;
+      const horiz = w >= h;
+      const lane = k % 2;
+      const ax = horiz ? x : x + (lane ? w - 0.8 : 0.8), ay = horiz ? y + (lane ? h - 0.8 : 0.8) : y;
+      const bx = horiz ? x + w : ax, by = horiz ? ay : y + h;
+      const dir = lane ? -1 : 1;
+      const g = new Graphics();
+      const col = cols[(i * 3 + k) % cols.length];
+      drawBox(g, -0.6, -0.3, 1.2, 0.6, 0.05, 0.35, col); drawBox(g, -0.35, -0.25, 0.7, 0.5, 0.4, 0.25, shade(col, 0.55));
+      const head = worldToScreen(horiz ? 0.6 * dir : 0, horiz ? 0 : 0.6 * dir, 0.25);
+      g.circle(head.x, head.y, 2.5).fill(0xfff1c0);
+      this.markers.addChild(g);
+      this.traffic.push({ g, ax: dir > 0 ? ax : bx, ay: dir > 0 ? ay : by, bx: dir > 0 ? bx : ax, by: dir > 0 ? by : ay, t: (k * 0.37 + i * 0.13) % 1, v: 0.025 + ((i + k) % 3) * 0.01 });
+    }
+  }
+  private animateTraffic(dt: number) {
+    for (const c of this.traffic) {
+      c.t += c.v * dt * (settings.reduceMotion ? 0.4 : 1);
+      if (c.t > 1) c.t -= 1;
+      const x = c.ax + (c.bx - c.ax) * c.t, y = c.ay + (c.by - c.ay) * c.t;
+      const p = worldToScreen(x, y);
+      c.g.position.set(p.x, p.y);
+      // Los coches se apartan si hay alguien en la calzada (solo visual).
+      c.g.alpha = 1;
+    }
+  }
   private animateSky(now: number, dt: number) {
+    for (const f of [...this.fxList]) if (now > f.until) { f.g.destroy(); this.fxList.splice(this.fxList.indexOf(f), 1); }
+    this.animateTraffic(dt);
     const g = this.beaconG; g.clear();
     const on = settings.reduceFlashes ? true : Math.floor(now / 700) % 2 === 0;
     for (const b of this.beacons) g.circle(b.x, b.y, on ? 5 : 3).fill({ color: 0xff3040, alpha: on ? 0.95 : 0.4 });

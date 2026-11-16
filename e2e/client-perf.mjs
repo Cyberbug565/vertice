@@ -17,7 +17,7 @@ await page.goto(BASE);
 await page.fill('#username', `perf${tag}`); await page.fill('#password', 'secreto1');
 await page.click('#btn-register'); await page.click('#btn-create');
 await page.fill('#char-name', `Perf ${tag}`);
-for (let i = 0; i < 5; i++) await page.click('#btn-next');
+for (let i = 0; i < 6; i++) await page.click('#btn-next');
 await page.click('#btn-create-final');
 await page.waitForFunction(() => window.__vt && window.__vt.me().id > 0, null, { timeout: 20000 });
 const coldBytes = await page.evaluate(() => performance.getEntriesByType('resource').concat(performance.getEntriesByType('navigation')).reduce((s, e) => s + (e.transferSize || e.encodedBodySize || 0), 0));

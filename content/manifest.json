@@ -1,1 +1,1 @@
-{ "version": "0.2.0", "edition": "original", "city": "Ciudad Vértice", "startZone": "bloque9", "startAt": [8, 8], "cityHourMs": 60000 }
+{ "version": "0.3.0", "edition": "original", "city": "Ciudad Vértice", "startZone": "bloque9", "startAt": [8, 8], "cityHourMs": 60000 }

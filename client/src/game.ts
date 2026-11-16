@@ -8,7 +8,7 @@ import { blip, initAudio, setAmbientActive } from './audio';
 import { $ui, clearUi, fmtMoney, h } from './ui/dom';
 import { Minimap, renderZoneMap } from './ui/minimap';
 import { settingsPanel } from './ui/screens';
-import { bountyPanel, clinicPanel, deathScreen, jobsPanel, marketPanel, shopPanel, targetMenu, type LifeCtx } from './ui/life';
+import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Protegida', public: 'Pública', disputed: 'Disputada (PvP)' };
 const STANCES = [
@@ -58,18 +58,18 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const progress = h('div', { class: 'progress', style: { display: 'none' } }, h('i'));
   const stanceSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Postura' });
   const renderStance = () => stanceSeg.replaceChildren(...STANCES.map((s) => h('button', { 'aria-pressed': String(st.sheet?.stance === s.id), title: s.desc, onclick: () => { net.send({ t: 'stance', stance: s.id } as any); blip(); } }, s.label)));
-  const bottom = h('div', { class: 'hud hud-bottom' }, actionEl, progress, h('div', { class: 'toolbar' },
-    h('button', { class: 'btn', id: 'btn-stop', onclick: () => stop(), title: 'Cancelar la orden actual (S o clic derecho)' }, 'Cancelar ', h('kbd', {}, 'S')),
-    h('button', { class: 'btn danger', id: 'btn-retreat', onclick: () => retreat(), title: 'Ir al refugio protegido alcanzable más cercano' }, 'Retirada ', h('kbd', {}, 'R')),
-    stanceSeg,
-    h('button', { class: 'btn', id: 'btn-journal', onclick: () => journalPanel() }, 'Diario ', h('kbd', {}, 'J')),
-    h('button', { class: 'btn', id: 'btn-sheet', onclick: () => sheetPanel() }, 'Ficha ', h('kbd', {}, 'C')),
-    h('button', { class: 'btn', onclick: () => inventoryPanel() }, 'Inventario ', h('kbd', {}, 'I')),
-    h('button', { class: 'btn', id: 'btn-sleep', onclick: () => toggleSleep(), title: 'Dormir donde estás o despertar (Z). En la calle descansas peor y te pueden robar.' }, 'Dormir ', h('kbd', {}, 'Z')),
-    h('button', { class: 'btn', onclick: () => net.send({ t: 'jobs' } as any) }, 'Empleos ', h('kbd', {}, 'O')),
-    h('button', { class: 'btn', onclick: () => net.send({ t: 'market' } as any) }, 'Mercado ', h('kbd', {}, 'K')),
-    h('button', { class: 'btn', onclick: () => net.send({ t: 'bounties' } as any) }, 'Recompensas ', h('kbd', {}, 'B')),
-    h('button', { class: 'btn', onclick: () => settingsPanel(() => view.applySettings()) }, 'Ajustes')));
+  const ib = (icon: string, label: string, key: string, fn: () => void, id?: string, extra = '') => h('button', { class: `ibtn ${extra}`, id, onclick: fn, title: `${label} (${key})` }, h('span', { class: 'ico' }, icon), h('span', { class: 'lbl' }, label));
+  const bottom = h('div', { class: 'hud hud-bottom' }, actionEl, progress,
+    h('div', { class: 'toolbar' },
+      ib('✋', 'Cancelar', 'S', () => stop(), 'btn-stop'), ib('🏃', 'Retirada', 'R', () => retreat(), 'btn-retreat', 'danger'), stanceSeg,
+      ib('💤', 'Dormir', 'Z', () => toggleSleep(), 'btn-sleep')),
+    h('div', { class: 'toolbar' },
+      ib('📓', 'Diario', 'J', () => journalPanel(), 'btn-journal'), ib('🧍', 'Ficha', 'C', () => sheetPanel(), 'btn-sheet'), ib('🎒', 'Inventario', 'I', () => inventoryPanel()),
+      ib('🗺', 'Mapa', 'M', () => worldMapPanel(st.zone)), ib('⚑', 'Facciones', 'F', () => net.send({ t: 'factions' } as any)),
+      ib('💼', 'Empleos', 'O', () => net.send({ t: 'jobs' } as any)), ib('📈', 'Mercado', 'K', () => net.send({ t: 'market' } as any)), ib('🎯', 'Recompensas', 'B', () => net.send({ t: 'bounties' } as any)),
+      ib('✚', 'Ámbar', 'U', () => net.send({ t: 'ambar' } as any)), ib('⚙', 'Ajustes', 'Esc', () => settingsPanel(() => view.applySettings()))));
+  // Arma equipada, munición y RAM del deck.
+  const weaponEl = h('div', { class: 'hud hud-weapon' });
   const toasts = h('div', { class: 'toasts', 'aria-live': 'polite' });
   const chatLog = h('div', { class: 'log', 'aria-live': 'polite' });
   const chatIn = h('input', { id: 'chat-input', placeholder: 'Chat local (Enter)…', maxLength: 200 }) as HTMLInputElement;
@@ -82,7 +82,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const tooltip = h('div', { class: 'tooltip', style: { display: 'none' } });
   const dialogEl = h('div', { class: 'dialog', id: 'dialog', role: 'dialog', style: { display: 'none' } });
   const ctxOverlay = h('div', { class: 'overlay', style: { display: 'none' } }, h('div', { class: 'reward' }, h('h2', {}, 'Recuperando gráficos…'), h('p', {}, 'El contexto gráfico se ha perdido. La simulación sigue en el servidor.')));
-  $ui().append(tl, tr, bottom, toasts, chat, tooltip, dialogEl, ctxOverlay);
+  $ui().append(tl, tr, bottom, weaponEl, toasts, chat, tooltip, dialogEl, ctxOverlay);
 
   const toast = (text: string, kind: 'info' | 'good' | 'warn' | 'bad' = 'info') => {
     const t = h('div', { class: `toast ${kind}` }, text);
@@ -107,7 +107,16 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     hpBar.style.width = `${(100 * s.hp) / s.hpMax}%`; stBar.style.width = `${(100 * s.stamina) / s.staminaMax}%`;
     hpTxt.textContent = `${s.hp}/${s.hpMax}`; stTxt.textContent = `${s.stamina}/${s.staminaMax}`;
     moneyEl.textContent = `${fmtMoney(s.money)} · Rep. calle ${s.streetRep}`;
-    statsEl.textContent = `${s.professionName} (rango ${s.professionRank}) · Suerte ${s.luck}/${s.luckMax} · XP ${s.xp}/${s.xpNext}`;
+    statsEl.textContent = `${s.professionName} (rango ${s.professionRank}) · Suerte ${s.luck}/${s.luckMax} · XP ${s.xp}/${s.xpNext} · Carga ${s.carry}/${s.carryMax} kg`;
+    const w = s.weapon;
+    weaponEl.replaceChildren(...([
+      h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, w ? w.name : 'Puños'), h('span', { class: 'muted' }, w ? `${w.family} · ${w.kind === 'melee' ? 'cuerpo a cuerpo' : `${w.range} m`}` : 'cuerpo a cuerpo')),
+      h('div', { class: 'mono', style: { fontSize: '0.85em' } }, w ? `Daño ${w.damage[0]}–${w.damage[1]} · cadencia ${w.cooldown}s${w.ammo ? ` · ${w.ammoName}: ${w.ammoCount}` : ''}` : 'Daño 3–7', s.armor ? ` · blindaje ${s.armor}` : ''),
+      s.net.canHack ? h('div', {}, h('div', { class: 'row', style: { justifyContent: 'space-between', fontSize: '0.8em' } }, h('span', { style: { color: '#b46cff' } }, `RAM · red rango ${s.net.rank}`), h('span', { class: 'mono' }, `${s.net.ram}/${s.net.ramMax}`)),
+        h('div', { class: 'bar', style: { margin: '2px 0' } }, h('i', { style: { width: `${(100 * s.net.ram) / Math.max(1, s.net.ramMax)}%`, background: '#b46cff' } }))) : null,
+      s.encumbrance !== 'normal' ? h('div', { class: 'netbad', style: { fontSize: '0.8em' } }, s.encumbrance === 'sobrecargado' ? '⚠ Sobrecargado: muy lento y torpe' : '⚠ Cargado: más lento') : null,
+      s.ambar ? h('div', { style: { fontSize: '0.8em', color: '#ffbf00' } }, `✚ ${s.ambar.name} · ${s.ambar.usesLeft} rescates`) : null,
+    ] as (Node | null)[]).filter((x): x is Node => !!x));
     hgBar.style.width = `${s.needs.hunger}%`; thBar.style.width = `${s.needs.thirst}%`; ftBar.style.width = `${s.needs.fatigue}%`;
     for (const [b, v] of [[hgBar, s.needs.hunger], [thBar, s.needs.thirst], [ftBar, s.needs.fatigue]] as [HTMLElement, number][]) b.style.filter = v >= 80 ? 'saturate(2) brightness(1.3)' : '';
     const st2: (string | HTMLElement)[] = [];
@@ -117,7 +126,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     if (s.activeJob) st2.push(h('span', { class: 'netmid' }, ' · empleo aceptado'));
     if (!s.autoNeeds) st2.push(h('span', { class: 'muted' }, ' · autonomía apagada'));
     statusEl.replaceChildren(...st2);
-    const sb = document.getElementById('btn-sleep'); if (sb) sb.firstChild!.textContent = s.sleeping ? 'Despertar ' : 'Dormir ';
+    const sb = document.getElementById('btn-sleep'); if (sb) { sb.querySelector('.ico')!.textContent = s.sleeping ? '☀' : '💤'; sb.querySelector('.lbl')!.textContent = s.sleeping ? 'Despertar' : 'Dormir'; }
     renderStance();
     view.setMyAttributes(s.attributes as any);
   };
@@ -160,12 +169,12 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
 
   // ---------------------------------------------------------------- paneles
-  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
-    const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕'), h('h2', {}, title), ...body);
-    $ui().append(p);
+    const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body);
+    $ui().append(p); tooltip.style.display = 'none';
   };
   const journalPanel = () => panel('journal-panel', 'Diario de encargos',
     ...(st.journal.length ? st.journal.map((j) => h('div', { class: 'choice', style: { marginBottom: '8px' } },
@@ -184,7 +193,16 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       h('table', { class: 'sheet' },
         row('Salud', `${s.hp}/${s.hpMax}`, '25 + 5×BODY + 3×WILL'), row('Aguante', `${s.stamina}/${s.staminaMax}`, '40 + 4×BODY + 2×WILL'),
         row('Suerte', `${s.luck}/${s.luckMax}`, 'Se gasta en tiradas elegidas; se recarga al descansar'), row('Humanidad', `${s.humanity}/${s.humanityMax}`, '10×EMP; el cromo instalado reduce el máximo (hito 2)'),
-        row('Capacidad de cromo', `${s.chromeUsed}/${s.chromeCapacity}`, '18 + 2×TECH + BODY'), row('Carga', `${s.carry}/${s.carryMax} kg`, '20 + 6×BODY'), row('RAM', '—', 'Requiere cyberdeck (hito 2)')),
+        row('Capacidad de cromo', `${s.chromeUsed}/${s.chromeCapacity}`, '18 + 2×TECH + BODY'), row('Carga', `${s.carry}/${s.carryMax} kg${s.encumbrance !== 'normal' ? ` (${s.encumbrance})` : ''}`, '20 + 6×BODY; los cuerpos cargados suman 70 kg'), row('Blindaje', String(s.armor), 'Ropa y placas subdérmicas: restan daño'),
+        row('RAM', s.net.canHack ? `${s.net.ram}/${s.net.ramMax}` : '—', s.net.canHack ? 'Se regenera sola; los quickhacks la gastan' : 'Requiere un cyberdeck instalado')),
+      h('h3', {}, 'Rama de red (netrunner)'),
+      h('div', { class: 'fcard', style: { borderTopColor: '#b46cff' } },
+        h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, `Rango de red ${s.net.rank}`), h('span', { class: 'chip' }, s.net.canHack ? 'Deck activo' : 'Sin deck')),
+        h('div', { class: 'repbar' }, h('i', { style: { width: `${Math.min(100, (100 * s.net.xp) / Math.max(1, s.net.xpNext))}%`, background: '#b46cff' } })),
+        h('div', { class: 'muted', style: { fontSize: '0.85em' } }, `${s.net.xp}/${s.net.xpNext} XP de red. Cada rango sube la probabilidad de éxito, acorta la subida del hack, abarata la RAM y reduce el rastreo. Clic derecho sobre personas, cajeros o tiendas para hackear.`)),
+      h('h3', {}, 'Cromo visible por partes'),
+      h('div', { class: 'row' }, ...([['cabeza', 'Cabeza'], ['ojos', 'Ojos'], ['torso', 'Cuerpo'], ['brazo_izq', 'Brazo izq.'], ['brazo_der', 'Brazo der.'], ['pierna_izq', 'Pierna izq.'], ['pierna_der', 'Pierna der.']] as const).map(([k, n]) =>
+        h('span', { class: `chip${s.chrome.includes(k) ? ' good' : ''}` }, `${s.chrome.includes(k) ? '⚙' : '○'} ${n}`))),
       h('h3', {}, 'Habilidades'), h('p', { class: 'mono' }, Object.entries(s.skills).filter(([, v]) => v > 0).map(([k, v]) => `${content.skills.find((x) => x.id === k)?.name ?? k} ${v}`).join(' · ')),
       h('h3', {}, 'Necesidades'),
       h('p', {}, `Hambre ${s.needs.hunger} · Sed ${s.needs.thirst} · Sueño ${s.needs.fatigue} (0 = satisfecho, 100 = crítico). Ritmo por implantes: hambre ×${s.needsMult.hunger.toFixed(2)}, sed ×${s.needsMult.thirst.toFixed(2)}, sueño ×${s.needsMult.fatigue.toFixed(2)}.`),
@@ -201,10 +219,23 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const plusOne = (id: string) => ({ BODY: '+5 salud, +4 aguante, +6 kg, +1 cromo', WILL: '+3 salud, +2 aguante, umbral de inestabilidad +2', TECH: '+2 capacidad de cromo, +1 en reparaciones', MOVE: '+0,12 m/s de marcha', EMP: '+10 Humanidad base', LUCK: '+1 a la reserva de Suerte', COOL: '+1 en negociación e intimidación', INT: '+1 en Interfaz e investigación', REF: '+1 en armas a distancia', DEX: '+1 en sigilo y cuerpo a cuerpo' } as Record<string, string>)[id] ?? '';
   const inventoryPanel = () => {
     const s = st.sheet!;
-    panel('inv-panel', 'Inventario', h('p', {}, `Carga ${s.carry}/${s.carryMax} kg · ${fmtMoney(s.money)}`),
+    const weapons = s.weapons.map((wp) => {
+      const def = content.items.find((d) => d.id === wp.id)!; const w = def.weapon!;
+      const on = s.weapon?.id === wp.id;
+      return h('div', { class: `fcard${on ? ' on' : ''}`, style: { borderTopColor: w.kind === 'melee' ? '#ff8a3d' : '#43f3ff' } },
+        h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, def.name), h('span', { class: 'chip' }, wp.integrated ? 'Implante' : w.family)),
+        h('div', { class: 'mono', style: { fontSize: '0.82em' } }, `Daño ${w.damage[0]}–${w.damage[1]} · ${w.kind === 'melee' ? 'cuerpo a cuerpo' : `alcance ${w.range} m`} · cadencia ${w.cooldown}s · precisión ${w.accuracy >= 0 ? '+' : ''}${w.accuracy}`),
+        h('div', { style: { fontSize: '0.8em' } }, `${w.nonlethal === 'solo' ? 'Solo no letal' : w.nonlethal === 'opcional' ? 'Letal o KO' : w.kind === 'melee' ? 'Letal o KO' : 'Letal (KO con culatazo)'}${w.ammo ? ` · munición: ${content.items.find((i) => i.id === w.ammo)?.name} (${s.inventory.find((i) => i.def === w.ammo)?.qty ?? 0})` : ''} · ${w.tech}`),
+        h('button', { class: 'btn small', disabled: on, onclick: () => net.send({ t: 'equip', item: wp.id } as any) }, on ? 'Equipada' : 'Equipar'));
+    });
+    panel('inv-panel', 'Inventario', h('p', {}, `Carga ${s.carry}/${s.carryMax} kg${s.encumbrance !== 'normal' ? ` · ${s.encumbrance}` : ''} · Blindaje ${s.armor} · ${fmtMoney(s.money)}`),
+      h('h3', {}, 'Armas'), weapons.length ? h('div', { class: 'cards' }, ...weapons) : h('p', { class: 'muted' }, 'Sin armas: luchas con los puños.'),
+      s.weapon ? h('button', { class: 'btn small', onclick: () => net.send({ t: 'equip', item: null } as any) }, 'Guardar el arma (puños)') : '',
+      h('h3', {}, 'Mochila'),
       h('table', { class: 'sheet' }, ...s.inventory.map((it) => {
         const def = content.items.find((d) => d.id === it.def);
         return h('tr', {}, h('td', {}, h('b', {}, it.name)), h('td', {}, `×${it.qty}`), h('td', { class: 'muted' }, def?.desc ?? ''),
+          h('td', { class: 'mono' }, `${((def?.weight ?? 0) * it.qty).toFixed(1)} kg`),
           h('td', {}, def?.consumable ? h('button', { class: 'btn small', onclick: () => net.send({ t: 'useItem', item: it.def, opId: newOpId() } as any) }, 'Usar') : ''));
       })));
   };
@@ -249,7 +280,10 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       else if (!a.ok) { toast(a.reason ?? 'No disponible', 'warn'); st.destination = ''; setAction(''); }
     });
   };
-  view.onRightClick = stop;
+  // Clic derecho: menú de opciones sobre la persona u objeto; en el suelo, cancela.
+  view.onRightClick = () => { if (view.hovered && view.hovered.s.id !== view.meId) net.send({ t: 'menu', target: view.hovered.s.id } as any); else stop(); };
+  // La etiqueta flotante solo tiene sentido sobre el mapa: se oculta al pasar por encima de la interfaz.
+  $ui().addEventListener('pointerover', (ev) => { if (ev.target !== $ui()) tooltip.style.display = 'none'; });
   view.onHover = (e, sx, sy) => {
     if (!e) { tooltip.style.display = 'none'; return; }
     const hint = e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'player' ? 'Otra persona · usa el chat local' : e.s.kind === 'object' ? 'Clic: examinar' : 'Clic: hablar';
@@ -269,7 +303,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     else if (k === 'j') journalPanel();
     else if (k === 'c') sheetPanel();
     else if (k === 'i') inventoryPanel();
-    else if (k === 'm') bigMap();
+    else if (k === 'm') worldMapPanel(st.zone);
+    else if (k === 'f') net.send({ t: 'factions' } as any);
+    else if (k === 'u') net.send({ t: 'ambar' } as any);
     else if (k === 'z') toggleSleep();
     else if (k === 'o') net.send({ t: 'jobs' } as any);
     else if (k === 'k') net.send({ t: 'market' } as any);
@@ -322,13 +358,17 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         break;
       case 'spawn': for (const e of m.e) view.upsert(e); break;
       case 'despawn': for (const id of m.ids) view.remove(id); break;
-      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state); break;
+      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried); break;
+      case 'factions': factionsPanel(life, m.view); break;
+      case 'ambar': ambarPanel(life, m.view); break;
+      case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
+      case 'fx': view.fx(m.kind, m.from, m.to); if (m.kind === 'shot') blip('step'); break;
       case 'shop': shopPanel(life, m.view); break;
       case 'market': marketPanel(life, m.view); break;
       case 'jobs': jobsPanel(life, m.view); break;
       case 'clinic': clinicPanel(life, m.view); break;
       case 'bounties': bountyPanel(life, m.view); break;
-      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp); break; }
+      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId() } as any); else net.send({ t: 'interact', target: m.view.target } as any); }); break; }
       case 'death': net.close(); deathScreen(m.summary, () => onExit('dead')); break;
       case 'ack': { const cb = st.pending.get(m.seq); st.pending.delete(m.seq); if (cb) cb(m); else if (!m.ok && m.reason) toast(m.reason, 'warn'); else if (m.ok && m.path && m.seq === 0) view.confirmPath(m.path); if (m.info && m.ok && !cb) toast(m.info); break; }
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;

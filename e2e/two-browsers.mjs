@@ -31,7 +31,7 @@ async function createCharacter(page, user, name, roleId) {
   await page.click('#btn-register');
   await page.click('#btn-create');
   await page.fill('#char-name', name);
-  await page.click('#btn-next'); await page.click('#btn-next');
+  await page.click('#btn-next'); await page.click('#btn-next'); await page.click('#btn-next'); // nombre, aspecto, origen
   await page.click(`#role-${roleId}`); await page.click('#btn-next');
   await page.click('#btn-next'); // oficio
   await page.click('#btn-next');

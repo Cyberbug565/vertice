@@ -142,11 +142,13 @@ describe('v0.2 · vivir en la ciudad', () => {
     app.world.survival.rng = () => 0.95; // siempre saca 10
     const pv = P('victima'), pa = P('caco');
     pv.stance = 'defend'; pv.nextAttackAt = Date.now() + 1e9; // ni huye ni contraataca durante la prueba
+    // La patrulla de la PCV de Ferro intervendría (v0.3) y el caco huiría: la apartamos para medir solo el expediente.
+    for (const o of E('caco').zone.entities) if (o.npcType === 'police') { o.x = 2; o.y = 2; o.path = []; o.npc = undefined; }
     const m0 = pv.money;
     const rob = await a.cmd({ t: 'hostile', target: E('victima').id, action: 'rob', opId: op() });
     expect(rob.ok).toBe(true);
     expect(pv.money).toBeLessThan(m0);
-    for (let i = 0; i < 4; i++) { await sleep(1300); E('caco').x = E('victima').x + 1; E('caco').y = E('victima').y; E('victima').path = []; await a.cmd({ t: 'hostile', target: E('victima').id, action: 'beat', opId: op() }); if (pv.status !== 'alive') break; }
+    for (let i = 0; i < 12; i++) { await sleep(1300); E('caco').x = E('victima').x + 1; E('caco').y = E('victima').y; E('victima').path = []; await a.cmd({ t: 'hostile', target: E('victima').id, action: 'beat', opId: op() }); if (pv.status !== 'alive') break; }
     app.world.survival.rng = Math.random;
     expect(pa.wanted).toBeGreaterThanOrEqual(2);
     expect(app.world.survival.bounties.onPlayer(pa.charId).some((x) => x.poster === 'pcv')).toBe(true);
