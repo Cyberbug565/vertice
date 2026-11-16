@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  RULES, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption,
 } from '@vertice/shared';
 import type { Config } from '../config.js';
@@ -109,7 +109,7 @@ export class World {
       e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil', near: { x, y } } }; e.level = 1 + Math.floor(rng() * 6);
       const chromeRoll = rng();
       e.chrome = chromeRoll < 0.15 ? ['ojos'] : chromeRoll < 0.25 ? [rng() < 0.5 ? 'brazo_izq' : 'brazo_der'] : chromeRoll < 0.3 ? ['cabeza', 'ojos'] : chromeRoll < 0.34 ? ['pierna_izq', 'pierna_der'] : [];
-      (e.appearance as any).build = pick(['delgado', 'medio', 'robusto']); (e.appearance as any).hairStyle = pick(['corto', 'largo', 'coleta', 'rapado', 'afro', 'moño', 'cresta', 'rastas', 'calvo', 'asimetrico']);
+      (e.appearance as any).build = pick([...BUILDS, 'medio', 'medio']); (e.appearance as any).hairStyle = pick([...HAIR_STYLES]); (e.appearance as any).faceShape = pick([...FACE_SHAPES]); (e.appearance as any).legwear = pick(['pantalon', 'pantalon', 'pantalon', 'shorts', 'falda']);
       (e.appearance as any).top = pick(['chaqueta', 'gabardina', 'sudadera', 'top', 'traje', 'chaleco', 'mono']); (e.appearance as any).accessory = pick(['ninguno', 'ninguno', 'gafas', 'gorra', 'capucha', 'auriculares', 'visor']);
       (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
       e.npc.nextThink = Math.floor(rng() * 20);
@@ -412,7 +412,7 @@ export class World {
     try {
       if (gone.length) this.send(c, { t: 'despawn', ids: gone });
       if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
-      for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs }); }
+      for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs, lost: sp.lost ?? [], bleeding: sp.bleeding ?? false, weapon: sp.weapon, dead: sp.dead ?? false }); }
       if (np) {
         POS_DV.setUint8(0, BIN_POSITIONS); POS_DV.setUint32(1, this.tick >>> 0); POS_DV.setUint16(5, np);
         const buf = Buffer.from(POS_BUF.subarray(0, 7 + np * 9)); // copia: el búfer compartido se reutiliza

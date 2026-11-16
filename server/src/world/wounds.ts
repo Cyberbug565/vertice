@@ -34,7 +34,7 @@ export class Wounds {
     body.wounds[part] = (body.wounds[part] ?? 0) + dmg;
     let severed: BodyPart | undefined;
     if (lethal && !chrome) {
-      body.bleed += dmg * (bullet ? 0.05 : edged ? 0.06 : 0.012) * (part === 'torso' || part === 'cabeza' ? 1.4 : 1);
+      body.bleed += dmg * (bullet ? 0.035 : edged ? 0.045 : 0.01) * (part === 'torso' || part === 'cabeza' ? 1.4 : 1);
       // Amputación: armas de filo, explosivas o de gran calibre contra un miembro muy dañado.
       const threshold = part.startsWith('mano') ? 14 : 24;
       if (isLimb(part) && (edged || traits.includes('area') || weapon.w.damage[1] >= 26) && (body.wounds[part] ?? 0) >= threshold && this.rng() < 0.55) {

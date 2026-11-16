@@ -7,7 +7,7 @@ import {
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
 import { settings } from '../settings';
-import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSign, makeVehicle, shade, type Occl } from './art';
+import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSevered, makeSign, makeVehicle, makeWeapon, shade, type Occl } from './art';
 
 interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; ent?: CEnt; depth: number; mark: number }
 export interface CEnt {
@@ -15,6 +15,9 @@ export interface CEnt {
   view: Container; legs?: Container; body?: Container; visor?: Graphics; hpBar?: Graphics; tag?: Graphics; bubble?: Container; bubbleUntil?: number; label?: Text; obj: SortObj; phase: number;
   charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
   vehX?: Container; vehY?: Container; lvl?: Text;
+  // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
+  legL?: Container; legR?: Container; armB?: Container; armF?: Container; hand?: Container; bodyY?: number;
+  weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit'; dropAt?: number;
 }
 
 const INTERP_DELAY = 110;
@@ -28,6 +31,7 @@ export class GameView {
   world = new Container();
   ground = new Container();
   backdrop = new Container();
+  decalLayer = new Container();
   markers = new Container();
   objects = new Container();
   nightOverlay = new Graphics();
@@ -73,7 +77,7 @@ export class GameView {
     await this.app.init({ resizeTo: window, background: 0x07070f, antialias: false, preference: 'webgl', resolution: (window.devicePixelRatio || 1) * settings.resScale, autoDensity: true, powerPreference: 'high-performance' });
     parent.appendChild(this.app.canvas);
     this.app.stage.addChild(this.world, this.nightOverlay, this.lightsLayer, this.rain, this.labels);
-    this.world.addChild(this.ground, this.backdrop, this.markers, this.objects, this.sky);
+    this.world.addChild(this.ground, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
     this.markers.addChild(this.pathG, this.hoverG);
     this.lightsLayer.blendMode = 'add';
     this.lightsLayer.addChild(this.marketLights);
@@ -267,10 +271,17 @@ export class GameView {
     const view = new Container();
     const ent: CEnt = { s, x: s.x, y: s.y, samples: [{ t: performance.now(), x: s.x, y: s.y }], flags: 0, moving: false, view, obj: null as any, phase: Math.random() * 6 };
     if (s.kind === 'player' || s.kind === 'npc') {
-      const ch = makeCharacter(s.appearance, s.kind, s.chrome ?? []);
-      ch.root.scale.set(CHAR_SCALE);
+      const ch = makeCharacter(s.appearance, s.kind, s.chrome ?? [], s.lost ?? []);
+      ch.root.scale.set(CHAR_SCALE * ch.root.scale.x);
       view.addChild(ch.root);
       ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor; ent.charRoot = ch.root;
+      ent.legL = ch.legL; ent.legR = ch.legR; ent.armB = ch.armB; ent.armF = ch.armF; ent.hand = ch.hand; ent.bodyY = ch.bodyY;
+      // Arma empuñada (se ve en la mano; las largas se llevan con las dos manos).
+      const wi = s.weapon ? content.items.find((i) => i.id === s.weapon) : undefined;
+      if (wi?.weapon && ch.hand.visible) {
+        const wg = makeWeapon(wi.id, wi.weapon.family, wi.weapon.kind, s.appearance?.accent);
+        if (wg) { ch.hand.addChild(wg); ent.weaponKind = wi.weapon.kind; ent.weaponBig = ['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil'].includes(wi.weapon.family) || ['bate', 'katana-termica', 'lanza-electrica', 'hacha-plasma', 'espada-monofilamento', 'martillo-neumatico', 'machete'].includes(wi.id); }
+      }
       // Al volante: el coche sustituye a la figura (en moto, la figura va montada encima).
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
       if (car) {
@@ -339,6 +350,15 @@ export class GameView {
       rel((g) => { drawBox(g, fx + 0.15, fy + 0.2, 0.7, 0.6, 0, 0.8, 0x2f5a3a); drawBox(g, fx + 0.1, fy + 0.15, 0.8, 0.7, 0.8, 0.08, 0x3d7a4a); });
     } else if (s.objKind === 'workplace') {
       rel((g) => { const m = worldToScreen(fx + 0.5, fy + 0.5); g.circle(m.x, m.y - 14, 7).fill({ color: 0xffd23f, alpha: 0.9 }); g.rect(m.x - 2, m.y - 18, 4, 8).fill(0x1a1a28); });
+    } else if (s.objKind === 'camera') {
+      // Cámara de vigilancia en un poste: piloto rojo si graba, gris si está apagada.
+      const off = s.label === 'Apagada';
+      rel((g) => { const a1 = worldToScreen(fx + 0.5, fy + 0.5, 0), t = worldToScreen(fx + 0.5, fy + 0.5, 3.2); g.moveTo(a1.x, a1.y).lineTo(t.x, t.y).stroke({ width: 2, color: 0x3a3a48 }); g.roundRect(t.x - 2, t.y - 4, 12, 6, 2).fill(0xd8dce8); g.rect(t.x + 8, t.y - 3, 3, 4).fill(0x101018); g.circle(t.x + 1, t.y - 1, 1.6).fill(off ? 0x6a6a6a : 0xff2030); });
+    } else if (s.objKind === 'computer') {
+      rel((g) => { drawBox(g, fx + 0.1, fy + 0.2, 0.8, 0.6, 0, 0.75, 0x2a2a36); const t = worldToScreen(fx + 0.5, fy + 0.6, 0.75); g.rect(t.x - 8, t.y - 13, 16, 11).fill(0x101018); g.rect(t.x - 7, t.y - 12, 14, 9).fill(0x43f3ff); g.rect(t.x - 6, t.y - 10, 8, 1).fill(0x101018); g.rect(t.x - 6, t.y - 7, 10, 1).fill(0x101018); });
+    } else if (s.objKind === 'mycar') {
+      const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
+      if (car) { const v = makeVehicle(car.class, car.color, '#43f3ff'); ent.view.addChild(v); return; }
     } else if (s.objKind === 'board') {
       rel((g) => { drawBox(g, fx + 0.45, fy + 0.45, 0.1, 0.1, 0, 1.2, 0x333340); drawBox(g, fx + 0.1, fy + 0.4, 0.8, 0.2, 1.0, 0.8, 0xd8c8a0); });
     }
@@ -347,10 +367,20 @@ export class GameView {
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
   private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); if (this.hovered === e) this.hovered = null; }
-  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[] }) {
+  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean }) {
     const e = this.ents.get(id);
     if (!e) return;
     if (extra) {
+      e.s.bleeding = extra.bleeding || undefined;
+      e.s.dead = extra.dead || undefined;
+      const lostChanged = (extra.lost ?? []).join() !== (e.s.lost ?? []).join();
+      const wChanged = (extra.weapon ?? undefined) !== (e.s.weapon ?? undefined);
+      if (lostChanged || wChanged) {
+        // Miembro arrancado: cae al suelo junto al cuerpo.
+        for (const part of extra.lost ?? []) if (!(e.s.lost ?? []).includes(part) && !part.startsWith('mano')) this.severed(e, part);
+        this.upsert({ ...e.s, x: e.x, y: e.y, lost: extra.lost, weapon: extra.weapon, label, chrome: chrome ?? e.s.chrome, appearance: extra.appearance ?? e.s.appearance, vehicle: extra.vehicle ?? e.s.vehicle, state: state === 'alive' ? undefined : state ?? e.s.state });
+        return;
+      }
       if (extra.buffs !== undefined) e.s.buffs = extra.buffs;
       if (extra.level !== undefined) e.s.level = extra.level;
       const apChanged = extra.appearance && JSON.stringify(extra.appearance) !== JSON.stringify(e.s.appearance);
@@ -360,7 +390,9 @@ export class GameView {
     if (hpPct !== undefined) e.s.hpPct = hpPct;
     if (carried !== undefined) e.s.carried = carried || undefined;
     if (chrome !== undefined && (chrome ?? []).join() !== (e.s.chrome ?? []).join()) { e.s.chrome = chrome; this.upsert({ ...e.s, x: e.x, y: e.y }); return; }
+    const relabel = e.s.objKind === 'camera' && e.s.label !== label;
     e.s.label = label;
+    if (relabel) this.drawObjectEnt(e);
     if (bounty !== undefined) e.s.bounty = bounty || undefined;
     if (state !== undefined) e.s.state = state === 'alive' ? undefined : state;
   }
@@ -380,16 +412,103 @@ export class GameView {
   }
   /** Trazadoras de disparos, impactos y líneas de hackeo. */
   private fxList: { g: Graphics; until: number }[] = [];
-  fx(kind: 'shot' | 'hit' | 'hack' | 'ko', from: number, to: number) {
+  /** Balas trazadoras que viajan, arcos de golpe según el arma, salpicaduras y charcos de sangre. */
+  private bullets: { g: Graphics; ax: number; ay: number; bx: number; by: number; t0: number; dur: number; col: number; w: number; hit: boolean; tx: number; ty: number; part?: string; target: number }[] = [];
+  private decals: { g: Graphics; until: number }[] = [];
+  fx(kind: 'shot' | 'hit' | 'hack' | 'ko', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean } = {}) {
     const a = this.ents.get(from), b = this.ents.get(to);
-    if (!a || !b || settings.reduceFlashes && kind === 'shot') return;
-    const pa = worldToScreen(a.x, a.y, 1.1), pb = worldToScreen(b.x, b.y, 1.1);
+    if (!a || !b) return;
+    a.attackAt = performance.now(); a.attackKind = kind === 'shot' ? 'shot' : kind === 'hit' ? 'hit' : undefined;
+    if (a !== b && a.body) a.body.scale.x = (b.x - a.x) - (b.y - a.y) >= 0 ? 1 : -1;
+    const partZ = extra.part === 'cabeza' ? 1.55 : extra.part?.startsWith('pierna') ? 0.45 : 1.1;
+    const pa = worldToScreen(a.x, a.y, 1.15), pb = worldToScreen(b.x, b.y, partZ);
+    const wi = extra.weapon ? content.items.find((i) => i.id === extra.weapon) : undefined;
+    const fam = wi?.weapon?.family ?? '';
+    const hit = extra.hit !== false;
+    if (kind === 'hack') {
+      const g = new Graphics().moveTo(pa.x, pa.y).lineTo(pb.x, pb.y).stroke({ width: 1.5, color: 0x43f3ff, alpha: 0.8 }).circle(pb.x, pb.y, 10).stroke({ width: 1.5, color: 0x43f3ff });
+      this.lightsLayer.addChild(g); this.fxList.push({ g, until: performance.now() + 600 }); return;
+    }
+    if (kind === 'shot') {
+      const id = extra.weapon ?? '';
+      const col = /plasma|termica/.test(id) ? 0xff7a30 : /riel|pulsos|sonico|emp|inteligente/.test(id) ? 0x43c8ff : fam === 'Táser' ? 0xffd23f : fam === 'Arco' ? 0xd8e0ec : 0xfff1a0;
+      const pellets = fam === 'Escopeta' ? 5 : fam === 'Ametralladora' ? 4 : fam === 'Subfusil' ? 3 : 1;
+      const dist = Math.hypot(b.x - a.x, b.y - a.y);
+      // Fogonazo en la boca del arma.
+      if (!settings.reduceFlashes) { const mf = new Graphics().circle(pa.x + (pb.x > pa.x ? 6 : -6), pa.y - 2, 4).fill({ color: 0xfff6c0, alpha: 0.95 }); this.lightsLayer.addChild(mf); this.fxList.push({ g: mf, until: performance.now() + 60 }); }
+      for (let i = 0; i < pellets; i++) {
+        const spread = pellets > 1 ? (Math.random() - 0.5) * 16 : 0;
+        const miss = !hit ? { x: (Math.random() - 0.5) * 40, y: (Math.random() - 0.5) * 24 } : { x: 0, y: 0 };
+        const g = new Graphics();
+        this.lightsLayer.addChild(g);
+        this.bullets.push({ g, ax: pa.x, ay: pa.y, bx: pb.x + spread + miss.x, by: pb.y + spread * 0.5 + miss.y, t0: performance.now() + i * (fam === 'Escopeta' ? 0 : 55), dur: Math.min(260, 40 + dist * 9), col, w: fam === 'Rifle' || fam === 'Especial' ? 2.4 : 1.6, hit: hit && i === 0, tx: b.x, ty: b.y, part: extra.part, target: b.s.id });
+      }
+    } else if (kind === 'hit') {
+      // Arco del golpe: ancho con armas largas, corto con cuchillos y puños.
+      const g = new Graphics();
+      const r = fam === 'Hoja' ? 16 : fam === 'Contundente' ? 13 : fam === 'Cuchillo' ? 9 : 8;
+      const col = /termica|plasma/.test(extra.weapon ?? '') ? 0xff7a30 : /electrica|aturdidora|taser|choque/.test(extra.weapon ?? '') ? 0x43c8ff : fam === 'Hoja' || fam === 'Cuchillo' || fam === 'Implante' ? 0xe8f0ff : 0xffffff;
+      const dir = pb.x >= pa.x ? 1 : -1;
+      g.arc(pa.x + dir * 4, pa.y, r, dir > 0 ? -1.4 : Math.PI - 0.2, dir > 0 ? 0.2 : Math.PI + 1.4).stroke({ width: fam === 'Hoja' ? 3 : 2, color: col, alpha: 0.9 });
+      this.lightsLayer.addChild(g); this.fxList.push({ g, until: performance.now() + 180 });
+      if (hit) this.impact(b, pb.x, pb.y, extra, fam === 'Contundente' || fam === 'Puños' || fam === '');
+    } else if (kind === 'ko') {
+      const g = new Graphics().circle(pb.x, pb.y - 6, 7).stroke({ width: 1.5, color: 0xffd23f });
+      this.lightsLayer.addChild(g); this.fxList.push({ g, until: performance.now() + 500 });
+    }
+    if (extra.sever) this.blood(b.x, b.y, 1.4, 60000);
+  }
+  /** Impacto en el cuerpo: salpicadura (más con armas de filo y balas), chispas en el cromo y sangre en el suelo. */
+  private impact(b: CEnt, x: number, y: number, extra: { part?: string; crit?: boolean; sever?: boolean }, blunt: boolean) {
     const g = new Graphics();
-    if (kind === 'shot') g.moveTo(pa.x, pa.y).lineTo(pb.x, pb.y).stroke({ width: 2, color: 0xfff1a0, alpha: 0.9 });
-    if (kind === 'hack') g.moveTo(pa.x, pa.y).lineTo(pb.x, pb.y).stroke({ width: 1.5, color: 0x43f3ff, alpha: 0.8 }).circle(pb.x, pb.y, 10).stroke({ width: 1.5, color: 0x43f3ff });
-    if (kind === 'hit' || kind === 'shot') g.circle(pb.x, pb.y, 6).fill({ color: 0xff3040, alpha: 0.6 });
-    this.lightsLayer.addChild(g);
-    this.fxList.push({ g, until: performance.now() + (kind === 'hack' ? 600 : 160) });
+    const n = blunt ? 3 : extra.crit || extra.sever ? 14 : 8;
+    for (let i = 0; i < n; i++) { const ang = Math.random() * Math.PI * 2, d = 2 + Math.random() * (extra.sever ? 16 : 9); g.circle(x + Math.cos(ang) * d, y + Math.sin(ang) * d * 0.6, 0.8 + Math.random() * 1.8).fill({ color: 0xb0101a, alpha: 0.9 }); }
+    if (blunt) g.circle(x, y, 5).stroke({ width: 1.5, color: 0xffffff, alpha: 0.7 });
+    this.lightsLayer.addChild(g); this.fxList.push({ g, until: performance.now() + 260 });
+    if (!blunt || Math.random() < 0.3) this.blood(b.x + (Math.random() - 0.5) * 0.4, b.y + (Math.random() - 0.5) * 0.4, extra.crit || extra.sever ? 0.9 : 0.55, 40000);
+  }
+  /** Charco o gota de sangre en el suelo (se desvanece con el tiempo). */
+  blood(wx: number, wy: number, size: number, ms: number) {
+    if (this.decals.length > 220) { const d = this.decals.shift()!; d.g.destroy(); }
+    const p = worldToScreen(wx, wy, 0);
+    const g = new Graphics();
+    const r = 4 + size * 9;
+    g.ellipse(0, 0, r, r * 0.5).fill({ color: 0x5a0408, alpha: 0.8 });
+    for (let i = 0; i < 3; i++) g.ellipse((Math.random() - 0.5) * r * 1.4, (Math.random() - 0.5) * r * 0.6, r * 0.35, r * 0.18).fill({ color: 0x7a0810, alpha: 0.75 });
+    g.position.set(p.x, p.y);
+    this.decalLayer.addChild(g);
+    this.decals.push({ g, until: performance.now() + ms });
+  }
+  /** Miembro arrancado tirado en el suelo junto a su dueño. */
+  private severed(e: CEnt, part: string) {
+    const c = makeSevered(part, e.s.appearance?.skin ?? '#c89070');
+    const ox = (Math.random() - 0.5) * 1.2, oy = (Math.random() - 0.5) * 1.2;
+    const p = worldToScreen(e.x + ox, e.y + oy, 0);
+    c.position.set(p.x, p.y); c.rotation = (Math.random() - 0.5) * 1.2; c.scale.set(CHAR_SCALE);
+    this.decalLayer.addChild(c);
+    this.decals.push({ g: c as any, until: performance.now() + 120000 });
+    this.blood(e.x + ox, e.y + oy, 1.2, 120000);
+  }
+  private animateFx(now: number) {
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const b = this.bullets[i];
+      const k = (now - b.t0) / b.dur;
+      if (k < 0) continue;
+      b.g.clear();
+      if (k >= 1) {
+        b.g.destroy(); this.bullets.splice(i, 1);
+        const t = this.ents.get(b.target);
+        if (b.hit && t) this.impact(t, b.bx, b.by, { part: b.part }, false);
+        else { const s = new Graphics().circle(b.bx, b.by, 2).fill({ color: 0xffe0a0, alpha: 0.8 }); this.lightsLayer.addChild(s); this.fxList.push({ g: s, until: now + 90 }); }
+        continue;
+      }
+      const x = b.ax + (b.bx - b.ax) * k, y = b.ay + (b.by - b.ay) * k;
+      const tl = 0.18;
+      const x0 = b.ax + (b.bx - b.ax) * Math.max(0, k - tl), y0 = b.ay + (b.by - b.ay) * Math.max(0, k - tl);
+      b.g.moveTo(x0, y0).lineTo(x, y).stroke({ width: b.w, color: b.col, alpha: 0.95 });
+      b.g.circle(x, y, b.w * 0.8).fill({ color: 0xffffff, alpha: 0.9 });
+    }
+    for (let i = this.decals.length - 1; i >= 0; i--) { const d = this.decals[i]; const left = d.until - now; if (left <= 0) { d.g.destroy(); this.decals.splice(i, 1); } else if (left < 4000) d.g.alpha = left / 4000; }
   }
   private statusVisuals(e: CEnt, now: number) {
     if (e.bubble) {
@@ -417,7 +536,8 @@ export class GameView {
     e.charRoot.rotation = lying ? -Math.PI / 2 : 0;
     e.charRoot.position.set(lying ? -13 : 0, lying ? -3 : 0);
     if (e.zz) { e.zz.visible = sleeping; e.zz.y = -24 - (settings.reduceMotion ? 0 : (now / 120) % 10); }
-    if (downed) e.charRoot.alpha = settings.reduceFlashes ? 0.7 : 0.55 + 0.35 * Math.abs(Math.sin(now / 300));
+    if (downed && e.s.dead) e.charRoot.alpha = 0.92;
+    else if (downed) e.charRoot.alpha = settings.reduceFlashes ? 0.7 : 0.55 + 0.35 * Math.abs(Math.sin(now / 300));
     else e.charRoot.alpha = 1;
     if (e.s.carried) { e.charRoot.rotation = -Math.PI / 2; e.charRoot.position.set(-4, -19); }
     const amt = e.s.bounty ?? 0;
@@ -563,13 +683,7 @@ export class GameView {
       this.place(e);
       this.statusVisuals(e, now);
       // Animación corta: piernas alternas y balanceo; se desactiva con «reducir movimiento».
-      if (e.legs && e.body && !(e.charRoot && e.charRoot.rotation !== 0)) {
-        e.phase += dt * (e.moving ? 12 : 2);
-        const bob = settings.reduceMotion ? 0 : e.moving ? Math.abs(Math.sin(e.phase)) * 1.5 : Math.sin(e.phase) * 0.4;
-        e.body.y = -bob;
-        e.legs.scale.y = e.moving && !settings.reduceMotion ? 0.85 + 0.15 * Math.abs(Math.cos(e.phase)) : 1;
-        e.legs.skew.x = e.moving && !settings.reduceMotion ? Math.sin(e.phase) * 0.25 : 0;
-      }
+      if (e.legs && e.body && !(e.charRoot && e.charRoot.rotation !== 0)) this.animateBody(e, dt, now);
       if (e.label) {
         e.label.visible = settings.showNames || e === this.hovered;
         const p = worldToScreen(e.x, e.y, 1.25);
@@ -667,6 +781,7 @@ export class GameView {
     }
   }
   private animateSky(now: number, dt: number) {
+    this.animateFx(now);
     for (const f of [...this.fxList]) if (now > f.until) { f.g.destroy(); this.fxList.splice(this.fxList.indexOf(f), 1); }
     this.animateTraffic(dt);
     const g = this.beaconG; g.clear();
@@ -686,6 +801,36 @@ export class GameView {
       c.g.position.set(p.x, p.y);
       c.g.scale.x = along ? 1 : -1;
     }
+  }
+
+  /** Andar orgánico: piernas desde la cadera y brazos desde el hombro en contrafase, balanceo del tronco y postura de arma. */
+  private animateBody(e: CEnt, dt: number, now: number) {
+    const rm = settings.reduceMotion;
+    const run = e.moving && (e.s.buffs?.includes('corriendo') || (e.samples.length > 1 && Math.hypot(e.samples[e.samples.length - 1].x - e.samples[0].x, e.samples[e.samples.length - 1].y - e.samples[0].y) / Math.max(1, (e.samples[e.samples.length - 1].t - e.samples[0].t) / 1000) > 3.2));
+    const spd = e.moving ? (run ? 15 : 10) : 1.6;
+    e.phase += dt * spd;
+    const sw = rm ? 0 : e.moving ? Math.sin(e.phase) : 0;
+    const amp = run ? 0.75 : 0.48;
+    const bob = rm ? 0 : e.moving ? Math.abs(Math.cos(e.phase)) * (run ? 2.2 : 1.3) : Math.sin(e.phase) * 0.35;
+    e.body!.y = (e.bodyY ?? 0) - bob;
+    e.body!.rotation = e.moving && !rm ? (run ? 0.1 : 0.03) * (e.body!.scale.x >= 0 ? 1 : -1) : 0;
+    e.legs!.skew.x = 0; e.legs!.scale.y = e.legs!.scale.y || 1;
+    if (e.legL) e.legL.rotation = sw * amp;
+    if (e.legR) e.legR.rotation = -sw * amp;
+    // Brazos: balanceo natural, o postura de combate con el arma.
+    const since = e.attackAt ? now - e.attackAt : 1e9;
+    let front = -sw * amp * 0.8, back = sw * amp * 0.8;
+    if (e.weaponKind === 'ranged') { front = since < 380 ? -1.45 : -0.55 + sw * 0.08; if (e.weaponBig) back = front + 0.25; }
+    else if (e.weaponKind === 'melee') { front = -0.25 - sw * 0.2; if (e.weaponBig) back = front + 0.3; }
+    if (since < 320 && e.attackKind === 'hit') { const k = since / 320; front = 2.0 - k * 3.8; if (e.weaponBig) back = front + 0.3; }
+    else if (since < 380 && e.attackKind === 'shot' && !e.weaponKind) front = -1.4;
+    if (e.armF) e.armF.rotation = front;
+    if (e.armB) e.armB.rotation = back;
+    // El arma se mantiene más o menos horizontal (fuego) o en la línea del brazo (cuerpo a cuerpo).
+    if (e.hand && e.weaponKind === 'ranged') e.hand.rotation = -front - (since < 380 ? 0 : 0.35);
+    else if (e.hand) e.hand.rotation = 0.6;
+    // Gotas de sangre al andar si se desangra.
+    if (e.s.bleeding && now > (e.dropAt ?? 0)) { e.dropAt = now + (e.moving ? 260 : 900); this.blood(e.x + (Math.random() - 0.5) * 0.3, e.y + (Math.random() - 0.5) * 0.3, 0.35 + Math.random() * 0.3, 14000); }
   }
 
   private face(e: CEnt, dx: number, dy: number) {
@@ -740,13 +885,38 @@ export class GameView {
     }
   }
 
+  /** Alcance de tu arma (rojo) y de tiro seguro apuntando (verde); lo rellena la ficha del personaje. */
+  combat = { range: 1.5, aim: 0, ranged: false };
+  private tinted: CEnt | null = null;
+  /** Destino marcado (rombo magenta que late sobre el suelo). */
+  goal: { x: number; y: number; zone: string } | null = null;
   private drawHover() {
     const g = this.hoverG; g.clear();
+    if (this.goal && this.zone && this.goal.zone === this.zone.id) {
+      const gp = worldToScreen(this.goal.x, this.goal.y), k = 1 + 0.15 * Math.sin(performance.now() / 200);
+      g.poly([gp.x, gp.y - 10 * k, gp.x + 14 * k, gp.y, gp.x, gp.y + 10 * k, gp.x - 14 * k, gp.y]).stroke({ width: 2, color: 0xff40ff, alpha: 0.9 });
+      g.poly([gp.x, gp.y - 40, gp.x + 5, gp.y - 32, gp.x, gp.y - 24, gp.x - 5, gp.y - 32]).fill({ color: 0xff40ff, alpha: 0.85 });
+    }
     const e = this.hovered;
+    if (this.tinted && this.tinted !== e) { this.clearTint(this.tinted); this.tinted = null; }
     if (!e) return;
+    this.tinted = e;
     const p = worldToScreen(e.x, e.y);
-    g.ellipse(p.x, p.y, 16, 8).stroke({ width: 2, color: 0xffd23f, alpha: 0.9 });
+    const person = (e.s.kind === 'npc' || e.s.kind === 'player') && e.s.id !== this.meId && !e.s.dead && e.s.npcType !== 'essential';
+    if (!person) { g.ellipse(p.x, p.y, 16, 8).stroke({ width: 2, color: 0xffd23f, alpha: 0.9 }); return; }
+    const d = Math.hypot(e.x - this.me.x, e.y - this.me.y);
+    const inAim = this.combat.ranged && d <= this.combat.aim, inRange = d <= this.combat.range;
+    const col = inAim ? 0x5aff7a : inRange ? 0xff3040 : 0xffd23f;
+    g.ellipse(p.x, p.y, 17, 8.5).stroke({ width: 2.5, color: col, alpha: 0.95 });
+    // Silueta teñida: verde = tiro seguro (quieto y apuntando), rojo = a tu alcance.
+    if (e.charRoot) e.charRoot.tint = inAim ? 0xb8ffc8 : inRange ? 0xffb0b0 : 0xffffff;
+    // Anillos de alcance alrededor de ti.
+    const m = worldToScreen(this.me.x, this.me.y);
+    const ring = (r: number, c: number) => { const k = r * 45.25; g.ellipse(m.x, m.y, k, k * 0.5).stroke({ width: 1.2, color: c, alpha: 0.45 }); };
+    if (this.combat.ranged) { ring(this.combat.range, 0xff3040); ring(this.combat.aim, 0x5aff7a); }
   }
+  /** Quita el tinte de la silueta al dejar de señalar a alguien. */
+  clearTint(e: CEnt | null) { if (e?.charRoot) e.charRoot.tint = 0xffffff; }
 
   /** Fase del día (para el HUD): madrugada, amanecer, día, atardecer o noche. */
   dayPhase(h = this.cityHourFn()) { return h >= 5 && h < 8 ? 'amanecer' : h >= 8 && h < 18 ? 'día' : h >= 18 && h < 21 ? 'atardecer' : 'noche'; }

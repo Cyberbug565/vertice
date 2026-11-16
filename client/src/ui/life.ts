@@ -16,7 +16,7 @@ const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medici
 export function showPanel(id: string, title: string, ...body: (Node | string | null)[]) {
   const old = document.getElementById(id);
   const scroll = old?.scrollTop ?? 0;
-  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel']) if (pid !== id) document.getElementById(pid)?.remove();
+  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'search-panel', 'trunk-panel']) if (pid !== id) document.getElementById(pid)?.remove();
   const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body.filter(Boolean) as Node[]);
   if (old) old.replaceWith(p); else $ui().append(p);
   p.scrollTop = scroll;
@@ -134,18 +134,25 @@ export function bountyPanel(ctx: LifeCtx, v: BountyView) {
 }
 
 const GROUPS: Record<string, { label: string; color: string }> = { social: { label: 'Social', color: '#43f3ff' }, ayuda: { label: 'Ayuda', color: '#5affc8' }, combate: { label: 'Combate', color: '#ff3040' }, red: { label: 'Red (hackeo)', color: '#b46cff' } };
+/** Zona del cuerpo a la que apuntas (se recuerda entre menús). */
+let aimPart: string = 'torso';
+const PARTS: [string, string, string][] = [['torso', 'Torso', 'Sin penalización · daño normal'], ['cabeza', 'Cabeza', '−4 a acertar · daño ×2 · golpes contundentes: KO'], ['brazos', 'Brazos', '−2 · daño ×0,7 · puede perder el brazo'], ['manos', 'Manos', '−3 · daño ×0,5 · puede hacerle soltar el arma'], ['piernas', 'Piernas', '−2 · daño ×0,75 · puede perder la pierna (y no podrá correr)']];
 export function targetMenu(ctx: LifeCtx, v: TargetMenuView, at: { x: number; y: number }, onInteract?: (id: string) => void) {
   document.getElementById('target-menu')?.remove();
+  const combat = v.options.some((o) => ['attack', 'knockout', 'aim'].includes(o.id));
+  const partRow = combat ? h('div', { class: 'ctx-parts', role: 'radiogroup', 'aria-label': 'Zona del cuerpo' }, h('span', { class: 'muted', style: { fontSize: '0.78em' } }, 'Apuntar a:'),
+    ...PARTS.map(([id, label, tip]) => h('button', { class: `chip-btn${aimPart === id ? ' on' : ''}`, title: tip, role: 'radio', 'aria-checked': String(aimPart === id), onclick: (ev: Event) => { aimPart = id; (ev.currentTarget as HTMLElement).parentElement!.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b === ev.currentTarget)); } }, label))) : null;
   const groups = ['social', 'ayuda', 'combate', 'red'].map((g) => [g, v.options.filter((o) => o.group === g)] as const).filter(([, l]) => l.length);
   const m = h('div', { class: 'ctx-menu', id: 'target-menu', role: 'menu', style: { left: `${Math.min(window.innerWidth - 330, at.x + 12)}px`, top: `${Math.max(10, Math.min(window.innerHeight - 420, at.y - 40))}px`, borderColor: v.color ?? 'var(--line)' } },
     h('div', { class: 'ctx-head', style: { background: `linear-gradient(90deg, ${v.color ?? '#3a1440'}55, transparent)` } }, h('div', {}, h('b', {}, v.name), v.subtitle ? h('div', { class: 'muted', style: { fontSize: '0.8em' } }, v.subtitle) : null), h('button', { class: 'btn small', onclick: () => m.remove() }, '✕')),
-    ...(groups.length ? groups.map(([g, list]) => h('div', { class: 'ctx-group' }, h('div', { class: 'ctx-glabel', style: { color: GROUPS[g].color } }, GROUPS[g].label),
+    ...(groups.length ? groups.map(([g, list]) => h('div', { class: 'ctx-group' }, h('div', { class: 'ctx-glabel', style: { color: GROUPS[g].color } }, GROUPS[g].label), g === 'combate' ? partRow : null,
       ...list.map((o) => h('button', { class: `ctx-opt${o.danger ? ' danger' : ''}`, role: 'menuitem', disabled: !!o.disabled, style: { borderLeftColor: GROUPS[g].color }, title: o.disabled ?? o.detail ?? '', onclick: () => {
         if (o.kind === 'interact') onInteract?.(o.id);
         else if (o.kind === 'hack') ctx.net.send({ t: 'hack', target: v.target, hack: o.id.slice(5), opId: newOpId() } as any);
         else if (o.id === 'rescue') ctx.net.send({ t: 'rescue', target: v.target, opId: newOpId() } as any);
         else if (o.id === 'drop') ctx.net.send({ t: 'drop' } as any);
         else if (o.id === 'bribe') ctx.net.send({ t: 'bribe', opId: newOpId() } as any);
+        else if (['attack', 'knockout', 'aim', 'claim'].includes(o.id)) ctx.net.send({ t: 'hostile', target: v.target, action: o.id, opId: newOpId(), part: aimPart } as any);
         else ctx.net.send({ t: 'hostile', target: v.target, action: o.id, opId: newOpId() } as any);
         m.remove(); blip();
       } }, h('span', {}, o.label), o.chance !== undefined ? h('span', { class: 'ctx-chance', style: { color: o.chance >= 0.7 ? 'var(--green)' : o.chance >= 0.4 ? 'var(--yellow)' : 'var(--red)' } }, pct(o.chance)) : null,
@@ -189,7 +196,7 @@ export function ambarPanel(ctx: LifeCtx, v: AmbarView) {
 /** Mapa global: distritos de la megápolis colocados como en un mapa de juego. */
 let cityMapCache: { canvas: HTMLCanvasElement; project: (x: number, y: number) => { x: number; y: number } } | null = null;
 /** Mapa global: toda la ciudad única en isométrico, con los distritos rotulados, tu posición y viaje en coche. */
-export function worldMapPanel(current: string, opts: { discovered?: string[]; hasCar?: boolean; travel?: (zone: string) => void; me?: { x: number; y: number } } = {}) {
+export function worldMapPanel(current: string, opts: { discovered?: string[]; hasCar?: boolean; travel?: (zone: string) => void; me?: { x: number; y: number }; goal?: { x: number; y: number; zone: string } | null; goto?: (x: number, y: number) => void } = {}) {
   const W = content.world;
   const city = content.zones.find((z) => z.id === 'vertice')!;
   const inR = (x: number, y: number, [rx, ry, rw, rh]: number[]) => x >= rx && y >= ry && x < rx + rw && y < ry + rh;
@@ -224,7 +231,16 @@ export function worldMapPanel(current: string, opts: { discovered?: string[]; ha
   };
   if (!cityMapCache) { const cv = document.createElement('canvas'); cityMapCache = { canvas: cv, project: renderZoneMap(city, cv, 0.8).project }; }
   const { canvas, project } = cityMapCache;
-  const img = h('img', { src: canvas.toDataURL(), class: 'citymap-img', alt: 'Mapa de Ciudad Vértice' }) as HTMLImageElement;
+  const img = h('img', { src: canvas.toDataURL(), class: 'citymap-img', alt: 'Mapa de Ciudad Vértice', title: opts.goto ? 'Clic: marcar destino (vas solo hasta allí)' : '', style: { cursor: opts.goto ? 'crosshair' : 'default' },
+    onclick: (ev: MouseEvent) => {
+      if (!opts.goto) return;
+      const r = img.getBoundingClientRect();
+      const px = ((ev.clientX - r.left) / r.width) * canvas.width, py = ((ev.clientY - r.top) / r.height) * canvas.height;
+      const s0 = 0.8, a = (px - city.height * s0) / s0, b = (2 * py) / s0;
+      const x = (a + b) / 2, y = (b - a) / 2;
+      if (x < 0 || y < 0 || x >= city.width || y >= city.height) return;
+      opts.goto(x, y); document.getElementById('world-panel')?.remove();
+    } }) as HTMLImageElement;
   const pct = (x: number, y: number) => { const p = project(x, y); return { left: `${(100 * p.x) / canvas.width}%`, top: `${(100 * p.y) / canvas.height}%` }; };
   const labels = city.districts.map((m) => {
     const d = W.districts.find((x) => x.zone === m.id);
@@ -236,10 +252,11 @@ export function worldMapPanel(current: string, opts: { discovered?: string[]; ha
     ...city.doors.filter((x) => x.to.zone.startsWith('base-')).map((x) => h('span', { class: 'citymap-mark', title: x.name, style: pct(x.at[0], x.at[1]) }, '☠')),
     ...city.doors.filter((x) => x.hidden && (opts.discovered ?? []).includes(x.hidden)).map((x) => h('span', { class: 'citymap-mark', title: content.ripperdocs.find((r) => r.id === x.hidden)?.name, style: pct(x.at[0], x.at[1]) }, '⚕')),
     ...(pos ? [h('span', { class: 'citymap-me', title: 'Estás aquí', style: pct(pos.x, pos.y) })] : []),
+    ...(opts.goal && opts.goal.zone === 'vertice' ? [h('span', { class: 'citymap-mark', title: 'Destino marcado', style: { ...pct(opts.goal.x, opts.goal.y), color: '#ff40ff' } }, '◆')] : []),
   ];
   const map = h('div', { class: 'citymap' }, img, ...labels, ...marks);
   showInfo(here || 'ferro');
-  showPanel('world-panel', `Mapa de ${W.name}`, h('p', { class: 'muted' }, 'Toda la ciudad es un único mapa: se puede ir andando (o corriendo) de un distrito a otro por las avenidas de circunvalación. 🏢 torres corporativas · ☠ bases de bandas · ⚕ matasanos descubiertos.'), map, info);
+  showPanel('world-panel', `Mapa de ${W.name}`, h('p', { class: 'muted' }, 'Toda la ciudad es un único mapa. Haz clic en el plano para marcar un destino: tu personaje irá solo hasta allí. Colores: verde zona segura, sin tinte zona vigilada, rojo zona peligrosa y negro zona sin ley. 🏢 torres · ☠ bases de bandas · ⚕ matasanos descubiertos · ◆ destino.'), map, info);
 }
 
 export function deathScreen(s: DeathSummary, onNew: () => void) {

@@ -1,6 +1,6 @@
 // Opciones de personalización del personaje (validadas en el servidor y usadas por el creador del cliente).
-export const BUILDS = ['delgado', 'medio', 'robusto'] as const;
-export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños'] as const;
+export const BUILDS = ['delgado', 'medio', 'robusto', 'atletico', 'corpulento', 'bajo', 'alto'] as const;
+export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños', 'afro-corto', 'pompadour', 'bob', 'media-melena', 'trenza-larga', 'erizo'] as const;
 export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono'] as const;
 export const FACIALS = ['ninguno', 'barba', 'bigote', 'perilla', 'barba-larga', 'patillas', 'candado'] as const;
 export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada'] as const;
@@ -12,7 +12,8 @@ export const BODY_TATTOOS = ['ninguno', 'tribal', 'circuito', 'floral', 'codigo'
 export const ACCESSORIES = ['ninguno', 'gafas', 'visor', 'mascara', 'gorra', 'capucha', 'auriculares'] as const;
 export const EYE_COLORS = ['#3a2a1a', '#2a6aa8', '#3a8a4a', '#8a8a8a', '#43f3ff', '#ff3fa4', '#ffd23f', '#ff3040'] as const;
 export const LABELS: Record<string, string> = {
-  delgado: 'Delgado', medio: 'Medio', robusto: 'Robusto', rapado: 'Rapado', corto: 'Corto', cresta: 'Cresta', largo: 'Largo', coleta: 'Coleta', afro: 'Afro', 'moño': 'Moño', rastas: 'Rastas', calvo: 'Calvo', asimetrico: 'Asimétrico',
+  delgado: 'Delgado', medio: 'Medio', robusto: 'Robusto', atletico: 'Atlético', corpulento: 'Corpulento', bajo: 'Bajo/a', alto: 'Alto/a',
+  'afro-corto': 'Afro corto', pompadour: 'Tupé', bob: 'Bob', 'media-melena': 'Media melena', 'trenza-larga': 'Trenza larga', erizo: 'Erizo', rapado: 'Rapado', corto: 'Corto', cresta: 'Cresta', largo: 'Largo', coleta: 'Coleta', afro: 'Afro', 'moño': 'Moño', rastas: 'Rastas', calvo: 'Calvo', asimetrico: 'Asimétrico',
   chaqueta: 'Chaqueta', gabardina: 'Gabardina', chaleco: 'Chaleco', sudadera: 'Sudadera', traje: 'Traje', top: 'Top', mono: 'Mono de trabajo',
   undercut: 'Undercut', trenzas: 'Trenzas', mohicano: 'Mohicano', melena: 'Melena', flequillo: 'Flequillo', puntas: 'Puntas', 'coleta-alta': 'Coleta alta', rizos: 'Rizos', lobo: 'Corte lobo', 'dos-moños': 'Dos moños',
   'barba-larga': 'Barba larga', patillas: 'Patillas', candado: 'Candado', ovalada: 'Ovalada', angulosa: 'Angulosa', redonda: 'Redonda', alargada: 'Alargada',

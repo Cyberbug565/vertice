@@ -285,5 +285,21 @@ function sheetTab(s: CharacterSheet) {
     h('div', { class: 'attr-grid' }, stat('Salud', `${Math.round(s.hp)}/${s.hpMax}`), stat('Aguante', `${Math.round(s.stamina)}/${s.staminaMax}`), stat('Suerte', `${s.luck}/${s.luckMax}`), stat('Humanidad', `${s.humanity}/${s.humanityMax}`), stat('Blindaje', String(s.armor)), stat('Esquiva', `${s.dodge} %`), stat('Velocidad', `×${s.speedMult}`), stat('Carga', `${s.carry}/${s.carryMax} kg`)),
     h('h3', {}, 'Necesidades'),
     h('div', { class: 'attr-grid' }, stat('Hambre', `${s.needs.hunger}`), stat('Sed', `${s.needs.thirst}`), stat('Sueño', `${s.needs.fatigue}`), stat('Ritmo', `×${s.needsMult.hunger.toFixed(2)}`)),
+    h('h3', {}, 'Cuerpo y heridas'), bodyBlock(s),
+    h('h3', {}, 'Armas encima'),
+    h('div', { class: 'attr-grid' }, stat('Largas', `${s.weaponSlots.grande}/${s.weaponSlots.maxGrande}`), stat('Cortas', `${s.weaponSlots.pequena}/${s.weaponSlots.maxPequena}`), stat('Tiro seguro', `${s.aim.range} m`), stat('Apuntar', `${s.aim.time} s`)),
+    s.bio ? h('div', { class: 'fcard', style: { borderTopColor: s.bio.done ? '#5affc8' : '#ffd23f', marginTop: '8px' } }, h('b', {}, `Objetivo vital: ${s.bio.objectiveName}`), h('div', {}, s.bio.done ? '✔ Cumplido (+2 puntos de perk)' : s.bio.progress)) : null,
+    s.identified ? h('div', { class: 'fcard', style: { borderTopColor: '#ff3040', marginTop: '8px' } }, h('b', { style: { color: 'var(--red)' } }, '📷 Identificado/a por las cámaras'), h('div', {}, `${s.identified.crime} en ${s.identified.district}. Tu ficha es pública: la PCV puede ir a por ti con fuego real.`)) : null,
     s.uniques.length ? h('p', { class: 'small' }, h('b', {}, 'Efectos únicos activos: '), s.uniques.join(', ')) : null);
+}
+
+const PART_LABEL: Record<string, string> = { cabeza: 'Cabeza', torso: 'Torso', brazo_izq: 'Brazo izq.', brazo_der: 'Brazo der.', mano_izq: 'Mano izq.', mano_der: 'Mano der.', pierna_izq: 'Pierna izq.', pierna_der: 'Pierna der.' };
+/** Silueta con el estado de cada zona: sana, herida, grave o perdida (se recupera con una prótesis en un matasanos). */
+function bodyBlock(s: CharacterSheet) {
+  const st = (k: string) => (s.body.lost.includes(k) ? 'perdido' : (s.body.wounds[k] ?? 0) >= 20 ? 'grave' : (s.body.wounds[k] ?? 0) > 0 ? 'herido' : 'sano');
+  const col: Record<string, string> = { sano: '#5affc8', herido: '#ffd23f', grave: '#ff6a30', perdido: '#ff3040' };
+  return h('div', {},
+    h('div', { class: 'attr-grid' }, ...Object.keys(PART_LABEL).map((k) => h('div', { class: 'cs-stat' }, h('span', { class: 'muted small' }, PART_LABEL[k]), h('b', { style: { color: col[st(k)] } }, st(k))))),
+    s.body.bleed > 0.05 ? h('p', { style: { color: 'var(--red)' } }, `🩸 Hemorragia: −${s.body.bleed.toFixed(1)} de salud por segundo. Usa una venda o un estimulante, o busca un médico.`) : h('p', { class: 'small muted' }, 'Sin hemorragias.'),
+    s.body.lost.length ? h('p', { class: 'small' }, 'Has perdido: ', s.body.lost.map((k) => PART_LABEL[k] ?? k).join(', '), '. Un matasanos puede implantarte una prótesis (brazo o pierna).') : null);
 }

@@ -32,9 +32,12 @@ async function createCharacter(page, user, name, roleId) {
   await page.click('#btn-create');
   await page.fill('#char-name', name);
   await page.click('#btn-next'); await page.click('#btn-next'); await page.click('#btn-next'); // nombre, aspecto, origen
+  await page.click('#bio-objective-leyenda'); await page.click('#btn-next'); // historia
   await page.click(`#role-${roleId}`); await page.click('#btn-next');
   await page.click('#btn-next'); // oficio
-  await page.click('#btn-next');
+  await page.click('#btn-next'); // atributos
+  for (let i = 0; i < 3; i++) await page.click('button[aria-label="Subir Atletismo"]').catch(() => {});
+  await page.click('#btn-next'); // habilidades
   await page.click('#btn-create-final');
   await page.waitForFunction(() => window.__vt && window.__vt.me().id > 0, null, { timeout: 15000 });
 }

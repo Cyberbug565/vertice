@@ -5,7 +5,7 @@ import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 
 export function loginScreen(onDone: () => void) {
@@ -79,8 +79,14 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
     appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
       faceShape: 'ovalada', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0] },
-    attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes };
-  const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Rol', 'Oficio', 'Atributos', 'Revisión'];
+    attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes,
+    bio: { objective: 'rico', childhood: 'calle', event: 'traicion' }, skillPoints: {} as Record<string, number> };
+  const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Historia', 'Rol', 'Oficio', 'Atributos', 'Habilidades', 'Revisión'];
+  const S = (n: string) => STEPS.indexOf(n);
+  const skillBudget = () => CREATION_SKILL_POINTS + (st.bio.objective === 'maestria' ? 2 : 0) + (st.bio.event === 'deuda' ? 2 : 0);
+  const skillSpent = () => Object.values(st.skillPoints).reduce((a, b) => a + b, 0);
+  const bioBonus = (k: string) => [OBJECTIVES, CHILDHOODS, EVENTS].reduce((acc, list) => acc + (((list as readonly any[]).find((o) => o.id === (list === OBJECTIVES ? st.bio.objective : list === CHILDHOODS ? st.bio.childhood : st.bio.event))?.skills ?? {})[k] ?? 0), 0);
+  const bioMoney = () => [OBJECTIVES.find((o) => o.id === st.bio.objective), CHILDHOODS.find((o) => o.id === st.bio.childhood), EVENTS.find((o) => o.id === st.bio.event)].reduce((a, o) => a + ((o as any)?.money ?? 0), 0);
   const LAST = STEPS.length - 1;
   const preview = new Preview();
   const leave = (fn: () => void) => () => { preview.destroy(); fn(); };
@@ -132,20 +138,43 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
             h('button', { class: 'btn small', 'aria-pressed': String(st.previewChrome), onclick: () => { st.previewChrome = !st.previewChrome; render(); } }, st.previewChrome ? 'Quitar cromo' : 'Probar cromo')),
           h('p', { class: 'muted small' }, 'El cromo se ve por partes: cabeza, ojos, torso, brazos y piernas. Empiezas sin implantes; los verás aparecer al operarte.')),
         controls);
-    } else if (st.step === 2) {
+    } else if (st.step === S('Origen')) {
       body = h('div', { class: 'grid2' }, ...content.origins.map((o) => h('button', { class: 'choice', 'aria-pressed': String(st.origin === o.id), onclick: () => { st.origin = o.id; render(); } },
         h('h4', {}, o.name), h('p', {}, o.desc), h('p', {}, `Contacto inicial: ${o.contact}`), h('p', {}, `Fondos: ${fmtMoney(o.startMoney)}`))));
       body = h('div', { class: 'col' }, h('p', { class: 'muted' }, 'El origen cambia tus contactos y opciones de diálogo. Es independiente del rol (puedes ser de origen nómada sin ser Nómada).'), body);
-    } else if (st.step === 3) {
+    } else if (st.step === S('Historia')) {
+      const group = (title: string, key: 'objective' | 'childhood' | 'event', list: readonly any[], hint: string) => h('div', { class: 'col' }, h('h4', { class: 'creator-sec' }, title), h('p', { class: 'muted small' }, hint),
+        h('div', { class: 'grid2' }, ...list.map((o) => h('button', { class: 'choice', id: `bio-${key}-${o.id}`, 'aria-pressed': String(st.bio[key] === o.id), onclick: () => { st.bio[key] = o.id; render(); } },
+          h('h4', {}, o.name), h('p', {}, o.desc),
+          h('p', { style: { color: 'var(--yellow)' } }, o.bonus ?? ([...Object.entries(o.skills ?? {}).map(([k, v]) => `+${v} ${content.skills.find((x) => x.id === k)?.name ?? k}`), o.money ? `${o.money > 0 ? '+' : ''}${o.money} €$` : '', o.points ? `+${o.points} puntos de habilidad` : ''].filter(Boolean).join(' · ') || '—'))))));
+      body = h('div', { class: 'col' },
+        h('p', { class: 'muted' }, 'Tu historia: qué te mueve, de dónde vienes y qué te marcó. Da habilidades y dinero de partida, y un objetivo vital que, al cumplirlo, te premia con +2 puntos de perk.'),
+        group('Objetivo vital', 'objective', OBJECTIVES, 'La meta de tu vida en Vértice (se sigue en tu ficha).'),
+        group('Infancia', 'childhood', CHILDHOODS, 'Dónde y cómo creciste.'),
+        group('Giro vital', 'event', EVENTS, 'Lo que te cambió.'));
+    } else if (st.step === S('Habilidades')) {
+      const left = skillBudget() - skillSpent();
+      body = h('div', { class: 'col' },
+        h('p', {}, `Reparte ${skillBudget()} puntos de habilidad (máximo ${CREATION_SKILL_MAX} por habilidad). Se suman a lo que te dan el rol y tu historia. Restantes: `, h('b', { class: left === 0 ? 'cy' : 'neon', id: 'skill-points-left' }, String(left))),
+        h('div', { class: 'grid2' }, ...content.skills.map((sk) => {
+          const v = st.skillPoints[sk.id] ?? 0, bonus = bioBonus(sk.id);
+          return h('div', { class: 'attr' },
+            h('span', {}, h('b', {}, sk.name), bonus ? h('small', { class: 'good' }, ` +${bonus} historia`) : ''),
+            h('button', { class: 'btn small', 'aria-label': `Bajar ${sk.name}`, disabled: v <= 0, onclick: () => { st.skillPoints[sk.id] = v - 1; render(); } }, '−'),
+            h('span', { class: 'v' }, String(v)),
+            h('button', { class: 'btn small', 'aria-label': `Subir ${sk.name}`, disabled: v >= CREATION_SKILL_MAX || left <= 0, onclick: () => { st.skillPoints[sk.id] = v + 1; render(); } }, '+'));
+        })),
+        h('p', { class: 'muted small' }, 'Las habilidades suben hasta 25 usándolas. No hace falta gastar todos los puntos, pero los que no gastes se pierden.'));
+    } else if (st.step === S('Rol')) {
       body = h('div', { class: 'grid2' }, ...content.roles.map((r) => h('button', { class: 'choice', id: `role-${r.id}`, 'aria-pressed': String(st.role === r.id), onclick: () => { st.role = r.id; render(); }, style: { borderLeft: `4px solid ${r.accent}` } },
         h('h4', {}, `${r.name} · ${r.ability}`), h('p', {}, r.abilityDesc), h('p', {}, `Ingresos: ${r.income}`), h('p', {}, `Primer trabajo: ${r.firstJob}`), h('p', {}, `En grupo: ${r.groupContribution}`),
         r.m1Option ? h('p', { style: { color: 'var(--yellow)' } }, `Disponible ya en Ferro: ${r.m1Option}`) : h('p', {}, 'En el hito 1 resuelve el encargo por la ruta común (pagar o trabajar).'))));
-    } else if (st.step === 4) {
+    } else if (st.step === S('Oficio')) {
       const kinds: Record<string, string> = { empleo: 'Empleo', libre: 'Libre', ilegal: 'Ilegal' };
       body = h('div', { class: 'col' }, h('p', { class: 'muted' }, 'Tu oficio decide qué empleos puedes coger (5 por oficio, 100 en total) y te da una ventaja. El rol es tu especialidad de combate y técnica; el oficio, cómo te ganas la vida. Podrás cambiarlo en la bolsa de empleo.'),
         h('div', { class: 'grid2' }, ...content.professions.map((pr) => h('button', { class: 'choice', id: `prof-${pr.id}`, 'aria-pressed': String(st.profession === pr.id), onclick: () => { st.profession = pr.id; render(); } },
           h('h4', {}, `${pr.name} · ${kinds[pr.kind]}`), h('p', {}, pr.desc), h('p', { style: { color: 'var(--yellow)' } }, `Ventaja: ${pr.perk}`)))));
-    } else if (st.step === 5) {
+    } else if (st.step === S('Atributos')) {
       const a = st.attributes;
       const left = RULES.creationPoints - spent();
       body = h('div', { class: 'col' },
@@ -161,18 +190,21 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
       const r = content.roles.find((x) => x.id === st.role)!, o = content.origins.find((x) => x.id === st.origin)!, pf = content.professions.find((x) => x.id === st.profession)!;
       body = h('div', { class: 'col' }, h('h3', {}, st.name || '(sin nombre)'), h('p', {}, `${o.name} · ${r.name} (${r.ability}) · oficio ${pf.name}`),
         h('p', { class: 'mono' }, ATTRIBUTE_IDS.map((k) => `${k} ${st.attributes[k]}`).join(' · ')),
-        h('p', {}, `Empiezas en el vestíbulo del Bloque 9 (zona protegida) con ${fmtMoney(o.startMoney)}, agente personal, chaqueta, navaja, dos raciones de fideos y dos de agua. Tendrás que comer, beber y dormir.`),
+        h('p', {}, `Objetivo: ${OBJECTIVES.find((x) => x.id === st.bio.objective)?.name} · ${CHILDHOODS.find((x) => x.id === st.bio.childhood)?.name} · ${EVENTS.find((x) => x.id === st.bio.event)?.name}`),
+        h('p', { class: 'mono small' }, Object.entries(st.skillPoints).filter(([, v]) => v > 0).map(([k, v]) => `${content.skills.find((x) => x.id === k)?.name ?? k} +${v}`).join(' · ') || 'Sin puntos de habilidad repartidos.'),
+        h('p', {}, `Empiezas en el vestíbulo del Bloque 9 (zona segura, verde) con ${fmtMoney(Math.max(20, o.startMoney + bioMoney()))}, agente personal, chaqueta, navaja, dos raciones de fideos y dos de agua. Tendrás que comer, beber y dormir.`),
         h('p', { class: 'muted' }, 'Recuerda: una sola vida. Si tu personaje muere, se pierde su progreso; la cuenta conserva ajustes, amigos y el memorial.'));
     }
     card.replaceChildren(h('h2', {}, 'Crear personaje'), h('div', { class: 'steps' }, ...STEPS.map((s, i) => h('span', { class: i === st.step ? 'on' : '' }, `${i + 1}. ${s}`))), body, err, nav);
   };
   const validate = (): string | null => {
     if (st.step === 0 && !/^[\p{L}0-9 _'.-]{3,20}$/u.test(st.name.trim())) return 'El nombre debe tener entre 3 y 20 caracteres.';
-    if (st.step === 5 && spent() !== RULES.creationPoints) return `Te faltan o sobran puntos: llevas ${spent()} de ${RULES.creationPoints}.`;
+    if (st.step === S('Habilidades') && skillSpent() > skillBudget()) return 'Has gastado demasiados puntos de habilidad.';
+    if (st.step === S('Atributos') && spent() !== RULES.creationPoints) return `Te faltan o sobran puntos: llevas ${spent()} de ${RULES.creationPoints}.`;
     return null;
   };
   const submit = async () => {
-    try { await api('/api/characters', { name: st.name.trim(), origin: st.origin, role: st.role, profession: st.profession, attributes: st.attributes, appearance: st.appearance }); blip('good'); onDone(); }
+    try { await api('/api/characters', { name: st.name.trim(), origin: st.origin, role: st.role, profession: st.profession, attributes: st.attributes, appearance: st.appearance, bio: st.bio, skillPoints: Object.fromEntries(Object.entries(st.skillPoints).filter(([, v]) => v > 0)) }); blip('good'); onDone(); }
     catch (e: any) { err.textContent = e.message; blip('bad'); }
   };
   render();

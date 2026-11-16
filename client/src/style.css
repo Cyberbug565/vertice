@@ -366,3 +366,11 @@ button.chip { cursor: pointer; }
 .floor { display: grid; grid-template-columns: 36px 1fr auto auto; gap: 10px; align-items: center; padding: 6px 10px; background: rgba(14, 14, 32, 0.85); border: 1px solid #23234a; border-left: 4px solid; }
 .floor.here { background: rgba(40, 20, 50, 0.85); }
 .floor-n { font-size: 1.2em; font-weight: 800; text-align: center; color: var(--yellow); }
+
+/* v0.6 · selector de zona del cuerpo en el menú de combate */
+.ctx-parts { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 2px 0 6px; }
+.chip-btn { background: #1a1a2a; color: var(--fg, #e8e8f4); border: 1px solid #3a3a5a; border-radius: 10px; padding: 2px 8px; font-size: 0.78em; cursor: pointer; }
+.chip-btn.on { background: #ff304033; border-color: #ff3040; color: #fff; }
+.chip-btn:focus-visible { outline: 2px solid #43f3ff; }
+.d-lawless { color: #f4f4fa; background: #000 !important; border: 1px solid #ff3040; }
+.goalchip { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 4px; padding: 2px 6px; border: 1px solid #ff40ff; border-radius: 6px; color: #ffb0ff; font-size: 0.82em; background: #2a0a2a99; }

@@ -265,16 +265,40 @@ export function drawProp(g: Graphics, lightsIn: Graphics, p: ZoneDef['props'][nu
     case 'palm': { const a1 = worldToScreen(x + 0.5, y + 0.5, 0), t = worldToScreen(x + 0.5, y + 0.5, 3); g.moveTo(a1.x, a1.y).lineTo(t.x + 3, t.y).stroke({ width: 3, color: 0x6a4a2a }); for (const [dx, dy] of [[-14, 4], [14, 3], [-8, -6], [9, -7], [0, -9]]) g.moveTo(t.x + 3, t.y).quadraticCurveTo(t.x + 3 + dx / 2, t.y + dy - 6, t.x + 3 + dx, t.y + dy).stroke({ width: 3, color: 0x2f8a4f }); break; }
     case 'billboard': { drawBox(g, x + 0.45, y + 0.45, 0.1, 0.1, 0, 2.5, 0x333340); const t = worldToScreen(x + 0.5, y + 0.5, 3.4); g.rect(t.x - 34, t.y - 14, 68, 24).fill(0x101018); lights.rect(t.x - 32, t.y - 12, 64, 20).fill({ color: c, alpha: 0.55 }); break; }
     case 'neonstrip': { const a1 = worldToScreen(x, y + 0.5, 0.2), b1 = worldToScreen(x + 1, y + 0.5, 0.2); lights.moveTo(a1.x, a1.y).lineTo(b1.x, b1.y).stroke({ width: 3, color: c, alpha: 0.9 }); break; }
+    // ---- v0.6: mobiliario y mobiliario urbano que sirve de cobertura
+    case 'column': drawBox(g, x + 0.2, y + 0.2, 0.6, 0.6, 0, 3.2, p.color ? c : 0x5a5a6e); drawBox(g, x + 0.12, y + 0.12, 0.76, 0.76, 3.0, 0.2, 0x6a6a80); { const s1 = worldToScreen(x + 0.8, y + 0.8, 1.6); lights.rect(s1.x - 1, s1.y - 30, 2, 40).fill({ color: 0x43f3ff, alpha: 0.18 }); } break;
+    case 'sofa': drawBox(g, x, y + 0.2, 1, 0.65, 0, 0.35, c); drawBox(g, x, y + 0.7, 1, 0.18, 0.35, 0.4, shade(c, 0.8)); drawBox(g, x, y + 0.2, 0.15, 0.65, 0.35, 0.2, shade(c, 0.85)); drawBox(g, x + 0.85, y + 0.2, 0.15, 0.65, 0.35, 0.2, shade(c, 0.85)); break;
+    case 'desk': drawBox(g, x, y + 0.15, 1, 0.7, 0, 0.6, 0x3a3a46); { const s1 = worldToScreen(x + 0.5, y + 0.45, 0.6); g.rect(s1.x - 7, s1.y - 12, 14, 9).fill(0x101018); g.rect(s1.x - 6, s1.y - 11, 12, 7).fill(0x2a6aa8); lights.rect(s1.x - 8, s1.y - 13, 16, 11).fill({ color: 0x43a8ff, alpha: 0.2 }); } break;
+    case 'locker': drawBox(g, x + 0.1, y + 0.25, 0.8, 0.5, 0, 2.0, c === 0x8888aa ? 0x4a5a6a : c); { const s1 = worldToScreen(x + 0.5, y + 0.75, 1.0); g.rect(s1.x - 0.5, s1.y - 18, 1, 26).fill(0x2a3440); g.rect(s1.x - 8, s1.y - 14, 4, 1).fill(0x9aa8b8); g.rect(s1.x + 4, s1.y - 14, 4, 1).fill(0x9aa8b8); } break;
+    case 'fridge': drawBox(g, x + 0.15, y + 0.2, 0.7, 0.6, 0, 2.0, 0xd8dce8); { const s1 = worldToScreen(x + 0.5, y + 0.8, 1.2); g.rect(s1.x + 4, s1.y - 12, 1.4, 8).fill(0x6a6a7a); } break;
+    case 'planter': drawBox(g, x + 0.05, y + 0.05, 0.9, 0.9, 0, 0.5, 0x4a4a58); { const s1 = worldToScreen(x + 0.5, y + 0.5, 0.6); g.circle(s1.x - 6, s1.y, 8).fill(0x2f6b4f); g.circle(s1.x + 5, s1.y - 3, 9).fill(0x3d8a62); g.circle(s1.x, s1.y - 9, 7).fill(0x2f7b55); } break;
+    case 'arcade': drawBox(g, x + 0.15, y + 0.2, 0.7, 0.6, 0, 1.9, 0x1a1a2a); { const s1 = worldToScreen(x + 0.5, y + 0.8, 1.2); g.rect(s1.x - 7, s1.y - 12, 14, 10).fill(c); lights.rect(s1.x - 10, s1.y - 15, 20, 16).fill({ color: c, alpha: 0.3 }); } break;
+    case 'barrel': {
+      drawBox(g, x + 0.25, y + 0.25, 0.5, 0.5, 0, 0.95, p.text === 'fuego' ? 0x3a3a40 : c === 0x8888aa ? 0x2a6a8a : c);
+      if (p.text === 'fuego') { const s1 = worldToScreen(x + 0.5, y + 0.5, 1.0); g.poly([s1.x - 6, s1.y, s1.x - 2, s1.y - 14, s1.x + 1, s1.y - 6, s1.x + 4, s1.y - 16, s1.x + 7, s1.y]).fill(0xff8a20); g.poly([s1.x - 3, s1.y, s1.x, s1.y - 9, s1.x + 3, s1.y]).fill(0xffe060); lights.circle(s1.x, s1.y - 4, 46).fill({ color: 0xff6a20, alpha: 0.22 }); lights.circle(s1.x, s1.y - 6, 16).fill({ color: 0xffb040, alpha: 0.35 }); }
+      break;
+    }
+    case 'dumpster': drawBox(g, x - 0.2, y + 0.1, 1.4, 0.8, 0, 1.0, 0x2a5a4a); drawBox(g, x - 0.2, y + 0.1, 1.4, 0.8, 1.0, 0.08, 0x1f4538); break;
+    case 'hydrant': drawBox(g, x + 0.38, y + 0.38, 0.24, 0.24, 0, 0.55, 0xc82020); drawBox(g, x + 0.33, y + 0.33, 0.34, 0.34, 0.55, 0.1, 0xa01818); break;
+    case 'kiosk': drawBox(g, x + 0.05, y + 0.05, 0.9, 0.9, 0, 1.9, 0x2a2a3a); drawBox(g, x - 0.05, y - 0.05, 1.1, 1.1, 1.9, 0.15, c); { const s1 = worldToScreen(x + 0.5, y + 0.95, 1.1); g.rect(s1.x - 10, s1.y - 10, 20, 9).fill(0xffd23f); lights.rect(s1.x - 12, s1.y - 12, 24, 13).fill({ color: 0xffd23f, alpha: 0.2 }); } break;
+    case 'jersey': drawBox(g, x, y + 0.3, 1, 0.4, 0, 0.75, 0xa8a8b0); { const a1 = worldToScreen(x, y + 0.7, 0.5), b1 = worldToScreen(x + 1, y + 0.7, 0.5); g.moveTo(a1.x, a1.y).lineTo(b1.x, b1.y).stroke({ width: 3, color: 0xd82020, alpha: 0.85 }); } break;
+    case 'busstop': drawBox(g, x, y + 0.6, 1, 0.08, 0, 1.8, 0x6a7a8a, 0.55); drawBox(g, x - 0.05, y + 0.1, 1.1, 0.6, 1.8, 0.1, 0x3a4a5a); drawBox(g, x + 0.1, y + 0.35, 0.8, 0.25, 0, 0.4, 0x4a4a5a); { const s1 = worldToScreen(x + 0.5, y + 0.65, 1.1); lights.rect(s1.x - 12, s1.y - 10, 24, 16).fill({ color: 0x43a8ff, alpha: 0.25 }); } break;
   }
 }
 
 /** Personaje por partes (cabeza, torso, brazos y piernas izquierdos y derechos) con capas de ropa, rasgos y cromo visible. */
-export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: string[] = []): { root: Container; legs: Container; body: Container; visor: Graphics } {
+export interface CharParts { root: Container; legs: Container; body: Container; visor: Graphics; legL: Container; legR: Container; armB: Container; armF: Container; hand: Container; handB: Container; bodyY: number }
+/** Figura de un personaje: piernas y brazos articulados (cadera y hombro) para andar con naturalidad y empuñar armas. */
+export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: string[] = [], lost: string[] = []): CharParts {
   const a = { skin: '#c89070', hair: '#222222', jacket: '#40506a', accent: '#43f3ff', eyes: '#3a2a1a', pants: '#1a1a24', build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
     faceShape: 'ovalada', brows: 'normales', makeup: 'ninguno', makeupColor: '#ff3fa4', piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: '', shoes: '#101018',
     headwear: '', headColor: '', eyewear: '', legwear: 'pantalon', rarityGlow: '', ...(ap ?? {}) } as Required<Appearance>;
   const cr = new Set(chrome);
-  const bf = a.build === 'delgado' ? 0.85 : a.build === 'robusto' ? 1.2 : 1;
+  const B = a.build;
+  const bf = B === 'delgado' ? 0.85 : B === 'robusto' ? 1.2 : B === 'corpulento' ? 1.38 : B === 'atletico' ? 1.06 : B === 'alto' ? 0.95 : 1;
+  const hf = B === 'bajo' ? 0.8 : B === 'alto' ? 1.24 : B === 'atletico' ? 1.05 : 1;
+  const gone = new Set(lost);
+  const BLOOD = 0x8a0a12, BLOOD_D = 0x4a0408;
   const skin = HEX(a.skin), hair = HEX(a.hair), jacket = HEX(a.jacket), accent = HEX(a.accent), pants = HEX(a.pants), eyes = HEX(a.eyes);
   const shirt = a.shirt ? HEX(a.shirt) : shade(jacket, 0.7), shoes = HEX(a.shoes || '#101018'), mk = HEX(a.makeupColor || '#ff3fa4');
   const tattooCol = a.tattoo ? HEX(a.tattoo) : 0x1a1a2a;
@@ -289,6 +313,10 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   const leg = (side: -1 | 1) => {
     const g = new Graphics();
     const x = side * 3.2 * bf - 2.4 * bf, w = 4.8 * bf;
+    const holder = new Container();
+    holder.pivot.set(x + w / 2, -19); holder.position.set(x + w / 2, -19);
+    holder.addChild(g);
+    if (gone.has(side < 0 ? 'pierna_izq' : 'pierna_der')) { g.roundRect(x, -19, w, 4, 1.5).fill(pants); g.ellipse(x + w / 2, -15, w / 2, 1.4).fill(BLOOD); return holder; }
     const isChrome = cr.has(side < 0 ? 'pierna_izq' : 'pierna_der');
     if (isChrome) {
       g.roundRect(x, -19, w, 18, 1.5).fill(metal);
@@ -304,9 +332,11 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
     }
     g.roundRect(x - 0.6, -2.8, w + 1.8, 3.4, 1).fill(shoes);
     g.rect(x - 0.6, -0.4, w + 1.8, 0.8).fill(shade(shoes, 0.55));
-    return g;
+    return holder;
   };
-  legs.addChild(leg(-1), leg(1));
+  const legL = leg(-1), legR = leg(1);
+  legs.addChild(legL, legR);
+  legs.scale.y = hf;
   if (lw === 'falda') legs.addChild(new Graphics().poly([-6 * bf, -20, 6 * bf, -20, 8 * bf, -11, -8 * bf, -11]).fill(pants));
   // ---- Torso, brazos y cabeza
   const body = new Container();
@@ -316,6 +346,13 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   const arm = (side: -1 | 1) => {
     const g = new Graphics();
     const x = side < 0 ? tx - 3.4 : tx + tw - 0.6;
+    const holder = new Container();
+    holder.pivot.set(x + 2, -34.5); holder.position.set(x + 2, -34.5);
+    holder.addChild(g);
+    const hand = new Container(); hand.position.set(x + 2, -19.5); holder.addChild(hand);
+    (holder as any).hand = hand;
+    const sideK = side < 0 ? 'izq' : 'der';
+    if (gone.has(`brazo_${sideK}`)) { g.roundRect(x, -36, 4, 5, 1.5).fill(sleeveless ? skin : shade(jacket, 0.85)); g.ellipse(x + 2, -31, 2, 1.2).fill(BLOOD); hand.visible = false; return holder; }
     const isChrome = cr.has(side < 0 ? 'brazo_izq' : 'brazo_der');
     if (isChrome) {
       g.roundRect(x, -36, 4, 16, 1.5).fill(metal);
@@ -332,12 +369,16 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
         if (t === 'floral') { g.circle(x + 2, -31, 1.4).fill({ color: 0xff6aa8, alpha: 0.85 }); g.circle(x + 1.6, -26, 1).fill({ color: 0x7dff7a, alpha: 0.7 }); }
         if (t === 'codigo') for (let yy = -35; yy < -23; yy += 2) g.rect(x + 0.8 + (yy % 4 ? 1 : 0), yy, 1.4, 0.6).fill({ color: 0x5affc8, alpha: 0.85 });
       } else if (a.tattoo && sleeveless) g.moveTo(x + 2, -34).lineTo(x + 2, -24).stroke({ width: 1.2, color: tattooCol, alpha: 0.9 });
-      g.roundRect(x, -21, 4, 3.6, 1.5).fill(skin);
+      if (gone.has(`mano_${sideK}`)) { g.ellipse(x + 2, -20.5, 2, 1.1).fill(BLOOD); hand.visible = false; }
+      else g.roundRect(x, -21, 4, 3.6, 1.5).fill(skin);
     }
-    return g;
+    return holder;
   };
   const armBack = arm(-1), armFront = arm(1);
   const torso = new Graphics();
+  // Complexión: hombros anchos (atlético) o barriga (corpulento).
+  if (B === 'atletico') torso.poly([tx - 1.6, -37, tx + tw + 1.6, -37, tx + tw - 1, -27, tx + 1, -27]).fill(top === 'top' ? shade(accent, 0.45) : jacket);
+  if (B === 'corpulento') torso.ellipse(1, -24, tw / 2 + 1.5, 6).fill(top === 'top' ? skin : shade(jacket, 0.92));
   if (top === 'gabardina') torso.roundRect(tx - 1, -37, tw + 2, 30, 3).fill(shade(jacket, 0.9));
   torso.roundRect(tx, -37, tw, 19, 4).fill(top === 'top' ? shade(accent, 0.45) : jacket);
   if (top === 'top') { torso.roundRect(tx, -37, tw, 12, 4).fill(a.shirt ? shirt : shade(accent, 0.45)); torso.rect(tx + 1, -25, tw - 2, 6).fill(skin); }
@@ -353,6 +394,8 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   if (top === 'traje') { torso.poly([-3, -37, 0, -32, 3, -37]).fill(a.shirt ? shirt : 0xe8e8f0); torso.rect(-0.8, -34, 1.6, 9).fill(accent); torso.poly([-3, -37, -5, -30, -1, -28]).fill(shade(jacket, 0.75)); torso.poly([3, -37, 5, -30, 1, -28]).fill(shade(jacket, 0.85)); }
   if (top === 'mono') { torso.rect(tx, -22, tw, 2).fill(0x2a2a2a); torso.rect(tx + 3, -34, 3, 3).fill(shade(jacket, 0.75)); }
   if (cr.has('torso')) { torso.moveTo(tx + 3, -33).lineTo(tx + tw - 3, -33).moveTo(tx + 4, -30).lineTo(tx + tw - 4, -30).stroke({ width: 1, color: accent, alpha: 0.8 }); torso.circle(0, -31, 1.6).fill(accent); }
+  // ---- Pelo de detrás (por detrás de la cara: afro, melenas, trenzas, coletas)
+  const hairBack = new Graphics();
   // ---- Cabeza
   const head = new Graphics();
   const hw = a.headwear, ew = a.eyewear;
@@ -408,7 +451,16 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
     if (hs === 'melena') { head.roundRect(-7.2, -52, 4.2, 18, 2).fill(hair); head.roundRect(4.6, -52, 2.6, 10, 1.5).fill(hair); }
     if (hs === 'coleta') { head.roundRect(-9, -50, 4, 3, 1.5).fill(hair); head.roundRect(-10.5, -48, 3, 9, 1.5).fill(hair); }
     if (hs === 'coleta-alta') { head.roundRect(-6, -58, 4, 5, 2).fill(hair); head.roundRect(-9, -57, 3.4, 14, 1.6).fill(hair); }
-    if (hs === 'afro') head.circle(-0.5, -51, 8.5).fill(hair);
+    if (hs === 'afro') { hairBack.circle(-1.2, -50.5, 10).fill(hair); hairBack.circle(-4.5, -46, 6).fill(hair); head.roundRect(-7, -56, 14, 6.5, 3.5).fill(hair); head.ellipse(-6.4, -49, 2.2, 4.2).fill(hair); }
+    if (hs === 'afro-corto') { hairBack.circle(-1, -51, 7.6).fill(hair); head.roundRect(-6.8, -55, 13.6, 5.5, 3).fill(hair); }
+    if (hs === 'pompadour') { head.roundRect(-6, -58, 12, 6, 3).fill(hair); head.ellipse(4, -56, 4.5, 3).fill(hair); head.rect(-6.6, -51, 1.4, 4).fill({ color: hair, alpha: 0.6 }); }
+    if (hs === 'bob') { hairBack.roundRect(-8, -54, 15, 14, 4).fill(hair); head.roundRect(-7, -54.5, 14, 5.5, 3).fill(hair); head.roundRect(4.4, -52, 2.8, 9, 1.4).fill(hair); }
+    if (hs === 'media-melena') { hairBack.roundRect(-8, -53, 9, 17, 3).fill(hair); head.roundRect(4.8, -52, 2.2, 7, 1.2).fill(hair); }
+    if (hs === 'trenza-larga') { hairBack.roundRect(-9, -50, 3.4, 4, 1.4).fill(hair); for (let i = 0; i < 6; i++) hairBack.ellipse(-8.6 + (i % 2) * 0.8, -45 + i * 3.4, 1.9, 2).fill(i % 2 ? shade(hair, 0.85) : hair); }
+    if (hs === 'erizo') for (let i = -6; i <= 5; i += 2.2) head.poly([i - 1.2, -52, i, -57.5 - Math.abs(i) * 0.15, i + 1.2, -52]).fill(hair);
+    if (hs === 'largo') hairBack.roundRect(-8, -52, 6, 17, 2.5).fill(hair);
+    if (hs === 'melena') hairBack.roundRect(-8.4, -52, 7, 20, 3).fill(hair);
+    if (hs === 'rastas') for (let i = -8; i <= -2; i += 2) hairBack.roundRect(i, -50, 1.6, 15, 0.8).fill(shade(hair, 0.9));
     if (hs === 'rizos') for (const [cx, cy] of [[-5, -53], [-2, -55], [1.5, -55], [4.5, -53], [-6.5, -49.5]]) head.circle(cx, cy, 2.6).fill(hair);
     if (hs === 'moño') head.circle(-3.5, -55, 3.4).fill(hair);
     if (hs === 'dos-moños') { head.circle(-4.5, -55, 2.8).fill(hair); head.circle(3.5, -55.5, 2.8).fill(hair); }
@@ -434,9 +486,12 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   if (eyeItem === 'visor') visor.roundRect(-2, -48, 9, 3, 1).fill({ color: accent, alpha: 0.85 });
   if (eyeItem === 'mascara') visor.roundRect(-1, -43.5, 7.5, 4.5, 1.5).fill(0x202028);
   if (a.accessory === 'auriculares' && !hw) { visor.roundRect(-7.4, -48, 2.6, 5, 1).fill(0x202028); visor.moveTo(-6, -48).quadraticCurveTo(0, -57, 5.8, -50).stroke({ width: 1.2, color: 0x303038 }); visor.circle(-6.1, -45.5, 0.8).fill(accent); }
-  body.addChild(armBack, torso, head, visor, armFront);
+  const bodyY = -19 * (hf - 1);
+  body.y = bodyY;
+  body.addChild(armBack, torso, hairBack, head, visor, armFront);
   root.addChild(legs, body);
-  return { root, legs, body, visor };
+  if (B === 'bajo') root.scale.set(0.96); if (B === 'alto') root.scale.set(1.02);
+  return { root, legs, body, visor, legL, legR, armB: armBack, armF: armFront, hand: (armFront as any).hand, handB: (armBack as any).hand, bodyY };
 }
 
 /** Vehículo de un jugador al volante: caja isométrica con cabina, faros y neón por debajo. */
@@ -470,4 +525,92 @@ export function glowTexture(): Texture {
   x.fillStyle = gr; x.fillRect(0, 0, 64, 64);
   glowTex = Texture.from(c);
   return glowTex;
+}
+
+/** Arma en la mano: las de fuego apuntan hacia delante (+x) con la empuñadura en el origen; las de cuerpo a cuerpo, hacia arriba (−y). */
+export function makeWeapon(id: string, family: string, kind: string, accentHex = '#43f3ff'): Graphics | null {
+  const g = new Graphics();
+  const ac = HEX(accentHex), gun = 0x1c1e26, gun2 = 0x343844, steel = 0xc8d0dc, wood = 0x6a4a30;
+  const plasma = /plasma|termica|electrica|pulsos|riel|sonico|emp/.test(id);
+  const glow = plasma ? (id.includes('termica') || id.includes('plasma') ? 0xff6a20 : 0x43c8ff) : ac;
+  if (kind === 'ranged') {
+    switch (family) {
+      case 'Pistola': case 'Revólver': case 'Táser':
+        g.roundRect(-1, -0.5, 2.4, 4.2, 0.6).fill(gun2);
+        g.roundRect(-1.2, -2.4, family === 'Revólver' ? 9 : 7.5, 2.6, 0.6).fill(family === 'Táser' ? 0xffd23f : gun);
+        if (family === 'Revólver') g.circle(1.6, -1.2, 1.6).fill(gun2);
+        if (id.includes('silenciada')) g.roundRect(6, -2.1, 4.5, 2, 0.8).fill(gun2);
+        g.rect(4.5, -2.2, 2, 0.6).fill({ color: glow, alpha: 0.85 });
+        break;
+      case 'Subfusil':
+        g.roundRect(-1, -0.5, 2.2, 4, 0.6).fill(gun2); g.rect(2.5, 0, 1.8, 4.5).fill(gun);
+        g.roundRect(-3, -2.6, 13, 3, 0.8).fill(gun); g.rect(10, -2, 2.5, 1.4).fill(gun2); g.rect(2, -3.4, 4, 0.8).fill({ color: glow, alpha: 0.8 });
+        break;
+      case 'Rifle':
+        g.roundRect(-6, -2.2, 6, 3.2, 1).fill(id.includes('dardos') ? wood : gun2);
+        g.roundRect(-1, -0.4, 2, 3.6, 0.6).fill(gun2);
+        g.roundRect(0, -2.8, 15, 3, 0.8).fill(gun); g.rect(15, -2, 6, 1.2).fill(gun2);
+        if (id.includes('precision') || id.includes('francotirador')) { g.roundRect(3, -5.4, 7, 2, 0.8).fill(gun2); g.circle(10, -4.4, 0.9).fill({ color: glow, alpha: 0.9 }); }
+        g.rect(5, -2.4, 6, 0.6).fill({ color: glow, alpha: 0.8 });
+        break;
+      case 'Escopeta':
+        g.roundRect(-6, -2, 6, 3.4, 1).fill(wood); g.roundRect(-1, -0.2, 2, 3.4, 0.6).fill(gun2);
+        g.roundRect(0, -3, 16, 3.6, 1).fill(gun); g.roundRect(5, 0.4, 7, 1.8, 0.8).fill(wood);
+        if (id.includes('tecnologica')) g.rect(2, -3.4, 10, 0.6).fill({ color: glow, alpha: 0.85 });
+        break;
+      case 'Ametralladora':
+        g.roundRect(-5, -3, 9, 6, 1.5).fill(gun2); for (let i = 0; i < 3; i++) g.rect(4, -2.4 + i * 1.8, 13, 1).fill(gun);
+        g.circle(4, 0, 3.2).stroke({ width: 1, color: steel });
+        break;
+      case 'Arco':
+        g.roundRect(-1, -1.2, 12, 2, 0.6).fill(gun); g.moveTo(9, -6).quadraticCurveTo(12, 0, 9, 6).stroke({ width: 1.4, color: gun2 });
+        g.moveTo(9, -6).lineTo(9, 6).stroke({ width: 0.5, color: steel }); g.rect(1, -1.8, 12, 0.6).fill(steel);
+        break;
+      case 'Especial':
+        g.roundRect(-4, -3.2, 18, 5.6, 2).fill(gun); g.circle(14, -0.4, 2.6).fill(gun2); g.circle(14, -0.4, 1.4).fill({ color: glow, alpha: 0.9 });
+        break;
+      default: return null; // cañón de antebrazo: el propio brazo es el arma
+    }
+    return g;
+  }
+  switch (family) {
+    case 'Cuchillo': g.rect(-0.8, -1, 1.6, 3).fill(gun2); g.poly([-0.8, -1, 0.8, -1, 0.4, -7, -0.6, -6]).fill(steel); break;
+    case 'Hoja': {
+      const len = id.includes('lanza') ? 26 : id.includes('machete') ? 14 : id.includes('hacha') ? 16 : 20;
+      g.rect(-0.8, -1, 1.6, 4.5).fill(id.includes('katana') ? 0x2a1a1a : gun2);
+      if (id.includes('lanza')) { g.rect(-0.6, -len, 1.2, len).fill(gun2); g.poly([-1.6, -len, 1.6, -len, 0, -len - 5]).fill(glow); }
+      else if (id.includes('hacha')) { g.rect(-0.6, -len, 1.2, len).fill(gun2); g.poly([0, -len, 6, -len - 2, 6, -len + 6, 0, -len + 4]).fill(glow); }
+      else { g.rect(-2.2, -1.6, 4.4, 0.8).fill(steel); g.poly([-1, -1.6, 1, -1.6, 0.9, -len, -0.2, -len - 1.6, -1, -len + 1]).fill(plasma || id.includes('monofilamento') ? glow : steel); }
+      break;
+    }
+    case 'Contundente':
+      if (id === 'bate') g.poly([-0.8, 2, 0.8, 2, 1.8, -14, -1.8, -14]).fill(wood);
+      else if (id === 'nunchakus') { g.roundRect(-0.9, -6, 1.8, 6, 0.8).fill(gun2); g.roundRect(1, -11, 1.8, 6, 0.8).fill(gun2); g.moveTo(0, -6).lineTo(1.9, -5).stroke({ width: 0.4, color: steel }); }
+      else if (id === 'martillo-neumatico') { g.rect(-0.7, -12, 1.4, 14).fill(gun2); g.roundRect(-3.5, -16, 7, 5, 1).fill(gun); g.rect(-3.5, -14, 7, 0.8).fill({ color: glow, alpha: 0.9 }); }
+      else { g.roundRect(-1, -11, 2, 13, 0.8).fill(gun); g.rect(-0.6, -10, 1.2, 6).fill({ color: id.includes('electrica') || id.includes('aturdidora') ? 0x43c8ff : gun2, alpha: 0.9 }); }
+      break;
+    case 'Puños': g.roundRect(-1.6, -1.6, 3.6, 3.2, 1).fill(steel); g.circle(0.2, 0, 0.7).fill({ color: 0x43c8ff, alpha: 0.9 }); break;
+    case 'Implante':
+      if (id.includes('cuchillas')) { g.poly([-0.6, -1, 0.6, -1, 0.3, -12, -0.4, -11]).fill(0xd8e0ec); g.poly([1, 0, 2, 0, 2, -10, 1.4, -9]).fill(0xd8e0ec); }
+      else if (id.includes('latigo')) g.moveTo(0, 0).quadraticCurveTo(8, -6, 14, 2).stroke({ width: 0.8, color: glow });
+      else if (id.includes('garras')) for (const dx of [-1.2, 0, 1.2]) g.poly([dx - 0.3, 0, dx + 0.3, 0, dx, -4]).fill(steel);
+      else return null;
+      break;
+    default: return null;
+  }
+  return g;
+}
+
+/** Miembro cortado en el suelo (brazo o pierna) con su charco de sangre. */
+export function makeSevered(part: string, skinHex: string): Container {
+  const c = new Container();
+  const g = new Graphics();
+  g.ellipse(0, 0, 9, 4).fill({ color: 0x5a0408, alpha: 0.85 });
+  const skin = HEX(skinHex);
+  const isLeg = part.startsWith('pierna');
+  g.roundRect(-6, -2.5, isLeg ? 13 : 9, isLeg ? 4.4 : 3.4, 1.6).fill(isLeg ? 0x1a1a24 : skin);
+  g.ellipse(-6, -0.4, 1.4, 2).fill(0xa01018);
+  if (isLeg) g.roundRect(6, -3, 3.6, 5, 1).fill(0x101018);
+  c.addChild(g);
+  return c;
 }

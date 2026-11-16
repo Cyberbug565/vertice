@@ -19,7 +19,7 @@ services:
       DATABASE_URL: postgres://vertice:${DB_PASSWORD}@db:5432/vertice
       ADMIN_TOKEN: ${ADMIN_TOKEN}
       TRUST_PROXY: "true"
-      AMBIENT_NPCS: "24"
+      AMBIENT_NPCS: "48"
   caddy:
     image: caddy:2.8
     restart: unless-stopped

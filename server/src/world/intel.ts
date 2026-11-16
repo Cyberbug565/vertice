@@ -84,7 +84,7 @@ export class Intel {
     const f = fug[Math.floor(Math.random() * fug.length)];
     const place = this.placeName(f.zone.id, f.x, f.y);
     p.intel.set(`n:${f.id}`, { name: f.name, zone: f.zone.id, x: f.x + (Math.random() - 0.5) * 20, y: f.y + (Math.random() - 0.5) * 20, at: Date.now(), precise: false });
-    return `Dicen que ${f.name} anda por ${place}. Si lo buscas, márcalo como objetivo en tu agenda (tecla F).`;
+    return `Dicen que ${f.name} anda por ${place}. Si lo buscas, búscalo con el móvil (tecla G) y márcalo como objetivo.`;
   }
 
   /** Persona: posición en vivo si la información es precisa y reciente; si no, la última conocida. */

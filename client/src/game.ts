@@ -10,10 +10,11 @@ import { Minimap, renderZoneMap } from './ui/minimap';
 import { settingsPanel } from './ui/screens';
 import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen } from './ui/charscreen';
 import { autoPanel, elevatorPanel, hiringPanel } from './ui/work';
+import { searchPanel, trunkPanel } from './ui/intel';
 import { buildingPanel, dealerPanel, marketLivePanel, propsPanel, realtyPanel, ringPrompt, scanCard, stashPanel, type PropCtx } from './ui/property';
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
 
-const DANGER_TXT: Record<string, string> = { protected: 'Protegida', public: 'Pública', disputed: 'Disputada (PvP)' };
+const DANGER_TXT: Record<string, string> = { protected: 'Segura (verde)', public: 'Vigilada (amarilla)', disputed: 'Peligrosa (roja)', lawless: 'Sin ley (negra)' };
 const STANCES = [
   { id: 'avoid', label: 'Evitar', desc: 'Evitar: no inicia combate; si la atacan, busca la salida y usa solo consumibles preautorizados.' },
   { id: 'defend', label: 'Defender', desc: 'Defender: responde a agresiones válidas contra ti o tu grupo, busca cobertura y no persigue.' },
@@ -64,7 +65,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   // Reloj de la ciudad (un día dura 1 h 30 min reales) y turno del puesto de trabajo.
   const phaseEl = h('span', { class: 'phase' }), shiftEl = h('div', { class: 'shift' });
   const clockBox = h('div', { class: 'clockbox' }, h('span', { class: 'clock mono' }, clockEl), phaseEl);
-  const tr = h('div', { class: 'hud hud-tr' }, mm, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
+  // Destino marcado: chip con el nombre y botón para desmarcarlo.
+  const goalEl = h('div', { class: 'goalchip', style: { display: 'none' } });
+  const tr = h('div', { class: 'hud hud-tr' }, mm, goalEl, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
   const actionEl = h('div', { class: 'actionline', 'aria-live': 'polite', id: 'action' });
   const progress = h('div', { class: 'progress', style: { display: 'none' } }, h('i'));
   const stanceSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Postura' });
@@ -81,6 +84,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       ib('🗺', 'Mapa', 'M', () => mapPanel()), ib('⚑', 'Facciones', 'F', () => net.send({ t: 'factions' } as any)),
       ib('🏠', 'Propiedades', 'P', () => net.send({ t: 'props' } as any)), ib('🚗', 'Conducir', 'V', () => toggleDrive(), 'btn-drive'),
       ib('💼', 'Empleos', 'O', () => net.send({ t: 'jobs' } as any)), ib('📈', 'Mercado', 'K', () => marketLive(true)), ib('🎯', 'Recompensas', 'B', () => net.send({ t: 'bounties' } as any)),
+      ib('📱', 'Buscar', 'G', () => searchPanel({ net }, 'phone')), ib('🧳', 'Maletero', 'T', () => net.send({ t: 'trunk', action: 'view' } as any)),
       ib('✚', 'Ámbar', 'U', () => net.send({ t: 'ambar' } as any)), ib('⚙', 'Ajustes', 'Esc', () => settingsPanel(() => view.applySettings()))));
   // Arma equipada, munición y RAM del deck.
   const weaponEl = h('div', { class: 'hud hud-weapon' });
@@ -375,6 +379,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     else if (k === 'o') net.send({ t: 'jobs' } as any);
     else if (k === 'k') marketLive(true);
     else if (k === 'b') net.send({ t: 'bounties' } as any);
+    else if (k === 'g') searchPanel({ net }, 'phone');
+    else if (k === 't') net.send({ t: 'trunk', action: 'view' } as any);
     else if (k === 'enter') { e.preventDefault(); chatIn.focus(); }
     else if (k === 'tab' && onWorld()) {
       // Selección accesible: recorre las entidades interactivas cercanas por distancia.
@@ -399,7 +405,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   function toggleRun() { if (st.sheet) { net.send({ t: 'run', on: !st.sheet.running } as any); toast(st.sheet.running ? 'Andas.' : 'Corres: más rápido, pero gastas aguante.', 'info'); } }
   function toggleAuto() { if (!st.sheet) return; if (st.sheet.auto.on) net.send({ t: 'auto', on: false } as any); else autoPanel(st.sheet.auto.personality, (personality) => net.send({ t: 'auto', on: true, personality } as any)); }
   function toggleDrive() { if (!st.sheet) return; if (st.sheet.driving) net.send({ t: 'car', action: 'park' } as any); else if (!st.sheet.cars.length) toast('No tienes coche: cómpralo en un concesionario (mira el mapa).', 'warn'); else net.send({ t: 'car', action: 'drive' } as any); }
-  function mapPanel() { worldMapPanel(st.zone, { discovered: st.sheet?.discovered ?? [], hasCar: (st.sheet?.cars.length ?? 0) > 0, travel: (zone) => net.send({ t: 'car', action: 'travel', zone } as any), me: { x: view.me.x, y: view.me.y } }); }
+  function mapPanel() { worldMapPanel(st.zone, { discovered: st.sheet?.discovered ?? [], hasCar: (st.sheet?.cars.length ?? 0) > 0, travel: (zone) => net.send({ t: 'car', action: 'travel', zone } as any), me: { x: view.me.x, y: view.me.y }, goal: minimap.goal, goto: (x, y) => net.send({ t: 'goto', kind: 'place', x, y } as any) }); }
   let liveOn = false, livePending = false;
   function marketLive(on: boolean) { if (on && liveOn && document.getElementById('market-live-panel')) { closePanels(); marketLive(false); return; } liveOn = on; livePending = on; net.send({ t: 'marketLive', on } as any); }
   const pctx: PropCtx = { net, toast, money: () => st.sheet?.money ?? 0 };
@@ -432,11 +438,11 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         break;
       case 'spawn': for (const e of m.e) view.upsert(e); break;
       case 'despawn': for (const id of m.ids) view.remove(id); break;
-      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs }); break;
+      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs, lost: m.lost, bleeding: m.bleeding, weapon: m.weapon, dead: m.dead }); break;
       case 'factions': factionsPanel(life, m.view); break;
       case 'ambar': ambarPanel(life, m.view); break;
       case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
-      case 'fx': view.fx(m.kind, m.from, m.to); if (m.kind === 'shot') blip('step'); break;
+      case 'fx': view.fx(m.kind, m.from, m.to, { part: m.part, weapon: m.weapon, hit: m.hit, sever: m.sever, crit: m.crit }); if (m.kind === 'shot') blip('step'); break;
       case 'shop': shopPanel(life, m.view); break;
       case 'market': marketPanel(life, m.view); break;
       case 'jobs': jobsPanel(life, m.view); break;
@@ -447,7 +453,15 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'ack': { const cb = st.pending.get(m.seq); st.pending.delete(m.seq); if (cb) cb(m); else if (!m.ok && m.reason) toast(m.reason, 'warn'); else if (m.ok && m.path && m.seq === 0) view.confirmPath(m.path); if (m.info && m.ok && !cb) toast(m.info); break; }
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;
       case 'dialogClose': st.dialog = null; renderDialog(); break;
-      case 'sheet': st.sheet = m.sheet; renderSheet(); break;
+      case 'searchResults': searchPanel({ net }, m.device, m.results); break;
+      case 'trunk': trunkPanel({ net }, m.view); break;
+      case 'gotoTarget': {
+        minimap.goal = m.target ? { x: m.target.x, y: m.target.y, zone: m.target.zone } : null; view.goal = minimap.goal;
+        goalEl.style.display = m.target ? '' : 'none';
+        if (m.target) goalEl.replaceChildren(h('span', {}, '🎯 ', m.target.label), h('button', { class: 'btn small', title: 'Desmarcar destino', 'aria-label': 'Desmarcar destino', onclick: () => net.send({ t: 'goto', kind: 'cancel' } as any) }, '✕'));
+        break;
+      }
+      case 'sheet': st.sheet = m.sheet; view.combat = { range: m.sheet.weapon?.range ?? 1.5, aim: m.sheet.aim?.range ?? 0, ranged: m.sheet.weapon?.kind === 'ranged' }; renderSheet(); break;
       case 'skillxp': xpPop(m); break;
       case 'building': buildingPanel(pctx, m.view); break;
       case 'realty': realtyPanel(pctx, m.view); break;

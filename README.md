@@ -1,6 +1,6 @@
 # Vértice — RPG multijugador persistente isométrico (alfa v0.5)
 
-Novedades de la v0.5 (ciudad única más grande, día y noche de 1 h 30, correr, modo automático, puestos fijos con horario, torres por plantas y bases de bandas): [`docs/NOVEDADES-v0.5.md`](docs/NOVEDADES-v0.5.md). Las de la v0.4 (niveles, habilidades 1–25 y perks, pantalla de personaje, ropa, casas, coches, mercado en tiempo real, cromo con habilidades y calles con carriles): [`docs/NOVEDADES-v0.4.md`](docs/NOVEDADES-v0.4.md). Las de la v0.3: [`docs/NOVEDADES-v0.3.md`](docs/NOVEDADES-v0.3.md). Las de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md). Publicarlo en internet: [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
+Novedades de la v0.6 (combate por zonas del cuerpo con heridas, desangrado y amputaciones, armas visibles con balas trazadoras, límite de armas y maletero, cámaras que te identifican, zonas verde/amarilla/roja/negra, buscador de personas y destino marcado, más muebles para cubrirse, más cuerpos y peinados e historia del personaje): [`docs/NOVEDADES-v0.6.md`](docs/NOVEDADES-v0.6.md). Las de la v0.5 (ciudad única más grande, día y noche de 1 h 30, correr, modo automático, puestos fijos con horario, torres por plantas y bases de bandas): [`docs/NOVEDADES-v0.5.md`](docs/NOVEDADES-v0.5.md). Las de la v0.4 (niveles, habilidades 1–25 y perks, pantalla de personaje, ropa, casas, coches, mercado en tiempo real, cromo con habilidades y calles con carriles): [`docs/NOVEDADES-v0.4.md`](docs/NOVEDADES-v0.4.md). Las de la v0.3: [`docs/NOVEDADES-v0.3.md`](docs/NOVEDADES-v0.3.md). Las de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md). Publicarlo en internet: [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
 
 RPG de ambientación cyberpunk que se juega en el navegador. Es persistente, multijugador, con cámara isométrica 2.5D y control por clic. El servidor es autoritativo: Node.js con WebSocket y PostgreSQL. El cliente usa TypeScript, Vite y PixiJS 8 sobre WebGL 2.
 
@@ -62,6 +62,9 @@ Para un mundo que siga abierto aunque apagues el ordenador, consulta [`docs/DESP
 | Facciones, Rescate Ámbar | — | `F`, `U` |
 | Dormir o despertar | — | `Z` o el botón **Dormir** |
 | Empleos, recompensas | — | `O`, `B` |
+| Buscar personas con el móvil (en tu piso, haz clic en el ordenador) · maletero del coche | — | `G` · `T` |
+| Marcar destino (vas solo hasta allí) | Clic en el plano del mapa (`M`) o «Marcar como objetivo» en el buscador | — |
+| Atacar a una zona del cuerpo · disparo apuntado | Clic en la persona: elige Torso, Cabeza, Brazos, Manos o Piernas | El anillo rojo indica que está a tu alcance; el verde, tiro seguro apuntando |
 | Chat local | — | `Enter` |
 | Zoom | Rueda | `+` / `−` |
 

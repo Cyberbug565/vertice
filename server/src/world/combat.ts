@@ -469,6 +469,11 @@ export class Combat {
     const wnd = this.wounds.hit(target, tp, part, dmg, wp, lethal);
     dmg = wnd.dmg;
     target.lastHitBy = e.id; target.lastHitAt = now;
+    // Un tiro o golpe en la mano puede hacer soltar el arma.
+    if (wnd.part.startsWith('mano') && !wnd.severed && this.rng() < 0.4) {
+      if (tp && tp.equipped) { tp.equipped = null; if (target.conn) { this.notice(target.conn, 'bad', 'Te han dado en la mano: se te cae el arma (vuelve a empuñarla desde el inventario).'); this.w.send(target.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) }); } }
+      else if (!tp && target.weaponId) { target.weaponId = undefined; target.labelVer++; this.notice(c, 'good', `${target.name} suelta el arma.`); }
+    }
     this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, target.id, { weapon: wp.id, hit: true, part: wnd.part, sever: !!wnd.severed, crit });
     this.notice(c, 'good', `${crit ? '¡CRÍTICO! ' : ''}${opts.aimed ? 'Disparo apuntado: ' : ''}${lethal ? 'Impactas' : 'Golpeas'} a ${target.name} en ${PART_NAMES[wnd.part]} con ${wp.name}: −${dmg}.${wnd.severed ? ` ¡Le arrancas ${PART_NAMES[wnd.severed]}!` : ''}${wnd.ko ? ' Cae conmocionado/a.' : ''}`);
     if (tp && target.conn && (wnd.severed || wnd.part === 'cabeza')) this.notice(target.conn, 'bad', wnd.severed ? `¡Has perdido ${PART_NAMES[wnd.severed]}! Un matasanos puede implantarte una prótesis.` : 'Te han dado en la cabeza.');
