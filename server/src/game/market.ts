@@ -22,6 +22,8 @@ export class MarketService {
   private fenceCyber: { id: string; def: string }[] = [];
 
   constructor(private db: Db, private c: Content, private rng: () => number = Math.random) {}
+  /** Los míticos son únicos: no se venden (solo se pierden con la vida de su portador). */
+  private mythic(id: string) { return (this.c.items.find((i) => i.id === id) as any)?.rarity === 'mitico' || (this.c.cyberware.find((x) => x.id === id) as any)?.rarity === 'mitico'; }
 
   async load() {
     for (const sh of this.c.shops) {
@@ -105,10 +107,10 @@ export class MarketService {
     const sell = [...p.inventory].filter(([it, q]) => {
       if (q <= 0) return false;
       const def = this.c.items.find((i) => i.id === it);
-      return def && def.category !== 'mision' && (def.substance?.kind !== 'drug' || def.id === 'neblina') && (sh.fence || sh.buys.includes(def.category));
+      return def && def.category !== 'mision' && !this.mythic(it) && (def.substance?.kind !== 'drug' || def.id === 'neblina') && (sh.fence || sh.buys.includes(def.category));
     }).map(([it, q]) => ({ item: it, name: this.c.items.find((i) => i.id === it)!.name, qty: q, price: this.sellPrice(shopId, it) }));
     if (sh.fence) {
-      for (const ci of p.cyber.filter((x) => x.location === 'inventory')) {
+      for (const ci of p.cyber.filter((x) => x.location === 'inventory' && !this.mythic(x.def))) {
         const d = this.c.cyberware.find((x) => x.id === ci.def)!;
         sell.push({ item: `cyber:${ci.id}`, name: `${d.name}${ci.stolen ? ' (robado)' : ''}`, qty: 1, price: Math.floor(d.price * 0.35) });
       }
@@ -177,6 +179,7 @@ export class MarketService {
       if (!sh.fence) throw new GameError('Aquí no compran implantes.');
       const inst = p.cyber.find((x) => x.id === itemId.slice(6) && x.location === 'inventory');
       if (!inst) throw new GameError('No tienes ese implante suelto.');
+      if (this.mythic(inst.def)) throw new GameError('Nadie se atreve a comprar algo único: todo el mundo sabría de dónde ha salido.');
       const d = this.c.cyberware.find((x) => x.id === inst.def)!;
       const total = Math.floor(d.price * 0.35);
       await this.db.tx(async (q) => {
@@ -195,6 +198,7 @@ export class MarketService {
       return { total, name: d.name };
     }
     const def = this.c.items.find((i) => i.id === itemId);
+    if (this.mythic(itemId)) throw new GameError('Nadie se atreve a comprar algo único: todo el mundo sabría de dónde ha salido.');
     if (!def || def.category === 'mision' || (def.substance?.kind === 'drug' && def.id !== 'neblina') || !(sh.fence || sh.buys.includes(def.category))) throw new GameError('Aquí no compran eso.');
     if ((p.inventory.get(itemId) ?? 0) < qty) throw new GameError('No tienes tantas unidades.');
     const unit = Math.round(this.sellPrice(shopId, itemId) * (1 + (perkMods(this.c, p).mods.sell ?? 0)));

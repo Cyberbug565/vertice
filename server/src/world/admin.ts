@@ -1,9 +1,9 @@
-// v0.8 · Cuenta de pruebas «admintester» y menú de trucos (solo cuentas marcadas como administración).
-// La cuenta se crea al arrancar: en local con la contraseña de ADMIN_TESTER_PASSWORD (o «admintester» si no estás en producción);
-// en producción solo si ADMIN_TESTER_PASSWORD está definida.
+// v0.8 · Cuentas de administración («mataxhustaadmin» del dueño y «admintester» de pruebas) y menú de trucos.
+// La cuenta del dueño se crea siempre al arrancar con el hash guardado aquí (la contraseña no está en el repo); la de pruebas,
+// en local con ADMIN_TESTER_PASSWORD (o «admintester» si no estás en producción) y en producción solo si esa variable existe.
 import { randomUUID } from 'node:crypto';
 import { MATRICES, RULES, SKILL_MAX, nearestWalkable, skillXpFor, xpForLevel } from '@vertice/shared';
-import { register } from '../auth.js';
+import { hashPassword } from '../auth.js';
 import type { Db } from '../db/db.js';
 import { GameError } from '../game/effects.js';
 import { effective, type PlayerState } from '../game/player.js';
@@ -11,14 +11,24 @@ import { BOSSES, LEGENDS } from './legends.js';
 import type { PlayerConn, World } from './world.js';
 
 export const ADMIN_USER = 'admintester';
+/** Cuenta de administración del dueño del servidor. En el repositorio solo está el hash scrypt de su contraseña, nunca el texto. */
+export const OWNER_ADMIN = { username: 'mataxhustaadmin', passHash: 'scrypt$600sgAF9h1VtGo0U9lcQyw==$OPieD547EtATY+veyjSKDyA81CSzavhJ5Uye4RU2vcA=' };
+/** Nombres reservados: nadie puede registrarlos desde la web (así nadie se adelanta y hereda los permisos). */
+export const RESERVED_USERNAMES = new Set([ADMIN_USER, OWNER_ADMIN.username]);
 
-/** Crea (o marca) la cuenta de pruebas al arrancar. */
+/** Crea (o corrige) las cuentas de administración al arrancar. Si alguien hubiera registrado antes el nombre, pierde la contraseña. */
 export async function ensureAdminAccount(db: Db) {
+  await upsertAdmin(db, OWNER_ADMIN.username, OWNER_ADMIN.passHash);
   const pw = process.env.ADMIN_TESTER_PASSWORD || (process.env.NODE_ENV !== 'production' ? 'admintester' : '');
   if (!pw) return;
-  const r = await register(db, ADMIN_USER, pw);
-  await db.query('UPDATE accounts SET is_admin = true WHERE lower(username) = lower($1)', [ADMIN_USER]);
-  if (!('error' in r)) console.log(`[admin] cuenta de pruebas «${ADMIN_USER}» creada${process.env.ADMIN_TESTER_PASSWORD ? '' : ' (contraseña de desarrollo: admintester)'}.`);
+  const created = await upsertAdmin(db, ADMIN_USER, await hashPassword(pw));
+  if (created) console.log(`[admin] cuenta de pruebas «${ADMIN_USER}» creada${process.env.ADMIN_TESTER_PASSWORD ? '' : ' (contraseña de desarrollo: admintester)'}.`);
+}
+async function upsertAdmin(db: Db, username: string, passHash: string) {
+  const r = await db.query<any>('SELECT id FROM accounts WHERE lower(username) = lower($1)', [username]);
+  if (r.rows.length) { await db.query('UPDATE accounts SET pass_hash = $2, is_admin = true WHERE id = $1', [r.rows[0].id, passHash]); return false; }
+  await db.query('INSERT INTO accounts (id, username, pass_hash, is_admin) VALUES ($1,$2,$3,true)', [randomUUID(), username, passHash]);
+  return true;
 }
 
 export class Admin {

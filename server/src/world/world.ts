@@ -25,6 +25,7 @@ import { Intel } from './intel.js';
 import { Threats } from './threats.js';
 import { Relics } from './relics.js';
 import { Legends } from './legends.js';
+import { Mythics } from './mythics.js';
 import { Admin } from './admin.js';
 import { Nightlife } from './nightlife.js';
 import { Underworld } from './underworld.js';
@@ -74,6 +75,7 @@ export class World {
   readonly threats: Threats;
   readonly relics: Relics;
   readonly legends: Legends;
+  readonly mythics: Mythics;
   readonly admin: Admin;
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
@@ -93,6 +95,7 @@ export class World {
     this.threats = new Threats(this);
     this.relics = new Relics(this);
     this.legends = new Legends(this);
+    this.mythics = new Mythics(this);
     this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
@@ -156,6 +159,7 @@ export class World {
     await this.survival.init();
     await this.property.load();
     await this.posts.load();
+    await this.mythics.load();
     this.combat.spawnPopulation();
     this.nightlife.populate();
     this.underworld.populate();

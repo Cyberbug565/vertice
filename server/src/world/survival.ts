@@ -5,6 +5,7 @@ import {
   OBJECTIVES, PART_NAMES, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView,
 } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
+import type { MythicTransfer } from './mythics.js';
 import type { Entity, RunningTask } from './entity.js';
 import { ambientBrain } from './npc.js';
 import { MarketService } from '../game/market.js';
@@ -466,7 +467,7 @@ export class Survival {
     if (this.rng() >= chance) return;
     if (this.rng() < 0.6) {
       const amount = Math.floor(p.money * (0.15 + this.rng() * 0.2));
-      const items = [...p.inventory].filter(([it, q]) => q > 0 && this.w.c.items.find((i) => i.id === it)?.category !== 'mision');
+      const items = [...p.inventory].filter(([it, q]) => q > 0 && this.w.c.items.find((i) => i.id === it)?.category !== 'mision' && !this.w.mythics.isMythic(it));
       const lose = this.rng() < 0.25 && items.length ? items[Math.floor(this.rng() * items.length)][0] : null;
       if (amount < 1 && !lose) return;
       this.w.enqueue(c, async () => {
@@ -555,7 +556,11 @@ export class Survival {
     (p as any).dead = true;
     const place = `${e.zone.def.name}`;
     let summary: DeathSummary | null = null;
+    const heir = this.w.mythics.resolveKiller(e, killer);
+    let mythics: MythicTransfer[] = [];
     const refunds = await this.w.db.tx(async (q) => {
+      // Míticos únicos: pasan al asesino antes de que el resto del cromo se pierda con el cuerpo.
+      mythics = await this.w.mythics.onDeathTx(q, p, heir);
       const r = await q.query<any>("UPDATE characters SET status='dead', died_at=now(), cause_of_death=$2, hp=0 WHERE id=$1 AND status <> 'dead' RETURNING created_at, level, money", [p.charId, cause]);
       // Una sola vida: sus casas vuelven al mercado (el alijo se pierde) y sus coches desaparecen.
       await q.query('DELETE FROM house_stash WHERE house_id IN (SELECT house_id FROM houses_owned WHERE character_id=$1)', [p.charId]);
@@ -576,6 +581,7 @@ export class Survival {
       await q.query('INSERT INTO memorial (id, account_id, character_id, summary) VALUES ($1,$2,$3,$4) ON CONFLICT (character_id) DO NOTHING', [randomUUID(), p.accountId, p.charId, JSON.stringify(summary)]);
       return refunds;
     });
+    this.w.mythics.afterDeath(p, mythics);
     for (const rf of refunds) { const oc = this.connOf(rf.placedBy); if (oc?.p) { oc.p.money += rf.amount; this.notice(oc, 'info', `${p.name} ha muerto sin que nadie cobrara tu recompensa: te devuelven ${rf.amount} €$.`); this.sheet(oc); } }
     this.w.metrics.inc('deaths');
     const c = e.conn;

@@ -3,7 +3,7 @@
 // y su confianza con encargos cada vez más duros. Cada una lleva a un objeto mítico único.
 // También: entrar y salir del ciberespacio (sillas de inmersión, cuna neural) y el acceso al Velo.
 import { randomUUID } from 'node:crypto';
-import { MATRICES, nearestWalkable, type LegendView } from '@vertice/shared';
+import { nearestWalkable, type LegendView } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
 import type { PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
@@ -56,6 +56,13 @@ export const LEGENDS: LegendDef[] = [
     ] },
 ];
 
+/** Si el mítico del encargo final ya tiene dueño: gran recompensa, pero nada a la altura de lo mítico. */
+export const MYTHIC_ALT: Record<string, { money: number; items?: string[]; cyber?: string; line: string }> = {
+  'matriz-carmin': { money: 40000, items: ['matriz-centinela', 'ampliacion-zocalo'], line: 'Iris te paga con lo que rescató del Velo.' },
+  'matriz-eco': { money: 35000, items: ['matriz-berserker'], line: 'Sable te da lo que guardaba para su amigo.' },
+  'kairos-6': { money: 35000, cyber: 'kairos-5', line: 'Teo te deja su Kairós de reserva, el militar.' },
+};
+
 export class Legends {
   private bosses = new Map<string, Entity[]>(); // `${charId}:${boss}` → jefe y escoltas
   private jackFrom = new Map<string, { zone: string; at: [number, number] }>();
@@ -81,8 +88,17 @@ export class Legends {
     const step = L.steps[s.step];
     return { id: L.id, name: L.name, role: L.role, color: L.color, trust: Math.min(100, s.trust), step: s.step, steps: L.steps.length, active: s.active, done: !!s.done,
       mission: step && !s.done ? { title: step.title, desc: step.desc, progress: this.progressText(step.goal, s.count), ready: false } : null,
-      reward: step && !s.done ? [step.money ? `${step.money.toLocaleString('es-ES')} €$` : '', step.item ? this.w.c.items.find((i) => i.id === step.item)?.name ?? step.item : '', step.cyber ? this.w.c.cyberware.find((x) => x.id === step.cyber)?.name ?? step.cyber : '', step.trust ? `+${step.trust} de confianza` : ''].filter(Boolean).join(' · ') : '',
+      reward: step && !s.done ? this.altRewardText(p, step) ?? [step.money ? `${step.money.toLocaleString('es-ES')} €$` : '', step.item ? this.w.c.items.find((i) => i.id === step.item)?.name ?? step.item : '', step.cyber ? this.w.c.cyberware.find((x) => x.id === step.cyber)?.name ?? step.cyber : '', step.trust ? `+${step.trust} de confianza` : ''].filter(Boolean).join(' · ') : '',
       final: L.final };
+  }
+  /** Texto de recompensa del encargo final cuando su mítico ya lo lleva otra persona. */
+  private altRewardText(p: PlayerState, step: { item?: string; cyber?: string; money?: number }) {
+    const id = [step.item, step.cyber].find((x) => x && this.w.mythics.isMythic(x));
+    const h = id && !(p as any).admin ? this.w.mythics.heldByOther(id, p) : null;
+    if (!id || !h) return null;
+    const alt = MYTHIC_ALT[id];
+    const parts = [`${((step.money ?? 0) + (alt?.money ?? 30000)).toLocaleString('es-ES')} €$`, ...(alt?.items ?? []).map((it) => this.w.c.items.find((i) => i.id === it)?.name ?? it), alt?.cyber ? this.w.c.cyberware.find((x) => x.id === alt.cyber)?.name ?? alt.cyber : ''].filter(Boolean);
+    return `${parts.join(' · ')} — ${this.w.mythics.nameOf(id)} la tiene ${h.name}: solo matándole`;
   }
   private progressText(g: Goal, n: number) {
     return g.type === 'hack' || g.type === 'kill' ? `${Math.min(n, g.n)}/${g.n}` : g.type === 'bounty' ? `Cobra una recompensa de ${g.min} €$ o más` : g.type === 'visit' ? 'Pendiente' : 'Encuentra al objetivo y acaba con él';
@@ -136,11 +152,27 @@ export class Legends {
     s.active = false; s.count = 0; s.trust += step.trust;
     const lines: string[] = [];
     const effects: any[] = [];
-    if (step.money) effects.push({ money: step.money, reason: `${L.name}: ${step.title}` });
-    if (step.item) effects.push({ item: step.item, qty: 1 });
+    let item = step.item, cyber = step.cyber, money = step.money ?? 0;
+    // Míticos únicos: si otra persona ya lo tiene, la leyenda paga con otra cosa (y te dice a quién tendrías que matar).
+    const mythicId = item && this.w.mythics.isMythic(item) ? item : cyber && this.w.mythics.isMythic(cyber) ? cyber : null;
+    let mythicTaken: { name: string } | null = null;
+    if (mythicId) {
+      mythicTaken = await this.w.mythics.claim(mythicId, p);
+      if (mythicTaken) {
+        const alt = MYTHIC_ALT[mythicId] ?? { money: 30000, line: '' };
+        if (item === mythicId) item = undefined;
+        if (cyber === mythicId) cyber = alt.cyber;
+        money += alt.money;
+        for (const it of alt.items ?? []) effects.push({ item: it, qty: 1 });
+        lines.push(`${this.w.mythics.nameOf(mythicId)} ya tiene dueño: ${mythicTaken.name}. Si la quieres, tendrás que matarle.`);
+        if (alt.line) lines.push(alt.line);
+      }
+    }
+    if (money) effects.push({ money, reason: `${L.name}: ${step.title}` });
+    if (item) effects.push({ item, qty: 1 });
     if (effects.length) { const out = await this.w.effects.apply(p, effects, { opId: `leyenda-${L.id}-${s.step}-${randomUUID()}`, kind: 'legend' }); lines.push(...out.lines); }
-    if (step.cyber) {
-      const def = this.w.c.cyberware.find((x) => x.id === step.cyber)!;
+    if (cyber) {
+      const def = this.w.c.cyberware.find((x) => x.id === cyber)!;
       const instId = randomUUID();
       await this.w.db.query('INSERT INTO cyberware_instances (id, def_id, character_id, location, stolen, history) VALUES ($1,$2,$3,$4,$5,$6)',
         [instId, def.id, p.charId, 'inventory', false, JSON.stringify([{ at: new Date().toISOString(), event: `regalo de ${L.name}` }])]);
@@ -149,7 +181,7 @@ export class Legends {
     }
     s.step++;
     if (s.step >= L.steps.length) { s.done = true; lines.push(`${L.name} te debe la vida. Eres leyenda.`); }
-    const mythic = step.item && MATRICES[step.item]?.rarity === 'mitico' || step.cyber === 'kairos-6';
+    const mythic = !!mythicId && !mythicTaken;
     this.w.send(c, { t: 'reward', title: s.done ? `★ ${L.name}: ${step.title}` : `${L.name}: ${step.title}`, lines: lines.length ? lines : ['Más confianza'] });
     if (mythic) for (const o of this.w.conns.values()) if (o !== c) this.notice(o, 'warn', `★ Se rumorea que ${p.name} ha conseguido algo único gracias a ${L.name}.`);
     this.w.send(c, { t: 'sheet', sheet: (this.w.survival as any).sheetOf(p) });

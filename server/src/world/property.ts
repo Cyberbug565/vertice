@@ -219,6 +219,7 @@ export class Property {
     };
   }
   async stashMove(c: PlayerConn, houseId: string, item: string, qty: number, dir: 'in' | 'out') {
+    if (dir === 'in' && this.w.mythics.isMythic(item)) throw new GameError('Un objeto mítico no se separa de su portador: solo se pierde con su vida.');
     this.insideHouse(c, houseId);
     const p = c.p!;
     if (!this.w.c.items.some((i) => i.id === item)) throw new GameError('Objeto desconocido.');
@@ -376,6 +377,7 @@ export class Property {
       items, inventory: [...p.inventory].filter(([, q]) => q > 0).map(([def, qty]) => ({ def, name: nm(def), qty })) };
   }
   async trunkMove(c: PlayerConn, item: string, qty: number, dir: 'in' | 'out') {
+    if (dir === 'in' && this.w.mythics.isMythic(item)) throw new GameError('Un objeto mítico no se separa de su portador: solo se pierde con su vida.');
     const p = c.p!;
     const own = this.trunkCar(c);
     const car = this.w.c.cars.find((k) => k.id === own.car)!;

@@ -4,6 +4,8 @@ import type { Db } from './db/db.js';
 
 const scrypt = promisify(scryptCb) as (p: string, s: Buffer, n: number) => Promise<Buffer>;
 const SESSION_DAYS = 30;
+/** Nombres de las cuentas de administración: no se pueden registrar desde fuera. */
+const RESERVED = new Set(['admintester', 'mataxhustaadmin']);
 
 export async function hashPassword(pw: string): Promise<string> {
   const salt = randomBytes(16);
@@ -24,7 +26,8 @@ export function validateCredentials(username: unknown, password: unknown): strin
   return null;
 }
 
-export async function register(db: Db, username: string, password: string) {
+export async function register(db: Db, username: string, password: string, opts: { allowReserved?: boolean } = {}) {
+  if (!opts.allowReserved && RESERVED.has(username.toLowerCase())) return { error: 'Ese usuario ya existe' } as const;
   const id = randomUUID();
   try {
     await db.query('INSERT INTO accounts (id, username, pass_hash) VALUES ($1,$2,$3)', [id, username, await hashPassword(password)]);
