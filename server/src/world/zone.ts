@@ -13,6 +13,19 @@ export class Zone {
   constructor(readonly def: ZoneDef) { this.id = def.id; this.grid = buildZoneGrid(def); }
 
   static cellKey(x: number, y: number) { return Math.floor(y / CELL) * 4096 + Math.floor(x / CELL); }
+  /** v0.5: distrito de la ciudad única en una posición. */
+  districtAt(x: number, y: number) {
+    for (const d of this.def.districts) { const [rx, ry, rw, rh] = d.rect; if (x >= rx && y >= ry && x < rx + rw && y < ry + rh) return d; }
+    return null;
+  }
+  /** Nivel de detalle en la ciudad única: solo se simula lo que está cerca de algún jugador (bloques de 48 losetas). */
+  private active = new Set<number>();
+  static coarse(x: number, y: number) { return Math.floor(y / 48) * 1000 + Math.floor(x / 48); }
+  refreshActive() {
+    this.active.clear();
+    for (const p of this.players) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) this.active.add(Zone.coarse(p.x + dx * 48, p.y + dy * 48));
+  }
+  isActive(e: { x: number; y: number }) { return this.players.size > 0 && (!this.def.districts.length || this.active.has(Zone.coarse(e.x, e.y))); }
 
   add(e: Entity) {
     this.entities.add(e); if (e.kind === 'player') this.players.add(e);

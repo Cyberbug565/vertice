@@ -39,6 +39,8 @@ export interface PlayerState {
   houses: string[]; cars: { id: string; car: string }[]; driving: string | null;
   lastCombatAt: number; walked: number;
   revive?: { at: number; frac: number; why: string };
+  // ---- v0.5
+  running: boolean; auto: { on: boolean; personality: string; status: string };
 }
 
 export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean; part?: string | null }
@@ -245,6 +247,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     skillXp, perks: row.perks ?? [], skillPointsSpent: row.skill_points_spent ?? 0, wear, abilityCd: {}, buffs: {},
     secondLifeAt: Number(row.second_life_at ?? 0), milagroAt: 0, autoStimAt: 0,
     houses: houses.rows.map((x: any) => x.house_id), cars: cars.rows.map((x: any) => ({ id: x.id, car: x.car_id })), driving: null, lastCombatAt: 0, walked: 0,
+    running: false, auto: { on: !!row.autopilot?.on, personality: row.autopilot?.personality ?? 'responsable', status: '' },
   };
   for (const x of prog.rows) {
     p.contracts.set(x.contract_id, { instanceId: x.instance_id, contractId: x.contract_id, version: x.version, state: x.state, objectives: { ...x.shared_obj, ...x.objectives }, outcome: x.outcome });
@@ -258,6 +261,9 @@ export function flagValue(p: PlayerState, key: string): unknown {
   if (f.expiresAt && f.expiresAt < Date.now()) return false;
   return f.value;
 }
+
+/** Ganchos que rellena el mundo (datos que no viven en el estado del personaje). */
+export const sheetHooks: { post: (p: PlayerState) => CharacterSheet['post'] } = { post: () => null };
 
 export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
   const ef = effective(c, p);
@@ -274,6 +280,7 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     houses: [...p.houses], cars: p.cars.map((x) => ({ id: x.id, car: x.car })), driving: p.driving,
     discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
     speedMult: Math.round((1 + ef.speed) * 100) / 100, dodge: Math.round(ef.dodge * 100), uniques: [...ef.flags],
+    running: p.running, auto: { on: p.auto.on, personality: p.auto.personality }, post: sheetHooks.post(p),
     hp: p.hp, hpMax: ef.hpMax, stamina: p.stamina, staminaMax: ef.staminaMax, luck: p.luck, luckMax: p.attributes.LUCK,
     humanity: p.humanity, humanityMax: p.humanityMax, chromeCapacity: ef.chromeCapacity, chromeUsed: ef.chromeUsed,
     carry: Math.round(ef.weight * 10) / 10, carryMax: ef.carryMax,
@@ -316,10 +323,10 @@ export function buildJournal(c: Content, p: PlayerState, participants: (instance
 export async function savePlayerVitals(db: Queryable, p: PlayerState) {
   await db.query(`UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4, hp=$5, stamina=$6, luck=$7, stance=$8, hunger=$9, thirst=$10, fatigue=$11, wanted=$12,
      auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16, equipped=$17, net_xp=$18, net_rank=$19, downed_lethal=$20,
-     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27 WHERE id=$1 AND status <> 'dead'`,
+     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27, autopilot=$28 WHERE id=$1 AND status <> 'dead'`,
     [p.charId, p.zone, p.x, p.y, Math.round(p.hp), Math.round(p.stamina), p.luck, p.stance, p.hunger, p.thirst, p.fatigue, p.wanted, p.autoNeeds, p.activeJob,
       p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null, p.equipped, p.netXp, p.netRank, p.downedLethal,
-      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp]);
+      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp, JSON.stringify({ on: p.auto.on, personality: p.auto.personality })]);
 }
 
 /** Puntos de habilidad y de perk disponibles: se ganan al subir de nivel (y los de perk también cada 5 niveles de habilidad). */

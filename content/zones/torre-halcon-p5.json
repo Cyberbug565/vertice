@@ -1,0 +1,103 @@
+{
+ "id": "torre-halcon-p5",
+ "name": "Torre Halcón Dynamics · Planta 5: Laboratorio de armas",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#2c3444",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    10
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    7,
+    10
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    3,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    4
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    18,
+    1
+   ],
+   "blocking": false
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-halcon-p5",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [
+  {
+   "faction": "halcon",
+   "count": 2,
+   "area": [
+    12,
+    7,
+    5
+   ]
+  }
+ ],
+ "tower": {
+  "id": "torre-halcon",
+  "floor": 5,
+  "access": "restringido",
+  "corp": "halcon"
+ }
+}

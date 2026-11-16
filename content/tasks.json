@@ -6,10 +6,10 @@
   "steps": [
    {
     "moveTo": [
-     42,
-     64
+     65,
+     210
     ],
-    "zone": "ferro"
+    "zone": "vertice"
    },
    {
     "wait": 1.5,
@@ -17,10 +17,10 @@
    },
    {
     "moveTo": [
-     49,
-     56
+     74,
+     199
     ],
-    "zone": "ferro"
+    "zone": "vertice"
    },
    {
     "wait": 1,

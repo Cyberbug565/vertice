@@ -75,10 +75,10 @@
     5
    ],
    "to": {
-    "zone": "cenit",
+    "zone": "vertice",
     "at": [
-     68,
-     73
+     248,
+     220
     ]
    },
    "danger": "public"

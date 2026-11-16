@@ -1,0 +1,113 @@
+{
+ "id": "torre-teselia-p2",
+ "name": "Aguja Teselia · Planta 2: Desarrollo neural",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#262c48",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    5,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    7
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    20,
+    1
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-teselia-p2",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-teselia",
+  "floor": 2,
+  "access": "empleados",
+  "corp": "teselia"
+ }
+}

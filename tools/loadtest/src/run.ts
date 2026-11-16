@@ -14,9 +14,9 @@ const DURATION = Number(args.duration ?? 60);
 const WARMUP = Number(args.warmup ?? 10);
 const ADMIN = args.token ?? process.env.ADMIN_TOKEN ?? 'dev-admin';
 const RUN = args.run ?? Date.now().toString(36).slice(-4);
-const HOT: [number, number] = [22, 37];
+const HOT: [number, number] = [38, 174];
 const ROLES = ['solo', 'netrunner', 'tech', 'medtech', 'fixer', 'nomad', 'media', 'exec', 'lawman', 'rocker'];
-const FERRO_POINTS: [number, number][] = [[5,21],[21,21],[44,21],[60,21],[73,21],[88,21],[102,21],[5,48],[21,48],[44,48],[60,48],[73,48],[88,48],[11,15],[32,15],[55,15],[78,15],[11,38],[32,38],[55,38],[78,33],[97,33],[11,61],[32,64],[55,61],[78,61],[21,29],[25,38],[28,43],[47,45],[24,56]];
+const FERRO_POINTS: [number, number][] = [[15,153],[37,153],[67,153],[89,153],[106,153],[126,153],[145,153],[15,189],[37,189],[67,189],[89,189],[106,189],[126,189],[23,145],[51,145],[82,145],[113,145],[23,175],[51,175],[82,175],[113,169],[138,169],[23,206],[51,210],[82,206],[113,206],[37,163],[42,175],[46,182],[71,185],[41,199]];
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
@@ -68,7 +68,7 @@ async function runBot(i: number, contentHash: string, until: number, stats: BotS
         await sleep(rnd(500, 3000));
       } else if (r < 0.82) {
         // Entrar en un interior, quedarse un rato y salir.
-        if (b.zone !== 'ferro') { await b.enterDoor('Salida', 30000); continue; }
+        if (b.zone !== 'vertice') { await b.enterDoor('Salida', 30000); continue; }
         const [door, ax, ay] = pick([['Relé', 43.5, 40.5], ['Clínica', 23.5, 51.5], ['Bloque 9', 41.5, 35.5]] as [string, number, number][]);
         await walkTo(ax, ay, 40000);
         await b.enterDoor(door, 40000); stats.doors++;

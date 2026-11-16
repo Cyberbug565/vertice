@@ -16,7 +16,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 beforeAll(async () => {
   if (DB) { const c = new pg.Client({ connectionString: DB }); await c.connect(); await c.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;'); await c.end(); }
   app = await createApp({ port: 0, host: '127.0.0.1', databaseUrl: DB, pgliteDir: 'memory://', ambientNpcs: 4, crowdNpcs: 0, speedScale: 6, lingerSeconds: 1, logLevel: 'warn',
-    cityHourOffset: 10 - ((Date.now() / 60000) % 24), needsScale: 1, downedSeconds: 2, jobTimeScale: 0.05 });
+    cityHourMs: 60000, cityHourOffset: 10 - ((Date.now() / 60000) % 24), needsScale: 1, downedSeconds: 2, jobTimeScale: 0.05 });
   base = `http://127.0.0.1:${app.port}`;
 });
 afterAll(async () => { for (const c of clients) c.close(); await app?.close(); });
@@ -88,8 +88,8 @@ describe('v0.4 · progresión y propiedades', () => {
     const v = await join('visita');
     await o.enterDoor('Salida'); await v.enterDoor('Salida');
     await give('propietaria', 200000);
-    const ferro = app.world.zones.get('ferro')!;
-    const portal = [...ferro.entities].find((x) => x.objKind === 'housing')!;
+    const ferro = app.world.zones.get('vertice')!;
+    const portal = [...ferro.entities].filter((x) => x.objKind === 'housing').sort((a, b) => Math.hypot(a.x - E('propietaria').x, a.y - E('propietaria').y) - Math.hypot(b.x - E('propietaria').x, b.y - E('propietaria').y))[0];
     const house = app.world.c.houses.find((h) => h.building === portal.objId)!;
     for (const n of ['propietaria', 'visita']) { E(n).x = portal.x + 0.5; E(n).y = portal.y + 1; E(n).path = []; }
     const view = o.waitFor((m) => m.t === 'building', 3000, 'portal');
@@ -123,7 +123,7 @@ describe('v0.4 · progresión y propiedades', () => {
     expect(p.cars.length).toBe(1);
     expect((await d.cmd({ t: 'car', action: 'drive' })).ok).toBe(false); // dentro no se conduce
     await d.enterDoor('Salida');
-    await d.until(() => E('conductora').zone.id === 'ferro', 8000, 'en la calle');
+    await d.until(() => E('conductora').zone.id === 'vertice', 8000, 'en la calle');
     const walk = E('conductora').speed;
     expect((await d.cmd({ t: 'car', action: 'drive' })).ok).toBe(true);
     await sleep(1200);
@@ -131,7 +131,7 @@ describe('v0.4 · progresión y propiedades', () => {
     expect(E('conductora').vehicle).toBe(cheap.id);
     p.perks.push('piloto');
     expect((await d.cmd({ t: 'car', action: 'travel', zone: 'cenit' }, 15000)).ok).toBe(true);
-    await d.until(() => E('conductora').zone.id === 'cenit', 8000, 'en Cénit');
+    await d.until(() => app.world.districtOf(E('conductora').zone, E('conductora').x, E('conductora').y) === 'cenit', 8000, 'en Cénit');
     expect(await ledgerOk()).toBe(true);
   });
 
@@ -170,7 +170,7 @@ describe('v0.4 · progresión y propiedades', () => {
   it('los matasanos clandestinos no tienen rótulo y se descubren al entrar', async () => {
     const b = await join('exploradora');
     await b.enterDoor('Salida');
-    const ferro = app.world.zones.get('ferro')!;
+    const ferro = app.world.zones.get('vertice')!;
     const door = [...ferro.entities].find((x) => x.hiddenDoc === 'carnicero')!;
     expect(door.name).toBe('Puerta sin rótulo');
     expect(app.world.survival.sheetOf(P('exploradora')).discovered).not.toContain('carnicero');

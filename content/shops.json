@@ -3,7 +3,7 @@
   "id": "puesto-lin",
   "name": "Puesto de fideos de Lin",
   "owner": "asociacion-lumen",
-  "zone": "ferro",
+  "zone": "vertice",
   "stock": {
    "fideos-krill": 30,
    "sandwich-algas": 15,
@@ -86,7 +86,7 @@
   "id": "chatarreria-tomas",
   "name": "Chatarrería de Tomás",
   "owner": "chatarreros",
-  "zone": "ferro",
+  "zone": "vertice",
   "stock": {
    "kit-herramientas": 6,
    "ganzua-electronica": 3,
@@ -355,7 +355,7 @@
   "id": "nomadas-tienda",
   "name": "Puesto de los Nómadas del Polvo",
   "owner": "nomadas-polvo",
-  "zone": "yermo",
+  "zone": "vertice",
   "stock": {
    "agua-filtrada": 40,
    "nutribrick": 30,
@@ -567,5 +567,24 @@
   ],
   "priceMult": 1,
   "security": 18
+ },
+ {
+  "id": "farmacia",
+  "name": "Farmacia",
+  "owner": "okami",
+  "zone": "vertice",
+  "stock": {
+   "estim": 12,
+   "analgesicos": 30,
+   "estabilizador": 6,
+   "agua-filtrada": 20,
+   "bebida-isotonica": 12,
+   "barrita-proteica": 20
+  },
+  "buys": [
+   "medicina"
+  ],
+  "priceMult": 1.05,
+  "security": 16
  }
 ]

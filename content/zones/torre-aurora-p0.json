@@ -1,0 +1,114 @@
+{
+ "id": "torre-aurora-p0",
+ "name": "Torre Aurora Logística · Vestíbulo",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#3a4038",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    8,
+    4,
+    6,
+    1
+   ],
+   "color": "#3a4038"
+  }
+ ],
+ "props": [
+  {
+   "type": "plant",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    19,
+    2
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    4,
+    11
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    11
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    11,
+    1
+   ],
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-torre-aurora",
+   "name": "Salida a la calle",
+   "at": [
+    21,
+    7
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     361,
+     165
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "ascensor-torre-aurora-p0",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-aurora",
+  "floor": 0,
+  "access": "publico",
+  "corp": "aurora"
+ }
+}

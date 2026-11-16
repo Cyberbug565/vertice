@@ -1,0 +1,234 @@
+{
+ "id": "base-chatarreros",
+ "name": "Taller del Vertedero",
+ "kind": "interior",
+ "width": 28,
+ "height": 18,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#5a4a2a",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    22,
+    5,
+    1,
+    8
+   ],
+   "color": "#5a4a2a"
+  }
+ ],
+ "props": [
+  {
+   "type": "crate",
+   "at": [
+    3,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    4,
+    14
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    7,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    8,
+    14
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    11,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    12,
+    14
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    15,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    16,
+    14
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    19,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    20,
+    14
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    23,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    24,
+    14
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    8,
+    6
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    19,
+    6
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    8,
+    10
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    19,
+    10
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    8
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    15,
+    8
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    14,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3040"
+  },
+  {
+   "type": "neon",
+   "at": [
+    6,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3040"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-base-chatarreros",
+   "name": "Salida",
+   "at": [
+    27,
+    9
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     379,
+     287
+    ]
+   },
+   "danger": "disputed"
+  }
+ ],
+ "objects": [
+  {
+   "id": "botin-base-chatarreros",
+   "name": "Alijo de la banda",
+   "at": [
+    24,
+    9
+   ],
+   "kind": "loot"
+  }
+ ],
+ "waypoints": [
+  [
+   5,
+   9
+  ],
+  [
+   12,
+   12
+  ],
+  [
+   20,
+   6
+  ],
+  [
+   14,
+   9
+  ]
+ ],
+ "safePoint": [
+  25,
+  9
+ ],
+ "gangs": [
+  {
+   "faction": "chatarreros",
+   "count": 7,
+   "area": [
+    14,
+    9,
+    8
+   ]
+  }
+ ],
+ "gangBase": {
+  "faction": "chatarreros",
+  "boss": "Tuercas Méndez"
+ }
+}

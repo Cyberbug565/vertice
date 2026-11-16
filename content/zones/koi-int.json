@@ -18,10 +18,10 @@
     5
    ],
    "to": {
-    "zone": "ferro",
+    "zone": "vertice",
     "at": [
-     45,
-     20
+     69,
+     151
     ]
    },
    "danger": "public"

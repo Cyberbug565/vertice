@@ -47,10 +47,10 @@
     4
    ],
    "to": {
-    "zone": "neon-rojo",
+    "zone": "vertice",
     "at": [
-     36,
-     32
+     356,
+     53
     ]
    },
    "danger": "public"

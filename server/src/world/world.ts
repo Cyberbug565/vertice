@@ -11,7 +11,7 @@ import type { Metrics } from '../metrics.js';
 import { Zone } from './zone.js';
 import { spawnOf, type Entity } from './entity.js';
 import { ambientBrain, scheduledBrain, thinkNpc } from './npc.js';
-import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
+import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, savePlayerVitals, sheetHooks, wornAppearance, type PlayerState } from '../game/player.js';
 import { FactService, InstanceService } from '../game/services.js';
 import { EffectEngine, GameError, type EffectOutcome } from '../game/effects.js';
 import { allOk, buildView, checkNumbers, entryNode } from '../game/dialog.js';
@@ -19,6 +19,8 @@ import { Survival } from './survival.js';
 import { Combat } from './combat.js';
 import { Progress } from './progress.js';
 import { Property, isHouseZone } from './property.js';
+import { Posts } from './posts.js';
+import { Autopilot } from './autopilot.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
@@ -55,7 +57,9 @@ export class World {
   readonly combat: Combat;
   readonly progress: Progress;
   readonly property: Property;
-  private spawnAmbientFn: (z: Zone) => void = () => {};
+  readonly posts: Posts;
+  readonly autopilot: Autopilot;
+  private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => void = () => {};
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
     this.facts = new FactService(db);
@@ -65,6 +69,9 @@ export class World {
     this.combat = new Combat(this, this.survival);
     this.progress = new Progress(this);
     this.property = new Property(this);
+    this.posts = new Posts(this);
+    this.autopilot = new Autopilot(this);
+    sheetHooks.post = (p) => this.posts.status(p);
   }
 
   // ---------------------------------------------------------------- arranque
@@ -85,13 +92,15 @@ export class World {
     const rng = seededRng(this.cfg.seed);
     const pick = <T,>(a: T[]) => a[Math.floor(rng() * a.length)];
     const exteriors = [...this.zones.values()].filter((z) => z.def.kind === 'exterior' && z.def.ambient > 0);
-    const ref = this.zones.get('ferro')?.def.ambient || exteriors.reduce((acc, z) => acc + z.def.ambient, 0) || 1;
+    // Ciudad única: la población se reparte por distritos (AMBIENT_NPCS es la de Ferro; el resto escala por su peso).
+    const districtsAll = exteriors.flatMap((z) => z.def.districts.map((d) => ({ z, d })));
+    const ref = districtsAll.find((x) => x.d.id === 'ferro')?.d.ambient || this.zones.get('ferro')?.def.ambient || exteriors.reduce((acc, z) => acc + z.def.ambient, 0) || 1;
     const mkAmbient = (zone: Zone, x: number, y: number, home?: [number, number], radius?: number) => {
       const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES), title: 'Transeúnte', x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.6 + rng() * 0.8,
         appearance: { skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
       e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
       // Transeúntes: civiles con algo de cromo visible y salud propia.
-      e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil' } }; e.level = 1 + Math.floor(rng() * 6);
+      e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil', near: { x, y } } }; e.level = 1 + Math.floor(rng() * 6);
       const chromeRoll = rng();
       e.chrome = chromeRoll < 0.15 ? ['ojos'] : chromeRoll < 0.25 ? [rng() < 0.5 ? 'brazo_izq' : 'brazo_der'] : chromeRoll < 0.3 ? ['cabeza', 'ojos'] : chromeRoll < 0.34 ? ['pierna_izq', 'pierna_der'] : [];
       (e.appearance as any).build = pick(['delgado', 'medio', 'robusto']); (e.appearance as any).hairStyle = pick(['corto', 'largo', 'coleta', 'rapado', 'afro', 'moño', 'cresta', 'rastas', 'calvo', 'asimetrico']);
@@ -100,18 +109,26 @@ export class World {
       e.npc.nextThink = Math.floor(rng() * 20);
     };
     for (const zone of exteriors) {
-      // AMBIENT_NPCS es la población de Ferro; el resto de zonas escala por su peso relativo.
+      if (zone.def.districts.length) {
+        for (const d of zone.def.districts) { const n = Math.round((this.cfg.ambientNpcs * d.ambient) / ref); for (let i = 0; i < n && d.waypoints.length; i++) { const wp = pick(d.waypoints); mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); } }
+        continue;
+      }
       const n = Math.round((this.cfg.ambientNpcs * zone.def.ambient) / ref);
       for (let i = 0; i < n; i++) { const wp = pick(zone.def.waypoints); mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); }
     }
-    const crowdZone = this.zones.get('ferro') ?? exteriors[0];
+    const crowdZone = this.zones.get('vertice') ?? this.zones.get('ferro') ?? exteriors[0];
     for (let i = 0; i < this.cfg.crowdNpcs; i++) {
       const p = nearestWalkable(crowdZone.grid, this.cfg.crowdAt[0] + (rng() * 2 - 1) * 8, this.cfg.crowdAt[1] + (rng() * 2 - 1) * 8, 4) ?? { x: this.cfg.crowdAt[0] + 0.5, y: this.cfg.crowdAt[1] + 0.5 };
       mkAmbient(crowdZone, p.x, p.y, this.cfg.crowdAt, 9);
     }
-    this.spawnAmbientFn = (zone: Zone) => { const wp = pick(zone.def.waypoints); if (wp) mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); };
+    this.spawnAmbientFn = (zone: Zone, near?: { x: number; y: number }) => {
+      const d = near ? zone.districtAt(near.x, near.y) : null;
+      const wp = pick(d?.waypoints.length ? d.waypoints : zone.def.waypoints);
+      if (wp) mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5);
+    };
     await this.survival.init();
     await this.property.load();
+    await this.posts.load();
     this.combat.spawnPopulation();
   }
 
@@ -137,12 +154,36 @@ export class World {
     return nz;
   }
 
+  /** Distrito al que pertenece un punto (en la ciudad única) o una zona interior (por su salida a la calle). */
+  private districtCache = new Map<string, string>();
+  districtOf(zone: Zone, x = 0, y = 0): string {
+    if (zone.def.districts.length) return zone.districtAt(x, y)?.id ?? zone.id;
+    if (zone.def.kind === 'exterior') return zone.id;
+    const cached = this.districtCache.get(zone.id);
+    if (cached) return cached;
+    let out = zone.id;
+    if (zone.id.startsWith('casa:')) out = this.property.houses.get(zone.id.slice(5))?.district || zone.id;
+    else {
+      const lobby = zone.def.tower ? this.zones.get(`${zone.def.tower.id}-p0`) : zone;
+      const d = lobby?.def.doors.find((x) => this.zones.get(x.to.zone)?.def.kind === 'exterior');
+      const ext = d && this.zones.get(d.to.zone);
+      if (d && ext) out = this.districtOf(ext, d.to.at[0], d.to.at[1]);
+    }
+    this.districtCache.set(zone.id, out);
+    return out;
+  }
+  districtDef(zone: Zone, x: number, y: number) {
+    const id = this.districtOf(zone, x, y);
+    for (const z of this.zones.values()) for (const d of z.def.districts) if (d.id === id) return d;
+    return null;
+  }
+
   /** Crea un PNJ (lo usa la supervivencia para los fugitivos). */
   spawnNpc(z: Zone, o: { name: string; title: string; x: number; y: number; appearance: Entity['appearance']; label: string; speed: number }): Entity {
     return this.addEntity(z, { kind: 'npc', interactive: true, ...o });
   }
   removeEntity(e: Entity) { e.zone.remove(e); this.entities.delete(e.id); }
-  spawnAmbient(z: Zone) { this.spawnAmbientFn(z); }
+  spawnAmbient(z: Zone, near?: { x: number; y: number }) { this.spawnAmbientFn(z, near); }
   /** Mueve una entidad a otra zona sin puerta (cuerpos cargados). */
   moveEntityTo(e: Entity, to: Zone, x: number, y: number) { e.zone.remove(e); e.x = x; e.y = y; to.add(e); e.lastMoveTick = this.tick; }
   /** Traslada a un jugador a un punto concreto (detenciones). */
@@ -204,11 +245,12 @@ export class World {
     this.tick++;
     this.pathBudget = 40;
     const dt = 1 / RULES.tickRate;
+    if (this.tick % 10 === 1) for (const z of this.zones.values()) if (z.def.districts.length) z.refreshActive();
     for (const z of this.zones.values()) {
-      // Nivel de detalle: sin jugadores en la zona, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
-      const idle = z.players.size === 0;
+      // Nivel de detalle: lejos de cualquier jugador, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
+      const anyone = z.players.size > 0;
       for (const e of z.entities) {
-        if (idle && e.npc && e.npcType !== 'essential' && e.aggro === undefined) continue;
+        if (e.npc && e.npcType !== 'essential' && e.aggro === undefined && (!anyone || !z.isActive(e))) continue;
         if (e.path.length) this.moveEntity(e, dt);
         if (e.pendingAction && e.conn) this.combat.checkPending(e.conn);
         if (e.channel && this.tick >= e.channel.endTick) { const ch = e.channel; e.channel = undefined; ch.apply(); }
@@ -225,6 +267,7 @@ export class World {
     { const every = RULES.snapshotEveryTicks, phase = this.tick % every; let i = 0; for (const c of this.conns.values()) { if ((i++ % every) === phase) this.snapshot(c); } }
     this.combat.everyTick();
     if (this.tick % 20 === 0 && this.tick % 200 === 0) { try { this.property.sample(); } catch (err) { console.error('[propiedad]', err); } }
+    if (this.tick % 40 === 20) { try { this.autopilot.tick(); } catch (err) { console.error('[automático]', err); } }
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
@@ -491,7 +534,9 @@ export class World {
     this.metrics.inc('msgsIn');
     const p = c.p, sv = this.survival;
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
-    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy'];
+    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto'];
+    // Una orden manual del jugador (no del piloto automático, que usa seq 0) le devuelve el control.
+    if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop'].includes(m.t)) this.autopilot.takeOver(c);
     if (p.status === 'downed' && !passive.includes(m.t)) { if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás derribado: espera a que alguien te estabilice.' }); return; }
     // Cualquier orden activa despierta al personaje.
     if (p.sleeping && ['move', 'interact', 'retreat', 'stop', 'jobStart', 'useItem'].includes(m.t)) sv.wake(c, 'Te despiertas.');
@@ -534,6 +579,15 @@ export class World {
       case 'ability': return guarded(m.seq, () => this.combat.ability(c, m.id));
       case 'props': this.send(c, { t: 'props', view: this.property.propsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'marketLive': this.property.liveOn(c, m.on); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'run': p.running = m.on; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
+      case 'auto': return guarded(m.seq, async () => this.autopilot.set(c, m.on, m.personality));
+      case 'post': return guarded(m.seq, async () => {
+        if (m.action === 'apply') { await this.posts.apply(c, m.post ?? ''); this.send(c, { t: 'hiring', view: this.posts.hiringView(c, m.obj) }); }
+        else if (m.action === 'quit') await this.posts.quit(c);
+        else if (m.action === 'work') await this.posts.work(c);
+        else this.send(c, { t: 'hiring', view: this.posts.hiringView(c, m.obj) });
+      });
+      case 'elevator': return guarded(m.seq, async () => { if (m.floor === undefined) this.send(c, { t: 'elevator', view: this.posts.elevatorView(c) }); else await this.posts.elevator(c, m.floor, !!m.hack); });
       case 'house': return guarded(m.seq, async () => {
         const pr = this.property, hid = m.house ?? '';
         switch (m.action) {
@@ -771,6 +825,9 @@ export class World {
       case 'marketterm': return this.handle(c, { t: 'market', seq: 0 });
       case 'atm': return this.send(c, { t: 'targetMenu', view: this.combat.menu(c, o) });
       case 'ambar': return this.send(c, { t: 'ambar', view: this.combat.ambarView(c.p!) });
+      case 'hiring': return this.send(c, { t: 'hiring', view: this.posts.hiringView(c, o.objId) });
+      case 'elevator': return run(async () => this.send(c, { t: 'elevator', view: this.posts.elevatorView(c) }));
+      case 'loot': return run(() => this.combat.loot(c, o));
       case 'housing': return this.send(c, { t: 'building', view: this.property.buildingView(c.p!, o.objId ?? '') });
       case 'dealer': return run(() => this.send(c, { t: 'dealer', view: this.property.dealerView(c.p!, o.dealer ?? '') }));
       case 'realty': return this.send(c, { t: 'realty', view: this.property.realtyView(c.p!) });

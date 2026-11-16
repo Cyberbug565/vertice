@@ -21,7 +21,7 @@ async function resetDb() {
 }
 
 async function boot() {
-  app = await createApp({ port: 0, host: '127.0.0.1', databaseUrl: DB, pgliteDir: 'memory://', ambientNpcs: 6, crowdNpcs: 0, speedScale: 5, lingerSeconds: 1, logLevel: 'warn', cityHourOffset: 10 - ((Date.now() / 60000) % 24) });
+  app = await createApp({ port: 0, host: '127.0.0.1', databaseUrl: DB, pgliteDir: 'memory://', ambientNpcs: 6, crowdNpcs: 0, speedScale: 5, lingerSeconds: 1, logLevel: 'warn', cityHourMs: 60000, cityHourOffset: 10 - ((Date.now() / 60000) % 24) });
   base = `http://127.0.0.1:${app.port}`;
 }
 
@@ -77,17 +77,17 @@ describe('hito 1 · corte jugable de Ferro', () => {
 
   it('salir a la calle, cruzar sectores y rechazar destinos dentro de edificios', async () => {
     await ana.enterDoor('Salida');
-    expect(ana.zone).toBe('ferro');
+    expect(ana.zone).toBe('vertice');
     const tower = await ana.move(21.5, 14.5);
     expect(tower.ok).toBe(false);
     const sectorMsg = ana.waitFor((m) => m.t === 'sector', 30000, 'cambio de sector');
-    await ana.moveAndArrive(27.5, 29.5);
+    await ana.moveAndArrive(45.5, 163.5);
     const m = await sectorMsg as any;
     expect(m.sector).toMatch(/Ferro/);
   });
 
   it('encargo compartido: aceptar con Nadia en el bar (interior con salida)', async () => {
-    await ana.enterDoor('Bar El Relé').catch(async () => { await ana.moveAndArrive(47.5, 43.5); await ana.enterDoor('Bar El Relé'); });
+    await ana.enterDoor('Bar El Relé').catch(async () => { await ana.moveAndArrive(71.5, 182.5); await ana.enterDoor('Bar El Relé'); });
     expect(ana.zone).toBe('bar-rele');
     let d = await ana.interactAndDialog('Nadia');
     expect(d.options.map((o) => o.id)).toContain('accept');
@@ -95,7 +95,7 @@ describe('hito 1 · corte jugable de Ferro', () => {
     await ana.until(() => ana.journal.some((j) => j.contract === 'generador-lumen' && j.state === 'active'), 5000, 'diario');
     // Bruno sale del Bloque 9 y entra en el bar.
     await bruno.enterDoor('Salida');
-    await bruno.moveAndArrive(47.5, 43.5);
+    await bruno.moveAndArrive(71.5, 182.5);
     await bruno.enterDoor('Bar El Relé');
     d = await bruno.interactAndDialog('Nadia');
     await bruno.choose('accept');
@@ -104,7 +104,7 @@ describe('hito 1 · corte jugable de Ferro', () => {
 
   it('Netrunner: entra en el terminal (tirada con Suerte, idempotente y sin repetir)', async () => {
     await bruno.enterDoor('Salida');
-    await bruno.moveAndArrive(49.5, 58.5);
+    await bruno.moveAndArrive(74.5, 202.5);
     const d = await bruno.interactAndDialog('Terminal');
     const hack = d.options.find((o) => o.id === 'hack')!;
     expect(hack.disabled).toBeUndefined();
@@ -120,7 +120,7 @@ describe('hito 1 · corte jugable de Ferro', () => {
 
   it('Solo: negocia con Tomás leyendo la amenaza y consigue el acoplamiento', async () => {
     await ana.enterDoor('Salida');
-    await ana.moveAndArrive(46.5, 55.5);
+    await ana.moveAndArrive(70.5, 198.5);
     const d = await ana.interactAndDialog('Tomás');
     expect(d.options.map((o) => o.id)).toEqual(expect.arrayContaining(['buy', 'solo', 'work']));
     await ana.choose('solo', 4);
@@ -129,7 +129,7 @@ describe('hito 1 · corte jugable de Ferro', () => {
   });
 
   it('instalar el generador cambia un hecho de distrito visible para todos', async () => {
-    await ana.moveAndArrive(27.5, 28.5);
+    await ana.moveAndArrive(45.5, 162.5);
     await ana.interactAndDialog('Generador');
     const facts = bruno.waitFor((m) => m.t === 'facts' && (m as any).facts.lumen_power === true, 12000, 'luz en el mercado');
     await ana.choose('install');
@@ -139,7 +139,7 @@ describe('hito 1 · corte jugable de Ferro', () => {
 
   it('dos decisiones finales distintas con pago por contribución y consecuencias comprobables', async () => {
     const moneyA = ana.sheet!.money, moneyB = bruno.sheet!.money;
-    await ana.moveAndArrive(47.5, 43.5); await ana.enterDoor('Bar El Relé');
+    await ana.moveAndArrive(71.5, 182.5); await ana.enterDoor('Bar El Relé');
     await ana.interactAndDialog('Nadia');
     const rewardA = ana.waitFor((m) => m.t === 'reward', 5000, 'recompensa');
     await ana.choose('give_fixer');
@@ -147,7 +147,7 @@ describe('hito 1 · corte jugable de Ferro', () => {
     expect(ra.lines.join(' ')).toMatch(/\+200/);
     expect(ana.sheet!.money).toBe(moneyA + 200);
 
-    await bruno.moveAndArrive(47.5, 43.5); await bruno.enterDoor('Bar El Relé');
+    await bruno.moveAndArrive(71.5, 182.5); await bruno.enterDoor('Bar El Relé');
     await bruno.interactAndDialog('Nadia');
     const rewardB = bruno.waitFor((m) => m.t === 'reward', 5000, 'recompensa');
     await bruno.choose('give_market');
@@ -170,7 +170,7 @@ describe('hito 1 · corte jugable de Ferro', () => {
     await bruno.cmd({ t: 'closeDialog' });
     // Lin está en el mercado (de día) o en el bar (tarde): la buscamos donde esté.
     const h = app.world.cityHour();
-    if (h >= 19 && h < 23) { /* en el bar */ } else if (h >= 7 && h < 19) { await bruno.enterDoor('Salida'); await bruno.moveAndArrive(19.5, 33.5); } else return; // de noche descansa
+    if (h >= 19 && h < 23) { /* en el bar */ } else if (h >= 7 && h < 19) { await bruno.enterDoor('Salida'); await bruno.moveAndArrive(34.5, 169.5); } else return; // de noche descansa
     const d = await bruno.interactAndDialog('Lin');
     expect(d.text).toMatch(/amigo/);
     const shop = bruno.waitFor((m) => m.t === 'shop', 4000, 'puesto de Lin');

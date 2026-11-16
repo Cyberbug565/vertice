@@ -1,0 +1,114 @@
+{
+ "id": "torre-kaiten-p0",
+ "name": "Arcología Kaiten · Vestíbulo",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#4a5a4a",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    8,
+    4,
+    6,
+    1
+   ],
+   "color": "#4a5a4a"
+  }
+ ],
+ "props": [
+  {
+   "type": "plant",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    19,
+    2
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    4,
+    11
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    11
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    11,
+    1
+   ],
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-torre-kaiten",
+   "name": "Salida a la calle",
+   "at": [
+    21,
+    7
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     214,
+     53
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "ascensor-torre-kaiten-p0",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-kaiten",
+  "floor": 0,
+  "access": "publico",
+  "corp": "kaiten"
+ }
+}

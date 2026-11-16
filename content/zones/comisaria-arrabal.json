@@ -1,0 +1,100 @@
+{
+ "id": "comisaria-arrabal",
+ "name": "Puesto de la PCV del Arrabal",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2c3a52",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    4,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    7,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    4,
+    7
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#60a5fa"
+  },
+  {
+   "type": "screen",
+   "at": [
+    9,
+    1
+   ],
+   "blocking": false,
+   "color": "#60a5fa"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-comisaria-arrabal",
+   "name": "Salida a la calle",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     91,
+     277
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "ventanilla-comisaria-arrabal",
+   "name": "Ventanilla de «agilización»",
+   "at": [
+    10,
+    8
+   ],
+   "kind": "bribe"
+  },
+  {
+   "id": "contratar-comisaria-arrabal",
+   "name": "Sargento de guardia · ¿hay plazas?",
+   "at": [
+    12,
+    3
+   ],
+   "kind": "hiring"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

@@ -1,0 +1,176 @@
+{
+ "id": "torre-aurora-p2",
+ "name": "Torre Aurora Logística · Planta 2: Control de flota",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#3a4038",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    3
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    9
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    6,
+    3
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    6,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    6,
+    9
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    9,
+    3
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    9,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    9,
+    9
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    12,
+    3
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    12,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    12,
+    9
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    15,
+    3
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    15,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    15,
+    9
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    18,
+    3
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    18,
+    6
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    18,
+    9
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-aurora-p2",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-aurora",
+  "floor": 2,
+  "access": "empleados",
+  "corp": "aurora"
+ }
+}

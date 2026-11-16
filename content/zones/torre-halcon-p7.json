@@ -1,0 +1,83 @@
+{
+ "id": "torre-halcon-p7",
+ "name": "Torre Halcón Dynamics · Planta 7: Azotea y helipuerto",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "deck",
+ "wallColor": "#2c3444",
+ "blocks": [],
+ "props": [
+  {
+   "type": "antenna",
+   "at": [
+    3,
+    3
+   ],
+   "blocking": false,
+   "z": 4
+  },
+  {
+   "type": "crate",
+   "at": [
+    18,
+    3
+   ]
+  },
+  {
+   "type": "pipe",
+   "at": [
+    5,
+    11
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-halcon-p7",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [
+  {
+   "faction": "halcon",
+   "count": 2,
+   "area": [
+    12,
+    7,
+    5
+   ]
+  }
+ ],
+ "tower": {
+  "id": "torre-halcon",
+  "floor": 7,
+  "access": "restringido",
+  "corp": "halcon"
+ }
+}

@@ -1,0 +1,205 @@
+{
+ "id": "pasarela-neon-rojo-1",
+ "name": "Pasarela elevada · Neón Rojo",
+ "kind": "interior",
+ "width": 18,
+ "height": 5,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#1a2a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "window",
+   "at": [
+    2,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    2,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    4,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    4,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    6,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    6,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    8,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    8,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    10,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    10,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    12,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    12,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    14,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "window",
+   "at": [
+    14,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neon",
+   "at": [
+    9,
+    0
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "bench",
+   "at": [
+    9,
+    3
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "pasarela-neon-rojo-1-bajar-n",
+   "name": "Bajar (lado norte)",
+   "at": [
+    0,
+    2
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     385,
+     53
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "pasarela-neon-rojo-1-bajar-s",
+   "name": "Bajar (lado sur)",
+   "at": [
+    17,
+    2
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     385,
+     65
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [],
+ "waypoints": [
+  [
+   3,
+   2
+  ],
+  [
+   14,
+   2
+  ]
+ ],
+ "safePoint": [
+  3,
+  2
+ ],
+ "skywalk": true
+}

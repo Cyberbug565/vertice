@@ -10,6 +10,7 @@ import { startServer } from './net/server.js';
 export async function createApp(overrides: Partial<Config> = {}) {
   const cfg = loadConfig(overrides);
   const { content, hash } = loadValidatedContent();
+  if (cfg.cityHourMs) (content.manifest as { cityHourMs: number }).cityHourMs = cfg.cityHourMs;
   const db = await openDb(cfg.databaseUrl, cfg.pgliteDir);
   await migrate(db, cfg.logLevel === 'info');
   const metrics = new Metrics();

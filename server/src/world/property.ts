@@ -22,7 +22,7 @@ export class Property {
 
   constructor(private readonly w: World) {
     this.houses = new Map(w.c.houses.map((h) => [h.id, h]));
-    for (const z of new Set(w.c.houses.map((h) => h.zone))) this.housing.set(z, 1);
+    for (const z of new Set(w.c.houses.map((h) => h.district || h.zone))) this.housing.set(z, 1);
     for (const car of w.c.cars) this.carIdx.set(car.class, 1);
   }
 
@@ -38,7 +38,9 @@ export class Property {
     const pm = perkMods(this.w.c, p);
     return Math.min(0.4, (pm.mods.price ?? 0) + (pm.flags.has('lengua') ? 0.1 : 0));
   }
-  housePrice(h: HouseDef, p?: PlayerState) { return Math.round((h.price * (this.housing.get(h.zone) ?? 1) * (1 - this.discount(p))) / 10) * 10; }
+  /** Nombre de un distrito de la ciudad única (o de una zona). */
+  dname(id: string) { for (const z of this.w.c.zones) { const d = z.districts.find((x) => x.id === id); if (d) return d.name; } return this.w.c.zones.find((z) => z.id === id)?.name ?? id; }
+  housePrice(h: HouseDef, p?: PlayerState) { return Math.round((h.price * (this.housing.get(h.district || h.zone) ?? 1) * (1 - this.discount(p))) / 10) * 10; }
   carPrice(carId: string, dealerId?: string, p?: PlayerState) {
     const car = this.w.c.cars.find((x) => x.id === carId)!;
     const d = dealerId ? this.w.c.dealers.find((x) => x.id === dealerId) : undefined;
@@ -92,9 +94,9 @@ export class Property {
     };
   }
   realtyView(p: PlayerState, filter?: string): RealtyView {
-    const zn = (id: string) => this.w.c.zones.find((z) => z.id === id)?.name ?? id;
-    const houses = this.w.c.houses.filter((h) => !this.owners.has(h.id) && (!filter || h.zone === filter || h.size === filter))
-      .map((h) => ({ id: h.id, name: h.name, size: h.size, zone: h.zone, zoneName: zn(h.zone), price: this.housePrice(h, p), floor: h.floor }))
+    const zn = (id: string) => this.dname(id);
+    const houses = this.w.c.houses.filter((h) => !this.owners.has(h.id) && (!filter || h.district === filter || h.size === filter))
+      .map((h) => ({ id: h.id, name: h.name, size: h.size, zone: h.district, zoneName: zn(h.district), price: this.housePrice(h, p), floor: h.floor }))
       .sort((a, b) => a.price - b.price).slice(0, 120);
     return { houses, index: Object.fromEntries(this.housing), mine: [...p.houses] };
   }
@@ -118,7 +120,7 @@ export class Property {
     });
     p.money -= price; p.houses.push(houseId);
     this.owners.set(houseId, { charId: p.charId, name: p.name, price, permits: [] });
-    this.housing.set(h.zone, Math.min(1.8, (this.housing.get(h.zone) ?? 1) * 1.015));
+    this.housing.set(h.district, Math.min(1.8, (this.housing.get(h.district) ?? 1) * 1.015));
     this.trade(`${p.name} compra «${h.name}» por ${price.toLocaleString('es-ES')} €$.`);
     this.w.send(c, { t: 'reward', title: 'Vivienda comprada', lines: [h.name, `${price.toLocaleString('es-ES')} €$`, 'Es tu refugio: zona protegida, cama perfecta y alijo para guardar cosas.', 'Solo entra quien tú autorices (Propiedades, tecla P).'] });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
@@ -142,7 +144,7 @@ export class Property {
     });
     p.money += value; p.houses = p.houses.filter((x) => x !== houseId);
     this.owners.delete(houseId);
-    this.housing.set(h.zone, Math.max(0.6, (this.housing.get(h.zone) ?? 1) * 0.99));
+    this.housing.set(h.district, Math.max(0.6, (this.housing.get(h.district) ?? 1) * 0.99));
     this.trade(`Se pone a la venta «${h.name}» (${value.toLocaleString('es-ES')} €$ para su antiguo dueño).`);
     this.w.send(c, { t: 'notice', kind: 'good', text: `Vendes ${h.name} por ${value.toLocaleString('es-ES')} €$ (70 % del valor de mercado). Lo que había en el alijo se pierde.` });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
@@ -240,9 +242,9 @@ export class Property {
   }
 
   propsView(p: PlayerState): PropsView {
-    const zn = (id: string) => this.w.c.zones.find((z) => z.id === id)?.name ?? id;
+    const zn = (id: string) => this.dname(id);
     return {
-      houses: p.houses.map((id) => { const h = this.houses.get(id)!; const o = this.owners.get(id); return { id, name: h.name, zone: h.zone, zoneName: zn(h.zone), size: h.size, value: Math.round(this.housePrice(h) * 0.7), paid: o?.price ?? 0, permits: o?.permits ?? [] }; }),
+      houses: p.houses.map((id) => { const h = this.houses.get(id)!; const o = this.owners.get(id); return { id, name: h.name, zone: h.district, zoneName: zn(h.district), size: h.size, value: Math.round(this.housePrice(h) * 0.7), paid: o?.price ?? 0, permits: o?.permits ?? [] }; }),
       cars: p.cars.map((x) => { const d = this.w.c.cars.find((k) => k.id === x.car)!; return { id: x.id, car: x.car, name: `${d.maker} ${d.name}`, class: d.class, value: Math.round(this.carPrice(d.id) * 0.6), speed: d.speed }; }),
       driving: p.driving,
     };
@@ -328,8 +330,11 @@ export class Property {
   /** Viaje en coche a otro distrito: unos segundos de trayecto (instantáneo con el perk «Piloto»). */
   async travel(c: PlayerConn, zoneId: string) {
     const p = c.p!, e = c.e!;
-    const to = this.w.zones.get(zoneId);
-    if (!to || to.def.kind !== 'exterior' || zoneId === e.zone.id) throw new GameError('Elige otro distrito.');
+    // Ciudad única: se viaja a un distrito (su punto seguro); se mantiene la compatibilidad con zonas sueltas.
+    const city = [...this.w.zones.values()].find((z) => z.def.districts.some((d) => d.id === zoneId));
+    const dist = city?.def.districts.find((d) => d.id === zoneId);
+    const to = city ?? this.w.zones.get(zoneId);
+    if (!to || to.def.kind !== 'exterior' || (!dist && zoneId === e.zone.id) || (dist && this.w.districtOf(e.zone, e.x, e.y) === zoneId)) throw new GameError('Elige otro distrito.');
     if (e.zone.def.kind !== 'exterior') throw new GameError('Sal a la calle para coger el coche.');
     if (!p.cars.length) throw new GameError('Necesitas un coche para viajar entre distritos.');
     if (p.status !== 'alive') throw new GameError('Ahora no.');
@@ -338,11 +343,12 @@ export class Property {
     const car = this.carOf(p)!;
     const secs = pilot ? 0 : Math.max(3, Math.round(14 / car.speed));
     if (secs) {
-      this.w.send(c, { t: 'action', text: `Conduces hacia ${to.def.name}…`, progress: 0, duration: secs });
+      this.w.send(c, { t: 'action', text: `Conduces hacia ${dist?.name ?? to.def.name}…`, progress: 0, duration: secs });
       await new Promise((r) => setTimeout(r, secs * 1000));
       if (c.closed || p.status !== 'alive' || c.e !== e) return;
     }
-    await this.w.teleport(c, zoneId, [to.def.safePoint[0], to.def.safePoint[1]]);
+    const sp = dist?.safePoint ?? to.def.safePoint;
+    await this.w.teleport(c, to.id, [sp[0], sp[1]]);
     e.vehicle = car.id; e.labelVer++;
     this.w.progress.gain(p, 'conduccion', 6);
     this.w.send(c, { t: 'action', text: '' });
@@ -361,7 +367,7 @@ export class Property {
     const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medicina: 'Medicina', arma: 'Armas', municion: 'Munición', ropa: 'Ropa', equipo: 'Equipo', herramienta: 'Herramientas', chatarra: 'Chatarra', ciberware: 'Ciberware', contrabando: 'Contrabando' };
     const indices = [
       ...[...this.hist.keys()].filter((k) => k.startsWith('cat:')).map((k) => ({ id: k, name: CAT[k.slice(4)] ?? k.slice(4), value: h(k).at(-1) ?? 1, change: ch(h(k)), history: h(k) })),
-      ...[...this.housing.keys()].map((z) => ({ id: `viv:${z}`, name: `Vivienda · ${this.w.c.zones.find((x) => x.id === z)?.name ?? z}`, value: this.housing.get(z)!, change: ch(h(`viv:${z}`)), history: h(`viv:${z}`) })),
+      ...[...this.housing.keys()].map((z) => ({ id: `viv:${z}`, name: `Vivienda · ${this.dname(z)}`, value: this.housing.get(z)!, change: ch(h(`viv:${z}`)), history: h(`viv:${z}`) })),
       ...[...this.carIdx.keys()].map((k) => ({ id: `car:${k}`, name: `Vehículos · ${k}`, value: this.carIdx.get(k)!, change: ch(h(`car:${k}`)), history: h(`car:${k}`) })),
     ];
     const items: MarketLiveView['items'] = [];
@@ -376,7 +382,7 @@ export class Property {
     return {
       at: Date.now(), indices, items: items.slice(0, 40),
       trades: [...this.trades, ...this.w.survival.market.view().bulletin.map((b) => ({ at: Date.parse(b.at), text: b.text }))].sort((a, b) => b.at - a.at).slice(0, 14),
-      housing: zones.map((z) => { const free = this.w.c.houses.filter((x) => x.zone === z && !this.owners.has(x.id)); return { zone: z, name: this.w.c.zones.find((x) => x.id === z)?.name ?? z, index: this.housing.get(z)!, forSale: free.length, cheapest: free.length ? Math.min(...free.map((x) => this.housePrice(x))) : 0 }; }),
+      housing: zones.map((z) => { const free = this.w.c.houses.filter((x) => x.district === z && !this.owners.has(x.id)); return { zone: z, name: this.dname(z), index: this.housing.get(z)!, forSale: free.length, cheapest: free.length ? Math.min(...free.map((x) => this.housePrice(x))) : 0 }; }),
       cars: this.w.c.cars.map((x) => ({ id: x.id, name: `${x.maker} ${x.name}`, class: x.class, price: this.carPrice(x.id) })),
     };
   }

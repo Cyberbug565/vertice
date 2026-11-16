@@ -55,6 +55,11 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('car'), seq, action: z.enum(['dealer', 'buy', 'sell', 'drive', 'park', 'travel']), dealer: z.string().max(48).optional(), car: z.string().max(64).optional(), zone: z.string().max(48).optional(), opId: opId.optional() }),
   z.object({ t: z.literal('props'), seq }),
   z.object({ t: z.literal('marketLive'), seq, on: z.boolean() }),
+  // ---- v0.5
+  z.object({ t: z.literal('run'), seq, on: z.boolean() }),
+  z.object({ t: z.literal('auto'), seq, on: z.boolean(), personality: z.string().max(24).optional() }),
+  z.object({ t: z.literal('post'), seq, action: z.enum(['apply', 'quit', 'work', 'view']), post: z.string().max(80).optional(), obj: z.string().max(80).optional() }),
+  z.object({ t: z.literal('elevator'), seq, floor: z.number().int().min(0).max(40).optional(), hack: z.boolean().optional() }),
 ]);
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
@@ -156,7 +161,12 @@ export interface CharacterSheet {
   abilities: { id: string; name: string; kind: string; cooldown: number; readyIn: number }[]; buffs: Record<string, number>;
   houses: string[]; cars: { id: string; car: string }[]; driving: string | null; discovered: string[];
   speedMult: number; dodge: number; uniques: string[];
+  // ---- v0.5
+  running: boolean; auto: { on: boolean; personality: string };
+  post: { id: string; name: string; place: string; shift: [number, number]; pay: number; onShift: boolean; worked: boolean } | null;
 }
+export interface HiringView { place: string; posts: { id: string; name: string; desc: string; skill: string; minLevel: number; level: number; pay: number; shift: string; employer: string; holder: string | null; canApply: boolean; reason: string }[]; mine: { id: string; name: string; shift: string } | null }
+export interface ElevatorView { tower: string; name: string; current: number; floors: { floor: number; zone: string; name: string; access: string; allowed: boolean }[] }
 
 export interface JournalEntry {
   contract: string; title: string; summary: string; state: 'active' | 'completed' | 'abandoned'; outcome?: string;
@@ -186,6 +196,8 @@ export type ServerMsg =
   | { t: 'marketLive'; view: MarketLiveView }
   | { t: 'scan'; view: ScanView }
   | { t: 'ring'; house: string; houseName: string; from: string; fromId: number }
+  | { t: 'hiring'; view: HiringView }
+  | { t: 'elevator'; view: ElevatorView }
   | { t: 'shop'; view: ShopView }
   | { t: 'market'; view: MarketView }
   | { t: 'jobs'; view: JobsView }

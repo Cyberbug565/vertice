@@ -1,0 +1,104 @@
+{
+ "id": "farmacia-cenit",
+ "name": "Farmacia Okami Cénit",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2a4a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    5,
+    1
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    10,
+    7
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-farmacia-cenit",
+   "name": "Salida a la calle",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     297,
+     213
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-farmacia-cenit",
+   "name": "Mostrador de Farmacia Okami Cénit",
+   "at": [
+    7,
+    3
+   ],
+   "kind": "shop",
+   "shop": "farmacia"
+  },
+  {
+   "id": "contratar-farmacia-cenit",
+   "name": "Encargada de la farmacia · ¿hay trabajo?",
+   "at": [
+    9,
+    6
+   ],
+   "kind": "hiring"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

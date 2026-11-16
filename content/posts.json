@@ -1,0 +1,1046 @@
+[
+ {
+  "id": "torre-okami-analista",
+  "name": "Analista de Okami",
+  "zone": "torre-okami-p2",
+  "at": [
+   6,
+   7
+  ],
+  "skill": "investigacion",
+  "minLevel": 8,
+  "pay": 260,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "okami",
+  "desc": "Informes, auditorías y reuniones interminables."
+ },
+ {
+  "id": "torre-okami-seguridad",
+  "name": "Vigilante de Torre Okami",
+  "zone": "torre-okami-p0",
+  "at": [
+   6,
+   10
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "okami",
+  "desc": "Turno de noche en el vestíbulo. Que nadie suba sin tarjeta."
+ },
+ {
+  "id": "torre-okami-recepcion",
+  "name": "Recepcionista de Torre Okami",
+  "zone": "torre-okami-p0",
+  "at": [
+   11,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 5,
+  "pay": 160,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "okami",
+  "desc": "Sonrisa corporativa y control de visitas."
+ },
+ {
+  "id": "torre-kaiten-analista",
+  "name": "Analista de Kaiten",
+  "zone": "torre-kaiten-p2",
+  "at": [
+   6,
+   7
+  ],
+  "skill": "investigacion",
+  "minLevel": 8,
+  "pay": 260,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "kaiten",
+  "desc": "Informes, auditorías y reuniones interminables."
+ },
+ {
+  "id": "torre-kaiten-seguridad",
+  "name": "Vigilante de Arcología Kaiten",
+  "zone": "torre-kaiten-p0",
+  "at": [
+   6,
+   10
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "kaiten",
+  "desc": "Turno de noche en el vestíbulo. Que nadie suba sin tarjeta."
+ },
+ {
+  "id": "torre-kaiten-recepcion",
+  "name": "Recepcionista de Arcología Kaiten",
+  "zone": "torre-kaiten-p0",
+  "at": [
+   11,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 5,
+  "pay": 160,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "kaiten",
+  "desc": "Sonrisa corporativa y control de visitas."
+ },
+ {
+  "id": "farmacia-colinas-farmaceutico",
+  "name": "Farmacéutico/a · Parafarmacia Jardines",
+  "zone": "farmacia-colinas",
+  "at": [
+   6,
+   3
+  ],
+  "skill": "medicina",
+  "minLevel": 8,
+  "pay": 200,
+  "shift": [
+   9,
+   17
+  ],
+  "employer": "okami",
+  "desc": "Dispensar medicamentos, preparar fórmulas y aconsejar."
+ },
+ {
+  "id": "farmacia-colinas-dependiente",
+  "name": "Dependiente/a · Parafarmacia Jardines",
+  "zone": "farmacia-colinas",
+  "at": [
+   8,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 4,
+  "pay": 120,
+  "shift": [
+   16,
+   24
+  ],
+  "employer": "okami",
+  "desc": "Caja, reposición y paciencia con los clientes."
+ },
+ {
+  "id": "comisaria-colinas-patrulla",
+  "name": "Agente de patrulla · Comisaría de Colinas Doradas",
+  "zone": "comisaria-colinas",
+  "at": [
+   5,
+   8
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 230,
+  "shift": [
+   14,
+   22
+  ],
+  "employer": "pcv",
+  "desc": "Patrulla, multas y detenciones (y algún «favor»)."
+ },
+ {
+  "id": "comisaria-colinas-detective",
+  "name": "Detective · Comisaría de Colinas Doradas",
+  "zone": "comisaria-colinas",
+  "at": [
+   8,
+   6
+  ],
+  "skill": "investigacion",
+  "minLevel": 10,
+  "pay": 300,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "pcv",
+  "desc": "Casos abiertos, testigos y pruebas que desaparecen."
+ },
+ {
+  "id": "comisaria-colinas-calabozos",
+  "name": "Guardia de calabozos · Comisaría de Colinas Doradas",
+  "zone": "comisaria-colinas",
+  "at": [
+   2,
+   9
+  ],
+  "skill": "intimidacion",
+  "minLevel": 6,
+  "pay": 180,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "pcv",
+  "desc": "Turno de noche vigilando a los detenidos."
+ },
+ {
+  "id": "obra-colinas-peon",
+  "name": "Peón · Urbanización Mirador",
+  "zone": "vertice",
+  "at": [
+   161,
+   99
+  ],
+  "skill": "atletismo",
+  "minLevel": 4,
+  "pay": 140,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Cargar, cavar y aguantar el sol.",
+  "obra": "caseta-obra-colinas"
+ },
+ {
+  "id": "obra-colinas-gruista",
+  "name": "Operador/a de grúa · Urbanización Mirador",
+  "zone": "vertice",
+  "at": [
+   162,
+   97
+  ],
+  "skill": "conduccion",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Mover vigas a 80 metros sin matar a nadie.",
+  "obra": "caseta-obra-colinas"
+ },
+ {
+  "id": "obra-colinas-jefe",
+  "name": "Jefe/a de obra · Urbanización Mirador",
+  "zone": "vertice",
+  "at": [
+   163,
+   104
+  ],
+  "skill": "reparacion",
+  "minLevel": 12,
+  "pay": 320,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Planos, plazos y gritos.",
+  "obra": "caseta-obra-colinas"
+ },
+ {
+  "id": "farmacia-neon-rojo-farmaceutico",
+  "name": "Farmacéutico/a · Farmacia 24h Sakura",
+  "zone": "farmacia-neon-rojo",
+  "at": [
+   6,
+   3
+  ],
+  "skill": "medicina",
+  "minLevel": 8,
+  "pay": 200,
+  "shift": [
+   9,
+   17
+  ],
+  "employer": "okami",
+  "desc": "Dispensar medicamentos, preparar fórmulas y aconsejar."
+ },
+ {
+  "id": "farmacia-neon-rojo-dependiente",
+  "name": "Dependiente/a · Farmacia 24h Sakura",
+  "zone": "farmacia-neon-rojo",
+  "at": [
+   8,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 4,
+  "pay": 120,
+  "shift": [
+   16,
+   24
+  ],
+  "employer": "okami",
+  "desc": "Caja, reposición y paciencia con los clientes."
+ },
+ {
+  "id": "comisaria-neon-rojo-patrulla",
+  "name": "Agente de patrulla · Comisaría de Neón Rojo",
+  "zone": "comisaria-neon-rojo",
+  "at": [
+   5,
+   8
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 230,
+  "shift": [
+   14,
+   22
+  ],
+  "employer": "pcv",
+  "desc": "Patrulla, multas y detenciones (y algún «favor»)."
+ },
+ {
+  "id": "comisaria-neon-rojo-detective",
+  "name": "Detective · Comisaría de Neón Rojo",
+  "zone": "comisaria-neon-rojo",
+  "at": [
+   8,
+   6
+  ],
+  "skill": "investigacion",
+  "minLevel": 10,
+  "pay": 300,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "pcv",
+  "desc": "Casos abiertos, testigos y pruebas que desaparecen."
+ },
+ {
+  "id": "comisaria-neon-rojo-calabozos",
+  "name": "Guardia de calabozos · Comisaría de Neón Rojo",
+  "zone": "comisaria-neon-rojo",
+  "at": [
+   2,
+   9
+  ],
+  "skill": "intimidacion",
+  "minLevel": 6,
+  "pay": 180,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "pcv",
+  "desc": "Turno de noche vigilando a los detenidos."
+ },
+ {
+  "id": "obra-neon-rojo-peon",
+  "name": "Peón · Obra del Casino Fénix",
+  "zone": "vertice",
+  "at": [
+   350,
+   99
+  ],
+  "skill": "atletismo",
+  "minLevel": 4,
+  "pay": 140,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Cargar, cavar y aguantar el sol.",
+  "obra": "caseta-obra-neon-rojo"
+ },
+ {
+  "id": "obra-neon-rojo-gruista",
+  "name": "Operador/a de grúa · Obra del Casino Fénix",
+  "zone": "vertice",
+  "at": [
+   351,
+   97
+  ],
+  "skill": "conduccion",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Mover vigas a 80 metros sin matar a nadie.",
+  "obra": "caseta-obra-neon-rojo"
+ },
+ {
+  "id": "obra-neon-rojo-jefe",
+  "name": "Jefe/a de obra · Obra del Casino Fénix",
+  "zone": "vertice",
+  "at": [
+   353,
+   104
+  ],
+  "skill": "reparacion",
+  "minLevel": 12,
+  "pay": 320,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Planos, plazos y gritos.",
+  "obra": "caseta-obra-neon-rojo"
+ },
+ {
+  "id": "torre-aurora-analista",
+  "name": "Analista de Aurora Logística",
+  "zone": "torre-aurora-p2",
+  "at": [
+   6,
+   7
+  ],
+  "skill": "investigacion",
+  "minLevel": 8,
+  "pay": 260,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "aurora",
+  "desc": "Informes, auditorías y reuniones interminables."
+ },
+ {
+  "id": "torre-aurora-seguridad",
+  "name": "Vigilante de Torre Aurora Logística",
+  "zone": "torre-aurora-p0",
+  "at": [
+   6,
+   10
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "aurora",
+  "desc": "Turno de noche en el vestíbulo. Que nadie suba sin tarjeta."
+ },
+ {
+  "id": "torre-aurora-recepcion",
+  "name": "Recepcionista de Torre Aurora Logística",
+  "zone": "torre-aurora-p0",
+  "at": [
+   11,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 5,
+  "pay": 160,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "aurora",
+  "desc": "Sonrisa corporativa y control de visitas."
+ },
+ {
+  "id": "farmacia-forja-farmaceutico",
+  "name": "Farmacéutico/a · Botiquín Obrero",
+  "zone": "farmacia-forja",
+  "at": [
+   6,
+   3
+  ],
+  "skill": "medicina",
+  "minLevel": 8,
+  "pay": 200,
+  "shift": [
+   9,
+   17
+  ],
+  "employer": "okami",
+  "desc": "Dispensar medicamentos, preparar fórmulas y aconsejar."
+ },
+ {
+  "id": "farmacia-forja-dependiente",
+  "name": "Dependiente/a · Botiquín Obrero",
+  "zone": "farmacia-forja",
+  "at": [
+   8,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 4,
+  "pay": 120,
+  "shift": [
+   16,
+   24
+  ],
+  "employer": "okami",
+  "desc": "Caja, reposición y paciencia con los clientes."
+ },
+ {
+  "id": "obra-forja-peon",
+  "name": "Peón · Ampliación de la fundición",
+  "zone": "vertice",
+  "at": [
+   311,
+   128
+  ],
+  "skill": "atletismo",
+  "minLevel": 4,
+  "pay": 140,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Cargar, cavar y aguantar el sol.",
+  "obra": "caseta-obra-forja"
+ },
+ {
+  "id": "obra-forja-gruista",
+  "name": "Operador/a de grúa · Ampliación de la fundición",
+  "zone": "vertice",
+  "at": [
+   312,
+   126
+  ],
+  "skill": "conduccion",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Mover vigas a 80 metros sin matar a nadie.",
+  "obra": "caseta-obra-forja"
+ },
+ {
+  "id": "obra-forja-jefe",
+  "name": "Jefe/a de obra · Ampliación de la fundición",
+  "zone": "vertice",
+  "at": [
+   313,
+   133
+  ],
+  "skill": "reparacion",
+  "minLevel": 12,
+  "pay": 320,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Planos, plazos y gritos.",
+  "obra": "caseta-obra-forja"
+ },
+ {
+  "id": "farmacia-arrabal-farmaceutico",
+  "name": "Farmacéutico/a · Farmacia de San Ciro",
+  "zone": "farmacia-arrabal",
+  "at": [
+   6,
+   3
+  ],
+  "skill": "medicina",
+  "minLevel": 8,
+  "pay": 200,
+  "shift": [
+   9,
+   17
+  ],
+  "employer": "okami",
+  "desc": "Dispensar medicamentos, preparar fórmulas y aconsejar."
+ },
+ {
+  "id": "farmacia-arrabal-dependiente",
+  "name": "Dependiente/a · Farmacia de San Ciro",
+  "zone": "farmacia-arrabal",
+  "at": [
+   8,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 4,
+  "pay": 120,
+  "shift": [
+   16,
+   24
+  ],
+  "employer": "okami",
+  "desc": "Caja, reposición y paciencia con los clientes."
+ },
+ {
+  "id": "comisaria-arrabal-patrulla",
+  "name": "Agente de patrulla · Puesto de la PCV del Arrabal",
+  "zone": "comisaria-arrabal",
+  "at": [
+   5,
+   8
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 230,
+  "shift": [
+   14,
+   22
+  ],
+  "employer": "pcv",
+  "desc": "Patrulla, multas y detenciones (y algún «favor»)."
+ },
+ {
+  "id": "comisaria-arrabal-detective",
+  "name": "Detective · Puesto de la PCV del Arrabal",
+  "zone": "comisaria-arrabal",
+  "at": [
+   8,
+   6
+  ],
+  "skill": "investigacion",
+  "minLevel": 10,
+  "pay": 300,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "pcv",
+  "desc": "Casos abiertos, testigos y pruebas que desaparecen."
+ },
+ {
+  "id": "comisaria-arrabal-calabozos",
+  "name": "Guardia de calabozos · Puesto de la PCV del Arrabal",
+  "zone": "comisaria-arrabal",
+  "at": [
+   2,
+   9
+  ],
+  "skill": "intimidacion",
+  "minLevel": 6,
+  "pay": 180,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "pcv",
+  "desc": "Turno de noche vigilando a los detenidos."
+ },
+ {
+  "id": "obra-arrabal-peon",
+  "name": "Peón · Obra del Bloque 60",
+  "zone": "vertice",
+  "at": [
+   11,
+   323
+  ],
+  "skill": "atletismo",
+  "minLevel": 4,
+  "pay": 140,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Cargar, cavar y aguantar el sol.",
+  "obra": "caseta-obra-arrabal"
+ },
+ {
+  "id": "obra-arrabal-gruista",
+  "name": "Operador/a de grúa · Obra del Bloque 60",
+  "zone": "vertice",
+  "at": [
+   12,
+   321
+  ],
+  "skill": "conduccion",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Mover vigas a 80 metros sin matar a nadie.",
+  "obra": "caseta-obra-arrabal"
+ },
+ {
+  "id": "obra-arrabal-jefe",
+  "name": "Jefe/a de obra · Obra del Bloque 60",
+  "zone": "vertice",
+  "at": [
+   13,
+   328
+  ],
+  "skill": "reparacion",
+  "minLevel": 12,
+  "pay": 320,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Planos, plazos y gritos.",
+  "obra": "caseta-obra-arrabal"
+ },
+ {
+  "id": "farmacia-ferro-farmaceutico",
+  "name": "Farmacéutico/a · Farmacia del Canal",
+  "zone": "farmacia-ferro",
+  "at": [
+   6,
+   3
+  ],
+  "skill": "medicina",
+  "minLevel": 8,
+  "pay": 200,
+  "shift": [
+   9,
+   17
+  ],
+  "employer": "okami",
+  "desc": "Dispensar medicamentos, preparar fórmulas y aconsejar."
+ },
+ {
+  "id": "farmacia-ferro-dependiente",
+  "name": "Dependiente/a · Farmacia del Canal",
+  "zone": "farmacia-ferro",
+  "at": [
+   8,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 4,
+  "pay": 120,
+  "shift": [
+   16,
+   24
+  ],
+  "employer": "okami",
+  "desc": "Caja, reposición y paciencia con los clientes."
+ },
+ {
+  "id": "comisaria-ferro-patrulla",
+  "name": "Agente de patrulla · Comisaría de Ferro",
+  "zone": "comisaria-ferro",
+  "at": [
+   5,
+   8
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 230,
+  "shift": [
+   14,
+   22
+  ],
+  "employer": "pcv",
+  "desc": "Patrulla, multas y detenciones (y algún «favor»)."
+ },
+ {
+  "id": "comisaria-ferro-detective",
+  "name": "Detective · Comisaría de Ferro",
+  "zone": "comisaria-ferro",
+  "at": [
+   8,
+   6
+  ],
+  "skill": "investigacion",
+  "minLevel": 10,
+  "pay": 300,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "pcv",
+  "desc": "Casos abiertos, testigos y pruebas que desaparecen."
+ },
+ {
+  "id": "comisaria-ferro-calabozos",
+  "name": "Guardia de calabozos · Comisaría de Ferro",
+  "zone": "comisaria-ferro",
+  "at": [
+   2,
+   9
+  ],
+  "skill": "intimidacion",
+  "minLevel": 6,
+  "pay": 180,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "pcv",
+  "desc": "Turno de noche vigilando a los detenidos."
+ },
+ {
+  "id": "obra-ferro-peon",
+  "name": "Peón · Obra del nuevo muelle",
+  "zone": "vertice",
+  "at": [
+   31,
+   211
+  ],
+  "skill": "atletismo",
+  "minLevel": 4,
+  "pay": 140,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Cargar, cavar y aguantar el sol.",
+  "obra": "caseta-obra-ferro"
+ },
+ {
+  "id": "obra-ferro-gruista",
+  "name": "Operador/a de grúa · Obra del nuevo muelle",
+  "zone": "vertice",
+  "at": [
+   32,
+   209
+  ],
+  "skill": "conduccion",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Mover vigas a 80 metros sin matar a nadie.",
+  "obra": "caseta-obra-ferro"
+ },
+ {
+  "id": "obra-ferro-jefe",
+  "name": "Jefe/a de obra · Obra del nuevo muelle",
+  "zone": "vertice",
+  "at": [
+   32,
+   214
+  ],
+  "skill": "reparacion",
+  "minLevel": 12,
+  "pay": 320,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Planos, plazos y gritos.",
+  "obra": "caseta-obra-ferro"
+ },
+ {
+  "id": "torre-halcon-analista",
+  "name": "Analista de Halcón Dynamics",
+  "zone": "torre-halcon-p2",
+  "at": [
+   6,
+   7
+  ],
+  "skill": "investigacion",
+  "minLevel": 8,
+  "pay": 260,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "halcon",
+  "desc": "Informes, auditorías y reuniones interminables."
+ },
+ {
+  "id": "torre-halcon-seguridad",
+  "name": "Vigilante de Torre Halcón Dynamics",
+  "zone": "torre-halcon-p0",
+  "at": [
+   6,
+   10
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "halcon",
+  "desc": "Turno de noche en el vestíbulo. Que nadie suba sin tarjeta."
+ },
+ {
+  "id": "torre-halcon-recepcion",
+  "name": "Recepcionista de Torre Halcón Dynamics",
+  "zone": "torre-halcon-p0",
+  "at": [
+   11,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 5,
+  "pay": 160,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "halcon",
+  "desc": "Sonrisa corporativa y control de visitas."
+ },
+ {
+  "id": "torre-teselia-analista",
+  "name": "Analista de Teselia",
+  "zone": "torre-teselia-p2",
+  "at": [
+   6,
+   7
+  ],
+  "skill": "investigacion",
+  "minLevel": 8,
+  "pay": 260,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "teselia",
+  "desc": "Informes, auditorías y reuniones interminables."
+ },
+ {
+  "id": "torre-teselia-seguridad",
+  "name": "Vigilante de Aguja Teselia",
+  "zone": "torre-teselia-p0",
+  "at": [
+   6,
+   10
+  ],
+  "skill": "armas",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   22,
+   6
+  ],
+  "employer": "teselia",
+  "desc": "Turno de noche en el vestíbulo. Que nadie suba sin tarjeta."
+ },
+ {
+  "id": "torre-teselia-recepcion",
+  "name": "Recepcionista de Aguja Teselia",
+  "zone": "torre-teselia-p0",
+  "at": [
+   11,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 5,
+  "pay": 160,
+  "shift": [
+   8,
+   16
+  ],
+  "employer": "teselia",
+  "desc": "Sonrisa corporativa y control de visitas."
+ },
+ {
+  "id": "farmacia-cenit-farmaceutico",
+  "name": "Farmacéutico/a · Farmacia Okami Cénit",
+  "zone": "farmacia-cenit",
+  "at": [
+   6,
+   3
+  ],
+  "skill": "medicina",
+  "minLevel": 8,
+  "pay": 200,
+  "shift": [
+   9,
+   17
+  ],
+  "employer": "okami",
+  "desc": "Dispensar medicamentos, preparar fórmulas y aconsejar."
+ },
+ {
+  "id": "farmacia-cenit-dependiente",
+  "name": "Dependiente/a · Farmacia Okami Cénit",
+  "zone": "farmacia-cenit",
+  "at": [
+   8,
+   3
+  ],
+  "skill": "negociacion",
+  "minLevel": 4,
+  "pay": 120,
+  "shift": [
+   16,
+   24
+  ],
+  "employer": "okami",
+  "desc": "Caja, reposición y paciencia con los clientes."
+ },
+ {
+  "id": "obra-cenit-peon",
+  "name": "Peón · Obra de la Torre Kaiten II",
+  "zone": "vertice",
+  "at": [
+   162,
+   128
+  ],
+  "skill": "atletismo",
+  "minLevel": 4,
+  "pay": 140,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Cargar, cavar y aguantar el sol.",
+  "obra": "caseta-obra-cenit"
+ },
+ {
+  "id": "obra-cenit-gruista",
+  "name": "Operador/a de grúa · Obra de la Torre Kaiten II",
+  "zone": "vertice",
+  "at": [
+   163,
+   126
+  ],
+  "skill": "conduccion",
+  "minLevel": 8,
+  "pay": 220,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Mover vigas a 80 metros sin matar a nadie.",
+  "obra": "caseta-obra-cenit"
+ },
+ {
+  "id": "obra-cenit-jefe",
+  "name": "Jefe/a de obra · Obra de la Torre Kaiten II",
+  "zone": "vertice",
+  "at": [
+   164,
+   133
+  ],
+  "skill": "reparacion",
+  "minLevel": 12,
+  "pay": 320,
+  "shift": [
+   7,
+   15
+  ],
+  "employer": "kaiten",
+  "desc": "Planos, plazos y gritos.",
+  "obra": "caseta-obra-cenit"
+ }
+]

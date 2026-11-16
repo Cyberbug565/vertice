@@ -1,0 +1,113 @@
+{
+ "id": "torre-aurora-p1",
+ "name": "Torre Aurora Logística · Planta 1: Centro de reparto",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#3a4038",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    5,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    7
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    20,
+    1
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-aurora-p1",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-aurora",
+  "floor": 1,
+  "access": "empleados",
+  "corp": "aurora"
+ }
+}

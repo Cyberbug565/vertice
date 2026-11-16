@@ -73,7 +73,7 @@
  {
   "id": "nomadas-yermo",
   "name": "Garaje de los Nómadas",
-  "zone": "yermo",
+  "zone": "vertice",
   "classes": [
    "todoterreno",
    "moto",

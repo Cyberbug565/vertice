@@ -1,0 +1,151 @@
+{
+ "id": "torre-aurora-p3",
+ "name": "Torre Aurora Logística · Planta 3: Almacén de alta seguridad",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#3a4038",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    6,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    8,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    10,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    12,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    14,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    16,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    18,
+    1
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    3,
+    11
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    8,
+    11
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    13,
+    11
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    18,
+    11
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-aurora-p3",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [
+  {
+   "faction": "aurora",
+   "count": 3,
+   "area": [
+    12,
+    7,
+    5
+   ]
+  }
+ ],
+ "tower": {
+  "id": "torre-aurora",
+  "floor": 3,
+  "access": "restringido",
+  "corp": "aurora"
+ }
+}

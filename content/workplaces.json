@@ -2,46 +2,46 @@
  {
   "id": "wp-muelles-ferro",
   "name": "Muelles de Ferro",
-  "zone": "ferro",
+  "zone": "vertice",
   "at": [
-   31,
-   6
+   50,
+   133
   ]
  },
  {
   "id": "wp-mercado-lumen",
   "name": "Mercado Lumen",
-  "zone": "ferro",
+  "zone": "vertice",
   "at": [
-   23,
-   38
+   39,
+   175
   ]
  },
  {
   "id": "wp-desguace",
   "name": "Desguace de Tomás",
-  "zone": "ferro",
+  "zone": "vertice",
   "at": [
-   44,
-   61
+   67,
+   206
   ]
  },
  {
   "id": "wp-generador",
   "name": "Generador del mercado",
-  "zone": "ferro",
+  "zone": "vertice",
   "at": [
-   27,
-   29
+   45,
+   163
   ]
  },
  {
   "id": "wp-esquina-kanal",
   "name": "Esquina de Kanal",
-  "zone": "ferro",
+  "zone": "vertice",
   "at": [
-   78,
-   43
+   113,
+   182
   ]
  },
  {
@@ -65,19 +65,19 @@
  {
   "id": "wp-plaza-cenit",
   "name": "Plaza Teselia",
-  "zone": "cenit",
+  "zone": "vertice",
   "at": [
-   94,
-   25
+   283,
+   156
   ]
  },
  {
   "id": "wp-avenida-cenit",
   "name": "Avenida central de Cénit",
-  "zone": "cenit",
+  "zone": "vertice",
   "at": [
-   43,
-   35
+   215,
+   169
   ]
  },
  {

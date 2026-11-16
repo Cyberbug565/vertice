@@ -5,6 +5,9 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { districts } from './districts.mjs';
 import { mapPoint, remapRefs, widenZone } from './widen.mjs';
+import { GRID, WASTE, scaleDistrict, remapToCity } from './merge.mjs';
+import { MAREA, enrichDistrict, mergeCity } from './v05.mjs';
+import { readdirSync, unlinkSync, existsSync, statSync, mkdirSync } from 'node:fs';
 import { DEALERS, REGION_OF_SLOT, CYBER_UPGRADES, HOUSE_SIZES, cars, clothing, cyberwareExtra, houseTemplates, perks, placeHousing, weapons } from './v04.mjs';
 
 const C = join(dirname(fileURLToPath(import.meta.url)), '../content');
@@ -111,7 +114,7 @@ const workplaces = [
   { id: 'wp-plaza-cenit', name: 'Plaza Teselia', zone: 'cenit', at: [84, 22] },
   { id: 'wp-avenida-cenit', name: 'Avenida central de Cénit', zone: 'cenit', at: [40, 32] },
 ];
-for (const it of interiors) {
+function buildInterior(it) {
   const [w, h, exit] = SIZE[it.size];
   const blocks = [], props = [], objects = [...(it.objects ?? [])];
   for (const [x, y, ww, hh] of it.counters ?? []) blocks.push({ type: 'counter', rect: [x, y, ww, hh], color: it.wall });
@@ -131,15 +134,33 @@ for (const it of interiors) {
   }
   zones.push({
     id: it.id, name: it.name, kind: 'interior', width: w, height: h, danger: it.danger, base: it.base, wallColor: it.wall, blocks, props,
-    doors: [{ id: `salida-${it.id}`, name: `Salida a la calle (${ZNAME[it.out[0]] ?? it.out[0]})`, at: exit, to: { zone: it.out[0], at: [it.out[1], it.out[2]] }, danger: 'public' }],
+    doors: [{ id: `salida-${it.id}`, name: it.out[0] === 'vertice' ? 'Salida a la calle' : `Salida a la calle (${ZNAME[it.out[0]] ?? it.out[0]})`, at: exit, to: { zone: it.out[0], at: [it.out[1], it.out[2]] }, danger: 'public' }],
     objects, waypoints: [[exit[0] - 2, exit[1]]], safePoint: [exit[0] - 2, exit[1]],
   });
 }
+for (const it of interiors) buildInterior(it);
 // Viviendas: portales en los edificios sin puerta y plantillas de interior.
 // El garaje de los Nómadas es un puesto al aire libre en El Yermo.
 exteriors.find((z) => z.id === 'yermo').objects.push({ id: 'yermo-garaje-nomada', name: 'Garaje de los Nómadas', at: mapPoint('yermo', 56, 43), kind: 'dealer', dealer: 'nomadas-yermo' });
-const houses = placeHousing(exteriors);
-for (const z of exteriors) write(`zones/${z.id}.json`, z);
+// v0.5: ciudad única. Sin puertas entre distritos; cada distrito se escala (×1,33), se enriquece y se funde en «vertice».
+for (const z of exteriors) z.doors = z.doors.filter((d) => !GRID[d.to.zone]);
+const scaled = exteriors.map(scaleDistrict);
+const posts = [], extraZones = [];
+scaled.forEach((z, i) => { const r = enrichDistrict(z, 500 + i * 13); for (const it of r.interiors) buildInterior(it); extraZones.push(...r.extraZones); posts.push(...r.posts); });
+const houses = placeHousing(scaled);
+for (const h of houses) { h.district = h.zone; h.zone = 'vertice'; }
+const city = mergeCity(scaled, { city: 'Ciudad Vértice' });
+write('zones/vertice.json', city.zone);
+for (const z of [...extraZones, ...city.bases]) write(`zones/${z.id}.json`, z);
+for (const id of Object.keys(GRID)) if (existsSync(join(C, `zones/${id}.json`))) unlinkSync(join(C, `zones/${id}.json`));
+write('posts.json', posts);
+{
+  const world = read('world.json');
+  world.districts = world.districts.filter((d) => !WASTE[d.zone]).map((d) => ({ ...d, rect: city.zone.districts.find((m) => m.id === d.zone).rect }));
+  for (const [id, w] of Object.entries(WASTE)) world.districts.push({ zone: id, gx: w.cell[0], gy: w.cell[1], color: w.color, desc: w.desc, police: 'Nula', factions: w.gangs.map((g) => g.faction), rect: city.zone.districts.find((m) => m.id === id).rect });
+  write('world.json', world);
+  write('factions.json', [...read('factions.json').filter((f) => f.id !== 'marea'), MAREA]);
+}
 for (const z of zones) write(`zones/${z.id}.json`, finalize(z));
 for (const t of houseTemplates()) write(`zones/${t.id}.json`, t);
 write('houses.json', houses);
@@ -374,3 +395,21 @@ write('dealers.json', DEALERS);
   write('shops.json', shops);
 }
 console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.length} armas y munición, ${cars().length} coches, ${houses.length} viviendas.`);
+
+// ---------------------------------------------------------------- v0.5: todo lo que apunta a un distrito pasa a la ciudad única
+{
+  const shops = read('shops.json').filter((x) => x.id !== 'farmacia');
+  shops.push({ id: 'farmacia', name: 'Farmacia', owner: 'okami', zone: 'vertice', stock: { estim: 12, analgesicos: 30, estabilizador: 6, 'agua-filtrada': 20, 'bebida-isotonica': 12, 'barrita-proteica': 20 }, buys: ['medicina'], priceMult: 1.05, security: 16 });
+  write('shops.json', shops);
+  const walk = (dir) => readdirSync(dir).flatMap((f) => { const p = join(dir, f); return statSync(p).isDirectory() ? walk(p) : f.endsWith('.json') ? [p] : []; });
+  let changed = 0;
+  for (const f of walk(C)) {
+    if (/world\.json$|ambar\.json$|zones[\/\\]vertice\.json$/.test(f)) continue;
+    const before = readFileSync(f, 'utf8');
+    const data = JSON.parse(before);
+    remapToCity(data);
+    const after = JSON.stringify(data, null, 1) + '\n';
+    if (after !== before && JSON.stringify(JSON.parse(before)) !== JSON.stringify(data)) { writeFileSync(f, after); changed++; }
+  }
+  console.log(`v0.5: ciudad única ${city.zone.width}×${city.zone.height}, ${posts.length} puestos fijos, ${extraZones.length + city.bases.length} zonas nuevas, ${changed} ficheros traducidos.`);
+}

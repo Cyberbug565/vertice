@@ -15,7 +15,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 beforeAll(async () => {
   if (DB) { const c = new pg.Client({ connectionString: DB }); await c.connect(); await c.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;'); await c.end(); }
   app = await createApp({ port: 0, host: '127.0.0.1', databaseUrl: DB, pgliteDir: 'memory://', ambientNpcs: 4, crowdNpcs: 0, speedScale: 6, lingerSeconds: 1, logLevel: 'warn',
-    cityHourOffset: 10 - ((Date.now() / 60000) % 24), needsScale: 1, downedSeconds: 2, jobTimeScale: 0.05 });
+    cityHourMs: 60000, cityHourOffset: 10 - ((Date.now() / 60000) % 24), needsScale: 1, downedSeconds: 2, jobTimeScale: 0.05 });
   base = `http://127.0.0.1:${app.port}`;
 });
 afterAll(async () => { for (const c of clients) c.close(); await app?.close(); });
@@ -36,12 +36,16 @@ const near = (a: string, x: number, y: number) => { E(a).x = x; E(a).y = y; E(a)
 
 describe('v0.3 · combate, red y ciudad', () => {
   it('la megápolis tiene siete distritos conectados y las bandas y la policía patrullan', () => {
-    const ext = [...app.world.zones.values()].filter((z) => z.def.kind === 'exterior').map((z) => z.id).sort();
-    expect(ext).toEqual(['arrabal', 'cenit', 'colinas', 'ferro', 'forja', 'neon-rojo', 'yermo']);
+    // v0.5: una sola zona exterior con todos los distritos dentro.
+    const ext = [...app.world.zones.values()].filter((z) => z.def.kind === 'exterior').map((z) => z.id);
+    expect(ext).toEqual(['vertice']);
+    const city = app.world.zones.get('vertice')!;
+    expect(city.def.districts.map((d) => d.id)).toEqual(expect.arrayContaining(['arrabal', 'cenit', 'colinas', 'ferro', 'forja', 'neon-rojo', 'yermo', 'muelles-viejos']));
     const npcs = [...app.world.entities.values()];
-    expect(npcs.some((e) => e.npcType === 'gang' && e.faction === 'engranajes' && e.zone.id === 'forja')).toBe(true);
-    expect(npcs.some((e) => e.npcType === 'police' && e.zone.id === 'cenit')).toBe(true);
-    expect(npcs.some((e) => e.npcType === 'police' && e.zone.id === 'forja')).toBe(false); // la PCV no entra en Forja
+    const dist = (e: any) => app.world.districtOf(e.zone, e.x, e.y);
+    expect(npcs.some((e) => e.npcType === 'gang' && e.faction === 'engranajes' && dist(e) === 'forja')).toBe(true);
+    expect(npcs.some((e) => e.npcType === 'police' && dist(e) === 'cenit')).toBe(true);
+    expect(npcs.some((e) => e.npcType === 'police' && dist(e) === 'forja')).toBe(false); // la PCV no entra en Forja
   });
 
   it('arma de fuego: gasta munición, tiene alcance y deja un cuerpo que se puede cargar (y pesa)', async () => {
@@ -165,8 +169,9 @@ describe('v0.3 · combate, red y ciudad', () => {
   });
 
   it('nivel de detalle: sin jugadores en una zona, sus transeúntes no se mueven', async () => {
-    const z = app.world.zones.get('yermo')!;
-    const civ = [...z.entities].find((e) => e.npc && e.npcType !== 'essential')!;
+    // En la ciudad única solo se simula lo que está cerca de algún jugador: El Yermo queda lejos de todos.
+    const z = app.world.zones.get('vertice')!;
+    const civ = [...z.entities].find((e) => e.npc && e.npcType !== 'essential' && app.world.districtOf(z, e.x, e.y) === 'yermo' && ![...z.players].some((p) => Math.hypot(p.x - e.x, p.y - e.y) < 160))!;
     const x0 = civ.x, y0 = civ.y;
     civ.path = [[civ.x + 5, civ.y]];
     await sleep(600);

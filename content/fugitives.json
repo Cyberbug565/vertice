@@ -3,11 +3,11 @@
   "id": "rata-mendez",
   "name": "«Rata» Méndez",
   "crime": "Robo de cromo a mano armada",
-  "zone": "ferro",
+  "zone": "vertice",
   "area": [
-   44,
-   62,
-   6
+   67,
+   207,
+   8
   ],
   "bounty": 400,
   "hp": 45,
@@ -26,11 +26,11 @@
   "id": "viuda-okoro",
   "name": "«La Viuda» Okoro",
   "crime": "Extorsión en Kanal",
-  "zone": "ferro",
+  "zone": "vertice",
   "area": [
-   78,
-   43,
-   8
+   113,
+   182,
+   11
   ],
   "bounty": 650,
   "hp": 55,
@@ -48,11 +48,11 @@
   "id": "chispas-lund",
   "name": "«Chispas» Lund",
   "crime": "Sabotaje de grúas en el muelle",
-  "zone": "ferro",
+  "zone": "vertice",
   "area": [
-   21,
-   6,
-   10
+   37,
+   133,
+   13
   ],
   "bounty": 300,
   "hp": 40,
@@ -71,11 +71,11 @@
   "id": "dex-varga",
   "name": "Dex Varga",
   "crime": "Robo de datos a Teselia",
-  "zone": "cenit",
+  "zone": "vertice",
   "area": [
-   37,
-   68,
-   6
+   207,
+   213,
+   8
   ],
   "bounty": 900,
   "hp": 60,

@@ -7,7 +7,7 @@ const rect = z.tuple([z.number().int(), z.number().int(), z.number().int().posit
 export const DangerLevel = z.enum(['protected', 'public', 'disputed']);
 export type DangerLevel = z.infer<typeof DangerLevel>;
 
-export const GROUND_TYPES = ['void', 'asphalt', 'sidewalk', 'plaza', 'market', 'dirt', 'water', 'bridge', 'wood', 'tile', 'metal', 'crosswalk', 'deck', 'gravel', 'grass', 'sand'] as const;
+export const GROUND_TYPES = ['void', 'asphalt', 'sidewalk', 'plaza', 'market', 'dirt', 'water', 'bridge', 'wood', 'tile', 'metal', 'crosswalk', 'deck', 'gravel', 'grass', 'sand', 'alley'] as const;
 export type GroundType = (typeof GROUND_TYPES)[number];
 export const BLOCKING_GROUND: ReadonlySet<GroundType> = new Set(['void', 'water']);
 
@@ -28,12 +28,12 @@ export const ZoneSchema = z.object({
     style: z.enum(['mega', 'block', 'shop', 'club', 'clinic', 'industrial', 'tower', 'arcology', 'spire', 'glass']),
     color: z.string(), sign: z.string().optional(), signColor: z.string().optional(),
   })).default([]),
-  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
+  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
   skybridges: z.array(z.object({ from: xy, to: xy, z: z.number(), color: z.string().optional() })).default([]),
   doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional(), hidden: z.string().optional() })).default([]),
   objects: z.array(z.object({
     id: z.string(), name: z.string(), at: xy,
-    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty']),
+    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot']),
     dialog: z.string().optional(), shop: z.string().optional(), workplace: z.string().optional(), dealer: z.string().optional(),
     sleep: z.object({ quality: z.number().min(0).max(1), price: z.number().int().nonnegative().default(0) }).optional(),
   })).default([]),
@@ -50,6 +50,17 @@ export const ZoneSchema = z.object({
   police: z.number().int().nonnegative().default(0),
   /** Miembros de bandas y facciones que pasean por la zona. */
   gangs: z.array(z.object({ faction: z.string(), count: z.number().int().positive(), area: z.tuple([z.number(), z.number(), z.number()]).optional() })).default([]),
+  /** v0.5: la ciudad única guarda sus distritos (rectángulo, policía, población, bandas). */
+  districts: z.array(z.object({
+    id: z.string(), name: z.string(), rect, police: z.number().int().default(0), ambient: z.number().int().default(0), sleepQuality: z.number().optional(), danger: DangerLevel.default('public'),
+    gangs: z.array(z.object({ faction: z.string(), count: z.number().int().positive(), area: z.tuple([z.number(), z.number(), z.number()]).optional() })).default([]),
+    safePoint: xy, waypoints: z.array(xy).default([]),
+  })).default([]),
+  /** Planta de una torre corporativa (acceso: público, empleados o restringido). */
+  tower: z.object({ id: z.string(), floor: z.number().int(), access: z.enum(['publico', 'empleados', 'restringido']), corp: z.string() }).optional(),
+  /** Base de una banda o de narcos: sus miembros atacan a quien no sea de los suyos. */
+  gangBase: z.object({ faction: z.string(), boss: z.string() }).optional(),
+  skywalk: z.boolean().optional(),
 });
 export type ZoneDef = z.infer<typeof ZoneSchema>;
 
@@ -275,7 +286,7 @@ export const AmbarPlanSchema = z.object({ id: z.string(), name: z.string(), pric
 export type AmbarPlanDef = z.infer<typeof AmbarPlanSchema>;
 export const WorldSchema = z.object({
   name: z.string(),
-  districts: z.array(z.object({ zone: z.string(), gx: z.number().int(), gy: z.number().int(), color: z.string(), desc: z.string(), police: z.string(), factions: z.array(z.string()) })),
+  districts: z.array(z.object({ zone: z.string(), gx: z.number().int(), gy: z.number().int(), color: z.string(), desc: z.string(), police: z.string(), factions: z.array(z.string()), rect: rect.optional() })),
 });
 export type WorldDef = z.infer<typeof WorldSchema>;
 
@@ -295,8 +306,13 @@ export const DealerSchema = z.object({ id: z.string(), name: z.string(), zone: z
 export type DealerDef = z.infer<typeof DealerSchema>;
 export const HOUSE_SIZES = ['estudio', 'piso', 'loft', 'atico', 'villa'] as const;
 export const HouseSchema = z.object({
-  id: z.string(), name: z.string(), building: z.string(), zone: z.string(), size: z.enum(HOUSE_SIZES), template: z.string(), price: z.number().int(), floor: z.number().int(),
+  id: z.string(), name: z.string(), building: z.string(), zone: z.string(), size: z.enum(HOUSE_SIZES), template: z.string(), price: z.number().int(), floor: z.number().int(), district: z.string().default(''),
 });
+export const PostSchema = z.object({
+  id: z.string(), name: z.string(), zone: z.string(), at: xy, skill: z.string(), minLevel: z.number().int(), pay: z.number().int(), shift: z.tuple([z.number().int(), z.number().int()]),
+  employer: z.string(), desc: z.string(), obra: z.string().optional(),
+});
+export type PostDef = z.infer<typeof PostSchema>;
 export type HouseDef = z.infer<typeof HouseSchema>;
 
 export const ContentSchema = z.object({
@@ -333,5 +349,6 @@ export const ContentSchema = z.object({
   cars: z.array(CarSchema),
   dealers: z.array(DealerSchema),
   houses: z.array(HouseSchema),
+  posts: z.array(PostSchema),
 });
 export type Content = z.infer<typeof ContentSchema>;

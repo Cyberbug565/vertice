@@ -1,0 +1,114 @@
+{
+ "id": "torre-halcon-p0",
+ "name": "Torre Halcón Dynamics · Vestíbulo",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2c3444",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    8,
+    4,
+    6,
+    1
+   ],
+   "color": "#2c3444"
+  }
+ ],
+ "props": [
+  {
+   "type": "plant",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    19,
+    2
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    4,
+    11
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    11
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    11,
+    1
+   ],
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-torre-halcon",
+   "name": "Salida a la calle",
+   "at": [
+    21,
+    7
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     289,
+     197
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "ascensor-torre-halcon-p0",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-halcon",
+  "floor": 0,
+  "access": "publico",
+  "corp": "halcon"
+ }
+}

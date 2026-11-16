@@ -32,7 +32,12 @@ export class Combat {
   spawnPopulation() {
     for (const z of this.w.zones.values()) {
       for (const g of z.def.gangs) for (let i = 0; i < g.count; i++) this.spawnFactionNpc(z, g.faction, 'gang', g.area);
-      for (let i = 0; i < z.def.police; i++) this.spawnFactionNpc(z, 'pcv', 'police');
+      // Ciudad única: bandas y patrullas por distrito.
+      for (const d of z.def.districts) {
+        for (const g of d.gangs) for (let i = 0; i < g.count; i++) this.spawnFactionNpc(z, g.faction, 'gang', g.area);
+        for (let i = 0; i < d.police; i++) { const wp = d.waypoints[Math.floor(this.rng() * d.waypoints.length)]; this.spawnFactionNpc(z, 'pcv', 'police', wp ? [wp[0], wp[1], 6] : undefined); }
+      }
+      if (!z.def.districts.length) for (let i = 0; i < z.def.police; i++) this.spawnFactionNpc(z, 'pcv', 'police');
     }
   }
   spawnFactionNpc(z: Zone, faction: string, type: Entity['npcType'], area?: [number, number, number], at?: { x: number; y: number }): Entity | null {
@@ -472,7 +477,7 @@ export class Combat {
   private crime(c: PlayerConn, target: Entity, lethal: boolean, kind: 'attempt' | 'hit' | 'down' | 'kill', legit?: boolean, factor = 1) {
     const p = c.p!;
     if ((legit ?? this.claimable(target, p).length > 0) && kind !== 'kill') return;
-    const police = c.e!.zone.def.police || (c.e!.zone.def.kind === 'interior' ? 1 : 0);
+    const police = this.policeAt(c.e!);
     if (!police) return;
     const flags = perkMods(this.c, p).flags;
     if (flags.has('fantasma') && ![...c.e!.zone.query(c.e!.x, c.e!.y, 18)].some((o) => o.npcType === 'police' || o.npcType === 'hierro')) return;
@@ -521,7 +526,7 @@ export class Combat {
     else {
       this.notice(c, 'bad', `${target.name} te pilla.`);
       this.provokeNpc(target, c.e!, false);
-      if (target.npcType === 'civil') await this.sv.addWanted(c, c.e!.zone.def.police ? 0.8 : 0, 'intento de robo');
+      if (target.npcType === 'civil') await this.sv.addWanted(c, this.policeAt(c.e!) ? 0.8 : 0, 'intento de robo');
     }
   }
 
@@ -724,7 +729,7 @@ export class Combat {
 
   factionsView(p: PlayerState): FactionsView {
     const name = (id: string) => this.c.factions.find((f) => f.id === id)?.name ?? id;
-    const zname = (id: string) => this.w.zones.get(id)?.def.name ?? id;
+    const zname = (id: string) => this.w.property.dname(id);
     return { factions: this.c.factions.filter((f) => f.id !== 'calle' && f.id !== 'independiente').map((f) => {
       const rep = p.rep.get(f.id) ?? 0;
       const standing = rep >= 50 ? 'Aliado' : rep >= 20 ? 'Amistoso' : rep > f.hostileBelow ? 'Neutral' : rep > -60 ? 'Hostil' : 'Enemigo jurado';
@@ -735,7 +740,7 @@ export class Combat {
 
   // ================================================================ Rescate Ámbar
   ambarView(p: PlayerState): AmbarView {
-    const zname = (id: string) => this.w.zones.get(id)?.def.name ?? id;
+    const zname = (id: string) => this.w.property.dname(id);
     return {
       active: p.ambar && p.ambar.expiresAt > Date.now() ? { plan: p.ambar.plan, name: this.c.ambar.find((x) => x.id === p.ambar!.plan)?.name ?? p.ambar.plan, usesLeft: p.ambar.usesLeft, expiresInMin: Math.round((p.ambar.expiresAt - Date.now()) / 60000) } : null,
       plans: this.c.ambar.map((x) => ({ ...x, zones: x.zones.map(zname) })), money: p.money,
@@ -766,9 +771,12 @@ export class Combat {
     p.ambar = { id, plan: plan.id, usesLeft: plan.uses, expiresAt: expires.getTime() };
     this.notice(c, 'good', `Suscripción ${plan.name} activa durante ${plan.days} días de juego.`);
   }
-  private districtOf(z: Zone): string {
-    if (z.def.kind === 'exterior') return z.id;
-    return z.def.doors[0]?.to.zone ?? z.id;
+  /** Patrullas de la PCV en el distrito donde está la entidad (los interiores cuentan como vigilados salvo bases y torres). */
+  policeAt(e: Entity) {
+    const z = e.zone;
+    if (z.def.districts.length) return z.districtAt(e.x, e.y)?.police ?? 1;
+    if (z.def.kind === 'interior') return z.def.gangBase ? 0 : 1;
+    return z.def.police;
   }
   /** Al caer herido de muerte: si hay suscripción y cobertura, Ámbar acude. */
   onPlayerDowned(c: PlayerConn | undefined, p: PlayerState, e: Entity) {
@@ -776,7 +784,7 @@ export class Combat {
     const sub = p.ambar;
     if (!sub || sub.expiresAt < Date.now() || sub.usesLeft <= 0) { this.notice(c, 'warn', 'No tienes suscripción a Rescate Ámbar: nadie vendrá a por ti salvo un jugador con un estimulante.'); return; }
     const plan = this.c.ambar.find((x) => x.id === sub.plan)!;
-    if (!plan.zones.includes(this.districtOf(e.zone))) { this.notice(c, 'warn', `${plan.name} no cubre ${e.zone.def.name}.`); return; }
+    if (!plan.zones.includes(this.w.districtOf(e.zone, e.x, e.y))) { this.notice(c, 'warn', `${plan.name} no cubre ${e.zone.def.name}.`); return; }
     const at = Date.now() + plan.arrival * 1000;
     p.downedUntil = Math.max(p.downedUntil, at + 4000);
     this.rescues.set(p.charId, { at, team: [], plan: plan.id });
@@ -832,7 +840,7 @@ export class Combat {
   private hierroTick() {
     for (const conn of this.w.conns.values()) {
       const p = conn.p, e = conn.e;
-      if (!p || !e || p.status !== 'alive' || p.wanted < 4 || e.zone.def.kind !== 'exterior' || e.zone.id === 'yermo') continue;
+      if (!p || !e || p.status !== 'alive' || p.wanted < 4 || e.zone.def.kind !== 'exterior' || (e.zone.def.districts.length ? !(e.zone.districtAt(e.x, e.y)?.police) : e.zone.id === 'yermo')) continue;
       const active = [...e.zone.entities].filter((o) => o.npcType === 'hierro' && o.hunting === p.charId);
       if (active.length) continue;
       for (let i = 0; i < 2; i++) {
@@ -898,7 +906,10 @@ export class Combat {
         if ((op.buffs.invisible ?? 0) > now || (op.buffs.senuelo ?? 0) > now) continue;
         const of = perkMods(this.c, op).flags;
         if (e.npcType === 'police' && op.wanted >= 2 && !of.has('sombra')) { e.aggro = o.id; e.aggroLethal = false; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
-        if (e.npcType === 'gang' && f && f.territory.includes(e.zone.id) && (op.rep.get(f.id) ?? 0) <= f.hostileBelow && !of.has('terror')) { e.aggro = o.id; e.aggroLethal = true; this.notice(o.conn, 'bad', `${f.name} te reconocen en su territorio: ¡te atacan!`); return true; }
+        // En la base de una banda (o en una planta restringida de una torre), quien no sea de los suyos es un intruso.
+        const intruder = (e.zone.def.gangBase?.faction === f?.id && (op.rep.get(f!.id) ?? 0) < 20) || (e.zone.def.tower?.access === 'restringido' && !this.w.posts.hasAccess(op, e.zone, true));
+        if (e.npcType === 'gang' && f && intruder && !of.has('terror')) { e.aggro = o.id; e.aggroLethal = !e.zone.def.tower; this.notice(o.conn, 'bad', e.zone.def.tower ? `Seguridad de ${f.name}: «¡Alto! No tiene autorización para esta planta.»` : `${f.name}: «¿Quién te ha dejado entrar?» ¡Te atacan!`); return true; }
+        if (e.npcType === 'gang' && f && f.territory.includes(this.w.districtOf(e.zone, e.x, e.y)) && (op.rep.get(f.id) ?? 0) <= f.hostileBelow && !of.has('terror')) { e.aggro = o.id; e.aggroLethal = true; this.notice(o.conn, 'bad', `${f.name} te reconocen en su territorio: ¡te atacan!`); return true; }
       }
     }
     return false;
@@ -1008,6 +1019,33 @@ export class Combat {
     this.w.send(c, { t: 'sheet', sheet: (this.sv as any).sheetOf(p) });
   }
 
+  /** Alijo de una base: solo se puede saquear con los guardias fuera de combate. Botín grande, enfado de la banda. */
+  private lootCd = new Map<string, number>();
+  async loot(c: PlayerConn, o: Entity) {
+    const p = c.p!, e = c.e!;
+    const base = e.zone.def.gangBase;
+    if (!base) throw new GameError('Aquí no hay nada que llevarse.');
+    if (Math.hypot(o.x - e.x, o.y - e.y) > 2.5) throw new GameError('Acércate al alijo.');
+    if ((this.lootCd.get(e.zone.id) ?? 0) > Date.now()) throw new GameError('Ya lo han vaciado. Volverán a llenarlo en unas horas.');
+    const guards = [...e.zone.entities].filter((x) => x.npcType === 'gang' && x.faction === base.faction && x.state !== 'downed');
+    if (guards.length && (p.rep.get(base.faction) ?? 0) < 40) {
+      for (const g of guards) { g.aggro = e.id; g.aggroLethal = true; }
+      throw new GameError(`Quedan ${guards.length} guardias en pie: te han visto. ¡Neutralízalos antes de tocar el alijo!`);
+    }
+    const amount = 600 + Math.floor(this.rng() * 1600);
+    const opId = `loot-${randomUUID()}`;
+    await this.credit(p, amount, opId, `Botín: ${e.zone.def.name}`);
+    const drug = 'neblina';
+    if (this.c.items.some((i) => i.id === drug)) {
+      p.inventory.set(drug, (p.inventory.get(drug) ?? 0) + 2);
+      void this.w.db.query(`INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,2) ON CONFLICT (character_id, def_id) DO UPDATE SET qty = inventory_items.qty + 2`, [randomUUID(), p.charId, drug]).catch(() => {});
+    }
+    this.lootCd.set(e.zone.id, Date.now() + 4 * this.c.manifest.cityHourMs);
+    await this.repChange(c, base.faction, -25, `${opId}:fac`);
+    this.w.progress.playerXp(p, 60);
+    this.w.send(c, { t: 'reward', title: `Has saqueado ${e.zone.def.name}`, lines: [`+${amount} €$`, `${base.boss} no lo va a olvidar: tu relación con la banda se desploma.`] });
+  }
+
   /** Cada segundo: PNJ derribados, reapariciones, rescates y Unidad Hierro. */
   async everySecond() {
     const now = Date.now();
@@ -1034,7 +1072,7 @@ export class Combat {
       this.respawnQueue.splice(this.respawnQueue.indexOf(r), 1);
       const z = this.w.zones.get(r.zone);
       const t = r.template as any;
-      if (z) { if (t.type === 'civil') this.w.spawnAmbient(z); else this.spawnFactionNpc(z, t.faction, t.type, t.area); }
+      if (z) { if (t.type === 'civil') this.w.spawnAmbient(z, t.near); else this.spawnFactionNpc(z, t.faction, t.type, t.area); }
     }
     await this.rescueTick();
     this.hierroTick();

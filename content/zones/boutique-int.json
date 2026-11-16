@@ -47,10 +47,10 @@
     4
    ],
    "to": {
-    "zone": "colinas",
+    "zone": "vertice",
     "at": [
-     73,
-     11
+     255,
+     25
     ]
    },
    "danger": "public"

@@ -17,7 +17,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 beforeAll(async () => {
   if (DB) { const c = new pg.Client({ connectionString: DB }); await c.connect(); await c.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;'); await c.end(); }
   app = await createApp({ port: 0, host: '127.0.0.1', databaseUrl: DB, pgliteDir: 'memory://', ambientNpcs: 4, crowdNpcs: 0, speedScale: 6, lingerSeconds: 1, logLevel: 'warn',
-    cityHourOffset: 10 - ((Date.now() / 60000) % 24), needsScale: 1, downedSeconds: 2, jobTimeScale: 0.05 });
+    cityHourMs: 60000, cityHourOffset: 10 - ((Date.now() / 60000) % 24), needsScale: 1, downedSeconds: 2, jobTimeScale: 0.05 });
   base = `http://127.0.0.1:${app.port}`;
 });
 afterAll(async () => { for (const c of clients) c.close(); await app?.close(); });
@@ -61,7 +61,7 @@ describe('v0.2 · vivir en la ciudad', () => {
     const p = P('compradora');
     for (const it of ['fideos-krill', 'agua-filtrada']) p.inventory.set(it, 0);
     await b.enterDoor('Salida');
-    await b.moveAndArrive(48.5, 40.5);
+    await b.moveAndArrive(73.5, 178.5);
     const money = p.money;
     p.thirst = 75;
     await b.waitFor((m) => m.t === 'notice' && /vas a comprar/.test(m.text), 8000, 'recado de compra');
@@ -158,7 +158,7 @@ describe('v0.2 · vivir en la ciudad', () => {
   it('red de mercado: comprar sube el precio, vender lo baja y las corporaciones revisan márgenes', async () => {
     const { b } = await join('mercader');
     await b.enterDoor('Salida');
-    await b.moveAndArrive(48.5, 40.5);
+    await b.moveAndArrive(73.5, 178.5);
     const vend = b.findEntity((e) => e.objKind === 'vending')!;
     const shopMsg = b.waitFor((m) => m.t === 'shop', 4000, 'tienda');
     await b.cmd({ t: 'interact', target: vend.id });
@@ -190,7 +190,7 @@ describe('v0.2 · vivir en la ciudad', () => {
     await app.db.query("INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,4850,5000,'prueba')", [op(), p.charId]);
     await app.db.query('UPDATE characters SET money=5000 WHERE id=$1', [p.charId]);
     await b.enterDoor('Salida');
-    await b.moveAndArrive(24.5, 57.5);
+    await b.moveAndArrive(41.5, 201.5);
     await b.enterDoor('Clínica');
     await b.interactAndDialog('Sato');
     const cl = b.waitFor((m) => m.t === 'clinic', 4000, 'consulta');

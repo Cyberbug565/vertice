@@ -1,0 +1,96 @@
+{
+ "id": "torre-kaiten-p4",
+ "name": "Arcología Kaiten · Planta 4: Ático de la dirección",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "wood",
+ "wallColor": "#4a5a4a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    11,
+    7
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    19,
+    11
+   ]
+  },
+  {
+   "type": "neon",
+   "at": [
+    11,
+    1
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    4,
+    11
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-kaiten-p4",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [
+  {
+   "faction": "kaiten",
+   "count": 3,
+   "area": [
+    12,
+    7,
+    5
+   ]
+  }
+ ],
+ "tower": {
+  "id": "torre-kaiten",
+  "floor": 4,
+  "access": "restringido",
+  "corp": "kaiten"
+ }
+}

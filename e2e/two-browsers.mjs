@@ -84,7 +84,7 @@ try {
   });
   await step('Salir a la calle (interior → exterior)', async () => {
     await clickEntity(A, (e) => e.kind === 'door');
-    await waitZone(A, 'ferro');
+    await waitZone(A, 'vertice');
     await A.waitForTimeout(1200);
     await A.screenshot({ path: `${OUT}02-calle-ferro.png` });
   });
@@ -102,7 +102,7 @@ try {
   });
   await step('El segundo jugador se une a la misma instancia del encargo', async () => {
     await clickEntity(B, (e) => e.kind === 'door');
-    await waitZone(B, 'ferro');
+    await waitZone(B, 'vertice');
     await B.waitForTimeout(500);
     await clickEntity(B, (e) => e.kind === 'door' && e.name.includes('Relé'));
     await waitZone(B, 'bar-rele');
@@ -138,7 +138,7 @@ try {
   });
   await step('Salir del bar de vuelta a la calle', async () => {
     await clickEntity(A, (e) => e.kind === 'door');
-    await waitZone(A, 'ferro');
+    await waitZone(A, 'vertice');
     const fps = await A.evaluate(() => window.__vt.view.app.ticker.FPS);
     results.push({ name: 'FPS (Chromium sin GPU, SwiftShader)', ok: true, value: Math.round(fps) });
   });

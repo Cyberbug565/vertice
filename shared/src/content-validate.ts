@@ -15,7 +15,7 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
     needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: get('cyberware.json'), ripperdocs: get('ripperdocs.json'),
     professions: get('professions.json'), workplaces: get('workplaces.json'), jobs: get('jobs.json'), fugitives: get('fugitives.json'),
     quickhacks: get('quickhacks.json'), ambar: get('ambar.json'), world: get('world.json'),
-    perks: get('perks.json'), cars: get('cars.json'), dealers: get('dealers.json'), houses: get('houses.json'),
+    perks: get('perks.json'), cars: get('cars.json'), dealers: get('dealers.json'), houses: get('houses.json'), posts: get('posts.json'),
   };
   const parsed = ContentSchema.safeParse(raw);
   if (!parsed.success) throw new Error('Contenido inválido:\n' + parsed.error.issues.slice(0, 20).map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n'));
@@ -27,6 +27,7 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
 export function validateContent(c: Content): string[] {
   const errs: string[] = [];
   const zoneIds = new Set(c.zones.map((z) => z.id));
+  const districtIds = new Set(c.zones.flatMap((z) => z.districts.map((d) => d.id)));
   const grids = new Map(c.zones.map((z) => [z.id, buildZoneGrid(z)]));
   const itemIds = new Set(c.items.map((i) => i.id));
   const factionIds = new Set(c.factions.map((f) => f.id));
@@ -161,7 +162,7 @@ export function validateContent(c: Content): string[] {
   for (const it of c.items) if (it.weapon?.ammo && !itemIds.has(it.weapon.ammo)) errs.push(`arma ${it.id}: munición ${it.weapon.ammo}`);
   for (const f of c.factions) {
     for (const r of Object.keys(f.relations)) if (!factionIds.has(r)) errs.push(`facción ${f.id}: relación con ${r} desconocida`);
-    for (const z of f.territory) if (!zoneIds.has(z)) errs.push(`facción ${f.id}: territorio ${z}`);
+    for (const z of f.territory) if (!zoneIds.has(z) && !districtIds.has(z)) errs.push(`facción ${f.id}: territorio ${z}`);
     if (f.weapon && !itemIds.has(f.weapon)) errs.push(`facción ${f.id}: arma ${f.weapon}`);
   }
   for (const z of c.zones) for (const g of z.gangs) if (!factionIds.has(g.faction)) errs.push(`${z.id}: banda ${g.faction}`);
@@ -177,10 +178,11 @@ export function validateContent(c: Content): string[] {
   const housingObjs = new Set(c.zones.flatMap((z) => z.objects.filter((o) => o.kind === 'housing').map((o) => o.id)));
   for (const h of c.houses) { if (!housingObjs.has(h.building)) errs.push(`casa ${h.id}: portal ${h.building}`); if (!zoneIds.has(h.template)) errs.push(`casa ${h.id}: plantilla ${h.template}`); }
   for (const z of c.zones) for (const o of z.objects) if (o.kind === 'dealer' && !c.dealers.some((d) => d.id === o.dealer)) errs.push(`${z.id}/${o.id}: concesionario ${o.dealer}`);
+  for (const p of c.posts) { if (!zoneIds.has(p.zone)) errs.push(`puesto ${p.id}: zona ${p.zone}`); else walk(p.zone, p.at, `puesto ${p.id}`); if (!skillIds.has(p.skill)) errs.push(`puesto ${p.id}: habilidad ${p.skill}`); }
   for (const it of c.items) for (const k of Object.keys(it.wear?.mods.skills ?? {})) if (!skillIds.has(k)) errs.push(`prenda ${it.id}: habilidad ${k}`);
   for (const cw of c.cyberware) for (const k of Object.keys(cw.effects.skills ?? {})) if (!skillIds.has(k)) errs.push(`ciberware ${cw.id}: habilidad ${k}`);
-  for (const d of c.world.districts) if (!zoneIds.has(d.zone)) errs.push(`mundo: distrito ${d.zone}`);
-  for (const p of c.ambar) for (const z of p.zones) if (!zoneIds.has(z)) errs.push(`Ámbar ${p.id}: zona ${z}`);
+  for (const d of c.world.districts) if (!zoneIds.has(d.zone) && !districtIds.has(d.zone)) errs.push(`mundo: distrito ${d.zone}`);
+  for (const p of c.ambar) for (const z of p.zones) if (!zoneIds.has(z) && !districtIds.has(z)) errs.push(`Ámbar ${p.id}: zona ${z}`);
   const cells = new Set<string>();
   for (const d of c.world.districts) { const k = `${d.gx},${d.gy}`; if (cells.has(k)) errs.push(`mundo: dos distritos en ${k}`); cells.add(k); }
   return errs;

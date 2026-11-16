@@ -47,10 +47,10 @@
     4
    ],
    "to": {
-    "zone": "forja",
+    "zone": "vertice",
     "at": [
-     42,
-     11
+     364,
+     137
     ]
    },
    "danger": "public"

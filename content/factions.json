@@ -485,5 +485,32 @@
   "hp": 40,
   "defense": 10,
   "chrome": []
+ },
+ {
+  "id": "marea",
+  "name": "Cártel de la Marea",
+  "kind": "gang",
+  "desc": "Narcotraficantes que mueven sintéticos por los muelles viejos. Pagan bien y matan mejor.",
+  "color": "#2a8aaa",
+  "archetype": "Cártel de narcotráfico portuario",
+  "territory": [
+   "muelles-viejos",
+   "ferro"
+  ],
+  "relations": {
+   "pcv": -60,
+   "hermandad-sol": -50,
+   "hojas-rojas": 30,
+   "chatarreros": 20,
+   "unidad-hierro": -70
+  },
+  "hostileBelow": -20,
+  "weapon": "subfusil",
+  "hp": 60,
+  "defense": 14,
+  "chrome": [
+   "ojos",
+   "brazo_der"
+  ]
  }
 ]

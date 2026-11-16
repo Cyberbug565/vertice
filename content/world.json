@@ -13,6 +13,12 @@
     "okami",
     "ambar",
     "pcv"
+   ],
+   "rect": [
+    158,
+    11,
+    141,
+    98
    ]
   },
   {
@@ -25,6 +31,12 @@
    "factions": [
     "kitsune",
     "furias"
+   ],
+   "rect": [
+    308,
+    11,
+    141,
+    98
    ]
   },
   {
@@ -40,6 +52,12 @@
     "chatarreros",
     "hojas-rojas",
     "furias"
+   ],
+   "rect": [
+    9,
+    125,
+    139,
+    93
    ]
   },
   {
@@ -55,6 +73,12 @@
     "teselia",
     "aurora",
     "pcv"
+   ],
+   "rect": [
+    158,
+    123,
+    141,
+    98
    ]
   },
   {
@@ -67,6 +91,12 @@
    "factions": [
     "engranajes",
     "aurora"
+   ],
+   "rect": [
+    308,
+    123,
+    141,
+    98
    ]
   },
   {
@@ -79,6 +109,12 @@
    "factions": [
     "nomadas-polvo",
     "saqueadores"
+   ],
+   "rect": [
+    465,
+    122,
+    128,
+    100
    ]
   },
   {
@@ -91,6 +127,97 @@
    "factions": [
     "hermandad-sol",
     "voces-vacio"
+   ],
+   "rect": [
+    8,
+    235,
+    141,
+    98
+   ]
+  },
+  {
+   "zone": "muelles-viejos",
+   "gx": 0,
+   "gy": 0,
+   "color": "#4a7a9a",
+   "desc": "Dársenas abandonadas y almacenes oxidados. Aquí descarga el Cártel de la Marea.",
+   "police": "Nula",
+   "factions": [
+    "marea"
+   ],
+   "rect": [
+    8,
+    8,
+    142,
+    104
+   ]
+  },
+  {
+   "zone": "descampado-norte",
+   "gx": 3,
+   "gy": 0,
+   "color": "#8a7a5a",
+   "desc": "Solares, chabolas y ruinas de una antigua refinería. Territorio de saqueadores.",
+   "police": "Nula",
+   "factions": [
+    "saqueadores"
+   ],
+   "rect": [
+    458,
+    8,
+    142,
+    104
+   ]
+  },
+  {
+   "zone": "poligono",
+   "gx": 1,
+   "gy": 2,
+   "color": "#7a5a5a",
+   "desc": "Naves industriales cerradas. Las Hojas Rojas guardan aquí lo que no quieren que vea la PCV.",
+   "police": "Nula",
+   "factions": [
+    "hojas-rojas"
+   ],
+   "rect": [
+    158,
+    232,
+    142,
+    104
+   ]
+  },
+  {
+   "zone": "vertedero",
+   "gx": 2,
+   "gy": 2,
+   "color": "#6a7a4a",
+   "desc": "Montañas de chatarra y talleres ilegales de los Chatarreros.",
+   "police": "Nula",
+   "factions": [
+    "chatarreros"
+   ],
+   "rect": [
+    308,
+    232,
+    142,
+    104
+   ]
+  },
+  {
+   "zone": "cementerio-trenes",
+   "gx": 3,
+   "gy": 2,
+   "color": "#5a5a6a",
+   "desc": "Vagones oxidados y túneles de mantenimiento. Base de Los Engranajes.",
+   "police": "Nula",
+   "factions": [
+    "engranajes"
+   ],
+   "rect": [
+    458,
+    232,
+    142,
+    104
    ]
   }
  ]

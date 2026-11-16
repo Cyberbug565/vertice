@@ -1,0 +1,83 @@
+{
+ "id": "torre-teselia-p6",
+ "name": "Aguja Teselia · Planta 6: Azotea",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "deck",
+ "wallColor": "#262c48",
+ "blocks": [],
+ "props": [
+  {
+   "type": "antenna",
+   "at": [
+    3,
+    3
+   ],
+   "blocking": false,
+   "z": 4
+  },
+  {
+   "type": "crate",
+   "at": [
+    18,
+    3
+   ]
+  },
+  {
+   "type": "pipe",
+   "at": [
+    5,
+    11
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-teselia-p6",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [
+  {
+   "faction": "teselia",
+   "count": 2,
+   "area": [
+    12,
+    7,
+    5
+   ]
+  }
+ ],
+ "tower": {
+  "id": "torre-teselia",
+  "floor": 6,
+  "access": "restringido",
+  "corp": "teselia"
+ }
+}

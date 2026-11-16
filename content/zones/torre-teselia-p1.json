@@ -1,0 +1,113 @@
+{
+ "id": "torre-teselia-p1",
+ "name": "Aguja Teselia · Planta 1: Tienda insignia",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#262c48",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    5,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    7
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    20,
+    1
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-teselia-p1",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-teselia",
+  "floor": 1,
+  "access": "publico",
+  "corp": "teselia"
+ }
+}

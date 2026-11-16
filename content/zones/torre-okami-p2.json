@@ -1,0 +1,113 @@
+{
+ "id": "torre-okami-p2",
+ "name": "Torre Okami · Planta 2: Administración",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#3a2e44",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    5,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    3
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    7
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    20,
+    1
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-okami-p2",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-okami",
+  "floor": 2,
+  "access": "empleados",
+  "corp": "okami"
+ }
+}

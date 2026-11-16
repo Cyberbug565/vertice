@@ -59,6 +59,7 @@ export class Survival {
   connOf(charId: string): PlayerConn | undefined { for (const c of this.w.conns.values()) if (c.p?.charId === charId) return c; return undefined; }
 
   // ================================================================ tick por segundo
+  dangerHere(c: PlayerConn) { return dangerAt(c.e!.zone.grid, c.e!.x, c.e!.y); }
   everySecond() {
     const dtH = this.gameHoursPerSecond();
     for (const c of this.w.conns.values()) if (c.p && c.e && !c.closed) this.tickPlayer(c, dtH);
@@ -129,10 +130,15 @@ export class Survival {
     if (car && e.zone.def.kind === 'exterior') e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * car.speed * (1 + ef.carSpeed);
     else {
       if (p.driving) this.w.property.park(c, true);
-      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1);
+      // Correr: más rápido a cambio de aguante; sin aguante se vuelve a andar.
+      const run = p.running && p.stamina > 3 && !p.carrying && !p.sleeping;
+      if (run && e.moving) p.stamina = Math.max(0, p.stamina - 3);
+      else if (!e.moving || !p.running) p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1));
+      if (p.running && p.stamina <= 3 && e.moving) this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.');
+      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1);
     }
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
-    if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y));
+    if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y) * (p.running && !p.driving ? 2 : 1));
     x.lastPos = { zone: e.zone.id, x: e.x, y: e.y };
     // Regeneración (perks de medicina) fuera de combate.
     const regen = ef.perk.regen ?? 0;
@@ -262,7 +268,8 @@ export class Survival {
   groundQuality(c: PlayerConn) {
     const e = c.e!, p = c.p!;
     const dn = dangerAt(e.zone.grid, e.x, e.y);
-    let q = e.zone.def.sleepQuality ?? (dn === 'protected' ? 0.6 : dn === 'public' ? 0.35 : 0.25);
+    const dist = e.zone.districtAt(e.x, e.y);
+    let q = (dist && dn !== 'protected' ? dist.sleepQuality : undefined) ?? e.zone.def.sleepQuality ?? (dn === 'protected' ? 0.6 : dn === 'public' ? 0.35 : 0.25);
     if (dn !== 'protected') {
       q += this.w.c.professions.find((x) => x.id === p.profession)?.mods.sleepStreet ?? 0;
       if (e.zone.def.kind === 'exterior' && (p.inventory.get('ropa-impermeable') ?? 0) > 0) q += 0.05;
@@ -414,6 +421,8 @@ export class Survival {
       await q.query('DELETE FROM house_stash WHERE house_id IN (SELECT house_id FROM houses_owned WHERE character_id=$1)', [p.charId]);
       await q.query('DELETE FROM houses_owned WHERE character_id=$1', [p.charId]);
       await q.query('DELETE FROM cars_owned WHERE character_id=$1', [p.charId]);
+      await q.query('DELETE FROM posts_held WHERE character_id=$1', [p.charId]);
+      for (const [k, h] of this.w.posts.held) if (h.charId === p.charId) this.w.posts.held.delete(k);
       if (!r.rows.length) return [];
       await q.query("UPDATE cyberware_instances SET location='lost', history = history || $2::jsonb WHERE character_id=$1 AND location IN ('inventory','installed')", [p.charId, JSON.stringify([{ at: new Date().toISOString(), event: 'perdido con la muerte de su portador' }])]);
       const refunds = await this.bounties.expireForCharTx(q, p.charId);
@@ -654,7 +663,7 @@ export class Survival {
     if (p.sleeping) this.wake(c);
     const job = this.w.c.jobs.find((j) => j.id === p.activeJob)!;
     const wp = this.w.c.workplaces.find((y) => y.id === job.workplace)!;
-    if (e.zone.id !== wp.zone) throw new GameError(`Tu puesto está en ${this.w.zones.get(wp.zone)?.def.name}: ve allí primero.`);
+    if (e.zone.id !== wp.zone) { const z = this.w.zones.get(wp.zone); throw new GameError(`Tu puesto está en ${z ? (z.def.districts.length ? `${this.w.property.dname(this.w.districtOf(z, wp.at[0], wp.at[1]))} (${wp.name})` : z.def.name) : wp.zone}: ve allí primero.`); }
     this.w.cancelActivity(e);
     e.task = { def: { id: `job:${job.id}`, label: job.title, repeat: 1, steps: [{ moveTo: wp.at as [number, number], zone: wp.zone }, { wait: Math.max(0.5, job.seconds * this.w.cfg.jobTimeScale), label: `Trabajando: ${job.title}` }], onComplete: [] },
       step: 0, rep: 0, waitUntil: 0, started: false, opId: `job-${randomUUID()}`, onDone: () => this.w.enqueue(c, () => this.finishJob(c, job.id)) } as RunningTask;

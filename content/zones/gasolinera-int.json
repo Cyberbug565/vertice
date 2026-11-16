@@ -47,10 +47,10 @@
     4
    ],
    "to": {
-    "zone": "yermo",
+    "zone": "vertice",
     "at": [
-     48,
-     45
+     513,
+     167
     ]
    },
    "danger": "public"

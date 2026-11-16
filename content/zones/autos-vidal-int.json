@@ -43,10 +43,10 @@
     5
    ],
    "to": {
-    "zone": "arrabal",
+    "zone": "vertice",
     "at": [
-     100,
-     11
+     141,
+     249
     ]
    },
    "danger": "public"

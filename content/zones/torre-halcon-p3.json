@@ -1,0 +1,96 @@
+{
+ "id": "torre-halcon-p3",
+ "name": "Torre Halcón Dynamics · Planta 3: Centro de seguridad",
+ "kind": "interior",
+ "width": 22,
+ "height": 14,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#2c3444",
+ "blocks": [],
+ "props": [
+  {
+   "type": "screen",
+   "at": [
+    3,
+    1
+   ],
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    7,
+    1
+   ],
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    11,
+    1
+   ],
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    15,
+    1
+   ],
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    5
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    10,
+    5
+   ]
+  }
+ ],
+ "doors": [],
+ "objects": [
+  {
+   "id": "ascensor-torre-halcon-p3",
+   "name": "Ascensor",
+   "at": [
+    1,
+    7
+   ],
+   "kind": "elevator"
+  }
+ ],
+ "waypoints": [
+  [
+   4,
+   7
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   16,
+   7
+  ]
+ ],
+ "safePoint": [
+  3,
+  7
+ ],
+ "gangs": [],
+ "tower": {
+  "id": "torre-halcon",
+  "floor": 3,
+  "access": "empleados",
+  "corp": "halcon"
+ }
+}

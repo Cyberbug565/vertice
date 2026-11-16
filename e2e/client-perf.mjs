@@ -30,7 +30,7 @@ const warmToControlMs = Date.now() - t1;
 // Ir al punto concurrido del mercado.
 const clickWorld = async (x, y) => { const s = await page.evaluate(([x, y]) => window.__vt.screenOf(x, y), [x, y]); await page.mouse.click(s.x, s.y); };
 await clickWorld(8.5, 11.5);
-await page.waitForFunction(() => window.__vt.me().zone === 'ferro', null, { timeout: 20000 });
+await page.waitForFunction(() => window.__vt.me().zone === 'vertice', null, { timeout: 20000 });
 await page.waitForTimeout(800);
 for (const [x, y] of [[33.5, 36.5], [24.5, 35.5]]) { await page.evaluate(([x, y]) => window.__vt.view.onGroundClick(x, y), [x, y]); await page.waitForTimeout(7000); }
 await page.waitForTimeout(2000);
