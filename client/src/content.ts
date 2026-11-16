@@ -10,3 +10,12 @@ export const content: Content = assembled.content;
 export const contentHash: string = assembled.hash;
 export const roleById = (id: string) => content.roles.find((r) => r.id === id);
 export const factionName = (id: string) => content.factions.find((f) => f.id === id)?.name ?? id;
+/** Definición de zona; las viviendas («casa:<id>») usan la plantilla de su tamaño. */
+export function zoneDef(id: string) {
+  if (id.startsWith('casa:')) {
+    const h = content.houses.find((x) => x.id === id.slice(5));
+    const tpl = h && content.zones.find((z) => z.id === h.template);
+    if (tpl && h) return { ...tpl, id, name: h.name };
+  }
+  return content.zones.find((z) => z.id === id);
+}

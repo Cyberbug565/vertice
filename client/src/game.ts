@@ -1,6 +1,6 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
 import { checkChance, chanceBand, worldToScreen, type CharacterSheet, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
-import { content, factionName, roleById } from './content';
+import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
 import { settings, onSettings } from './settings';
@@ -8,6 +8,8 @@ import { blip, initAudio, setAmbientActive } from './audio';
 import { $ui, clearUi, fmtMoney, h } from './ui/dom';
 import { Minimap, renderZoneMap } from './ui/minimap';
 import { settingsPanel } from './ui/screens';
+import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen } from './ui/charscreen';
+import { buildingPanel, dealerPanel, marketLivePanel, propsPanel, realtyPanel, ringPrompt, scanCard, stashPanel, type PropCtx } from './ui/property';
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Protegida', public: 'Pública', disputed: 'Disputada (PvP)' };
@@ -16,6 +18,9 @@ const STANCES = [
   { id: 'defend', label: 'Defender', desc: 'Defender: responde a agresiones válidas contra ti o tu grupo, busca cobertura y no persigue.' },
   { id: 'aggressive', label: 'Agresiva', desc: 'Agresiva: ataca objetivos elegibles dentro de la orden seleccionada, gastando munición y cromo autorizados.' },
 ] as const;
+
+const ABIL_ICON: Record<string, string> = { 'tiempo-bala': '⏱', invisible: '👻', curar: '💉', pulso: '💥', esprint: '💨', carga: '🚀', senuelo: '🎭', torbellino: '🌀', 'disparo-cargado': '🎯', 'pico-ram': '🧠' };
+const BUFF_NAME: Record<string, string> = { 'tiempo-bala': '⏱ Tiempo bala', invisible: '👻 Invisible', curar: '💉 Curando', esprint: '💨 Esprint', senuelo: '🎭 Señuelo', carga: '🚀 Carga', 'disparo-cargado': '🎯 Cargado' };
 
 export async function startGame(token: string, onExit0: (reason?: string) => void) {
   const timers: number[] = [];
@@ -46,7 +51,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const statusEl = h('div', { style: { fontSize: '0.85em', minHeight: '1.2em' }, 'aria-live': 'polite' });
   const nameEl = h('div', {}), moneyEl = h('div', { class: 'mono' }), statsEl = h('div', { class: 'muted', style: { fontSize: '0.85em' } });
   const hpTxt = h('span', { class: 'mono' }), stTxt = h('span', { class: 'mono' });
-  const tl = h('div', { class: 'hud hud-tl', 'aria-label': 'Estado del personaje' }, nameEl,
+  const xpFill = h('i', { style: { background: 'var(--xp)' } }), xpTxt = h('span', { class: 'mono small' });
+  const xpEl = h('div', { class: 'hud-xp', title: 'Experiencia de nivel' }, h('div', { class: 'xpbar' }, xpFill), xpTxt);
+  const tl = h('div', { class: 'hud hud-tl', 'aria-label': 'Estado del personaje' }, nameEl, xpEl,
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Salud'), hpTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Salud' }, hpBar),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Aguante'), stTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Aguante' }, stBar),
     needsEl, statusEl, moneyEl, statsEl);
@@ -64,12 +71,39 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       ib('✋', 'Cancelar', 'S', () => stop(), 'btn-stop'), ib('🏃', 'Retirada', 'R', () => retreat(), 'btn-retreat', 'danger'), stanceSeg,
       ib('💤', 'Dormir', 'Z', () => toggleSleep(), 'btn-sleep')),
     h('div', { class: 'toolbar' },
-      ib('📓', 'Diario', 'J', () => journalPanel(), 'btn-journal'), ib('🧍', 'Ficha', 'C', () => sheetPanel(), 'btn-sheet'), ib('🎒', 'Inventario', 'I', () => inventoryPanel()),
-      ib('🗺', 'Mapa', 'M', () => worldMapPanel(st.zone)), ib('⚑', 'Facciones', 'F', () => net.send({ t: 'factions' } as any)),
-      ib('💼', 'Empleos', 'O', () => net.send({ t: 'jobs' } as any)), ib('📈', 'Mercado', 'K', () => net.send({ t: 'market' } as any)), ib('🎯', 'Recompensas', 'B', () => net.send({ t: 'bounties' } as any)),
+      ib('📓', 'Diario', 'J', () => journalPanel(), 'btn-journal'), ib('🧍', 'Personaje', 'C', () => charScreen('sheet'), 'btn-sheet'), ib('🎒', 'Inventario', 'I', () => charScreen('inv'), 'btn-inv'),
+      ib('🦾', 'Cromo', 'X', () => charScreen('cyber')), ib('⭐', 'Habilidades', 'H', () => charScreen('skills'), 'btn-skills'),
+      ib('🗺', 'Mapa', 'M', () => mapPanel()), ib('⚑', 'Facciones', 'F', () => net.send({ t: 'factions' } as any)),
+      ib('🏠', 'Propiedades', 'P', () => net.send({ t: 'props' } as any)), ib('🚗', 'Conducir', 'V', () => toggleDrive(), 'btn-drive'),
+      ib('💼', 'Empleos', 'O', () => net.send({ t: 'jobs' } as any)), ib('📈', 'Mercado', 'K', () => marketLive(true)), ib('🎯', 'Recompensas', 'B', () => net.send({ t: 'bounties' } as any)),
       ib('✚', 'Ámbar', 'U', () => net.send({ t: 'ambar' } as any)), ib('⚙', 'Ajustes', 'Esc', () => settingsPanel(() => view.applySettings()))));
   // Arma equipada, munición y RAM del deck.
   const weaponEl = h('div', { class: 'hud hud-weapon' });
+  // Habilidades de los implantes (teclas 1–4) y avisos de experiencia de habilidad (barras azules).
+  const abilityEl = h('div', { class: 'hud-abilities' });
+  const xpPops = h('div', { class: 'xp-pops', 'aria-live': 'polite' });
+  const readyAt = new Map<string, number>();
+  const renderAbilities = (s: CharacterSheet, fromSheet = true) => {
+    if (fromSheet) for (const a of s.abilities) readyAt.set(a.id, Date.now() + a.readyIn * 1000);
+    abilityEl.replaceChildren(...s.abilities.slice(0, 4).map((a, i) => {
+      const left = Math.ceil(((readyAt.get(a.id) ?? 0) - Date.now()) / 1000);
+      const ready = left <= 0;
+      const b = h('button', { class: `abil${ready ? ' ready' : ''}`, title: `${a.name} (${i + 1}) · recarga ${a.cooldown} s`, onclick: () => net.send({ t: 'ability', id: a.id } as any) },
+        h('span', { class: 'abil-key' }, String(i + 1)), h('span', { class: 'abil-ico' }, ABIL_ICON[a.kind] ?? '⚡'), h('span', { class: 'abil-name' }, a.name), ready ? null : h('span', { class: 'abil-cd' }, `${left}s`));
+      return b;
+    }), ...Object.entries(s.buffs).filter(([k]) => !k.endsWith('PerSec')).map(([k, v]) => h('span', { class: 'buff' }, `${BUFF_NAME[k] ?? k} ${v}s`)));
+  };
+  const xpPop = (m: Extract<ServerMsg, { t: 'skillxp' }>) => {
+    const key = `pop-${m.skill}`;
+    let el = document.getElementById(key);
+    const cur = m.xp - m.from, need = Math.max(1, m.to - m.from);
+    const body = [h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, m.name), h('span', { class: 'mono' }, `${m.up ? '▲ ' : ''}Nv ${m.level} · +${m.gain}`)),
+      h('div', { class: 'xpbar' }, h('i', { style: { width: `${Math.min(100, (100 * cur) / need)}%`, background: 'var(--xp)' } })), h('div', { class: 'mono small muted' }, `${cur}/${need} XP`)];
+    if (el) el.replaceChildren(...body); else { el = h('div', { class: `xp-pop${m.up ? ' up' : ''}`, id: key }, ...body); xpPops.append(el); }
+    if (m.up) el.classList.add('up');
+    clearTimeout((el as any)._t); (el as any)._t = setTimeout(() => el!.remove(), 3500);
+    while (xpPops.children.length > 4) xpPops.firstChild!.remove();
+  };
   const toasts = h('div', { class: 'toasts', 'aria-live': 'polite' });
   const chatLog = h('div', { class: 'log', 'aria-live': 'polite' });
   const chatIn = h('input', { id: 'chat-input', placeholder: 'Chat local (Enter)…', maxLength: 200 }) as HTMLInputElement;
@@ -82,7 +116,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const tooltip = h('div', { class: 'tooltip', style: { display: 'none' } });
   const dialogEl = h('div', { class: 'dialog', id: 'dialog', role: 'dialog', style: { display: 'none' } });
   const ctxOverlay = h('div', { class: 'overlay', style: { display: 'none' } }, h('div', { class: 'reward' }, h('h2', {}, 'Recuperando gráficos…'), h('p', {}, 'El contexto gráfico se ha perdido. La simulación sigue en el servidor.')));
-  $ui().append(tl, tr, bottom, weaponEl, toasts, chat, tooltip, dialogEl, ctxOverlay);
+  $ui().append(tl, tr, bottom, weaponEl, abilityEl, xpPops, toasts, chat, tooltip, dialogEl, ctxOverlay);
 
   const toast = (text: string, kind: 'info' | 'good' | 'warn' | 'bad' = 'info') => {
     const t = h('div', { class: `toast ${kind}` }, text);
@@ -103,11 +137,16 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const renderSheet = () => {
     const s = st.sheet; if (!s) return;
-    nameEl.replaceChildren(h('b', {}, s.name), ` · ${roleById(s.role)?.name ?? s.role} · nivel ${s.level}`);
+    nameEl.replaceChildren(h('b', {}, s.name), ` · ${roleById(s.role)?.name ?? s.role} · `, h('span', { class: 'lvchip' }, `Nv ${s.level}`), s.skillPoints + s.perkPoints ? h('span', { class: 'ptschip', title: 'Puntos sin gastar (H)' }, `+${s.skillPoints + s.perkPoints}`) : '');
+    const xi = s.xp - s.xpLevelStart, xn = Math.max(1, s.xpNext - s.xpLevelStart);
+    xpFill.style.width = `${Math.min(100, (100 * xi) / xn)}%`; xpTxt.textContent = `${xi}/${xn} XP`;
+    view.showLevels = s.uniques.includes('lector');
+    renderAbilities(s);
+    refreshCharScreen(s);
     hpBar.style.width = `${(100 * s.hp) / s.hpMax}%`; stBar.style.width = `${(100 * s.stamina) / s.staminaMax}%`;
     hpTxt.textContent = `${s.hp}/${s.hpMax}`; stTxt.textContent = `${s.stamina}/${s.staminaMax}`;
     moneyEl.textContent = `${fmtMoney(s.money)} · Rep. calle ${s.streetRep}`;
-    statsEl.textContent = `${s.professionName} (rango ${s.professionRank}) · Suerte ${s.luck}/${s.luckMax} · XP ${s.xp}/${s.xpNext} · Carga ${s.carry}/${s.carryMax} kg`;
+    statsEl.textContent = `${s.professionName} (rango ${s.professionRank}) · Suerte ${s.luck}/${s.luckMax} · Carga ${s.carry}/${s.carryMax} kg${s.driving ? ' · 🚗 al volante' : ''}`;
     const w = s.weapon;
     weaponEl.replaceChildren(...([
       h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, w ? w.name : 'Puños'), h('span', { class: 'muted' }, w ? `${w.family} · ${w.kind === 'melee' ? 'cuerpo a cuerpo' : `${w.range} m`}` : 'cuerpo a cuerpo')),
@@ -169,7 +208,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
 
   // ---------------------------------------------------------------- paneles
-  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
@@ -240,7 +279,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       })));
   };
   const bigMap = () => {
-    const z = content.zones.find((z) => z.id === st.zone)!;
+    const z = zoneDef(st.zone)!;
     const c = h('canvas', { style: { maxWidth: '100%', display: 'block', margin: '0 auto' } }) as HTMLCanvasElement;
     const pr = renderZoneMap(z, c, z.kind === 'interior' ? 24 : 6).project;
     const ctx = c.getContext('2d')!;
@@ -297,18 +336,23 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const keys = (e: KeyboardEvent) => {
     if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
     const k = e.key.toLowerCase();
-    if (k === 'escape') { if (document.querySelector('.panel')) closePanels(); else if (st.dialog) net.send({ t: 'closeDialog' } as any); else stop(); }
+    if (k === 'escape') { if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove(); else if (document.querySelector('.panel')) closePanels(); else if (st.dialog) net.send({ t: 'closeDialog' } as any); else stop(); }
     else if (k === 's') stop();
     else if (k === 'r') retreat();
     else if (k === 'j') journalPanel();
-    else if (k === 'c') sheetPanel();
-    else if (k === 'i') inventoryPanel();
-    else if (k === 'm') worldMapPanel(st.zone);
+    else if (k === 'c') charScreen('sheet');
+    else if (k === 'i') charScreen('inv');
+    else if (k === 'x') charScreen('cyber');
+    else if (k === 'h') charScreen('skills');
+    else if (k === 'p') net.send({ t: 'props' } as any);
+    else if (k === 'v') toggleDrive();
+    else if (k === 'm') mapPanel();
+    else if (!st.dialog && /^[1-4]$/.test(k) && st.sheet?.abilities[Number(k) - 1]) net.send({ t: 'ability', id: st.sheet.abilities[Number(k) - 1].id } as any);
     else if (k === 'f') net.send({ t: 'factions' } as any);
     else if (k === 'u') net.send({ t: 'ambar' } as any);
     else if (k === 'z') toggleSleep();
     else if (k === 'o') net.send({ t: 'jobs' } as any);
-    else if (k === 'k') net.send({ t: 'market' } as any);
+    else if (k === 'k') marketLive(true);
     else if (k === 'b') net.send({ t: 'bounties' } as any);
     else if (k === 'enter') { e.preventDefault(); chatIn.focus(); }
     else if (k === 'tab' && onWorld()) {
@@ -330,6 +374,13 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   window.addEventListener('keydown', keys);
   onSettings(() => renderSheet());
+  function charScreen(tab: 'inv' | 'cyber' | 'skills' | 'sheet') { if (!st.sheet) return; closePanels(); tooltip.style.display = 'none'; openCharScreen({ net, toast }, st.sheet, tab); }
+  function toggleDrive() { if (!st.sheet) return; if (st.sheet.driving) net.send({ t: 'car', action: 'park' } as any); else if (!st.sheet.cars.length) toast('No tienes coche: cómpralo en un concesionario (mira el mapa).', 'warn'); else net.send({ t: 'car', action: 'drive' } as any); }
+  function mapPanel() { worldMapPanel(st.zone, { discovered: st.sheet?.discovered ?? [], hasCar: (st.sheet?.cars.length ?? 0) > 0, travel: (zone) => net.send({ t: 'car', action: 'travel', zone } as any) }); }
+  let liveOn = false, livePending = false;
+  function marketLive(on: boolean) { if (on && liveOn && document.getElementById('market-live-panel')) { closePanels(); marketLive(false); return; } liveOn = on; livePending = on; net.send({ t: 'marketLive', on } as any); }
+  const pctx: PropCtx = { net, toast, money: () => st.sheet?.money ?? 0 };
+  timers.push(window.setInterval(() => { if (st.sheet?.abilities.length) renderAbilities(st.sheet, false); }, 1000));
 
   // ---------------------------------------------------------------- red
   net.onPositions = (p) => view.positions(p.ents);
@@ -347,18 +398,18 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'welcome':
         view.meId = m.you; st.sheet = m.sheet; st.journal = m.journal; st.facts = m.facts; st.cityHourMs = m.cityHourMs; st.cityEpoch = m.cityEpoch;
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger;
-        view.setZone(m.zone, m.x, m.y); minimap.setZone(content.zones.find((z) => z.id === m.zone)!); view.setFacts(m.facts);
+        view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(m.facts);
         renderSheet(); renderLocation(); setAction('');
         break;
       case 'zone':
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger; st.dialog = null; renderDialog();
-        view.setZone(m.zone, m.x, m.y); minimap.setZone(content.zones.find((z) => z.id === m.zone)!); view.setFacts(st.facts);
+        view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(st.facts);
         st.destination = ''; renderLocation(); setAction(''); blip('step');
-        toast(`Entras en ${content.zones.find((z) => z.id === m.zone)?.name} · zona ${DANGER_TXT[m.danger]}`, 'info');
+        toast(`Entras en ${zoneDef(m.zone)?.name} · zona ${DANGER_TXT[m.danger]}`, 'info');
         break;
       case 'spawn': for (const e of m.e) view.upsert(e); break;
       case 'despawn': for (const id of m.ids) view.remove(id); break;
-      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried); break;
+      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs }); break;
       case 'factions': factionsPanel(life, m.view); break;
       case 'ambar': ambarPanel(life, m.view); break;
       case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
@@ -374,6 +425,20 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;
       case 'dialogClose': st.dialog = null; renderDialog(); break;
       case 'sheet': st.sheet = m.sheet; renderSheet(); break;
+      case 'skillxp': xpPop(m); break;
+      case 'building': buildingPanel(pctx, m.view); break;
+      case 'realty': realtyPanel(pctx, m.view); break;
+      case 'dealer': dealerPanel(pctx, m.view); break;
+      case 'props': propsPanel(pctx, m.view); break;
+      case 'stash': stashPanel(pctx, m.view); break;
+      case 'marketLive': {
+        if (!liveOn) break;
+        // Si el panel se cerró (Escape u otro panel), se deja de recibir el mercado en vivo.
+        if (!livePending && !document.getElementById('market-live-panel')) { marketLive(false); break; }
+        livePending = false; marketLivePanel(pctx, m.view, () => marketLive(false)); break;
+      }
+      case 'scan': scanCard(m.view); break;
+      case 'ring': ringPrompt(pctx, m.house, m.houseName, m.from, m.fromId); break;
       case 'journal': st.journal = m.journal; if (document.getElementById('journal-panel')) { closePanels(); journalPanel(); } break;
       case 'notice': toast(m.text, m.kind); break;
       case 'reward': {

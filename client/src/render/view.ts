@@ -5,15 +5,16 @@ import {
   GROUND_TYPES, buildZoneGrid, findPath, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
 } from '@vertice/shared';
-import { content } from '../content';
+import { content, zoneDef } from '../content';
 import { settings } from '../settings';
-import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSign, shade, type Occl } from './art';
+import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSign, makeVehicle, shade, type Occl } from './art';
 
 interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; ent?: CEnt; depth: number; mark: number }
 export interface CEnt {
   s: EntitySpawn; x: number; y: number; samples: { t: number; x: number; y: number }[]; flags: number; moving: boolean;
   view: Container; legs?: Container; body?: Container; visor?: Graphics; hpBar?: Graphics; tag?: Graphics; bubble?: Container; bubbleUntil?: number; label?: Text; obj: SortObj; phase: number;
   charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
+  vehX?: Container; vehY?: Container; lvl?: Text;
 }
 
 const INTERP_DELAY = 110;
@@ -102,7 +103,7 @@ export class GameView {
 
   // ------------------------------------------------------------------ zona
   setZone(zoneId: string, x: number, y: number) {
-    this.zone = content.zones.find((z) => z.id === zoneId)!;
+    this.zone = zoneDef(zoneId)!;
     this.grid = buildZoneGrid(this.zone);
     for (const e of this.ents.values()) this.destroyEnt(e);
     this.ents.clear();
@@ -267,6 +268,19 @@ export class GameView {
       const ch = makeCharacter(s.appearance, s.kind, s.chrome ?? []);
       view.addChild(ch.root);
       ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor; ent.charRoot = ch.root;
+      // Al volante: el coche sustituye a la figura (en moto, la figura va montada encima).
+      const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
+      if (car) {
+        ent.vehX = makeVehicle(car.class, car.color, s.appearance?.accent);
+        ent.vehY = makeVehicle(car.class, car.color, s.appearance?.accent); ent.vehY.scale.x = -1;
+        view.addChildAt(ent.vehX, 0); view.addChildAt(ent.vehY, 0); ent.vehY.visible = false;
+        if (car.class === 'moto') { ch.root.scale.set(0.8); ch.root.y = -10; ch.legs.visible = false; } else ch.root.visible = false;
+      }
+      if (s.level && s.kind === 'npc') {
+        ent.lvl = new Text({ text: `Nv ${s.level}`, style: { fontFamily: 'system-ui', fontSize: 10, fontWeight: '700', fill: 0xffd23f, stroke: { color: 0x000000, width: 3 } } });
+        ent.lvl.anchor.set(0.5, 1); ent.lvl.position.set(0, -70); ent.lvl.visible = false;
+        view.addChild(ent.lvl);
+      }
       ent.zz = new Text({ text: 'Zz', style: { fontFamily: 'system-ui', fontSize: 14, fontWeight: '700', fill: 0x9ad8ff, stroke: { color: 0x000000, width: 3 } } });
       ent.zz.anchor.set(0.5); ent.zz.position.set(14, -30); ent.zz.visible = false;
       view.addChild(ent.zz);
@@ -330,9 +344,16 @@ export class GameView {
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
   private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); if (this.hovered === e) this.hovered = null; }
-  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean) {
+  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[] }) {
     const e = this.ents.get(id);
     if (!e) return;
+    if (extra) {
+      if (extra.buffs !== undefined) e.s.buffs = extra.buffs;
+      if (extra.level !== undefined) e.s.level = extra.level;
+      const apChanged = extra.appearance && JSON.stringify(extra.appearance) !== JSON.stringify(e.s.appearance);
+      const vehChanged = (extra.vehicle ?? null) !== (e.s.vehicle ?? null);
+      if (apChanged || vehChanged) { this.upsert({ ...e.s, x: e.x, y: e.y, appearance: extra.appearance ?? e.s.appearance, vehicle: extra.vehicle ?? null, chrome: chrome ?? e.s.chrome, label, state: state === 'alive' ? undefined : state ?? e.s.state }); return; }
+    }
     if (hpPct !== undefined) e.s.hpPct = hpPct;
     if (carried !== undefined) e.s.carried = carried || undefined;
     if (chrome !== undefined && (chrome ?? []).join() !== (e.s.chrome ?? []).join()) { e.s.chrome = chrome; this.upsert({ ...e.s, x: e.x, y: e.y }); return; }
@@ -382,6 +403,10 @@ export class GameView {
       e.tag = new Graphics().poly([0, -64, 4, -60, 0, -56, -4, -60]).fill(col).stroke({ width: 1, color: 0x000000, alpha: 0.6 });
       e.view.addChild(e.tag);
     }
+    if (e.lvl) e.lvl.visible = this.showLevels && (e === this.hovered || (e.s.npcType !== 'civil' && Math.hypot(e.x - this.me.x, e.y - this.me.y) < 10));
+    // Camuflaje óptico: casi invisible para los demás (y translúcido para uno mismo).
+    const invis = e.s.buffs?.includes('invisible');
+    e.view.alpha = invis ? (e.s.id === this.meId ? 0.4 : 0.08) : 1;
     if (!e.charRoot) return;
     const sleeping = e.s.state === 'sleeping' || (e.flags & 32) === 32;
     const downed = e.s.state === 'downed' || (e.flags & 64) === 64;
@@ -663,7 +688,11 @@ export class GameView {
   private face(e: CEnt, dx: number, dy: number) {
     const sx = dx - dy; // dirección horizontal en pantalla
     if (e.body && Math.abs(sx) > 0.0005) e.body.scale.x = sx >= 0 ? 1 : -1;
+    // El coche se orienta según el eje por el que circula (X o Y del mundo).
+    if (e.vehX && e.vehY && Math.hypot(dx, dy) > 0.001) { const alongX = Math.abs(dx) >= Math.abs(dy); e.vehX.visible = alongX; e.vehY.visible = !alongX; }
   }
+  /** Muestra el nivel de los PNJ (óptica de análisis o perk «Lector»). */
+  showLevels = false;
 
   /** Orden topológico de profundidad entre objetos que se solapan en pantalla. */
   private depthSort() {

@@ -1,13 +1,12 @@
 // Pantallas fuera del juego: acceso, menú principal, creación de personaje, ajustes y memorial.
 import { ATTRIBUTE_IDS, RULES, carryCapacity, chromeCapacity, humanityBase, maxHp, maxStamina, walkSpeed, type Attributes } from '@vertice/shared';
 import { api, setToken } from '../api';
-import { content } from '../content';
+import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { ACCESSORIES, BUILDS, CHROME_PARTS, EYE_COLORS, FACIALS, HAIR_STYLES, LABELS, TOPS } from '@vertice/shared';
-import { Application, Container } from 'pixi.js';
-import { makeCharacter } from '../render/art';
+import { ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { Preview } from './preview';
 
 export function loginScreen(onDone: () => void) {
   clearUi();
@@ -28,7 +27,7 @@ export function loginScreen(onDone: () => void) {
     h('label', { for: 'username' }, 'Usuario'), user, h('label', { for: 'password' }, 'Contraseña'), pass, err,
     h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'submit', id: 'btn-login' }, 'Entrar'), h('button', { class: 'btn', type: 'button', id: 'btn-register', onclick: () => go('register') }, 'Crear cuenta')));
   $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card narrow' },
-    h('h1', { class: 'logo neon' }, 'VÉRTICE'), h('p', { class: 'muted' }, 'Ciudad Vértice · megápolis de siete distritos. Edición de universo original. Alfa v0.3.'), form)));
+    h('h1', { class: 'logo neon' }, 'VÉRTICE'), h('p', { class: 'muted' }, 'Ciudad Vértice · megápolis de siete distritos. Edición de universo original. Alfa v0.4.'), form)));
   user.focus();
 }
 
@@ -42,7 +41,7 @@ export async function mainMenu(opts: { onEnter: () => void; onCreate: () => void
   const body = h('div', { class: 'col' },
     h('h1', { class: 'logo neon' }, 'VÉRTICE'),
     h('p', { class: 'muted' }, `Cuenta: ${me.account.username}`),
-    ch ? h('div', { class: 'choice' }, h('h4', {}, ch.name), h('p', {}, `${content.roles.find((r) => r.id === ch.role)?.name} · nivel ${ch.level} · ${fmtMoney(Number(ch.money))} · ${content.zones.find((z) => z.id === ch.zone_id)?.name ?? ch.zone_id}`))
+    ch ? h('div', { class: 'choice' }, h('h4', {}, ch.name), h('p', {}, `${content.roles.find((r) => r.id === ch.role)?.name} · nivel ${ch.level} · ${fmtMoney(Number(ch.money))} · ${zoneDef(ch.zone_id)?.name ?? ch.zone_id}`))
       : h('p', {}, 'No tienes ningún personaje vivo. Cada personaje tiene una sola vida.'),
     h('label', { for: 'city' }, 'Ciudad lógica'), city,
     h('div', { class: 'row' },
@@ -70,30 +69,16 @@ const JACKET = ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e'
 const ACCENT = ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'];
 const PANTS = ['#1a1a24', '#2a2a3a', '#3a2a1a', '#24384a', '#4a1a2a', '#5a5a64', '#1a3a2a'];
 const TATTOO = ['', '#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#1a1a1a'];
+const SHIRT = ['#e8e8f0', '#1a1a1a', '#2a2a3a', '#a82020', '#2a6aa8', '#3a8a4a', '#ff3fa4', '#ffd23f'];
+const SHOES = ['#101018', '#e8e8f0', '#5a3a1a', '#a82020', '#43f3ff', '#3a3a3a'];
+const MAKEUP_COL = ['#ff3fa4', '#43f3ff', '#ffd23f', '#b46cff', '#a82020', '#1a1a1a'];
 const pick = <T,>(l: readonly T[]) => l[Math.floor(Math.random() * l.length)];
-
-/** Vista previa en vivo del personaje (Pixi), a escala grande para apreciar facciones, ropa y cromo. */
-class Preview {
-  app = new Application(); ready: Promise<void>; holder = new Container(); el = h('div', { class: 'preview' });
-  constructor() {
-    this.ready = this.app.init({ width: 240, height: 300, backgroundAlpha: 0, antialias: true, resolution: window.devicePixelRatio || 1, autoDensity: true }).then(() => {
-      this.el.append(this.app.canvas); this.app.stage.addChild(this.holder);
-    });
-  }
-  async show(ap: any, chrome: string[]) {
-    await this.ready;
-    this.holder.removeChildren().forEach((c) => c.destroy({ children: true }));
-    const ch = makeCharacter(ap, 'player', chrome);
-    ch.root.scale.set(3.6); ch.root.position.set(120, 262);
-    this.holder.addChild(ch.root);
-  }
-  destroy() { void this.ready.then(() => this.app.destroy(true, { children: true })); }
-}
 
 export function creationScreen(onDone: () => void, onCancel: () => void) {
   clearUi();
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
-    appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '' },
+    appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
+      faceShape: 'ovalada', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0] },
     attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes };
   const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Rol', 'Oficio', 'Atributos', 'Revisión'];
   const LAST = STEPS.length - 1;
@@ -111,7 +96,8 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
     h('div', { class: 'seg wrap', role: 'group', 'aria-label': label }, ...opts.map((o) => h('button', { class: 'segbtn', 'aria-pressed': String(st.appearance[key] === o), onclick: () => { (st.appearance as any)[key] = o; render(); } }, LABELS[o] ?? o))));
   const randomize = () => {
     Object.assign(st.appearance, { skin: pick(SKIN), hair: pick(HAIR), jacket: pick(JACKET), accent: pick(ACCENT), eyes: pick(EYE_COLORS), pants: pick(PANTS),
-      build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(TOPS), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO) });
+      build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(TOPS), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO),
+      faceShape: pick(FACE_SHAPES), brows: pick(BROWS), makeup: pick(MAKEUPS), makeupColor: pick(MAKEUP_COL), piercing: pick(PIERCINGS), scar: pick(SCARS), bodyTattoo: pick(BODY_TATTOOS), shirt: pick(SHIRT), shoes: pick(SHOES) });
     render();
   };
 
@@ -129,10 +115,17 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
     } else if (st.step === 1) {
       void preview.show(st.appearance, st.previewChrome ? [...CHROME_PARTS] : []);
       const controls = h('div', { class: 'col appearance-controls' },
-        optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), swatchRow('Ojos', 'eyes', [...EYE_COLORS]),
+        h('h4', { class: 'creator-sec' }, 'Cuerpo y cara'),
+        optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), optRow('Forma de la cara', 'faceShape', FACE_SHAPES), swatchRow('Ojos', 'eyes', [...EYE_COLORS]), optRow('Cejas', 'brows', BROWS),
+        h('h4', { class: 'creator-sec' }, 'Pelo'),
         optRow('Peinado', 'hairStyle', HAIR_STYLES), swatchRow('Color de pelo', 'hair', HAIR), optRow('Vello facial', 'facial', FACIALS),
-        optRow('Ropa', 'top', TOPS), swatchRow('Color de la prenda', 'jacket', JACKET), swatchRow('Pantalón', 'pants', PANTS),
-        optRow('Accesorio', 'accessory', ACCESSORIES), swatchRow('Tatuaje facial', 'tattoo', TATTOO), swatchRow('Acento (luces y cromo)', 'accent', ACCENT));
+        h('h4', { class: 'creator-sec' }, 'Detalles'),
+        optRow('Maquillaje', 'makeup', MAKEUPS), swatchRow('Color del maquillaje', 'makeupColor', MAKEUP_COL), optRow('Piercing', 'piercing', PIERCINGS), optRow('Cicatriz', 'scar', SCARS),
+        swatchRow('Tatuaje facial', 'tattoo', TATTOO), optRow('Tatuaje en brazos y piernas', 'bodyTattoo', BODY_TATTOOS),
+        h('h4', { class: 'creator-sec' }, 'Ropa de partida'),
+        optRow('Prenda', 'top', TOPS), swatchRow('Color de la prenda', 'jacket', JACKET), swatchRow('Camiseta', 'shirt', SHIRT), swatchRow('Pantalón', 'pants', PANTS), swatchRow('Calzado', 'shoes', SHOES),
+        optRow('Accesorio', 'accessory', ACCESSORIES), swatchRow('Acento (luces y cromo)', 'accent', ACCENT),
+        h('p', { class: 'muted small' }, 'En el juego podrás cambiarte de ropa: chaquetas, camisetas, pantalones, calzado, gorros y gafas, algunas con mejoras.'));
       body = h('div', { class: 'creator' },
         h('div', { class: 'col preview-col' }, preview.el,
           h('div', { class: 'row' }, h('button', { class: 'btn small', onclick: randomize }, '🎲 Aleatorio'),

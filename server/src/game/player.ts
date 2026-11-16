@@ -325,7 +325,8 @@ export async function savePlayerVitals(db: Queryable, p: PlayerState) {
 /** Puntos de habilidad y de perk disponibles: se ganan al subir de nivel (y los de perk también cada 5 niveles de habilidad). */
 export function pointsAvailable(c: Content, p: PlayerState) {
   const skillEarned = LEVEL_GAINS.skillPoints * (p.level - 1);
-  const perkEarned = LEVEL_GAINS.perkPoints * (p.level - 1) + Object.values(p.skillXp).reduce((a, xp) => a + Math.floor(skillLevelForXp(xp) / 5), 0);
+  // De habilidad: un punto de perk al llegar a 10, 15, 20 y 25 en cualquiera de ellas.
+  const perkEarned = LEVEL_GAINS.perkPoints * (p.level - 1) + 1 + Object.values(p.skillXp).reduce((a, xp) => { const lv = skillLevelForXp(xp); return a + (lv >= 10 ? Math.floor(lv / 5) - 1 : 0); }, 0);
   const perkSpent = p.perks.reduce((a, id) => a + (c.perks.find((x) => x.id === id)?.cost ?? 0), 0);
   return { skill: Math.max(0, skillEarned - p.skillPointsSpent), perk: Math.max(0, perkEarned - perkSpent) };
 }

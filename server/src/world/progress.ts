@@ -32,7 +32,7 @@ export class Progress {
     if (after > before) {
       if (c) this.w.send(c, { t: 'notice', kind: 'good', text: after === SKILL_MAX ? `★ ${name} al 25: dominio absoluto. Revisa los perks de nivel 25.` : `${name} sube a nivel ${after}.` });
       this.playerXp(p, 8 + 2 * after);
-      if (after % 5 === 0 && c) this.w.send(c, { t: 'notice', kind: 'good', text: `+1 punto de perk por llegar a ${name} ${after}.` });
+      if (after % 5 === 0 && after >= 10 && c) this.w.send(c, { t: 'notice', kind: 'good', text: `+1 punto de perk por llegar a ${name} ${after}.` });
       this.sheetSoon(c, p);
     }
   }

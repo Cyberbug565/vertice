@@ -1,0 +1,402 @@
+{
+  "scenario": "spread",
+  "bots": 100,
+  "durationS": 40,
+  "warmupS": 10,
+  "base": "http://localhost:8080",
+  "run": "y65k",
+  "at": "2026-11-16T03:16:55.585Z",
+  "note": "Generador y servidor en la misma máquina salvo que se indique lo contrario. Población: bots = clientes sintéticos; PNJ según /api/metrics.",
+  "server": {
+    "tickMs": {
+      "n": 1168,
+      "avg": 2.460432488869753,
+      "p50": 2.0854200000030687,
+      "p95": 4.59020099999907,
+      "p99": 10.11399800000072,
+      "max": 19.202158999993117
+    },
+    "dbWriteMs": {
+      "n": 527,
+      "avg": 1.7261959791268628,
+      "p50": 0.6769169999970472,
+      "p95": 5.368630000000849,
+      "p99": 8.599253000000317,
+      "max": 14.338137999991886
+    },
+    "world": {
+      "tick": 1508,
+      "cityHour": 4.93,
+      "connections": 100,
+      "lingering": 0,
+      "zones": {
+        "almacen-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "ambar-hq-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "armas-forja-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "armeria-callejon-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "armeria-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "arrabal": {
+          "entities": 72,
+          "players": 0,
+          "npcs": 37
+        },
+        "autos-ferro-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "autos-vidal-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "bar-rele": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "blindados-halcon-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "bloque9": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 2
+        },
+        "boutique-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "carnicero-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "casino-loto-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "cenit": {
+          "entities": 54,
+          "players": 0,
+          "npcs": 23
+        },
+        "clinica-okami-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "clinica-sato": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "club-campo-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "club-kitsune-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "colinas": {
+          "entities": 54,
+          "players": 0,
+          "npcs": 17
+        },
+        "comedor-obrero-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "comisaria-int": {
+          "entities": 5,
+          "players": 0,
+          "npcs": 0
+        },
+        "concesionario-saeta-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "electronica-yokai-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "ferro": {
+          "entities": 183,
+          "players": 100,
+          "npcs": 38
+        },
+        "forja": {
+          "entities": 54,
+          "players": 0,
+          "npcs": 18
+        },
+        "gasolinera-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "iglesia-sanciro-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "inmobiliaria-kaiten-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "iruka-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "koi-int": {
+          "entities": 8,
+          "players": 0,
+          "npcs": 0
+        },
+        "laboratorio-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "logistica-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "mercadillo-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "moda-orbita-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "motel-int": {
+          "entities": 6,
+          "players": 0,
+          "npcs": 0
+        },
+        "motos-kotetsu-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "neon-rojo": {
+          "entities": 68,
+          "players": 0,
+          "npcs": 33
+        },
+        "nido-int": {
+          "entities": 10,
+          "players": 0,
+          "npcs": 0
+        },
+        "nodo-vacio-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "oficinas-halcon-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "okami-super-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "pachinko-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "ramen-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "ropa-lumen-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "ropa-neon-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "ropa-segunda-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "ruiz-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 1
+        },
+        "taller-engranajes-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "teselia-int": {
+          "entities": 4,
+          "players": 0,
+          "npcs": 0
+        },
+        "tienda-24h-int": {
+          "entities": 3,
+          "players": 0,
+          "npcs": 0
+        },
+        "usados-forja-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 0
+        },
+        "vex-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        },
+        "voltio-int": {
+          "entities": 5,
+          "players": 0,
+          "npcs": 0
+        },
+        "yermo": {
+          "entities": 23,
+          "players": 0,
+          "npcs": 16
+        },
+        "yuki-int": {
+          "entities": 2,
+          "players": 0,
+          "npcs": 1
+        }
+      }
+    },
+    "counters": {
+      "msgsIn": 466,
+      "msgsRejected": 0,
+      "bytesOut": 27373283,
+      "bytesOutPositions": 10049260,
+      "bytesOutJson": 17324023,
+      "snapshotsSkipped": 0,
+      "sectorCrossings": 340,
+      "zoneTransfers": 127,
+      "npcTransfers": 0,
+      "pathRequests": 590,
+      "pathFailures": 0,
+      "pathExpanded": 63982,
+      "pathCacheHits": 1,
+      "kicks": 0,
+      "slowClientDrops": 0,
+      "reconnects": 13,
+      "lateTicks": 0
+    },
+    "memoryMiB": {
+      "rss": 211,
+      "heapUsed": 41
+    },
+    "db": "postgres"
+  },
+  "client": {
+    "recvKiBps": {
+      "avg": 4.51,
+      "p50": 3.95,
+      "p95": 9.86,
+      "p99": 19.78,
+      "max": 44.18
+    },
+    "moveAckMs": {
+      "p50": 0.7,
+      "p95": 1.5,
+      "p99": 7,
+      "n": 283
+    },
+    "initialLoadKiB": 169.7
+  },
+  "activity": {
+    "moves": 423,
+    "doorCrossings": 140,
+    "dialogs": 18,
+    "purchases": 18,
+    "reconnects": 16,
+    "errors": 4,
+    "sampleErrors": [
+      "[boty65kx16] no veo la puerta Bloque 9",
+      "[boty65kx32] no veo la puerta Clínica",
+      "[boty65kx96] no veo la puerta Clínica",
+      "[boty65kx31] no veo la puerta Bloque 9"
+    ]
+  },
+  "timeline": [
+    {
+      "t": 26,
+      "tickP95": 4.9,
+      "conns": 100,
+      "rss": 207
+    },
+    {
+      "t": 36,
+      "tickP95": 4.74,
+      "conns": 99,
+      "rss": 208
+    },
+    {
+      "t": 46,
+      "tickP95": 4.88,
+      "conns": 100,
+      "rss": 209
+    },
+    {
+      "t": 56,
+      "tickP95": 4.74,
+      "conns": 100,
+      "rss": 210
+    },
+    {
+      "t": 66,
+      "tickP95": 4.73,
+      "conns": 100,
+      "rss": 211
+    }
+  ]
+}

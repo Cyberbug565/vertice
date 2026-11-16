@@ -16,7 +16,7 @@ const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medici
 export function showPanel(id: string, title: string, ...body: (Node | string | null)[]) {
   const old = document.getElementById(id);
   const scroll = old?.scrollTop ?? 0;
-  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel']) if (pid !== id) document.getElementById(pid)?.remove();
+  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel']) if (pid !== id) document.getElementById(pid)?.remove();
   const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body.filter(Boolean) as Node[]);
   if (old) old.replaceWith(p); else $ui().append(p);
   p.scrollTop = scroll;
@@ -187,23 +187,29 @@ export function ambarPanel(ctx: LifeCtx, v: AmbarView) {
 }
 
 /** Mapa global: distritos de la megápolis colocados como en un mapa de juego. */
-export function worldMapPanel(current: string) {
+export function worldMapPanel(current: string, opts: { discovered?: string[]; hasCar?: boolean; travel?: (zone: string) => void } = {}) {
   const W = content.world;
   const maxX = Math.max(...W.districts.map((d) => d.gx)), maxY = Math.max(...W.districts.map((d) => d.gy));
-  const exteriorOf = (zid: string) => { const z = content.zones.find((x) => x.id === zid); if (!z || z.kind === 'exterior') return zid; return z.doors[0]?.to.zone ?? zid; };
+  const exteriorOf = (zid: string) => { if (zid.startsWith('casa:')) { const h = content.houses.find((x) => x.id === zid.slice(5)); if (h) return h.zone; } const z = content.zones.find((x) => x.id === zid); if (!z || z.kind === 'exterior') return zid; return z.doors[0]?.to.zone ?? zid; };
   const here = exteriorOf(current);
   const facName = (id: string) => content.factions.find((f) => f.id === id);
   const info = h('div', { class: 'fcard', style: { minHeight: '120px' } });
   const showInfo = (zid: string) => {
     const d = W.districts.find((x) => x.zone === zid)!;
     const z = content.zones.find((x) => x.id === zid)!;
-    const places = z.doors.filter((x) => !content.zones.find((y) => y.id === x.to.zone && y.kind === 'exterior')).map((x) => x.name);
+    // Las consultas clandestinas solo aparecen cuando las has descubierto.
+    const places = z.doors.filter((x) => !content.zones.find((y) => y.id === x.to.zone && y.kind === 'exterior'))
+      .map((x) => (x.hidden ? ((opts.discovered ?? []).includes(x.hidden) ? `⚕ ${content.ripperdocs.find((r) => r.id === x.hidden)?.name ?? 'Matasanos'}` : null) : x.name)).filter((x): x is string => !!x);
+    const portals = z.objects.filter((o) => o.kind === 'housing').length;
+    const dealers = z.objects.filter((o) => o.kind === 'dealer').length;
     const exits = z.doors.filter((x) => content.zones.find((y) => y.id === x.to.zone && y.kind === 'exterior')).map((x) => x.name);
     info.replaceChildren(...([h('h3', { style: { color: d.color, margin: '0 0 4px' } }, z.name, zid === here ? ' · estás aquí' : ''), h('p', { style: { margin: '4px 0' } }, d.desc),
       h('div', {}, '👮 Presencia policial: ', h('b', {}, d.police)),
       h('div', { class: 'row', style: { gap: '4px', margin: '6px 0' } }, ...d.factions.map((f) => { const fd = facName(f); return h('span', { class: 'chip', style: { background: (fd?.color ?? '#888') + '33', color: fd?.color } }, fd?.name ?? f); })),
       places.length ? h('div', { style: { fontSize: '0.85em' } }, '🚪 ', places.join(' · ')) : null,
-      exits.length ? h('div', { style: { fontSize: '0.85em', color: 'var(--cyan)' } }, '➜ ', exits.join(' · ')) : null] as (Node | null)[]).filter((x): x is Node => !!x));
+      exits.length ? h('div', { style: { fontSize: '0.85em', color: 'var(--cyan)' } }, '➜ ', exits.join(' · ')) : null,
+      h('div', { style: { fontSize: '0.85em' } }, `🏠 ${portals} portales con ${content.houses.filter((x) => x.zone === zid).length} viviendas${dealers ? ` · 🚗 concesionario al aire libre` : ''}`),
+      zid !== here && opts.travel ? h('button', { class: 'btn small primary', disabled: !opts.hasCar, title: opts.hasCar ? '' : 'Necesitas un coche', onclick: () => { opts.travel!(zid); document.getElementById('world-panel')?.remove(); } }, opts.hasCar ? `🚗 Viajar en coche a ${z.name}` : '🚗 Viajar (necesitas coche)') : null] as (Node | null)[]).filter((x): x is Node => !!x));
   };
   const grid = h('div', { class: 'worldgrid', style: { gridTemplateColumns: `repeat(${maxX + 1}, 1fr)` } });
   for (let gy = 0; gy <= maxY; gy++) for (let gx = 0; gx <= maxX; gx++) {
