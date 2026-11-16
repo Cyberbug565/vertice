@@ -78,7 +78,9 @@
    "cerveza-kanal": 40,
    "refresco-neon": 30,
    "bebida-isotonica": 20,
-   "agua-filtrada": 20
+   "agua-filtrada": 20,
+   "gin-zafiro": 20,
+   "licor-voltio": 45
   },
   "priceMult": 1.3,
   "security": 15
@@ -211,7 +213,9 @@
    "sushi-real": 20,
    "bebida-isotonica": 30,
    "agua-filtrada": 30,
-   "cafe-sintetico": 20
+   "cafe-sintetico": 20,
+   "gin-zafiro": 35,
+   "verm-granate": 30
   },
   "priceMult": 1.5,
   "security": 20
@@ -225,7 +229,9 @@
    "cerveza-kanal": 40,
    "refresco-neon": 30,
    "ramen-kanal": 15,
-   "agua-filtrada": 20
+   "agua-filtrada": 20,
+   "gin-zafiro": 35,
+   "verm-granate": 15
   },
   "priceMult": 1.25,
   "security": 16
@@ -588,5 +594,47 @@
   ],
   "priceMult": 1.05,
   "security": 16
+ },
+ {
+  "id": "rele-barra",
+  "name": "Barra de El Relé",
+  "owner": "independiente",
+  "zone": "bar-rele",
+  "stock": {
+   "agua-filtrada": 25,
+   "refresco-neon": 20,
+   "cerveza-kanal": 32,
+   "verm-granate": 22
+  },
+  "priceMult": 1.08,
+  "security": 15
+ },
+ {
+  "id": "ultima-luz-barra",
+  "name": "Barra de La Última Luz",
+  "owner": "independiente",
+  "zone": "bar-ultima-luz",
+  "stock": {
+   "agua-filtrada": 25,
+   "refresco-neon": 20,
+   "cerveza-kanal": 25,
+   "verm-granate": 35
+  },
+  "priceMult": 1.08,
+  "security": 15
+ },
+ {
+  "id": "circuito-barra",
+  "name": "Barra de Circuito 33",
+  "owner": "independiente",
+  "zone": "discoteca-circuito",
+  "stock": {
+   "agua-filtrada": 25,
+   "refresco-neon": 20,
+   "gin-zafiro": 35,
+   "licor-voltio": 30
+  },
+  "priceMult": 1.08,
+  "security": 15
  }
 ]

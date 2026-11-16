@@ -1,0 +1,102 @@
+{
+ "id": "refugio-hojas",
+ "name": "La Trastienda Carmesí",
+ "kind": "interior",
+ "width": 14,
+ "height": 10,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#26313a",
+ "safePoint": [
+  12,
+  5
+ ],
+ "waypoints": [
+  [
+   12,
+   5
+  ]
+ ],
+ "furnished": true,
+ "gangBase": {
+  "faction": "hojas-rojas",
+  "boss": "Madame Kurenai"
+ },
+ "gangs": [
+  {
+   "faction": "hojas-rojas",
+   "count": 2,
+   "area": [
+    5,
+    6,
+    2
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "locker",
+   "at": [
+    3,
+    3
+   ]
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    3
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#f36b82",
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    3,
+    6
+   ]
+  },
+  {
+   "type": "neon",
+   "at": [
+    9,
+    1
+   ],
+   "color": "#f36b82",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    8,
+    7
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-refugio-hojas",
+   "name": "Salida a la calle (Polígono Abandonado)",
+   "at": [
+    13,
+    5
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     176,
+     284
+    ]
+   },
+   "danger": "disputed"
+  }
+ ]
+}

@@ -1,0 +1,253 @@
+{
+ "contacts": [
+  {
+   "id": "sira",
+   "name": "Sira «La Señal»",
+   "zone": "bar-rele",
+   "at": [
+    11,
+    4
+   ]
+  },
+  {
+   "id": "nadir",
+   "name": "Nadir",
+   "zone": "bar-ultima-luz",
+   "at": [
+    12,
+    5
+   ]
+  },
+  {
+   "id": "vera",
+   "name": "Vera «Eco»",
+   "zone": "discoteca-circuito",
+   "at": [
+    18,
+    11
+   ]
+  },
+  {
+   "id": "mikio",
+   "name": "Mikio",
+   "zone": "club-kitsune-int",
+   "at": [
+    13,
+    8
+   ]
+  }
+ ],
+ "buyers": [
+  {
+   "id": "ferro",
+   "name": "Juno",
+   "zone": "vertice",
+   "at": [
+    71,
+    185
+   ],
+   "crew": "hojas-rojas",
+   "risk": 0.22
+  },
+  {
+   "id": "muelles",
+   "name": "Duna",
+   "zone": "vertice",
+   "at": [
+    57,
+    62
+   ],
+   "crew": "marea",
+   "risk": 0.27
+  },
+  {
+   "id": "poligono",
+   "name": "Cifra",
+   "zone": "vertice",
+   "at": [
+    208,
+    289
+   ],
+   "crew": "hojas-rojas",
+   "risk": 0.28
+  },
+  {
+   "id": "vertedero",
+   "name": "Lija",
+   "zone": "vertice",
+   "at": [
+    358,
+    285
+   ],
+   "crew": "chatarreros",
+   "risk": 0.25
+  },
+  {
+   "id": "forja",
+   "name": "Tadeo",
+   "zone": "vertice",
+   "at": [
+    336,
+    156
+   ],
+   "crew": "engranajes",
+   "risk": 0.23
+  },
+  {
+   "id": "trenes",
+   "name": "La Hendidura",
+   "zone": "vertice",
+   "at": [
+    508,
+    284
+   ],
+   "crew": "engranajes",
+   "risk": 0.3
+  },
+  {
+   "id": "arrabal",
+   "name": "Vico",
+   "zone": "vertice",
+   "at": [
+    76,
+    265
+   ],
+   "crew": "chatarreros",
+   "risk": 0.19
+  },
+  {
+   "id": "neon",
+   "name": "Noa",
+   "zone": "vertice",
+   "at": [
+    321,
+    27
+   ],
+   "crew": "marea",
+   "risk": 0.26
+  }
+ ],
+ "crews": [
+  {
+   "id": "marea",
+   "tier": "principal",
+   "entryRep": 18,
+   "rivals": [
+    "engranajes",
+    "chatarreros",
+    "hermandad-sol"
+   ],
+   "bases": [
+    {
+     "id": "marea-central",
+     "name": "Contable de El Capitán Iriarte",
+     "zone": "base-marea",
+     "at": [
+      18,
+      9
+     ]
+    },
+    {
+     "id": "marea-refugio",
+     "name": "Encargado · La Dársena",
+     "zone": "refugio-marea",
+     "at": [
+      8,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "id": "engranajes",
+   "tier": "principal",
+   "entryRep": 22,
+   "rivals": [
+    "marea",
+    "hojas-rojas",
+    "kitsune"
+   ],
+   "bases": [
+    {
+     "id": "engranajes-central",
+     "name": "Contable de Pistón",
+     "zone": "base-engranajes",
+     "at": [
+      18,
+      9
+     ]
+    },
+    {
+     "id": "engranajes-refugio",
+     "name": "Encargado · El Vagón Taller",
+     "zone": "refugio-engranajes",
+     "at": [
+      8,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hojas-rojas",
+   "tier": "secundaria",
+   "parent": "marea",
+   "entryRep": 5,
+   "rivals": [
+    "engranajes",
+    "chatarreros",
+    "furias"
+   ],
+   "bases": [
+    {
+     "id": "hojas-rojas-central",
+     "name": "Contable de Madame Kurenai",
+     "zone": "base-hojas-rojas",
+     "at": [
+      18,
+      9
+     ]
+    },
+    {
+     "id": "hojas-rojas-refugio",
+     "name": "Encargado · La Trastienda Carmesí",
+     "zone": "refugio-hojas",
+     "at": [
+      8,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "id": "chatarreros",
+   "tier": "secundaria",
+   "parent": "engranajes",
+   "entryRep": 8,
+   "rivals": [
+    "marea",
+    "hojas-rojas"
+   ],
+   "bases": [
+    {
+     "id": "chatarreros-central",
+     "name": "Contable de Tuercas Méndez",
+     "zone": "base-chatarreros",
+     "at": [
+      18,
+      9
+     ]
+    },
+    {
+     "id": "chatarreros-refugio",
+     "name": "Encargado · El Desguace Hundido",
+     "zone": "refugio-chatarreros",
+     "at": [
+      8,
+      4
+     ]
+    }
+   ]
+  }
+ ]
+}

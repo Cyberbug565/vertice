@@ -6,6 +6,7 @@ import { GameError } from '../game/effects.js';
 import { effective, skillLevel, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
 import type { PlayerConn, World } from './world.js';
+import { isSick } from '../game/substances.js';
 
 export interface GotoState { kind: 'place' | 'person' | 'door'; label: string; zone: string; x: number; y: number; key?: string; door?: number; lastPathAt: number; tx: number; ty: number }
 const TRACK_MS = 5 * 60_000;
@@ -118,7 +119,15 @@ export class Intel {
       const zone = e.zone.def.kind === 'exterior' ? e.zone : city;
       st = { kind: 'place', label: this.placeName(zone.id, m.x, m.y), zone: zone.id, x: m.x, y: m.y, lastPathAt: 0, tx: NaN, ty: NaN };
     }
-    this.goto.set(p.charId, st);
+    this.setGoal(c, st);
+  }
+
+  markPlace(c: PlayerConn, label: string, zone: string, x: number, y: number) {
+    this.setGoal(c, { kind: 'place', label, zone, x, y, lastPathAt: 0, tx: NaN, ty: NaN });
+  }
+
+  private setGoal(c: PlayerConn, st: GotoState) {
+    this.goto.set(c.p!.charId, st);
     this.w.send(c, { t: 'gotoTarget', target: { label: st.label, zone: st.zone, x: st.x, y: st.y } });
     this.w.send(c, { t: 'notice', kind: 'info', text: `Objetivo marcado: ${st.label}. Vas de camino (cualquier orden manual lo cancela).` });
     this.step(c);
@@ -136,7 +145,7 @@ export class Intel {
   private step(c: PlayerConn) {
     const p = c.p!, e = c.e!;
     const st = this.goto.get(p.charId);
-    if (!st || c.closed || p.status !== 'alive' || p.sleeping || e.transit || e.channel || e.pendingInteract !== undefined || e.pendingAction) return;
+    if (!st || c.closed || p.status !== 'alive' || p.sleeping || isSick(p.substances) || e.transit || e.channel || e.pendingInteract !== undefined || e.pendingAction) return;
     if (st.kind === 'person' && st.key) {
       const pos = this.personPos(p, st.key);
       if (pos) { const moved = pos.zone !== st.zone || Math.hypot(pos.x - st.x, pos.y - st.y) > 2; st.zone = pos.zone; st.x = pos.x; st.y = pos.y; if (moved) this.w.send(c, { t: 'gotoTarget', target: { label: st.label, zone: st.zone, x: st.x, y: st.y } }); }

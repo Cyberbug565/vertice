@@ -7,6 +7,8 @@ import {
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
+import { substanceEffects, type SubstanceUse } from './substances.js';
+import { underworldStatus, type UnderworldState } from './underworld.js';
 
 export interface ContractProgress { instanceId: string; contractId: string; version: number; state: 'active' | 'completed' | 'abandoned'; objectives: Record<string, boolean>; outcome?: string | null }
 
@@ -47,6 +49,8 @@ export interface PlayerState {
   bio: { objective: string; childhood: string; event: string; done: boolean } | null;
   identified: { crime: string; district: string; at: number } | null;
   intel: Map<string, { name: string; zone: string; x: number; y: number; at: number; precise: boolean }>;
+  substances: SubstanceUse;
+  underworld: UnderworldState;
 }
 
 export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean; part?: string | null }
@@ -282,6 +286,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     houses: houses.rows.map((x: any) => x.house_id), cars: cars.rows.map((x: any) => ({ id: x.id, car: x.car_id })), driving: null, lastCombatAt: 0, walked: 0,
     running: false, auto: { on: !!row.autopilot?.on, personality: row.autopilot?.personality ?? 'responsable', status: '' },
     body: row.body ?? newBody(), bio: row.bio ?? null, identified: row.identified ?? null, intel: new Map(),
+    substances: row.substance_use ?? {}, underworld: row.underworld ?? {},
   };
   for (const x of prog.rows) {
     p.contracts.set(x.contract_id, { instanceId: x.instance_id, contractId: x.contract_id, version: x.version, state: x.state, objectives: { ...x.shared_obj, ...x.objectives }, outcome: x.outcome });
@@ -320,8 +325,9 @@ export function aimOf(c: Content, p: PlayerState) {
   const w = ef.weapon?.weapon;
   if (!w || w.kind !== 'ranged') return { range: 0, time: 0 };
   const lv = skillLevelForXp(p.skillXp.armas ?? 0);
-  const f = Math.max(0.35, Math.min(0.85, 0.3 + lv * 0.02 + ef.attrs.REF * 0.025 + (w.traits?.includes('inteligente') ? 0.1 : 0)));
-  return { range: Math.round(w.range * f * 10) / 10, time: Math.round(Math.max(0.7, 2.4 - lv * 0.05 - ef.attrs.REF * 0.06) * 10) / 10 };
+  const aim = substanceEffects(c, p.substances).aim;
+  const f = Math.max(0.2, Math.min(0.85, 0.3 + lv * 0.02 + ef.attrs.REF * 0.025 + (w.traits?.includes('inteligente') ? 0.1 : 0) + aim * 0.035));
+  return { range: Math.round(w.range * f * 10) / 10, time: Math.round(Math.max(0.7, 2.4 - lv * 0.05 - ef.attrs.REF * 0.06 - aim * 0.12) * 10) / 10 };
 }
 
 export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
@@ -344,6 +350,7 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     weaponSlots: weaponSlotsOf(c, p), aim: aimOf(c, p),
     bio: p.bio ? { ...p.bio, objectiveName: OBJECTIVES.find((o) => o.id === p.bio!.objective)?.name ?? p.bio.objective, progress: sheetHooks.objective(p) } : null,
     identified: p.identified ? { crime: p.identified.crime, district: p.identified.district } : null,
+    substances: substanceEffects(c, p.substances).status, underworld: underworldStatus(c, p.underworld),
     hp: Math.round(p.hp), hpMax: ef.hpMax, stamina: Math.round(p.stamina), staminaMax: ef.staminaMax, luck: p.luck, luckMax: p.attributes.LUCK,
     humanity: p.humanity, humanityMax: p.humanityMax, chromeCapacity: ef.chromeCapacity, chromeUsed: ef.chromeUsed,
     carry: Math.round(ef.weight * 10) / 10, carryMax: ef.carryMax,

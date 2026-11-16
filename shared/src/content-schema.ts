@@ -63,6 +63,7 @@ export const ZoneSchema = z.object({
   gangBase: z.object({ faction: z.string(), boss: z.string() }).optional(),
   skywalk: z.boolean().optional(),
   furnished: z.boolean().optional(),
+  nightlife: z.object({ kind: z.enum(['bar', 'club']), music: z.enum(['fiesta', 'chill']), floor: rect, color: z.string().regex(/^#[0-9a-fA-F]{6}$/) }).optional(),
 });
 
 /** v0.6: cobertura que da cada elemento del escenario frente a disparos (total o parcial). */
@@ -193,6 +194,14 @@ export const ItemSchema = z.object({
   id: z.string(), name: z.string(), desc: z.string(), weight: z.number(), price: z.number().int().optional(),
   category: z.enum(ITEM_CATEGORIES).default('equipo'),
   consumable: z.object({ restore: z.enum(['stamina', 'hp']).optional(), amount: z.number().default(0), hunger: z.number().default(0), thirst: z.number().default(0), fatigue: z.number().default(0) }).optional(),
+  substance: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('alcohol'), strength: z.number().int().min(1).max(60) }),
+    z.object({ kind: z.literal('drug'), seconds: z.number().int().positive(), crashSeconds: z.number().int().positive(),
+      habit: z.number().int().min(1).max(40), aim: z.number().default(0), speed: z.number().default(0),
+      melee: z.number().default(0), defense: z.number().default(0), ram: z.number().default(0),
+      crashAim: z.number().nonpositive().default(0), crashSpeed: z.number().nonpositive().default(0), fatigue: z.number().nonnegative(),
+    }),
+  ]).optional(),
   confront: z.number().int().optional(),
   weapon: WeaponSchema.optional(),
   armor: z.number().int().optional(),
@@ -321,6 +330,17 @@ export const PostSchema = z.object({
 export type PostDef = z.infer<typeof PostSchema>;
 export type HouseDef = z.infer<typeof HouseSchema>;
 
+const UnderworldSiteSchema = z.object({ id: z.string(), name: z.string(), zone: z.string(), at: xy });
+const UnderworldSchema = z.object({
+  contacts: z.array(UnderworldSiteSchema),
+  buyers: z.array(UnderworldSiteSchema.extend({ crew: z.string(), risk: z.number().min(0).max(0.7) })),
+  crews: z.array(z.object({
+    id: z.string(), tier: z.enum(['principal', 'secundaria']), parent: z.string().optional(),
+    entryRep: z.number().int().nonnegative(), rivals: z.array(z.string()), bases: z.array(UnderworldSiteSchema).min(2),
+  })),
+});
+export type UnderworldDef = z.infer<typeof UnderworldSchema>;
+
 export const ContentSchema = z.object({
   manifest: z.object({ version: z.string(), edition: z.string(), city: z.string(), startZone: z.string(), startAt: xy, cityHourMs: z.number().int().positive() }),
   attributes: z.array(z.object({ id: z.enum(ATTRIBUTE_IDS), name: z.string(), represents: z.string(), effect: z.string(), example: z.string() })),
@@ -356,5 +376,6 @@ export const ContentSchema = z.object({
   dealers: z.array(DealerSchema),
   houses: z.array(HouseSchema),
   posts: z.array(PostSchema),
+  underworld: UnderworldSchema,
 });
 export type Content = z.infer<typeof ContentSchema>;

@@ -1,4 +1,4 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.5)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.6)
 
 Novedades de la v0.6 (combate por zonas del cuerpo con heridas, desangrado y amputaciones, armas visibles con balas trazadoras, límite de armas y maletero, cámaras que te identifican, zonas verde/amarilla/roja/negra, buscador de personas y destino marcado, más muebles para cubrirse, más cuerpos y peinados e historia del personaje): [`docs/NOVEDADES-v0.6.md`](docs/NOVEDADES-v0.6.md). Las de la v0.5 (ciudad única más grande, día y noche de 1 h 30, correr, modo automático, puestos fijos con horario, torres por plantas y bases de bandas): [`docs/NOVEDADES-v0.5.md`](docs/NOVEDADES-v0.5.md). Las de la v0.4 (niveles, habilidades 1–25 y perks, pantalla de personaje, ropa, casas, coches, mercado en tiempo real, cromo con habilidades y calles con carriles): [`docs/NOVEDADES-v0.4.md`](docs/NOVEDADES-v0.4.md). Las de la v0.3: [`docs/NOVEDADES-v0.3.md`](docs/NOVEDADES-v0.3.md). Las de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md). Publicarlo en internet: [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
 
@@ -52,7 +52,8 @@ Para un mundo que siga abierto aunque apagues el ordenador, consulta [`docs/DESP
 | Moverse | Clic izquierdo en el suelo | — |
 | Hablar, entrar o examinar | Clic en la persona, puerta u objeto. El personaje se acerca solo | `Tab` / `Mayús+Tab` selecciona lo cercano y `E` o `Espacio` interactúa. Opciones de diálogo con 1–9 |
 | Menú de opciones (hablar, robar, KO, matar, capturar, hackear, cargar cuerpo…) | Clic derecho sobre la persona, cajero o tienda | Clic izquierdo sobre jugadores, pandilleros y fugitivos |
-| Cancelar la orden | Clic derecho en el suelo | `S` o el botón **Cancelar** |
+| Bailar | Clic derecho sobre tu personaje o el suelo → **Bailar** | `Y` abre la ruleta |
+| Cancelar la orden | Clic derecho en el suelo → **Cancelar orden** | `S` o el botón **Cancelar** |
 | Retirada al refugio protegido más cercano | — | `R` o el botón **Retirada** |
 | Diario, mapa global (con viaje en coche) | — | `J`, `M` |
 | Personaje: ficha, inventario y ropa, ciberware, habilidades y perks | — | `C`, `I`, `X`, `H` |
@@ -67,6 +68,16 @@ Para un mundo que siga abierto aunque apagues el ordenador, consulta [`docs/DESP
 | Atacar a una zona del cuerpo · disparo apuntado | Clic en la persona: elige Torso, Cabeza, Brazos, Manos o Piernas | El anillo rojo indica que está a tu alcance; el verde, tiro seguro apuntando |
 | Chat local | — | `Enter` |
 | Zoom | Rueda | `+` / `−` |
+
+## Vida nocturna y bajos fondos
+
+El mapa (`M`) señala los locales con ♫. Visita La Última Luz en el Arrabal, Circuito 33 en Forja o las pistas de El Relé, Voltio, Kitsune y el Club de Campo Kaiten. Pide una bebida en la barra y pulsa **Beber**. También puedes tomarla desde el inventario. La embriaguez reduce la puntería y el exceso causa vómitos, sed y fatiga. El consumo repetido puede causar dependencia y abstinencia.
+
+Habla con **Sira «La Señal»** en El Relé para ver los precios, quién controla cada distrito y el riesgo de venta. Puedes comprar y revender por tu cuenta para quedarte con el margen completo, expuesto a compradores que se quedan con parte del dinero y a represalias de las bandas. La reputación en los bajos fondos desbloquea el ingreso en bandas secundarias y organizaciones principales.
+
+Si te afilias, el contacto te entrega un lote para un comprador concreto. La banda reduce el riesgo en los tratos que controla. Sus aliados te dan acceso a sus bases y las bandas rivales te atacan en su territorio. Tras cobrar, el encargo indica qué base recibe el dinero. Pulsa **Marcar ruta** en el HUD o el diario (`J`). Entregar dentro del plazo paga una comisión y mejora tu reputación. Las entregas completadas dan ascensos. Pasarse del plazo o abandonar tiene un coste de reputación. Las sustancias también se pueden consumir desde el inventario y cada una tiene efectos, bajón y dependencia propios.
+
+La música cambia con el lugar y el combate. El navegador sintetiza cinco secuencias originales sin grabaciones ni muestras externas. Ajusta música, ambiente y efectos por separado en **Ajustes**.
 
 ## Primer encargo: «Luz para el Mercado Lumen»
 

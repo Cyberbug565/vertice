@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   checkChance, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
-  OBJECTIVES, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type JobsView, type TargetMenuView,
+  OBJECTIVES, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView,
 } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { Entity, RunningTask } from './entity.js';
@@ -11,6 +11,7 @@ import { MarketService } from '../game/market.js';
 import { ClinicService } from '../game/clinic.js';
 import { BountyService, type Bounty } from '../game/bounty.js';
 import { GameError } from '../game/effects.js';
+import { isSick, substanceEffects, takeDose } from '../game/substances.js';
 import { buildSheet, chromeParts, effective, objectiveStatus, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
@@ -80,6 +81,7 @@ export class Survival {
 
   private tickPlayer(c: PlayerConn, dtH: number) {
     const p = c.p!, e = c.e!, n = this.w.c.needs, x = this.x(c);
+    this.w.nightlife.symptoms(p, e);
     if (p.status === 'downed') {
       if (p.revive && Date.now() >= p.revive.at) {
         const ef0 = effective(this.w.c, p);
@@ -95,6 +97,7 @@ export class Survival {
       return;
     }
     const ef = effective(this.w.c, p);
+    const substances = substanceEffects(this.w.c, p.substances);
     const working = !!e.task?.def.id.startsWith('job:');
     const mult = working ? n.workMultiplier : 1;
     const sleepMult = p.sleeping ? 0.5 : 1;
@@ -111,7 +114,7 @@ export class Survival {
         this.wake(c, full ? 'Te despiertas como nueva persona: sueño, Suerte y algo de salud recuperados.' : 'Te despiertas. No has descansado del todo bien.');
       } else if (dangerAt(e.zone.grid, e.x, e.y) !== 'protected' && e.zone.def.kind !== 'interior') this.streetEvent(c, dtH);
     } else {
-      p.fatigue = Math.min(100, p.fatigue + n.perGameHour.fatigue * ef.needs.fatigue * mult * (p.profession === 'estibador' && working ? 0.7 : 1) * dtH);
+      p.fatigue = Math.min(100, p.fatigue + (n.perGameHour.fatigue * ef.needs.fatigue * mult * (p.profession === 'estibador' && working ? 0.7 : 1) + substances.fatigue) * dtH);
     }
     let dmg = 0;
     if (p.hunger >= 100) dmg += n.damagePerGameHourAtMax * dtH;
@@ -146,7 +149,7 @@ export class Survival {
       else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1));
       if (p.running && p.stamina <= 3 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.'); }
       if (p.stamina > 20) x.breathless = false;
-      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult;
+      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult * substances.speed;
     }
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
     if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y) * (p.running && !p.driving ? 2 : 1));
@@ -159,7 +162,7 @@ export class Survival {
     // Biomonitor: autoestimulante por debajo del 25 %.
     if (ef.flags.has('autoestim') && p.hp < ef.hpMax * 0.25 && Date.now() > p.autoStimAt) { p.autoStimAt = Date.now() + 120000; p.hp = Math.min(ef.hpMax, p.hp + 20); this.notice(c, 'good', 'Tu biomonitor inyecta un estimulante: +20 de salud.'); }
     // RAM del deck: se recarga más rápido con rango de red.
-    if (ef.ram > 0) p.ram = Math.min(ef.ram, p.ram + (0.25 + p.netRank * 0.03)); else p.ram = 0;
+    if (ef.ram > 0) p.ram = Math.min(ef.ram, p.ram + (0.25 + p.netRank * 0.03 + substances.ram)); else p.ram = 0;
     // Cromo visible y salud para quien mire.
     const parts = chromeParts(this.w.c, p);
     if (parts.join() !== (e.chrome ?? []).join()) { e.chrome = parts; this.bump(e); }
@@ -174,7 +177,7 @@ export class Survival {
       if (q <= 0) continue;
       const d = this.w.c.items.find((i) => i.id === it);
       const gain = -(d?.consumable?.[need] ?? 0);
-      if (!d?.consumable || gain <= 0) continue;
+      if (!d?.consumable || d.substance || gain <= 0) continue;
       const waste = Math.max(0, gain - p[need]);
       const score = gain - waste * 1.5 - (d.price ?? 0) * 0.05;
       if (score > bestScore) { bestScore = score; best = it; }
@@ -184,7 +187,7 @@ export class Survival {
 
   private autoNeeds(c: PlayerConn) {
     const p = c.p!, e = c.e!, x = this.x(c), n = this.w.c.needs;
-    if (!p.autoNeeds || p.sleeping || e.task || e.channel || e.path.length || c.dialog || e.transit || Date.now() < x.nextAutoAt) return;
+    if (!p.autoNeeds || isSick(p.substances) || c.e?.emote || p.sleeping || e.task || e.channel || e.path.length || c.dialog || e.transit || Date.now() < x.nextAutoAt) return;
     for (const need of ['thirst', 'hunger'] as const) {
       if (p[need] < n.autoThreshold) continue;
       x.nextAutoAt = Date.now() + 4000;
@@ -251,7 +254,8 @@ export class Survival {
   async consume(c: PlayerConn, item: string, opId: string, auto = false) {
     const p = c.p!;
     const d = this.w.c.items.find((i) => i.id === item);
-    if (!d?.consumable) throw new GameError('Eso no se puede consumir.');
+    if (!d?.consumable || (auto && d.substance)) throw new GameError('Eso no se puede consumir.');
+    if (d.substance) return this.consumeSubstance(c, d, d.consumable, opId);
     if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No te quedan.');
     const r = await this.w.db.tx(async (q) => {
       const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
@@ -274,6 +278,43 @@ export class Survival {
     const bleeding = p.body.bleed > 0.05;
     if (item === 'venda' || item === 'estim') this.w.combat.wounds.treat(p, c.e, item === 'estim' ? 1 : 0.7);
     this.notice(c, 'info', `${auto ? 'Automático: ' : ''}${item === 'venda' ? 'te vendas' : `consumes ${d.name}`}${bleeding && (item === 'venda' || item === 'estim') ? (p.body.bleed > 0.05 ? ': la hemorragia baja, pero sigue.' : ': la hemorragia se detiene.') : '.'}`);
+    this.sheet(c);
+  }
+
+  private async consumeSubstance(c: PlayerConn, d: ItemDef, cons: NonNullable<ItemDef['consumable']>, opId: string) {
+    const p = c.p!, e = c.e!;
+    if (p.status !== 'alive' || p.sleeping || p.driving || isSick(p.substances)) throw new GameError('No puedes consumirlo ahora.');
+    if ((p.inventory.get(d.id) ?? 0) < 1) throw new GameError('No te quedan.');
+    const next = takeDose(p.substances, d, Date.now());
+    const thirst = Math.max(0, Math.min(100, p.thirst + cons.thirst + (next.sick ? 18 : 0)));
+    const fatigue = Math.max(0, Math.min(100, p.fatigue + cons.fatigue + (next.sick ? 15 : 0)));
+    const stamina = Math.max(0, Math.min(effective(this.w.c, p).staminaMax,
+      p.stamina + (cons.restore === 'stamina' ? cons.amount : 0) - (next.sick ? 14 : 0)));
+    const qty = await this.w.db.tx(async (q) => {
+      const op = await q.query("INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,'consume',$3) ON CONFLICT DO NOTHING RETURNING op_id",
+        [opId, p.charId, JSON.stringify({ item: d.id })]);
+      if (!op.rows.length) return null;
+      const item = await q.query<{ qty: number }>('UPDATE inventory_items SET qty = qty - 1 WHERE character_id=$1 AND def_id=$2 AND qty >= 1 RETURNING qty', [p.charId, d.id]);
+      if (!item.rows.length) throw new GameError('No te quedan.');
+      await q.query('UPDATE characters SET substance_use=$2, thirst=$3, fatigue=$4, stamina=$5 WHERE id=$1',
+        [p.charId, JSON.stringify(next.state), thirst, fatigue, Math.round(stamina)]);
+      return item.rows[0].qty;
+    });
+    if (qty === null) return;
+    p.inventory.set(d.id, qty);
+    p.substances = next.state;
+    p.thirst = thirst;
+    p.fatigue = fatigue;
+    p.stamina = stamina;
+    this.notice(c, 'info', `Consumes ${d.name}.`);
+    if (next.sick) {
+      this.w.intel.cancel(c);
+      this.w.nightlife.symptoms(p, e);
+      this.notice(c, 'bad', 'Vomitas. La intoxicación te deja sin aguante, con sed y agotamiento.');
+    }
+    if (next.newDependence) this.notice(c, 'warn', d.substance?.kind === 'alcohol'
+      ? 'Has desarrollado dependencia al alcohol. Al quedarte sobrio puedes sufrir abstinencia.'
+      : `Has desarrollado dependencia a ${d.name}. Puedes sufrir abstinencia cuando se acabe el efecto.`);
     this.sheet(c);
   }
 

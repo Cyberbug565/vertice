@@ -198,7 +198,7 @@ function cyberTab(s: CharacterSheet) {
   const body = h('div', { class: 'cy-figure' }, silhouette(s.chrome));
   const left = REGIONS.filter((r) => r.side === 'l').map(box), right = REGIONS.filter((r) => r.side === 'r').map(box);
   const inBag = s.cyber.filter((c) => c.location === 'inventory');
-  return h('div', { class: 'cy' },
+  return h('div', { class: 'cy-layout' },
     h('div', { class: 'cy-meter' }, h('div', { class: 'cy-mlabel' }, 'CAPACIDAD'), h('div', { class: 'cy-vbar' }, h('i', { style: { height: `${(100 * s.chromeUsed) / Math.max(1, s.chromeCapacity)}%` } })), h('b', { class: 'mono' }, `${s.chromeUsed}/${s.chromeCapacity}`)),
     h('div', { class: 'cy-col' }, ...left), body, h('div', { class: 'cy-col' }, ...right),
     h('div', { class: 'cy-meter hum' }, h('div', { class: 'cy-mlabel' }, 'HUMANIDAD'), h('div', { class: 'cy-vbar' }, h('i', { style: { height: `${(100 * s.humanity) / Math.max(1, s.humanityMax)}%` } })), h('b', { class: 'mono' }, `${s.humanity}/${s.humanityMax}`)),

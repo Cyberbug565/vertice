@@ -114,6 +114,24 @@
     6
    ],
    "color": "#ff3fa4"
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#d66aff",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    12,
+    1
+   ],
+   "color": "#d66aff",
+   "blocking": false
   }
  ],
  "doors": [
@@ -156,5 +174,16 @@
   13,
   5
  ],
- "furnished": true
+ "furnished": true,
+ "nightlife": {
+  "kind": "club",
+  "music": "fiesta",
+  "floor": [
+   6,
+   3,
+   5,
+   4
+  ],
+  "color": "#d66aff"
+ }
 }

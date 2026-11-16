@@ -41,11 +41,25 @@
  },
  {
   "id": "neblina",
-  "name": "«Neblina» (sustancia ficticia)",
-  "desc": "Lote de una sustancia ficticia del juego. Ilegal: se vende al perista.",
+  "name": "Neblina",
+  "desc": "Sintético de los Muelles. Mejora la defensa y acelera la recuperación de RAM. Luego llegan temblores y fatiga.",
   "weight": 0.2,
   "category": "contrabando",
-  "price": 90
+  "price": 90,
+  "consumable": {
+   "fatigue": -5
+  },
+  "substance": {
+   "kind": "drug",
+   "seconds": 70,
+   "crashSeconds": 100,
+   "habit": 15,
+   "defense": 2,
+   "ram": 0.35,
+   "crashAim": -1,
+   "crashSpeed": -0.08,
+   "fatigue": 16
+  }
  },
  {
   "id": "chatarra",
@@ -202,13 +216,17 @@
  {
   "id": "cerveza-kanal",
   "name": "Cerveza Kanal",
-  "desc": "Sed −25, sueño +5.",
+  "desc": "Cerveza ligera. Baja la sed, pero la embriaguez reduce la puntería.",
   "weight": 0.5,
   "category": "bebida",
   "price": 9,
   "consumable": {
    "thirst": -25,
    "fatigue": 5
+  },
+  "substance": {
+   "kind": "alcohol",
+   "strength": 23
   }
  },
  {

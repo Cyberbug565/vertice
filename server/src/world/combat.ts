@@ -1,4 +1,5 @@
 // Combate automático por armas, red (quickhacks), facciones, policía, Rescate Ámbar y transporte de cuerpos.
+import { isSick, substanceEffects } from '../game/substances.js';
 import { randomUUID } from 'node:crypto';
 import { AIM, COVER_FULL, COVER_HALF, PART_NAMES, hitPart, type AimZone, type BodyPart } from '@vertice/shared';
 import { checkChance, dangerAt, findPath, lineWalkable, nearestWalkable, isWalkable, skillLevelForXp, type ClientMsg, type FactionsView, type AmbarView, type ItemDef, type ScanView, type TargetMenuView, type WeaponDef } from '@vertice/shared';
@@ -99,12 +100,13 @@ export class Combat {
     const skill = wp.w.kind === 'melee' ? ef.skills.cuerpo ?? 0 : ef.skills.armas ?? 0;
     const edge = ef.flags.has('al-limite') && p.hp < ef.hpMax * 0.3 ? 3 : 0;
     const charge = (p.buffs.carga ?? 0) > Date.now() ? 3 : 0;
-    return ef.attrs.REF + skill + wp.w.accuracy + ef.confront - this.encPenalty(p) - (p.fatigue >= 80 ? 1 : 0) + (wp.w.kind === 'ranged' ? ef.perk.rangedAcc ?? 0 : 0) + edge + charge;
+    const affectedAim = wp.w.kind === 'ranged' ? substanceEffects(this.c, p.substances).aim : 0;
+    return ef.attrs.REF + skill + wp.w.accuracy + ef.confront - this.encPenalty(p) - (p.fatigue >= 80 ? 1 : 0) + (wp.w.kind === 'ranged' ? ef.perk.rangedAcc ?? 0 : 0) + edge + charge + affectedAim;
   }
   defenseScore(p: PlayerState) {
     const ef = effective(this.c, p);
     const edge = ef.flags.has('al-limite') && p.hp < ef.hpMax * 0.3 ? 3 : 0;
-    return ef.attrs.DEX + (ef.skills.atletismo ?? 0) + ef.defense + (p.stance === 'avoid' ? 1 : 0) - (p.sleeping ? 6 : 0) - (p.blindUntil > Date.now() ? 4 : 0) - (ef.flags.has('imparable') ? 0 : this.encPenalty(p)) + edge;
+    return ef.attrs.DEX + (ef.skills.atletismo ?? 0) + ef.defense + (p.stance === 'avoid' ? 1 : 0) - (p.sleeping ? 6 : 0) - (p.blindUntil > Date.now() ? 4 : 0) - (ef.flags.has('imparable') ? 0 : this.encPenalty(p)) + edge + substanceEffects(this.c, p.substances).defense;
   }
   /** Probabilidad de esquivar por completo (perks, implantes y Tiempo bala). */
   dodgeOf(p: PlayerState) { return Math.min(0.6, effective(this.c, p).dodge + ((p.buffs['tiempo-bala'] ?? 0) > Date.now() ? 0.3 : 0)); }
@@ -141,6 +143,10 @@ export class Combat {
       if (target.objKind === 'atm' || target.objKind === 'shop') this.hackOptions(p, e, target, opts);
       return { target: target.id, name: target.name, subtitle: target.objKind === 'atm' ? 'Cajero automático' : 'Comercio', options: opts };
     }
+    if (target.marketSite) {
+      opts.push({ id: 'trade', kind: 'interact', group: 'social', label: target.title === 'Entrega de la banda' ? 'Hablar de la entrega' : 'Negociar' });
+      return { target: target.id, name: target.name, subtitle, color: fac?.color, options: opts };
+    }
     if (target.npcType === 'essential' || (target.kind === 'npc' && !target.npcType && target.dialog && !target.fugitive && !target.npcMax)) {
       opts.push({ id: 'talk', kind: 'interact', group: 'social', label: 'Hablar' });
       if (target.npcShop) opts.push({ id: 'trade', kind: 'interact', group: 'social', label: 'Comerciar' });
@@ -171,8 +177,9 @@ export class Combat {
     // Disparo apuntado: seguro dentro de tu alcance de tiro (verde), pero tienes que estar quieto apuntando.
     if (wp.w.kind === 'ranged') {
       const aim = aimOf(this.c, p), dist = Math.hypot(target.x - e.x, target.y - e.y);
-      opts.push({ id: 'aim', kind: 'action', group: 'combate', label: `Disparo apuntado (${aim.time} s quieto)`, chance: dist <= aim.range ? 1 : undefined, danger: true,
-        detail: `Tiro seguro hasta ${aim.range} m (está a ${dist.toFixed(0)} m). Mejora con Armas a distancia y REF.`, disabled: block ?? (dist > aim.range ? `Fuera de tiro seguro: acércate a ${aim.range} m` : !this.lineClear(e, target) ? 'Sin línea de tiro' : undefined) });
+      const impaired = substanceEffects(this.c, p.substances).aim < 0;
+      opts.push({ id: 'aim', kind: 'action', group: 'combate', label: `Disparo apuntado (${aim.time} s quieto)`, chance: dist <= aim.range && !impaired ? 1 : undefined, danger: true,
+        detail: impaired ? `Puntería reducida por tus efectos activos. Puedes apuntar hasta ${aim.range} m.` : `Tiro seguro hasta ${aim.range} m (está a ${dist.toFixed(0)} m). Mejora con Armas a distancia y REF.`, disabled: block ?? (dist > aim.range ? `Fuera de tiro seguro: acércate a ${aim.range} m` : !this.lineClear(e, target) ? 'Sin línea de tiro' : undefined) });
     }
     const cov = wp.w.kind === 'ranged' ? this.coverOf(e, target) : 0;
     if (cov) subtitle += cov >= 6 ? ' · a cubierto (difícil de alcanzar)' : ' · parcialmente a cubierto';
@@ -413,6 +420,8 @@ export class Combat {
   async attack(c: PlayerConn, target: Entity, lethal: boolean, opId: string, opts: { part?: AimZone; aimed?: boolean } = {}) {
     const p = c.p!, e = c.e!;
     const now = Date.now();
+    if (isSick(p.substances, now)) return;
+    this.w.nightlife.stop(e);
     if (now < p.nextAttackAt) { e.pendingAction = { target: target.id, action: lethal ? 'attack' : 'knockout', opId: `${opId}r`, part: opts.part }; return; }
     if (effective(this.c, p).armsLost >= 2) throw new GameError('Sin brazos no puedes atacar.');
     if (lethal && this.weaponOf(p).w.nonlethal === 'solo') lethal = false;
@@ -441,7 +450,8 @@ export class Combat {
     let a = this.attackScore(p) - rangePenalty - aimPen - ef.armsLost * 3 + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
     const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + cover + this.roll();
     if (ef.flags.has('ojo-de-dios') && wp.w.kind === 'ranged' && dist <= wp.w.range) a = Math.max(a, d);
-    if (opts.aimed) a = Math.max(a, d + 1);
+    const substances = substanceEffects(this.c, p.substances, now);
+    if (opts.aimed) a = substances.aim >= 0 ? Math.max(a, d + 1) : a + Math.max(0, 5 + substances.aim);
     const part = hitPart(() => this.rng(), opts.part);
     if (tp?.sleeping && target.conn) this.sv.wake(target.conn);
     const silent = traits.has('silenciosa') ? 0.5 : 1;
@@ -455,7 +465,7 @@ export class Combat {
       this.w.progress.gain(p, skill, 1);
       return;
     }
-    let dmg = this.rollDamage(wp.w, a - d);
+    let dmg = this.rollDamage(wp.w, a - d) + (wp.w.kind === 'melee' ? substances.melee : 0);
     dmg *= 1 + (wp.w.kind === 'melee' ? ef.meleeDmg : ef.perk.rangedDmg ?? 0) + (wp.w.kind === 'ranged' && dist < 3 ? ef.perk.closeDmg ?? 0 : 0) + (!lethal && ef.perk.koBonus ? 0.2 : 0);
     if (ef.flags.has('corazon-cromo') && Object.values(p.buffs).some((u) => u > now)) dmg *= 1.25;
     const chromed = tp ? chromeParts(this.c, tp).length > 0 : (target.chrome?.length ?? 0) > 0;
@@ -518,12 +528,14 @@ export class Combat {
   /** Respuesta del jugador atacado según su postura: Defender/Agresiva devuelve el golpe; Evitar se retira. */
   private counter(victim: Entity, attacker: Entity) {
     const vc = victim.conn, vp = vc?.p;
-    if (!vc || !vp || vp.status !== 'alive') return;
+    if (!vc || !vp || vp.status !== 'alive' || isSick(vp.substances)) return;
+    this.w.nightlife.stop(victim);
     if (vp.stance === 'avoid') { if (!victim.path.length) this.w.handle(vc, { t: 'retreat', seq: 0 } as any); return; }
     if (!victim.pendingAction && !victim.task) victim.pendingAction = { target: attacker.id, action: vp.stance === 'aggressive' ? 'attack' : 'knockout', opId: `counter-${randomUUID()}` };
   }
 
   damagePlayer(tp: PlayerState, te: Entity, dmg: number, lethal: boolean, src: Src) {
+    this.w.nightlife.stop(te);
     tp.hp -= dmg; tp.lastCombatAt = Date.now();
     this.notice(te.conn, 'bad', `${src.name} te ${lethal ? 'hiere' : 'golpea'}: −${dmg} de salud.`);
     if (te.conn) this.w.send(te.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) });
@@ -1081,9 +1093,18 @@ export class Combat {
         const of = perkMods(this.c, op).flags;
         if (e.npcType === 'police' && op.wanted >= 2 && !of.has('sombra')) { e.aggro = o.id; e.aggroLethal = op.identified?.crime === 'asesinato'; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
         // En la base de una banda (o en una planta restringida de una torre), quien no sea de los suyos es un intruso.
-        const intruder = (e.zone.def.gangBase?.faction === f?.id && (op.rep.get(f!.id) ?? 0) < 20) || (e.zone.def.tower?.access === 'restringido' && !this.w.posts.hasAccess(op, e.zone, true));
+        const allied = f && this.w.underworld.isAlly(op, f.id);
+        const intruder = (f && e.zone.def.gangBase?.faction === f.id && !allied && (op.rep.get(f.id) ?? 0) < 20)
+          || (e.zone.def.tower?.access === 'restringido' && !this.w.posts.hasAccess(op, e.zone, true));
         if (e.npcType === 'gang' && f && intruder && !of.has('terror')) { e.aggro = o.id; e.aggroLethal = !e.zone.def.tower; this.notice(o.conn, 'bad', e.zone.def.tower ? `Seguridad de ${f.name}: «¡Alto! No tiene autorización para esta planta.»` : `${f.name}: «¿Quién te ha dejado entrar?» ¡Te atacan!`); return true; }
-        if (e.npcType === 'gang' && f && f.territory.includes(this.w.districtOf(e.zone, e.x, e.y)) && (op.rep.get(f.id) ?? 0) <= f.hostileBelow && !of.has('terror')) { e.aggro = o.id; e.aggroLethal = true; this.notice(o.conn, 'bad', `${f.name} te reconocen en su territorio: ¡te atacan!`); return true; }
+        if (e.npcType !== 'gang' || !f || allied || of.has('terror')) continue;
+        const territory = f.territory.includes(this.w.districtOf(e.zone, e.x, e.y));
+        const crewTurf = territory || e.zone.def.gangBase?.faction === f.id || e.zone.districtAt(e.x, e.y)?.gangs.some((g) => g.faction === f.id);
+        if ((territory && (op.rep.get(f.id) ?? 0) <= f.hostileBelow) || (crewTurf && this.w.underworld.isRival(op, f.id))) {
+          e.aggro = o.id; e.aggroLethal = true;
+          this.notice(o.conn, 'bad', `${f.name} te reconocen en su territorio. ¡Te atacan!`);
+          return true;
+        }
       }
     }
     return false;

@@ -315,6 +315,7 @@ export class Property {
     if (e.zone.def.kind !== 'exterior') throw new GameError('Solo se conduce en la calle.');
     if (p.status !== 'alive' || p.sleeping) throw new GameError('Ahora no puedes conducir.');
     const own = (ownedId ? p.cars.find((x) => x.id === ownedId) : undefined) ?? [...p.cars].sort((a, b) => this.w.c.cars.find((x) => x.id === b.car)!.speed - this.w.c.cars.find((x) => x.id === a.car)!.speed)[0];
+    this.w.nightlife.stop(e);
     p.driving = own.id;
     e.vehicle = own.car; e.labelVer++;
     // Si estaba aparcado, deja de estarlo (de cerca te subes; de lejos llega solo con el piloto automático).

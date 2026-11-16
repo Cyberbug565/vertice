@@ -228,6 +228,6 @@ export function settingsPanel(onChange?: () => void) {
       h('label', { class: 'row' }, h('input', { type: 'checkbox', checked: s.showNames, onchange: (e: any) => set({ showNames: e.target.checked }) }), 'Mostrar nombres de jugadores'),
       h('label', { class: 'row' }, h('span', { style: { width: '9em' } }, 'Tamaño de texto'), h('select', { onchange: (e: any) => set({ textSize: e.target.value }) }, h('option', { value: 'normal', selected: s.textSize === 'normal' }, 'Normal'), h('option', { value: 'large', selected: s.textSize === 'large' }, 'Grande'), h('option', { value: 'xl', selected: s.textSize === 'xl' }, 'Muy grande'))),
       range('music', 'Música'), range('ambient', 'Ambiente'), range('sfx', 'Efectos'), range('ui', 'Interfaz'),
-      h('p', { class: 'muted' }, 'Controles: clic izquierdo para moverte o interactuar · clic derecho o S para cancelar · Tab/Mayús+Tab seleccionar lo cercano · E o Espacio interactuar · R retirada · Z dormir · O empleos · K mercado · B recompensas · J diario · C ficha · I inventario · M mapa · Enter chat · rueda o +/− zoom.')));
+      h('p', { class: 'muted' }, 'Controles: clic izquierdo para moverte o interactuar · clic derecho → Bailar (o Y) · S para cancelar · Tab/Mayús+Tab seleccionar lo cercano · E o Espacio interactuar · R retirada · Z dormir · O empleos · K mercado · B recompensas · J diario · C ficha · I inventario · M mapa · Enter chat · rueda o +/− zoom.')));
   $ui().append(panel);
 }

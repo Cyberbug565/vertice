@@ -16,7 +16,7 @@ const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medici
 export function showPanel(id: string, title: string, ...body: (Node | string | null)[]) {
   const old = document.getElementById(id);
   const scroll = old?.scrollTop ?? 0;
-  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'search-panel', 'trunk-panel']) if (pid !== id) document.getElementById(pid)?.remove();
+  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'search-panel', 'trunk-panel', 'underworld-panel']) if (pid !== id) document.getElementById(pid)?.remove();
   const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body.filter(Boolean) as Node[]);
   if (old) old.replaceWith(p); else $ui().append(p);
   p.scrollTop = scroll;
@@ -30,12 +30,14 @@ export function shopPanel(ctx: LifeCtx, v: ShopView) {
     h('td', { class: 'mono' }, `${it.stock} uds.`),
     h('td', {}, h('div', { class: 'row' },
       h('button', { class: 'btn small', disabled: it.price > v.money || it.stock < 1, onclick: () => { ctx.net.send({ t: 'buy', shop: v.shop, item: it.item, qty: 1, opId: newOpId() } as any); blip(); } }, 'Comprar'),
+      v.bar && it.category === 'bebida' ? h('button', { class: 'btn small primary', disabled: !it.owned, 'data-bar-drink': it.item,
+        'aria-label': `Beber ${it.name}`, onclick: () => ctx.net.send({ t: 'useItem', item: it.item, opId: newOpId() }) }, 'Beber') : null,
       !it.item.startsWith('cyber:') && it.stock > 0 ? h('button', { class: 'btn small danger', title: `Destreza + Sigilo + 1d10 contra la seguridad (${v.security}). Si fallas: paliza y nivel de búsqueda.`, onclick: () => { if (confirm(`Intentar robar ${it.name}. Probabilidad ${pct(it.stealChance)}. Si fallas, el vigilante te hará daño y subirá tu nivel de búsqueda. ¿Seguir?`)) ctx.net.send({ t: 'steal', shop: v.shop, item: it.item, opId: newOpId() } as any); } }, `Robar ${pct(it.stealChance)}`) : null))));
   const sell = v.sell.length ? h('table', { class: 'sheet' }, ...v.sell.map((s) => h('tr', {}, h('td', {}, s.name), h('td', { class: 'mono' }, `×${s.qty}`), h('td', { class: 'mono' }, `${s.price} €$/u`),
     h('td', {}, h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'sell', shop: v.shop, item: s.item, qty: 1, opId: newOpId() } as any) }, 'Vender 1'))))) : h('p', { class: 'muted' }, 'Aquí no compran nada de lo que llevas.');
   showPanel('shop-panel', v.name,
     h('p', { class: 'muted' }, `Propiedad: ${v.ownerName} · Seguridad ${v.security}${v.fence ? ' · Perista: compra de todo, sin preguntas' : ''} · Tu saldo: `, h('b', { class: 'cy' }, fmtMoney(v.money))),
-    h('p', { class: 'muted', style: { fontSize: '0.85em' } }, 'Precios en eurodólares fijados por la corporación de cada categoría y ajustados por las existencias de esta tienda: cuando los jugadores compran sube, cuando venden baja.'),
+    h('p', { class: 'muted', style: { fontSize: '0.85em' } }, v.bar ? 'Compra una bebida y pulsa Beber para tomarla en el local. También puedes llevártela en el inventario.' : 'Precios en eurodólares fijados por la corporación de cada categoría y ajustados por las existencias de esta tienda: cuando los jugadores compran sube, cuando venden baja.'),
     h('table', { class: 'sheet' }, h('tr', {}, h('th', {}, 'Artículo'), h('th', {}, 'Precio'), h('th', {}, 'Existencias'), h('th', {}, '')), ...rows),
     h('h3', {}, 'Vender'), sell);
 }
@@ -247,16 +249,24 @@ export function worldMapPanel(current: string, opts: { discovered?: string[]; ha
     const [rx, ry, rw, rh] = m.rect;
     return h('button', { class: `citymap-label${m.id === here ? ' here' : ''}`, style: { ...pct(rx + rw / 2, ry + rh / 2), color: d?.color ?? '#fff', borderColor: d?.color ?? '#fff' }, onclick: () => showInfo(m.id) }, m.name);
   });
+  const rooms = new Set(content.zones.filter((z) => z.nightlife).map((z) => z.id));
+  const venues = city.doors.filter((d) => rooms.has(d.to.zone));
   const marks = [
+    ...venues.map((d) => {
+      const contact = content.underworld.contacts.find((s) => s.zone === d.to.zone);
+      const title = contact ? `${d.name} · contacto: ${contact.name}` : d.name;
+      return h('button', { class: 'citymap-night', title, 'aria-label': title, style: pct(d.at[0] + 0.5, d.at[1] + 0.5),
+        onclick: () => { opts.goto?.(d.at[0] + 0.5, d.at[1] + 0.5); document.getElementById('world-panel')?.remove(); } }, '♫');
+    }),
     ...city.doors.filter((x) => x.to.zone.startsWith('torre-')).map((x) => h('span', { class: 'citymap-mark', title: x.name, style: pct(x.at[0], x.at[1]) }, '🏢')),
-    ...city.doors.filter((x) => x.to.zone.startsWith('base-')).map((x) => h('span', { class: 'citymap-mark', title: x.name, style: pct(x.at[0], x.at[1]) }, '☠')),
+    ...city.doors.filter((x) => (x.to.zone.startsWith('base-') || x.to.zone.startsWith('refugio-'))).map((x) => h('span', { class: 'citymap-mark', title: x.name, style: pct(x.at[0], x.at[1]) }, '☠')),
     ...city.doors.filter((x) => x.hidden && (opts.discovered ?? []).includes(x.hidden)).map((x) => h('span', { class: 'citymap-mark', title: content.ripperdocs.find((r) => r.id === x.hidden)?.name, style: pct(x.at[0], x.at[1]) }, '⚕')),
     ...(pos ? [h('span', { class: 'citymap-me', title: 'Estás aquí', style: pct(pos.x, pos.y) })] : []),
     ...(opts.goal && opts.goal.zone === 'vertice' ? [h('span', { class: 'citymap-mark', title: 'Destino marcado', style: { ...pct(opts.goal.x, opts.goal.y), color: '#ff40ff' } }, '◆')] : []),
   ];
   const map = h('div', { class: 'citymap' }, img, ...labels, ...marks);
   showInfo(here || 'ferro');
-  showPanel('world-panel', `Mapa de ${W.name}`, h('p', { class: 'muted' }, 'Toda la ciudad es un único mapa. Haz clic en el plano para marcar un destino: tu personaje irá solo hasta allí. Colores: verde zona segura, sin tinte zona vigilada, rojo zona peligrosa y negro zona sin ley. 🏢 torres · ☠ bases de bandas · ⚕ matasanos descubiertos · ◆ destino.'), map, info);
+  showPanel('world-panel', `Mapa de ${W.name}`, h('p', { class: 'muted' }, 'Toda la ciudad es un único mapa. Haz clic en el plano para marcar un destino: tu personaje irá solo hasta allí. Colores: verde zona segura, sin tinte zona vigilada, rojo zona peligrosa y negro zona sin ley. 🏢 torres · ♫ bares y discotecas · ☠ bases de bandas · ⚕ matasanos descubiertos · ◆ destino.'), map, info);
 }
 
 export function deathScreen(s: DeathSummary, onNew: () => void) {

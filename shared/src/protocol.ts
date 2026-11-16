@@ -1,5 +1,6 @@
 // Protocolo compartido cliente ↔ servidor. Los mensajes de control viajan como JSON; las posiciones, como binario.
 import { z } from 'zod';
+import { DANCE_IDS, type DanceId } from './nightlife.js';
 
 export const PROTOCOL_VERSION = 1;
 export const MAX_CLIENT_MESSAGE_BYTES = 2048;
@@ -64,9 +65,15 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('searchPeople'), seq, query: z.string().min(2).max(24), device: z.enum(['phone', 'computer']) }),
   z.object({ t: z.literal('goto'), seq, kind: z.enum(['place', 'person', 'door', 'cancel']), x: z.number().finite().optional(), y: z.number().finite().optional(), key: z.string().max(80).optional(), door: z.number().int().optional() }),
   z.object({ t: z.literal('trunk'), seq, action: z.enum(['view', 'in', 'out']), item: z.string().max(64).optional(), qty: z.number().int().min(1).max(999).optional() }),
+  z.object({ t: z.literal('dance'), seq, move: z.enum(DANCE_IDS).nullable() }),
+  z.object({ t: z.literal('underworld'), seq,
+    action: z.enum(['track', 'quote', 'buy', 'sell', 'join', 'leave', 'accept', 'collect', 'deliver', 'abandon']),
+    site: z.string().max(64).optional(), ref: z.string().max(64).optional(), qty: z.number().int().min(1).max(5).optional(), opId: opId.optional(),
+  }),
 ]);
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
+export interface EmoteState { move: DanceId | 'nausea'; at: number }
 export type EntityKind = 'player' | 'npc' | 'door' | 'object';
 export interface Appearance {
   skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string;
@@ -82,7 +89,7 @@ export interface EntitySpawn {
   /** v0.4: nivel (los PNJ lo muestran con óptica de análisis o el perk «Lector») y coche que conduce. */
   level?: number; vehicle?: string | null; buffs?: string[];
   /** v0.6: miembros perdidos, si sangra, arma en la mano y si es un cadáver. */
-  lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean;
+  lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EmoteState;
 }
 export interface SearchResult { key: string; name: string; kind: 'player' | 'npc'; level: number; title: string; faction?: string; bounty: number; record: string[]; online: boolean; location: { zone: string; place: string; x?: number; y?: number; precise: boolean } | null }
 export interface TrunkView { car: string; name: string; capacity: number; used: number; items: { def: string; name: string; qty: number }[]; inventory: { def: string; name: string; qty: number }[] }
@@ -110,8 +117,8 @@ export interface ScanView {
 }
 
 export interface ShopView {
-  shop: string; name: string; owner: string; ownerName: string; security: number; fence: boolean; money: number;
-  items: { item: string; name: string; desc: string; category: string; price: number; base: number; stock: number; trend: number; stealChance: number; discount: number }[];
+  shop: string; name: string; owner: string; ownerName: string; security: number; fence: boolean; money: number; bar?: boolean;
+  items: { item: string; name: string; desc: string; category: string; price: number; base: number; stock: number; trend: number; stealChance: number; discount: number; owned?: number }[];
   sell: { item: string; name: string; qty: number; price: number }[];
 }
 export interface MarketView {
@@ -142,6 +149,32 @@ export interface TargetMenuView {
 export interface FactionsView { factions: { id: string; name: string; kind: string; color: string; archetype: string; desc: string; territory: string[]; rep: number; standing: string; allies: string[]; enemies: string[] }[] }
 export interface AmbarView { active: { plan: string; name: string; usesLeft: number; expiresInMin: number } | null; plans: { id: string; name: string; price: number; days: number; arrival: number; uses: number; revive: number; zones: string[]; color: string; desc: string }[]; money: number }
 export interface DeathSummary { name: string; role: string; profession: string; level: number; cause: string; place: string; money: number; minutesAlive: number; jobs: number; contracts: number }
+
+export interface SubstanceView {
+  drunk: number; sick: boolean; hangover: boolean; aim: number; speed: number;
+  effects: { id: string; name: string; phase?: 'active' | 'crash'; until?: number; dependent: boolean; withdrawal: boolean }[];
+}
+
+export interface UnderworldJobView {
+  phase: 'sale' | 'cash'; item: string; qty: number; target: string; place: string;
+  cash?: number; commission?: number; deadline?: number;
+}
+
+export interface UnderworldStatus {
+  rep: number;
+  membership: { id: string; name: string; rank: string; deliveries: number; rivals: string[] } | null;
+  job: UnderworldJobView | null;
+}
+
+export interface UnderworldView {
+  site: string; name: string; place: string; kind: 'contact' | 'buyer' | 'base'; status: UnderworldStatus;
+  money: number;
+  goods: { id: string; name: string; desc: string; qty: number; price: number }[];
+  markets: { id: string; name: string; place: string; controller: string; risk: number; prices: { name: string; price: number }[] }[];
+  crews: { id: string; name: string; tier: 'principal' | 'secundaria'; parent?: string; entryRep: number; canJoin: boolean; rivals: string[]; commission: number }[];
+  risk?: number;
+  currentStop: boolean;
+}
 
 export interface CharacterSheet {
   id: string; name: string; role: string; origin: string; level: number; xp: number; xpNext: number; roleRank: number;
@@ -178,6 +211,8 @@ export interface CharacterSheet {
   aim: { range: number; time: number };
   bio: { objective: string; objectiveName: string; childhood: string; event: string; done: boolean; progress: string } | null;
   identified: { crime: string; district: string } | null;
+  substances: SubstanceView;
+  underworld: UnderworldStatus;
 }
 export interface HiringView { place: string; posts: { id: string; name: string; desc: string; skill: string; minLevel: number; level: number; pay: number; shift: string; employer: string; holder: string | null; canApply: boolean; reason: string }[]; mine: { id: string; name: string; shift: string } | null }
 export interface ElevatorView { tower: string; name: string; current: number; floors: { floor: number; zone: string; name: string; access: string; allowed: boolean }[] }
@@ -200,7 +235,7 @@ export type ServerMsg =
   | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
   | { t: 'spawn'; e: EntitySpawn[] }
   | { t: 'despawn'; ids: number[] }
-  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean }
+  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EmoteState | null }
   | { t: 'skillxp'; skill: string; name: string; gain: number; level: number; xp: number; from: number; to: number; up: boolean }
   | { t: 'building'; view: BuildingView }
   | { t: 'realty'; view: RealtyView }
@@ -220,6 +255,7 @@ export type ServerMsg =
   | { t: 'targetMenu'; view: TargetMenuView }
   | { t: 'death'; summary: DeathSummary }
   | { t: 'factions'; view: FactionsView }
+  | { t: 'underworld'; view: UnderworldView }
   | { t: 'ambar'; view: AmbarView }
   | { t: 'speech'; id: number; text: string }
   | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean }

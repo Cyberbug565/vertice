@@ -7,6 +7,7 @@ import {
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
 import { settings } from '../settings';
+import { dancePose } from './dance';
 import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSevered, makeSign, makeVehicle, makeWeapon, shade, type Occl } from './art';
 
 interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; ent?: CEnt; depth: number; mark: number }
@@ -17,7 +18,7 @@ export interface CEnt {
   vehX?: Container; vehY?: Container; lvl?: Text;
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
   legL?: Container; legR?: Container; armB?: Container; armF?: Container; hand?: Container; bodyY?: number;
-  weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit'; dropAt?: number;
+  weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit'; dropAt?: number; faceSign?: number;
 }
 
 const INTERP_DELAY = 110;
@@ -32,6 +33,8 @@ export class GameView {
   ground = new Container();
   backdrop = new Container();
   decalLayer = new Container();
+  private floor = new Container();
+  private floorTiles = [new Graphics(), new Graphics(), new Graphics()];
   markers = new Container();
   objects = new Container();
   nightOverlay = new Graphics();
@@ -60,7 +63,8 @@ export class GameView {
   hovered: CEnt | null = null;
   onGroundClick: (x: number, y: number) => void = () => {};
   onEntityClick: (e: CEnt) => void = () => {};
-  onRightClick: () => void = () => {};
+  onRightClick: (x: number, y: number) => void = () => {};
+  serverTime = () => Date.now();
   onHover: (e: CEnt | null, sx: number, sy: number) => void = () => {};
   onContextLost: (lost: boolean) => void = () => {};
   private rainDrops: { x: number; y: number; v: number }[] = [];
@@ -77,18 +81,19 @@ export class GameView {
     await this.app.init({ resizeTo: window, background: 0x07070f, antialias: false, preference: 'webgl', resolution: (window.devicePixelRatio || 1) * settings.resScale, autoDensity: true, powerPreference: 'high-performance' });
     parent.appendChild(this.app.canvas);
     this.app.stage.addChild(this.world, this.nightOverlay, this.lightsLayer, this.rain, this.labels);
-    this.world.addChild(this.ground, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
+    this.floor.addChild(...this.floorTiles);
+    this.world.addChild(this.ground, this.floor, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
     this.markers.addChild(this.pathG, this.hoverG);
     this.lightsLayer.blendMode = 'add';
     this.lightsLayer.addChild(this.marketLights);
     this.objects.sortableChildren = true;
     this.app.ticker.maxFPS = settings.fpsCap;
-    // Entrada: clic izquierdo mueve o interactúa, clic derecho cancela.
+    // Entrada: clic izquierdo mueve o interactúa, clic derecho abre acciones.
     this.app.stage.eventMode = 'static';
     this.app.stage.hitArea = this.app.screen;
     this.app.stage.on('pointertap', (ev: FederatedPointerEvent) => this.onTap(ev));
     this.app.stage.on('pointermove', (ev: FederatedPointerEvent) => this.onMove(ev));
-    this.app.canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); const r = this.app.canvas.getBoundingClientRect(); this.hovered = this.pick(e.clientX - r.left, e.clientY - r.top); this.onRightClick(); });
+    this.app.canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); const r = this.app.canvas.getBoundingClientRect(); this.hovered = this.pick(e.clientX - r.left, e.clientY - r.top, true); this.onRightClick(e.clientX, e.clientY); });
     this.app.canvas.addEventListener('wheel', (e) => { e.preventDefault(); this.setZoom(this.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); }, { passive: false });
     // Pérdida del contexto gráfico: aviso y reconstrucción de la escena al recuperarlo.
     this.app.canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.onContextLost(true); });
@@ -134,6 +139,7 @@ export class GameView {
     for (const t of this.traffic) t.g.destroy(); this.trafficMarks?.destroy(); this.trafficMarks = null;
     this.beacons = []; this.holos = []; this.cars = []; this.traffic = [];
     const z = this.zone, q = settings.quality;
+    this.buildDanceFloor();
     if (z.kind === 'interior') {
       // Paredes del fondo (siempre detrás) y barandilla frontal baja con huecos en las puertas.
       const wallCol = HEX(z.wallColor ?? '#3a3a5a');
@@ -367,10 +373,14 @@ export class GameView {
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
   private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); if (this.hovered === e) this.hovered = null; }
-  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean }) {
+  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EntitySpawn['emote'] | null }) {
     const e = this.ents.get(id);
     if (!e) return;
     if (extra) {
+      if (extra.emote !== undefined) {
+        if (extra.emote && e.s.id === this.meId) this.cancelPrediction();
+        e.s.emote = extra.emote ?? undefined;
+      }
       e.s.bleeding = extra.bleeding || undefined;
       e.s.dead = extra.dead || undefined;
       const lostChanged = (extra.lost ?? []).join() !== (e.s.lost ?? []).join();
@@ -568,7 +578,7 @@ export class GameView {
     }
   }
 
-  setMyAttributes(a: Attributes) { this.me.speed = walkSpeed(a); }
+  setMyAttributes(a: Attributes, speed = 1) { this.me.speed = walkSpeed(a) * speed; }
   /** Predicción local: el cliente calcula la ruta con la misma rejilla y empieza a moverse antes del ack. */
   predictMove(x: number, y: number): [number, number][] | null {
     if (!this.grid) return null;
@@ -601,14 +611,15 @@ export class GameView {
     const l = this.world.toLocal({ x: gx, y: gy });
     return screenToWorld(l.x, l.y);
   }
-  private pick(gx: number, gy: number): CEnt | null {
+  private pick(gx: number, gy: number, includeSelf = false): CEnt | null {
     const l = this.world.toLocal({ x: gx, y: gy });
     let best: CEnt | null = null, bestDepth = -Infinity;
     for (const e of this.ents.values()) {
-      if (!e.s.interactive || e.s.id === this.meId) continue;
+      if (!e.s.interactive || (!includeSelf && e.s.id === this.meId)) continue;
       const p = worldToScreen(e.x, e.y);
       const dx = l.x - p.x, dy = l.y - p.y;
       const hit = e.s.kind === 'door' ? Math.abs(dx) < 24 && dy > -36 && dy < 14 : e.s.kind === 'object' ? Math.abs(dx) < 22 && dy > -44 && dy < 14 : Math.abs(dx) < 13 && dy > -48 && dy < 8;
+      if (hit && includeSelf && e.s.id === this.meId) return e;
       if (hit && e.view.zIndex > bestDepth) { best = e; bestDepth = e.view.zIndex; }
     }
     return best;
@@ -662,6 +673,7 @@ export class GameView {
     else if (err > 1.2) { const k = Math.min(1, dt * 2); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
 
     const renderT = now - INTERP_DELAY;
+    const serverNow = this.serverTime();
     for (const e of this.ents.values()) {
       if (e.s.id === this.meId) {
         const dx = me.x - e.x, dy = me.y - e.y;
@@ -683,7 +695,7 @@ export class GameView {
       this.place(e);
       this.statusVisuals(e, now);
       // Animación corta: piernas alternas y balanceo; se desactiva con «reducir movimiento».
-      if (e.legs && e.body && !(e.charRoot && e.charRoot.rotation !== 0)) this.animateBody(e, dt, now);
+      if (e.legs && e.body && !(e.charRoot && e.charRoot.rotation !== 0)) this.animateBody(e, dt, now, serverNow);
       if (e.label) {
         e.label.visible = settings.showNames || e === this.hovered;
         const p = worldToScreen(e.x, e.y, 1.25);
@@ -706,6 +718,7 @@ export class GameView {
     for (const c of this.chunks.values()) c.visible = true;
 
     this.depthSort();
+    this.pulseDanceFloor(now);
     this.drawHover();
     this.drawNight();
     this.drawRain(dt);
@@ -804,7 +817,7 @@ export class GameView {
   }
 
   /** Andar orgánico: piernas desde la cadera y brazos desde el hombro en contrafase, balanceo del tronco y postura de arma. */
-  private animateBody(e: CEnt, dt: number, now: number) {
+  private animateBody(e: CEnt, dt: number, now: number, serverNow: number) {
     const rm = settings.reduceMotion;
     const run = e.moving && (e.s.buffs?.includes('corriendo') || (e.samples.length > 1 && Math.hypot(e.samples[e.samples.length - 1].x - e.samples[0].x, e.samples[e.samples.length - 1].y - e.samples[0].y) / Math.max(1, (e.samples[e.samples.length - 1].t - e.samples[0].t) / 1000) > 3.2));
     const spd = e.moving ? (run ? 15 : 10) : 1.6;
@@ -812,6 +825,9 @@ export class GameView {
     const sw = rm ? 0 : e.moving ? Math.sin(e.phase) : 0;
     const amp = run ? 0.75 : 0.48;
     const bob = rm ? 0 : e.moving ? Math.abs(Math.cos(e.phase)) * (run ? 2.2 : 1.3) : Math.sin(e.phase) * 0.35;
+    const facing = e.faceSign ?? 1;
+    e.body!.scale.x = facing; e.legs!.scale.x = 1;
+    e.body!.x = 0; e.legs!.x = 0; e.legs!.y = 0;
     e.body!.y = (e.bodyY ?? 0) - bob;
     e.body!.rotation = e.moving && !rm ? (run ? 0.1 : 0.03) * (e.body!.scale.x >= 0 ? 1 : -1) : 0;
     e.legs!.skew.x = 0; e.legs!.scale.y = e.legs!.scale.y || 1;
@@ -824,6 +840,23 @@ export class GameView {
     else if (e.weaponKind === 'melee') { front = -0.25 - sw * 0.2; if (e.weaponBig) back = front + 0.3; }
     if (since < 320 && e.attackKind === 'hit') { const k = since / 320; front = 2.0 - k * 3.8; if (e.weaponBig) back = front + 0.3; }
     else if (since < 380 && e.attackKind === 'shot' && !e.weaponKind) front = -1.4;
+    if (e.s.emote && !e.moving && !e.s.vehicle) {
+      const age = Math.max(0, serverNow - e.s.emote.at) / 1000;
+      const pose = dancePose(e.s.emote.move, rm ? 0.18 : age);
+      const turn = pose.turn === undefined ? 1 : Math.sign(pose.turn || 1) * Math.max(0.42, Math.abs(pose.turn));
+      const flip = Math.sign(facing * turn);
+      e.body!.scale.x = facing * turn;
+      e.legs!.scale.x = Math.abs(turn);
+      e.body!.x = pose.sway * flip;
+      e.body!.y = (e.bodyY ?? 0) - pose.lift;
+      e.body!.rotation = pose.lean * flip;
+      e.legs!.x = pose.sway * flip;
+      e.legs!.y = -Math.max(0, pose.lift);
+      if (e.legL) e.legL.rotation = pose.left * flip;
+      if (e.legR) e.legR.rotation = pose.right * flip;
+      front = pose.front;
+      back = pose.back;
+    }
     if (e.armF) e.armF.rotation = front;
     if (e.armB) e.armB.rotation = back;
     // El arma se mantiene más o menos horizontal (fuego) o en la línea del brazo (cuerpo a cuerpo).
@@ -833,9 +866,31 @@ export class GameView {
     if (e.s.bleeding && now > (e.dropAt ?? 0)) { e.dropAt = now + (e.moving ? 260 : 900); this.blood(e.x + (Math.random() - 0.5) * 0.3, e.y + (Math.random() - 0.5) * 0.3, 0.35 + Math.random() * 0.3, 14000); }
   }
 
+  private buildDanceFloor() {
+    for (const g of this.floorTiles) g.clear();
+    const room = this.zone?.nightlife;
+    this.floor.visible = !!room;
+    if (!room) return;
+    const [x, y, w, h] = room.floor;
+    const palette = [HEX(room.color), room.kind === 'club' ? 0x58dbf7 : 0xd3a67d, room.kind === 'club' ? 0xe575dd : 0xe8a68d];
+    for (let v = 0; v < h; v++) for (let u = 0; u < w; u++) {
+      const ix = x + u, iy = y + v, pad = 0.055;
+      const shape = [[ix + pad, iy + pad], [ix + 1 - pad, iy + pad], [ix + 1 - pad, iy + 1 - pad], [ix + pad, iy + 1 - pad]]
+        .flatMap(([a, b]) => { const p = worldToScreen(a, b); return [p.x, p.y]; });
+      const k = (u + v * 2 + Math.floor(u / 3)) % palette.length;
+      this.floorTiles[k].poly(shape).fill({ color: palette[k], alpha: room.kind === 'club' ? 0.45 : 0.24 }).stroke({ color: palette[k], width: 1, alpha: 0.7 });
+    }
+  }
+
+  private pulseDanceFloor(now: number) {
+    if (!this.floor.visible) return;
+    const still = settings.reduceFlashes || settings.reduceMotion || this.zone?.nightlife?.kind === 'bar';
+    for (const [i, tiles] of this.floorTiles.entries()) tiles.alpha = still ? 0.62 : 0.63 + 0.18 * Math.sin(now / 285 + i * 2.1);
+  }
+
   private face(e: CEnt, dx: number, dy: number) {
     const sx = dx - dy; // dirección horizontal en pantalla
-    if (e.body && Math.abs(sx) > 0.0005) e.body.scale.x = sx >= 0 ? 1 : -1;
+    if (e.body && Math.abs(sx) > 0.0005) e.body.scale.x = e.faceSign = sx >= 0 ? 1 : -1;
     // El coche se orienta según el eje por el que circula (X o Y del mundo).
     if (e.vehX && e.vehY && Math.hypot(dx, dy) > 0.001) { const alongX = Math.abs(dx) >= Math.abs(dy); e.vehX.visible = alongX; e.vehY.visible = !alongX; }
   }

@@ -95,16 +95,17 @@ export class MarketService {
 
   shopView(shopId: string, p: PlayerState): ShopView {
     const sh = this.c.shops.find((x) => x.id === shopId)!;
-    const items = [...(this.stock.get(shopId) ?? new Map()).entries()].map(([it, e]) => {
+    const bar = this.c.zones.find((z) => z.id === sh.zone)?.nightlife !== undefined;
+    const items: ShopView['items'] = [...(this.stock.get(shopId) ?? new Map()).entries()].map(([it, e]) => {
       const def = this.c.items.find((i) => i.id === it)!;
       const price = this.price(shopId, it, p);
       const ref = Math.round(this.corpPrice(it, def.category) * sh.priceMult);
-      return { item: it, name: def.name, desc: def.desc, category: def.category, price, base: def.price ?? 0, stock: Math.floor(e.stock), trend: ref ? Math.round(((price / (1 - this.discountFor(shopId, p)) - ref) / ref) * 100) : 0, stealChance: this.stealChance(shopId, p), discount: Math.round(this.discountFor(shopId, p) * 100) };
+      return { item: it, name: def.name, desc: def.desc, category: def.category, owned: bar && def.category === 'bebida' ? p.inventory.get(it) ?? 0 : undefined, price, base: def.price ?? 0, stock: Math.floor(e.stock), trend: ref ? Math.round(((price / (1 - this.discountFor(shopId, p)) - ref) / ref) * 100) : 0, stealChance: this.stealChance(shopId, p), discount: Math.round(this.discountFor(shopId, p) * 100) };
     });
     const sell = [...p.inventory].filter(([it, q]) => {
       if (q <= 0) return false;
       const def = this.c.items.find((i) => i.id === it);
-      return def && def.category !== 'mision' && (sh.fence || sh.buys.includes(def.category));
+      return def && def.category !== 'mision' && (def.substance?.kind !== 'drug' || def.id === 'neblina') && (sh.fence || sh.buys.includes(def.category));
     }).map(([it, q]) => ({ item: it, name: this.c.items.find((i) => i.id === it)!.name, qty: q, price: this.sellPrice(shopId, it) }));
     if (sh.fence) {
       for (const ci of p.cyber.filter((x) => x.location === 'inventory')) {
@@ -117,7 +118,7 @@ export class MarketService {
       }
     }
     const owner = this.c.factions.find((f) => f.id === sh.owner)?.name ?? sh.owner;
-    return { shop: shopId, name: sh.name, owner: sh.owner, ownerName: owner, security: sh.security, fence: sh.fence, money: p.money, items, sell };
+    return { shop: shopId, name: sh.name, owner: sh.owner, ownerName: owner, security: sh.security, fence: sh.fence, money: p.money, bar, items, sell };
   }
 
   /** Compra atómica: dinero, inventario y libro económico en la misma transacción. */
@@ -194,7 +195,7 @@ export class MarketService {
       return { total, name: d.name };
     }
     const def = this.c.items.find((i) => i.id === itemId);
-    if (!def || def.category === 'mision' || !(sh.fence || sh.buys.includes(def.category))) throw new GameError('Aquí no compran eso.');
+    if (!def || def.category === 'mision' || (def.substance?.kind === 'drug' && def.id !== 'neblina') || !(sh.fence || sh.buys.includes(def.category))) throw new GameError('Aquí no compran eso.');
     if ((p.inventory.get(itemId) ?? 0) < qty) throw new GameError('No tienes tantas unidades.');
     const unit = Math.round(this.sellPrice(shopId, itemId) * (1 + (perkMods(this.c, p).mods.sell ?? 0)));
     const total = unit * qty;
@@ -323,7 +324,7 @@ export class MarketService {
     let best: { shop: string; item: string; price: number; score: number } | null = null;
     for (const sid of shopIds) for (const [it, e] of this.stock.get(sid) ?? []) {
       const def = this.c.items.find((i) => i.id === it)!;
-      if (def.category !== cat || e.stock < 1 || !def.consumable) continue;
+      if (def.category !== cat || e.stock < 1 || !def.consumable || def.substance) continue;
       const price = this.price(sid, it, p);
       if (price > p.money) continue;
       const gain = -(def.consumable[need] ?? 0);

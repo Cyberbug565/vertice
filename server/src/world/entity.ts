@@ -1,4 +1,4 @@
-import type { Appearance, EntityKind, EntitySpawn, TaskDef, FugitiveDef } from '@vertice/shared';
+import type { Appearance, EntityKind, EntitySpawn, TaskDef, FugitiveDef, EmoteState } from '@vertice/shared';
 import type { Zone } from './zone.js';
 import type { PlayerConn } from './world.js';
 import type { NpcBrain } from './npc.js';
@@ -30,6 +30,7 @@ export interface Entity {
   objId?: string; dealer?: string; hiddenDoc?: string; vehicle?: string | null; level?: number; stunUntil?: number; dots?: { until: number; dmg: number; next: number; by?: number }[];
   buffs?: Record<string, number>; decoyUntil?: number;
   // ---- v0.6
+  emote?: EmoteState; marketSite?: string;
   body?: import('@vertice/shared').BodyState; dead?: boolean; searched?: boolean; ownerChar?: string; carOwnedId?: string; disabledUntil?: number;
 }
 
@@ -38,5 +39,5 @@ export function spawnOf(e: Entity): EntitySpawn {
     bounty: e.bounty || undefined, state: e.state && e.state !== 'alive' ? e.state : undefined, fugitive: e.fugitive ? true : undefined,
     chrome: e.chrome?.length ? e.chrome : undefined, faction: e.faction, npcType: e.npcType, carried: e.carriedBy ? true : undefined,
     hpPct: e.npcMax ? Math.max(0, Math.round(((e.npcHp ?? e.npcMax) / e.npcMax) * 100)) : undefined,
-    level: e.level, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, dead: e.dead || undefined, buffs: e.buffs ? Object.entries(e.buffs).filter(([, u]) => u > Date.now()).map(([k]) => k) : undefined };
+    level: e.level, emote: e.emote, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, dead: e.dead || undefined, buffs: e.buffs ? Object.entries(e.buffs).filter(([, u]) => u > Date.now()).map(([k]) => k) : undefined };
 }

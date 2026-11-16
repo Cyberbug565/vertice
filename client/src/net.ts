@@ -4,6 +4,7 @@ import { contentHash } from './content';
 
 export type NetStatus = 'connecting' | 'online' | 'reconnecting' | 'offline';
 type Positions = NonNullable<ReturnType<typeof decodePositions>>;
+type Unsequenced<T> = T extends ClientMsg ? Omit<T, 'seq'> : never;
 
 export class Net {
   private ws?: WebSocket;
@@ -65,7 +66,7 @@ export class Net {
     this.pingTimer = window.setInterval(ping, 2000);
   }
   /** Envía una intención con número de secuencia. Devuelve la secuencia para correlacionar el ack. */
-  send(m: Omit<ClientMsg, 'seq'> & { seq?: number }): number {
+  send(m: Unsequenced<ClientMsg>): number {
     const seq = this.seq++;
     if (this.ws?.readyState === WebSocket.OPEN) this.ws.send(JSON.stringify({ ...m, seq }));
     return seq;

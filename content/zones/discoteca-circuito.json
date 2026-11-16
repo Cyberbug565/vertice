@@ -1,0 +1,187 @@
+{
+ "id": "discoteca-circuito",
+ "name": "Discoteca Circuito 33",
+ "kind": "interior",
+ "width": 22,
+ "height": 16,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#25334e",
+ "safePoint": [
+  19,
+  8
+ ],
+ "waypoints": [
+  [
+   19,
+   8
+  ]
+ ],
+ "furnished": true,
+ "nightlife": {
+  "kind": "club",
+  "music": "fiesta",
+  "floor": [
+   7,
+   4,
+   8,
+   8
+  ],
+  "color": "#7b8fff"
+ },
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    3,
+    3,
+    1,
+    6
+   ],
+   "color": "#354560"
+  },
+  {
+   "type": "furniture",
+   "rect": [
+    9,
+    2,
+    4,
+    1
+   ],
+   "color": "#534399"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-circuito",
+   "name": "Barra",
+   "at": [
+    4,
+    7
+   ],
+   "kind": "shop",
+   "shop": "circuito-barra"
+  }
+ ],
+ "props": [
+  {
+   "type": "screen",
+   "at": [
+    10,
+    1
+   ],
+   "color": "#708eff",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    12,
+    1
+   ],
+   "color": "#e64ebf",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    4
+   ],
+   "color": "#394a65"
+  },
+  {
+   "type": "column",
+   "at": [
+    15,
+    4
+   ],
+   "color": "#394a65"
+  },
+  {
+   "type": "neon",
+   "at": [
+    5,
+    6
+   ],
+   "color": "#a65bff",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    16,
+    6
+   ],
+   "color": "#4bf2ce",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    6,
+    12
+   ],
+   "color": "#4bf2ce",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    15,
+    12
+   ],
+   "color": "#a65bff",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    8,
+    13
+   ],
+   "color": "#462e68"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    13,
+    13
+   ],
+   "color": "#462e68"
+  },
+  {
+   "type": "table",
+   "at": [
+    11,
+    14
+   ]
+  },
+  {
+   "type": "arcade",
+   "at": [
+    18,
+    3
+   ],
+   "color": "#d955e3"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-discoteca-circuito",
+   "name": "Salida a la calle (Forja)",
+   "at": [
+    21,
+    8
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     312,
+     164
+    ]
+   },
+   "danger": "public"
+  }
+ ]
+}

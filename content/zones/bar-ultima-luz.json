@@ -1,0 +1,133 @@
+{
+ "id": "bar-ultima-luz",
+ "name": "Bar La Última Luz",
+ "kind": "interior",
+ "width": 17,
+ "height": 12,
+ "danger": "public",
+ "base": "wood",
+ "wallColor": "#322235",
+ "safePoint": [
+  14,
+  6
+ ],
+ "waypoints": [
+  [
+   14,
+   6
+  ]
+ ],
+ "furnished": true,
+ "nightlife": {
+  "kind": "bar",
+  "music": "chill",
+  "floor": [
+   6,
+   4,
+   5,
+   4
+  ],
+  "color": "#ff9f75"
+ },
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    2,
+    2,
+    7,
+    1
+   ],
+   "color": "#683849"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-ultima-luz",
+   "name": "Barra",
+   "at": [
+    5,
+    3
+   ],
+   "kind": "shop",
+   "shop": "ultima-luz-barra"
+  }
+ ],
+ "props": [
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "color": "#ff9f75",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    3,
+    8
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    13,
+    3
+   ]
+  },
+  {
+   "type": "sofa",
+   "at": [
+    10,
+    9
+   ],
+   "color": "#683849"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    4,
+    9
+   ],
+   "color": "#683849"
+  },
+  {
+   "type": "neon",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#f17eca",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    14,
+    8
+   ],
+   "color": "#ff9f75",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-bar-ultima-luz",
+   "name": "Salida a la calle (El Arrabal)",
+   "at": [
+    16,
+    6
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     52,
+     248
+    ]
+   },
+   "danger": "public"
+  }
+ ]
+}

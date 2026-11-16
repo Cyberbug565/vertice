@@ -279,7 +279,7 @@ button.chip { cursor: pointer; }
 .cs-card-rar { font-size: 0.65em; letter-spacing: 0.18em; font-weight: 700; }
 
 /* Ciberware sobre la silueta */
-.cy { display: grid; grid-template-columns: 54px minmax(220px, 1fr) minmax(220px, 300px) minmax(220px, 1fr) 54px; gap: 14px; align-items: start; }
+.cy-layout { display: grid; grid-template-columns: 54px minmax(220px, 1fr) minmax(220px, 300px) minmax(220px, 1fr) 54px; gap: 14px; align-items: start; }
 .cy-col { display: flex; flex-direction: column; gap: 10px; }
 .cy-box { padding: 6px 8px; background: rgba(20, 8, 14, 0.75); border: 1px solid var(--cs-line); position: relative; }
 .cy-box.l::after, .cy-box.r::after { content: ''; position: absolute; top: 50%; width: 14px; border-top: 1px dashed #ff3a5a88; }
@@ -345,7 +345,7 @@ button.chip { cursor: pointer; }
 .ring { position: fixed; left: 50%; top: 90px; transform: translateX(-50%); z-index: 45; padding: 12px 16px; background: var(--panel-solid); border: 1px solid var(--yellow); border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); }
 .ring p { margin: 6px 0; }
 .creator-sec { margin: 8px 0 0; font-size: 0.75em; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); }
-@media (max-width: 1100px) { .cs-inv { grid-template-columns: 1fr 1fr; } .cs-bag { grid-column: 1 / -1; } .cy { grid-template-columns: 40px 1fr 1fr 40px; } .cy-figure { display: none; } .pk-tree { grid-template-columns: repeat(5, 200px); } .xp-pops { right: 10px; bottom: 200px; } .scan { right: 10px; } }
+@media (max-width: 1100px) { .cs-inv { grid-template-columns: 1fr 1fr; } .cs-bag { grid-column: 1 / -1; } .cy-layout { grid-template-columns: 40px 1fr 1fr 40px; } .cy-figure { display: none; } .pk-tree { grid-template-columns: repeat(5, 200px); } .xp-pops { right: 10px; bottom: 200px; } .scan { right: 10px; } }
 
 /* ===== v0.5: reloj, turnos, correr/automático, mapa único, ascensor ===== */
 .clockbox { display: inline-flex; gap: 6px; align-items: baseline; }
@@ -374,3 +374,117 @@ button.chip { cursor: pointer; }
 .chip-btn:focus-visible { outline: 2px solid #43f3ff; }
 .d-lawless { color: #f4f4fa; background: #000 !important; border: 1px solid #ff3040; }
 .goalchip { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 4px; padding: 2px 6px; border: 1px solid #ff40ff; border-radius: 6px; color: #ffb0ff; font-size: 0.82em; background: #2a0a2a99; }
+
+/* Vida nocturna */
+#world-actions {
+  position: fixed;
+  z-index: 85;
+  display: grid;
+  gap: 6px;
+  padding: 9px;
+  border: 1px solid #53618c;
+  border-radius: 10px;
+  background: #131729f5;
+  box-shadow: 0 12px 38px #000a;
+  pointer-events: auto;
+}
+.dance-overlay {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #07091dc2;
+  pointer-events: auto;
+}
+.dance-wheel {
+  --ring: min(86vw, 76vh, 470px);
+  position: relative;
+  width: var(--ring);
+  aspect-ratio: 1;
+  border: 1px solid #8172dd;
+  border-radius: 50%;
+  background: conic-gradient(from -30deg, #423769 0deg, #1e2440 59deg, #625296 59deg 60deg,
+    #3b305d 60deg, #1b223c 119deg, #625296 119deg 120deg, #423769 120deg, #1e2440 179deg, #625296 179deg 180deg,
+    #3b305d 180deg, #1b223c 239deg, #625296 239deg 240deg, #423769 240deg, #1e2440 299deg, #625296 299deg 300deg,
+    #3b305d 300deg, #1b223c 359deg, #625296 359deg);
+  box-shadow: 0 24px 80px #000a, 0 0 34px #775efa44;
+}
+.dance-center {
+  position: absolute;
+  inset: 30%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 5px;
+  text-align: center;
+  padding: 9%;
+  border: 1px solid #918de894;
+  border-radius: 50%;
+  background: #14182c;
+}
+.dance-center h2, .dance-center p { margin: 0; }
+.dance-center h2 { font-size: clamp(.9rem, 3vw, 1.15rem); }
+.dance-center p { font-size: clamp(.65rem, 2vw, .86rem); color: #c2c7ea; line-height: 1.18; }
+.dance-center .btn { white-space: nowrap; }
+.dance-step {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 25%;
+  aspect-ratio: 1;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 2px;
+  padding: 0 4px;
+  border: 1px solid #a89ae787;
+  border-radius: 50%;
+  color: #f4efff;
+  background: #181e35ec;
+  font: inherit;
+  font-size: clamp(.66rem, 2.3vw, .95rem);
+  cursor: pointer;
+}
+.dance-step span { font-size: clamp(1.25rem, 5vw, 2.35rem); line-height: 1; color: #94e9fa; }
+.dance-step:hover, .dance-step:focus-visible, .dance-step[aria-pressed="true"] {
+  outline: none;
+  border-color: #a4f4ff;
+  color: #fff;
+  background: #3a3373;
+  box-shadow: 0 0 0 2px #a4f4ff8c, 0 0 24px #64d2ff59;
+}
+.substance-readout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 7px; font-size: .78em; }
+.substance-readout:empty { display: none; }
+.underworld-goal, .underworld-order { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 8px; }
+.underworld-goal { margin: 6px 0; padding: 8px; background: #35243c; border: 1px solid #c774a274; border-radius: 8px; font-size: .81em; }
+.underworld-clock { color: #ffd193; font-weight: 700; justify-self: end; }
+.underworld-clock.netbad { color: #ff8296; }
+.underworld-order-detail { grid-column: 1 / -1; }
+.underworld-goal button, .underworld-order button { justify-self: start; }
+#underworld-panel { width: min(720px, calc(100vw - 28px)); }
+.underworld-top { display: grid; grid-template-columns: minmax(0, 1fr) max-content; width: 100%; align-items: center; gap: 8px; }
+.underworld-top p { margin: 4px 0; }
+.underworld-top .mono { white-space: nowrap; }
+.underworld-nav { margin-top: 4px; }
+.underworld-section { scroll-margin-top: 52px; }
+.underworld-standing { display: grid; gap: 4px; padding: 9px 0; margin-bottom: 6px; }
+.underworld-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 8px; }
+.underworld-grid .choice { display: grid; align-content: start; gap: 6px; padding: 10px; }
+.underworld-grid h4, .underworld-grid p, .underworld-grid ul { margin: 0; }
+.underworld-grid ul { padding-left: 20px; }
+.underworld-grid .choice > button { justify-self: start; }
+.underworld-controls { margin: 8px 0; }
+.citymap-night {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  padding: 1px 5px;
+  border: 1px solid #f6a9fd;
+  border-radius: 4px;
+  color: #fff0fd;
+  background: #542d65;
+  font-size: .9rem;
+  line-height: 1.1;
+  cursor: pointer;
+}
+.citymap-night:hover, .citymap-night:focus-visible { outline: 2px solid #fff0fd; }

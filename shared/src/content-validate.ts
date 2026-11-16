@@ -16,6 +16,7 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
     professions: get('professions.json'), workplaces: get('workplaces.json'), jobs: get('jobs.json'), fugitives: get('fugitives.json'),
     quickhacks: get('quickhacks.json'), ambar: get('ambar.json'), world: get('world.json'),
     perks: get('perks.json'), cars: get('cars.json'), dealers: get('dealers.json'), houses: get('houses.json'), posts: get('posts.json'),
+    underworld: get('underworld.json'),
   };
   const parsed = ContentSchema.safeParse(raw);
   if (!parsed.success) throw new Error('Contenido inválido:\n' + parsed.error.issues.slice(0, 20).map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n'));
@@ -60,8 +61,30 @@ export function validateContent(c: Content): string[] {
       const adj = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => isWalkable(g, o.at[0] + dx + 0.5, o.at[1] + dy + 0.5));
       if (!adj) errs.push(`${z.id}/${o.id}: sin acceso transitable`);
     }
+    if (z.nightlife) {
+      const [x, y, w, h] = z.nightlife.floor;
+      if (z.kind !== 'interior') errs.push(`${z.id}: la pista de baile necesita un interior`);
+      for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) walk(z.id, [x + dx, y + dy], `${z.id}.pista`);
+    }
     for (const wp of z.waypoints) walk(z.id, wp, `${z.id}.waypoint`);
     for (const b of z.buildings) if (b.rect[0] + b.rect[2] > z.width || b.rect[1] + b.rect[3] > z.height) errs.push(`${z.id}/${b.id}: fuera de límites`);
+  }
+  const crews = new Map(c.underworld.crews.map((crew) => [crew.id, crew]));
+  if (crews.size !== c.underworld.crews.length) errs.push('Mercado negro: bandas duplicadas');
+  const sites = [...c.underworld.contacts, ...c.underworld.buyers, ...c.underworld.crews.flatMap((crew) => crew.bases)];
+  if (new Set(sites.map((s) => s.id)).size !== sites.length) errs.push('Mercado negro: puntos duplicados');
+  for (const s of sites) walk(s.zone, s.at, `Mercado negro / ${s.id}`);
+  for (const crew of crews.values()) {
+    if (!c.factions.some((f) => f.id === crew.id && f.kind === 'gang')) errs.push(`Mercado negro: banda desconocida ${crew.id}`);
+    if (crew.tier === 'secundaria' ? crews.get(crew.parent ?? '')?.tier !== 'principal' : crew.parent !== undefined) errs.push(`Mercado negro: jerarquía inválida de ${crew.id}`);
+    if (new Set(crew.bases.map((b) => b.zone)).size !== crew.bases.length) errs.push(`Mercado negro: bases duplicadas para ${crew.id}`);
+    for (const rival of crew.rivals) if (rival === crew.id || !factionIds.has(rival)) errs.push(`Mercado negro: rival inválido de ${crew.id}: ${rival}`);
+    for (const b of crew.bases) if (!c.zones.some((z) => z.id === b.zone && z.gangBase?.faction === crew.id)) errs.push(`Mercado negro: base ${b.zone} ajena a ${crew.id}`);
+    if (!c.underworld.buyers.some((b) => b.crew === crew.id)) errs.push(`Mercado negro: ${crew.id} no tiene compradores`);
+  }
+  for (const b of c.underworld.buyers) if (!crews.has(b.crew) || !c.zones.some((z) => z.id === b.zone && z.kind === 'exterior')) errs.push(`Mercado negro: comprador inválido ${b.id}`);
+  for (const item of c.items.filter((i) => i.substance)) {
+    if (!item.consumable || (item.substance?.kind === 'drug' ? item.category !== 'contrabando' || !item.price : item.category !== 'bebida')) errs.push(`Consumible inválido: ${item.id}`);
   }
   for (const n of c.npcs) {
     if (n.dialog && !(n.dialog in c.dialogs)) errs.push(`npc ${n.id}: diálogo desconocido`);

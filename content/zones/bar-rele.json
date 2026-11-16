@@ -144,6 +144,28 @@
   10,
   5
  ],
- "objects": [],
- "furnished": true
+ "objects": [
+  {
+   "id": "barra-rele",
+   "name": "Barra",
+   "at": [
+    6,
+    3
+   ],
+   "kind": "shop",
+   "shop": "rele-barra"
+  }
+ ],
+ "furnished": true,
+ "nightlife": {
+  "kind": "bar",
+  "music": "chill",
+  "floor": [
+   5,
+   4,
+   4,
+   2
+  ],
+  "color": "#ff88bc"
+ }
 }

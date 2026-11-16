@@ -81,12 +81,18 @@ describe('v0.5 · ciudad única, puestos y automático', () => {
     expect(v.floors.find((f: any) => f.floor === 1).allowed).toBe(true);
     expect(v.floors.find((f: any) => f.floor === 6).allowed).toBe(false);
     expect((await t.cmd({ t: 'elevator', floor: 6 })).reason).toMatch(/restringido/);
+    // La reacción se verifica con un guardia al alcance del ascensor. Su ruta habitual es aleatoria.
+    const floor = app.world.zones.get('torre-halcon-p6')!;
+    const guard = [...floor.entities].find((g) => g.npcType === 'gang' && g.faction === 'halcon')!;
+    guard.x = 4.5;
+    guard.y = 7.5;
+    floor.moved(guard);
     p.skillXp.interfaz = skillXpFor(25);
     app.world.survival.rng = () => 0.01;
     expect((await t.cmd({ t: 'elevator', floor: 6, hack: true })).ok).toBe(true);
     app.world.survival.rng = Math.random;
     await t.until(() => E('intrusa').zone.id === 'torre-halcon-p6', 5000, 'planta ejecutiva');
-    await t.until(() => [...E('intrusa').zone.entities].some((g) => g.npcType === 'gang' && g.aggro === E('intrusa').id), 8000, 'seguridad alertada');
+    await t.until(() => guard.aggro === E('intrusa').id, 8000, 'seguridad alertada');
   });
 
   it('correr: más velocidad a cambio de aguante', async () => {

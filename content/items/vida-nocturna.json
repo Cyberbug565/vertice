@@ -1,0 +1,115 @@
+[
+ {
+  "id": "gin-zafiro",
+  "name": "Gin Zafiro",
+  "desc": "Combinado de discoteca. Embriaguez moderada y algo de fatiga.",
+  "price": 18,
+  "weight": 0.35,
+  "category": "bebida",
+  "consumable": {
+   "thirst": -10,
+   "fatigue": 5
+  },
+  "substance": {
+   "kind": "alcohol",
+   "strength": 31
+  }
+ },
+ {
+  "id": "licor-voltio",
+  "name": "Licor Voltio",
+  "desc": "Licor intenso. Sube rápido la embriaguez, la sed y la fatiga.",
+  "price": 23,
+  "weight": 0.35,
+  "category": "bebida",
+  "consumable": {
+   "thirst": 5,
+   "fatigue": 8
+  },
+  "substance": {
+   "kind": "alcohol",
+   "strength": 42
+  }
+ },
+ {
+  "id": "verm-granate",
+  "name": "Vermut Granate",
+  "desc": "Aperitivo especiado; emborracha más que la cerveza.",
+  "price": 14,
+  "weight": 0.35,
+  "category": "bebida",
+  "consumable": {
+   "thirst": -8,
+   "fatigue": 4
+  },
+  "substance": {
+   "kind": "alcohol",
+   "strength": 27
+  }
+ },
+ {
+  "id": "pulso-azul",
+  "name": "Pulso Azul",
+  "desc": "Mejora brevemente la puntería; al bajar llegan temblores y fatiga.",
+  "price": 64,
+  "weight": 0.08,
+  "category": "contrabando",
+  "consumable": {
+   "thirst": 6
+  },
+  "substance": {
+   "kind": "drug",
+   "seconds": 65,
+   "crashSeconds": 90,
+   "habit": 17,
+   "aim": 3,
+   "crashAim": -3,
+   "fatigue": 17
+  }
+ },
+ {
+  "id": "medula-ignea",
+  "name": "Médula Ígnea",
+  "desc": "Acelera la carrera y refuerza los golpes; después ralentiza y agota.",
+  "price": 78,
+  "weight": 0.08,
+  "category": "contrabando",
+  "consumable": {
+   "restore": "stamina",
+   "amount": 12,
+   "thirst": 10
+  },
+  "substance": {
+   "kind": "drug",
+   "seconds": 55,
+   "crashSeconds": 100,
+   "habit": 20,
+   "speed": 0.22,
+   "melee": 3,
+   "crashSpeed": -0.23,
+   "fatigue": 25
+  }
+ },
+ {
+  "id": "bruma-lila",
+  "name": "Bruma Lila",
+  "desc": "Mejora la defensa y la recuperación de RAM; luego reduce la puntería y el ritmo.",
+  "price": 92,
+  "weight": 0.08,
+  "category": "contrabando",
+  "consumable": {
+   "fatigue": 5
+  },
+  "substance": {
+   "kind": "drug",
+   "seconds": 80,
+   "crashSeconds": 110,
+   "habit": 16,
+   "defense": 3,
+   "ram": 0.6,
+   "crashAim": -2,
+   "crashSpeed": -0.13,
+   "fatigue": 20
+  }
+ }
+]

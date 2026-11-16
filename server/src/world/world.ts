@@ -22,6 +22,9 @@ import { Property, isHouseZone } from './property.js';
 import { Posts } from './posts.js';
 import { Autopilot } from './autopilot.js';
 import { Intel } from './intel.js';
+import { Nightlife } from './nightlife.js';
+import { Underworld } from './underworld.js';
+import { isSick } from '../game/substances.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
@@ -63,6 +66,8 @@ export class World {
   readonly posts: Posts;
   readonly autopilot: Autopilot;
   readonly intel: Intel;
+  readonly nightlife: Nightlife;
+  readonly underworld: Underworld;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => void = () => {};
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
@@ -76,6 +81,8 @@ export class World {
     this.posts = new Posts(this);
     this.autopilot = new Autopilot(this);
     this.intel = new Intel(this);
+    this.nightlife = new Nightlife(this);
+    this.underworld = new Underworld(this);
     sheetHooks.post = (p) => this.posts.status(p);
     sheetHooks.objective = (p) => objectiveStatus(p).text;
   }
@@ -136,6 +143,8 @@ export class World {
     await this.property.load();
     await this.posts.load();
     this.combat.spawnPopulation();
+    this.nightlife.populate();
+    this.underworld.populate();
   }
 
   private populateZone(z: Zone) {
@@ -279,12 +288,14 @@ export class World {
     if (this.tick % 40 === 20) { try { this.autopilot.tick(); } catch (err) { console.error('[automático]', err); } }
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
+    if (this.tick % 20 === 0) this.underworld.everySecond();
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
     this.metrics.tick.push(performance.now() - t0);
   }
 
   private moveEntity(e: Entity, dt: number) {
+    this.nightlife.stop(e);
     let budget = e.speed * dt;
     let lastDx = 0, lastDy = 0;
     while (budget > 0 && e.path.length) {
@@ -356,6 +367,7 @@ export class World {
   }
 
   cancelActivity(e: Entity, reason?: string) {
+    this.nightlife.stop(e);
     const had = !!(e.task || e.channel || e.path.length);
     e.task = undefined; e.channel = undefined; e.path = []; e.pendingInteract = undefined; e.moving = false;
     if (e.conn) {
@@ -412,7 +424,7 @@ export class World {
     try {
       if (gone.length) this.send(c, { t: 'despawn', ids: gone });
       if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
-      for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs, lost: sp.lost ?? [], bleeding: sp.bleeding ?? false, weapon: sp.weapon, dead: sp.dead ?? false }); }
+      for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs, lost: sp.lost ?? [], bleeding: sp.bleeding ?? false, weapon: sp.weapon, dead: sp.dead ?? false, emote: sp.emote ?? null }); }
       if (np) {
         POS_DV.setUint8(0, BIN_POSITIONS); POS_DV.setUint32(1, this.tick >>> 0); POS_DV.setUint16(5, np);
         const buf = Buffer.from(POS_BUF.subarray(0, 7 + np * 9)); // copia: el búfer compartido se reutiliza
@@ -477,6 +489,7 @@ export class World {
     }
     const e = conn.e!;
     e.conn = conn;
+    this.nightlife.symptoms(conn.p!, e);
     if (e.label === 'Desconectado') { e.label = ''; e.labelVer++; }
     this.conns.set(accountId, conn);
     const s = sectorOf(e.zone.grid, e.x, e.y);
@@ -497,6 +510,7 @@ export class World {
     this.conns.delete(conn.accountId);
     const e = conn.e, p = conn.p;
     if (!e || !p) return;
+    this.nightlife.stop(e);
     e.task = undefined; e.channel = undefined; e.path = []; e.pendingInteract = undefined; e.moving = false; e.conn = undefined;
     const danger = dangerAt(e.zone.grid, e.x, e.y);
     if (danger === 'protected' || this.cfg.lingerSeconds <= 0) { void this.removePlayer(conn.accountId, e, p); return; }
@@ -549,9 +563,13 @@ export class World {
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
     const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto'];
     // Una orden manual del jugador (no del piloto automático, que usa seq 0) le devuelve el control.
-    if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'retreat', 'stop'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
-    if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop'].includes(m.t)) this.autopilot.takeOver(c);
+    if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'retreat', 'stop', 'dance'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
+    if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop', 'dance'].includes(m.t)) this.autopilot.takeOver(c);
     if (p.status === 'downed' && !passive.includes(m.t)) { if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás derribado: espera a que alguien te estabilice.' }); return; }
+    if (isSick(p.substances) && !passive.includes(m.t) && !['stop', 'menu'].includes(m.t)) {
+      if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás vomitando. Espera a recuperarte.' });
+      return;
+    }
     // Cualquier orden activa despierta al personaje.
     if (p.sleeping && ['move', 'interact', 'retreat', 'stop', 'jobStart', 'useItem'].includes(m.t)) sv.wake(c, 'Te despiertas.');
     const guarded = (seq: number, fn: () => Promise<void>) => this.enqueue(c, async () => {
@@ -637,6 +655,8 @@ export class World {
         if (m.action === 'view') this.send(c, { t: 'trunk', view: await this.property.trunkView(c) });
         else await this.property.trunkMove(c, m.item ?? '', m.qty ?? 1, m.action);
       });
+      case 'dance': return guarded(m.seq, async () => this.nightlife.dance(c, m.move));
+      case 'underworld': return guarded(m.seq, () => this.underworld.command(c, m));
       case 'factions': this.send(c, { t: 'factions', view: this.combat.factionsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'ambar': return guarded(m.seq, async () => { if (m.plan && m.opId) await this.combat.buyAmbar(c, m.plan, m.opId); this.send(c, { t: 'ambar', view: this.combat.ambarView(p) }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); });
       case 'bribe': return guarded(m.seq, () => this.combat.bribe(c, m.opId));
@@ -658,6 +678,7 @@ export class World {
   }
 
   playerPath(e: Entity, x: number, y: number): { ok: true } | { ok: false; reason: string } {
+    if (e.conn?.p && isSick(e.conn.p.substances)) return { ok: false, reason: 'Estás vomitando. Espera a recuperarte.' };
     this.metrics.inc('pathRequests');
     const r = findPath(e.zone.grid, e.x, e.y, x, y, pathBudgetFor(e.x, e.y, x, y));
     this.metrics.inc('pathExpanded', r.expanded);
@@ -732,6 +753,7 @@ export class World {
       return true;
     }
     if (d > INTERACT_RANGE) { if (retries > 0) this.reapproach(c, target, retries); return false; }
+    if (target.marketSite) { this.underworld.open(c, target); return true; }
     if (target.kind === 'object' && target.objKind && !target.dialog) { this.objectAction(c, target); return true; }
     if (target.kind === 'npc' && !target.dialog && target.npcShop) { this.survival.openShop(c, target.npcShop, target); return true; }
     this.openDialog(c, target);
@@ -786,6 +808,7 @@ export class World {
     if (e.transit || !door.doorTo) return;
     const to = this.ensureZone(door.doorTo.zone);
     if (!to) return;
+    this.nightlife.stop(e);
     if (p.driving && to.def.kind !== 'exterior') this.property.park(c, true);
     if (door.hiddenDoc) this.combat.discover(c, door.hiddenDoc);
     e.transit = true;

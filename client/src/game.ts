@@ -1,10 +1,12 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
-import { checkChance, chanceBand, worldToScreen, type CharacterSheet, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
+import { checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
 import { settings, onSettings } from './settings';
-import { blip, initAudio, setAmbientActive } from './audio';
+import { audioScene, blip, initAudio, setAmbientActive } from './audio';
+import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
+import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
 import { $ui, clearUi, fmtMoney, h } from './ui/dom';
 import { Minimap, renderZoneMap } from './ui/minimap';
 import { settingsPanel } from './ui/screens';
@@ -26,10 +28,16 @@ const BUFF_NAME: Record<string, string> = { 'tiempo-bala': '⏱ Tiempo bala', in
 
 export async function startGame(token: string, onExit0: (reason?: string) => void) {
   const timers: number[] = [];
+  const eventScope = new AbortController();
+  let combatMusicUntil = 0;
+  let localDance: DanceId | null = null;
   let exited = false;
-  const onExit = (reason?: string) => { if (exited) return; exited = true; window.removeEventListener('keydown', keys); for (const t of timers) clearInterval(t); net.close(); try { view.app.destroy(true); } catch {} onExit0(reason); };
+  const onExit = (reason?: string) => { if (exited) return; exited = true; eventScope.abort(); audioScene(null); window.removeEventListener('keydown', keys); for (const t of timers) clearInterval(t); net.close(); try { view.app.destroy(true); } catch {} onExit0(reason); };
   clearUi();
   initAudio();
+  const resumeOnGesture = () => initAudio();
+  document.addEventListener('pointerdown', resumeOnGesture, { once: true, capture: true, signal: eventScope.signal });
+  document.addEventListener('keydown', resumeOnGesture, { once: true, capture: true, signal: eventScope.signal });
   const view = new GameView();
   const net = new Net(token);
   const st = {
@@ -37,6 +45,14 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     zone: '', sector: '', danger: 'public', action: '', destination: '', cityHourMs: 60000, cityEpoch: 0, luck: 0,
     pending: new Map<number, (m: Extract<ServerMsg, { t: 'ack' }>) => void>(), muted: new Set<number>(),
   };
+  const refreshScore = () => {
+    const room = zoneDef(st.zone);
+    if (!room) return;
+    const indoor = room.kind === 'interior';
+    const theme = Date.now() < combatMusicUntil ? 'accion' : room.nightlife?.music ?? (indoor ? 'chill' : st.danger === 'lawless' ? 'yermo' : 'calle');
+    audioScene(theme, indoor);
+  };
+  view.serverTime = () => Date.now() + net.clockOffset;
   const cityHour = () => ((((Date.now() + net.clockOffset) / st.cityHourMs + st.cityEpoch) % 24) + 24) % 24;
   const gameEl = document.getElementById('game')!;
   gameEl.replaceChildren();
@@ -51,6 +67,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     h('span', {}, 'Sed'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sed' }, thBar),
     h('span', {}, 'Sueño'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sueño' }, ftBar));
   const statusEl = h('div', { style: { fontSize: '0.85em', minHeight: '1.2em' }, 'aria-live': 'polite' });
+  const substancesEl = h('div', { class: 'substance-readout', 'aria-label': 'Estado de consumo' });
   const nameEl = h('div', {}), moneyEl = h('div', { class: 'mono' }), statsEl = h('div', { class: 'muted', style: { fontSize: '0.85em' } });
   const hpTxt = h('span', { class: 'mono' }), stTxt = h('span', { class: 'mono' });
   const xpFill = h('i', { style: { background: 'var(--xp)' } }), xpTxt = h('span', { class: 'mono small' });
@@ -58,7 +75,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const tl = h('div', { class: 'hud hud-tl', 'aria-label': 'Estado del personaje' }, nameEl, xpEl,
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Salud'), hpTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Salud' }, hpBar),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Aguante'), stTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Aguante' }, stBar),
-    needsEl, statusEl, moneyEl, statsEl);
+    needsEl, statusEl, substancesEl, moneyEl, statsEl);
   const mm = h('canvas', { id: 'minimap', title: 'Mapa grande (M)', onclick: () => bigMap() }) as HTMLCanvasElement;
   const minimap = new Minimap(mm);
   const sectorEl = h('div', { style: { fontWeight: '600', marginTop: '4px' } }), dangerEl = h('span', { class: 'badge' }), clockEl = h('span', { class: 'mono' }), netEl = h('span', { class: 'mono' });
@@ -67,7 +84,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const clockBox = h('div', { class: 'clockbox' }, h('span', { class: 'clock mono' }, clockEl), phaseEl);
   // Destino marcado: chip con el nombre y botón para desmarcarlo.
   const goalEl = h('div', { class: 'goalchip', style: { display: 'none' } });
-  const tr = h('div', { class: 'hud hud-tr' }, mm, goalEl, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
+  const streetGoal = h('div', { id: 'underworld-goal' });
+  const tr = h('div', { class: 'hud hud-tr' }, mm, goalEl, streetGoal, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
   const actionEl = h('div', { class: 'actionline', 'aria-live': 'polite', id: 'action' });
   const progress = h('div', { class: 'progress', style: { display: 'none' } }, h('i'));
   const stanceSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Postura' });
@@ -185,12 +203,18 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     if (s.activeJob) st2.push(h('span', { class: 'netmid' }, ' · empleo aceptado'));
     if (!s.autoNeeds) st2.push(h('span', { class: 'muted' }, ' · autonomía apagada'));
     statusEl.replaceChildren(...st2);
+    substancesEl.replaceChildren(...substanceReadout(s.substances));
+    streetGoal.replaceChildren(...(s.underworld.job ? [jobBrief(s.underworld.job, net, true)] : []));
+    updateDeliveryClock(view.serverTime());
+    const inv = new Map(s.inventory.map((i) => [i.def, i.qty]));
+    for (const b of document.querySelectorAll<HTMLButtonElement>('[data-bar-drink]')) b.disabled = s.substances.sick || !inv.get(b.dataset.barDrink ?? '');
+    if (s.substances.sick) view.cancelPrediction();
     document.getElementById('btn-run')?.setAttribute('aria-pressed', String(s.running));
     document.getElementById('btn-auto')?.setAttribute('aria-pressed', String(s.auto.on));
     renderShift(cityHour());
     const sb = document.getElementById('btn-sleep'); if (sb) { sb.querySelector('.ico')!.textContent = s.sleeping ? '☀' : '💤'; sb.querySelector('.lbl')!.textContent = s.sleeping ? 'Despertar' : 'Dormir'; }
     renderStance();
-    view.setMyAttributes(s.attributes as any);
+    view.setMyAttributes(s.attributes as any, s.substances.speed);
   };
   const renderLocation = () => {
     sectorEl.textContent = st.sector;
@@ -231,19 +255,25 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
 
   // ---------------------------------------------------------------- paneles
-  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { closeDanceMenus(); for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
     const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body);
     $ui().append(p); tooltip.style.display = 'none';
   };
-  const journalPanel = () => panel('journal-panel', 'Diario de encargos',
+  const journalPanel = () => {
+    const u = st.sheet?.underworld;
+    panel('journal-panel', 'Diario de encargos',
+      ...(u && (u.rep > 0 || u.membership) ? [h('h3', {}, 'Bajos fondos'), undergroundStanding(u)] : []),
+      ...(u?.job ? [jobBrief(u.job, net)] : []),
     ...(st.journal.length ? st.journal.map((j) => h('div', { class: 'choice', style: { marginBottom: '8px' } },
       h('h4', {}, `${j.title} — ${j.state === 'active' ? 'activo' : j.state === 'completed' ? `completado (${j.outcome === 'fixer' ? 'control para Nadia' : 'control para el mercado'})` : 'abandonado'}`),
       h('p', {}, j.summary), h('p', {}, `Participantes en la instancia compartida: ${j.participants}`),
       h('ul', {}, ...j.objectives.map((o) => h('li', { class: o.done ? 'obj-done' : 'obj-todo' }, `${o.done ? '✔' : '○'} ${o.text}`)))))
-      : [h('p', {}, 'Aún no tienes encargos. Pregunta a Reme en el vestíbulo o busca a Nadia en el bar El Relé.')]));
+      : [h('p', {}, 'Para buscar encargos de la ciudad, habla con Reme en el vestíbulo o con Nadia en el bar El Relé.')]));
+    updateDeliveryClock(view.serverTime());
+  };
   const sheetPanel = () => {
     const s = st.sheet!; const role = roleById(s.role)!;
     panel('sheet-panel', `Ficha · ${s.name}`,
@@ -320,6 +350,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     st.pending.set(seq, (a) => { if (a.ok && a.path) { view.confirmPath(a.path); st.destination = a.info ?? 'Refugio'; setAction('Retirándose'); } else toast(a.reason ?? 'Sin retirada posible', 'warn'); });
   };
   view.onGroundClick = (x, y) => {
+    closeDanceMenus();
+    document.getElementById('underworld-panel')?.remove();
     if (st.dialog) net.send({ t: 'closeDialog' } as any);
     const predicted = view.predictMove(x, y);
     if (!predicted) { toast('Destino inaccesible: ahí hay un edificio, agua u obstáculo.', 'warn'); return; }
@@ -333,6 +365,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     });
   };
   view.onEntityClick = (e: CEnt) => {
+    closeDanceMenus();
     if (e.s.kind === 'door' && e.s.danger === 'disputed' && !confirm(`${e.s.name} lleva a una zona disputada con PvP letal. ¿Cruzar?`)) return;
     const seq = net.send({ t: 'interact', target: e.s.id } as any);
     st.destination = e.s.name;
@@ -342,8 +375,28 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       else if (!a.ok) { toast(a.reason ?? 'No disponible', 'warn'); st.destination = ''; setAction(''); }
     });
   };
-  // Clic derecho: menú de opciones sobre la persona u objeto; en el suelo, cancela.
-  view.onRightClick = () => { if (view.hovered && view.hovered.s.id !== view.meId) net.send({ t: 'menu', target: view.hovered.s.id } as any); else stop(); };
+  const openDances = () => {
+    closePanels();
+    danceWheel(localDance, (move) => {
+      const previous = localDance;
+      localDance = move;
+      const seq = net.send({ t: 'dance', move });
+      st.pending.set(seq, (a) => {
+        if (!a.ok) { localDance = previous; toast(a.reason ?? 'Ahora no puedes bailar.', 'warn'); return; }
+        view.cancelPrediction();
+        st.destination = '';
+        setAction('');
+      });
+    });
+  };
+  view.onRightClick = (x, y) => {
+    closeDanceMenus();
+    if (view.hovered && view.hovered.s.id !== view.meId) net.send({ t: 'menu', target: view.hovered.s.id } as any);
+    else {
+      document.getElementById('target-menu')?.remove();
+      worldActions(x, y, openDances, stop);
+    }
+  };
   // La etiqueta flotante solo tiene sentido sobre el mapa: se oculta al pasar por encima de la interfaz.
   $ui().addEventListener('pointerover', (ev) => { if (ev.target !== $ui()) tooltip.style.display = 'none'; });
   view.onHover = (e, sx, sy) => {
@@ -359,6 +412,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const keys = (e: KeyboardEvent) => {
     if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
     const k = e.key.toLowerCase();
+    if (document.getElementById('dance-wheel')) return;
+    if (k === 'escape' && closeDanceMenus()) return;
+    if (k === 'y') { openDances(); return; }
     if (k === 'escape') { if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove(); else if (document.querySelector('.panel')) closePanels(); else if (st.dialog) net.send({ t: 'closeDialog' } as any); else stop(); }
     else if (k === 's') stop();
     else if (k === 'r') retreat();
@@ -425,31 +481,48 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   net.onMsg = (m) => {
     switch (m.t) {
       case 'welcome':
+        localDance = null;
         view.meId = m.you; st.sheet = m.sheet; st.journal = m.journal; st.facts = m.facts; st.cityHourMs = m.cityHourMs; st.cityEpoch = m.cityEpoch;
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger;
         view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(m.facts);
-        renderSheet(); renderLocation(); setAction('');
+        renderSheet(); renderLocation(); setAction(''); refreshScore();
         break;
       case 'zone':
+        localDance = null;
+        closeDanceMenus();
+        document.getElementById('shop-panel')?.remove();
+        document.getElementById('underworld-panel')?.remove();
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger; st.dialog = null; renderDialog();
         view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(st.facts);
-        st.destination = ''; renderLocation(); setAction(''); blip('step');
+        st.destination = ''; renderLocation(); setAction(''); refreshScore(); blip('step');
         toast(`Entras en ${zoneDef(m.zone)?.name} · zona ${DANGER_TXT[m.danger]}`, 'info');
         break;
-      case 'spawn': for (const e of m.e) view.upsert(e); break;
+      case 'spawn':
+        for (const e of m.e) {
+          view.upsert(e);
+          if (e.id === view.meId && e.emote && e.emote.move !== 'nausea') localDance = e.emote.move;
+        }
+        break;
       case 'despawn': for (const id of m.ids) view.remove(id); break;
-      case 'label': view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs, lost: m.lost, bleeding: m.bleeding, weapon: m.weapon, dead: m.dead }); break;
+      case 'label':
+        if (m.id === view.meId && m.emote !== undefined) localDance = m.emote && m.emote.move !== 'nausea' ? m.emote.move : null;
+        view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs, lost: m.lost, bleeding: m.bleeding, weapon: m.weapon, dead: m.dead, emote: m.emote }); break;
       case 'factions': factionsPanel(life, m.view); break;
+      case 'underworld': underworldPanel(net, m.view); break;
       case 'ambar': ambarPanel(life, m.view); break;
       case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
-      case 'fx': view.fx(m.kind, m.from, m.to, { part: m.part, weapon: m.weapon, hit: m.hit, sever: m.sever, crit: m.crit }); if (m.kind === 'shot') blip('step'); break;
+      case 'fx':
+        view.fx(m.kind, m.from, m.to, { part: m.part, weapon: m.weapon, hit: m.hit, sever: m.sever, crit: m.crit });
+        if (m.kind === 'shot') blip('step');
+        if (m.from === view.meId || m.to === view.meId) { combatMusicUntil = Date.now() + 11_000; refreshScore(); }
+        break;
       case 'shop': shopPanel(life, m.view); break;
       case 'market': marketPanel(life, m.view); break;
       case 'jobs': jobsPanel(life, m.view); break;
       case 'clinic': clinicPanel(life, m.view); break;
       case 'bounties': bountyPanel(life, m.view); break;
       case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId() } as any); else net.send({ t: 'interact', target: m.view.target } as any); }); break; }
-      case 'death': net.close(); deathScreen(m.summary, () => onExit('dead')); break;
+      case 'death': net.close(); audioScene(null); deathScreen(m.summary, () => onExit('dead')); break;
       case 'ack': { const cb = st.pending.get(m.seq); st.pending.delete(m.seq); if (cb) cb(m); else if (!m.ok && m.reason) toast(m.reason, 'warn'); else if (m.ok && m.path && m.seq === 0) view.confirmPath(m.path); if (m.info && m.ok && !cb) toast(m.info); break; }
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;
       case 'dialogClose': st.dialog = null; renderDialog(); break;
@@ -487,7 +560,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         break;
       }
       case 'action': if (m.text) setAction(m.text, m.duration); else { st.destination = ''; setAction(''); } break;
-      case 'sector': st.sector = m.sector; st.danger = m.danger; renderLocation(); break;
+      case 'sector': st.sector = m.sector; st.danger = m.danger; renderLocation(); refreshScore(); break;
       case 'facts': {
         if (m.facts.lumen_power === true && st.facts.lumen_power !== true) toast('El Mercado Lumen vuelve a tener luz.', 'good');
         st.facts = m.facts; view.setFacts(m.facts); break;
@@ -509,13 +582,15 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const ph = view.dayPhase(hr);
     phaseEl.textContent = `${ph === 'día' ? '☀' : ph === 'noche' ? '🌙' : ph === 'amanecer' ? '🌅' : '🌇'} ${ph}`;
     renderShift(hr);
+    if (combatMusicUntil && Date.now() >= combatMusicUntil) { combatMusicUntil = 0; refreshScore(); }
+    updateDeliveryClock(view.serverTime());
     const kbs = (net.bytesIn - lastBytes) / 1024; lastBytes = net.bytesIn;
     const cls = net.status !== 'online' ? 'netbad' : net.rtt > 200 ? 'netmid' : 'netok';
     netEl.className = `mono ${cls}`;
     netEl.textContent = net.status === 'online' ? `${Math.round(net.rtt)} ms · ${kbs.toFixed(1)} KiB/s · ${Math.round(view.app.ticker.FPS)} FPS · CPU ${view.frameMs.toFixed(1)} ms` : net.status;
   }, 1000));
   timers.push(window.setInterval(() => minimap.draw(view.me, [...view.ents.values()].filter((e) => e.s.id !== view.meId).map((e) => ({ x: e.x, y: e.y, kind: e.s.kind }))), 250));
-  document.addEventListener('visibilitychange', () => setAmbientActive(!document.hidden));
+  document.addEventListener('visibilitychange', () => setAmbientActive(!document.hidden), { signal: eventScope.signal });
 
   // Ganchos de depuración para pruebas automatizadas en navegador.
   (window as any).__vt = {
