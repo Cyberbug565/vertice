@@ -1,0 +1,379 @@
+{
+ "shops.json": {
+  "$keyed": {}
+ },
+ "zones/club-campo-int.json": {
+  "$obj": {
+   "props": {
+    "$multi": {
+     "add": [
+      {
+       "type": "screen",
+       "at": [
+        6,
+        2
+       ],
+       "color": "#f8c66e",
+       "blocking": false
+      },
+      {
+       "type": "neon",
+       "at": [
+        12,
+        1
+       ],
+       "color": "#f8c66e",
+       "blocking": false
+      }
+     ],
+     "remove": []
+    }
+   },
+   "nightlife": {
+    "$set": {
+     "kind": "bar",
+     "music": "chill",
+     "floor": [
+      6,
+      5,
+      5,
+      3
+     ],
+     "color": "#f8c66e"
+    }
+   }
+  }
+ },
+ "zones/club-kitsune-int.json": {
+  "$obj": {
+   "props": {
+    "$multi": {
+     "add": [
+      {
+       "type": "screen",
+       "at": [
+        6,
+        2
+       ],
+       "color": "#d66aff",
+       "blocking": false
+      },
+      {
+       "type": "neon",
+       "at": [
+        12,
+        1
+       ],
+       "color": "#d66aff",
+       "blocking": false
+      }
+     ],
+     "remove": []
+    }
+   },
+   "nightlife": {
+    "$set": {
+     "kind": "club",
+     "music": "fiesta",
+     "floor": [
+      6,
+      3,
+      5,
+      4
+     ],
+     "color": "#d66aff"
+    }
+   }
+  }
+ },
+ "zones/refugio-chatarreros.json": {
+  "$obj": {
+   "danger": {
+    "$set": "disputed"
+   }
+  }
+ },
+ "zones/refugio-engranajes.json": {
+  "$obj": {
+   "danger": {
+    "$set": "disputed"
+   }
+  }
+ },
+ "zones/refugio-hojas.json": {
+  "$obj": {
+   "danger": {
+    "$set": "disputed"
+   }
+  }
+ },
+ "zones/refugio-marea.json": {
+  "$obj": {
+   "danger": {
+    "$set": "disputed"
+   }
+  }
+ },
+ "zones/vertice.json": {
+  "$obj": {
+   "buildings": {
+    "$keyed": {
+     "forja-b7-h": {
+      "$obj": {
+       "style": {
+        "$set": "club"
+       },
+       "color": {
+        "$set": "#25334e"
+       },
+       "name": {
+        "$set": "Discoteca Circuito 33"
+       },
+       "sign": {
+        "$set": "CIRCUITO 33"
+       },
+       "signColor": {
+        "$set": "#7b8fff"
+       }
+      }
+     },
+     "arrabal-b2-b-h": {
+      "$obj": {
+       "height": {
+        "$set": 8
+       },
+       "style": {
+        "$set": "club"
+       },
+       "color": {
+        "$set": "#322235"
+       },
+       "name": {
+        "$set": "Bar La Última Luz"
+       },
+       "sign": {
+        "$set": "ÚLTIMA LUZ"
+       },
+       "signColor": {
+        "$set": "#ff9f75"
+       }
+      }
+     },
+     "muelles-viejos-nave-2": {
+      "$obj": {
+       "name": {
+        "$set": "La Dársena"
+       }
+      }
+     },
+     "poligono-nave-0": {
+      "$obj": {
+       "name": {
+        "$set": "La Trastienda Carmesí"
+       }
+      }
+     },
+     "vertedero-nave-1": {
+      "$obj": {
+       "name": {
+        "$set": "El Desguace Hundido"
+       }
+      }
+     },
+     "cementerio-trenes-nave-2": {
+      "$obj": {
+       "name": {
+        "$set": "El Vagón Taller"
+       }
+      }
+     }
+    }
+   },
+   "doors": {
+    "$keyed": {
+     "puerta-bar-ultima-luz": {
+      "$set": {
+       "id": "puerta-bar-ultima-luz",
+       "name": "Bar La Última Luz",
+       "at": [
+        52,
+        248
+       ],
+       "to": {
+        "zone": "bar-ultima-luz",
+        "at": [
+         14,
+         6
+        ]
+       },
+       "danger": "public"
+      }
+     },
+     "puerta-discoteca-circuito": {
+      "$set": {
+       "id": "puerta-discoteca-circuito",
+       "name": "Discoteca Circuito 33",
+       "at": [
+        312,
+        164
+       ],
+       "to": {
+        "zone": "discoteca-circuito",
+        "at": [
+         19,
+         8
+        ]
+       },
+       "danger": "public"
+      }
+     },
+     "puerta-refugio-marea": {
+      "$set": {
+       "id": "puerta-refugio-marea",
+       "name": "La Dársena",
+       "at": [
+        98,
+        63
+       ],
+       "to": {
+        "zone": "refugio-marea",
+        "at": [
+         12,
+         5
+        ]
+       },
+       "danger": "disputed"
+      }
+     },
+     "puerta-refugio-engranajes": {
+      "$set": {
+       "id": "puerta-refugio-engranajes",
+       "name": "El Vagón Taller",
+       "at": [
+        548,
+        283
+       ],
+       "to": {
+        "zone": "refugio-engranajes",
+        "at": [
+         12,
+         5
+        ]
+       },
+       "danger": "disputed"
+      }
+     },
+     "puerta-refugio-hojas": {
+      "$set": {
+       "id": "puerta-refugio-hojas",
+       "name": "La Trastienda Carmesí",
+       "at": [
+        176,
+        284
+       ],
+       "to": {
+        "zone": "refugio-hojas",
+        "at": [
+         12,
+         5
+        ]
+       },
+       "danger": "disputed"
+      }
+     },
+     "puerta-refugio-chatarreros": {
+      "$set": {
+       "id": "puerta-refugio-chatarreros",
+       "name": "El Desguace Hundido",
+       "at": [
+        358,
+        283
+       ],
+       "to": {
+        "zone": "refugio-chatarreros",
+        "at": [
+         12,
+         5
+        ]
+       },
+       "danger": "disputed"
+      }
+     }
+    }
+   }
+  }
+ },
+ "zones/voltio-int.json": {
+  "$obj": {
+   "props": {
+    "$multi": {
+     "add": [
+      {
+       "type": "table",
+       "at": [
+        6,
+        9
+       ]
+      },
+      {
+       "type": "arcade",
+       "at": [
+        8,
+        9
+       ],
+       "color": "#ff3fa4"
+      },
+      {
+       "type": "screen",
+       "at": [
+        6,
+        2
+       ],
+       "color": "#48f2fd",
+       "blocking": false
+      },
+      {
+       "type": "neon",
+       "at": [
+        12,
+        1
+       ],
+       "color": "#48f2fd",
+       "blocking": false
+      }
+     ],
+     "remove": [
+      {
+       "type": "table",
+       "at": [
+        7,
+        3
+       ]
+      },
+      {
+       "type": "arcade",
+       "at": [
+        10,
+        5
+       ],
+       "color": "#ff3fa4"
+      }
+     ]
+    }
+   },
+   "nightlife": {
+    "$set": {
+     "kind": "club",
+     "music": "fiesta",
+     "floor": [
+      5,
+      3,
+      6,
+      4
+     ],
+     "color": "#48f2fd"
+    }
+   }
+  }
+ }
+}

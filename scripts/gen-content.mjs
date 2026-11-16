@@ -431,3 +431,10 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log(`v0.5: ciudad única ${city.zone.width}×${city.zone.height}, ${posts.length} puestos fijos, ${extraZones.length + city.bases.length} zonas nuevas, ${changed} ficheros traducidos.`);
   console.log(`v0.6: ${furnished} muebles en interiores, ${nStreet} elementos urbanos, ${nCams} cámaras.`);
 }
+
+// ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
+{
+  const { applyOverlays } = await import('./overlay.mjs');
+  const n = applyOverlays(C, join(dirname(fileURLToPath(import.meta.url)), 'overlays'));
+  if (n) console.log(`Capas: ${n} ficheros ajustados a mano.`);
+}
