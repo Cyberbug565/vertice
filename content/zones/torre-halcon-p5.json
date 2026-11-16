@@ -175,6 +175,15 @@
     7
    ],
    "kind": "elevator"
+  },
+  {
+   "id": "silla-torre-halcon-p5",
+   "name": "Sala de inmersión privada",
+   "at": [
+    18,
+    3
+   ],
+   "kind": "neuralchair"
   }
  ],
  "waypoints": [

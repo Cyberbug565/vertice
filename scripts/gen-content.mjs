@@ -432,6 +432,19 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log(`v0.6: ${furnished} muebles en interiores, ${nStreet} elementos urbanos, ${nCams} cámaras.`);
 }
 
+// ---------------------------------------------------------------- v0.8: rarezas, Kairós, matrices, ciberespacio, el Velo y las leyendas
+{
+  const v8 = await import('./v08.mjs');
+  write('cyberware.json', v8.cyberwareV08(read('cyberware.json')));
+  write('items.json', v8.itemsV08(read('items.json')));
+  write('factions.json', v8.factionsV08(read('factions.json')));
+  write('shops.json', v8.shopsV08(read('shops.json')));
+  write('ripperdocs.json', v8.ripperdocsV08(read('ripperdocs.json')));
+  write('npcs.json', v8.npcsV08(read('npcs.json')));
+  v8.zonesV08(C);
+  console.log('v0.8: 6 aceleradores Kairós, zócalo y 5 matrices, ciberespacio, el Velo y 3 guaridas de leyendas.');
+}
+
 // ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
 {
   const { applyOverlays } = await import('./overlay.mjs');

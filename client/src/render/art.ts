@@ -10,7 +10,7 @@ export function shade(c: number, f: number) {
 
 const GROUND: Record<GroundType, number> = {
   void: 0x05050a, asphalt: 0x24242f, sidewalk: 0x3a3a4c, plaza: 0x46405c, market: 0x4b3a46, dirt: 0x4a3f32, water: 0x0b2440,
-  bridge: 0x4c4c5c, wood: 0x5c4232, tile: 0x585a72, metal: 0x46525c, crosswalk: 0x24242f, deck: 0x3e3a36, gravel: 0x4b4640, grass: 0x2f5a3a, sand: 0x8a7458, alley: 0x15131c,
+  bridge: 0x4c4c5c, wood: 0x5c4232, tile: 0x585a72, metal: 0x46525c, crosswalk: 0x24242f, deck: 0x3e3a36, gravel: 0x4b4640, grass: 0x2f5a3a, sand: 0x8a7458, alley: 0x15131c, data: 0x07142a, grid: 0x1a0610,
 };
 
 function diamond(x: number, y: number) {
@@ -36,6 +36,12 @@ export function drawGroundChunk(g: Graphics, zone: ZoneDef, ground: Uint8Array, 
     } else if (type === 'deck' || type === 'wood') {
       const a = worldToScreen(x, y + 0.5), b = worldToScreen(x + 1, y + 0.5);
       g.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width: 1, color: 0x000000, alpha: 0.25 });
+    } else if (type === 'data' || type === 'grid') {
+      // Ciberespacio: rejilla de neón y, a veces, un píxel corrupto.
+      const neon = type === 'data' ? 0x43f3ff : 0xff2040;
+      const a = worldToScreen(x, y), b = worldToScreen(x + 1, y), d = worldToScreen(x, y + 1);
+      g.moveTo(a.x, a.y).lineTo(b.x, b.y).moveTo(a.x, a.y).lineTo(d.x, d.y).stroke({ width: 1, color: neon, alpha: 0.35 });
+      if (h % 23 === 0) { const m = worldToScreen(x + 0.5, y + 0.5); g.rect(m.x - 6 + (h % 9), m.y - 2, 8 + (h % 7), 3).fill({ color: h % 2 ? 0x5aff8a : 0xff3fa4, alpha: 0.5 }); }
     } else if (type === 'asphalt' && h % 11 === 0) {
       const a = worldToScreen(x + 0.4, y + 0.4);
       g.circle(a.x, a.y + 4, 2).fill({ color: 0x000000, alpha: 0.3 });
@@ -282,6 +288,12 @@ export function drawProp(g: Graphics, lightsIn: Graphics, p: ZoneDef['props'][nu
     case 'hydrant': drawBox(g, x + 0.38, y + 0.38, 0.24, 0.24, 0, 0.55, 0xc82020); drawBox(g, x + 0.33, y + 0.33, 0.34, 0.34, 0.55, 0.1, 0xa01818); break;
     case 'kiosk': drawBox(g, x + 0.05, y + 0.05, 0.9, 0.9, 0, 1.9, 0x2a2a3a); drawBox(g, x - 0.05, y - 0.05, 1.1, 1.1, 1.9, 0.15, c); { const s1 = worldToScreen(x + 0.5, y + 0.95, 1.1); g.rect(s1.x - 10, s1.y - 10, 20, 9).fill(0xffd23f); lights.rect(s1.x - 12, s1.y - 12, 24, 13).fill({ color: 0xffd23f, alpha: 0.2 }); } break;
     case 'jersey': drawBox(g, x, y + 0.3, 1, 0.4, 0, 0.75, 0xa8a8b0); { const a1 = worldToScreen(x, y + 0.7, 0.5), b1 = worldToScreen(x + 1, y + 0.7, 0.5); g.moveTo(a1.x, a1.y).lineTo(b1.x, b1.y).stroke({ width: 3, color: 0xd82020, alpha: 0.85 }); } break;
+    // ---- v0.8: decorado del ciberespacio
+    case 'monolith': drawBox(g, x + 0.2, y + 0.2, 0.6, 0.6, 0, 4.5, 0x06101c); { const t = worldToScreen(x + 0.5, y + 0.8, 2.5); g.rect(t.x - 1, t.y - 60, 2, 70).fill({ color: c, alpha: 0.9 }); lights.rect(t.x - 10, t.y - 70, 20, 90).fill({ color: c, alpha: 0.18 }); for (let i = 0; i < 5; i++) g.rect(t.x - 8 + i * 3, t.y - 40 + ((i * 13) % 30), 2, 4).fill({ color: c, alpha: 0.7 }); } break;
+    case 'datastream': { const a = worldToScreen(x + 0.5, y + 0.5, 0), t = worldToScreen(x + 0.5, y + 0.5, 7); lights.moveTo(a.x, a.y).lineTo(t.x, t.y).stroke({ width: 6, color: c, alpha: 0.18 }); lights.moveTo(a.x, a.y).lineTo(t.x, t.y).stroke({ width: 1.5, color: c, alpha: 0.7 }); for (let i = 0; i < 6; i++) { const q = worldToScreen(x + 0.5, y + 0.5, 1 + i); lights.rect(q.x - 2, q.y, 4, 3).fill({ color: 0xffffff, alpha: 0.6 }); } break; }
+    case 'glitch': { const s0 = worldToScreen(x + 0.5, y + 0.5, 0.2); for (let i = 0; i < 4; i++) g.rect(s0.x - 18 + i * 9, s0.y - 6 + ((i * 7) % 10), 6 + (i % 3) * 5, 3).fill({ color: i % 2 ? c : 0xffffff, alpha: 0.55 }); break; }
+    case 'node': drawBox(g, x + 0.25, y + 0.25, 0.5, 0.5, 0, 0.4, 0x0a1a2a); { const s0 = worldToScreen(x + 0.5, y + 0.5, 1.2); g.poly([s0.x, s0.y - 12, s0.x + 9, s0.y, s0.x, s0.y + 12, s0.x - 9, s0.y]).fill({ color: c, alpha: 0.7 }); lights.circle(s0.x, s0.y, 22).fill({ color: c, alpha: 0.2 }); } break;
+    case 'codewall': drawBox(g, x, y + 0.4, 1, 0.2, 0, 2.6, 0x031a0c); { for (let i = 0; i < 6; i++) { const q = worldToScreen(x + 0.15 + (i % 3) * 0.3, y + 0.6, 0.4 + Math.floor(i / 3) * 1.1); g.rect(q.x - 3, q.y - 6, 6, 4).fill({ color: c, alpha: 0.8 }); } } break;
     case 'busstop': drawBox(g, x, y + 0.6, 1, 0.08, 0, 1.8, 0x6a7a8a, 0.55); drawBox(g, x - 0.05, y + 0.1, 1.1, 0.6, 1.8, 0.1, 0x3a4a5a); drawBox(g, x + 0.1, y + 0.35, 0.8, 0.25, 0, 0.4, 0x4a4a5a); { const s1 = worldToScreen(x + 0.5, y + 0.65, 1.1); lights.rect(s1.x - 12, s1.y - 10, 24, 16).fill({ color: 0x43a8ff, alpha: 0.25 }); } break;
   }
 }

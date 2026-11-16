@@ -178,8 +178,13 @@ export class Threats {
     const tx = offender && offender.zone === z && !offender.dead ? offender.x : i.x, ty = offender && offender.zone === z && !offender.dead ? offender.y : i.y;
     // Aparcan a unos metros y entran corriendo.
     for (let k = 0; k < i.units; k++) {
-      const ang = this.rng() * Math.PI * 2, r = 9 + this.rng() * 4;
-      const at = nearestWalkable(z.grid, tx + Math.cos(ang) * r, ty + Math.sin(ang) * r, 5);
+      // Buscan un sitio libre a unos metros (si no hay, más cerca).
+      let at: { x: number; y: number } | null = null;
+      for (let tries = 0; !at && tries < 10; tries++) {
+        const ang = this.rng() * Math.PI * 2, r = Math.max(2, 12 - tries);
+        at = nearestWalkable(z.grid, tx + Math.cos(ang) * r, ty + Math.sin(ang) * r, 5);
+      }
+      at ??= nearestWalkable(z.grid, tx, ty, 8);
       if (!at) continue;
       const cop = this.w.combat.spawnFactionNpc(z, 'pcv', 'police', undefined, at);
       if (!cop) continue;
@@ -257,36 +262,65 @@ export class Threats {
   }
 
   // ================================================================ ciberpsicosis del jugador
+  /** Sube la ciberpsicosis (con la resistencia de las matrices) y abre un episodio al cruzar el umbral. */
+  psychoGain(c: PlayerConn, p: PlayerState, amount: number, kairos = false) {
+    const ef = effective(this.w.c, p);
+    if (ef.matrix.psyImmune || !p.psyche) return;
+    const ps = p.psyche;
+    const before = ps.level;
+    ps.level = Math.min(100, ps.level + amount * ef.matrix.psyGain * (1 - ef.matrix.psyResist));
+    if (before < 45 && ps.level >= 45 && !(ps.episode && ps.episode.until > Date.now())) this.startEpisode(c, p, kairos);
+  }
+  /** Episodio de ciberpsicosis: dura de 1 a 3 semanas de juego (horas reales). Mientras dura, el nivel no baja de su suelo. */
+  private startEpisode(c: PlayerConn, p: PlayerState, kairos: boolean) {
+    const ps = p.psyche;
+    const day = this.w.c.manifest.cityHourMs * 24;
+    ps.episodes = (ps.episodes ?? 0) + 1;
+    const grave = ps.level >= 70 || ps.episodes >= 3;
+    const days = kairos && !grave ? 1 + Math.floor(this.rng() * 2) : grave ? 14 + Math.floor(this.rng() * 8) : 7 + Math.floor(this.rng() * 8);
+    ps.episode = { until: Date.now() + days * day, floor: grave ? 70 : 45, grave };
+    const weeks = days >= 7 ? `${Math.round(days / 7 * 10) / 10} semanas` : `${days} día${days > 1 ? 's' : ''}`;
+    this.notice(c, 'bad', grave
+      ? `🧠 CIBERPSICOSIS GRAVE. Tu mente se rompe: durante ${weeks} de juego no volverás a ser tú. Pierdes el control a menudo. Solo bajar de cromo y aguantar te salvará.`
+      : `🧠 EPISODIO DE CIBERPSICOSIS (${weeks} de juego). Las voces, la paranoia y la rabia no se irán aunque te quites cromo: tendrás que esperar a que pase.`);
+  }
+  private whisper(c: PlayerConn, lvl: number) {
+    const soft = ['…te están mirando…', '¿Has oído eso?', 'El cromo zumba. Zumba. Zumba.', 'No es tu mano. ¿O sí?', 'Ese tipo sabe lo que hiciste.'];
+    const hard = ['MÁTALOS ANTES DE QUE TE MATEN.', 'Tu piel es un error. Arráncala.', 'TODOS SON MÁQUINAS. TÚ TAMBIÉN.', 'Rompe algo. Lo que sea. YA.'];
+    this.w.send(c, { t: 'notice', kind: lvl >= 70 ? 'bad' : 'warn', text: `🗯 ${(lvl >= 70 ? hard : soft)[Math.floor(this.rng() * (lvl >= 70 ? hard : soft).length)]}` });
+  }
   private psyche(c: PlayerConn, p: PlayerState, e: Entity) {
     if (p.status !== 'alive' || !p.psyche) return;
     const ef = effective(this.w.c, p);
+    const ps = p.psyche;
+    if (ef.matrix.psyImmune) { if (ps.level > 0 || ps.episode) { ps.level = 0; ps.episode = undefined; this.notice(c, 'good', 'Rafa: «Tranquilo, chaval. Esas voces ya no te tocan.»'); } return; }
     const over = ef.chromeUsed - ef.chromeCapacity;
     const lowHum = p.humanity < 15 ? (15 - p.humanity) / 5 : 0;
-    const ps = p.psyche;
-    const before = ps.level;
-    if (over > 0 || lowHum > 0) ps.level = Math.min(100, ps.level + Math.max(0, over) * 0.025 + lowHum * 0.02 + 0.01);
-    else ps.level = Math.max(0, ps.level - (ps.level > 60 ? 0.015 : 0.035));
+    const now = Date.now();
+    const inEpisode = !!ps.episode && ps.episode.until > now;
+    if (ps.episode && !inEpisode) { ps.episode = undefined; this.notice(c, 'good', '🧠 El episodio de ciberpsicosis remite. Por fin silencio.'); }
+    if (over > 0 || lowHum > 0) this.psychoGain(c, p, Math.max(0, over) * 0.025 + lowHum * 0.02 + 0.01);
+    else ps.level = Math.max(inEpisode ? ps.episode!.floor : 0, ps.level - (ps.level > 60 ? 0.015 : 0.035));
+    if (inEpisode) ps.level = Math.max(ps.level, ps.episode!.floor);
     if (ps.level > 50) ps.heavy += 1;
     ps.peak = Math.max(ps.peak, ps.level);
     if (ps.level <= 0) { ps.peak = 0; ps.heavy = Math.max(0, ps.heavy - 1); }
-    // Avisos solo cuando ya es grave (al principio no se nota nada).
-    if (before < 45 && ps.level >= 45) this.notice(c, 'warn', 'Te tiembla el pulso. Oyes el zumbido del cromo dentro de tu cabeza…');
-    if (before < 70 && ps.level >= 70) this.notice(c, 'bad', 'Todo el mundo te mira. Todos. El cromo grita más fuerte que tú.');
-    if (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || p.sleeping || e.transit) return;
     const lvl = ps.level;
+    // Síntomas que se notan: susurros desde 15, insultos desde 25, empujones desde 45, disparos solos desde 70.
+    if (lvl >= 15 && this.rng() < (lvl >= 70 ? 0.05 : lvl >= 45 ? 0.03 : 0.012)) this.whisper(c, lvl);
+    if (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || p.sleeping || e.transit || e.ghostOf) return;
     if (lvl < 25) return;
     const pick = () => [...e.zone.query(e.x, e.y, lvl >= 70 ? 9 : 4)].filter((o) => o !== e && (o.kind === 'npc' || o.kind === 'player') && o.state !== 'downed' && !o.dead && o.npcType !== 'essential' && (o.kind === 'player' || !!o.npcMax));
-    // 25+: insulta a la gente; 45+: empuja y pega; 70+: dispara solo.
-    if (this.rng() < (lvl < 45 ? 0.012 : 0.025)) {
+    if (this.rng() < (lvl < 45 ? 0.02 : 0.04)) {
       const t = pick()[0];
       if (t) for (const o of e.zone.query(e.x, e.y, 20)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'speech', id: e.id, text: INSULTS[Math.floor(this.rng() * INSULTS.length)] });
     }
-    if (lvl >= 45 && this.rng() < (lvl >= 70 ? 0.03 : 0.012) && Date.now() >= p.nextAttackAt) {
+    if (lvl >= 45 && this.rng() < (lvl >= 85 ? 0.08 : lvl >= 70 ? 0.045 : 0.018) && Date.now() >= p.nextAttackAt) {
       const ts = pick();
       const t = ts[Math.floor(this.rng() * ts.length)];
       if (t) {
         const lethal = lvl >= 70;
-        this.notice(c, 'bad', lethal ? `Tus manos se mueven solas: ¡disparas a ${t.name}!` : `Sin saber por qué, la tomas con ${t.name}.`);
+        this.notice(c, 'bad', lethal ? `Tus manos se mueven solas: ¡atacas a ${t.name}!` : `Sin saber por qué, la tomas con ${t.name}.`);
         void this.w.combat.attack(c, t, lethal, `psicosis-${randomUUID()}`).catch(() => {});
       }
     }
@@ -295,7 +329,7 @@ export class Threats {
   onRemoval(c: PlayerConn) {
     const p = c.p!;
     const ps = p.psyche;
-    if (!ps || ps.heavy < 120) return;
+    if (!ps || (ps.heavy < 120 && !(ps.episode && ps.episode.until > Date.now()))) return;
     const amount = Math.round(Math.min(10, 2 + ps.peak / 12 + ps.heavy / 600));
     const ms = Math.round(Math.min(90, 10 + ps.heavy / 60) * 60_000);
     ps.debuff = { amount, until: Date.now() + ms };

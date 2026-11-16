@@ -8,7 +8,7 @@ const rect = z.tuple([z.number().int(), z.number().int(), z.number().int().posit
 export const DangerLevel = z.enum(['protected', 'public', 'disputed', 'lawless']);
 export type DangerLevel = z.infer<typeof DangerLevel>;
 
-export const GROUND_TYPES = ['void', 'asphalt', 'sidewalk', 'plaza', 'market', 'dirt', 'water', 'bridge', 'wood', 'tile', 'metal', 'crosswalk', 'deck', 'gravel', 'grass', 'sand', 'alley'] as const;
+export const GROUND_TYPES = ['void', 'asphalt', 'sidewalk', 'plaza', 'market', 'dirt', 'water', 'bridge', 'wood', 'tile', 'metal', 'crosswalk', 'deck', 'gravel', 'grass', 'sand', 'alley', 'data', 'grid'] as const;
 export type GroundType = (typeof GROUND_TYPES)[number];
 export const BLOCKING_GROUND: ReadonlySet<GroundType> = new Set(['void', 'water']);
 
@@ -29,12 +29,12 @@ export const ZoneSchema = z.object({
     style: z.enum(['mega', 'block', 'shop', 'club', 'clinic', 'industrial', 'tower', 'arcology', 'spire', 'glass']),
     color: z.string(), sign: z.string().optional(), signColor: z.string().optional(),
   })).default([]),
-  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window', 'column', 'sofa', 'desk', 'locker', 'fridge', 'planter', 'arcade', 'barrel', 'dumpster', 'hydrant', 'kiosk', 'jersey', 'busstop']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
+  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window', 'column', 'sofa', 'desk', 'locker', 'fridge', 'planter', 'arcade', 'barrel', 'dumpster', 'hydrant', 'kiosk', 'jersey', 'busstop', 'monolith', 'datastream', 'glitch', 'node', 'codewall']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
   skybridges: z.array(z.object({ from: xy, to: xy, z: z.number(), color: z.string().optional() })).default([]),
   doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional(), hidden: z.string().optional() })).default([]),
   objects: z.array(z.object({
     id: z.string(), name: z.string(), at: xy,
-    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot', 'camera', 'computer']),
+    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot', 'camera', 'computer', 'neuralchair', 'jackout']),
     dialog: z.string().optional(), shop: z.string().optional(), workplace: z.string().optional(), dealer: z.string().optional(),
     sleep: z.object({ quality: z.number().min(0).max(1), price: z.number().int().nonnegative().default(0) }).optional(),
   })).default([]),
@@ -63,6 +63,8 @@ export const ZoneSchema = z.object({
   gangBase: z.object({ faction: z.string(), boss: z.string() }).optional(),
   skywalk: z.boolean().optional(),
   furnished: z.boolean().optional(),
+  /** v0.8: ciberespacio (se dibuja con fallos visuales) y guarida de una leyenda (hace falta su confianza para entrar). */
+  cyber: z.boolean().optional(), legend: z.string().optional(),
   nightlife: z.object({ kind: z.enum(['bar', 'club']), music: z.enum(['fiesta', 'chill']), floor: rect, color: z.string().regex(/^#[0-9a-fA-F]{6}$/) }).optional(),
 });
 
@@ -174,10 +176,10 @@ export const RoleSchema = z.object({
 });
 export type RoleDef = z.infer<typeof RoleSchema>;
 
-export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'herramienta', 'arma', 'ropa', 'chatarra', 'mision', 'equipo', 'contrabando', 'municion'] as const;
+export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'herramienta', 'arma', 'ropa', 'chatarra', 'mision', 'equipo', 'contrabando', 'municion', 'matriz'] as const;
 
 export const WEAPON_TRAITS = ['perforante', 'inteligente', 'quemadura', 'sangrado', 'electrica', 'emp', 'area', 'silenciosa', 'aturdidora'] as const;
-export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario'] as const;
+export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario', 'mitico'] as const;
 export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies'] as const;
 export type WearSlot = (typeof WEAR_SLOTS)[number];
 export const CYBER_REGIONS = ['so', 'corteza', 'ojos', 'cara', 'brazos', 'manos', 'esqueleto', 'nervioso', 'circulatorio', 'tegumentario', 'piernas'] as const;
@@ -257,7 +259,8 @@ export const CyberwareSchema = z.object({
   /** v0.4: zona del cuerpo en la pantalla de ciberware. */
   region: z.enum(CYBER_REGIONS).optional(),
   /** Habilidad que se activa (tecla) con enfriamiento. */
-  ability: z.object({ kind: z.enum(['tiempo-bala', 'invisible', 'curar', 'pulso', 'esprint', 'carga', 'senuelo', 'torbellino', 'disparo-cargado', 'pico-ram']), name: z.string(), cooldown: z.number(), duration: z.number().default(0), power: z.number().default(0) }).optional(),
+  rarity: z.enum(RARITIES).optional(),
+  ability: z.object({ kind: z.enum(['tiempo-bala', 'invisible', 'curar', 'pulso', 'esprint', 'carga', 'senuelo', 'torbellino', 'disparo-cargado', 'pico-ram', 'kairos']), name: z.string(), cooldown: z.number(), duration: z.number().default(0), power: z.number().default(0) }).optional(),
   /** Efecto pasivo único (segundo-corazon, autoestim, lector, modulador, compartimento, refuerzo). */
   unique: z.string().optional(),
   prosthetic: z.boolean().default(false),

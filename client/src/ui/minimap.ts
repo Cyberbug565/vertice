@@ -1,7 +1,7 @@
 // Minimapa y mapa grande por planta, proyectados en isométrico para coincidir con la vista.
 import { GROUND_TYPES, buildZoneGrid, type ZoneDef } from '@vertice/shared';
 
-const COL: Record<string, string> = { asphalt: '#2a2a3a', sidewalk: '#44445a', plaza: '#4e4868', market: '#6a4a5a', water: '#0d3050', bridge: '#5a5a6a', deck: '#4a4640', gravel: '#5a5448', crosswalk: '#3a3a4a', wood: '#6a4a36', tile: '#5e6078', metal: '#4e5a64', dirt: '#5a4a3a', void: '#000', alley: '#1c1a24', grass: '#2f5a3a', sand: '#8a7458' };
+const COL: Record<string, string> = { asphalt: '#2a2a3a', sidewalk: '#44445a', plaza: '#4e4868', market: '#6a4a5a', water: '#0d3050', bridge: '#5a5a6a', deck: '#4a4640', gravel: '#5a5448', crosswalk: '#3a3a4a', wood: '#6a4a36', tile: '#5e6078', metal: '#4e5a64', dirt: '#5a4a3a', void: '#000', alley: '#1c1a24', grass: '#2f5a3a', sand: '#8a7458', data: '#0a2a4a', grid: '#3a0a18' };
 
 const DANGER_TINT = ['rgba(90,255,140,0.22)', '', 'rgba(255,48,64,0.22)', 'rgba(0,0,0,0.5)'];
 export function renderZoneMap(zone: ZoneDef, canvas: HTMLCanvasElement, scale: number) {

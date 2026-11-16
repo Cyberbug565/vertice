@@ -4,6 +4,7 @@ import { openDb } from './db/db.js';
 import { migrate } from './db/migrate.js';
 import { loadValidatedContent } from './content.js';
 import { Metrics } from './metrics.js';
+import { ensureAdminAccount } from './world/admin.js';
 import { World } from './world/world.js';
 import { startServer } from './net/server.js';
 
@@ -13,6 +14,7 @@ export async function createApp(overrides: Partial<Config> = {}) {
   if (cfg.cityHourMs) (content.manifest as { cityHourMs: number }).cityHourMs = cfg.cityHourMs;
   const db = await openDb(cfg.databaseUrl, cfg.pgliteDir);
   await migrate(db, cfg.logLevel === 'info');
+  await ensureAdminAccount(db).catch((err) => console.error('[admin]', err));
   const metrics = new Metrics();
   const world = new World(content, hash, db, cfg, metrics);
   await world.init();

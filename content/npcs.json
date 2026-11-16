@@ -303,5 +303,83 @@
     "label": "Atiende la consulta"
    }
   ]
+ },
+ {
+  "id": "leyenda-iris",
+  "name": "Iris «Fantasma» Kuro",
+  "title": "Netrunner legendaria",
+  "faction": "red-bisagra",
+  "essential": true,
+  "appearance": {
+   "skin": "#e0b48c",
+   "hair": "#d9d9e3",
+   "jacket": "#1a1a2a",
+   "accent": "#43f3ff"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "guarida-iris",
+    "at": [
+     6,
+     4
+    ],
+    "state": "rest",
+    "label": "Conectada a la red"
+   }
+  ]
+ },
+ {
+  "id": "leyenda-sable",
+  "name": "Sable",
+  "title": "La mejor mercenaria de Vértice",
+  "faction": "calle",
+  "essential": true,
+  "appearance": {
+   "skin": "#8a5a3c",
+   "hair": "#1a1a1a",
+   "jacket": "#2a2a2a",
+   "accent": "#ffd23f"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "refugio-sable",
+    "at": [
+     5,
+     3
+    ],
+    "state": "rest",
+    "label": "Limpiando su arma"
+   }
+  ]
+ },
+ {
+  "id": "leyenda-teo",
+  "name": "Teo «Cometa» Marlín",
+  "title": "Líder de los Saqueadores",
+  "faction": "saqueadores",
+  "essential": true,
+  "appearance": {
+   "skin": "#c89070",
+   "hair": "#5aff8a",
+   "jacket": "#3a2a1a",
+   "accent": "#ff6a20"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "garaje-cometa",
+    "at": [
+     9,
+     5
+    ],
+    "state": "rest",
+    "label": "Arreglando una moto"
+   }
+  ]
  }
 ]

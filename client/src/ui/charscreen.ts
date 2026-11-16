@@ -1,6 +1,6 @@
 // v0.4 · Pantalla de personaje a pantalla completa: inventario con huecos de ropa y armas, ciberware sobre la silueta,
 // habilidades 1–25 con barras de experiencia y árbol de perks.
-import type { CharacterSheet } from '@vertice/shared';
+import { MATRICES, RARITY_COLOR, RARITY_LABEL, type CharacterSheet } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
 import { $ui, fmtMoney, h } from './dom';
@@ -12,7 +12,7 @@ type Tab = 'inv' | 'cyber' | 'skills' | 'sheet';
 
 const RARITY: Record<string, { name: string; color: string }> = {
   comun: { name: 'Común', color: '#9a9ac0' }, 'poco-comun': { name: 'Poco común', color: '#5affc8' }, raro: { name: 'Raro', color: '#43a8ff' },
-  epico: { name: 'Épico', color: '#b46cff' }, legendario: { name: 'Legendario', color: '#ffbf00' },
+  epico: { name: 'De lujo', color: '#b46cff' }, legendario: { name: 'Legendario', color: '#ffbf00' }, mitico: { name: 'Mítico', color: '#ff2040' },
 };
 const SLOT_NAMES: Record<string, string> = { cabeza: 'Cabeza', cara: 'Cara', torso_ext: 'Chaqueta', torso_int: 'Camiseta', piernas: 'Piernas', pies: 'Calzado' };
 const SLOT_ICON: Record<string, string> = { cabeza: '🧢', cara: '🕶', torso_ext: '🧥', torso_int: '👕', piernas: '👖', pies: '👟' };
@@ -32,7 +32,7 @@ export function closeCharScreen() { document.getElementById('char-screen')?.remo
 
 export function openCharScreen(ctx: CharCtx, sheet: CharacterSheet, tab: Tab) {
   if (charScreenOpen() && st.tab === tab) { closeCharScreen(); return; }
-  st.ctx = ctx; st.sheet = sheet; st.tab = tab;
+  st.ctx = ctx; st.sheet = sheet; st.tab = tab; cyberNet = ctx.net;
   render();
 }
 export function refreshCharScreen(sheet: CharacterSheet) { st.sheet = sheet; if (charScreenOpen()) render(); }
@@ -185,9 +185,10 @@ function cyberTab(s: CharacterSheet) {
       h('div', { class: 'cy-slots' }, ...Array.from({ length: slots }, (_, i) => {
         const c = list[i];
         if (!c) return h('div', { class: 'cy-slot empty', title: 'Hueco libre: instálalo en un matasanos' });
-        const el = h('div', { class: `cy-slot g${c.grade}` }, h('span', { class: 'cs-ico' }, c.ability ? '⚡' : '🦾'), h('span', { class: 'cy-name' }, c.name));
-        el.addEventListener('mouseenter', () => showTip(el, h('div', { class: 'cs-card', style: { borderColor: '#43f3ff' } },
-          h('div', { class: 'cs-card-rar', style: { color: '#43f3ff' } }, `${c.family.toUpperCase()} · GRADO ${['I', 'II', 'III', 'IV', 'V'][c.grade - 1]}`), h('b', {}, c.name), h('p', { class: 'muted' }, c.desc),
+        const rc = RARITY_COLOR[c.rarity ?? 'comun'];
+        const el = h('div', { class: `cy-slot g${c.grade} r-${c.rarity ?? 'comun'}`, style: { borderColor: rc } }, h('span', { class: 'cs-ico' }, c.ability ? '⚡' : '🦾'), h('span', { class: 'cy-name', style: { color: rc } }, c.name));
+        el.addEventListener('mouseenter', () => showTip(el, h('div', { class: 'cs-card', style: { borderColor: rc } },
+          h('div', { class: 'cs-card-rar', style: { color: rc } }, `${(RARITY_LABEL[c.rarity ?? 'comun'] ?? '').toUpperCase()} · ${c.family.toUpperCase()} · GRADO ${['I', 'II', 'III', 'IV', 'V'][c.grade - 1]}`), h('b', {}, c.name), h('p', { class: 'muted' }, c.desc),
           h('div', { class: 'mono' }, `Capacidad ${c.capacity} · Humanidad −${c.humanity}`), c.part ? h('div', {}, `Lado: ${c.part.endsWith('izq') ? 'izquierdo' : 'derecho'}`) : null,
           c.ability ? h('div', { class: 'good' }, `Habilidad activa: ${c.ability} (teclas 1–4)`) : null, c.unique ? h('div', { class: 'good' }, 'Efecto único pasivo') : null,
           c.stolen ? h('div', { class: 'netbad' }, 'Procedencia: robado') : null)));
@@ -202,7 +203,23 @@ function cyberTab(s: CharacterSheet) {
     h('div', { class: 'cy-meter' }, h('div', { class: 'cy-mlabel' }, 'CAPACIDAD'), h('div', { class: 'cy-vbar' }, h('i', { style: { height: `${(100 * s.chromeUsed) / Math.max(1, s.chromeCapacity)}%` } })), h('b', { class: 'mono' }, `${s.chromeUsed}/${s.chromeCapacity}`)),
     h('div', { class: 'cy-col' }, ...left), body, h('div', { class: 'cy-col' }, ...right),
     h('div', { class: 'cy-meter hum' }, h('div', { class: 'cy-mlabel' }, 'HUMANIDAD'), h('div', { class: 'cy-vbar' }, h('i', { style: { height: `${(100 * s.humanity) / Math.max(1, s.humanityMax)}%` } })), h('b', { class: 'mono' }, `${s.humanity}/${s.humanityMax}`)),
-    h('div', { class: 'cy-foot muted small' }, inBag.length ? `En la mochila sin instalar: ${inBag.map((c) => c.name).join(', ')}. ` : '', 'Los implantes se instalan y se retiran en un matasanos. Los mejores no se anuncian: pregunta en la calle.'));
+    h('div', { class: 'cy-foot muted small' }, inBag.length ? h('span', {}, 'En la mochila sin instalar: ', ...inBag.map((c, i) => h('span', { style: { color: RARITY_COLOR[c.rarity ?? 'comun'] } }, `${i ? ', ' : ''}${c.name}`)), '. ') : '', 'Los implantes se instalan y se retiran en un matasanos. Los mejores no se anuncian: pregunta en la calle.'),
+    matricesBlock(s));
+}
+/** v0.8 · Zócalo de matrices: ranuras, matrices puestas (las míticas bloqueadas no salen) y las que llevas en la mochila. */
+let cyberNet: Net | null = null;
+function matricesBlock(s: CharacterSheet) {
+  const m = s.matrices;
+  const bag = s.inventory.filter((i) => MATRICES[i.def] && i.qty > 0 && !(MATRICES[i.def].rarity === 'mitico' && m.equipped.includes(i.def)));
+  if (!m.socket && !bag.length) return h('div', { class: 'mx-box muted small' }, 'Sin zócalo de matrices. Los matasanos de grado IV o más lo instalan (ocupa la ranura «zócalo»).');
+  const card = (id: string, on: boolean) => { const d = MATRICES[id]; const rc = RARITY_COLOR[d.rarity]; return h('div', { class: `mx-card${on ? ' on' : ''}`, style: { borderColor: rc } },
+    h('div', { class: 'mono small', style: { color: rc } }, `${RARITY_LABEL[d.rarity].toUpperCase()} · ${d.chrome ? `${d.chrome} de cromo` : 'sin coste de cromo'}${d.locked ? ' · NO SE QUITA' : ''}`),
+    h('b', {}, d.name), h('p', { class: 'small muted' }, d.desc),
+    on ? (d.locked ? h('span', { class: 'small', style: { color: rc } }, 'Anclada hasta la muerte') : h('button', { class: 'btn small', onclick: () => cyberNet?.send({ t: 'matrix', action: 'remove', item: id } as any) }, 'Quitar'))
+      : h('button', { class: 'btn small primary', disabled: !m.socket || m.equipped.length >= m.slots, onclick: () => { if (!d.locked || confirm(`${d.name} no se podrá quitar nunca. ¿Insertarla?`)) cyberNet?.send({ t: 'matrix', action: 'equip', item: id } as any); } }, 'Insertar')); };
+  return h('div', { class: 'mx-box' },
+    h('div', { class: 'cy-title' }, `ZÓCALO DE MATRICES · ${m.socket ? `${m.equipped.length}/${m.slots} ranuras` : 'no instalado'}`),
+    h('div', { class: 'mx-grid' }, ...m.equipped.map((id) => card(id, true)), ...Array.from({ length: Math.max(0, m.slots - m.equipped.length) }, () => h('div', { class: 'mx-card empty' }, 'Ranura libre')), ...bag.map((i) => card(i.def, false))));
 }
 /** Silueta humana estilizada con las partes cromadas resaltadas. */
 function silhouette(chrome: string[]) {

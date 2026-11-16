@@ -223,6 +223,15 @@
     7
    ],
    "kind": "elevator"
+  },
+  {
+   "id": "silla-torre-kaiten-p3",
+   "name": "Sala de inmersión privada",
+   "at": [
+    18,
+    3
+   ],
+   "kind": "neuralchair"
   }
  ],
  "waypoints": [

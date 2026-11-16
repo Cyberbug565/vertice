@@ -101,6 +101,22 @@
     ]
    },
    "danger": "public"
+  },
+  {
+   "id": "puerta-refugio-sable",
+   "name": "Puerta sin rótulo",
+   "at": [
+    0,
+    3
+   ],
+   "to": {
+    "zone": "refugio-sable",
+    "at": [
+     1,
+     4
+    ]
+   },
+   "danger": "public"
   }
  ],
  "objects": [

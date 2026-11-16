@@ -1,0 +1,845 @@
+{
+ "id": "ciberespacio",
+ "name": "Ciberespacio · La Malla",
+ "kind": "interior",
+ "cyber": true,
+ "furnished": true,
+ "width": 72,
+ "height": 52,
+ "chunkSize": 16,
+ "danger": "lawless",
+ "base": "data",
+ "ground": [
+  {
+   "type": "void",
+   "rect": [
+    16,
+    0,
+    3,
+    18
+   ]
+  },
+  {
+   "type": "void",
+   "rect": [
+    16,
+    34,
+    3,
+    18
+   ]
+  },
+  {
+   "type": "void",
+   "rect": [
+    34,
+    10,
+    4,
+    14
+   ]
+  },
+  {
+   "type": "void",
+   "rect": [
+    34,
+    30,
+    4,
+    14
+   ]
+  },
+  {
+   "type": "void",
+   "rect": [
+    52,
+    0,
+    3,
+    20
+   ]
+  },
+  {
+   "type": "void",
+   "rect": [
+    52,
+    32,
+    3,
+    20
+   ]
+  },
+  {
+   "type": "grid",
+   "rect": [
+    1,
+    19,
+    15,
+    14
+   ]
+  },
+  {
+   "type": "grid",
+   "rect": [
+    56,
+    22,
+    15,
+    8
+   ]
+  }
+ ],
+ "blocks": [
+  {
+   "type": "barrier",
+   "rect": [
+    22,
+    4,
+    2,
+    5
+   ],
+   "height": 3,
+   "color": "#0a3a5a"
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    27,
+    42,
+    2,
+    5
+   ],
+   "height": 3,
+   "color": "#0a3a5a"
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    32,
+    4,
+    2,
+    5
+   ],
+   "height": 3,
+   "color": "#0a3a5a"
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    37,
+    42,
+    2,
+    5
+   ],
+   "height": 3,
+   "color": "#0a3a5a"
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    42,
+    4,
+    2,
+    5
+   ],
+   "height": 3,
+   "color": "#0a3a5a"
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    47,
+    42,
+    2,
+    5
+   ],
+   "height": 3,
+   "color": "#0a3a5a"
+  }
+ ],
+ "props": [
+  {
+   "type": "node",
+   "at": [
+    3,
+    21
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "node",
+   "at": [
+    13,
+    21
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "node",
+   "at": [
+    3,
+    30
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "node",
+   "at": [
+    13,
+    30
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    22,
+    6
+   ],
+   "color": "#ff3fa4",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    29,
+    6
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    25,
+    9
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    32,
+    9
+   ],
+   "color": "#ff3fa4",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    28,
+    12
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    24,
+    12
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    31,
+    15
+   ],
+   "color": "#ff3fa4",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    27,
+    15
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    23,
+    18
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    30,
+    18
+   ],
+   "color": "#ff3fa4",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    26,
+    21
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    22,
+    21
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    29,
+    24
+   ],
+   "color": "#ff3fa4",
+   "blocking": true
+  },
+  {
+   "type": "monolith",
+   "at": [
+    25,
+    24
+   ],
+   "color": "#43f3ff",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    40,
+    6
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    42,
+    6
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    44,
+    6
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    46,
+    6
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    48,
+    6
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    40,
+    15
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    42,
+    15
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    44,
+    15
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    46,
+    15
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "codewall",
+   "at": [
+    48,
+    15
+   ],
+   "color": "#5aff8a",
+   "blocking": true
+  },
+  {
+   "type": "glitch",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    30,
+    17
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    43,
+    24
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    56,
+    31
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    5,
+    38
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    18,
+    45
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    31,
+    6
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    44,
+    13
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    57,
+    20
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    6,
+    27
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    19,
+    34
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    32,
+    41
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    45,
+    48
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    58,
+    9
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    7,
+    16
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    20,
+    23
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    33,
+    30
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    46,
+    37
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    59,
+    44
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    8,
+    5
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    21,
+    12
+   ],
+   "color": "#ff2040",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    34,
+    19
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "glitch",
+   "at": [
+    47,
+    26
+   ],
+   "color": "#5aff8a",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    17,
+    19
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    28,
+    36
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    39,
+    5
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    50,
+    22
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    61,
+    39
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    10,
+    8
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    21,
+    25
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    32,
+    42
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    43,
+    11
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    54,
+    28
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    65,
+    45
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    14,
+    14
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    25,
+    31
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    36,
+    48
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "datastream",
+   "at": [
+    47,
+    17
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "puerta-velo",
+   "name": "El Velo",
+   "at": [
+    70,
+    26
+   ],
+   "to": {
+    "zone": "velo",
+    "at": [
+     2,
+     20
+    ]
+   },
+   "danger": "lawless"
+  }
+ ],
+ "objects": [
+  {
+   "id": "nodo-salida",
+   "name": "Nodo de salida · desconectar",
+   "at": [
+    3,
+    26
+   ],
+   "kind": "jackout"
+  }
+ ],
+ "dangerAreas": [
+  {
+   "level": "protected",
+   "rect": [
+    1,
+    19,
+    15,
+    14
+   ]
+  }
+ ],
+ "sectors": [],
+ "waypoints": [],
+ "safePoint": [
+  8,
+  26
+ ],
+ "ambient": 0,
+ "police": 0,
+ "gangs": [
+  {
+   "faction": "ias-salvajes",
+   "count": 7,
+   "area": [
+    27,
+    26,
+    8
+   ]
+  },
+  {
+   "faction": "ias-salvajes",
+   "count": 6,
+   "area": [
+    45,
+    26,
+    8
+   ]
+  },
+  {
+   "faction": "ias-salvajes",
+   "count": 8,
+   "area": [
+    62,
+    26,
+    8
+   ]
+  }
+ ]
+}

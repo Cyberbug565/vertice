@@ -16,6 +16,7 @@ import { searchPanel, trunkPanel } from './ui/intel';
 import { actionFor, keyOf, keymap } from './keymap';
 import { BodyPanel } from './ui/body';
 import { keysPanel, pauseMenu } from './ui/pause';
+import { cheatPanel, legendPanel } from './ui/legends';
 import { buildingPanel, dealerPanel, marketLivePanel, propsPanel, realtyPanel, ringPrompt, scanCard, stashPanel, type PropCtx } from './ui/property';
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
 
@@ -26,7 +27,7 @@ const STANCES = [
   { id: 'aggressive', label: 'Agresiva', desc: 'Agresiva: ataca objetivos elegibles dentro de la orden seleccionada, gastando munición y cromo autorizados.' },
 ] as const;
 
-const ABIL_ICON: Record<string, string> = { 'tiempo-bala': '⏱', invisible: '👻', curar: '💉', pulso: '💥', esprint: '💨', carga: '🚀', senuelo: '🎭', torbellino: '🌀', 'disparo-cargado': '🎯', 'pico-ram': '🧠' };
+const ABIL_ICON: Record<string, string> = { kairos: '⏩', onda: '🌊', proyeccion: '👻', 'tiempo-bala': '⏱', invisible: '👻', curar: '💉', pulso: '💥', esprint: '💨', carga: '🚀', senuelo: '🎭', torbellino: '🌀', 'disparo-cargado': '🎯', 'pico-ram': '🧠' };
 const BUFF_NAME: Record<string, string> = { 'tiempo-bala': '⏱ Tiempo bala', invisible: '👻 Invisible', curar: '💉 Curando', esprint: '💨 Esprint', senuelo: '🎭 Señuelo', carga: '🚀 Carga', 'disparo-cargado': '🎯 Cargado' };
 
 export async function startGame(token: string, onExit0: (reason?: string) => void) {
@@ -70,6 +71,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     h('span', {}, 'Sed'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sed' }, thBar),
     h('span', {}, 'Sueño'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sueño' }, ftBar));
   const statusEl = h('div', { style: { fontSize: '0.85em', minHeight: '1.2em' }, 'aria-live': 'polite' });
+  const psycheEl = h('div', { class: 'psyche-meter', style: { display: 'none' } });
   const substancesEl = h('div', { class: 'substance-readout', 'aria-label': 'Estado de consumo' });
   const nameEl = h('div', {}), moneyEl = h('div', { class: 'mono' }), statsEl = h('div', { class: 'muted', style: { fontSize: '0.85em' } });
   const hpTxt = h('span', { class: 'mono' }), stTxt = h('span', { class: 'mono' });
@@ -78,7 +80,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const tl = h('div', { class: 'hud hud-tl', 'aria-label': 'Estado del personaje' }, nameEl, xpEl,
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Salud'), hpTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Salud' }, hpBar),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Aguante'), stTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Aguante' }, stBar),
-    needsEl, statusEl, substancesEl, moneyEl, statsEl);
+    needsEl, psycheEl, statusEl, substancesEl, moneyEl, statsEl);
   const mm = h('canvas', { id: 'minimap', title: 'Mapa grande (M)', onclick: () => bigMap() }) as HTMLCanvasElement;
   const minimap = new Minimap(mm);
   const sectorEl = h('div', { style: { fontWeight: '600', marginTop: '4px' } }), dangerEl = h('span', { class: 'badge' }), clockEl = h('span', { class: 'mono' }), netEl = h('span', { class: 'mono' });
@@ -238,6 +240,14 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     renderStance();
     view.setMyAttributes(s.attributes as any, s.substances.speed);
     bodyPanel.update(s);
+    // v0.8: compañeros de las matrices, síntomas de ciberpsicosis y medidor de estabilidad mental.
+    view.setCompanions(s.matrices.equipped);
+    view.psyche = s.psyche.level;
+    for (const [cls, on] of [['psy1', s.psyche.level >= 15], ['psy2', s.psyche.level >= 45], ['psy3', s.psyche.level >= 70]] as const) document.body.classList.toggle(cls, on);
+    psycheEl.style.display = s.psyche.level >= 15 || s.psyche.episode ? '' : 'none';
+    psycheEl.replaceChildren(h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, '🧠 Estabilidad mental'), h('b', { class: 'mono' }, `${100 - s.psyche.level}%`)),
+      h('div', { class: 'bar psy' }, h('i', { style: { width: `${100 - s.psyche.level}%`, background: s.psyche.level >= 70 ? 'var(--red)' : s.psyche.level >= 45 ? 'var(--orange)' : 'var(--yellow)' } })),
+      s.psyche.episode ? h('div', { class: 'small', style: { color: 'var(--red)' } }, `${s.psyche.episode.grave ? 'Ciberpsicosis grave' : 'Episodio de ciberpsicosis'}: quedan ${s.psyche.episode.days} días de juego`) : '');
     document.body.classList.toggle('psicosis', s.psychosis === 'Ciberpsicosis');
   };
   const renderLocation = () => {
@@ -506,6 +516,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       else if (document.querySelector('.panel')) closePanels(); else if (st.dialog) net.send({ t: 'closeDialog' } as any); else openPause();
       return;
     }
+    if ((k === 'º' || k === '`' || k === 'f10' || k === 'dead') && st.sheet?.admin) { e.preventDefault(); net.send({ t: 'cheat', cmd: 'info' } as any); return; }
     const a = ARROWS[k] ?? actionFor(k);
     if (a && MOVE[a]) { e.preventDefault(); if (!held.has(a)) { held.add(a); pushSteer(); } return; }
     if (e.repeat) return;
@@ -583,14 +594,27 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         view.meId = m.you; st.sheet = m.sheet; st.journal = m.journal; st.facts = m.facts; st.cityHourMs = m.cityHourMs; st.cityEpoch = m.cityEpoch;
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger;
         view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(m.facts);
+        document.body.classList.toggle('cyber-zone', !!zoneDef(m.zone)?.cyber);
         renderSheet(); renderLocation(); setAction(''); refreshScore();
         break;
+      case 'possess':
+        // Proyección de Eco: pasas a controlar al fantasma (o vuelves a tu cuerpo).
+        view.meId = m.you; view.ghostMode = m.ghost; st.zone = m.zone;
+        view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(st.facts);
+        document.body.classList.toggle('ghost-mode', m.ghost);
+        document.body.classList.toggle('cyber-zone', !!zoneDef(m.zone)?.cyber);
+        if (st.sheet) view.setCompanions(st.sheet.matrices.equipped);
+        renderLocation(); setAction('');
+        break;
+      case 'legend': if (m.open || document.getElementById('legend-panel')) legendPanel(net, m.view); break;
+      case 'cheatInfo': cheatPanel(net, m); break;
       case 'zone':
         localDance = null;
         closeDanceMenus();
         document.getElementById('shop-panel')?.remove();
         document.getElementById('underworld-panel')?.remove();
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger; st.dialog = null; renderDialog();
+        document.body.classList.toggle('cyber-zone', !!zoneDef(m.zone)?.cyber);
         view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(st.facts);
         st.destination = ''; renderLocation(); setAction(''); refreshScore(); blip('step');
         toast(`Entras en ${zoneDef(m.zone)?.name} · zona ${DANGER_TXT[m.danger]}`, 'info');

@@ -23,6 +23,9 @@ import { Posts } from './posts.js';
 import { Autopilot } from './autopilot.js';
 import { Intel } from './intel.js';
 import { Threats } from './threats.js';
+import { Relics } from './relics.js';
+import { Legends } from './legends.js';
+import { Admin } from './admin.js';
 import { Nightlife } from './nightlife.js';
 import { Underworld } from './underworld.js';
 import { isSick } from '../game/substances.js';
@@ -31,6 +34,7 @@ export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
   known: Map<number, { lv: number; sent: number }>; lastSnapTick: number; dialog?: { no: number; dialogId: string; node: string; targetId: number };
   queue: Promise<void>; chatTimes: number[]; closed: boolean; lastSector?: string; lastDanger?: string; bytesOut: number;
+  sentScaled?: number; admin?: boolean; kairosWarnAt?: number;
 }
 
 const INTERACT_RANGE = 2.3;
@@ -68,6 +72,9 @@ export class World {
   readonly autopilot: Autopilot;
   readonly intel: Intel;
   readonly threats: Threats;
+  readonly relics: Relics;
+  readonly legends: Legends;
+  readonly admin: Admin;
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => void = () => {};
@@ -84,6 +91,9 @@ export class World {
     this.autopilot = new Autopilot(this);
     this.intel = new Intel(this);
     this.threats = new Threats(this);
+    this.relics = new Relics(this);
+    this.legends = new Legends(this);
+    this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
     sheetHooks.post = (p) => this.posts.status(p);
@@ -104,6 +114,7 @@ export class World {
       const e = this.addEntity(this.zones.get(entry.zone)!, { kind: 'npc', name: n.name, title: n.title, x: entry.at[0] + 0.5, y: entry.at[1] + 0.5, interactive: true, dialog: n.dialog, appearance: n.appearance, label: entry.label, speed: 2.2, npcShop: n.shop });
       e.npc = scheduledBrain(n, this.cfg.seed + e.id);
       e.npcType = n.essential === false ? 'civil' : 'essential'; e.faction = n.faction; e.level = 6 + Math.floor(rng0() * 10);
+      if (n.id.startsWith('leyenda-')) { e.legendId = n.id; e.level = 25; }
     }
     const rng = seededRng(this.cfg.seed);
     const pick = <T,>(a: T[]) => a[Math.floor(rng() * a.length)];
@@ -212,7 +223,9 @@ export class World {
   }
   playerOf(e: Entity): PlayerState | undefined {
     if (e.kind !== 'player') return undefined;
-    if (e.conn?.p) return e.conn.p;
+    if (e.conn?.p && !e.ghostOf) return e.conn.p;
+    if (e.ghostOwner?.p) return e.ghostOwner.p;
+    if (e.ghostOf) return undefined;
     for (const l of this.lingering.values()) if (l.e === e) return l.p;
     return undefined;
   }
@@ -267,6 +280,7 @@ export class World {
     this.pathBudget = 40;
     const dt = 1 / RULES.tickRate;
     if (this.tick % 10 === 1) for (const z of this.zones.values()) if (z.def.districts.length) z.refreshActive();
+    this.relics.dilation();
     for (const z of this.zones.values()) {
       // Nivel de detalle: lejos de cualquier jugador, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
       const anyone = z.players.size > 0;
@@ -294,6 +308,8 @@ export class World {
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.underworld.everySecond();
+    if (this.tick % 20 === 12) this.legends.tick().catch((err) => console.error('[leyendas]', err));
+    if (this.tick % 20 === 15) { try { this.relics.everySecond(); } catch (err) { console.error('[matrices]', err); } }
     if (this.tick % 20 === 5) this.threats.tick().catch((err) => console.error('[amenazas]', err));
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
@@ -302,7 +318,7 @@ export class World {
 
   private moveEntity(e: Entity, dt: number) {
     this.nightlife.stop(e);
-    let budget = e.speed * dt;
+    let budget = e.speed * dt * (e.timeScale ?? 1);
     let lastDx = 0, lastDy = 0;
     while (budget > 0 && e.path.length) {
       const [tx, ty] = e.path[0];
@@ -332,11 +348,13 @@ export class World {
     const s = e.steer!;
     if (Date.now() - s.at > 1500 || (!s.dx && !s.dy)) { e.steer = undefined; if (e.moving) { e.moving = false; e.lastMoveTick = this.tick; } return; }
     const p = this.playerOf(e);
-    if (e.transit || e.carriedBy || e.state === 'downed' || (p && (p.status !== 'alive' || p.sleeping))) { e.moving = false; return; }
+    if (e.transit || e.carriedBy || e.state === 'downed' || (p && (p.status !== 'alive' || p.sleeping)) || (e.stunUntil ?? 0) > Date.now()) { e.moving = false; return; }
     this.nightlife.stop(e);
-    const step = e.speed * dt * (e.guard ? 0.5 : 1);
+    const step = e.speed * dt * (e.guard ? 0.5 : 1) * (e.timeScale ?? 1);
     const g = e.zone.grid;
-    const free = (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - e.x) * 0.22, y + Math.sign(y - e.y) * 0.22);
+    // La proyección de Eco atraviesa paredes (solo no puede salirse del mapa).
+    const free = e.ghostOf ? (x: number, y: number) => x > 0.3 && y > 0.3 && x < g.w - 0.3 && y < g.h - 0.3
+      : (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - e.x) * 0.22, y + Math.sign(y - e.y) * 0.22);
     let nx = e.x + s.dx * step, ny = e.y + s.dy * step;
     if (!free(nx, ny)) { if (free(nx, e.y)) ny = e.y; else if (free(e.x, ny)) nx = e.x; else { nx = e.x; ny = e.y; } }
     const moved = nx !== e.x || ny !== e.y;
@@ -434,6 +452,7 @@ export class World {
     let np = 0;
     const NEAR2 = 12 * 12;
     for (const v of vis) {
+      if (v.privateTo && v.privateTo !== c) continue;
       visIds.add(v.id);
       const k = c.known.get(v.id);
       if (!k) { spawns.push(spawnOf(v)); c.known.set(v.id, { lv: v.labelVer, sent: this.tick }); continue; }
@@ -523,6 +542,7 @@ export class World {
     }
     const e = conn.e!;
     e.conn = conn;
+    await this.admin.onJoin(conn);
     this.nightlife.symptoms(conn.p!, e);
     if (e.label === 'Desconectado') { e.label = ''; e.labelVer++; }
     this.conns.set(accountId, conn);
@@ -539,6 +559,7 @@ export class World {
 
   detach(conn: PlayerConn) {
     if (conn.closed) return;
+    if (this.relics.ghosts.has(conn)) this.relics.endGhost(conn, false);
     conn.closed = true;
     if (this.conns.get(conn.accountId) !== conn) return;
     this.conns.delete(conn.accountId);
@@ -567,7 +588,7 @@ export class World {
     if (this.saving) return;
     this.saving = true;
     try {
-      const list = [...this.conns.values()].filter((c) => c.e && c.p).map((c) => ({ e: c.e!, p: c.p! }));
+      const list = [...this.conns.values()].filter((c) => c.e && c.p).map((c) => ({ e: this.relics.bodyOf(c), p: c.p! }));
       for (const l of this.lingering.values()) list.push(l);
       for (const { e, p } of list) {
         if (e.transit) continue;
@@ -696,6 +717,9 @@ export class World {
         }
       });
       case 'drop': return guarded(m.seq, async () => this.combat.drop(c));
+      case 'matrix': return guarded(m.seq, async () => this.relics.matrix(c, m.action, m.item));
+      case 'legend': return guarded(m.seq, async () => this.legends.handle(c, m.legend, m.action));
+      case 'cheat': return guarded(m.seq, async () => this.admin.cheat(c, m.cmd, m.arg, m.n));
       case 'treat': return guarded(m.seq, async () => sv.treatPart(c, m.part, m.item, m.opId));
       case 'repairChrome': return guarded(m.seq, async () => sv.repairChrome(c, m.doc, m.opId));
       case 'searchPeople': return guarded(m.seq, async () => this.intel.search(c, m.query, m.device));
@@ -759,6 +783,7 @@ export class World {
   private onInteract(c: PlayerConn, e: Entity, seq: number, targetId: number) {
     if (e.transit) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Cruzando una puerta…' });
     const target = this.entities.get(targetId);
+    if (e.ghostOf && target?.kind !== 'door') return this.send(c, { t: 'ack', seq, ok: false, reason: 'Eres una proyección: nadie te ve y no puedes tocar nada. Espía, atraviesa paredes y cruza puertas.' });
     if (!target || target.zone !== e.zone || !target.interactive || target === e) return this.send(c, { t: 'ack', seq, ok: false, reason: 'No puedes interactuar con eso.' });
     if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil')) {
       // Menú de acciones sobre personas: se calcula en el servidor con probabilidades y bloqueos.
@@ -803,6 +828,7 @@ export class World {
     }
     if (d > INTERACT_RANGE) { if (retries > 0) this.reapproach(c, target, retries); return false; }
     if (target.marketSite) { this.underworld.open(c, target); return true; }
+    if (target.legendId) { this.legends.open(c, target.legendId); return true; }
     if (target.kind === 'object' && target.objKind && !target.dialog) { this.objectAction(c, target); return true; }
     if (target.kind === 'npc' && !target.dialog && target.npcShop) { this.survival.openShop(c, target.npcShop, target); return true; }
     this.openDialog(c, target);
@@ -858,8 +884,12 @@ export class World {
   private async transferPlayer(c: PlayerConn, door: Entity) {
     const e = c.e!, p = c.p!;
     if (e.transit || !door.doorTo) return;
+    if (e.ghostOf) { this.relics.ghostDoor(c, door); return; }
     const to = this.ensureZone(door.doorTo.zone);
     if (!to) return;
+    // v0.8: las guaridas de las leyendas y el Velo solo se abren a quien se ha ganado su confianza.
+    const deny = this.legends.denyEntry(p, to);
+    if (deny) { this.send(c, { t: 'notice', kind: 'warn', text: deny }); return; }
     this.nightlife.stop(e);
     if (p.driving && to.def.kind !== 'exterior') this.property.park(c, true);
     if (door.hiddenDoc) this.combat.discover(c, door.hiddenDoc);
@@ -897,6 +927,7 @@ export class World {
       e.sectorId = s.id;
       conn.lastDanger = dangerAt(to.grid, nx, ny);
       this.send(conn, { t: 'zone', zone: to.id, x: nx, y: ny, sector: s.name, danger: conn.lastDanger });
+      void this.legends.event(conn, { type: 'visit', zone: to.id }).catch(() => {});
     }
   }
 
@@ -921,6 +952,8 @@ export class World {
       case 'bountyboard': return this.send(c, { t: 'bounties', view: sv.bountyView(c.p!) });
       case 'marketterm': return this.handle(c, { t: 'market', seq: 0 });
       case 'computer': return this.send(c, { t: 'searchResults', device: 'computer', results: [] });
+      case 'neuralchair': return run(() => this.legends.jackIn(c, 'silla', o.zone.id === 'pachinko-int' ? 300 : 0));
+      case 'jackout': return run(() => this.legends.jackOut(c));
       case 'mycar': {
         if (o.ownerChar !== c.p!.charId) return this.send(c, { t: 'notice', kind: 'info', text: `${o.name}. Cerrado con llave.` });
         return run(async () => this.send(c, { t: 'trunk', view: await this.property.trunkView(c) }));

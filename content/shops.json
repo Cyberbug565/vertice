@@ -117,7 +117,9 @@
    "credencial-falsa": 5,
    "subfusil": 3,
    "revolver-pesado": 3,
-   "bala-pistola": 200
+   "bala-pistola": 200,
+   "matriz-centinela": 1,
+   "matriz-berserker": 1
   },
   "buys": [
    "chatarra",
@@ -349,7 +351,10 @@
    "pulsera-interfaz": 6,
    "ganzua-electronica": 6,
    "estabilizador": 10,
-   "cafe-sintetico": 20
+   "cafe-sintetico": 20,
+   "matriz-espectro": 1,
+   "ampliacion-zocalo": 1,
+   "cuna-neural": 1
   },
   "buys": [
    "equipo",
@@ -629,7 +634,8 @@
    "estabilizador": 6,
    "agua-filtrada": 20,
    "bebida-isotonica": 12,
-   "barrita-proteica": 20
+   "barrita-proteica": 20,
+   "inmunosupresor": 12
   },
   "buys": [
    "medicina"

@@ -15,6 +15,10 @@ export const ClientMsg = z.discriminatedUnion('t', [
   // v0.7 · movimiento con WASD (dirección en el mundo; 0,0 = parar), guardia con clic derecho, curar una zona del cuerpo y reparar cromo.
   z.object({ t: z.literal('steer'), seq, dx: z.number().finite().min(-1).max(1), dy: z.number().finite().min(-1).max(1) }),
   z.object({ t: z.literal('guard'), seq, on: z.boolean() }),
+  // v0.8 · matrices del zócalo, leyendas y menú de trucos (solo cuentas de administración).
+  z.object({ t: z.literal('matrix'), seq, action: z.enum(['equip', 'remove']), item: z.string().max(64) }),
+  z.object({ t: z.literal('legend'), seq, legend: z.string().max(32), action: z.enum(['view', 'accept']) }),
+  z.object({ t: z.literal('cheat'), seq, cmd: z.string().max(32), arg: z.string().max(80).optional(), n: z.number().finite().optional() }),
   z.object({ t: z.literal('treat'), seq, part: z.enum(['cabeza', 'torso', 'brazo_izq', 'brazo_der', 'mano_izq', 'mano_der', 'pierna_izq', 'pierna_der']), item: z.string().max(64), opId }),
   z.object({ t: z.literal('repairChrome'), seq, doc: z.string().max(64), opId }),
   z.object({ t: z.literal('interact'), seq, target: z.number().int().nonnegative() }),
@@ -193,7 +197,7 @@ export interface CharacterSheet {
   needs: { hunger: number; thirst: number; fatigue: number }; needsMult: { hunger: number; thirst: number; fatigue: number };
   status: 'alive' | 'downed'; downedLeft: number; sleeping: { quality: number; where: string } | null; wanted: number; autoNeeds: boolean;
   profession: string; professionName: string; professionRank: number; professionXp: number; activeJob: string | null;
-  cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean; region: string; part: string | null; ability?: string; unique?: string }[];
+  cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean; region: string; part: string | null; ability?: string; unique?: string; rarity?: string }[];
   bonuses: { confront: number; defense: number; steal: number; surgery: number };
   weapon: { id: string; name: string; kind: string; family: string; damage: [number, number]; range: number; cooldown: number; accuracy: number; ammo?: string; ammoName?: string; ammoCount?: number; nonlethal: string; tech: string } | null;
   weapons: { id: string; name: string; integrated: boolean }[];
@@ -216,7 +220,11 @@ export interface CharacterSheet {
   aim: { range: number; time: number };
   bio: { objective: string; objectiveName: string; childhood: string; event: string; done: boolean; progress: string } | null;
   identified: { crime: string; district: string } | null;
-  psychosis: 'Inestable' | 'Ciberpsicosis' | null; chromeDebuff: { amount: number; minutes: number } | null;
+  psychosis: 'Inquieto' | 'Inestable' | 'Ciberpsicosis' | null;
+  psyche: { level: number; episode: { grave: boolean; days: number } | null };
+  matrices: { socket: boolean; slots: number; equipped: string[] };
+  kairos: number;
+  admin?: boolean; chromeDebuff: { amount: number; minutes: number } | null;
   substances: SubstanceView;
   underworld: UnderworldStatus;
 }
@@ -280,6 +288,9 @@ export type ServerMsg =
   | { t: 'facts'; facts: Record<string, unknown> }
   | { t: 'chat'; from: string; fromId: number; channel: 'local' | 'global'; text: string }
   | { t: 'selfSpeed'; v: number; guard: boolean }
+  | { t: 'possess'; you: number; zone: string; x: number; y: number; ghost: boolean }
+  | { t: 'legend'; view: import('./relics.js').LegendView; open: boolean }
+  | { t: 'cheatInfo'; items: { id: string; name: string; kind: string }[]; npcs: string[]; places: { id: string; name: string }[] }
   | { t: 'pong'; seq: number; ct: number; st: number }
   | { t: 'kicked'; reason: string }
   | { t: 'error'; reason: string };

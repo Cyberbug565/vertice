@@ -138,6 +138,7 @@ export function placeCameras(z) {
 
 /** Zonas de color: verde solo en el inicio (y en tu casa), amarilla con vigilancia, roja sin apenas ley y negra sin ley. */
 export function dangerPolicy(zone) {
+  if (zone.cyber) return;
   if (zone.kind === 'interior') {
     zone.danger = zone.id === 'bloque9' || zone.id.startsWith('casa-') ? 'protected' : zone.gangBase ? 'lawless' : zone.danger === 'disputed' ? 'disputed' : 'public';
     for (const d of zone.doors ?? []) if (d.danger === 'protected') d.danger = 'public';

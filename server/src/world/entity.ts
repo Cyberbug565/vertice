@@ -25,6 +25,9 @@ export interface Entity {
   npcType?: 'civil' | 'gang' | 'police' | 'hierro' | 'fugitive' | 'ambar' | 'essential' | 'psycho';
   /** v0.7: depredador (ataca a quien pilla), escolta de un objetivo con recompensa, nivel de botín, cromo extraíble del cadáver,
    *  patrulla enviada por una llamada o una cámara (y hasta cuándo), y civil llamando a la policía. */
+  /** v0.8: solo lo ve una conexión (la proyección de Eco), fantasma de un cuerpo, cuerpo en trance, Kairós activo, escala de tiempo, jefe de leyenda. */
+legendId?: string;
+    privateTo?: PlayerConn; ghostOf?: number; ghostOwner?: PlayerConn; kairosTier?: number; timeScale?: number; legendBoss?: { legend: string; step: number; owner: string };
   predator?: boolean; escortOf?: number; lootTier?: number; lootChrome?: string[]; dispatchedUntil?: number; callingUntil?: number;
   lastHitBy?: number; lastHitAt?: number; faction?: string; npcMax?: number; defense?: number; weaponId?: string; chrome?: string[];
   aggro?: number; aggroLethal?: boolean; nextAttackAt?: number; fleeUntil?: number; nextPathAt?: number;
@@ -44,5 +47,5 @@ export function spawnOf(e: Entity): EntitySpawn {
     bounty: e.bounty || undefined, state: e.state && e.state !== 'alive' ? e.state : undefined, fugitive: e.fugitive ? true : undefined,
     chrome: e.chrome?.length ? e.chrome : undefined, faction: e.faction, npcType: e.npcType, carried: e.carriedBy ? true : undefined,
     hpPct: e.npcMax ? Math.max(0, Math.round(((e.npcHp ?? e.npcMax) / e.npcMax) * 100)) : undefined,
-    level: e.level, emote: e.emote, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, dead: e.dead || undefined, buffs: e.buffs || e.guard ? [...Object.entries(e.buffs ?? {}).filter(([, u]) => u > Date.now()).map(([k]) => k), ...(e.guard ? ['guardia'] : [])] : undefined };
+    level: e.level, emote: e.emote, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, dead: e.dead || undefined, buffs: e.buffs || e.guard || e.kairosTier ? [...Object.entries(e.buffs ?? {}).filter(([, u]) => u > Date.now()).map(([k]) => k), ...(e.guard ? ['guardia'] : []), ...(e.kairosTier ? [`kairos${e.kairosTier}`] : [])] : undefined };
 }

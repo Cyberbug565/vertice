@@ -10,3 +10,4 @@ export * from './appearance.js';
 export * from './body.js';
 export * from './bio.js';
 export * from './nightlife.js';
+export * from './relics.js';

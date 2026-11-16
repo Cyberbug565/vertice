@@ -66,7 +66,8 @@ function memorialPanel(list: any[]) {
 const SKIN = ['#f0c8a8', '#e0b48c', '#c89070', '#b07a5a', '#8a5a3c', '#6a4028'];
 const HAIR = ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#ffd23f'];
 const JACKET = ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a', '#8a2a2a'];
-const ACCENT = ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'];
+// Color del cromo (luces, implantes y estela del Kairós).
+const ACCENT = ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff', '#ff2040', '#ffffff', '#3a6bff', '#00ffa8', '#ff00ff', '#c0ff00', '#ffb020', '#8a8aff', '#ff6a6a', '#2affff'];
 const PANTS = ['#1a1a24', '#2a2a3a', '#3a2a1a', '#24384a', '#4a1a2a', '#5a5a64', '#1a3a2a'];
 const TATTOO = ['', '#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#1a1a1a'];
 const SHIRT = ['#e8e8f0', '#1a1a1a', '#2a2a3a', '#a82020', '#2a6aa8', '#3a8a4a', '#ff3fa4', '#ffd23f'];

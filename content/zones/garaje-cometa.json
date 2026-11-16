@@ -1,0 +1,79 @@
+{
+ "id": "garaje-cometa",
+ "name": "Garaje de los Saqueadores",
+ "kind": "interior",
+ "legend": "teo",
+ "furnished": true,
+ "width": 16,
+ "height": 11,
+ "chunkSize": 16,
+ "danger": "public",
+ "base": "metal",
+ "ground": [],
+ "blocks": [],
+ "props": [
+  {
+   "type": "car",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#ff6a20",
+   "blocking": true
+  },
+  {
+   "type": "barrel",
+   "at": [
+    12,
+    2
+   ],
+   "text": "fuego",
+   "blocking": true
+  },
+  {
+   "type": "crate",
+   "at": [
+    13,
+    8
+   ],
+   "blocking": true
+  },
+  {
+   "type": "neon",
+   "at": [
+    8,
+    1
+   ],
+   "color": "#ff6a20"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-garaje-cometa",
+   "name": "Salida",
+   "at": [
+    0,
+    5
+   ],
+   "to": {
+    "zone": "base-saqueadores",
+    "at": [
+     1,
+     9
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [],
+ "dangerAreas": [],
+ "sectors": [],
+ "waypoints": [],
+ "safePoint": [
+  2,
+  5
+ ],
+ "ambient": 0,
+ "police": 0,
+ "gangs": []
+}

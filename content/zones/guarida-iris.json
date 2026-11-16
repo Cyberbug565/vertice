@@ -1,0 +1,96 @@
+{
+ "id": "guarida-iris",
+ "name": "Cuarto de servidores sin rótulo",
+ "kind": "interior",
+ "legend": "iris",
+ "furnished": true,
+ "width": 12,
+ "height": 9,
+ "chunkSize": 16,
+ "danger": "public",
+ "base": "metal",
+ "ground": [],
+ "blocks": [],
+ "props": [
+  {
+   "type": "screen",
+   "at": [
+    3,
+    1
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    1
+   ],
+   "color": "#b46cff"
+  },
+  {
+   "type": "desk",
+   "at": [
+    4,
+    2
+   ],
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    1
+   ],
+   "blocking": true
+  },
+  {
+   "type": "datastream",
+   "at": [
+    9,
+    6
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-guarida-iris",
+   "name": "Salida",
+   "at": [
+    0,
+    4
+   ],
+   "to": {
+    "zone": "nodo-vacio-int",
+    "at": [
+     1,
+     4
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "silla-iris",
+   "name": "Silla de inmersión de Iris",
+   "at": [
+    8,
+    4
+   ],
+   "kind": "neuralchair"
+  }
+ ],
+ "dangerAreas": [],
+ "sectors": [],
+ "waypoints": [],
+ "safePoint": [
+  2,
+  4
+ ],
+ "ambient": 0,
+ "police": 0,
+ "gangs": []
+}

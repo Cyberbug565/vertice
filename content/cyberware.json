@@ -17,7 +17,8 @@
    }
   },
   "visible": "ojos",
-  "region": "ojos"
+  "region": "ojos",
+  "rarity": "comun"
  },
  {
   "id": "audifono-coclear",
@@ -37,7 +38,8 @@
   },
   "prosthetic": true,
   "visible": "cabeza",
-  "region": "cara"
+  "region": "cara",
+  "rarity": "comun"
  },
  {
   "id": "filtro-neural",
@@ -56,7 +58,8 @@
    }
   },
   "visible": "cabeza",
-  "region": "corteza"
+  "region": "corteza",
+  "rarity": "comun"
  },
  {
   "id": "brazo-protesico",
@@ -76,7 +79,8 @@
   },
   "prosthetic": true,
   "visible": "brazo",
-  "region": "brazos"
+  "region": "brazos",
+  "rarity": "comun"
  },
  {
   "id": "brazos-asistencia",
@@ -97,7 +101,8 @@
    "carry": 15
   },
   "visible": "brazo",
-  "region": "brazos"
+  "region": "brazos",
+  "rarity": "raro"
  },
  {
   "id": "pierna-protesica",
@@ -117,7 +122,8 @@
   },
   "prosthetic": true,
   "visible": "pierna",
-  "region": "piernas"
+  "region": "piernas",
+  "rarity": "comun"
  },
  {
   "id": "piernas-salto",
@@ -146,7 +152,8 @@
    "cooldown": 30,
    "duration": 6,
    "power": 0.7
-  }
+  },
+  "rarity": "epico"
  },
  {
   "id": "subdermico",
@@ -164,7 +171,8 @@
    "armor": 2
   },
   "visible": "torso",
-  "region": "tegumentario"
+  "region": "tegumentario",
+  "rarity": "raro"
  },
  {
   "id": "estomago-sintetico",
@@ -185,7 +193,8 @@
    }
   },
   "visible": "ninguna",
-  "region": "circulatorio"
+  "region": "circulatorio",
+  "rarity": "raro"
  },
  {
   "id": "rinon-filtrante",
@@ -206,7 +215,8 @@
    }
   },
   "visible": "ninguna",
-  "region": "circulatorio"
+  "region": "circulatorio",
+  "rarity": "comun"
  },
  {
   "id": "regulador-sueno",
@@ -227,7 +237,8 @@
    }
   },
   "visible": "cabeza",
-  "region": "corteza"
+  "region": "corteza",
+  "rarity": "raro"
  },
  {
   "id": "coprocesador",
@@ -247,7 +258,8 @@
    }
   },
   "visible": "cabeza",
-  "region": "corteza"
+  "region": "corteza",
+  "rarity": "epico"
  },
  {
   "id": "cyberdeck-operaciones",
@@ -267,7 +279,8 @@
    "ram": 12
   },
   "visible": "cabeza",
-  "region": "so"
+  "region": "so",
+  "rarity": "epico"
  },
  {
   "id": "acelerador-neural",
@@ -284,7 +297,8 @@
    "confront": 3
   },
   "visible": "cabeza",
-  "region": "so"
+  "region": "so",
+  "rarity": "epico"
  },
  {
   "id": "sistema-apoyo",
@@ -304,7 +318,8 @@
    }
   },
   "visible": "cabeza",
-  "region": "so"
+  "region": "so",
+  "rarity": "comun"
  },
  {
   "id": "ice-aislamiento",
@@ -323,7 +338,8 @@
    }
   },
   "visible": "cabeza",
-  "region": "corteza"
+  "region": "corteza",
+  "rarity": "legendario"
  },
  {
   "id": "camuflaje-optico",
@@ -349,7 +365,8 @@
    "name": "Camuflaje",
    "cooldown": 90,
    "duration": 8
-  }
+  },
+  "rarity": "legendario"
  },
  {
   "id": "biomonitor-experimental",
@@ -368,7 +385,8 @@
   },
   "visible": "torso",
   "region": "circulatorio",
-  "unique": "autoestim"
+  "unique": "autoestim",
+  "rarity": "legendario"
  },
  {
   "id": "cuchillas-antebrazo",
@@ -391,7 +409,8 @@
    "name": "Torbellino",
    "cooldown": 25,
    "power": 1
-  }
+  },
+  "rarity": "epico"
  },
  {
   "id": "puno-hidraulico",
@@ -419,7 +438,8 @@
    "cooldown": 40,
    "duration": 2,
    "power": 6
-  }
+  },
+  "rarity": "epico"
  },
  {
   "id": "canon-antebrazo",
@@ -442,7 +462,8 @@
    "name": "Disparo cargado",
    "cooldown": 30,
    "power": 2
-  }
+  },
+  "rarity": "legendario"
  },
  {
   "id": "ojos-tacticos",
@@ -462,7 +483,8 @@
    }
   },
   "visible": "ojos",
-  "region": "ojos"
+  "region": "ojos",
+  "rarity": "raro"
  },
  {
   "id": "cyberdeck-basico",
@@ -479,7 +501,8 @@
    "ram": 6
   },
   "visible": "cabeza",
-  "region": "so"
+  "region": "so",
+  "rarity": "comun"
  },
  {
   "id": "cyberdeck-militar",
@@ -504,7 +527,8 @@
    "kind": "pico-ram",
    "name": "Pico de RAM",
    "cooldown": 120
-  }
+  },
+  "rarity": "legendario"
  },
  {
   "id": "reflejos-sobrealimentados",
@@ -525,7 +549,8 @@
    "name": "Tiempo bala",
    "cooldown": 60,
    "duration": 6
-  }
+  },
+  "rarity": "legendario"
  },
  {
   "id": "refuerzo-sinaptico",
@@ -542,7 +567,8 @@
   "effects": {
    "dodge": 0.12
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "rarity": "raro"
  },
  {
   "id": "segundo-corazon",
@@ -558,7 +584,8 @@
   "desc": "Un corazón de reserva: una vez cada dos días de juego, si te matan, vuelves a la vida con la mitad de salud.",
   "effects": {},
   "visible": "ninguna",
-  "unique": "segundo-corazon"
+  "unique": "segundo-corazon",
+  "rarity": "legendario"
  },
  {
   "id": "glandula-adrenalina",
@@ -580,7 +607,8 @@
    "cooldown": 45,
    "duration": 5,
    "power": 0.35
-  }
+  },
+  "rarity": "raro"
  },
  {
   "id": "pulso-emp",
@@ -602,7 +630,8 @@
    "cooldown": 75,
    "duration": 3,
    "power": 8
-  }
+  },
+  "rarity": "legendario"
  },
  {
   "id": "piernas-propulsion",
@@ -625,7 +654,8 @@
    "name": "Carga",
    "cooldown": 20,
    "power": 6
-  }
+  },
+  "rarity": "epico"
  },
  {
   "id": "proyector-holografico",
@@ -646,7 +676,8 @@
    "name": "Señuelo",
    "cooldown": 60,
    "duration": 5
-  }
+  },
+  "rarity": "epico"
  },
  {
   "id": "latigo-monofilamento",
@@ -663,7 +694,8 @@
   "effects": {
    "weapon": "latigo-monofilamento-arma"
   },
-  "visible": "brazo"
+  "visible": "brazo",
+  "rarity": "legendario"
  },
  {
   "id": "garras-retractiles",
@@ -680,7 +712,8 @@
   "effects": {
    "weapon": "garras-arma"
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "rarity": "raro"
  },
  {
   "id": "palma-electrica",
@@ -697,7 +730,8 @@
   "effects": {
    "weapon": "palma-taser-arma"
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "rarity": "raro"
  },
  {
   "id": "optica-analisis",
@@ -717,7 +751,8 @@
    }
   },
   "visible": "ojos",
-  "unique": "lector"
+  "unique": "lector",
+  "rarity": "raro"
  },
  {
   "id": "modulador-voz",
@@ -738,7 +773,8 @@
    }
   },
   "visible": "ninguna",
-  "unique": "modulador"
+  "unique": "modulador",
+  "rarity": "comun"
  },
  {
   "id": "compartimento-oculto",
@@ -754,7 +790,8 @@
   "desc": "Un hueco en las costillas: los robos te quitan la mitad.",
   "effects": {},
   "visible": "ninguna",
-  "unique": "compartimento"
+  "unique": "compartimento",
+  "rarity": "comun"
  },
  {
   "id": "esqueleto-titanio",
@@ -773,7 +810,8 @@
    "carry": 20,
    "armor": 1
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "rarity": "epico"
  },
  {
   "id": "huesos-densos",
@@ -791,7 +829,8 @@
    "hpMax": 10,
    "meleeDmg": 0.15
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "rarity": "raro"
  },
  {
   "id": "interfaz-vehiculo",
@@ -811,7 +850,8 @@
     "conduccion": 2
    }
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "rarity": "comun"
  },
  {
   "id": "traductor-cultural",
@@ -831,7 +871,8 @@
     "actuacion": 1
    }
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "rarity": "comun"
  },
  {
   "id": "implante-mandibula",
@@ -850,6 +891,278 @@
     "intimidacion": 2
    }
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "rarity": "raro"
+ },
+ {
+  "id": "kairos-1",
+  "name": "Kairós «Paso»",
+  "family": "Acelerador neuromotor",
+  "slot": "columna",
+  "grade": 2,
+  "capacity": 8,
+  "humanity": 6,
+  "price": 14000,
+  "maker": "engranajes",
+  "desc": "Acelerador neuromotor de gama baja: solo te mueves algo más rápido. Sin zona de ralentización. Sustituye la columna. Se activa como habilidad: gasta mucha RAM; sin RAM, quema tu salud. Al apagarlo quedas exhausto. Usarlo mucho acerca la ciberpsicosis.",
+  "effects": {
+   "attrs": {
+    "REF": 1
+   },
+   "skills": {},
+   "hpMax": 0,
+   "confront": 0,
+   "steal": 0,
+   "surgery": 0,
+   "carry": 0,
+   "ram": 6,
+   "armor": 0,
+   "meleeDmg": 0,
+   "speed": 0.03,
+   "carSpeed": 0,
+   "dodge": 0.02
+  },
+  "region": "esqueleto",
+  "rarity": "raro",
+  "ability": {
+   "kind": "kairos",
+   "name": "Kairós",
+   "cooldown": 4,
+   "duration": 0,
+   "power": 1
+  },
+  "prosthetic": false,
+  "visible": "ninguna"
+ },
+ {
+  "id": "kairos-2",
+  "name": "Kairós «Callejero»",
+  "family": "Acelerador neuromotor",
+  "slot": "columna",
+  "grade": 3,
+  "capacity": 12,
+  "humanity": 9,
+  "price": 32000,
+  "maker": "aurora",
+  "desc": "Gama media: una burbuja pequeña donde todo se mueve más despacio que tú. Sustituye la columna. Se activa como habilidad: gasta mucha RAM; sin RAM, quema tu salud. Al apagarlo quedas exhausto. Usarlo mucho acerca la ciberpsicosis.",
+  "effects": {
+   "attrs": {
+    "REF": 1
+   },
+   "skills": {},
+   "hpMax": 6,
+   "confront": 0,
+   "steal": 0,
+   "surgery": 0,
+   "carry": 0,
+   "ram": 8,
+   "armor": 0,
+   "meleeDmg": 0,
+   "speed": 0.06,
+   "carSpeed": 0,
+   "dodge": 0.04
+  },
+  "region": "esqueleto",
+  "rarity": "epico",
+  "ability": {
+   "kind": "kairos",
+   "name": "Kairós",
+   "cooldown": 4,
+   "duration": 0,
+   "power": 2
+  },
+  "prosthetic": false,
+  "visible": "ninguna"
+ },
+ {
+  "id": "kairos-3",
+  "name": "Kairós de lujo «Seda»",
+  "family": "Acelerador neuromotor",
+  "slot": "columna",
+  "grade": 4,
+  "capacity": 16,
+  "humanity": 12,
+  "price": 62000,
+  "maker": "teselia",
+  "desc": "De lujo: zona de 5 m, el mundo a la mitad de velocidad. Sustituye la columna. Se activa como habilidad: gasta mucha RAM; sin RAM, quema tu salud. Al apagarlo quedas exhausto. Usarlo mucho acerca la ciberpsicosis.",
+  "effects": {
+   "attrs": {
+    "REF": 2
+   },
+   "skills": {},
+   "hpMax": 12,
+   "confront": 0,
+   "steal": 0,
+   "surgery": 0,
+   "carry": 0,
+   "ram": 10,
+   "armor": 0,
+   "meleeDmg": 0,
+   "speed": 0.09,
+   "carSpeed": 0,
+   "dodge": 0.06
+  },
+  "region": "esqueleto",
+  "rarity": "legendario",
+  "ability": {
+   "kind": "kairos",
+   "name": "Kairós",
+   "cooldown": 4,
+   "duration": 0,
+   "power": 3
+  },
+  "prosthetic": false,
+  "visible": "ninguna"
+ },
+ {
+  "id": "kairos-4",
+  "name": "Kairós militar «Hoplita»",
+  "family": "Acelerador neuromotor",
+  "slot": "columna",
+  "grade": 4,
+  "capacity": 20,
+  "humanity": 15,
+  "price": 98000,
+  "maker": "halcon",
+  "desc": "Militar: zona de 7 m, las balas casi se quedan quietas. Sustituye la columna. Se activa como habilidad: gasta mucha RAM; sin RAM, quema tu salud. Al apagarlo quedas exhausto. Usarlo mucho acerca la ciberpsicosis.",
+  "effects": {
+   "attrs": {
+    "REF": 2
+   },
+   "skills": {},
+   "hpMax": 18,
+   "confront": 0,
+   "steal": 0,
+   "surgery": 0,
+   "carry": 0,
+   "ram": 12,
+   "armor": 0,
+   "meleeDmg": 0,
+   "speed": 0.12,
+   "carSpeed": 0,
+   "dodge": 0.08
+  },
+  "region": "esqueleto",
+  "rarity": "legendario",
+  "ability": {
+   "kind": "kairos",
+   "name": "Kairós",
+   "cooldown": 4,
+   "duration": 0,
+   "power": 4
+  },
+  "prosthetic": false,
+  "visible": "ninguna"
+ },
+ {
+  "id": "kairos-5",
+  "name": "Kairós futurista «Quásar»",
+  "family": "Acelerador neuromotor",
+  "slot": "columna",
+  "grade": 5,
+  "capacity": 24,
+  "humanity": 18,
+  "price": 165000,
+  "maker": "okami",
+  "desc": "Futurista: zona de 9 m, el mundo se arrastra. Sustituye la columna. Se activa como habilidad: gasta mucha RAM; sin RAM, quema tu salud. Al apagarlo quedas exhausto. Usarlo mucho acerca la ciberpsicosis.",
+  "effects": {
+   "attrs": {
+    "REF": 3
+   },
+   "skills": {},
+   "hpMax": 24,
+   "confront": 0,
+   "steal": 0,
+   "surgery": 0,
+   "carry": 0,
+   "ram": 14,
+   "armor": 0,
+   "meleeDmg": 0,
+   "speed": 0.15,
+   "carSpeed": 0,
+   "dodge": 0.1
+  },
+  "region": "esqueleto",
+  "rarity": "legendario",
+  "ability": {
+   "kind": "kairos",
+   "name": "Kairós",
+   "cooldown": 4,
+   "duration": 0,
+   "power": 5
+  },
+  "prosthetic": false,
+  "visible": "ninguna"
+ },
+ {
+  "id": "kairos-6",
+  "name": "Kairós Experimental «Cometa»",
+  "family": "Acelerador neuromotor",
+  "slot": "columna",
+  "grade": 5,
+  "capacity": 26,
+  "humanity": 20,
+  "price": 0,
+  "maker": "saqueadores",
+  "desc": "Prototipo único de un líder de banda que llegó a lo más alto. Zona de 12 m: los demás parecen estatuas. Sustituye la columna. Se activa como habilidad: gasta mucha RAM; sin RAM, quema tu salud. Al apagarlo quedas exhausto. Usarlo mucho acerca la ciberpsicosis.",
+  "effects": {
+   "attrs": {
+    "REF": 3
+   },
+   "skills": {},
+   "hpMax": 30,
+   "confront": 0,
+   "steal": 0,
+   "surgery": 0,
+   "carry": 0,
+   "ram": 16,
+   "armor": 0,
+   "meleeDmg": 0,
+   "speed": 0.18,
+   "carSpeed": 0,
+   "dodge": 0.12
+  },
+  "region": "esqueleto",
+  "rarity": "mitico",
+  "ability": {
+   "kind": "kairos",
+   "name": "Kairós",
+   "cooldown": 4,
+   "duration": 0,
+   "power": 6
+  },
+  "prosthetic": false,
+  "visible": "ninguna"
+ },
+ {
+  "id": "zocalo-matrices",
+  "name": "Zócalo de matrices",
+  "family": "Zócalo neural",
+  "slot": "zocalo",
+  "grade": 4,
+  "capacity": 3,
+  "humanity": 6,
+  "price": 28000,
+  "maker": "teselia",
+  "desc": "Zócalo neural con 2 ranuras para matrices (ampliable a 4 con módulos de ampliación). Las matrices consumen mucha capacidad de cromo, pero dan mejoras enormes.",
+  "effects": {
+   "attrs": {},
+   "skills": {},
+   "hpMax": 0,
+   "confront": 0,
+   "steal": 0,
+   "surgery": 0,
+   "carry": 0,
+   "ram": 0,
+   "armor": 0,
+   "meleeDmg": 0,
+   "speed": 0,
+   "carSpeed": 0,
+   "dodge": 0
+  },
+  "region": "so",
+  "rarity": "legendario",
+  "prosthetic": false,
+  "visible": "ninguna"
  }
 ]

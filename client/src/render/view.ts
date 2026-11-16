@@ -7,6 +7,7 @@ import {
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
 import { settings } from '../settings';
+import { kairosOf, kairosScale, MATRICES } from '@vertice/shared';
 import { dancePose } from './dance';
 import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSevered, makeSign, makeVehicle, makeWeapon, shade, type Occl } from './art';
 
@@ -56,6 +57,14 @@ export class GameView {
   private chunkLights = new Map<string, Container>();
   private pathG = new Graphics();
   private hoverG = new Graphics();
+  // v0.8: zonas Kairós, estelas de imágenes residuales, compañeros de las matrices y alucinaciones.
+  private kairosG = new Graphics();
+  private trailLayer = new Container();
+  private trails = new Map<number, { tex: any; tint: number; pts: { x: number; y: number; t: number; sp?: any }[]; last: number; tier: number }>();
+  private companions: { id: string; root: Container; x: number; y: number; nextLine: number; bubble?: Container; bubbleUntil?: number }[] = [];
+  private halluc: { c: Container; until: number; x: number; y: number }[] = [];
+  ghostMode = false;
+  psyche = 0;
   private marketLights = new Graphics();
   private powered = false;
   zoom = 0.85;
@@ -90,7 +99,7 @@ export class GameView {
     this.app.stage.addChild(this.world, this.nightOverlay, this.lightsLayer, this.rain, this.labels);
     this.floor.addChild(...this.floorTiles);
     this.world.addChild(this.ground, this.floor, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
-    this.markers.addChild(this.pathG, this.hoverG);
+    this.markers.addChild(this.kairosG, this.trailLayer, this.pathG, this.hoverG);
     this.lightsLayer.blendMode = 'add';
     this.lightsLayer.addChild(this.marketLights);
     this.objects.sortableChildren = true;
@@ -286,7 +295,22 @@ export class GameView {
     if (old) this.destroyEnt(old);
     const view = new Container();
     const ent: CEnt = { s, x: s.x, y: s.y, samples: [{ t: performance.now(), x: s.x, y: s.y }], flags: 0, moving: false, view, obj: null as any, phase: Math.random() * 6 };
-    if (s.kind === 'player' || s.kind === 'npc') {
+    if (s.kind === 'npc' && s.faction?.startsWith('ias-')) {
+      // IAs del ciberespacio: geometría que flota y parpadea, no personas.
+      const big = s.faction === 'ias-velo' || s.name === 'CARMÍN';
+      const col = s.name === 'CARMÍN' ? 0xff2040 : big ? 0xff4060 : 0x43f3ff;
+      const body = new Container();
+      const g = new Graphics();
+      const k = big ? 1.5 : 1;
+      g.poly([0, -46 * k, 14 * k, -26 * k, 0, -6 * k, -14 * k, -26 * k]).fill({ color: 0x050510, alpha: 0.9 }).stroke({ width: 2, color: col });
+      g.circle(0, -26 * k, 4 * k).fill(col);
+      for (let i = 0; i < 4; i++) g.rect(-18 * k + i * 9 * k, -12 * k - (i % 2) * 34 * k, 6 * k, 2).fill({ color: i % 2 ? 0xffffff : col, alpha: 0.7 });
+      g.ellipse(0, 0, 12 * k, 5 * k).fill({ color: col, alpha: 0.25 });
+      body.addChild(g);
+      view.addChild(body);
+      ent.body = body;
+      if (s.name === 'CARMÍN') { const ch = makeCharacter(s.appearance, 'npc', ['ojos']); ch.root.scale.set(CHAR_SCALE * 1.4); ch.root.alpha = 0.9; view.addChild(ch.root); ent.charRoot = ch.root; ent.legs = ch.legs; ent.body = ch.body; ent.bodyY = ch.bodyY; }
+    } else if (s.kind === 'player' || s.kind === 'npc') {
       const ch = makeCharacter(s.appearance, s.kind, s.chrome ?? [], s.lost ?? []);
       ch.root.scale.set(CHAR_SCALE * ch.root.scale.x);
       view.addChild(ch.root);
@@ -372,6 +396,10 @@ export class GameView {
       // Cámara de vigilancia en un poste: piloto rojo si graba, gris si está apagada.
       const off = s.label === 'Apagada';
       rel((g) => { const a1 = worldToScreen(fx + 0.5, fy + 0.5, 0), t = worldToScreen(fx + 0.5, fy + 0.5, 3.2); g.moveTo(a1.x, a1.y).lineTo(t.x, t.y).stroke({ width: 2, color: 0x3a3a48 }); g.roundRect(t.x - 2, t.y - 4, 12, 6, 2).fill(0xd8dce8); g.rect(t.x + 8, t.y - 3, 3, 4).fill(0x101018); g.circle(t.x + 1, t.y - 1, 1.6).fill(off ? 0x6a6a6a : 0xff2030); });
+    } else if (s.objKind === 'neuralchair') {
+      rel((g) => { drawBox(g, fx + 0.1, fy + 0.2, 0.8, 0.6, 0, 0.45, 0x1a1a2a); drawBox(g, fx + 0.1, fy + 0.65, 0.8, 0.15, 0.45, 0.8, 0x24243a); const t = worldToScreen(fx + 0.5, fy + 0.7, 1.4); g.ellipse(t.x, t.y, 10, 4).stroke({ width: 2, color: 0x43f3ff }); g.circle(t.x, t.y - 4, 2).fill(0x43f3ff); });
+    } else if (s.objKind === 'jackout') {
+      rel((g) => { const t = worldToScreen(fx + 0.5, fy + 0.5, 0.6); g.poly([t.x, t.y - 22, t.x + 12, t.y - 4, t.x, t.y + 14, t.x - 12, t.y - 4]).fill({ color: 0x5aff8a, alpha: 0.35 }).stroke({ width: 2, color: 0x5aff8a }); g.rect(t.x - 1, t.y - 12, 2, 16).fill(0xffffff); });
     } else if (s.objKind === 'computer') {
       rel((g) => { drawBox(g, fx + 0.1, fy + 0.2, 0.8, 0.6, 0, 0.75, 0x2a2a36); const t = worldToScreen(fx + 0.5, fy + 0.6, 0.75); g.rect(t.x - 8, t.y - 13, 16, 11).fill(0x101018); g.rect(t.x - 7, t.y - 12, 14, 9).fill(0x43f3ff); g.rect(t.x - 6, t.y - 10, 8, 1).fill(0x101018); g.rect(t.x - 6, t.y - 7, 10, 1).fill(0x101018); });
     } else if (s.objKind === 'mycar') {
@@ -463,7 +491,7 @@ export class GameView {
         const miss = !hit ? { x: (Math.random() - 0.5) * 40, y: (Math.random() - 0.5) * 24 } : { x: 0, y: 0 };
         const g = new Graphics();
         this.lightsLayer.addChild(g);
-        this.bullets.push({ g, ax: pa.x, ay: pa.y, bx: pb.x + spread + miss.x, by: pb.y + spread * 0.5 + miss.y, t0: performance.now() + i * (fam === 'Escopeta' ? 0 : 55), dur: Math.min(260, 40 + dist * 9), col, w: fam === 'Rifle' || fam === 'Especial' ? 2.4 : 1.6, hit: hit && i === 0, tx: b.x, ty: b.y, part: extra.part, target: b.s.id });
+        this.bullets.push({ g, ax: pa.x, ay: pa.y, bx: pb.x + spread + miss.x, by: pb.y + spread * 0.5 + miss.y, t0: performance.now() + i * (fam === 'Escopeta' ? 0 : 55), dur: Math.min(260, 40 + dist * 9) / this.timeScaleAt(b.x, b.y, a), col, w: fam === 'Rifle' || fam === 'Especial' ? 2.4 : 1.6, hit: hit && i === 0, tx: b.x, ty: b.y, part: extra.part, target: b.s.id });
       }
     } else if (kind === 'hit') {
       // Arco del golpe: ancho con armas largas, corto con cuchillos y puños.
@@ -562,6 +590,8 @@ export class GameView {
     else if (downed) e.charRoot.alpha = settings.reduceFlashes ? 0.7 : 0.55 + 0.35 * Math.abs(Math.sin(now / 300));
     else e.charRoot.alpha = 1;
     if (e.s.carried) { e.charRoot.rotation = -Math.PI / 2; e.charRoot.position.set(-4, -19); }
+    // Proyección de Eco: el fantasma que controlas se ve translúcido y anaranjado (los demás no lo ven).
+    if (this.ghostMode && e.s.id === this.meId) { e.charRoot.alpha = 0.45 + 0.15 * Math.sin(now / 220); e.charRoot.tint = 0xffc070; }
     const amt = e.s.bounty ?? 0;
     if (amt !== (e.markerAmt ?? 0)) {
       e.marker?.destroy({ children: true }); e.marker = undefined; e.markerAmt = amt;
@@ -747,6 +777,9 @@ export class GameView {
     for (const c of this.chunks.values()) c.visible = true;
 
     this.depthSort();
+    this.drawKairos(now);
+    this.updateCompanions(now, dt);
+    this.updateHalluc(now);
     this.pulseDanceFloor(now);
     this.drawHover();
     this.drawNight();
@@ -974,6 +1007,115 @@ export class GameView {
 
   /** Alcance de tu arma (rojo) y de tiro seguro apuntando (verde); lo rellena la ficha del personaje. */
   combat = { range: 1.5, aim: 0, ranged: false };
+  // ================================================================ v0.8 · Kairós, compañeros, fantasma y alucinaciones
+  private kairosTier(e: CEnt) { const b = e.s.buffs?.find((x) => x.startsWith('kairos')); return b ? Number(b.slice(6)) || 0 : 0; }
+  /** Escala de tiempo en un punto para las balas de `shooter` (más lentas dentro de una zona Kairós ajena; más rápidas si dispara quien lo lleva). */
+  timeScaleAt(x: number, y: number, shooter?: CEnt) {
+    const own = shooter ? this.kairosTier(shooter) : 0;
+    let sc = own ? kairosOf(own).boost : 1;
+    for (const e of this.ents.values()) {
+      const t = this.kairosTier(e);
+      if (!t || e === shooter || t <= own) continue;
+      const r = kairosOf(t).radius;
+      if (r && Math.hypot(e.x - x, e.y - y) <= r) sc = Math.min(sc, kairosScale(t, own));
+    }
+    return Math.max(0.08, sc);
+  }
+  private drawKairos(now: number) {
+    const g = this.kairosG; g.clear();
+    let meIn = 0;
+    for (const e of this.ents.values()) {
+      const t = this.kairosTier(e);
+      const tr = this.trails.get(e.s.id);
+      if (!t || !e.charRoot) { if (tr) { for (const p of tr.pts) p.sp?.destroy(); this.trails.delete(e.s.id); } continue; }
+      const k = kairosOf(t);
+      const tint = HEX(e.s.appearance?.accent ?? '#43f3ff');
+      if (k.radius) {
+        const m = worldToScreen(e.x, e.y), rr = k.radius * 45.25, pulse = 0.5 + 0.5 * Math.sin(now / 160);
+        g.ellipse(m.x, m.y, rr, rr * 0.5).fill({ color: tint, alpha: 0.05 + 0.03 * pulse }).stroke({ width: 2, color: tint, alpha: 0.35 + 0.25 * pulse });
+        const q = 0.6 + 0.4 * ((now / 900) % 1);
+        g.ellipse(m.x, m.y, rr * q, rr * 0.5 * q).stroke({ width: 1, color: 0xffffff, alpha: 0.15 });
+        if (e.s.id !== this.meId && Math.hypot(e.x - this.me.x, e.y - this.me.y) <= k.radius) meIn = Math.max(meIn, t);
+      }
+      if (e.s.id === this.meId) meIn = Math.max(meIn, t);
+      // Estela de imágenes residuales: más larga y duradera cuanto mejor es el Kairós; del color del cromo elegido.
+      let trail = tr;
+      if (!trail) {
+        let tex: any = null;
+        try { tex = this.app.renderer.generateTexture({ target: e.charRoot, resolution: 1 } as any); } catch {}
+        trail = { tex, tint, pts: [], last: 0, tier: t };
+        this.trails.set(e.s.id, trail);
+      }
+      if (trail.tex && now - trail.last > 45 && (e.moving || (e.s.id === this.meId && (this.steer.dx || this.steer.dy)))) {
+        trail.last = now;
+        const b = e.charRoot.getLocalBounds();
+        const sp = new Sprite(trail.tex);
+        sp.anchor.set(-b.x / Math.max(1, b.width), -b.y / Math.max(1, b.height));
+        sp.scale.set(e.charRoot.scale.x, e.charRoot.scale.y);
+        sp.tint = tint; sp.blendMode = 'add';
+        const p = worldToScreen(e.x, e.y); sp.position.set(p.x, p.y);
+        this.trailLayer.addChild(sp);
+        trail.pts.push({ x: e.x, y: e.y, t: now, sp });
+      }
+      const life = 90 * k.trail;
+      while (trail.pts.length && (now - trail.pts[0].t > life || trail.pts.length > k.trail * 2)) trail.pts.shift()!.sp?.destroy();
+      for (const p of trail.pts) if (p.sp) p.sp.alpha = 0.55 * (1 - (now - p.t) / life);
+    }
+    document.body.classList.toggle('kairos-on', meIn > 0);
+  }
+  /** Compañeros de las matrices (CARMÍN y Rafa): solo los ve quien las lleva. */
+  setCompanions(ids: string[]) {
+    const want = ids.filter((id) => MATRICES[id]?.companion && !(this.ghostMode && id === 'matriz-eco'));
+    for (const c of [...this.companions]) if (!want.includes(c.id)) { c.root.destroy({ children: true }); c.bubble?.destroy({ children: true }); this.companions.splice(this.companions.indexOf(c), 1); }
+    for (const id of want) {
+      if (this.companions.some((c) => c.id === id)) continue;
+      const ap = id === 'matriz-carmin' ? { skin: '#f4d8d8', hair: '#ff2040', jacket: '#1a7a3a', accent: '#ff2040', eyes: '#5aff8a', build: 'alto', hairStyle: 'melena', top: 'gabardina', faceShape: 'afilada', mouth: 'sonrisa' }
+        : { skin: '#e0c0a0', hair: '#1a1a1a', jacket: '#1a1a1a', accent: '#ffb020', build: 'delgado', hairStyle: 'largo', top: 'chaqueta', facial: 'perilla', accessory: 'gafas', mouth: 'seria' };
+      const ch = makeCharacter(ap as any, 'npc', id === 'matriz-carmin' ? [] : ['brazo_izq']);
+      ch.root.scale.set(CHAR_SCALE); ch.root.alpha = 0.82;
+      const glow = new Graphics().ellipse(0, 0, 14, 7).stroke({ width: 1.5, color: HEX(MATRICES[id].companion!.color), alpha: 0.8 });
+      const root = new Container(); root.addChild(glow, ch.root);
+      this.objects.addChild(root);
+      this.companions.push({ id, root, x: this.me.x - 1, y: this.me.y + 1, nextLine: performance.now() + 4000 + Math.random() * 8000 });
+    }
+  }
+  private updateCompanions(now: number, dt: number) {
+    this.companions.forEach((c, i) => {
+      const tx = this.me.x - 1.1 + i * 0.4, ty = this.me.y + 0.9 - i * 1.6;
+      const k = Math.min(1, dt * 2.5);
+      c.x += (tx - c.x) * k; c.y += (ty - c.y) * k;
+      const p = worldToScreen(c.x, c.y); c.root.position.set(p.x, p.y); c.root.zIndex = p.y;
+      c.root.alpha = 0.75 + 0.15 * Math.sin(now / 300 + i);
+      if (now > c.nextLine) {
+        c.nextLine = now + 14000 + Math.random() * 20000;
+        const lines = MATRICES[c.id].companion!.lines;
+        c.bubble?.destroy({ children: true });
+        const t = new Text({ text: lines[Math.floor(Math.random() * lines.length)], style: { fontFamily: 'system-ui', fontSize: 12, fill: 0xffffff, wordWrap: true, wordWrapWidth: 200 } });
+        const col = HEX(MATRICES[c.id].companion!.color);
+        const bg = new Graphics().roundRect(-t.width / 2 - 8, -t.height - 10, t.width + 16, t.height + 10, 6).fill({ color: 0x10040a, alpha: 0.92 }).stroke({ width: 1.5, color: col });
+        t.position.set(-t.width / 2, -t.height - 5);
+        const b = new Container(); b.addChild(bg, t); this.labels.addChild(b);
+        c.bubble = b; c.bubbleUntil = now + 5000;
+      }
+      if (c.bubble) { if (now > (c.bubbleUntil ?? 0)) { c.bubble.destroy({ children: true }); c.bubble = undefined; } else { const g = this.world.toGlobal(worldToScreen(c.x, c.y, 1.9)); c.bubble.position.set(g.x, g.y); } }
+    });
+  }
+  /** Alucinaciones de la ciberpsicosis: siluetas que aparecen y desaparecen (solo las ves tú). */
+  private updateHalluc(now: number) {
+    for (const h0 of [...this.halluc]) { if (now > h0.until) { h0.c.destroy({ children: true }); this.halluc.splice(this.halluc.indexOf(h0), 1); } else { h0.c.alpha = (0.25 + 0.35 * Math.random()) * (this.psyche >= 70 ? 1.3 : 1); } }
+    const lv = this.psyche;
+    if (lv < 25 || settings.reduceFlashes || !this.grid) return;
+    const every = lv >= 70 ? 1500 : lv >= 45 ? 3500 : 7000;
+    if (this.halluc.length > 3 || Math.random() > 1 / (every / 16)) return;
+    const a = Math.random() * Math.PI * 2, r = 3 + Math.random() * 4;
+    const x = this.me.x + Math.cos(a) * r, y = this.me.y + Math.sin(a) * r;
+    const ch = makeCharacter({ skin: '#101014', hair: '#000000', jacket: '#08080c', accent: lv >= 70 ? '#ff2020' : '#303040', eyes: '#ff2020' } as any, 'npc', lv >= 70 ? ['ojos'] : []);
+    ch.root.scale.set(CHAR_SCALE * (0.9 + Math.random() * 0.4)); ch.root.tint = lv >= 70 ? 0xff6060 : 0x8080a0;
+    const c = new Container(); c.addChild(ch.root);
+    const p = worldToScreen(x, y); c.position.set(p.x, p.y); c.zIndex = p.y;
+    this.objects.addChild(c);
+    this.halluc.push({ c, until: now + 900 + Math.random() * 1600, x, y });
+  }
   private tinted: CEnt | null = null;
   /** Destino marcado (rombo magenta que late sobre el suelo). */
   goal: { x: number; y: number; zone: string } | null = null;

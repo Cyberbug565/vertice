@@ -102,14 +102,6 @@
    "color": "#2a3040"
   },
   {
-   "type": "locker",
-   "at": [
-    18,
-    3
-   ],
-   "color": "#3a4a5a"
-  },
-  {
    "type": "sofa",
    "at": [
     9,
@@ -168,6 +160,15 @@
     7
    ],
    "kind": "elevator"
+  },
+  {
+   "id": "silla-torre-teselia-p5",
+   "name": "Sala de inmersión privada",
+   "at": [
+    18,
+    3
+   ],
+   "kind": "neuralchair"
   }
  ],
  "waypoints": [

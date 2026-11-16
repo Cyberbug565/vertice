@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import {
   ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
-  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, twoHanded, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
+  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
@@ -51,7 +51,11 @@ export interface PlayerState {
   intel: Map<string, { name: string; zone: string; x: number; y: number; at: number; precise: boolean }>;
   substances: SubstanceUse;
   /** v0.7 · Ciberpsicosis: nivel 0–100, segundos acumulados por encima de 50, pico del episodio y bajada temporal de la capacidad de cromo. */
-  psyche: { level: number; heavy: number; peak: number; debuff?: { amount: number; until: number } };
+  psyche: { level: number; heavy: number; peak: number; debuff?: { amount: number; until: number }; episode?: { until: number; floor: number; grave: boolean }; episodes?: number };
+  /** v0.8: matrices puestas en el zócalo y ranuras extra; Kairós encendido; progreso con las leyendas. */
+  relics: { matrices: string[]; socketExtra: number };
+  kairos?: { tier: number; since: number };
+  legends: Record<string, { trust: number; step: number; active: boolean; count: number; done?: boolean }>;
   underworld: UnderworldState;
 }
 
@@ -124,6 +128,17 @@ export function effective(c: Content, p: PlayerState) {
     hpMax += d.effects.hpMax ?? 0; confront += d.effects.confront ?? 0; steal += d.effects.steal ?? 0; surgery += d.effects.surgery ?? 0;
     if (d.effects.needs) { needs.hunger *= d.effects.needs.hunger; needs.thirst *= d.effects.needs.thirst; needs.fatigue *= d.effects.needs.fatigue; }
   }
+  // v0.8: matrices del zócalo neural (solo si el zócalo está instalado).
+  const matrix = { rangedDmg: 0, aim: 0, hackImmune: false, cameraGhost: false, psyResist: 0, psyImmune: false, hackSpeed: 0, hackCost: 0, ramRegen: 1, ramBonus: 0, stopBleed: false, psyGain: 1, capBonus: 0, meleeDmg: 0, armor: 0 };
+  if (p.cyber.some((ci) => ci.location === 'installed' && ci.def === 'zocalo-matrices')) for (const id of p.relics?.matrices ?? []) {
+    const m = MATRICES[id]; if (!m) continue;
+    chromeUsed += m.chrome; hpMax += m.hpMax ?? 0;
+    if (m.stealth) skills.sigilo = (skills.sigilo ?? 0) + m.stealth;
+    matrix.rangedDmg += m.rangedDmg ?? 0; matrix.meleeDmg += m.meleeDmg ?? 0; matrix.aim += m.aim ?? 0; matrix.armor += m.armor ?? 0;
+    matrix.hackImmune ||= !!m.hackImmune; matrix.cameraGhost ||= !!m.cameraGhost; matrix.psyImmune ||= !!m.psyImmune; matrix.stopBleed ||= !!m.stopBleed;
+    matrix.psyResist = Math.max(matrix.psyResist, m.psyResist ?? 0); matrix.hackSpeed = Math.max(matrix.hackSpeed, m.hackSpeed ?? 0); matrix.hackCost = Math.max(matrix.hackCost, m.hackCost ?? 0);
+    matrix.ramRegen = Math.max(matrix.ramRegen, m.ramRegen ?? 1); matrix.ramBonus += m.ramBonus ?? 0; matrix.psyGain *= m.psyGain ?? 1; matrix.capBonus += m.capBonus ?? 0;
+  }
   hpMax += 5 * (attrs.BODY - p.attributes.BODY) + 3 * (attrs.WILL - p.attributes.WILL);
   hpMax += LEVEL_GAINS.hp * (p.level - 1) + (pm.mods.hpMax ?? 0);
   confront += pm.mods.confront ?? 0; steal += pm.mods.steal ?? 0; surgery += pm.mods.surgery ?? 0;
@@ -160,9 +175,9 @@ export function effective(c: Content, p: PlayerState) {
   const weapon = eq?.weapon && armsLost < 2 && !(armsLost && twoHanded(eq)) ? eq : undefined;
   const weight = [...p.inventory].reduce((acc, [d, q]) => acc + (c.items.find((i) => i.id === d)?.weight ?? 0) * q, 0);
   const carryMax = carryCapacity(attrs) + carryBonus;
-  return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs) + chromeBonus - ((p.psyche?.debuff?.until ?? 0) > Date.now() ? p.psyche!.debuff!.amount : 0), humanityLoad: load, needs, mods, weapon, integrated, ram, weight, carryMax,
-    staminaMax: maxStamina(attrs) + LEVEL_GAINS.stamina * (p.level - 1) + (pm.mods.stamina ?? 0), speed, meleeDmg, dodge: Math.min(0.5, dodge), carSpeed, perk: pm.mods, flags: pm.flags,
-    armsLost, legsLost, limbMult: (legsLost === 2 ? 0.25 : legsLost ? 0.5 : 1) * (brokenLegs === 2 ? 0.5 : brokenLegs ? 0.75 : 1), chromeBroken, brokenArms };
+  return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor: armor + matrix.armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs) + chromeBonus + matrix.capBonus - ((p.psyche?.debuff?.until ?? 0) > Date.now() ? p.psyche!.debuff!.amount : 0), humanityLoad: load, needs, mods, weapon, integrated, ram: ram + matrix.ramBonus, weight, carryMax,
+    staminaMax: maxStamina(attrs) + LEVEL_GAINS.stamina * (p.level - 1) + (pm.mods.stamina ?? 0), speed, meleeDmg: meleeDmg + matrix.meleeDmg, dodge: Math.min(0.5, dodge), carSpeed, perk: pm.mods, flags: pm.flags,
+    matrix, armsLost, legsLost, limbMult: (legsLost === 2 ? 0.25 : legsLost ? 0.5 : 1) * (brokenLegs === 2 ? 0.5 : brokenLegs ? 0.75 : 1), chromeBroken, brokenArms };
 }
 /** v0.7 · Un miembro de cromo muy dañado (24+) no sangra, pero falla hasta que lo repara un matasanos. */
 export const CHROME_BROKEN_AT = 24;
@@ -292,7 +307,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     houses: houses.rows.map((x: any) => x.house_id), cars: cars.rows.map((x: any) => ({ id: x.id, car: x.car_id })), driving: null, lastCombatAt: 0, walked: 0,
     running: false, auto: { on: !!row.autopilot?.on, personality: row.autopilot?.personality ?? 'responsable', status: '' },
     body: row.body ?? newBody(), bio: row.bio ?? null, identified: row.identified ?? null, intel: new Map(),
-    substances: row.substance_use ?? {}, underworld: row.underworld ?? {}, psyche: { level: 0, heavy: 0, peak: 0, ...(row.psyche ?? {}) },
+    substances: row.substance_use ?? {}, underworld: row.underworld ?? {}, psyche: { level: 0, heavy: 0, peak: 0, ...(row.psyche ?? {}) }, relics: { matrices: [], socketExtra: 0, ...(row.relics ?? {}) }, legends: row.legends ?? {},
   };
   for (const x of prog.rows) {
     p.contracts.set(x.contract_id, { instanceId: x.instance_id, contractId: x.contract_id, version: x.version, state: x.state, objectives: { ...x.shared_obj, ...x.objectives }, outcome: x.outcome });
@@ -346,7 +361,8 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     skillProg: c.skills.map((sk) => { const xp = p.skillXp[sk.id] ?? 0, lv = skillLevelForXp(xp); return { id: sk.id, name: sk.name, attr: sk.attr, level: lv, xp, from: skillXpFor(lv), to: lv >= SKILL_MAX ? skillXpFor(SKILL_MAX) : skillXpFor(lv + 1), bonus: ef.skills[sk.id] ?? 0 }; }),
     skillPoints: pointsAvailable(c, p).skill, perkPoints: pointsAvailable(c, p).perk, perks: [...p.perks],
     wear: { ...p.wear } as Record<string, string>, look: wornAppearance(c, p),
-    abilities: p.cyber.filter((ci) => ci.location === 'installed').map((ci) => c.cyberware.find((d) => d.id === ci.def)).filter((d) => d?.ability).map((d) => ({ id: d!.id, name: d!.ability!.name, kind: d!.ability!.kind, cooldown: d!.ability!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[d!.id] ?? 0) - Date.now()) / 1000)) })),
+    abilities: [...p.cyber.filter((ci) => ci.location === 'installed').map((ci) => c.cyberware.find((d) => d.id === ci.def)).filter((d) => d?.ability).map((d) => ({ id: d!.id, name: d!.ability!.name, kind: d!.ability!.kind as string, cooldown: d!.ability!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[d!.id] ?? 0) - Date.now()) / 1000)) })),
+      ...(p.cyber.some((ci) => ci.location === 'installed' && ci.def === 'zocalo-matrices') ? (p.relics?.matrices ?? []) : []).filter((id) => MATRICES[id]?.ability).map((id) => ({ id, name: MATRICES[id].ability!.name, kind: MATRICES[id].ability!.kind as string, cooldown: MATRICES[id].ability!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[id] ?? 0) - Date.now()) / 1000)) }))],
     buffs: Object.fromEntries(Object.entries(p.buffs).filter(([, u]) => u > Date.now()).map(([k, u]) => [k, Math.round((u - Date.now()) / 1000)])),
     houses: [...p.houses], cars: p.cars.map((x) => ({ id: x.id, car: x.car })), driving: p.driving,
     discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
@@ -358,7 +374,10 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     identified: p.identified ? { crime: p.identified.crime, district: p.identified.district } : null,
     substances: substanceEffects(c, p.substances).status, underworld: underworldStatus(c, p.underworld),
     // Ciberpsicosis: no se nota nada hasta que es seria.
-    psychosis: (p.psyche?.level ?? 0) >= 70 ? 'Ciberpsicosis' : (p.psyche?.level ?? 0) >= 45 ? 'Inestable' : null, chromeDebuff: (p.psyche?.debuff?.until ?? 0) > Date.now() ? { amount: p.psyche!.debuff!.amount, minutes: Math.ceil((p.psyche!.debuff!.until - Date.now()) / 60000) } : null,
+    psychosis: (p.psyche?.level ?? 0) >= 70 ? 'Ciberpsicosis' : (p.psyche?.level ?? 0) >= 45 ? 'Inestable' : (p.psyche?.level ?? 0) >= 15 ? 'Inquieto' : null,
+    psyche: { level: Math.round(p.psyche?.level ?? 0), episode: p.psyche?.episode && p.psyche.episode.until > Date.now() ? { grave: p.psyche.episode.grave, days: Math.round(((p.psyche.episode.until - Date.now()) / (c.manifest.cityHourMs * 24)) * 10) / 10 } : null },
+    matrices: { socket: p.cyber.some((ci) => ci.location === 'installed' && ci.def === 'zocalo-matrices'), slots: Math.min(SOCKET_MAX, SOCKET_BASE + (p.relics?.socketExtra ?? 0)), equipped: [...(p.relics?.matrices ?? [])] },
+    kairos: p.kairos ? p.kairos.tier : 0, admin: !!(p as any).admin, chromeDebuff: (p.psyche?.debuff?.until ?? 0) > Date.now() ? { amount: p.psyche!.debuff!.amount, minutes: Math.ceil((p.psyche!.debuff!.until - Date.now()) / 60000) } : null,
     hp: Math.round(p.hp), hpMax: ef.hpMax, stamina: Math.round(p.stamina), staminaMax: ef.staminaMax, luck: p.luck, luckMax: p.attributes.LUCK,
     humanity: p.humanity, humanityMax: p.humanityMax, chromeCapacity: ef.chromeCapacity, chromeUsed: ef.chromeUsed,
     carry: Math.round(ef.weight * 10) / 10, carryMax: ef.carryMax,
@@ -371,7 +390,7 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     wanted: Math.round(p.wanted * 10) / 10, autoNeeds: p.autoNeeds,
     profession: p.profession, professionName: c.professions.find((x) => x.id === p.profession)?.name ?? p.profession, professionRank: p.professionRank, professionXp: p.professionXp,
     activeJob: p.activeJob,
-    cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen, region: d.region ?? 'corteza', part: ci.part ?? null, ability: d.ability?.name, unique: d.unique }; }),
+    cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen, region: d.region ?? 'corteza', part: ci.part ?? null, ability: d.ability?.name, unique: d.unique, rarity: d.rarity ?? (d.grade <= 1 ? 'comun' : d.grade === 2 ? 'raro' : d.grade === 3 ? 'epico' : 'legendario') }; }),
     bonuses: { confront: ef.confront, defense: ef.defense, steal: ef.steal, surgery: Math.round(ef.surgery * 100) },
     weapon: ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, kind: ef.weapon.weapon.kind, family: ef.weapon.weapon.family, damage: ef.weapon.weapon.damage, range: ef.weapon.weapon.range, cooldown: ef.weapon.weapon.cooldown, accuracy: ef.weapon.weapon.accuracy,
       ammo: ef.weapon.weapon.ammo, ammoName: ef.weapon.weapon.ammo ? c.items.find((i) => i.id === ef.weapon!.weapon!.ammo)?.name : undefined, ammoCount: ef.weapon.weapon.ammo ? p.inventory.get(ef.weapon.weapon.ammo) ?? 0 : undefined, nonlethal: ef.weapon.weapon.nonlethal, tech: ef.weapon.weapon.tech } : null,
@@ -401,10 +420,10 @@ export function buildJournal(c: Content, p: PlayerState, participants: (instance
 export async function savePlayerVitals(db: Queryable, p: PlayerState) {
   await db.query(`UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4, hp=$5, stamina=$6, luck=$7, stance=$8, hunger=$9, thirst=$10, fatigue=$11, wanted=$12,
      auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16, equipped=$17, net_xp=$18, net_rank=$19, downed_lethal=$20,
-     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27, autopilot=$28, body=$29, bio=$30, identified=$31, psyche=$32 WHERE id=$1 AND status <> 'dead'`,
+     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27, autopilot=$28, body=$29, bio=$30, identified=$31, psyche=$32, relics=$33, legends=$34 WHERE id=$1 AND status <> 'dead'`,
     [p.charId, p.zone, p.x, p.y, Math.round(p.hp), Math.round(p.stamina), p.luck, p.stance, p.hunger, p.thirst, p.fatigue, p.wanted, p.autoNeeds, p.activeJob,
       p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null, p.equipped, p.netXp, p.netRank, p.downedLethal,
-      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp, JSON.stringify({ on: p.auto.on, personality: p.auto.personality }), JSON.stringify(p.body), p.bio ? JSON.stringify(p.bio) : null, p.identified ? JSON.stringify(p.identified) : null, JSON.stringify(p.psyche)]);
+      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp, JSON.stringify({ on: p.auto.on, personality: p.auto.personality }), JSON.stringify(p.body), p.bio ? JSON.stringify(p.bio) : null, p.identified ? JSON.stringify(p.identified) : null, JSON.stringify(p.psyche), JSON.stringify(p.relics ?? { matrices: [], socketExtra: 0 }), JSON.stringify(p.legends ?? {})]);
 }
 
 /** Puntos de habilidad y de perk disponibles: se ganan al subir de nivel (y los de perk también cada 5 niveles de habilidad). */

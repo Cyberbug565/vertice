@@ -141,6 +141,15 @@
    ],
    "kind": "workplace",
    "workplace": "wp-trastienda"
+  },
+  {
+   "id": "silla-pachinko-int",
+   "name": "Silla de inmersión (alquiler del fixer)",
+   "at": [
+    2,
+    2
+   ],
+   "kind": "neuralchair"
   }
  ],
  "waypoints": [

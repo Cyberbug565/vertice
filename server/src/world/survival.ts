@@ -97,6 +97,7 @@ export class Survival {
       return;
     }
     const ef = effective(this.w.c, p);
+    if (p.hp > ef.hpMax) p.hp = ef.hpMax;
     const substances = substanceEffects(this.w.c, p.substances);
     const working = !!e.task?.def.id.startsWith('job:');
     const mult = working ? n.workMultiplier : 1;
@@ -149,10 +150,10 @@ export class Survival {
       else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1));
       if (p.running && p.stamina <= 3 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.'); }
       if (p.stamina > 20) x.breathless = false;
-      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult * substances.speed;
+      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > Date.now() ? 0.55 : 1);
     }
     // v0.7: el cliente predice el movimiento con WASD a la misma velocidad que el servidor.
-    { const v = Math.round(e.speed * 1000) / 1000; if (x.sentSpeed !== v || x.sentGuard !== !!e.guard) { x.sentSpeed = v; x.sentGuard = !!e.guard; this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard }); } }
+    { const v = Math.round(e.speed * (e.timeScale ?? 1) * 1000) / 1000; if (x.sentSpeed !== v || x.sentGuard !== !!e.guard) { x.sentSpeed = v; x.sentGuard = !!e.guard; this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard }); } }
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
     if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y) * (p.running && !p.driving ? 2 : 1));
     x.lastPos = { zone: e.zone.id, x: e.x, y: e.y };
@@ -164,7 +165,7 @@ export class Survival {
     // Biomonitor: autoestimulante por debajo del 25 %.
     if (ef.flags.has('autoestim') && p.hp < ef.hpMax * 0.25 && Date.now() > p.autoStimAt) { p.autoStimAt = Date.now() + 120000; p.hp = Math.min(ef.hpMax, p.hp + 20); this.notice(c, 'good', 'Tu biomonitor inyecta un estimulante: +20 de salud.'); }
     // RAM del deck: se recarga más rápido con rango de red.
-    if (ef.ram > 0) p.ram = Math.min(ef.ram, p.ram + (0.25 + p.netRank * 0.03 + substances.ram)); else p.ram = 0;
+    if (ef.ram > 0) { if (!p.kairos) p.ram = Math.min(ef.ram, p.ram + (0.25 + p.netRank * 0.03 + substances.ram) * ef.matrix.ramRegen); } else p.ram = 0;
     // Cromo visible y salud para quien mire.
     const parts = chromeParts(this.w.c, p);
     if (parts.join() !== (e.chrome ?? []).join()) { e.chrome = parts; this.bump(e); }
@@ -255,6 +256,17 @@ export class Survival {
 
   async consume(c: PlayerConn, item: string, opId: string, auto = false) {
     const p = c.p!;
+    // v0.8: objetos que se «usan» sin ser comida ni medicina corriente.
+    if (item === 'cuna-neural') { if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No la tienes.'); return this.w.legends.jackIn(c, 'casa'); }
+    if (item === 'ampliacion-zocalo') {
+      if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No te queda ninguno.');
+      if (!this.w.relics.hasSocket(p)) throw new GameError('Primero necesitas un zócalo de matrices instalado.');
+      this.w.relics.expand(c);
+      p.inventory.set(item, (p.inventory.get(item) ?? 1) - 1);
+      await this.w.db.query('UPDATE inventory_items SET qty = GREATEST(0, qty - 1) WHERE character_id=$1 AND def_id=$2', [p.charId, item]);
+      this.sheet(c); return;
+    }
+    if (item.startsWith('matriz-')) return this.w.relics.matrix(c, 'equip', item);
     const d = this.w.c.items.find((i) => i.id === item);
     if (!d?.consumable || (auto && d.substance)) throw new GameError('Eso no se puede consumir.');
     if (d.substance) return this.consumeSubstance(c, d, d.consumable, opId);
@@ -279,6 +291,11 @@ export class Survival {
     if (cons.restore === 'stamina') p.stamina = p.stamina + cons.amount;
     const bleeding = p.body.bleed > 0.05;
     if (item === 'venda' || item === 'estim') this.w.combat.wounds.treat(p, c.e, item === 'estim' ? 1 : 0.7);
+    if (item === 'inmunosupresor' && p.psyche) {
+      const floor = p.psyche.episode && p.psyche.episode.until > Date.now() ? p.psyche.episode.floor : 0;
+      p.psyche.level = Math.max(floor, p.psyche.level - 18);
+      this.notice(c, floor ? 'warn' : 'good', floor ? 'El neuroinhibidor calma un poco las voces, pero el episodio sigue su curso.' : 'El neuroinhibidor apaga el zumbido del cromo.');
+    }
     this.notice(c, 'info', `${auto ? 'Automático: ' : ''}${item === 'venda' ? 'te vendas' : `consumes ${d.name}`}${bleeding && (item === 'venda' || item === 'estim') ? (p.body.bleed > 0.05 ? ': la hemorragia baja, pero sigue.' : ': la hemorragia se detiene.') : '.'}`);
     this.sheet(c);
   }

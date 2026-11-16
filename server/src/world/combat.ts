@@ -209,11 +209,13 @@ export class Combat {
   private ramCost(p: PlayerState, ram: number, effect?: string) {
     const pm = perkMods(this.c, p);
     if (pm.flags.has('analista') && (effect === 'scan' || effect === 'deepscan')) return 1;
-    return Math.max(1, Math.round((ram - Math.floor(p.netRank / 3)) * (1 - (pm.mods.hackCost ?? 0)) * (pm.flags.has('dios-red') ? 0.5 : 1)));
+    return Math.max(1, Math.round((ram - Math.floor(p.netRank / 3)) * (1 - (pm.mods.hackCost ?? 0)) * (pm.flags.has('dios-red') ? 0.5 : 1) * (1 - effective(this.c, p).matrix.hackCost)));
   }
   private uploadTime(p: PlayerState, base: number) {
     const pm = perkMods(this.c, p);
     if (pm.flags.has('dios-red')) return 0.3;
+    const mx = effective(this.c, p).matrix.hackSpeed;
+    if (mx) return Math.max(0.15, base * (1 - mx));
     return Math.max(0.4, base * (1 - 0.06 * p.netRank) * (p.role === 'netrunner' ? 0.85 : 1) * (1 - (pm.mods.hackSpeed ?? 0)));
   }
   private hackScore(p: PlayerState) { const ef = effective(this.c, p); return ef.attrs.INT + (ef.skills.interfaz ?? 0) + Math.floor(p.netRank / 2) + (p.role === 'netrunner' ? 2 : 0) + (ef.perk.hackChance ?? 0); }
@@ -266,6 +268,7 @@ export class Combat {
     if (p.status !== 'alive') return fail('No puedes hacer eso ahora.');
     if (p.sleeping) this.sv.wake(c);
     const target = this.w.entities.get(m.target);
+    if (e.ghostOf) return fail('Eres una proyección: no puedes tocar nada.');
     if (!target || target.zone !== e.zone || target === e) return fail('Objetivo no válido.');
     let action: string = m.action;
     if (action === 'beat') action = 'knockout';
@@ -441,6 +444,8 @@ export class Combat {
     this.w.nightlife.stop(e);
     if (now < p.nextAttackAt) { e.pendingAction = { target: target.id, action: lethal ? 'attack' : 'knockout', opId: `${opId}r`, part: opts.part }; return; }
     if (effective(this.c, p).armsLost >= 2) throw new GameError('Sin brazos no puedes atacar.');
+    if ((e.stunUntil ?? 0) > now) throw new GameError('Estás aturdido.');
+    if (e.ghostOf) throw new GameError('Eres una proyección: no puedes tocar nada.');
     if (lethal && this.weaponOf(p).w.nonlethal === 'solo') lethal = false;
     const wp = this.weaponFor(p, lethal);
     const legit = this.claimable(target, p).length > 0;
@@ -451,7 +456,7 @@ export class Combat {
     }
     const ef = effective(this.c, p);
     const fast = (p.buffs['tiempo-bala'] ?? 0) > now ? 0.4 : 1;
-    p.nextAttackAt = now + wp.w.cooldown * 1000 * fast * (wp.w.kind === 'ranged' ? 1 - (ef.perk.rangedCd ?? 0) : 1);
+    p.nextAttackAt = now + (wp.w.cooldown * 1000 * fast * (wp.w.kind === 'ranged' ? 1 - (ef.perk.rangedCd ?? 0) : 1)) / (e.timeScale ?? 1);
     p.lastCombatAt = now;
     const tp = this.w.playerOf(target);
     if (tp && tp.status !== 'alive') return;
@@ -470,7 +475,8 @@ export class Combat {
     const steady = wp.w.kind === 'ranged' && e.guard && !opts.aimed ? 2 : 0;
     const aimPen = opts.part && !opts.aimed ? AIM[opts.part].penalty : 0;
     const cover = wp.w.kind === 'ranged' ? this.coverOf(e, target) * (opts.aimed ? 0.5 : 1) : 0;
-    let a = this.attackScore(p) - rangePenalty - aimPen - ef.armsLost * 3 - ef.brokenArms * 2 + steady + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
+    const tremor = (p.psyche?.level ?? 0) >= 70 ? 4 : (p.psyche?.level ?? 0) >= 45 ? 2 : 0;
+    let a = this.attackScore(p) - rangePenalty - aimPen - ef.armsLost * 3 - ef.brokenArms * 2 - tremor + ef.matrix.aim + steady + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
     // Bloqueo: quien se defiende con un arma cuerpo a cuerpo para mejor los golpes (no las balas).
     const blocking = !!(tp && target.guard && wp.w.kind === 'melee' && this.weaponOf(tp).w.kind === 'melee');
     const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + cover + (blocking ? 3 : 0) + this.roll();
@@ -491,10 +497,11 @@ export class Combat {
       return;
     }
     let dmg = this.rollDamage(wp.w, a - d) + (wp.w.kind === 'melee' ? substances.melee : 0);
-    dmg *= 1 + (wp.w.kind === 'melee' ? ef.meleeDmg : ef.perk.rangedDmg ?? 0) + (wp.w.kind === 'ranged' && dist < 3 ? ef.perk.closeDmg ?? 0 : 0) + (!lethal && ef.perk.koBonus ? 0.2 : 0);
+    dmg *= 1 + (wp.w.kind === 'melee' ? ef.meleeDmg : (ef.perk.rangedDmg ?? 0) + ef.matrix.rangedDmg) + (wp.w.kind === 'ranged' && dist < 3 ? ef.perk.closeDmg ?? 0 : 0) + (!lethal && ef.perk.koBonus ? 0.2 : 0);
     if (ef.flags.has('corazon-cromo') && Object.values(p.buffs).some((u) => u > now)) dmg *= 1.25;
     const chromed = tp ? chromeParts(this.c, tp).length > 0 : (target.chrome?.length ?? 0) > 0;
     if (traits.has('emp') && chromed) dmg *= 1.5;
+    if (traits.has('emp')) this.w.relics.emp(target.zone.id, target.x, target.y, 3);
     if (wp.w.kind === 'ranged' && (p.buffs['disparo-cargado'] ?? 0) > now) { dmg *= 2; delete p.buffs['disparo-cargado']; this.notice(c, 'good', 'Disparo cargado.'); }
     const crit = this.rng() < (ef.perk.crit ?? 0) + (opts.aimed ? 0.15 : 0);
     if (crit) dmg *= 2;
@@ -561,6 +568,9 @@ export class Combat {
   }
 
   damagePlayer(tp: PlayerState, te: Entity, dmg: number, lethal: boolean, src: Src) {
+    if ((tp as any).god) return;
+    // La proyección de Eco se corta si alguien hiere el cuerpo.
+    if (te.ghostOwner) this.w.relics.endGhost(te.ghostOwner, false);
     this.w.nightlife.stop(te);
     tp.hp -= dmg; tp.lastCombatAt = Date.now();
     this.notice(te.conn, 'bad', `${src.name} te ${lethal ? 'hiere' : 'golpea'}: −${dmg} de salud.`);
@@ -587,6 +597,8 @@ export class Combat {
     for (const o of target.zone.query(target.x, target.y, 12)) if (o !== target && o.faction === target.faction && o.npcType === target.npcType && o.state !== 'downed' && !o.aggro) { o.aggro = attacker.id; o.aggroLethal = target.aggroLethal; }
   }
 
+  /** Deja KO a un PNJ (sin matarlo). */
+  knockOut(target: Entity, _by?: PlayerConn) { if (target.state !== 'downed') { this.npcDowned(target, false); this.bump(target); } }
   private npcDowned(target: Entity, lethal: boolean) {
     target.state = 'downed'; target.npcLethalDown = lethal; target.path = []; target.moving = false; target.aggro = undefined;
     target.downedUntil = Date.now() + (lethal ? 20000 : 60000);
@@ -603,9 +615,11 @@ export class Combat {
     if (pf.has('frenesi')) { const ef = effective(this.c, p); p.hp = Math.min(ef.hpMax, p.hp + 10); p.nextAttackAt = 0; this.notice(c, 'good', 'Frenesí: +10 de salud y siguiente ataque inmediato.'); }
     const all = this.claimable(target, p);
     const pay = all.filter((b) => !lethal || !b.aliveOnly);
+    if (!tpl) void this.w.legends.event(c, { type: 'kill', faction: target.faction, npcType: target.npcType }).catch(() => {});
     if (pay.length) {
       const mods = this.c.professions.find((x) => x.id === p.profession)?.mods;
       const paid = await this.sv.bounties.claim(p, pay, mods?.bounty ?? 0, opId);
+      if (paid) void this.w.legends.event(c, { type: 'bounty', amount: paid }).catch(() => {});
       if (paid) this.w.send(c, { t: 'reward', title: `Recompensa cobrada: ${target.name}`, lines: [`+${paid} €$`, ...pay.map((b) => `${b.poster === 'particular' ? 'Particular' : b.poster.toUpperCase()}: ${b.reason}`)] });
       this.sv.updateMarker(target);
       if (target.fugitive) {
@@ -666,7 +680,7 @@ export class Combat {
     if (lvl === 'disputed' && !cops) return;
     const police = lvl === 'public' ? 1 : this.policeAt(c.e!);
     if (!police) return;
-    if ((kind === 'kill' || (kind === 'down' && lethal)) && this.cameraSees(c.e!) && !((p.buffs.invisible ?? 0) > Date.now())) void this.identify(c, kind === 'kill' ? 'asesinato' : 'intento de asesinato');
+    if ((kind === 'kill' || (kind === 'down' && lethal)) && this.cameraSees(c.e!) && !((p.buffs.invisible ?? 0) > Date.now()) && !effective(this.c, p).matrix.cameraGhost) void this.identify(c, kind === 'kill' ? 'asesinato' : 'intento de asesinato');
     const flags = perkMods(this.c, p).flags;
     if (flags.has('fantasma') && ![...c.e!.zone.query(c.e!.x, c.e!.y, 18)].some((o) => o.npcType === 'police' || o.npcType === 'hierro')) return;
     if ((p.buffs.invisible ?? 0) > Date.now()) return;
@@ -774,7 +788,7 @@ export class Combat {
       if (docs.length) { const d = docs[Math.floor(this.rng() * docs.length)]; line = `Te cuento un secreto: ${d.rumor}`; this.discover(c, d.id); }
     } else if ((target.npcType === 'civil' || target.npcType === 'gang') && this.rng() < 0.3) {
       // Soplos: dónde se esconde algún fugitivo (sirve para marcarlo como objetivo).
-      const r = this.w.intel.rumor(p); if (r) { line = r; this.w.progress.gain(p, 'investigacion', 2); }
+      const r = this.rng() < 0.35 ? this.w.legends.rumor(p) : this.w.intel.rumor(p); if (r) { line = r; this.w.progress.gain(p, 'investigacion', 2); }
     }
     this.w.progress.gain(p, 'actuacion', 1);
     for (const o of target.zone.query(target.x, target.y, 20)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'speech', id: target.id, text: line });
@@ -834,6 +848,8 @@ export class Combat {
     if (p.ram < cost) throw new GameError('RAM insuficiente: espera a que se recargue.');
     if (Math.hypot(target.x - e.x, target.y - e.y) > q.range) throw new GameError('Fuera de alcance de tu deck.');
     if (target.npcType === 'essential' && q.effect !== 'scan' && q.effect !== 'deepscan') throw new GameError('Esta persona no se puede atacar.');
+    { const tpH = this.w.playerOf(target); if (tpH && effective(this.c, tpH).matrix.hackImmune) throw new GameError(`La mente de ${target.name} es un muro rojo. Algo dentro se ríe de ti.`); }
+    if (e.ghostOf) throw new GameError('Eres una proyección: no puedes hackear.');
     if (['damage', 'knockout', 'kill', 'drain'].includes(q.effect) && dangerAt(e.zone.grid, e.x, e.y) === 'protected') throw new GameError('Zona protegida.');
     if (q.effect === 'cash' && target.objKind === 'atm' && (this.atmCooldown.get(target.name + target.id) ?? 0) > Date.now()) throw new GameError('Este cajero está vacío: se recarga en unas horas.');
     if (p.sleeping) this.sv.wake(c);
@@ -866,6 +882,7 @@ export class Combat {
       if (!tp && target.kind === 'npc') this.provokeNpc(target, e, false);
     } else {
       this.notice(c, 'good', `✔ ${q.name} (${score} contra ${dv}).`);
+      if (target.kind !== 'object') void this.w.legends.event(c, { type: 'hack' }).catch(() => {});
       const [a, b] = q.amount;
       switch (q.effect) {
         case 'scan': {
@@ -1093,7 +1110,7 @@ export class Combat {
       }
       e.path = []; e.moving = false;
       if ((e.nextAttackAt ?? 0) <= now) {
-        e.nextAttackAt = now + wp.w.cooldown * 1000 * 1.3;
+        e.nextAttackAt = now + (wp.w.cooldown * 1000 * 1.3) / (e.timeScale ?? 1);
         const a = this.npcAttackScore(e) + this.roll(), d = this.defenseScore(tp) + this.roll();
         const cover = wp.w.kind === 'ranged' ? this.coverOf(e, t) : 0;
         const hitOk = a >= d + cover;
@@ -1162,7 +1179,7 @@ export class Combat {
     }
     e.path = []; e.moving = false;
     if ((e.nextAttackAt ?? 0) > now) return true;
-    e.nextAttackAt = now + wp.w.cooldown * 1000 * 1.3;
+    e.nextAttackAt = now + (wp.w.cooldown * 1000 * 1.3) / (e.timeScale ?? 1);
     const kind = wp.w.kind === 'ranged' ? 'shot' : 'hit';
     const a = this.npcAttackScore(e) + this.roll(), d = this.npcDefenseScore(t) + (wp.w.kind === 'ranged' ? this.coverOf(e, t) : 0) + this.roll();
     if (a < d) { this.fx(e, kind, e.id, t.id, { weapon: wp.id, hit: false }); if (t.npcType === 'civil' && !t.fleeUntil) this.w.threats.react(t, e); return true; }
@@ -1230,9 +1247,11 @@ export class Combat {
   async ability(c: PlayerConn, cyberId: string) {
     const p = c.p!, e = c.e!;
     if (p.status !== 'alive') throw new GameError('Ahora no.');
+    if (cyberId.startsWith('matriz-')) return this.w.relics.ability(c, cyberId);
     const inst = p.cyber.find((x) => x.location === 'installed' && x.def === cyberId);
     const d = inst && this.c.cyberware.find((x) => x.id === cyberId);
     if (!d?.ability) throw new GameError('No tienes ese implante instalado.');
+    if (d.ability.kind === 'kairos') return this.w.relics.toggleKairos(c, d.ability.power);
     const now = Date.now();
     if ((p.abilityCd[cyberId] ?? 0) > now) throw new GameError(`${d.ability.name}: se recarga en ${Math.ceil(((p.abilityCd[cyberId] ?? 0) - now) / 1000)} s.`);
     const pm = perkMods(this.c, p);
@@ -1252,6 +1271,7 @@ export class Combat {
       case 'disparo-cargado': p.buffs['disparo-cargado'] = now + 30000; this.notice(c, 'good', `${ab.name}: tu próximo disparo hará el doble de daño.`); break;
       case 'pulso': case 'torbellino': {
         if (prot) throw new GameError('Zona protegida.');
+        if (ab.kind === 'pulso') this.w.relics.emp(e.zone.id, e.x, e.y, 5, c);
         const list = hostiles(ab.kind === 'pulso' ? 5 : 2.2);
         if (!list.length) { this.notice(c, 'info', 'No hay nadie a tu alrededor.'); break; }
         const boost = pm.flags.has('corazon-cromo') ? 1.25 : 1;

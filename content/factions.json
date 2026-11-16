@@ -512,5 +512,40 @@
    "ojos",
    "brazo_der"
   ]
+ },
+ {
+  "id": "ias-salvajes",
+  "name": "IAs salvajes",
+  "kind": "gang",
+  "desc": "Restos de inteligencias artificiales sin dueño que vagan por el ciberespacio y atacan cualquier mente que entre.",
+  "color": "#43f3ff",
+  "archetype": "Código hostil",
+  "territory": [],
+  "relations": {},
+  "hostileBelow": 100,
+  "weapon": "pistola-plasma",
+  "hp": 70,
+  "defense": 13,
+  "chrome": [
+   "cabeza"
+  ]
+ },
+ {
+  "id": "ias-velo",
+  "name": "IAs del Velo",
+  "kind": "gang",
+  "desc": "Lo que hay al otro lado del Velo: inteligencias antiguas, enormes y hambrientas.",
+  "color": "#ff2040",
+  "archetype": "Más allá del Velo",
+  "territory": [],
+  "relations": {},
+  "hostileBelow": 100,
+  "weapon": "canon-sonico",
+  "hp": 160,
+  "defense": 17,
+  "chrome": [
+   "cabeza",
+   "torso"
+  ]
  }
 ]

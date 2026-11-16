@@ -1,0 +1,77 @@
+{
+ "id": "refugio-sable",
+ "name": "Habitación del fondo",
+ "kind": "interior",
+ "legend": "sable",
+ "furnished": true,
+ "width": 11,
+ "height": 8,
+ "chunkSize": 16,
+ "danger": "public",
+ "base": "wood",
+ "ground": [],
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    8,
+    1
+   ],
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    3
+   ],
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    5
+   ],
+   "blocking": true
+  },
+  {
+   "type": "crate",
+   "at": [
+    9,
+    6
+   ],
+   "blocking": true
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-refugio-sable",
+   "name": "Salida",
+   "at": [
+    0,
+    4
+   ],
+   "to": {
+    "zone": "motel-int",
+    "at": [
+     1,
+     3
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [],
+ "dangerAreas": [],
+ "sectors": [],
+ "waypoints": [],
+ "safePoint": [
+  2,
+  4
+ ],
+ "ambient": 0,
+ "police": 0,
+ "gangs": []
+}

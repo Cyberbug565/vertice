@@ -737,5 +737,75 @@
    "restore": "hp",
    "amount": 5
   }
+ },
+ {
+  "id": "matriz-carmin",
+  "name": "Matriz CARMÍN",
+  "desc": "Única. Una IA burlona vestida de rojo y verde vive aquí dentro. Se inserta en el zócalo de matrices y ya no sale.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "mitico"
+ },
+ {
+  "id": "matriz-eco",
+  "name": "Matriz ECO",
+  "desc": "Única. El engrama de un rockero muerto: puedes proyectarlo y controlarlo un rato.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "mitico"
+ },
+ {
+  "id": "matriz-centinela",
+  "name": "Matriz Centinela",
+  "desc": "Protocolo táctico militar para el zócalo de matrices.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "legendario",
+  "price": 45000
+ },
+ {
+  "id": "matriz-berserker",
+  "name": "Matriz Berserker",
+  "desc": "Furia química y neuronal. Peligrosa para la cabeza.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "legendario",
+  "price": 52000
+ },
+ {
+  "id": "matriz-espectro",
+  "name": "Matriz Espectro",
+  "desc": "Silencio digital: te vuelves difícil de ver.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "epico",
+  "price": 26000
+ },
+ {
+  "id": "ampliacion-zocalo",
+  "name": "Módulo de ampliación de zócalo",
+  "desc": "Añade una ranura al zócalo de matrices (máximo 4). Se usa desde el inventario.",
+  "weight": 0.1,
+  "category": "equipo",
+  "rarity": "legendario",
+  "price": 35000
+ },
+ {
+  "id": "inmunosupresor",
+  "name": "Neuroinhibidor",
+  "desc": "Baja el nivel de ciberpsicosis, pero no acorta un episodio en curso.",
+  "weight": 0.1,
+  "category": "medicina",
+  "rarity": "raro",
+  "price": 450
+ },
+ {
+  "id": "cuna-neural",
+  "name": "Cuna neural doméstica",
+  "desc": "Silla de inmersión para tu casa: úsala desde el inventario dentro de tu vivienda para entrar en el ciberespacio.",
+  "weight": 12,
+  "category": "equipo",
+  "rarity": "legendario",
+  "price": 90000
  }
 ]

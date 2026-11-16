@@ -323,14 +323,6 @@
   {
    "type": "column",
    "at": [
-    1,
-    10
-   ],
-   "color": "#3a3a3a"
-  },
-  {
-   "type": "column",
-   "at": [
     12,
     10
    ],
@@ -361,6 +353,22 @@
     ]
    },
    "danger": "disputed"
+  },
+  {
+   "id": "puerta-garaje-cometa",
+   "name": "Puerta sin rótulo",
+   "at": [
+    0,
+    9
+   ],
+   "to": {
+    "zone": "garaje-cometa",
+    "at": [
+     1,
+     5
+    ]
+   },
+   "danger": "public"
   }
  ],
  "objects": [
