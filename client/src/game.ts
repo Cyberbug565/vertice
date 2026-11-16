@@ -13,6 +13,9 @@ import { settingsPanel } from './ui/screens';
 import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen } from './ui/charscreen';
 import { autoPanel, elevatorPanel, hiringPanel } from './ui/work';
 import { searchPanel, trunkPanel } from './ui/intel';
+import { actionFor, keyOf, keymap } from './keymap';
+import { BodyPanel } from './ui/body';
+import { keysPanel, pauseMenu } from './ui/pause';
 import { buildingPanel, dealerPanel, marketLivePanel, propsPanel, realtyPanel, ringPrompt, scanCard, stashPanel, type PropCtx } from './ui/property';
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
 
@@ -90,20 +93,29 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const progress = h('div', { class: 'progress', style: { display: 'none' } }, h('i'));
   const stanceSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Postura' });
   const renderStance = () => stanceSeg.replaceChildren(...STANCES.map((s) => h('button', { 'aria-pressed': String(st.sheet?.stance === s.id), title: s.desc, onclick: () => { net.send({ t: 'stance', stance: s.id } as any); blip(); } }, s.label)));
-  const ib = (icon: string, label: string, key: string, fn: () => void, id?: string, extra = '') => h('button', { class: `ibtn ${extra}`, id, onclick: fn, title: `${label} (${key})` }, h('span', { class: 'ico' }, icon), h('span', { class: 'lbl' }, label));
-  const bottom = h('div', { class: 'hud hud-bottom' }, actionEl, progress,
-    h('div', { class: 'toolbar' },
-      ib('✋', 'Cancelar', 'S', () => stop(), 'btn-stop'), ib('🏃', 'Retirada', 'R', () => retreat(), 'btn-retreat', 'danger'), stanceSeg,
-      ib('👟', 'Correr', 'Mayús', () => toggleRun(), 'btn-run'), ib('🤖', 'Automático', 'A', () => toggleAuto(), 'btn-auto'),
-      ib('💤', 'Dormir', 'Z', () => toggleSleep(), 'btn-sleep')),
-    h('div', { class: 'toolbar' },
-      ib('📓', 'Diario', 'J', () => journalPanel(), 'btn-journal'), ib('🧍', 'Personaje', 'C', () => charScreen('sheet'), 'btn-sheet'), ib('🎒', 'Inventario', 'I', () => charScreen('inv'), 'btn-inv'),
-      ib('🦾', 'Cromo', 'X', () => charScreen('cyber')), ib('⭐', 'Habilidades', 'H', () => charScreen('skills'), 'btn-skills'),
-      ib('🗺', 'Mapa', 'M', () => mapPanel()), ib('⚑', 'Facciones', 'F', () => net.send({ t: 'factions' } as any)),
-      ib('🏠', 'Propiedades', 'P', () => net.send({ t: 'props' } as any)), ib('🚗', 'Conducir', 'V', () => toggleDrive(), 'btn-drive'),
-      ib('💼', 'Empleos', 'O', () => net.send({ t: 'jobs' } as any)), ib('📈', 'Mercado', 'K', () => marketLive(true)), ib('🎯', 'Recompensas', 'B', () => net.send({ t: 'bounties' } as any)),
-      ib('📱', 'Buscar', 'G', () => searchPanel({ net }, 'phone')), ib('🧳', 'Maletero', 'T', () => net.send({ t: 'trunk', action: 'view' } as any)),
-      ib('✚', 'Ámbar', 'U', () => net.send({ t: 'ambar' } as any)), ib('⚙', 'Ajustes', 'Esc', () => settingsPanel(() => view.applySettings()))));
+  // v0.7: barra inferior compacta. Arriba, las acciones; abajo, los paneles como iconos con su tecla (cambia en Esc → Teclas).
+  const ib = (icon: string, label: string, action: string, fn: () => void, id?: string, extra = '') => h('button', { class: `ibtn ${extra}`, id, onclick: fn, title: `${label} (${keyOf(action)})`, 'aria-label': label },
+    h('span', { class: 'ico' }, icon), h('span', { class: 'lbl' }, label), h('span', { class: 'kbd' }, keyOf(action)));
+  const toolbarA = h('div', { class: 'toolbar actions' }), toolbarB = h('div', { class: 'toolbar panels' });
+  const renderToolbar = () => {
+    toolbarA.replaceChildren(
+      ib('✋', 'Cancelar', 'cancel', () => stop(), 'btn-stop'), ib('🏃', 'Retirada', 'retreat', () => retreat(), 'btn-retreat', 'danger'), stanceSeg,
+      ib('👟', 'Correr', 'run', () => toggleRun(), 'btn-run'), ib('💃', 'Bailar', 'dance', () => openDances(), 'btn-dance'), ib('💤', 'Dormir', 'sleep', () => toggleSleep(), 'btn-sleep'),
+      ib('🤖', 'Auto', 'auto', () => toggleAuto(), 'btn-auto'));
+    toolbarB.replaceChildren(
+      ib('🧍', 'Personaje', 'character', () => charScreen('sheet'), 'btn-sheet', 'mini'), ib('🎒', 'Inventario', 'inventory', () => charScreen('inv'), 'btn-inv', 'mini'),
+      ib('🦾', 'Cromo', 'cyber', () => charScreen('cyber'), undefined, 'mini'), ib('⭐', 'Habilidades', 'skills', () => charScreen('skills'), 'btn-skills', 'mini'),
+      ib('🫀', 'Cuerpo', 'body', () => bodyPanel.toggle(), 'btn-body', 'mini'), ib('🗺', 'Mapa', 'map', () => mapPanel(), undefined, 'mini'), ib('📓', 'Diario', 'journal', () => journalPanel(), 'btn-journal', 'mini'),
+      ib('📱', 'Buscar', 'search', () => searchPanel({ net }, 'phone'), undefined, 'mini'), ib('🚗', 'Conducir', 'drive', () => toggleDrive(), 'btn-drive', 'mini'), ib('🧳', 'Maletero', 'trunk', () => net.send({ t: 'trunk', action: 'view' } as any), undefined, 'mini'),
+      ib('💼', 'Empleos', 'jobs', () => net.send({ t: 'jobs' } as any), undefined, 'mini'), ib('🏠', 'Propiedades', 'props', () => net.send({ t: 'props' } as any), undefined, 'mini'),
+      ib('📈', 'Mercado', 'market', () => marketLive(true), undefined, 'mini'), ib('🎯', 'Recompensas', 'bounties', () => net.send({ t: 'bounties' } as any), undefined, 'mini'),
+      ib('⚑', 'Facciones', 'factions', () => net.send({ t: 'factions' } as any), undefined, 'mini'), ib('✚', 'Ámbar', 'ambar', () => net.send({ t: 'ambar' } as any), undefined, 'mini'),
+      h('button', { class: 'ibtn mini', title: 'Menú (Esc)', 'aria-label': 'Menú', onclick: () => openPause() }, h('span', { class: 'ico' }, '☰'), h('span', { class: 'lbl' }, 'Menú'), h('span', { class: 'kbd' }, 'Esc')));
+  };
+  const bottom = h('div', { class: 'hud hud-bottom' }, actionEl, progress, toolbarA, toolbarB);
+  // Panel del cuerpo (siempre a mano mientras peleas).
+  const bodyPanel = new BodyPanel(net, (t, k) => toast(t, k), () => keyOf('body'));
+  try { if (localStorage.getItem('vertice.bodyPanel') === '0') bodyPanel.toggle(false); } catch {}
   // Arma equipada, munición y RAM del deck.
   const weaponEl = h('div', { class: 'hud hud-weapon' });
   // Habilidades de los implantes (teclas 1–4) y avisos de experiencia de habilidad (barras azules).
@@ -144,17 +156,27 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const toasts = h('div', { class: 'toasts', 'aria-live': 'polite' });
   const chatLog = h('div', { class: 'log', 'aria-live': 'polite' });
-  const chatIn = h('input', { id: 'chat-input', placeholder: 'Chat local (Enter)…', maxLength: 200 }) as HTMLInputElement;
+  const chatIn = h('input', { id: 'chat-input', placeholder: `Chat local (${keyOf('chat')})…`, maxLength: 200, 'aria-label': 'Chat local' }) as HTMLInputElement;
   chatIn.addEventListener('keydown', (e) => {
     e.stopPropagation();
     if (e.key === 'Enter') { const t = chatIn.value.trim(); if (t) net.send({ t: 'chat', channel: 'local', text: t } as any); chatIn.value = ''; chatIn.blur(); }
     if (e.key === 'Escape') chatIn.blur();
   });
-  const chat = h('div', { class: 'chat' }, chatLog, chatIn);
+  const chat = h('div', { class: 'chat' }, h('div', { class: 'chat-tag' }, 'LOCAL · lo oyen los de cerca'), chatLog, chatIn);
+  // Chat global, a la derecha: lo lee toda la ciudad.
+  const globalLog = h('div', { class: 'log', 'aria-live': 'polite' });
+  const globalIn = h('input', { id: 'chat-global-input', placeholder: `Chat global (${keyOf('chatGlobal')})…`, maxLength: 200, 'aria-label': 'Chat global' }) as HTMLInputElement;
+  globalIn.addEventListener('keydown', (e) => {
+    e.stopPropagation();
+    if (e.key === 'Enter') { const t = globalIn.value.trim(); if (t) net.send({ t: 'chat', channel: 'global', text: t } as any); globalIn.value = ''; globalIn.blur(); }
+    if (e.key === 'Escape') globalIn.blur();
+  });
+  const globalChat = h('div', { class: 'chat chat-global' }, h('div', { class: 'chat-tag' }, 'GLOBAL · toda la ciudad'), globalLog, globalIn);
   const tooltip = h('div', { class: 'tooltip', style: { display: 'none' } });
   const dialogEl = h('div', { class: 'dialog', id: 'dialog', role: 'dialog', style: { display: 'none' } });
   const ctxOverlay = h('div', { class: 'overlay', style: { display: 'none' } }, h('div', { class: 'reward' }, h('h2', {}, 'Recuperando gráficos…'), h('p', {}, 'El contexto gráfico se ha perdido. La simulación sigue en el servidor.')));
-  $ui().append(tl, tr, bottom, weaponEl, abilityEl, xpPops, toasts, chat, tooltip, dialogEl, ctxOverlay);
+  $ui().append(tl, tr, bottom, weaponEl, abilityEl, xpPops, toasts, chat, globalChat, bodyPanel.el, tooltip, dialogEl, ctxOverlay);
+  queueMicrotask(() => renderToolbar());
 
   const toast = (text: string, kind: 'info' | 'good' | 'warn' | 'bad' = 'info') => {
     const t = h('div', { class: `toast ${kind}` }, text);
@@ -165,7 +187,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const setAction = (text: string, duration?: number) => {
     st.action = text;
-    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : 'Haz clic en el suelo para moverte, o en una persona, puerta u objeto para interactuar.';
+    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · clic en alguien: menú · mantén clic derecho para apuntar o bloquear · Esc: menú`;
     const bar = progress.firstChild as HTMLElement;
     if (duration) {
       progress.style.display = 'block';
@@ -215,6 +237,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const sb = document.getElementById('btn-sleep'); if (sb) { sb.querySelector('.ico')!.textContent = s.sleeping ? '☀' : '💤'; sb.querySelector('.lbl')!.textContent = s.sleeping ? 'Despertar' : 'Dormir'; }
     renderStance();
     view.setMyAttributes(s.attributes as any, s.substances.speed);
+    bodyPanel.update(s);
+    document.body.classList.toggle('psicosis', s.psychosis === 'Ciberpsicosis');
   };
   const renderLocation = () => {
     sectorEl.textContent = st.sector;
@@ -349,24 +373,25 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const seq = net.send({ t: 'retreat' } as any);
     st.pending.set(seq, (a) => { if (a.ok && a.path) { view.confirmPath(a.path); st.destination = a.info ?? 'Refugio'; setAction('Retirándose'); } else toast(a.reason ?? 'Sin retirada posible', 'warn'); });
   };
-  view.onGroundClick = (x, y) => {
+  // v0.7 · Ratón: el suelo ya no mueve (se anda con WASD). Clic izquierdo en una persona (o en ti) abre su menú;
+  // en una puerta u objeto, interactúa. Con el clic derecho mantenido (apuntar o bloquear), clic izquierdo en alguien = atacar.
+  let aimPart: string = 'torso';
+  view.onGroundClick = () => {
     closeDanceMenus();
     document.getElementById('underworld-panel')?.remove();
-    if (st.dialog) net.send({ t: 'closeDialog' } as any);
-    const predicted = view.predictMove(x, y);
-    if (!predicted) { toast('Destino inaccesible: ahí hay un edificio, agua u obstáculo.', 'warn'); return; }
-    const seq = net.send({ t: 'move', x, y } as any);
-    const end = predicted[predicted.length - 1];
-    st.destination = `(${end[0].toFixed(0)}, ${end[1].toFixed(0)})`;
-    setAction('Caminando');
-    st.pending.set(seq, (a) => {
-      if (a.ok && a.path) view.confirmPath(a.path);
-      else { view.cancelPrediction(); st.destination = ''; setAction(''); toast(`Orden rechazada: ${a.reason}`, 'warn'); }
-    });
+    document.getElementById('target-menu')?.remove();
   };
   view.onEntityClick = (e: CEnt) => {
     closeDanceMenus();
-    if (e.s.kind === 'door' && e.s.danger === 'disputed' && !confirm(`${e.s.name} lleva a una zona disputada con PvP letal. ¿Cruzar?`)) return;
+    const person = e.s.kind === 'player' || e.s.kind === 'npc';
+    if (e.s.id === view.meId) { selfMenu(); return; }
+    if (person && view.guarding) {
+      const lethal = st.sheet?.weapon?.nonlethal !== 'solo';
+      net.send({ t: 'hostile', target: e.s.id, action: lethal ? 'attack' : 'knockout', opId: newOpId(), part: aimPart } as any);
+      return;
+    }
+    if (person && e.s.kind === 'player' || (person && e.s.npcType && e.s.npcType !== 'essential') || (person && e.s.dead)) { net.send({ t: 'menu', target: e.s.id } as any); return; }
+    if (e.s.kind === 'door' && e.s.danger === 'disputed' && !confirm(`${e.s.name} lleva a una zona peligrosa (roja). ¿Cruzar?`)) return;
     const seq = net.send({ t: 'interact', target: e.s.id } as any);
     st.destination = e.s.name;
     setAction(e.s.kind === 'door' ? 'Yendo a la puerta' : `Yendo hacia ${e.s.name}`);
@@ -375,6 +400,47 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       else if (!a.ok) { toast(a.reason ?? 'No disponible', 'warn'); st.destination = ''; setAction(''); }
     });
   };
+  /** Menú propio (clic izquierdo sobre tu personaje). */
+  const selfMenu = () => {
+    document.getElementById('target-menu')?.remove();
+    const me = view.ents.get(view.meId);
+    const sp = me ? view.world.toGlobal(worldToScreen(me.x, me.y)) : { x: 400, y: 300 };
+    const item = (label: string, key: string, fn: () => void) => h('button', { class: 'ctx-opt', onclick: () => { m.remove(); fn(); } }, h('span', {}, label), h('span', { class: 'kbd' }, keyOf(key)));
+    const m = h('div', { class: 'ctx-menu', id: 'target-menu', role: 'menu', style: { left: `${Math.min(window.innerWidth - 300, sp.x + 14)}px`, top: `${Math.max(10, sp.y - 120)}px` } },
+      h('div', { class: 'ctx-head' }, h('b', {}, st.sheet?.name ?? 'Tú'), h('button', { class: 'btn small', onclick: () => m.remove() }, '✕')),
+      h('div', { class: 'ctx-group' },
+        item('💃 Bailar', 'dance', () => openDances()), item('🫀 Cuerpo y heridas', 'body', () => bodyPanel.toggle(true)), item('🎒 Inventario', 'inventory', () => charScreen('inv')),
+        item(st.sheet?.sleeping ? '☀ Despertar' : '💤 Dormir aquí', 'sleep', () => toggleSleep()), item('🏃 Retirada al refugio', 'retreat', () => retreat())),
+      h('div', { class: 'ctx-group' }, h('div', { class: 'ctx-glabel' }, 'Al atacar con clic derecho, apunta a:'),
+        h('div', { class: 'ctx-parts' }, ...['torso', 'cabeza', 'brazos', 'manos', 'piernas'].map((pp) => h('button', { class: `chip-btn${aimPart === pp ? ' on' : ''}`, onclick: (ev: Event) => { aimPart = pp; (ev.currentTarget as HTMLElement).parentElement!.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b === ev.currentTarget)); } }, pp)))));
+    $ui().append(m);
+    const close = (ev: MouseEvent) => { if (!m.contains(ev.target as Node)) { m.remove(); window.removeEventListener('mousedown', close, true); } };
+    setTimeout(() => window.addEventListener('mousedown', close, true), 50);
+  };
+  // Clic derecho mantenido: apuntar (armas a distancia) o bloquear (cuerpo a cuerpo). Se ve una retícula junto al cursor.
+  const reticle = h('div', { class: 'reticle', style: { display: 'none' } }, h('i'));
+  $ui().append(reticle);
+  view.onGuard = (on) => {
+    net.send({ t: 'guard', on } as any);
+    guardSince = on ? performance.now() : 0;
+    reticle.style.display = on ? '' : 'none';
+    if (on) document.getElementById('target-menu')?.remove();
+  };
+  let guardSince = 0;
+  timers.push(window.setInterval(() => {
+    if (!view.guarding) return;
+    const ranged = st.sheet?.weapon?.kind === 'ranged';
+    const aimT = (st.sheet?.aim.time ?? 1.5) * 1000;
+    const k = Math.min(1, (performance.now() - guardSince) / aimT);
+    const t = view.hovered && (view.hovered.s.kind === 'npc' || view.hovered.s.kind === 'player') && view.hovered.s.id !== view.meId ? view.hovered : null;
+    const d = t ? Math.hypot(t.x - view.me.x, t.y - view.me.y) : Infinity;
+    const safe = ranged && k >= 1 && d <= (st.sheet?.aim.range ?? 0);
+    const inRange = d <= (st.sheet?.weapon?.range ?? 1.5);
+    reticle.className = `reticle ${ranged ? 'aim' : 'block'}${safe ? ' safe' : inRange ? ' range' : ''}`;
+    reticle.style.left = `${view.cursor.sx}px`; reticle.style.top = `${view.cursor.sy}px`;
+    (reticle.firstChild as HTMLElement).style.setProperty('--k', String(ranged ? k : 1));
+    reticle.title = ranged ? (safe ? 'Tiro seguro' : k < 1 ? 'Apuntando…' : 'Fuera de tiro seguro') : 'Bloqueando';
+  }, 50));
   const openDances = () => {
     closePanels();
     danceWheel(localDance, (move) => {
@@ -389,19 +455,12 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       });
     });
   };
-  view.onRightClick = (x, y) => {
-    closeDanceMenus();
-    if (view.hovered && view.hovered.s.id !== view.meId) net.send({ t: 'menu', target: view.hovered.s.id } as any);
-    else {
-      document.getElementById('target-menu')?.remove();
-      worldActions(x, y, openDances, stop);
-    }
-  };
+  void worldActions;
   // La etiqueta flotante solo tiene sentido sobre el mapa: se oculta al pasar por encima de la interfaz.
   $ui().addEventListener('pointerover', (ev) => { if (ev.target !== $ui()) tooltip.style.display = 'none'; });
   view.onHover = (e, sx, sy) => {
     if (!e) { tooltip.style.display = 'none'; return; }
-    const hint = e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'player' ? 'Otra persona · usa el chat local' : e.s.kind === 'object' ? 'Clic: examinar' : 'Clic: hablar';
+    const hint = e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? 'Clic: examinar' : view.guarding ? 'Clic: ¡atacar!' : 'Clic: menú · clic derecho mantenido + clic: atacar';
     tooltip.replaceChildren(h('b', {}, e.s.name), e.s.title ? ` · ${e.s.title}` : '', e.s.label ? h('div', { class: 'muted' }, e.s.label) : '', h('div', { class: 'cy' }, hint));
     tooltip.style.display = 'block'; tooltip.style.left = `${sx + 14}px`; tooltip.style.top = `${sy + 14}px`;
   };
@@ -409,51 +468,90 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
 
   // Tab y Espacio solo actúan sobre el mundo si el foco no está en un control del HUD (para no romper la navegación por teclado).
   const onWorld = () => { const a = document.activeElement; return !a || a === document.body || a.tagName === 'CANVAS'; };
+  // v0.7 · Teclado configurable (Esc → Teclas). WASD o flechas para andar.
+  const held = new Set<string>();
+  const MOVE: Record<string, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+  const ARROWS: Record<string, string> = { arrowup: 'up', arrowdown: 'down', arrowleft: 'left', arrowright: 'right' };
+  let lastSteer = { dx: 0, dy: 0 }, lastSteerAt = 0;
+  const pushSteer = (force = false) => {
+    let sx = 0, sy = 0;
+    for (const a of held) { const v = MOVE[a]; if (v) { sx += v[0]; sy += v[1]; } }
+    // Pantalla → mundo isométrico: arriba = (−1,−1), derecha = (1,−1).
+    let dx = sx - sy, dy = -sx - sy;
+    const len = Math.hypot(dx, dy); if (len) { dx /= len; dy /= len; }
+    view.steer = { dx, dy };
+    const changed = dx !== lastSteer.dx || dy !== lastSteer.dy;
+    if (changed || force || ((dx || dy) && performance.now() - lastSteerAt > 450)) {
+      if (changed && (dx || dy)) { closeDanceMenus(); if (st.dialog) net.send({ t: 'closeDialog' } as any); view.cancelPrediction(); st.destination = ''; }
+      net.send({ t: 'steer', dx, dy } as any); lastSteer = { dx, dy }; lastSteerAt = performance.now();
+    }
+  };
+  timers.push(window.setInterval(() => { if (view.steer.dx || view.steer.dy) pushSteer(); }, 200));
+  window.addEventListener('blur', () => { held.clear(); pushSteer(true); }, { signal: eventScope.signal });
+  window.addEventListener('keyup', (e) => {
+    const a = ARROWS[e.key.toLowerCase()] ?? actionFor(e.key.toLowerCase());
+    if (a && MOVE[a] && held.delete(a)) pushSteer();
+  }, { signal: eventScope.signal });
+  const openPause = () => pauseMenu({ onSettings: () => settingsPanel(() => view.applySettings()), onLogout: () => onExit('logout'), onKeysChanged: () => { renderToolbar(); chatIn.placeholder = `Chat local (${keyOf('chat')})…`; globalIn.placeholder = `Chat global (${keyOf('chatGlobal')})…`; } });
   const keys = (e: KeyboardEvent) => {
-    if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
+    const tag = (e.target as HTMLElement)?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (document.getElementById('keys-panel') || document.getElementById('pause-menu')) return;
     const k = e.key.toLowerCase();
     if (document.getElementById('dance-wheel')) return;
-    if (k === 'escape' && closeDanceMenus()) return;
-    if (k === 'y') { openDances(); return; }
-    if (k === 'escape') { if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove(); else if (document.querySelector('.panel')) closePanels(); else if (st.dialog) net.send({ t: 'closeDialog' } as any); else stop(); }
-    else if (k === 's') stop();
-    else if (k === 'r') retreat();
-    else if (k === 'j') journalPanel();
-    else if (k === 'c') charScreen('sheet');
-    else if (k === 'i') charScreen('inv');
-    else if (k === 'x') charScreen('cyber');
-    else if (k === 'h') charScreen('skills');
-    else if (k === 'p') net.send({ t: 'props' } as any);
-    else if (k === 'v') toggleDrive();
-    else if (k === 'shift') toggleRun();
-    else if (k === 'a') toggleAuto();
-    else if (k === 'm') mapPanel();
-    else if (!st.dialog && /^[1-4]$/.test(k) && st.sheet?.abilities[Number(k) - 1]) net.send({ t: 'ability', id: st.sheet.abilities[Number(k) - 1].id } as any);
-    else if (k === 'f') net.send({ t: 'factions' } as any);
-    else if (k === 'u') net.send({ t: 'ambar' } as any);
-    else if (k === 'z') toggleSleep();
-    else if (k === 'o') net.send({ t: 'jobs' } as any);
-    else if (k === 'k') marketLive(true);
-    else if (k === 'b') net.send({ t: 'bounties' } as any);
-    else if (k === 'g') searchPanel({ net }, 'phone');
-    else if (k === 't') net.send({ t: 'trunk', action: 'view' } as any);
-    else if (k === 'enter') { e.preventDefault(); chatIn.focus(); }
-    else if (k === 'tab' && onWorld()) {
-      // Selección accesible: recorre las entidades interactivas cercanas por distancia.
-      e.preventDefault();
-      const near = [...view.ents.values()].filter((x) => x.s.interactive && x.s.id !== view.meId && Math.hypot(x.x - view.me.x, x.y - view.me.y) < 14)
-        .sort((a, b) => Math.hypot(a.x - view.me.x, a.y - view.me.y) - Math.hypot(b.x - view.me.x, b.y - view.me.y));
-      if (!near.length) { toast('No hay nada cerca con lo que interactuar.'); return; }
-      const idx = near.indexOf(view.hovered as CEnt);
-      const next = near[(idx + (e.shiftKey ? near.length - 1 : 1)) % near.length];
-      view.hovered = next;
-      const sp = view.world.toGlobal(worldToScreen(next.x, next.y));
-      view.onHover(next, sp.x, sp.y);
+    if (k === 'escape') {
+      if (closeDanceMenus()) return;
+      if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove();
+      else if (document.getElementById('target-menu')) document.getElementById('target-menu')!.remove();
+      else if (document.querySelector('.panel')) closePanels(); else if (st.dialog) net.send({ t: 'closeDialog' } as any); else openPause();
+      return;
     }
-    else if ((k === 'e' || k === ' ') && onWorld() && view.hovered && !st.dialog) { e.preventDefault(); view.onEntityClick(view.hovered); }
-    else if (k === '+' || k === '=') view.setZoom(view.zoom * 1.1);
-    else if (k === '-') view.setZoom(view.zoom / 1.1);
-    else if (st.dialog && /^[1-9]$/.test(k)) document.getElementById(`opt-${st.dialog.options[Number(k) - 1]?.id}`)?.click();
+    const a = ARROWS[k] ?? actionFor(k);
+    if (a && MOVE[a]) { e.preventDefault(); if (!held.has(a)) { held.add(a); pushSteer(); } return; }
+    if (e.repeat) return;
+    if (!st.dialog && /^[1-4]$/.test(k) && st.sheet?.abilities[Number(k) - 1]) { net.send({ t: 'ability', id: st.sheet.abilities[Number(k) - 1].id } as any); return; }
+    if (st.dialog && /^[1-9]$/.test(k)) { document.getElementById(`opt-${st.dialog.options[Number(k) - 1]?.id}`)?.click(); return; }
+    switch (a) {
+      case 'run': toggleRun(); break;
+      case 'interact': if (onWorld() && view.hovered && !st.dialog) { e.preventDefault(); view.onEntityClick(view.hovered); } break;
+      case 'cancel': stop(); break;
+      case 'retreat': retreat(); break;
+      case 'body': bodyPanel.toggle(); break;
+      case 'dance': openDances(); break;
+      case 'sleep': toggleSleep(); break;
+      case 'drive': toggleDrive(); break;
+      case 'inventory': charScreen('inv'); break;
+      case 'character': charScreen('sheet'); break;
+      case 'cyber': charScreen('cyber'); break;
+      case 'skills': charScreen('skills'); break;
+      case 'map': mapPanel(); break;
+      case 'journal': journalPanel(); break;
+      case 'search': searchPanel({ net }, 'phone'); break;
+      case 'trunk': net.send({ t: 'trunk', action: 'view' } as any); break;
+      case 'chat': e.preventDefault(); chatIn.focus(); break;
+      case 'chatGlobal': e.preventDefault(); globalIn.focus(); break;
+      case 'auto': toggleAuto(); break;
+      case 'jobs': net.send({ t: 'jobs' } as any); break;
+      case 'props': net.send({ t: 'props' } as any); break;
+      case 'market': marketLive(true); break;
+      case 'bounties': net.send({ t: 'bounties' } as any); break;
+      case 'factions': net.send({ t: 'factions' } as any); break;
+      case 'ambar': net.send({ t: 'ambar' } as any); break;
+      case 'zoomIn': view.setZoom(view.zoom * 1.1); break;
+      case 'zoomOut': view.setZoom(view.zoom / 1.1); break;
+      case 'target': if (onWorld()) {
+        // Selección accesible: recorre las entidades interactivas cercanas por distancia.
+        e.preventDefault();
+        const near = [...view.ents.values()].filter((x) => x.s.interactive && x.s.id !== view.meId && Math.hypot(x.x - view.me.x, x.y - view.me.y) < 14)
+          .sort((p1, p2) => Math.hypot(p1.x - view.me.x, p1.y - view.me.y) - Math.hypot(p2.x - view.me.x, p2.y - view.me.y));
+        if (!near.length) { toast('No hay nada cerca con lo que interactuar.'); break; }
+        const idx = near.indexOf(view.hovered as CEnt);
+        const next = near[(idx + (e.shiftKey ? near.length - 1 : 1)) % near.length];
+        view.hovered = next;
+        const sp = view.world.toGlobal(worldToScreen(next.x, next.y));
+        view.onHover(next, sp.x, sp.y);
+      } break;
+    }
   };
   window.addEventListener('keydown', keys);
   onSettings(() => renderSheet());
@@ -565,9 +663,17 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if (m.facts.lumen_power === true && st.facts.lumen_power !== true) toast('El Mercado Lumen vuelve a tener luz.', 'good');
         st.facts = m.facts; view.setFacts(m.facts); break;
       }
-      case 'chat': if (st.muted.has(m.fromId)) break;
-        chatLog.append(h('div', {}, h('span', { class: 'who', title: 'Clic para silenciar', onclick: () => { st.muted.add(m.fromId); toast(`Has silenciado a ${m.from}.`); } }, m.from), `: ${m.text}`));
-        chatLog.scrollTop = chatLog.scrollHeight; break;
+      case 'chat': {
+        if (st.muted.has(m.fromId)) break;
+        const log = m.channel === 'global' ? globalLog : chatLog;
+        log.append(h('div', {}, h('span', { class: 'who', title: 'Clic para silenciar', onclick: () => { st.muted.add(m.fromId); toast(`Has silenciado a ${m.from}.`); } }, m.from), `: ${m.text}`));
+        while (log.children.length > 80) log.firstChild!.remove();
+        log.scrollTop = log.scrollHeight;
+        // Chat local: bocadillo encima del personaje que habla.
+        if (m.channel !== 'global') view.say(m.fromId, m.text);
+        break;
+      }
+      case 'selfSpeed': view.me.speed = m.v; view.serverSpeed = true; break;
       case 'kicked': break;
       case 'error': if (m.reason === 'mensaje_invalido') toast('El servidor rechazó un mensaje mal formado.', 'bad'); break;
     }

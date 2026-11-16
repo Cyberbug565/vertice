@@ -1,8 +1,8 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.6)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.7)
 
-Novedades de la v0.6 (combate por zonas del cuerpo con heridas, desangrado y amputaciones, armas visibles con balas trazadoras, límite de armas y maletero, cámaras que te identifican, zonas verde/amarilla/roja/negra, buscador de personas y destino marcado, más muebles para cubrirse, más cuerpos y peinados e historia del personaje): [`docs/NOVEDADES-v0.6.md`](docs/NOVEDADES-v0.6.md). Las de la v0.5 (ciudad única más grande, día y noche de 1 h 30, correr, modo automático, puestos fijos con horario, torres por plantas y bases de bandas): [`docs/NOVEDADES-v0.5.md`](docs/NOVEDADES-v0.5.md). Las de la v0.4 (niveles, habilidades 1–25 y perks, pantalla de personaje, ropa, casas, coches, mercado en tiempo real, cromo con habilidades y calles con carriles): [`docs/NOVEDADES-v0.4.md`](docs/NOVEDADES-v0.4.md). Las de la v0.3: [`docs/NOVEDADES-v0.3.md`](docs/NOVEDADES-v0.3.md). Las de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md). Publicarlo en internet: [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
+Novedades de la v0.7 (WASD, apuntar y bloquear con el clic derecho, panel del cuerpo para curarte por zonas, teclas configurables, chat local y global, nuevo aspecto cyberpunk, más caras, recompensas que publica la ciudad, maleantes, policía que llega según la distancia, ciberpsicópatas y ciberpsicosis): [`docs/NOVEDADES-v0.7.md`](docs/NOVEDADES-v0.7.md). Novedades de la v0.6 (combate por zonas del cuerpo con heridas, desangrado y amputaciones, armas visibles con balas trazadoras, límite de armas y maletero, cámaras que te identifican, zonas verde/amarilla/roja/negra, buscador de personas y destino marcado, más muebles para cubrirse, más cuerpos y peinados e historia del personaje): [`docs/NOVEDADES-v0.6.md`](docs/NOVEDADES-v0.6.md). Las de la v0.5 (ciudad única más grande, día y noche de 1 h 30, correr, modo automático, puestos fijos con horario, torres por plantas y bases de bandas): [`docs/NOVEDADES-v0.5.md`](docs/NOVEDADES-v0.5.md). Las de la v0.4 (niveles, habilidades 1–25 y perks, pantalla de personaje, ropa, casas, coches, mercado en tiempo real, cromo con habilidades y calles con carriles): [`docs/NOVEDADES-v0.4.md`](docs/NOVEDADES-v0.4.md). Las de la v0.3: [`docs/NOVEDADES-v0.3.md`](docs/NOVEDADES-v0.3.md). Las de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md). Publicarlo en internet: [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
 
-RPG de ambientación cyberpunk que se juega en el navegador. Es persistente, multijugador, con cámara isométrica 2.5D y control por clic. El servidor es autoritativo: Node.js con WebSocket y PostgreSQL. El cliente usa TypeScript, Vite y PixiJS 8 sobre WebGL 2.
+RPG de ambientación cyberpunk que se juega en el navegador. Es persistente, multijugador, con cámara isométrica 2.5D, movimiento con WASD y ratón para interactuar y combatir. El servidor es autoritativo: Node.js con WebSocket y PostgreSQL. El cliente usa TypeScript, Vite y PixiJS 8 sobre WebGL 2.
 
 > **Edición:** universo original (Ciudad Vértice: Ferro, Cénit, Colinas Doradas, Neón Rojo, Forja, El Arrabal y El Yermo). El motor no conoce ningún lugar concreto: el mapa, los roles, los diálogos, los encargos y las facciones viven en `content/` como datos validados. Más detalles en [`docs/DISENO.md`](docs/DISENO.md#edicion-y-propiedad-intelectual).
 
@@ -42,31 +42,28 @@ Para un mundo que siga abierto aunque apagues el ordenador, consulta [`docs/DESP
 
 1. Abre http://localhost:8080 en una ventana normal **y** en una ventana de incógnito o en otro perfil del navegador. Cada perfil guarda su propia sesión.
 2. En cada ventana: **Crear cuenta** → **Crear personaje**. Elige, por ejemplo, *Solo* en una y *Netrunner* en la otra.
-3. Los dos aparecéis en el vestíbulo del Bloque 9, que es zona protegida, y os veis. Escribid en el chat local con Enter.
+3. Los dos aparecéis en el vestíbulo del Bloque 9, que es zona protegida, y os veis. Escribid en el chat local con Intro (o en el global con Y).
 4. Para jugar desde otro ordenador de la red, abre `http://IP-DEL-SERVIDOR:8080`.
 
 ## Controles
 
-| Acción | Ratón | Teclado / alternativa accesible |
+Todas las teclas se pueden cambiar en **Esc → Teclas**. Estas son las de serie:
+
+| Acción | Ratón | Teclado |
 | --- | --- | --- |
-| Moverse | Clic izquierdo en el suelo | — |
-| Hablar, entrar o examinar | Clic en la persona, puerta u objeto. El personaje se acerca solo | `Tab` / `Mayús+Tab` selecciona lo cercano y `E` o `Espacio` interactúa. Opciones de diálogo con 1–9 |
-| Menú de opciones (hablar, robar, KO, matar, capturar, hackear, cargar cuerpo…) | Clic derecho sobre la persona, cajero o tienda | Clic izquierdo sobre jugadores, pandilleros y fugitivos |
-| Bailar | Clic derecho sobre tu personaje o el suelo → **Bailar** | `Y` abre la ruleta |
-| Cancelar la orden | Clic derecho en el suelo → **Cancelar orden** | `S` o el botón **Cancelar** |
-| Retirada al refugio protegido más cercano | — | `R` o el botón **Retirada** |
-| Diario, mapa global (con viaje en coche) | — | `J`, `M` |
-| Personaje: ficha, inventario y ropa, ciberware, habilidades y perks | — | `C`, `I`, `X`, `H` |
-| Habilidades de los implantes | — | `1`–`4` |
-| Conducir o aparcar · propiedades (casas, permisos, coches) · mercado en tiempo real | — | `V` · `P` · `K` |
-| Correr o andar · modo automático | — | `Mayús` · `A` |
-| Facciones, Rescate Ámbar | — | `F`, `U` |
-| Dormir o despertar | — | `Z` o el botón **Dormir** |
-| Empleos, recompensas | — | `O`, `B` |
-| Buscar personas con el móvil (en tu piso, haz clic en el ordenador) · maletero del coche | — | `G` · `T` |
-| Marcar destino (vas solo hasta allí) | Clic en el plano del mapa (`M`) o «Marcar como objetivo» en el buscador | — |
-| Atacar a una zona del cuerpo · disparo apuntado | Clic en la persona: elige Torso, Cabeza, Brazos, Manos o Piernas | El anillo rojo indica que está a tu alcance; el verde, tiro seguro apuntando |
-| Chat local | — | `Enter` |
+| Andar · correr | — | `W` `A` `S` `D` o las flechas · `Mayús` |
+| Menú de una persona (o el tuyo propio) | Clic izquierdo sobre ella (o sobre ti) | `Tab` la señala y `E` interactúa |
+| Entrar por una puerta, examinar un objeto, hablar con alguien importante | Clic izquierdo (el personaje se acerca solo) | `E` |
+| Apuntar (armas a distancia) o bloquear (cuerpo a cuerpo) | Mantén el clic derecho. Con él pulsado, clic izquierdo sobre alguien = atacar. Cuando la retícula se llena y se pone verde, el tiro es seguro | — |
+| Panel del cuerpo (heridas; clic en una zona para curarla) | Clic en la silueta | `F` |
+| Bailar · dormir · conducir | — | `B` · `Z` · `V` |
+| Cancelar · retirada al refugio | — | `Q` · `R` |
+| Inventario · ficha · ciberware · habilidades | — | `I` · `C` · `X` · `K` |
+| Mapa (clic en el plano para marcar destino) · diario · buscar personas (móvil) · maletero | — | `M` · `J` · `G` · `T` |
+| Chat local (bocadillo sobre tu personaje) · chat global (panel de la derecha) | — | `Intro` · `Y` |
+| Implantes | — | `1`–`4` |
+| Automático · empleos · propiedades · mercado · recompensas · facciones · Ámbar | — | `L` · `O` · `P` · `N` · `U` · `H` · `.` |
+| Menú (continuar, ajustes, teclas, cerrar sesión) | Botón ☰ | `Esc` |
 | Zoom | Rueda | `+` / `−` |
 
 ## Vida nocturna y bajos fondos

@@ -88,6 +88,7 @@ export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
         o.theft ? h('li', { class: 'netbad' }, `Riesgo de que te roben mientras estás sedado: ${pct(o.theft)}`) : null,
         h('li', {}, `Precio: ${fmtMoney(o.price)}`),
         h('li', {}, `Humanidad tras la operación: ${o.humanityAfter} · Capacidad de cromo: ${o.capacityAfter}/${v.chromeCapacity}`)),
+      o.warning ? h('p', { class: 'netbad' }, `⚠ ${o.warning}`) : null,
       h('p', { class: 'muted' }, 'Si mueres en la mesa, pierdes este personaje para siempre.'),
       h('div', { class: 'row' }, h('button', { class: 'btn danger', onclick: () => { ov.remove(); ctx.net.send({ t: 'clinicDo', doc: v.doc, action: o.action, source: o.source, ref: o.ref, opId: newOpId() } as any); } }, 'Operar'),
         h('button', { class: 'btn', onclick: () => ov.remove() }, 'Cancelar'))));
@@ -109,6 +110,10 @@ export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
     h('p', {}, `Calidad ${'★'.repeat(v.skill)}${'☆'.repeat(5 - v.skill)} · ${v.morality} · `, h('b', { class: v.dangerLabel.startsWith('Peligroso') ? 'netbad' : v.dangerLabel === 'De confianza' ? 'netok' : 'netmid' }, v.dangerLabel)),
     h('p', { class: 'muted' }, v.desc),
     h('p', { class: 'mono' }, `Saldo ${fmtMoney(v.money)} · Humanidad ${v.humanity}/${v.humanityMax} · Cromo ${v.chromeUsed}/${v.chromeCapacity} · Reputación con su gente ${v.rep}`),
+    v.chromeUsed > v.chromeCapacity ? h('p', { class: 'netbad' }, `⚠ Llevas más cromo del que tu cuerpo aguanta (${v.chromeUsed}/${v.chromeCapacity}). Cuanto más te pases y más tiempo, más cerca estarás de la ciberpsicosis.`) : null,
+    v.repair ? h('div', { class: 'fcard', style: { borderTopColor: '#43f3ff' } }, h('b', {}, '🔧 Reparar cromo dañado'),
+      h('div', { class: 'small' }, `Partes: ${v.repair.parts.map((k) => k.replace('_', ' ')).join(', ')}. Los miembros robóticos no sangran, pero dañados fallan (puntería y velocidad).`),
+      h('button', { class: 'btn small primary', disabled: v.money < v.repair.price, onclick: () => ctx.net.send({ t: 'repairChrome', doc: v.doc, opId: newOpId() } as any) }, `Reparar · ${fmtMoney(v.repair.price)}`)) : null,
     ...groups.filter(([, l]) => l.length).flatMap(([t, l]) => [h('h3', {}, t), h('table', { class: 'sheet' }, h('tr', {}, h('th', {}, 'Implante'), h('th', {}, 'Precio'), h('th', {}, 'Supervivencia'), h('th', {}, '')), ...l.map(row))]));
 }
 
@@ -151,6 +156,7 @@ export function targetMenu(ctx: LifeCtx, v: TargetMenuView, at: { x: number; y: 
       ...list.map((o) => h('button', { class: `ctx-opt${o.danger ? ' danger' : ''}`, role: 'menuitem', disabled: !!o.disabled, style: { borderLeftColor: GROUPS[g].color }, title: o.disabled ?? o.detail ?? '', onclick: () => {
         if (o.kind === 'interact') onInteract?.(o.id);
         else if (o.kind === 'hack') ctx.net.send({ t: 'hack', target: v.target, hack: o.id.slice(5), opId: newOpId() } as any);
+        else if (o.id.startsWith('extract:')) ctx.net.send({ t: 'hostile', target: v.target, action: 'extract', chrome: o.id.slice(8), opId: newOpId() } as any);
         else if (o.id === 'rescue') ctx.net.send({ t: 'rescue', target: v.target, opId: newOpId() } as any);
         else if (o.id === 'drop') ctx.net.send({ t: 'drop' } as any);
         else if (o.id === 'bribe') ctx.net.send({ t: 'bribe', opId: newOpId() } as any);

@@ -6,7 +6,7 @@ import { startGame } from './game';
 function toMenu() {
   if (!getToken()) return loginScreen(toMenu);
   void mainMenu({
-    onEnter: () => void startGame(getToken()!, (reason) => { document.getElementById('game')!.replaceChildren(); if (reason === 'auth') localStorage.removeItem('vertice.token'); toMenu(); }),
+    onEnter: () => void startGame(getToken()!, (reason) => { document.getElementById('game')!.replaceChildren(); if (reason === 'auth' || reason === 'logout') localStorage.removeItem('vertice.token'); toMenu(); }),
     onCreate: () => creationScreen(() => void startGame(getToken()!, () => toMenu()), toMenu),
     onLogout: toMenu,
   });

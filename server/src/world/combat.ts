@@ -154,7 +154,8 @@ export class Combat {
       return { target: target.id, name: target.name, subtitle: `${subtitle} · persona clave (no se puede atacar)`, color: fac?.color, options: opts };
     }
     if (target.carriedBy === e.id) { opts.push({ id: 'drop', kind: 'action', group: 'ayuda', label: 'Soltar el cuerpo' }); return { target: target.id, name: target.name, subtitle, options: opts }; }
-    if (target.dead) return { target: target.id, name: target.name, subtitle: 'Cadáver', options: [{ id: 'search', kind: 'action', group: 'ayuda', label: 'Registrar el cuerpo', detail: 'Dinero, munición y lo que lleve. Más botín en zonas rojas y negras.', disabled: target.searched ? 'Ya lo han registrado' : undefined }] };
+    if (target.dead) return { target: target.id, name: target.name, subtitle: 'Cadáver', options: [{ id: 'search', kind: 'action', group: 'ayuda', label: 'Registrar el cuerpo', detail: 'Dinero, munición y lo que lleve. Más botín en zonas rojas y negras.', disabled: target.searched ? 'Ya lo han registrado' : undefined },
+      ...(target.lootChrome ?? []).map((id) => { const d = this.c.cyberware.find((x) => x.id === id)!; const need = d.grade * 4; return { id: `extract:${id}`, kind: 'action' as const, group: 'ayuda' as const, label: `Extraer cromo: ${d.name}`, detail: `Grado ${d.grade}. Requiere Reparación ${need}. Luego puede implantártelo un matasanos.`, disabled: skillLevel(p, 'reparacion') < need ? `Requiere Reparación ${need} (tienes ${skillLevel(p, 'reparacion')})` : undefined }; })] };
     if (downed) {
       if (!tp) opts.push({ id: 'search', kind: 'action', group: 'ayuda', label: 'Registrar el cuerpo', detail: 'Dinero, munición y lo que lleve. Más botín en zonas rojas y negras. En zona vigilada es delito.', disabled: target.searched ? 'Ya lo han registrado' : undefined });
       if (tp) {
@@ -270,6 +271,7 @@ export class Combat {
     if (action === 'beat') action = 'knockout';
     if (action === 'claim') action = this.claimable(target, p).some((b) => b.aliveOnly) || (target.fugitive?.alive ?? false) ? 'knockout' : 'attack';
     if (action === 'talk') { this.talk(c, target); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true }); }
+    if (action === 'extract') { await this.w.threats.extract(c, target, m.chrome); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true }); }
     if (action === 'search') {
       if (!(target.state === 'downed' || target.dead) || target.kind !== 'npc') return fail('Solo se puede registrar a alguien caído.');
       if (Math.hypot(target.x - e.x, target.y - e.y) > 2.2) { const dest = nearestWalkable(e.zone.grid, target.x, target.y, 2); const r = dest ? findPath(e.zone.grid, e.x, e.y, dest.x, dest.y, 20000) : null; if (!r?.ok) return fail('No puedes llegar.'); e.path = r.path; e.moving = true; e.pendingAction = { target: target.id, action: 'search', opId: m.opId }; return this.w.send(c, { t: 'ack', seq: m.seq, ok: true, path: e.path }); }
@@ -401,6 +403,21 @@ export class Combat {
     if (wpItem?.weapon && this.rng() < 0.25 * mult) await give(wpItem.id, 1);
     if (wpItem?.weapon?.ammo && this.rng() < 0.5) await give(wpItem.weapon.ammo, Math.round((4 + this.rng() * 8) * mult));
     if (this.rng() < 0.3) await give('venda', 1);
+    // v0.7: objetivos con recompensa y ciberpsicópatas llevan mucho más encima.
+    if (target.lootTier) {
+      const t = target.lootTier;
+      const extra = Math.round((150 + this.rng() * 250) * t * t);
+      await this.credit(p, extra, `${opId}:botin`, `Botín de ${target.name}`); found[0] = `${money + extra} €$`;
+      if (wpItem?.weapon) await give(wpItem.id, 1);
+      if (wpItem?.weapon?.ammo) await give(wpItem.weapon.ammo, 10 * t);
+      await give('estim', t >= 3 ? 2 : 1);
+      if (t >= 3 && !target.lootChrome?.length && this.rng() < (t >= 4 ? 0.9 : 0.5)) {
+        const pool = this.c.cyberware.filter((x) => x.grade >= 2 && x.grade <= t);
+        const def = pool[Math.floor(this.rng() * pool.length)];
+        if (def) { const instId = uuid(); await this.w.db.query('INSERT INTO cyberware_instances (id, def_id, character_id, location, stolen, history) VALUES ($1,$2,$3,$4,$5,$6)', [instId, def.id, p.charId, 'inventory', true, JSON.stringify([{ at: new Date().toISOString(), event: `encontrado en el cuerpo de ${target.name}` }])]); p.cyber.push({ id: instId, def: def.id, location: 'inventory', stolen: true }); found.push(`Implante: ${def.name} (sin instalar)`); }
+      }
+    }
+    if (target.lootChrome?.length) found.push(`Cromo extraíble: ${target.lootChrome.map((id) => this.c.cyberware.find((x) => x.id === id)?.name ?? id).join(', ')} (usa «Extraer cromo»)`);
     if (lvl === 'lawless' && this.rng() < 0.5) await give('neblina', 1 + Math.floor(this.rng() * 3));
     if (lvl !== 'public' && this.rng() < 0.15 * mult) await give('estim', 1);
     this.w.progress.gain(p, 'percepcion', 2);
@@ -445,10 +462,18 @@ export class Combat {
     const smart = traits.has('inteligente') || ef.flags.has('ojo-de-dios');
     const rangePenalty = wp.w.kind === 'ranged' && !smart && dist > wp.w.range / 2 ? Math.round((dist - wp.w.range / 2) / (wp.w.range / 4)) : 0;
     // Apuntar a una zona concreta cuesta precisión (salvo en el disparo apuntado); la cobertura protege de los disparos.
+    // v0.7: con el clic derecho mantenido se apunta; tras el tiempo de apuntar y dentro del alcance seguro, el tiro es seguro.
+    if (wp.w.kind === 'ranged' && e.guard && e.guardSince && !opts.aimed) {
+      const aim = aimOf(this.c, p);
+      if ((now - e.guardSince) / 1000 >= aim.time && dist <= aim.range && this.lineClear(e, target)) opts = { ...opts, aimed: true };
+    }
+    const steady = wp.w.kind === 'ranged' && e.guard && !opts.aimed ? 2 : 0;
     const aimPen = opts.part && !opts.aimed ? AIM[opts.part].penalty : 0;
     const cover = wp.w.kind === 'ranged' ? this.coverOf(e, target) * (opts.aimed ? 0.5 : 1) : 0;
-    let a = this.attackScore(p) - rangePenalty - aimPen - ef.armsLost * 3 + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
-    const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + cover + this.roll();
+    let a = this.attackScore(p) - rangePenalty - aimPen - ef.armsLost * 3 - ef.brokenArms * 2 + steady + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
+    // Bloqueo: quien se defiende con un arma cuerpo a cuerpo para mejor los golpes (no las balas).
+    const blocking = !!(tp && target.guard && wp.w.kind === 'melee' && this.weaponOf(tp).w.kind === 'melee');
+    const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + cover + (blocking ? 3 : 0) + this.roll();
     if (ef.flags.has('ojo-de-dios') && wp.w.kind === 'ranged' && dist <= wp.w.range) a = Math.max(a, d);
     const substances = substanceEffects(this.c, p.substances, now);
     if (opts.aimed) a = substances.aim >= 0 ? Math.max(a, d + 1) : a + Math.max(0, 5 + substances.aim);
@@ -475,6 +500,7 @@ export class Combat {
     if (crit) dmg *= 2;
     dmg = Math.round(dmg);
     if (tp && !traits.has('perforante')) dmg = Math.max(1, dmg - this.armorOf(tp) - (wp.w.tech === 'tecnica' ? -this.armorOf(tp) : 0));
+    if (blocking) { dmg = Math.max(1, Math.round(dmg * 0.35)); if (target.conn) this.notice(target.conn, 'good', `Bloqueas el golpe de ${p.name}.`); }
     // Herida en la zona alcanzada: sangrado, amputación o conmoción.
     const wnd = this.wounds.hit(target, tp, part, dmg, wp, lethal);
     dmg = wnd.dmg;
@@ -555,7 +581,7 @@ export class Combat {
 
   private provokeNpc(target: Entity, attacker: Entity, lethal: boolean) {
     if (target.state === 'downed') return;
-    if (target.npcType === 'civil' || !target.npcType) { target.fleeUntil = Date.now() + 15000; target.path = []; return; }
+    if (target.npcType === 'civil' || !target.npcType) { this.w.threats.react(target, attacker); return; }
     target.aggro = attacker.id; target.aggroLethal = target.npcType !== 'police' || lethal;
     // Los suyos acuden.
     for (const o of target.zone.query(target.x, target.y, 12)) if (o !== target && o.faction === target.faction && o.npcType === target.npcType && o.state !== 'downed' && !o.aggro) { o.aggro = attacker.id; o.aggroLethal = target.aggroLethal; }
@@ -630,7 +656,9 @@ export class Combat {
   /** Consecuencias legales: solo cuenta donde la PCV patrulla. Cobrar recompensas no es delito. */
   private crime(c: PlayerConn, target: Entity, lethal: boolean, kind: 'attempt' | 'hit' | 'down' | 'kill', legit?: boolean, factor = 1) {
     const p = c.p!;
+    if (target.npcType === 'psycho' || (target.predator && target.aggro !== undefined)) return;
     if ((legit ?? this.claimable(target, p).length > 0) && kind !== 'kill') return;
+    if (kind !== 'attempt' || lethal) this.w.threats.violence(c.e!, target);
     // v0.6: zona negra, sin ley; zona roja, solo si hay agentes cerca; zona amarilla, vigilada (cámaras y patrullas).
     const lvl = dangerAt(c.e!.zone.grid, c.e!.x, c.e!.y);
     if (lvl === 'lawless') return;
@@ -1048,6 +1076,7 @@ export class Combat {
     if (e.aggro !== undefined) {
       const t = this.w.entities.get(e.aggro);
       const tp = t ? this.w.playerOf(t) : undefined;
+      if (t && !tp && t.kind === 'npc') return this.npcVsNpc(e, t);
       const hidden = tp && ((tp.buffs.invisible ?? 0) > now || (tp.buffs.senuelo ?? 0) > now);
       if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || hidden || (e.npcType === 'police' && tp.wanted < 1)) { e.aggro = undefined; if (e.label !== 'Patrullando') { e.label = e.npcType === 'police' ? 'Patrullando' : ''; this.bump(e); } return false; }
       const wp = this.npcWeapon(e);
@@ -1072,7 +1101,8 @@ export class Combat {
         else if (hitOk) {
           const police = e.npcType === 'police';
           const lethal = police ? !!e.aggroLethal : e.aggroLethal !== false;
-          const raw = Math.max(1, this.rollDamage(wp.w, a - d) - (wp.w.traits?.includes('perforante') ? 0 : this.armorOf(tp)));
+          let raw = Math.max(1, this.rollDamage(wp.w, a - d) - (wp.w.traits?.includes('perforante') ? 0 : this.armorOf(tp)));
+          if (t.guard && wp.w.kind === 'melee' && this.weaponOf(tp).w.kind === 'melee') { raw = Math.max(1, Math.round(raw * 0.35)); this.notice(t.conn, 'good', `Bloqueas a ${e.name}.`); }
           const wnd = this.wounds.hit(t, tp, hitPart(this.rng), raw, wp, lethal);
           this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id, { weapon: wp.id, hit: true, part: wnd.part, sever: !!wnd.severed });
           if (wnd.severed && t.conn) this.notice(t.conn, 'bad', `¡${e.name} te ha arrancado ${PART_NAMES[wnd.severed]}! Un matasanos puede implantarte una prótesis.`);
@@ -1108,6 +1138,46 @@ export class Combat {
       }
     }
     return false;
+  }
+
+  /** v0.7 · PNJ contra PNJ: maleantes que atacan a civiles, policía contra criminales, ciberpsicópatas contra todo. */
+  private npcVsNpc(e: Entity, t: Entity): boolean {
+    const now = Date.now();
+    if (t.zone !== e.zone || t.state === 'downed' || t.dead || Math.hypot(t.x - e.x, t.y - e.y) > 30) {
+      e.aggro = undefined;
+      if (e.label === 'En combate' || e.label === 'Atacando') { e.label = e.npcType === 'police' ? 'Patrullando' : e.npcType === 'psycho' ? 'Fuera de control' : ''; this.bump(e); }
+      return false;
+    }
+    const wp = this.npcWeapon(e);
+    const dist = Math.hypot(t.x - e.x, t.y - e.y);
+    const inRange = dist <= wp.w.range - 0.2 && (wp.w.kind === 'melee' || lineWalkable(e.zone.grid, e.x, e.y, t.x, t.y));
+    if (e.label !== 'En combate') { e.label = 'En combate'; this.bump(e); }
+    if (!inRange) {
+      if (!e.path.length || (e.nextPathAt ?? 0) < now) {
+        e.nextPathAt = now + 1500;
+        const r = findPath(e.zone.grid, e.x, e.y, t.x, t.y, 4000);
+        if (r.ok) { e.path = r.path.slice(0, -1).length ? r.path.slice(0, -1) : r.path; e.moving = true; }
+      }
+      return true;
+    }
+    e.path = []; e.moving = false;
+    if ((e.nextAttackAt ?? 0) > now) return true;
+    e.nextAttackAt = now + wp.w.cooldown * 1000 * 1.3;
+    const kind = wp.w.kind === 'ranged' ? 'shot' : 'hit';
+    const a = this.npcAttackScore(e) + this.roll(), d = this.npcDefenseScore(t) + (wp.w.kind === 'ranged' ? this.coverOf(e, t) : 0) + this.roll();
+    if (a < d) { this.fx(e, kind, e.id, t.id, { weapon: wp.id, hit: false }); if (t.npcType === 'civil' && !t.fleeUntil) this.w.threats.react(t, e); return true; }
+    const lethal = e.aggroLethal !== false;
+    const raw = Math.max(1, this.rollDamage(wp.w, a - d) * (e.npcType === 'psycho' ? 1.6 : 1));
+    const wnd = this.wounds.hit(t, undefined, hitPart(this.rng), Math.round(raw), wp, lethal);
+    this.fx(e, kind, e.id, t.id, { weapon: wp.id, hit: true, part: wnd.part, sever: !!wnd.severed });
+    t.lastHitBy = e.id; t.lastHitAt = now;
+    this.damageNpc(t, wnd.dmg, lethal && !wnd.ko);
+    if (wnd.ko && (t.state as string) !== 'downed') this.npcDowned(t, false);
+    if ((t.state as string) === 'downed') { e.aggro = undefined; for (const o of t.zone.query(t.x, t.y, 20)) if (o.kind === 'player' && o.conn) this.notice(o.conn, 'bad', `${e.name} ha derribado a ${t.name}.`); }
+    else if (t.npcType === 'civil') this.w.threats.react(t, e);
+    else if (t.aggro === undefined && t.npcType !== 'essential') { t.aggro = e.id; t.aggroLethal = true; }
+    this.w.threats.violence(e, t);
+    return true;
   }
 
   // ================================================================ v0.4: matasanos ocultos, análisis y habilidades de implantes
@@ -1269,7 +1339,7 @@ export class Combat {
       this.respawnQueue.splice(this.respawnQueue.indexOf(r), 1);
       const z = this.w.zones.get(r.zone);
       const t = r.template as any;
-      if (z) { if (t.type === 'civil') this.w.spawnAmbient(z, t.near); else this.spawnFactionNpc(z, t.faction, t.type, t.area); }
+      if (z) { if (t.type === 'civil') this.w.spawnAmbient(z, t.near); else if (t.type === 'predator') this.w.threats.spawnPredator(z, [t.near.x, t.near.y]); else this.spawnFactionNpc(z, t.faction, t.type, t.area); }
     }
     await this.rescueTick();
     this.hierroTick();

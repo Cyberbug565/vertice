@@ -35,13 +35,6 @@
    ]
   },
   {
-   "type": "table",
-   "at": [
-    6,
-    9
-   ]
-  },
-  {
    "type": "neon",
    "at": [
     6,
@@ -108,20 +101,27 @@
    "color": "#5a3a2a"
   },
   {
-   "type": "arcade",
-   "at": [
-    8,
-    9
-   ],
-   "color": "#ff3fa4"
-  },
-  {
    "type": "barrel",
    "at": [
     4,
     6
    ],
    "color": "#5a3a2a"
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    9
+   ]
+  },
+  {
+   "type": "arcade",
+   "at": [
+    8,
+    9
+   ],
+   "color": "#ff3fa4"
   },
   {
    "type": "screen",

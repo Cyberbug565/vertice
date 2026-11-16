@@ -415,6 +415,48 @@
   "security": 13
  },
  {
+  "id": "rele-barra",
+  "name": "Barra de El Relé",
+  "owner": "independiente",
+  "zone": "bar-rele",
+  "stock": {
+   "agua-filtrada": 25,
+   "refresco-neon": 20,
+   "cerveza-kanal": 32,
+   "verm-granate": 22
+  },
+  "priceMult": 1.08,
+  "security": 15
+ },
+ {
+  "id": "ultima-luz-barra",
+  "name": "Barra de La Última Luz",
+  "owner": "independiente",
+  "zone": "bar-ultima-luz",
+  "stock": {
+   "agua-filtrada": 25,
+   "refresco-neon": 20,
+   "cerveza-kanal": 25,
+   "verm-granate": 35
+  },
+  "priceMult": 1.08,
+  "security": 15
+ },
+ {
+  "id": "circuito-barra",
+  "name": "Barra de Circuito 33",
+  "owner": "independiente",
+  "zone": "discoteca-circuito",
+  "stock": {
+   "agua-filtrada": 25,
+   "refresco-neon": 20,
+   "gin-zafiro": 35,
+   "licor-voltio": 30
+  },
+  "priceMult": 1.08,
+  "security": 15
+ },
+ {
   "id": "ropa-lumen",
   "name": "Ropa Lumen",
   "owner": "asociacion-lumen",
@@ -594,47 +636,5 @@
   ],
   "priceMult": 1.05,
   "security": 16
- },
- {
-  "id": "rele-barra",
-  "name": "Barra de El Relé",
-  "owner": "independiente",
-  "zone": "bar-rele",
-  "stock": {
-   "agua-filtrada": 25,
-   "refresco-neon": 20,
-   "cerveza-kanal": 32,
-   "verm-granate": 22
-  },
-  "priceMult": 1.08,
-  "security": 15
- },
- {
-  "id": "ultima-luz-barra",
-  "name": "Barra de La Última Luz",
-  "owner": "independiente",
-  "zone": "bar-ultima-luz",
-  "stock": {
-   "agua-filtrada": 25,
-   "refresco-neon": 20,
-   "cerveza-kanal": 25,
-   "verm-granate": 35
-  },
-  "priceMult": 1.08,
-  "security": 15
- },
- {
-  "id": "circuito-barra",
-  "name": "Barra de Circuito 33",
-  "owner": "independiente",
-  "zone": "discoteca-circuito",
-  "stock": {
-   "agua-filtrada": 25,
-   "refresco-neon": 20,
-   "gin-zafiro": 35,
-   "licor-voltio": 30
-  },
-  "priceMult": 1.08,
-  "security": 15
  }
 ]

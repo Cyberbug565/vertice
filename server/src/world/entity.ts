@@ -10,6 +10,8 @@ export interface Entity {
   id: number; kind: EntityKind; name: string; title?: string;
   zone: Zone; x: number; y: number; cellKey: number; sectorId: string;
   path: [number, number][]; speed: number; facing: number; moving: boolean; lastMoveTick: number;
+  /** v0.7: dirección de WASD (con marca de tiempo para cortar si el cliente deja de avisar) y guardia con clic derecho. */
+  steer?: { dx: number; dy: number; at: number }; guard?: boolean; guardSince?: number;
   appearance?: Appearance; role?: string; label: string; labelVer: number;
   interactive: boolean; objKind?: string; dialog?: string; danger?: string;
   doorTo?: { zone: string; at: [number, number] };
@@ -20,7 +22,10 @@ export interface Entity {
   state?: 'alive' | 'downed' | 'sleeping'; bounty?: number; fugitive?: FugitiveDef; npcHp?: number; npcShop?: string;
   shop?: string; sleep?: { quality: number; price: number }; workplace?: string;
   // ---- v0.3: combate, facciones y transporte de cuerpos
-  npcType?: 'civil' | 'gang' | 'police' | 'hierro' | 'fugitive' | 'ambar' | 'essential';
+  npcType?: 'civil' | 'gang' | 'police' | 'hierro' | 'fugitive' | 'ambar' | 'essential' | 'psycho';
+  /** v0.7: depredador (ataca a quien pilla), escolta de un objetivo con recompensa, nivel de botín, cromo extraíble del cadáver,
+   *  patrulla enviada por una llamada o una cámara (y hasta cuándo), y civil llamando a la policía. */
+  predator?: boolean; escortOf?: number; lootTier?: number; lootChrome?: string[]; dispatchedUntil?: number; callingUntil?: number;
   lastHitBy?: number; lastHitAt?: number; faction?: string; npcMax?: number; defense?: number; weaponId?: string; chrome?: string[];
   aggro?: number; aggroLethal?: boolean; nextAttackAt?: number; fleeUntil?: number; nextPathAt?: number;
   downedUntil?: number; npcLethalDown?: boolean; lastAttacker?: number; carriedBy?: number; blindUntil?: number;
@@ -39,5 +44,5 @@ export function spawnOf(e: Entity): EntitySpawn {
     bounty: e.bounty || undefined, state: e.state && e.state !== 'alive' ? e.state : undefined, fugitive: e.fugitive ? true : undefined,
     chrome: e.chrome?.length ? e.chrome : undefined, faction: e.faction, npcType: e.npcType, carried: e.carriedBy ? true : undefined,
     hpPct: e.npcMax ? Math.max(0, Math.round(((e.npcHp ?? e.npcMax) / e.npcMax) * 100)) : undefined,
-    level: e.level, emote: e.emote, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, dead: e.dead || undefined, buffs: e.buffs ? Object.entries(e.buffs).filter(([, u]) => u > Date.now()).map(([k]) => k) : undefined };
+    level: e.level, emote: e.emote, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, dead: e.dead || undefined, buffs: e.buffs || e.guard ? [...Object.entries(e.buffs ?? {}).filter(([, u]) => u > Date.now()).map(([k]) => k), ...(e.guard ? ['guardia'] : [])] : undefined };
 }

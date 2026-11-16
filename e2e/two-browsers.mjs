@@ -68,22 +68,28 @@ try {
     await A.waitForTimeout(500);
     await A.screenshot({ path: `${OUT}01-vestibulo-dos-jugadores.png` });
   });
-  await step('Clic en el suelo mueve; clic derecho cancela', async () => {
+  await step('WASD mueve; al soltar se para; el clic en el suelo ya no mueve', async () => {
+    await A.click('canvas', { position: { x: 5, y: 5 } }).catch(() => {});
     const m0 = await me(A);
-    await clickWorld(A, 14.5, 9.5);
-    await A.waitForTimeout(600);
-    const m1 = await me(A);
-    if (Math.hypot(m1.x - m0.x, m1.y - m0.y) < 0.3) throw new Error('no se movió');
-    await clickWorld(A, 14.5, 9.5, 'right');
+    await A.keyboard.down('d');
     await A.waitForTimeout(700);
+    await A.keyboard.up('d');
+    await A.waitForTimeout(500);
+    const m1 = await me(A);
+    if (Math.hypot(m1.x - m0.x, m1.y - m0.y) < 0.3) throw new Error('no se movió con WASD');
+    await A.waitForTimeout(500);
     const m2 = await me(A);
-    await A.waitForTimeout(600);
+    if (Math.hypot(m2.x - m1.x, m2.y - m1.y) > 0.15) throw new Error('siguió moviéndose al soltar la tecla');
+    await clickWorld(A, m2.x + 3, m2.y);
+    await A.waitForTimeout(700);
     const m3 = await me(A);
-    if (Math.hypot(m3.x - m2.x, m3.y - m2.y) > 0.15) throw new Error('siguió moviéndose tras cancelar');
+    if (Math.hypot(m3.x - m2.x, m3.y - m2.y) > 0.15) throw new Error('el clic en el suelo no debería mover');
   });
-  await step('Colisión: un clic fuera del área transitable se rechaza con motivo', async () => {
-    await clickWorld(A, 8.5, -4);
-    await A.waitForSelector('.toast.warn', { timeout: 4000 });
+  await step('Esc abre el menú (ajustes, teclas, cerrar sesión)', async () => {
+    await A.keyboard.press('Escape');
+    await A.waitForSelector('#pause-menu', { timeout: 3000 });
+    await A.keyboard.press('Escape');
+    await A.waitForSelector('#pause-menu', { state: 'detached', timeout: 3000 });
   });
   await step('Salir a la calle (interior → exterior)', async () => {
     await clickEntity(A, (e) => e.kind === 'door');

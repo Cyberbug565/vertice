@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption,
 } from '@vertice/shared';
 import type { Config } from '../config.js';
@@ -22,6 +22,7 @@ import { Property, isHouseZone } from './property.js';
 import { Posts } from './posts.js';
 import { Autopilot } from './autopilot.js';
 import { Intel } from './intel.js';
+import { Threats } from './threats.js';
 import { Nightlife } from './nightlife.js';
 import { Underworld } from './underworld.js';
 import { isSick } from '../game/substances.js';
@@ -66,6 +67,7 @@ export class World {
   readonly posts: Posts;
   readonly autopilot: Autopilot;
   readonly intel: Intel;
+  readonly threats: Threats;
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => void = () => {};
@@ -81,6 +83,7 @@ export class World {
     this.posts = new Posts(this);
     this.autopilot = new Autopilot(this);
     this.intel = new Intel(this);
+    this.threats = new Threats(this);
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
     sheetHooks.post = (p) => this.posts.status(p);
@@ -116,7 +119,7 @@ export class World {
       e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil', near: { x, y } } }; e.level = 1 + Math.floor(rng() * 6);
       const chromeRoll = rng();
       e.chrome = chromeRoll < 0.15 ? ['ojos'] : chromeRoll < 0.25 ? [rng() < 0.5 ? 'brazo_izq' : 'brazo_der'] : chromeRoll < 0.3 ? ['cabeza', 'ojos'] : chromeRoll < 0.34 ? ['pierna_izq', 'pierna_der'] : [];
-      (e.appearance as any).build = pick([...BUILDS, 'medio', 'medio']); (e.appearance as any).hairStyle = pick([...HAIR_STYLES]); (e.appearance as any).faceShape = pick([...FACE_SHAPES]); (e.appearance as any).legwear = pick(['pantalon', 'pantalon', 'pantalon', 'shorts', 'falda']);
+      (e.appearance as any).build = pick([...BUILDS, 'medio', 'medio']); (e.appearance as any).hairStyle = pick([...HAIR_STYLES]); (e.appearance as any).faceShape = pick([...FACE_SHAPES]); (e.appearance as any).nose = pick([...NOSES]); (e.appearance as any).mouth = pick([...MOUTHS]); (e.appearance as any).legwear = pick(['pantalon', 'pantalon', 'pantalon', 'shorts', 'falda']);
       (e.appearance as any).top = pick(['chaqueta', 'gabardina', 'sudadera', 'top', 'traje', 'chaleco', 'mono']); (e.appearance as any).accessory = pick(['ninguno', 'ninguno', 'gafas', 'gorra', 'capucha', 'auriculares', 'visor']);
       (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
       e.npc.nextThink = Math.floor(rng() * 20);
@@ -145,6 +148,7 @@ export class World {
     this.combat.spawnPopulation();
     this.nightlife.populate();
     this.underworld.populate();
+    if (this.cfg.threats !== false) await this.threats.init(); else this.threats.enabled = false;
   }
 
   private populateZone(z: Zone) {
@@ -269,6 +273,7 @@ export class World {
       for (const e of z.entities) {
         if (e.npc && e.npcType !== 'essential' && e.aggro === undefined && (!anyone || !z.isActive(e))) continue;
         if (e.path.length) this.moveEntity(e, dt);
+        else if (e.steer) this.steerEntity(e, dt);
         if (e.pendingAction && e.conn) this.combat.checkPending(e.conn);
         if (e.channel && this.tick >= e.channel.endTick) { const ch = e.channel; e.channel = undefined; ch.apply(); }
         if (e.task) this.processTask(e);
@@ -289,6 +294,7 @@ export class World {
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.underworld.everySecond();
+    if (this.tick % 20 === 5) this.threats.tick().catch((err) => console.error('[amenazas]', err));
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
     this.metrics.tick.push(performance.now() - t0);
@@ -319,6 +325,34 @@ export class World {
       }
     }
     if (!e.moving) this.onArrive(e);
+  }
+
+  /** v0.7: movimiento libre con WASD. Se desliza por las paredes (prueba el eje X y el Y por separado). */
+  private steerEntity(e: Entity, dt: number) {
+    const s = e.steer!;
+    if (Date.now() - s.at > 1500 || (!s.dx && !s.dy)) { e.steer = undefined; if (e.moving) { e.moving = false; e.lastMoveTick = this.tick; } return; }
+    const p = this.playerOf(e);
+    if (e.transit || e.carriedBy || e.state === 'downed' || (p && (p.status !== 'alive' || p.sleeping))) { e.moving = false; return; }
+    this.nightlife.stop(e);
+    const step = e.speed * dt * (e.guard ? 0.5 : 1);
+    const g = e.zone.grid;
+    const free = (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - e.x) * 0.22, y + Math.sign(y - e.y) * 0.22);
+    let nx = e.x + s.dx * step, ny = e.y + s.dy * step;
+    if (!free(nx, ny)) { if (free(nx, e.y)) ny = e.y; else if (free(e.x, ny)) nx = e.x; else { nx = e.x; ny = e.y; } }
+    const moved = nx !== e.x || ny !== e.y;
+    if (moved) { e.facing = facingToIdx(nx - e.x, ny - e.y); e.x = nx; e.y = ny; e.zone.moved(e); }
+    e.moving = moved;
+    e.lastMoveTick = this.tick;
+    if (e.kind === 'player' && e.conn) this.sectorCheck(e);
+  }
+  private sectorCheck(e: Entity) {
+    const s = sectorOf(e.zone.grid, e.x, e.y);
+    const dn = dangerAt(e.zone.grid, e.x, e.y);
+    if (s.id !== e.sectorId || dn !== e.conn!.lastDanger) {
+      if (s.id !== e.sectorId) this.metrics.inc('sectorCrossings');
+      e.sectorId = s.id; e.conn!.lastDanger = dn;
+      this.send(e.conn!, { t: 'sector', sector: s.name, danger: dn });
+    }
   }
 
   private onArrive(e: Entity) {
@@ -579,12 +613,25 @@ export class World {
     switch (m.t) {
       case 'ping': this.send(c, { t: 'pong', seq: m.seq, ct: m.ct, st: Date.now() }); return;
       case 'move': return this.onMove(c, e, m.seq, m.x, m.y);
+      case 'steer': {
+        const moving = m.dx !== 0 || m.dy !== 0;
+        const len = Math.hypot(m.dx, m.dy) || 1;
+        if (moving && !e.steer) { this.cancelActivity(e); this.closeDialog(c); this.intel.cancel(c); if (p.auto.on) this.autopilot.takeOver(c); }
+        if (moving && e.path.length) { e.path = []; e.pendingInteract = undefined; }
+        e.steer = moving ? { dx: m.dx / len, dy: m.dy / len, at: Date.now() } : undefined;
+        if (!moving) { e.moving = false; e.lastMoveTick = this.tick; }
+        return;
+      }
+      case 'guard': {
+        e.guard = m.on; e.guardSince = m.on ? Date.now() : undefined; e.labelVer++;
+        this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      }
       case 'stop': this.cancelActivity(e); this.closeDialog(c); this.send(c, { t: 'ack', seq: m.seq, ok: true, info: 'Orden cancelada' }); return;
       case 'interact': return this.onInteract(c, e, m.seq, m.target);
       case 'retreat': return this.onRetreat(c, e, m.seq);
       case 'closeDialog': this.closeDialog(c); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'stance': p.stance = m.stance; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
-      case 'chat': return this.onChat(c, e, m.seq, m.text);
+      case 'chat': return this.onChat(c, e, m.seq, m.text, m.channel);
       case 'choose': this.enqueue(c, () => this.onChoose(c, m)); return;
       case 'useItem': return guarded(m.seq, () => sv.consume(c, m.item, m.opId));
       case 'sleep': return guarded(m.seq, () => sv.sleepCmd(c, -1));
@@ -649,6 +696,8 @@ export class World {
         }
       });
       case 'drop': return guarded(m.seq, async () => this.combat.drop(c));
+      case 'treat': return guarded(m.seq, async () => sv.treatPart(c, m.part, m.item, m.opId));
+      case 'repairChrome': return guarded(m.seq, async () => sv.repairChrome(c, m.doc, m.opId));
       case 'searchPeople': return guarded(m.seq, async () => this.intel.search(c, m.query, m.device));
       case 'goto': return guarded(m.seq, async () => this.intel.start(c, m));
       case 'trunk': return guarded(m.seq, async () => {
@@ -791,13 +840,16 @@ export class World {
     this.send(c, { t: 'ack', seq, ok: true, path: e.path, info: `Retirada hacia ${best.door.name} (${Math.round(best.len)} m)` });
   }
 
-  private onChat(c: PlayerConn, e: Entity, seq: number, text: string) {
+  private onChat(c: PlayerConn, e: Entity, seq: number, text: string, channel: 'local' | 'global' = 'local') {
     const now = Date.now();
     c.chatTimes = c.chatTimes.filter((x) => now - x < 5000);
-    if (c.chatTimes.length >= 3) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Vas demasiado rápido: espera unos segundos para escribir.' });
+    // El global llega a toda la ciudad: como mucho un mensaje cada 4 s.
+    if (c.chatTimes.length >= 3 || (channel === 'global' && c.chatTimes.some((x) => now - x < 4000 && (c as any).lastGlobal === x))) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Vas demasiado rápido: espera unos segundos para escribir.' });
     c.chatTimes.push(now);
+    if (channel === 'global') (c as any).lastGlobal = now;
     const clean = text.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 200);
     if (!clean) return;
+    if (channel === 'global') { for (const o of this.conns.values()) if (!o.closed) this.send(o, { t: 'chat', from: e.name, fromId: e.id, channel: 'global', text: clean }); this.send(c, { t: 'ack', seq, ok: true }); return; }
     for (const o of e.zone.query(e.x, e.y, 20)) if (o.kind === 'player' && o.conn) this.send(o.conn, { t: 'chat', from: e.name, fromId: e.id, channel: 'local', text: clean });
     this.send(c, { t: 'ack', seq, ok: true });
   }

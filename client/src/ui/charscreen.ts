@@ -289,6 +289,8 @@ function sheetTab(s: CharacterSheet) {
     h('h3', {}, 'Armas encima'),
     h('div', { class: 'attr-grid' }, stat('Largas', `${s.weaponSlots.grande}/${s.weaponSlots.maxGrande}`), stat('Cortas', `${s.weaponSlots.pequena}/${s.weaponSlots.maxPequena}`), stat('Tiro seguro', `${s.aim.range} m`), stat('Apuntar', `${s.aim.time} s`)),
     s.bio ? h('div', { class: 'fcard', style: { borderTopColor: s.bio.done ? '#5affc8' : '#ffd23f', marginTop: '8px' } }, h('b', {}, `Objetivo vital: ${s.bio.objectiveName}`), h('div', {}, s.bio.done ? '✔ Cumplido (+2 puntos de perk)' : s.bio.progress)) : null,
+    s.psychosis ? h('div', { class: 'fcard', style: { borderTopColor: '#ff2020', marginTop: '8px' } }, h('b', { style: { color: 'var(--red)' } }, `🧠 ${s.psychosis}`), h('div', {}, s.psychosis === 'Ciberpsicosis' ? 'Pierdes el control: disparas y atacas sin querer. Quítate cromo en un matasanos y descansa.' : 'Insultas y empujas a la gente sin motivo. Llevas más cromo del que aguantas.')) : null,
+    s.chromeDebuff ? h('div', { class: 'fcard', style: { borderTopColor: '#ff9a30', marginTop: '8px' } }, h('b', {}, 'Rechazo del cromo'), h('div', {}, `Capacidad de cromo −${s.chromeDebuff.amount} durante ${s.chromeDebuff.minutes} min.`)) : null,
     s.identified ? h('div', { class: 'fcard', style: { borderTopColor: '#ff3040', marginTop: '8px' } }, h('b', { style: { color: 'var(--red)' } }, '📷 Identificado/a por las cámaras'), h('div', {}, `${s.identified.crime} en ${s.identified.district}. Tu ficha es pública: la PCV puede ir a por ti con fuego real.`)) : null,
     s.uniques.length ? h('p', { class: 'small' }, h('b', {}, 'Efectos únicos activos: '), s.uniques.join(', ')) : null);
 }

@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { humanityBase, surgeryRisk, type ClinicOffer, type ClinicView, type Content, type CyberwareDef, type RipperdocDef } from '@vertice/shared';
 import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
-import { effective, type PlayerState } from './player.js';
+import { chromeParts, effective, type PlayerState } from './player.js';
 import { ROMAN, type MarketService } from './market.js';
 
 const MORALITY: Record<string, string> = { estricta: 'Estricta: nunca instala cromo robado', flexible: 'Flexible: acepta cromo robado con recargo', sin_escrupulos: 'Sin escrúpulos: instala lo que sea' };
@@ -35,12 +35,18 @@ export class ClinicService {
     const risk = surgeryRisk({ skill: d.skill, grade: def.grade, danger: d.danger, body: ef.attrs.BODY, rep: this.rep(p, d), stolen, unscrupulous: d.morality === 'sin_escrupulos', bonus: ef.surgery, humanityAfter, removal });
     let blocked: string | undefined;
     let replaces: string | undefined;
+    let warning: string | undefined;
     if (!removal) {
       if (def.grade > d.maxGrade) blocked = `${d.name} no trabaja cromo de grado ${ROMAN[def.grade - 1]} (máximo ${ROMAN[d.maxGrade - 1]}).`;
       else if (stolen && d.morality === 'estricta') blocked = 'Se niega: no instala cromo robado.';
       const occupied = p.cyber.find((x) => x.location === 'installed' && this.c.cyberware.find((y) => y.id === x.def)?.slot === def.slot);
       if (!blocked && occupied) { replaces = this.c.cyberware.find((y) => y.id === occupied.def)!.name; blocked = `La ranura «${def.slot}» está ocupada por ${replaces}. Retíralo primero: dos implantes no pueden compartir ranura.`; }
-      if (!blocked && capacityAfter > ef.chromeCapacity) blocked = `Superarías tu capacidad de cromo (${capacityAfter}/${ef.chromeCapacity}).`;
+      // v0.7: se puede pasar del límite (hasta un 50 % más) con matasanos poco escrupulosos… a cambio de arriesgarse a la ciberpsicosis.
+      if (!blocked && capacityAfter > ef.chromeCapacity) {
+        if (d.morality === 'estricta') blocked = `Superarías tu capacidad de cromo (${capacityAfter}/${ef.chromeCapacity}). ${d.name} no trabaja por encima del límite.`;
+        else if (capacityAfter > Math.floor(ef.chromeCapacity * 1.5)) blocked = `Ni el matasanos más loco te metería tanto cromo (${capacityAfter}/${ef.chromeCapacity}).`;
+        else warning = `Te pasas de tu límite de cromo (${capacityAfter}/${ef.chromeCapacity}). Cuanto más te pases y más tiempo, más cerca de la ciberpsicosis.`;
+      }
       if (!blocked && humMaxAfter < 10) blocked = 'Tu Humanidad máxima bajaría de 10: ningún matasanos serio lo haría.';
     }
     if (!blocked && d.id === 'vex' && this.rep(p, d) < -10) blocked = 'Vex no quiere tocarte: tienes mala fama con las Hojas Rojas.';
@@ -48,7 +54,7 @@ export class ClinicService {
     return {
       source, ref, action: removal ? 'remove' : 'install', def: def.id, name: def.name, grade: def.grade, slot: def.slot, family: def.family, desc: def.desc, stolen,
       capacity: def.capacity, humanity: def.humanity, price, survival: risk.survival, clean: risk.clean, theft: risk.theft, danger: risk.label,
-      humanityAfter: removal ? p.humanity : humanityAfter, capacityAfter, blocked, replaces,
+      humanityAfter: removal ? p.humanity : humanityAfter, capacityAfter, blocked, replaces, warning,
     };
   }
 
@@ -63,7 +69,8 @@ export class ClinicService {
       offers.push(this.offer(p, d, def, ci.location === 'installed' ? 'installed' : 'inventory', ci.id, ci.stolen));
     }
     const dangerLabel = d.danger >= 0.3 ? 'Peligroso: tiene fama de robar a sus pacientes' : d.danger > 0.05 ? 'Algo turbio' : 'De confianza';
-    return { doc: d.id, name: d.name, skill: d.skill, morality: MORALITY[d.morality], dangerLabel, desc: d.desc, money: p.money, humanity: p.humanity, humanityMax: p.humanityMax, chromeUsed: ef.chromeUsed, chromeCapacity: ef.chromeCapacity, rep: this.rep(p, d), offers };
+    return { doc: d.id, name: d.name, skill: d.skill, morality: MORALITY[d.morality], dangerLabel, desc: d.desc, money: p.money, humanity: p.humanity, humanityMax: p.humanityMax, chromeUsed: ef.chromeUsed, chromeCapacity: ef.chromeCapacity, rep: this.rep(p, d), offers,
+      repair: (() => { const parts = chromeParts(this.c, p).filter((k) => (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0) > 0); const dmg = parts.reduce((acc, k) => acc + (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0), 0); return parts.length ? { parts, price: Math.max(60, Math.round(dmg * 9 * d.priceMult)) } : null; })() };
   }
 
   /** Opera. La tirada, el cobro, el cambio de cromo y las consecuencias se aplican juntas e idempotentes. */

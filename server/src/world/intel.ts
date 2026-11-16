@@ -47,8 +47,11 @@ export class Intel {
     const locate = (zoneId: string, x: number, y: number) => {
       if (precise) return { zone: zoneId, place: this.placeName(zoneId, x, y), x, y, precise: true };
       // El móvil solo triangula el distrito: un punto aproximado a unas decenas de metros.
+      // (siempre en un punto transitable: si no, la ruta hacia él sería imposible)
+      const g = this.w.zones.get(zoneId)?.grid;
       const jx = x + (Math.random() - 0.5) * 30, jy = y + (Math.random() - 0.5) * 30;
-      return { zone: zoneId, place: this.placeName(zoneId, x, y), x: jx, y: jy, precise: false };
+      const ok = g ? nearestWalkable(g, jx, jy, 12) : null;
+      return { zone: zoneId, place: this.placeName(zoneId, x, y), x: ok?.x ?? x, y: ok?.y ?? y, precise: false };
     };
     // Jugadores (vivos), conectados o no.
     const rows = await this.w.db.query<any>("SELECT id, name, role, level FROM characters WHERE status <> 'dead' AND lower(name) LIKE $1 ORDER BY level DESC LIMIT 8", [`%${q.replace(/[%_]/g, '')}%`]);
@@ -191,7 +194,7 @@ export class Intel {
     let tx = x, ty = y;
     const d = Math.hypot(x - e.x, y - e.y);
     if (d > 140) { tx = e.x + ((x - e.x) / d) * 140; ty = e.y + ((y - e.y) / d) * 140; }
-    const dest = nearestWalkable(e.zone.grid, tx, ty, 8);
+    const dest = nearestWalkable(e.zone.grid, tx, ty, 8) ?? nearestWalkable(e.zone.grid, tx, ty, 25);
     if (!dest) throw new GameError('No hay forma de llegar hasta ahí.');
     const r = this.w.playerPath(e, dest.x, dest.y);
     if (!r.ok) {

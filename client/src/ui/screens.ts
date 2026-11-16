@@ -5,7 +5,7 @@ import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 
 export function loginScreen(onDone: () => void) {
@@ -78,7 +78,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   clearUi();
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
     appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
-      faceShape: 'ovalada', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0] },
+      faceShape: 'ovalada', nose: 'recta', mouth: 'neutra', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0] },
     attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes,
     bio: { objective: 'rico', childhood: 'calle', event: 'traicion' }, skillPoints: {} as Record<string, number> };
   const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Historia', 'Rol', 'Oficio', 'Atributos', 'Habilidades', 'Revisión'];
@@ -103,7 +103,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   const randomize = () => {
     Object.assign(st.appearance, { skin: pick(SKIN), hair: pick(HAIR), jacket: pick(JACKET), accent: pick(ACCENT), eyes: pick(EYE_COLORS), pants: pick(PANTS),
       build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(TOPS), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO),
-      faceShape: pick(FACE_SHAPES), brows: pick(BROWS), makeup: pick(MAKEUPS), makeupColor: pick(MAKEUP_COL), piercing: pick(PIERCINGS), scar: pick(SCARS), bodyTattoo: pick(BODY_TATTOOS), shirt: pick(SHIRT), shoes: pick(SHOES) });
+      faceShape: pick(FACE_SHAPES), nose: pick(NOSES), mouth: pick(MOUTHS), brows: pick(BROWS), makeup: pick(MAKEUPS), makeupColor: pick(MAKEUP_COL), piercing: pick(PIERCINGS), scar: pick(SCARS), bodyTattoo: pick(BODY_TATTOOS), shirt: pick(SHIRT), shoes: pick(SHOES) });
     render();
   };
 
@@ -122,7 +122,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
       void preview.show(st.appearance, st.previewChrome ? [...CHROME_PARTS] : []);
       const controls = h('div', { class: 'col appearance-controls' },
         h('h4', { class: 'creator-sec' }, 'Cuerpo y cara'),
-        optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), optRow('Forma de la cara', 'faceShape', FACE_SHAPES), swatchRow('Ojos', 'eyes', [...EYE_COLORS]), optRow('Cejas', 'brows', BROWS),
+        optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), optRow('Forma de la cara', 'faceShape', FACE_SHAPES), optRow('Nariz', 'nose', NOSES), optRow('Boca', 'mouth', MOUTHS), swatchRow('Ojos', 'eyes', [...EYE_COLORS]), optRow('Cejas', 'brows', BROWS),
         h('h4', { class: 'creator-sec' }, 'Pelo'),
         optRow('Peinado', 'hairStyle', HAIR_STYLES), swatchRow('Color de pelo', 'hair', HAIR), optRow('Vello facial', 'facial', FACIALS),
         h('h4', { class: 'creator-sec' }, 'Detalles'),

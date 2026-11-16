@@ -16,7 +16,7 @@ function loadDotEnv() {
 
 export interface Config {
   port: number; host: string; databaseUrl?: string; pgliteDir: string; staticDir: string;
-  ambientNpcs: number; crowdNpcs: number; crowdAt: [number, number]; adminToken: string; cityHourOffset: number;
+  ambientNpcs: number; threats?: boolean; crowdNpcs: number; crowdAt: [number, number]; adminToken: string; cityHourOffset: number;
   lingerSeconds: number; viewRadius: number; seed: number; logLevel: 'info' | 'warn'; speedScale: number; needsScale: number; downedSeconds?: number; jobTimeScale: number; cityHourMs?: number;
 }
 
@@ -31,6 +31,7 @@ export function loadConfig(overrides: Partial<Config> = {}): Config {
     pgliteDir: e.PGLITE_DIR ?? join(ROOT, 'data/pglite'),
     staticDir: e.STATIC_DIR ?? join(ROOT, 'client/dist'),
     ambientNpcs: Number(e.AMBIENT_NPCS ?? 48),
+    threats: e.THREATS !== '0',
     crowdNpcs: Number(e.CROWD_NPCS ?? 0),
     crowdAt: crowd,
     adminToken: e.ADMIN_TOKEN ?? 'dev-admin',

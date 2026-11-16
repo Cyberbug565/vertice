@@ -403,8 +403,12 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   if (hood) head.ellipse(0, -44, 8.5, 9).fill(hw === 'capucha' && a.headColor ? HEX(a.headColor) : shade(jacket, 0.85));
   head.rect(-2, -39.5, 4, 3).fill(shade(skin, 0.9));
   const fs = a.faceShape;
-  const [fw, fh, fr, fy] = fs === 'angulosa' ? [12, 13, 2, -52] : fs === 'redonda' ? [13, 12.5, 6, -51.5] : fs === 'alargada' ? [11, 14.5, 4, -53] : [12, 13, 5, -52];
+  const [fw, fh, fr, fy] = fs === 'angulosa' ? [12, 13, 2, -52] : fs === 'redonda' ? [13, 12.5, 6, -51.5] : fs === 'alargada' ? [11, 14.5, 4, -53]
+    : fs === 'cuadrada' ? [13, 13, 1.5, -52] : fs === 'corazon' ? [12.5, 12.5, 5, -52] : fs === 'ancha' ? [14, 12.5, 4.5, -51.5] : fs === 'afilada' ? [11, 14, 3, -52.5] : [12, 13, 5, -52];
   head.roundRect(-fw / 2, fy, fw, fh, fr).fill(skin);
+  // Barbilla: en punta (corazón y afilada) o recta y marcada (cuadrada).
+  if (fs === 'corazon' || fs === 'afilada') head.poly([-fw / 2 + 1, fy + fh - 4, fw / 2 - 1, fy + fh - 4, 1, fy + fh + 1.6]).fill(skin);
+  if (fs === 'cuadrada') head.rect(-fw / 2, fy + fh - 3, fw, 2).fill(shade(skin, 0.94));
   if (fs === 'angulosa') head.poly([-6, -42, -3, -38.6, 4, -38.6, 6, -42]).fill(shade(skin, 0.92));
   head.ellipse(-fw / 2, -45, 1.4, 2).fill(shade(skin, 0.85));
   // Cejas, ojos, nariz y boca (vista de tres cuartos mirando a la derecha).
@@ -418,8 +422,19 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   if (a.makeup === 'delineado') { head.moveTo(-1.4, -47.2).lineTo(1.6, -47.2).moveTo(3.1, -47.2).lineTo(6.2, -47.6).stroke({ width: 0.6, color: 0x101010 }); }
   if (a.makeup === 'neon') { head.rect(-1.4, -44.8, 3, 0.7).fill(mk); head.rect(3, -44.8, 3, 0.7).fill(mk); }
   if (a.makeup === 'pintura') head.rect(-fw / 2, -46, fw, 1.6).fill({ color: mk, alpha: 0.7 });
-  head.moveTo(5.8, -46).lineTo(6.6, -43.5).lineTo(5.4, -43.2).stroke({ width: 0.8, color: shade(skin, 0.7) });
-  head.moveTo(1.5, -41.6).lineTo(4.6, -41.8).stroke({ width: a.makeup === 'labios' ? 1.4 : 0.9, color: a.makeup === 'labios' ? mk : shade(skin, 0.55) });
+  // Nariz (perfil de tres cuartos) y boca.
+  const ns = (a as any).nose ?? 'recta', nc = shade(skin, 0.7);
+  if (ns === 'chata') head.moveTo(5.6, -45.5).lineTo(6.3, -43.6).lineTo(5.2, -43.4).stroke({ width: 1, color: nc });
+  else if (ns === 'aguilena') head.moveTo(5.6, -46.4).quadraticCurveTo(7.6, -45.2, 6.6, -43.2).lineTo(5.4, -43.2).stroke({ width: 0.9, color: nc });
+  else if (ns === 'pequena') head.moveTo(5.6, -44.6).lineTo(6, -43.6).lineTo(5.3, -43.5).stroke({ width: 0.7, color: nc });
+  else if (ns === 'ancha') { head.moveTo(5.6, -46).lineTo(6.8, -43.4).lineTo(4.6, -43.1).stroke({ width: 1.1, color: nc }); head.circle(4.9, -43.5, 0.6).fill(nc); }
+  else head.moveTo(5.8, -46).lineTo(6.6, -43.5).lineTo(5.4, -43.2).stroke({ width: 0.8, color: nc });
+  const ms = (a as any).mouth ?? 'neutra', lipC = a.makeup === 'labios' ? mk : shade(skin, 0.55), lipW = a.makeup === 'labios' ? 1.4 : 0.9;
+  if (ms === 'sonrisa') head.moveTo(1.4, -42).quadraticCurveTo(3, -40.6, 4.8, -42.2).stroke({ width: lipW, color: lipC });
+  else if (ms === 'seria') head.moveTo(1.5, -41.4).quadraticCurveTo(3, -42.2, 4.6, -41.4).stroke({ width: lipW, color: lipC });
+  else if (ms === 'labios-gruesos') { head.roundRect(1.3, -42.4, 3.6, 1.8, 0.9).fill(a.makeup === 'labios' ? mk : shade(skin, 0.68)); head.moveTo(1.4, -41.5).lineTo(4.8, -41.5).stroke({ width: 0.5, color: shade(skin, 0.5) }); }
+  else if (ms === 'fina') head.moveTo(1.8, -41.6).lineTo(4.4, -41.7).stroke({ width: 0.6, color: lipC });
+  else head.moveTo(1.5, -41.6).lineTo(4.6, -41.8).stroke({ width: lipW, color: lipC });
   // Vello facial.
   const f = a.facial;
   if (f === 'barba') head.poly([-5, -44, -4, -39.5, 0, -38, 4, -39.5, 6, -43, 5.5, -41, 1, -40.5, -2, -41]).fill(hair);

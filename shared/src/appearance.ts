@@ -3,7 +3,9 @@ export const BUILDS = ['delgado', 'medio', 'robusto', 'atletico', 'corpulento', 
 export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños', 'afro-corto', 'pompadour', 'bob', 'media-melena', 'trenza-larga', 'erizo'] as const;
 export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono'] as const;
 export const FACIALS = ['ninguno', 'barba', 'bigote', 'perilla', 'barba-larga', 'patillas', 'candado'] as const;
-export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada'] as const;
+export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada', 'cuadrada', 'corazon', 'ancha', 'afilada'] as const;
+export const NOSES = ['recta', 'chata', 'aguilena', 'pequena', 'ancha'] as const;
+export const MOUTHS = ['neutra', 'sonrisa', 'seria', 'labios-gruesos', 'fina'] as const;
 export const BROWS = ['normales', 'finas', 'gruesas', 'arqueadas', 'cortadas'] as const;
 export const MAKEUPS = ['ninguno', 'delineado', 'labios', 'neon', 'pintura'] as const;
 export const PIERCINGS = ['ninguno', 'nariz', 'ceja', 'labio', 'orejas', 'septum'] as const;
@@ -16,6 +18,8 @@ export const LABELS: Record<string, string> = {
   'afro-corto': 'Afro corto', pompadour: 'Tupé', bob: 'Bob', 'media-melena': 'Media melena', 'trenza-larga': 'Trenza larga', erizo: 'Erizo', rapado: 'Rapado', corto: 'Corto', cresta: 'Cresta', largo: 'Largo', coleta: 'Coleta', afro: 'Afro', 'moño': 'Moño', rastas: 'Rastas', calvo: 'Calvo', asimetrico: 'Asimétrico',
   chaqueta: 'Chaqueta', gabardina: 'Gabardina', chaleco: 'Chaleco', sudadera: 'Sudadera', traje: 'Traje', top: 'Top', mono: 'Mono de trabajo',
   undercut: 'Undercut', trenzas: 'Trenzas', mohicano: 'Mohicano', melena: 'Melena', flequillo: 'Flequillo', puntas: 'Puntas', 'coleta-alta': 'Coleta alta', rizos: 'Rizos', lobo: 'Corte lobo', 'dos-moños': 'Dos moños',
+  cuadrada: 'Cuadrada', corazon: 'Corazón', ancha: 'Ancha', afilada: 'Afilada', recta: 'Recta', chata: 'Chata', aguilena: 'Aguileña', pequena: 'Pequeña',
+  neutra: 'Neutra', sonrisa: 'Sonrisa', seria: 'Seria', 'labios-gruesos': 'Labios gruesos', fina: 'Fina',
   'barba-larga': 'Barba larga', patillas: 'Patillas', candado: 'Candado', ovalada: 'Ovalada', angulosa: 'Angulosa', redonda: 'Redonda', alargada: 'Alargada',
   normales: 'Normales', finas: 'Finas', gruesas: 'Gruesas', arqueadas: 'Arqueadas', cortadas: 'Con corte', delineado: 'Delineado', labios: 'Labios', neon: 'Neón', pintura: 'Pintura de guerra',
   nariz: 'Nariz', ceja: 'Ceja', labio: 'Labio', orejas: 'Orejas', septum: 'Septum', ninguna: 'Ninguna', mejilla: 'Mejilla', ojo: 'Ojo', frente: 'Frente',
@@ -33,11 +37,11 @@ export function normalizeAppearance(a: any): { ok: true; value: Record<string, s
   const v: Record<string, string> = { skin: a.skin, hair: a.hair, jacket: a.jacket, accent: a.accent,
     eyes: a.eyes ?? '#3a2a1a', pants: a.pants ?? '#1a1a24', build: a.build ?? 'medio', hairStyle: a.hairStyle ?? 'corto', top: a.top ?? 'chaqueta', facial: a.facial ?? 'ninguno', accessory: a.accessory ?? 'ninguno', tattoo: a.tattoo ?? '',
     faceShape: a.faceShape ?? 'ovalada', brows: a.brows ?? 'normales', makeup: a.makeup ?? 'ninguno', makeupColor: a.makeupColor ?? '#ff3fa4', piercing: a.piercing ?? 'ninguno', scar: a.scar ?? 'ninguna', bodyTattoo: a.bodyTattoo ?? 'ninguno',
-    shirt: a.shirt ?? '#2a2a3a', shoes: a.shoes ?? '#1a1a1a' };
+    shirt: a.shirt ?? '#2a2a3a', shoes: a.shoes ?? '#1a1a1a', nose: a.nose ?? 'recta', mouth: a.mouth ?? 'neutra' };
   if (![v.eyes, v.pants, v.makeupColor, v.shirt, v.shoes].every((x) => HEX.test(x))) return { ok: false, error: 'Color inválido' };
   if (v.tattoo && !HEX.test(v.tattoo)) return { ok: false, error: 'Tatuaje inválido' };
   const enumOk = (val: string, list: readonly string[], n: string) => (list.includes(val) ? null : `Opción inválida: ${n}`);
   const e = enumOk(v.build, BUILDS, 'complexión') ?? enumOk(v.hairStyle, HAIR_STYLES, 'peinado') ?? enumOk(v.top, TOPS, 'ropa') ?? enumOk(v.facial, FACIALS, 'vello facial') ?? enumOk(v.accessory, ACCESSORIES, 'accesorio')
-    ?? enumOk(v.faceShape, FACE_SHAPES, 'cara') ?? enumOk(v.brows, BROWS, 'cejas') ?? enumOk(v.makeup, MAKEUPS, 'maquillaje') ?? enumOk(v.piercing, PIERCINGS, 'piercing') ?? enumOk(v.scar, SCARS, 'cicatriz') ?? enumOk(v.bodyTattoo, BODY_TATTOOS, 'tatuaje corporal');
+    ?? enumOk(v.faceShape, FACE_SHAPES, 'cara') ?? enumOk(v.nose, NOSES, 'nariz') ?? enumOk(v.mouth, MOUTHS, 'boca') ?? enumOk(v.brows, BROWS, 'cejas') ?? enumOk(v.makeup, MAKEUPS, 'maquillaje') ?? enumOk(v.piercing, PIERCINGS, 'piercing') ?? enumOk(v.scar, SCARS, 'cicatriz') ?? enumOk(v.bodyTattoo, BODY_TATTOOS, 'tatuaje corporal');
   return e ? { ok: false, error: e } : { ok: true, value: v };
 }

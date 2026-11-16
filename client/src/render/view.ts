@@ -2,7 +2,7 @@
 // interpolación de entidades remotas y predicción del personaje propio.
 import { Application, Container, Graphics, Sprite, Text, type FederatedPointerEvent } from 'pixi.js';
 import {
-  GROUND_TYPES, buildZoneGrid, findPath, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
+  GROUND_TYPES, buildZoneGrid, findPath, isWalkable, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
@@ -64,6 +64,13 @@ export class GameView {
   onGroundClick: (x: number, y: number) => void = () => {};
   onEntityClick: (e: CEnt) => void = () => {};
   onRightClick: (x: number, y: number) => void = () => {};
+  /** v0.7: clic derecho mantenido (apuntar o bloquear). */
+  onGuard: (on: boolean) => void = () => {};
+  /** Dirección de WASD en coordenadas del mundo (0,0 = quieto) y si estás en guardia (apuntando o bloqueando). */
+  steer = { dx: 0, dy: 0 };
+  guarding = false;
+  /** Punto del suelo bajo el cursor (para mirar hacia él al apuntar). */
+  cursor = { x: 0, y: 0, sx: 0, sy: 0 };
   serverTime = () => Date.now();
   onHover: (e: CEnt | null, sx: number, sy: number) => void = () => {};
   onContextLost: (lost: boolean) => void = () => {};
@@ -93,7 +100,10 @@ export class GameView {
     this.app.stage.hitArea = this.app.screen;
     this.app.stage.on('pointertap', (ev: FederatedPointerEvent) => this.onTap(ev));
     this.app.stage.on('pointermove', (ev: FederatedPointerEvent) => this.onMove(ev));
-    this.app.canvas.addEventListener('contextmenu', (e) => { e.preventDefault(); const r = this.app.canvas.getBoundingClientRect(); this.hovered = this.pick(e.clientX - r.left, e.clientY - r.top, true); this.onRightClick(e.clientX, e.clientY); });
+    this.app.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    this.app.canvas.addEventListener('pointerdown', (e) => { if (e.button === 2) { this.guarding = true; this.onGuard(true); } });
+    window.addEventListener('pointerup', (e) => { if (e.button === 2 && this.guarding) { this.guarding = false; this.onGuard(false); } });
+    window.addEventListener('blur', () => { if (this.guarding) { this.guarding = false; this.onGuard(false); } });
     this.app.canvas.addEventListener('wheel', (e) => { e.preventDefault(); this.setZoom(this.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); }, { passive: false });
     // Pérdida del contexto gráfico: aviso y reconstrucción de la escena al recuperarlo.
     this.app.canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.onContextLost(true); });
@@ -281,6 +291,8 @@ export class GameView {
       ch.root.scale.set(CHAR_SCALE * ch.root.scale.x);
       view.addChild(ch.root);
       ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor; ent.charRoot = ch.root;
+      // Ciberpsicópata: aura roja que late bajo los pies.
+      if (s.npcType === 'psycho') { const aura = new Graphics().ellipse(0, 0, 22, 11).fill({ color: 0xff2020, alpha: 0.25 }).ellipse(0, 0, 22, 11).stroke({ width: 2, color: 0xff2020, alpha: 0.9 }); view.addChildAt(aura, 0); ch.root.scale.set(CHAR_SCALE * 1.15); }
       ent.legL = ch.legL; ent.legR = ch.legR; ent.armB = ch.armB; ent.armF = ch.armF; ent.hand = ch.hand; ent.bodyY = ch.bodyY;
       // Arma empuñada (se ve en la mano; las largas se llevan con las dos manos).
       const wi = s.weapon ? content.items.find((i) => i.id === s.weapon) : undefined;
@@ -578,7 +590,9 @@ export class GameView {
     }
   }
 
-  setMyAttributes(a: Attributes, speed = 1) { this.me.speed = walkSpeed(a) * speed; }
+  /** Velocidad propia: la exacta la manda el servidor (selfSpeed); esto solo es la estimación inicial. */
+  serverSpeed = false;
+  setMyAttributes(a: Attributes, speed = 1) { if (!this.serverSpeed) this.me.speed = walkSpeed(a) * speed; }
   /** Predicción local: el cliente calcula la ruta con la misma rejilla y empieza a moverse antes del ack. */
   predictMove(x: number, y: number): [number, number][] | null {
     if (!this.grid) return null;
@@ -632,6 +646,8 @@ export class GameView {
     this.onGroundClick(w.x, w.y);
   }
   private onMove(ev: FederatedPointerEvent) {
+    const w = this.toWorld(ev.global.x, ev.global.y);
+    this.cursor = { x: w.x, y: w.y, sx: ev.global.x, sy: ev.global.y };
     const e = this.pick(ev.global.x, ev.global.y);
     this.hovered = e;
     this.app.canvas.style.cursor = e ? 'pointer' : 'crosshair';
@@ -659,7 +675,18 @@ export class GameView {
     dt = Math.min(dt, 0.1);
     // Personaje propio: avanza por la ruta predicha y se reconcilia con el último estado confirmado.
     const me = this.me;
-    if (me.path.length) {
+    // WASD: el cliente avanza al instante con las mismas reglas que el servidor (se desliza por las paredes).
+    if ((this.steer.dx || this.steer.dy) && this.grid) {
+      me.path = []; this.pathG.clear();
+      const step = me.speed * dt * (this.guarding ? 0.5 : 1), g = this.grid;
+      const free = (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - me.x) * 0.22, y + Math.sign(y - me.y) * 0.22);
+      let nx = me.x + this.steer.dx * step, ny = me.y + this.steer.dy * step;
+      if (!free(nx, ny)) { if (free(nx, me.y)) ny = me.y; else if (free(me.x, ny)) nx = me.x; else { nx = me.x; ny = me.y; } }
+      me.x = nx; me.y = ny;
+      const errS = Math.hypot(me.serverX - me.x, me.serverY - me.y);
+      if (errS > 3) { me.x = me.serverX; me.y = me.serverY; }
+      else if (errS > 0.6) { const k = Math.min(1, dt * 3); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
+    } else if (me.path.length) {
       let budget = me.speed * dt;
       while (budget > 0 && me.path.length) {
         const [tx, ty] = me.path[0]; const dx = tx - me.x, dy = ty - me.y, d = Math.hypot(dx, dy);
@@ -668,7 +695,8 @@ export class GameView {
       if (!me.path.length) this.pathG.clear();
     }
     const err = Math.hypot(me.serverX - me.x, me.serverY - me.y);
-    if (err > 3) { me.x = me.serverX; me.y = me.serverY; }
+    if (this.steer.dx || this.steer.dy) { /* corregido arriba */ }
+    else if (err > 3) { me.x = me.serverX; me.y = me.serverY; }
     else if (!me.path.length && !me.serverMoving) { const k = Math.min(1, dt * 8); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
     else if (err > 1.2) { const k = Math.min(1, dt * 2); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
 
@@ -678,7 +706,8 @@ export class GameView {
       if (e.s.id === this.meId) {
         const dx = me.x - e.x, dy = me.y - e.y;
         e.moving = Math.hypot(dx, dy) > 0.002;
-        if (e.moving) this.face(e, dx, dy);
+        if (this.guarding) this.face(e, this.cursor.x - me.x, this.cursor.y - me.y);
+        else if (e.moving) this.face(e, dx, dy);
         e.x = me.x; e.y = me.y;
       } else if (e.s.kind === 'player' || e.s.kind === 'npc') {
         const s = e.samples;
@@ -838,6 +867,9 @@ export class GameView {
     let front = -sw * amp * 0.8, back = sw * amp * 0.8;
     if (e.weaponKind === 'ranged') { front = since < 380 ? -1.45 : -0.55 + sw * 0.08; if (e.weaponBig) back = front + 0.25; }
     else if (e.weaponKind === 'melee') { front = -0.25 - sw * 0.2; if (e.weaponBig) back = front + 0.3; }
+    // Guardia: apuntando (brazo extendido hacia el objetivo) o bloqueando (arma cruzada delante).
+    const guard = e.s.id === this.meId ? this.guarding : !!e.s.buffs?.includes('guardia');
+    if (guard && since >= 380) { if (e.weaponKind === 'ranged') { front = -1.5; if (e.weaponBig) back = -1.3; } else { front = -1.05; back = -0.9; } }
     if (since < 320 && e.attackKind === 'hit') { const k = since / 320; front = 2.0 - k * 3.8; if (e.weaponBig) back = front + 0.3; }
     else if (since < 380 && e.attackKind === 'shot' && !e.weaponKind) front = -1.4;
     if (e.s.emote && !e.moving && !e.s.vehicle) {

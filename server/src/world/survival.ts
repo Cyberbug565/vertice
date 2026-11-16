@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   checkChance, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
-  OBJECTIVES, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView,
+  OBJECTIVES, PART_NAMES, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView,
 } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { Entity, RunningTask } from './entity.js';
@@ -23,7 +23,7 @@ export { opposed as opposedChance } from './combat.js';
 interface ConnExtra {
   openShop?: { shop: string; entity: number }; openClinic?: { doc: string; entity: number };
   nextAutoAt: number; noFoodWarnAt: number; warned: Record<string, boolean>; lastSheetAt: number; nextHostileAt: number;
-  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean; lastPos?: { zone: string; x: number; y: number }; breathless?: boolean;
+  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean; lastPos?: { zone: string; x: number; y: number }; breathless?: boolean; sentSpeed?: number; sentGuard?: boolean;
 }
 
 export class Survival {
@@ -151,6 +151,8 @@ export class Survival {
       if (p.stamina > 20) x.breathless = false;
       e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult * substances.speed;
     }
+    // v0.7: el cliente predice el movimiento con WASD a la misma velocidad que el servidor.
+    { const v = Math.round(e.speed * 1000) / 1000; if (x.sentSpeed !== v || x.sentGuard !== !!e.guard) { x.sentSpeed = v; x.sentGuard = !!e.guard; this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard }); } }
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
     if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y) * (p.running && !p.driving ? 2 : 1));
     x.lastPos = { zone: e.zone.id, x: e.x, y: e.y };
@@ -316,6 +318,73 @@ export class Survival {
       ? 'Has desarrollado dependencia al alcohol. Al quedarte sobrio puedes sufrir abstinencia.'
       : `Has desarrollado dependencia a ${d.name}. Puedes sufrir abstinencia cuando se acabe el efecto.`);
     this.sheet(c);
+  }
+
+  // ================================================================ v0.7: curar una zona concreta del cuerpo
+  /** Vendas, estimulantes y analgésicos sobre una herida concreta. El cromo no se cura: se repara en un matasanos. */
+  async treatPart(c: PlayerConn, part: BodyPart, item: string, opId: string) {
+    const p = c.p!;
+    const TREAT: Record<string, { wound: number; bleed: number; hp: number; label: string }> = {
+      venda: { wound: 10, bleed: 0.7, hp: 5, label: 'Te vendas' },
+      estim: { wound: 18, bleed: 1, hp: 20, label: 'Te inyectas un estimulante en' },
+      estabilizador: { wound: 14, bleed: 0.85, hp: 10, label: 'Aplicas el estabilizador en' },
+      analgesicos: { wound: 6, bleed: 0, hp: 8, label: 'Los analgésicos calman el dolor de' },
+    };
+    const t0 = TREAT[item];
+    if (!t0) throw new GameError('Eso no sirve para curar heridas.');
+    if (p.body.lost.includes(part)) throw new GameError('Ese miembro ya no está: solo un matasanos puede implantarte una prótesis.');
+    if (chromeParts(this.w.c, p).includes(part)) throw new GameError('Es cromo: no sangra, pero si está dañado tiene que repararlo un matasanos.');
+    if (!(p.body.wounds[part] ?? 0) && p.body.bleed <= 0.05) throw new GameError('Esa zona está sana.');
+    if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No te quedan.');
+    const done = await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) return false;
+      const u = await q.query('UPDATE inventory_items SET qty = qty - 1 WHERE character_id=$1 AND def_id=$2 AND qty >= 1 RETURNING qty', [p.charId, item]);
+      if (!u.rows.length) throw new GameError('No te quedan.');
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'treat', JSON.stringify({ item, part })]);
+      return true;
+    });
+    if (!done) return;
+    p.inventory.set(item, (p.inventory.get(item) ?? 1) - 1);
+    p.body.wounds[part] = Math.max(0, (p.body.wounds[part] ?? 0) - t0.wound);
+    if (!p.body.wounds[part]) delete p.body.wounds[part];
+    p.body.bleed = Math.max(0, p.body.bleed * (1 - t0.bleed));
+    p.hp = Math.min(effective(this.w.c, p).hpMax, p.hp + t0.hp);
+    if (c.e) c.e.labelVer++;
+    this.w.progress.gain(p, 'medicina', 2);
+    this.notice(c, 'good', `${t0.label} ${PART_NAMES[part]}.${p.body.bleed > 0.05 ? ` Sigues sangrando (−${p.body.bleed.toFixed(1)}/s).` : ''}`);
+    this.sheet(c);
+  }
+
+  /** Reparar el cromo dañado en la consulta de un matasanos (los miembros robóticos no sangran, pero se averían). */
+  async repairChrome(c: PlayerConn, docId: string, opId: string) {
+    const o = this.x(c).openClinic;
+    const src = o && this.w.entities.get(o.entity);
+    if (!o || o.doc !== docId || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > 4) throw new GameError('Tienes que estar en la consulta.');
+    const p = c.p!;
+    const doc = this.w.c.ripperdocs.find((d) => d.id === docId)!;
+    const parts = chromeParts(this.w.c, p).filter((k) => (p.body.wounds[k as BodyPart] ?? 0) > 0) as BodyPart[];
+    if (!parts.length) throw new GameError('Tu cromo está en perfecto estado.');
+    const price = this.chromeRepairPrice(p, doc.priceMult);
+    if (p.money < price) throw new GameError(`La reparación cuesta ${price} €$.`);
+    await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) throw new GameError('Operación ya procesada');
+      const bal = p.money - price;
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:cromo`, p.charId, -price, bal, `Reparación de cromo: ${doc.name}`]);
+      await q.query('UPDATE characters SET money=$2 WHERE id=$1', [p.charId, bal]);
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'chrome-repair', JSON.stringify({ parts, price })]);
+    });
+    p.money -= price;
+    for (const k of parts) delete p.body.wounds[k];
+    if (c.e) c.e.labelVer++;
+    this.notice(c, 'good', `${doc.name} repara tu cromo (${parts.map((k) => PART_NAMES[k]).join(', ')}) por ${price} €$.`);
+    this.sheet(c);
+    this.w.send(c, { t: 'clinic', view: this.clinic.view(docId, p) });
+  }
+  chromeRepairPrice(p: PlayerState, mult: number) {
+    const dmg = chromeParts(this.w.c, p).reduce((acc, k) => acc + (p.body.wounds[k as BodyPart] ?? 0), 0);
+    return Math.max(60, Math.round(dmg * 9 * mult));
   }
 
   // ================================================================ sueño
@@ -560,16 +629,22 @@ export class Survival {
     this.w.send(c, { t: 'bounties', view: this.bountyView(p) });
   }
 
-  scheduleFugitive(id: string) { this.fugitiveRespawn.set(id, Date.now() + 3 * this.w.c.manifest.cityHourMs); }
-  private async spawnFugitive(f: FugitiveDef) {
+  scheduleFugitive(id: string) {
+    // v0.7: las recompensas que genera la ciudad no reaparecen; los ciberpsicópatas, tampoco.
+    if (id.startsWith('gen-')) { this.w.threats.retire(id); return; }
+    if (id.startsWith('psico-')) return;
+    this.fugitiveRespawn.set(id, Date.now() + 3 * this.w.c.manifest.cityHourMs);
+  }
+  async spawnFugitive(f: FugitiveDef): Promise<Entity | undefined> {
     const z = this.w.zones.get(f.zone);
-    if (!z) return;
+    if (!z) return undefined;
     if (!this.bounties.onNpc(f.id).length) await this.bounties.post('npc', { npc: f.id, name: f.name }, f.bounty, f.poster, f.alive ? `${f.crime} (lo quieren VIVO)` : f.crime, f.alive);
     const pos = nearestWalkable(z.grid, f.area[0] + 0.5, f.area[1] + 0.5, 4) ?? { x: z.def.safePoint[0] + 0.5, y: z.def.safePoint[1] + 0.5 };
     const e = this.w.spawnNpc(z, { name: f.name, title: 'Fugitivo', x: pos.x, y: pos.y, appearance: f.appearance, label: `Buscado: ${f.crime}`, speed: 2.4 });
     e.fugitive = f; e.npcHp = f.hp; e.npcMax = f.hp; e.defense = f.defense; e.weaponId = f.weapon; e.npcType = 'fugitive'; e.dialog = undefined; e.chrome = ['ojos']; e.level = Math.min(25, 6 + Math.floor(f.bounty / 100));
     e.npc = ambientBrain(this.w.cfg.seed + e.id, [f.area[0], f.area[1]], f.area[2]);
     this.updateMarker(e);
+    return e;
   }
 
   /** Ponerse o quitarse una prenda: cambia el aspecto, el blindaje y las mejoras. */
@@ -796,6 +871,7 @@ export class Survival {
       await this.die(p, c.e!, r.cause!);
       return;
     }
+    if (m.action === 'remove') this.w.threats.onRemoval(c);
     if (m.action === 'install') {
       this.w.progress.gain(c.p!, 'filo', 12);
       if (this.w.combat.wounds.restore(p, r.def.visible)) { c.e!.labelVer++; this.notice(c, 'good', `${r.def.name}: vuelves a tener el miembro que perdiste.`); }
