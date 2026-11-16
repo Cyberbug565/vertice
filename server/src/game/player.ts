@@ -2,6 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
+  LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
@@ -30,6 +31,14 @@ export interface PlayerState {
   equipped: string | null; netXp: number; netRank: number; ram: number; downedLethal: boolean;
   carrying: number | null; blindUntil: number; nextAttackAt: number;
   ambar: { id: string; plan: string; usesLeft: number; expiresAt: number } | null;
+  // ---- v0.4
+  skillXp: Record<string, number>; perks: string[]; skillPointsSpent: number;
+  wear: Partial<Record<string, string>>;
+  abilityCd: Record<string, number>; buffs: Record<string, number>;
+  secondLifeAt: number; milagroAt: number; autoStimAt: number;
+  houses: string[]; cars: { id: string; car: string }[]; driving: string | null;
+  lastCombatAt: number; walked: number;
+  revive?: { at: number; frac: number; why: string };
 }
 
 export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean; part?: string | null }
@@ -50,9 +59,45 @@ export function chromeParts(c: Content, p: { cyber: CyberInstance[] }): string[]
 }
 
 /** Atributos, habilidades y modificadores efectivos (base + ciberware + oficio). */
+export function skillLevel(p: PlayerState, id: string) { return skillLevelForXp(p.skillXp[id] ?? 0); }
+/** Suma de las mejoras de los perks comprados y conjunto de efectos únicos (perks y ciberware). */
+export function perkMods(c: Content, p: PlayerState) {
+  const mods: Record<string, number> = {};
+  const flags = new Set<string>();
+  for (const id of p.perks) {
+    const d = c.perks.find((x) => x.id === id);
+    if (!d) continue;
+    for (const [k, v] of Object.entries(d.mods)) mods[k] = (mods[k] ?? 0) + v;
+    if (d.flag) flags.add(d.flag);
+  }
+  for (const ci of p.cyber) if (ci.location === 'installed') { const d = c.cyberware.find((x) => x.id === ci.def); if (d?.unique) flags.add(d.unique); }
+  return { mods, flags };
+}
+/** Aspecto con la ropa puesta encima. */
+export function wornAppearance(c: Content, p: PlayerState): Appearance {
+  const a: any = { ...p.appearance };
+  for (const [slot, id] of Object.entries(p.wear)) {
+    const it = id ? c.items.find((i) => i.id === id) : undefined;
+    if (!it?.wear || (p.inventory.get(it.id) ?? 0) <= 0) continue;
+    const w = it.wear;
+    if (slot === 'torso_ext') { a.top = w.style; a.jacket = w.color; a.outer = w.style; }
+    else if (slot === 'torso_int') { a.shirt = w.color; if (!p.wear.torso_ext || (p.inventory.get(p.wear.torso_ext) ?? 0) <= 0) { a.top = w.style; a.jacket = w.color; } }
+    else if (slot === 'piernas') { a.pants = w.color; a.legwear = w.style; }
+    else if (slot === 'pies') a.shoes = w.color;
+    else if (slot === 'cabeza') { a.headwear = w.style; a.headColor = w.color; }
+    else if (slot === 'cara') { a.eyewear = w.style; a.accessory = 'ninguno'; }
+    if (it.rarity === 'legendario' || it.rarity === 'epico') a.rarityGlow = it.rarity === 'legendario' ? '#ffd23f' : '#b46cff';
+  }
+  return a;
+}
+
 export function effective(c: Content, p: PlayerState) {
   const attrs = { ...p.attributes } as Attributes;
-  const skills = { ...p.skills };
+  const skills: Record<string, number> = {};
+  for (const s of c.skills) skills[s.id] = skillBonus(skillLevel(p, s.id));
+  const pm = perkMods(c, p);
+  const wearItems = Object.values(p.wear).map((id) => (id && (p.inventory.get(id) ?? 0) > 0 ? c.items.find((i) => i.id === id) : undefined)).filter((x): x is NonNullable<typeof x> => !!x?.wear);
+  for (const it of wearItems) for (const [k, v] of Object.entries(it.wear!.mods.skills)) skills[k] = (skills[k] ?? 0) + v;
   let hpMax = maxHp(p.attributes), confront = 0, steal = 0, surgery = 0, chromeUsed = 0, load = 0;
   const needs = { hunger: 1, thirst: 1, fatigue: 1 };
   for (const ci of p.cyber) {
@@ -66,30 +111,37 @@ export function effective(c: Content, p: PlayerState) {
     if (d.effects.needs) { needs.hunger *= d.effects.needs.hunger; needs.thirst *= d.effects.needs.thirst; needs.fatigue *= d.effects.needs.fatigue; }
   }
   hpMax += 5 * (attrs.BODY - p.attributes.BODY) + 3 * (attrs.WILL - p.attributes.WILL);
+  hpMax += LEVEL_GAINS.hp * (p.level - 1) + (pm.mods.hpMax ?? 0);
+  confront += pm.mods.confront ?? 0; steal += pm.mods.steal ?? 0; surgery += pm.mods.surgery ?? 0;
+  const lv = levelNeedsMult(p.level) * (1 - (pm.mods.needs ?? 0)) * (1 - wearItems.reduce((a, it) => a + it.wear!.mods.needs, 0));
+  needs.hunger *= lv; needs.thirst *= lv; needs.fatigue *= lv;
   const prof = c.professions.find((x) => x.id === p.profession);
   const mods = prof?.mods ?? { confront: 0, steal: 0, sleepStreet: 0, rescue: false, corpDiscount: 0, speed: 0, bounty: 0, rummage: 0 };
   confront += mods.confront ?? 0; steal += mods.steal ?? 0;
   if (p.profession === 'tecnico' || p.profession === 'investigador') surgery += 0.01;
   for (const [it, q] of p.inventory) { if (q <= 0) continue; if (it === 'ganzua-electronica') steal += 2; }
-  // Blindaje: la mejor prenda que lleves más el cromo subdérmico.
-  let armor = 0, carryBonus = 0, ram = 0;
-  for (const [it, q] of p.inventory) { if (q > 0) armor = Math.max(armor, c.items.find((i) => i.id === it)?.armor ?? 0); }
+  // Blindaje: la suma de la ropa puesta más el cromo subdérmico.
+  let armor = wearItems.reduce((a, it) => a + (it.armor ?? 0), 0), carryBonus = wearItems.reduce((a, it) => a + it.wear!.mods.carry, 0) + (pm.mods.carry ?? 0), ram = 0;
+  let speed = wearItems.reduce((a, it) => a + it.wear!.mods.speed, 0) + (pm.mods.speed ?? 0), meleeDmg = pm.mods.meleeDmg ?? 0, dodge = pm.mods.dodge ?? 0, carSpeed = pm.mods.carSpeed ?? 0, chromeBonus = pm.mods.chrome ?? 0;
   const integrated: string[] = [];
   for (const ci of p.cyber) {
     if (ci.location !== 'installed') continue;
     const d = c.cyberware.find((x) => x.id === ci.def);
     if (!d) continue;
     armor += d.effects.armor ?? 0; carryBonus += d.effects.carry ?? 0; ram = Math.max(ram, d.effects.ram ?? 0);
+    speed += d.effects.speed ?? 0; meleeDmg += d.effects.meleeDmg ?? 0; dodge += d.effects.dodge ?? 0; carSpeed += d.effects.carSpeed ?? 0;
     if (d.effects.weapon) integrated.push(d.effects.weapon);
   }
   if (!ram && p.role === 'netrunner' && (p.inventory.get('pulsera-interfaz') ?? 0) > 0) ram = 4;
   if (!ram && p.role === 'netrunner') ram = 3;
+  if (ram) ram += pm.mods.ram ?? 0;
   // Arma equipada: debe estar en la mochila o ser un implante instalado; si no, puños.
   const eq = p.equipped && ((p.inventory.get(p.equipped) ?? 0) > 0 || integrated.includes(p.equipped)) ? c.items.find((i) => i.id === p.equipped) : undefined;
   const weapon = eq?.weapon ? eq : undefined;
   const weight = [...p.inventory].reduce((acc, [d, q]) => acc + (c.items.find((i) => i.id === d)?.weight ?? 0) * q, 0);
   const carryMax = carryCapacity(attrs) + carryBonus;
-  return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs), humanityLoad: load, needs, mods, weapon, integrated, ram, weight, carryMax };
+  return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs) + chromeBonus, humanityLoad: load, needs, mods, weapon, integrated, ram, weight, carryMax,
+    staminaMax: maxStamina(attrs) + LEVEL_GAINS.stamina * (p.level - 1) + (pm.mods.stamina ?? 0), speed, meleeDmg, dodge: Math.min(0.5, dodge), carSpeed, perk: pm.mods, flags: pm.flags };
 }
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
@@ -119,8 +171,10 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
   const skills: Record<string, number> = Object.fromEntries(c.skills.map((s) => [s.id, 0]));
   for (const [k, v] of Object.entries(role.skills)) skills[k] = v;
   for (const k of ['percepcion', 'atletismo', 'negociacion']) skills[k] = Math.max(skills[k], 1);
+  const skillXp = Object.fromEntries(Object.entries(skills).map(([k, v]) => [k, skillXpFor(legacySkillLevel(v))]));
   const id = randomUUID();
-  const items: [string, number][] = [['agente', 1], ['chaqueta', 1], ['navaja', 1], ['fideos-krill', 2], ['agua-filtrada', 2]];
+  const items: [string, number][] = [['agente', 1], ['chaqueta', 1], ['camiseta-basica', 1], ['vaqueros', 1], ['deportivas', 1], ['navaja', 1], ['fideos-krill', 2], ['agua-filtrada', 2]];
+  const wear = { torso_ext: 'chaqueta', torso_int: 'camiseta-basica', piernas: 'vaqueros', pies: 'deportivas' };
   if (role.id === 'netrunner') items.push(['pulsera-interfaz', 1]);
   if (role.id === 'tech' || role.id === 'nomad') items.push(['kit-herramientas', 1]);
   if (role.id === 'medtech') items.push(['estim', 2]);
@@ -136,7 +190,7 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
         [id, accountId, input.name.trim(), origin.id, role.id, JSON.stringify(attrs), JSON.stringify(skills), JSON.stringify((normalizeAppearance(input.appearance) as any).value), 0,
           maxHp(attrs), maxStamina(attrs), attrs.LUCK, humanityBase(attrs.EMP), c.manifest.startZone, c.manifest.startAt[0] + 0.5, c.manifest.startAt[1] + 0.5, RULES.version, contentVersion, input.profession ?? 'vagabundo']);
       await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$3,$4)', [`start-${id}`, id, origin.startMoney, `Fondos iniciales (${origin.name})`]);
-      await q.query('UPDATE characters SET money = $2, equipped = $3 WHERE id = $1', [id, origin.startMoney, equipped]);
+      await q.query('UPDATE characters SET money = $2, equipped = $3, skill_xp = $4, wear = $5 WHERE id = $1', [id, origin.startMoney, equipped, JSON.stringify(skillXp), JSON.stringify(wear)]);
       for (const [def, qty] of items) await q.query('INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4)', [randomUUID(), id, def, qty]);
     });
   } catch (e: any) {
@@ -156,20 +210,26 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
   const r = await db.query<any>('SELECT * FROM characters WHERE id = $1', [charId]);
   const row = r.rows[0];
   if (!row || row.status === 'dead') return null;
-  const [inv, rep, flags, prog, checks, cyber] = await Promise.all([
+  const [inv, rep, flags, prog, checks, cyber, houses, cars] = await Promise.all([
     db.query<any>('SELECT def_id, qty FROM inventory_items WHERE character_id = $1 AND qty > 0', [charId]),
     db.query<any>('SELECT faction_id, value FROM reputation WHERE character_id = $1', [charId]),
     db.query<any>('SELECT key, value, expires_at FROM character_flags WHERE character_id = $1', [charId]),
     db.query<any>(`SELECT p.*, i.objectives AS shared_obj FROM contract_progress p JOIN contract_instances i ON i.id = p.instance_id WHERE p.character_id = $1 ORDER BY p.updated_at ASC`, [charId]),
     db.query<any>('SELECT check_key, success, roll, total FROM skill_checks WHERE character_id = $1', [charId]),
     db.query<any>("SELECT id, def_id, location, stolen, part FROM cyberware_instances WHERE character_id = $1 AND location IN ('inventory','installed') ORDER BY created_at", [charId]),
+    db.query<any>('SELECT house_id FROM houses_owned WHERE character_id = $1 ORDER BY bought_at', [charId]),
+    db.query<any>('SELECT id, car_id FROM cars_owned WHERE character_id = $1 ORDER BY bought_at', [charId]),
   ]);
+  // Personajes anteriores a la v0.4: las habilidades antiguas (0–6) pasan a niveles 1–25 y se viste la chaqueta.
+  const skillXp: Record<string, number> = row.skill_xp ?? Object.fromEntries(Object.entries(row.skills ?? {}).map(([k, v]) => [k, skillXpFor(legacySkillLevel(Number(v)))]));
+  const invMap = new Map<string, number>(inv.rows.map((x: any) => [x.def_id, x.qty]));
+  const wear: Record<string, string> = row.wear ?? ((invMap.get('chaqueta') ?? 0) > 0 ? { torso_ext: 'chaqueta' } : {});
   const p: PlayerState = {
     charId, accountId: row.account_id, name: row.name, role: row.role, origin: row.origin,
     attributes: row.attributes, skills: row.skills, appearance: row.appearance,
     level: row.level, xp: row.xp, roleRank: row.role_rank, money: Number(row.money), hp: row.hp, stamina: row.stamina, luck: row.luck, humanity: row.humanity,
     stance: row.stance, zone: row.zone_id, x: row.pos_x, y: row.pos_y,
-    inventory: new Map(inv.rows.map((x: any) => [x.def_id, x.qty])),
+    inventory: invMap,
     rep: new Map(rep.rows.map((x: any) => [x.faction_id, x.value])),
     flags: new Map(flags.rows.map((x: any) => [x.key, { value: x.value, expiresAt: x.expires_at ? new Date(x.expires_at).getTime() : null }])),
     contracts: new Map(),
@@ -182,6 +242,9 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     humanityMax: row.humanity_max ?? humanityBase(row.attributes.EMP),
     equipped: row.equipped ?? null, netXp: row.net_xp ?? 0, netRank: row.net_rank ?? 0, ram: 99, downedLethal: row.downed_lethal ?? true,
     carrying: null, blindUntil: 0, nextAttackAt: 0, ambar: null,
+    skillXp, perks: row.perks ?? [], skillPointsSpent: row.skill_points_spent ?? 0, wear, abilityCd: {}, buffs: {},
+    secondLifeAt: Number(row.second_life_at ?? 0), milagroAt: 0, autoStimAt: 0,
+    houses: houses.rows.map((x: any) => x.house_id), cars: cars.rows.map((x: any) => ({ id: x.id, car: x.car_id })), driving: null, lastCombatAt: 0, walked: 0,
   };
   for (const x of prog.rows) {
     p.contracts.set(x.contract_id, { instanceId: x.instance_id, contractId: x.contract_id, version: x.version, state: x.state, objectives: { ...x.shared_obj, ...x.objectives }, outcome: x.outcome });
@@ -202,7 +265,16 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
   return {
     id: p.charId, name: p.name, role: p.role, origin: p.origin, level: p.level, xp: p.xp, xpNext: xpForLevel(Math.min(RULES.levelMax, p.level + 1)), roleRank: p.roleRank,
     attributes: { ...a }, baseAttributes: { ...p.attributes }, skills: { ...ef.skills },
-    hp: p.hp, hpMax: ef.hpMax, stamina: p.stamina, staminaMax: maxStamina(a), luck: p.luck, luckMax: p.attributes.LUCK,
+    xpLevelStart: xpForLevel(p.level),
+    skillProg: c.skills.map((sk) => { const xp = p.skillXp[sk.id] ?? 0, lv = skillLevelForXp(xp); return { id: sk.id, name: sk.name, attr: sk.attr, level: lv, xp, from: skillXpFor(lv), to: lv >= SKILL_MAX ? skillXpFor(SKILL_MAX) : skillXpFor(lv + 1), bonus: ef.skills[sk.id] ?? 0 }; }),
+    skillPoints: pointsAvailable(c, p).skill, perkPoints: pointsAvailable(c, p).perk, perks: [...p.perks],
+    wear: { ...p.wear } as Record<string, string>, look: wornAppearance(c, p),
+    abilities: p.cyber.filter((ci) => ci.location === 'installed').map((ci) => c.cyberware.find((d) => d.id === ci.def)).filter((d) => d?.ability).map((d) => ({ id: d!.id, name: d!.ability!.name, kind: d!.ability!.kind, cooldown: d!.ability!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[d!.id] ?? 0) - Date.now()) / 1000)) })),
+    buffs: Object.fromEntries(Object.entries(p.buffs).filter(([, u]) => u > Date.now()).map(([k, u]) => [k, Math.round((u - Date.now()) / 1000)])),
+    houses: [...p.houses], cars: p.cars.map((x) => ({ id: x.id, car: x.car })), driving: p.driving,
+    discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
+    speedMult: Math.round((1 + ef.speed) * 100) / 100, dodge: Math.round(ef.dodge * 100), uniques: [...ef.flags],
+    hp: p.hp, hpMax: ef.hpMax, stamina: p.stamina, staminaMax: ef.staminaMax, luck: p.luck, luckMax: p.attributes.LUCK,
     humanity: p.humanity, humanityMax: p.humanityMax, chromeCapacity: ef.chromeCapacity, chromeUsed: ef.chromeUsed,
     carry: Math.round(ef.weight * 10) / 10, carryMax: ef.carryMax,
     money: p.money, streetRep: p.rep.get('calle') ?? 0, reputation: Object.fromEntries([...p.rep].filter(([k]) => k !== 'calle')),
@@ -214,7 +286,7 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     wanted: Math.round(p.wanted * 10) / 10, autoNeeds: p.autoNeeds,
     profession: p.profession, professionName: c.professions.find((x) => x.id === p.profession)?.name ?? p.profession, professionRank: p.professionRank, professionXp: p.professionXp,
     activeJob: p.activeJob,
-    cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen }; }),
+    cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen, region: d.region ?? 'corteza', part: ci.part ?? null, ability: d.ability?.name, unique: d.unique }; }),
     bonuses: { confront: ef.confront, defense: ef.defense, steal: ef.steal, surgery: Math.round(ef.surgery * 100) },
     weapon: ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, kind: ef.weapon.weapon.kind, family: ef.weapon.weapon.family, damage: ef.weapon.weapon.damage, range: ef.weapon.weapon.range, cooldown: ef.weapon.weapon.cooldown, accuracy: ef.weapon.weapon.accuracy,
       ammo: ef.weapon.weapon.ammo, ammoName: ef.weapon.weapon.ammo ? c.items.find((i) => i.id === ef.weapon!.weapon!.ammo)?.name : undefined, ammoCount: ef.weapon.weapon.ammo ? p.inventory.get(ef.weapon.weapon.ammo) ?? 0 : undefined, nonlethal: ef.weapon.weapon.nonlethal, tech: ef.weapon.weapon.tech } : null,
@@ -243,9 +315,19 @@ export function buildJournal(c: Content, p: PlayerState, participants: (instance
 
 export async function savePlayerVitals(db: Queryable, p: PlayerState) {
   await db.query(`UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4, hp=$5, stamina=$6, luck=$7, stance=$8, hunger=$9, thirst=$10, fatigue=$11, wanted=$12,
-     auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16, equipped=$17, net_xp=$18, net_rank=$19, downed_lethal=$20 WHERE id=$1 AND status <> 'dead'`,
+     auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16, equipped=$17, net_xp=$18, net_rank=$19, downed_lethal=$20,
+     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27 WHERE id=$1 AND status <> 'dead'`,
     [p.charId, p.zone, p.x, p.y, Math.round(p.hp), Math.round(p.stamina), p.luck, p.stance, p.hunger, p.thirst, p.fatigue, p.wanted, p.autoNeeds, p.activeJob,
-      p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null, p.equipped, p.netXp, p.netRank, p.downedLethal]);
+      p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null, p.equipped, p.netXp, p.netRank, p.downedLethal,
+      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp]);
+}
+
+/** Puntos de habilidad y de perk disponibles: se ganan al subir de nivel (y los de perk también cada 5 niveles de habilidad). */
+export function pointsAvailable(c: Content, p: PlayerState) {
+  const skillEarned = LEVEL_GAINS.skillPoints * (p.level - 1);
+  const perkEarned = LEVEL_GAINS.perkPoints * (p.level - 1) + Object.values(p.skillXp).reduce((a, xp) => a + Math.floor(skillLevelForXp(xp) / 5), 0);
+  const perkSpent = p.perks.reduce((a, id) => a + (c.perks.find((x) => x.id === id)?.cost ?? 0), 0);
+  return { skill: Math.max(0, skillEarned - p.skillPointsSpent), perk: Math.max(0, perkEarned - perkSpent) };
 }
 
 export function recomputeLevel(p: PlayerState) {

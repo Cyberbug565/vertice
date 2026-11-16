@@ -1,0 +1,81 @@
+{
+ "id": "moda-orbita-int",
+ "name": "Moda Órbita",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#5a3a5a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-moda-orbita-int",
+   "name": "Salida a la calle (Colinas Doradas)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "colinas",
+    "at": [
+     5,
+     56
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-moda-orbita-int",
+   "name": "Mostrador de Moda Órbita",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "moda-orbita"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

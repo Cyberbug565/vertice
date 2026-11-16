@@ -1,0 +1,96 @@
+{
+ "id": "casa-estudio",
+ "name": "Estudio",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#3a3550",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    4
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    9,
+    1
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-casa-estudio",
+   "name": "Salir a la calle",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     47,
+     44
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "cama-casa-estudio",
+   "name": "Tu cama",
+   "at": [
+    3,
+    2
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 1,
+    "price": 0
+   }
+  },
+  {
+   "id": "alijo-casa-estudio",
+   "name": "Alijo",
+   "at": [
+    9,
+    2
+   ],
+   "kind": "stash"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

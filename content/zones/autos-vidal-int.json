@@ -1,0 +1,77 @@
+{
+ "id": "autos-vidal-int",
+ "name": "Autos Vidal",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#5a4a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "car",
+   "at": [
+    3,
+    8
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "car",
+   "at": [
+    7,
+    8
+   ],
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "car",
+   "at": [
+    11,
+    8
+   ],
+   "color": "#ffd23f"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-autos-vidal-int",
+   "name": "Salida a la calle (El Arrabal)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "arrabal",
+    "at": [
+     100,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-autos-vidal-int",
+   "name": "Vendedor de Autos Vidal",
+   "at": [
+    7,
+    3
+   ],
+   "kind": "dealer",
+   "dealer": "vidal-arrabal"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

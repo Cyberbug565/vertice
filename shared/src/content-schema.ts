@@ -30,11 +30,11 @@ export const ZoneSchema = z.object({
   })).default([]),
   props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
   skybridges: z.array(z.object({ from: xy, to: xy, z: z.number(), color: z.string().optional() })).default([]),
-  doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional() })).default([]),
+  doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional(), hidden: z.string().optional() })).default([]),
   objects: z.array(z.object({
     id: z.string(), name: z.string(), at: xy,
-    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe']),
-    dialog: z.string().optional(), shop: z.string().optional(), workplace: z.string().optional(),
+    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty']),
+    dialog: z.string().optional(), shop: z.string().optional(), workplace: z.string().optional(), dealer: z.string().optional(),
     sleep: z.object({ quality: z.number().min(0).max(1), price: z.number().int().nonnegative().default(0) }).optional(),
   })).default([]),
   sectors: z.array(z.object({ chunk: xy, name: z.string() })).default([]),
@@ -158,9 +158,17 @@ export type RoleDef = z.infer<typeof RoleSchema>;
 
 export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'herramienta', 'arma', 'ropa', 'chatarra', 'mision', 'equipo', 'contrabando', 'municion'] as const;
 
+export const WEAPON_TRAITS = ['perforante', 'inteligente', 'quemadura', 'sangrado', 'electrica', 'emp', 'area', 'silenciosa', 'aturdidora'] as const;
+export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario'] as const;
+export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies'] as const;
+export type WearSlot = (typeof WEAR_SLOTS)[number];
+export const CYBER_REGIONS = ['so', 'corteza', 'ojos', 'cara', 'brazos', 'manos', 'esqueleto', 'nervioso', 'circulatorio', 'tegumentario', 'piernas'] as const;
+export type CyberRegion = (typeof CYBER_REGIONS)[number];
 export const WeaponSchema = z.object({
   kind: z.enum(['melee', 'ranged']), family: z.string(), damage: z.tuple([z.number(), z.number()]), range: z.number(), cooldown: z.number(), accuracy: z.number().int(),
   ammo: z.string().optional(), mag: z.number().int().optional(), nonlethal: z.enum(['no', 'opcional', 'solo']).default('no'), noise: z.number().min(0).max(1).default(0.5), tech: z.enum(['clasica', 'potencia', 'tecnica', 'inteligente']).default('clasica'),
+  /** v0.4: rasgos especiales (perforante, inteligente, quemadura, sangrado, electrica, emp, area, silenciosa, aturdidora). */
+  traits: z.array(z.enum(WEAPON_TRAITS)).default([]),
 });
 export type WeaponDef = z.infer<typeof WeaponSchema>;
 export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
@@ -171,6 +179,12 @@ export const ItemSchema = z.object({
   confront: z.number().int().optional(),
   weapon: WeaponSchema.optional(),
   armor: z.number().int().optional(),
+  rarity: z.enum(RARITIES).default('comun'),
+  /** Ropa: hueco donde se lleva, estilo y color con que se dibuja y mejoras. */
+  wear: z.object({
+    slot: z.enum(WEAR_SLOTS), style: z.string(), color: z.string(),
+    mods: z.object({ skills: z.record(z.string(), z.number()).default({}), carry: z.number().default(0), speed: z.number().default(0), needs: z.number().default(0) }).prefault({}),
+  }).optional(),
 });
 export type ItemDef = z.infer<typeof ItemSchema>;
 
@@ -212,7 +226,14 @@ export const CyberwareSchema = z.object({
     needs: z.object({ hunger: z.number().default(1), thirst: z.number().default(1), fatigue: z.number().default(1) }).optional(),
     hpMax: z.number().default(0), confront: z.number().default(0), steal: z.number().default(0), surgery: z.number().default(0),
     carry: z.number().default(0), ram: z.number().default(0), armor: z.number().default(0), weapon: z.string().optional(),
+    meleeDmg: z.number().default(0), speed: z.number().default(0), carSpeed: z.number().default(0), dodge: z.number().default(0),
   }).prefault({}),
+  /** v0.4: zona del cuerpo en la pantalla de ciberware. */
+  region: z.enum(CYBER_REGIONS).optional(),
+  /** Habilidad que se activa (tecla) con enfriamiento. */
+  ability: z.object({ kind: z.enum(['tiempo-bala', 'invisible', 'curar', 'pulso', 'esprint', 'carga', 'senuelo', 'torbellino', 'disparo-cargado', 'pico-ram']), name: z.string(), cooldown: z.number(), duration: z.number().default(0), power: z.number().default(0) }).optional(),
+  /** Efecto pasivo único (segundo-corazon, autoestim, lector, modulador, compartimento, refuerzo). */
+  unique: z.string().optional(),
   prosthetic: z.boolean().default(false),
   /** Parte del cuerpo donde se ve: se dibuja en el personaje. */
   visible: z.enum(['cabeza', 'ojos', 'torso', 'brazo', 'pierna', 'piernas', 'ninguna']).default('ninguna'),
@@ -223,6 +244,8 @@ export const RipperdocSchema = z.object({
   id: z.string(), name: z.string(), npc: z.string(), zone: z.string(), skill: z.number().int().min(1).max(5), priceMult: z.number(),
   morality: z.enum(['estricta', 'flexible', 'sin_escrupulos']), danger: z.number().min(0).max(1), faction: z.string().optional(),
   stock: z.array(z.string()), stolenStock: z.array(z.string()).default([]), maxGrade: z.number().int().min(1).max(5), desc: z.string(),
+  /** v0.4: consulta sin rótulo; no aparece en el mapa hasta descubrirla. */
+  hidden: z.boolean().default(false), rumor: z.string().default(''),
 });
 export type RipperdocDef = z.infer<typeof RipperdocSchema>;
 
@@ -245,7 +268,7 @@ export type FugitiveDef = z.infer<typeof FugitiveSchema>;
 
 export const QuickhackSchema = z.object({
   id: z.string(), name: z.string(), target: z.enum(['person', 'atm', 'shop']), ram: z.number().int(), upload: z.number(), dv: z.number().int(), minRank: z.number().int().default(0),
-  effect: z.enum(['scan', 'blind', 'damage', 'knockout', 'kill', 'drain', 'cash']), amount: z.tuple([z.number(), z.number()]).default([0, 0]), trace: z.number().min(0).max(1), range: z.number().default(12), desc: z.string(),
+  effect: z.enum(['scan', 'deepscan', 'blind', 'damage', 'knockout', 'kill', 'drain', 'cash']), minSkill: z.number().int().default(0), amount: z.tuple([z.number(), z.number()]).default([0, 0]), trace: z.number().min(0).max(1), range: z.number().default(12), desc: z.string(),
 });
 export type QuickhackDef = z.infer<typeof QuickhackSchema>;
 export const AmbarPlanSchema = z.object({ id: z.string(), name: z.string(), price: z.number().int(), days: z.number(), arrival: z.number(), uses: z.number().int(), revive: z.number(), zones: z.array(z.string()), color: z.string(), desc: z.string() });
@@ -255,6 +278,26 @@ export const WorldSchema = z.object({
   districts: z.array(z.object({ zone: z.string(), gx: z.number().int(), gy: z.number().int(), color: z.string(), desc: z.string(), police: z.string(), factions: z.array(z.string()) })),
 });
 export type WorldDef = z.infer<typeof WorldSchema>;
+
+export const PerkSchema = z.object({
+  id: z.string(), name: z.string(), desc: z.string(), skill: z.string(), tier: z.number().int().min(1).max(5), cost: z.number().int().min(1).max(3),
+  requires: z.object({ skills: z.record(z.string(), z.number().int()).default({}), level: z.number().int().default(1), perks: z.array(z.string()).default([]) }).prefault({}),
+  mods: z.record(z.string(), z.number()).default({}), flag: z.string().optional(),
+});
+export type PerkDef = z.infer<typeof PerkSchema>;
+export const CAR_CLASSES = ['moto', 'economico', 'utilitario', 'deportivo', 'todoterreno', 'lujo', 'blindado', 'hiper'] as const;
+export const CarSchema = z.object({
+  id: z.string(), name: z.string(), maker: z.string(), class: z.enum(CAR_CLASSES), speed: z.number(), trunk: z.number(), seats: z.number().int(), armor: z.number().int(),
+  price: z.number().int(), color: z.string(), desc: z.string(),
+});
+export type CarDef = z.infer<typeof CarSchema>;
+export const DealerSchema = z.object({ id: z.string(), name: z.string(), zone: z.string(), classes: z.array(z.enum(CAR_CLASSES)), priceMult: z.number(), desc: z.string() });
+export type DealerDef = z.infer<typeof DealerSchema>;
+export const HOUSE_SIZES = ['estudio', 'piso', 'loft', 'atico', 'villa'] as const;
+export const HouseSchema = z.object({
+  id: z.string(), name: z.string(), building: z.string(), zone: z.string(), size: z.enum(HOUSE_SIZES), template: z.string(), price: z.number().int(), floor: z.number().int(),
+});
+export type HouseDef = z.infer<typeof HouseSchema>;
 
 export const ContentSchema = z.object({
   manifest: z.object({ version: z.string(), edition: z.string(), city: z.string(), startZone: z.string(), startAt: xy, cityHourMs: z.number().int().positive() }),
@@ -286,5 +329,9 @@ export const ContentSchema = z.object({
   quickhacks: z.array(QuickhackSchema),
   ambar: z.array(AmbarPlanSchema),
   world: WorldSchema,
+  perks: z.array(PerkSchema),
+  cars: z.array(CarSchema),
+  dealers: z.array(DealerSchema),
+  houses: z.array(HouseSchema),
 });
 export type Content = z.infer<typeof ContentSchema>;

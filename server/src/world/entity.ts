@@ -26,11 +26,15 @@ export interface Entity {
   downedUntil?: number; npcLethalDown?: boolean; lastAttacker?: number; carriedBy?: number; blindUntil?: number;
   respawn?: { zone: string; template: Record<string, unknown> }; hunting?: string; expiresAt?: number;
   pendingAction?: { target: number; action: string; opId: string };
+  // ---- v0.4
+  objId?: string; dealer?: string; hiddenDoc?: string; vehicle?: string | null; level?: number; stunUntil?: number; dots?: { until: number; dmg: number; next: number; by?: number }[];
+  buffs?: Record<string, number>; decoyUntil?: number;
 }
 
 export function spawnOf(e: Entity): EntitySpawn {
   return { id: e.id, kind: e.kind, name: e.name, title: e.title, x: e.x, y: e.y, appearance: e.appearance, role: e.role, label: e.label, interactive: e.interactive, objKind: e.objKind, danger: e.danger,
     bounty: e.bounty || undefined, state: e.state && e.state !== 'alive' ? e.state : undefined, fugitive: e.fugitive ? true : undefined,
     chrome: e.chrome?.length ? e.chrome : undefined, faction: e.faction, npcType: e.npcType, carried: e.carriedBy ? true : undefined,
-    hpPct: e.npcMax ? Math.max(0, Math.round(((e.npcHp ?? e.npcMax) / e.npcMax) * 100)) : undefined };
+    hpPct: e.npcMax ? Math.max(0, Math.round(((e.npcHp ?? e.npcMax) / e.npcMax) * 100)) : undefined,
+    level: e.level, vehicle: e.vehicle ?? undefined, buffs: e.buffs ? Object.entries(e.buffs).filter(([, u]) => u > Date.now()).map(([k]) => k) : undefined };
 }

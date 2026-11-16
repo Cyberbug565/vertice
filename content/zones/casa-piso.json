@@ -1,0 +1,96 @@
+{
+ "id": "casa-piso",
+ "name": "Piso",
+ "kind": "interior",
+ "width": 14,
+ "height": 10,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#2f4a5a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "table",
+   "at": [
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    11,
+    1
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-casa-piso",
+   "name": "Salir a la calle",
+   "at": [
+    13,
+    5
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     47,
+     44
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "cama-casa-piso",
+   "name": "Tu cama",
+   "at": [
+    3,
+    2
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 1,
+    "price": 0
+   }
+  },
+  {
+   "id": "alijo-casa-piso",
+   "name": "Alijo",
+   "at": [
+    11,
+    2
+   ],
+   "kind": "stash"
+  }
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ]
+ ],
+ "safePoint": [
+  11,
+  5
+ ]
+}

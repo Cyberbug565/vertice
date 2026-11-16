@@ -1,0 +1,81 @@
+{
+ "id": "ropa-segunda-int",
+ "name": "Ropa de Segunda Mano",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#4a3a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-ropa-segunda-int",
+   "name": "Salida a la calle (El Arrabal)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "arrabal",
+    "at": [
+     67,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-ropa-segunda-int",
+   "name": "Mostrador de Ropa de Segunda Mano",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "ropa-segunda"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

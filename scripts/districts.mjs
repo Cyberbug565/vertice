@@ -60,10 +60,11 @@ function cityDistrict(id, seed, gates, interiorPlan) {
       const b = { id: `${id}-b${bi++}`, rect: [bx, by, bww, bhh], height, style: pick(T.styles), color: pick(T.colors) };
       const doorX = bx + Math.floor(bww / 2), doorY = by + bhh;
       const intr = plan.length && r() < 0.6 && doorY < H - 1 ? plan.shift() : null;
-      if (intr || r() < 0.45) { b.sign = intr?.sign ?? pick(T.signs); b.signColor = pick(T.signColors); }
+      if ((intr && !intr.hidden) || (!intr && r() < 0.45)) { b.sign = intr?.sign ?? pick(T.signs); b.signColor = pick(T.signColors); }
       if (intr) {
-        b.name = intr.name; b.style = intr.style ?? b.style; b.height = intr.height ?? b.height;
-        doors.push({ id: `puerta-${intr.id}`, name: intr.name, at: [doorX, doorY], to: { zone: intr.id, at: intr.inAt }, danger: intr.danger ?? 'protected' });
+        if (!intr.hidden) b.name = intr.name;
+        b.style = intr.style ?? b.style; b.height = intr.height ?? b.height;
+        doors.push({ id: `puerta-${intr.id}`, name: intr.hidden ? 'Puerta sin rótulo' : intr.name, at: [doorX, doorY], to: { zone: intr.id, at: intr.inAt }, danger: intr.danger ?? 'protected', ...(intr.hidden ? { hidden: intr.hidden } : {}) });
         interiorsOut.push({ ...intr, out: [id, doorX, doorY + 1 <= H - 1 ? doorY + 1 : doorY] });
       }
       buildings.push(b);
@@ -83,6 +84,10 @@ function cityDistrict(id, seed, gates, interiorPlan) {
   [[8, 30], [38, 33], [58, 30], [86, 33]].forEach(([x, y]) => props.push({ type: 'car', at: [x, y], color: pick(['#ffd23f', '#ff5a5a', '#43f3ff', '#e8e8f0', '#2a2a2a']) }));
   for (const [x, y] of [[5, 31], [15, 32], [30, 31], [40, 32], [56, 31], [66, 32], [80, 31], [92, 32], [47, 6], [48, 20], [47, 44], [48, 58], [21, 6], [21, 22], [21, 44], [21, 58], [73, 6], [73, 22], [73, 44], [73, 58], [10, 12], [60, 13], [85, 50], [30, 51]]) waypoints.push([x, y]);
   for (const g of gates) doors.push(g);
+  // Nada que bloquee el paso delante de una puerta o en el punto de salida de un interior.
+  const reserved = new Set([...doors.map((d) => `${d.at[0]},${d.at[1]}`), ...interiorsOut.map((i) => `${i.out[1]},${i.out[2]}`)]);
+  for (let i = props.length - 1; i >= 0; i--) if (reserved.has(`${props[i].at[0]},${props[i].at[1]}`)) props.splice(i, 1);
+  for (let i = objects.length - 1; i >= 0; i--) if (reserved.has(`${objects[i].at[0]},${objects[i].at[1]}`)) objects.splice(i, 1);
   const zone = {
     id, name: T.name, kind: 'exterior', width: W, height: H, chunkSize: 32, danger: 'public', base: T.base, ambient: T.ambient, police: T.police,
     gangs: T.gangs.map((g) => ({ ...g, area: [48, 32, 40] })), sleepQuality: T.sleepQuality, ground, blocks, buildings, props, doors, objects,
@@ -149,21 +154,31 @@ export function districts() {
     { id: 'ambar-hq-int', name: 'Sede de Rescate Ámbar', sign: 'ÁMBAR', size: 'big', base: 'tile', wall: '#3a3020', inAt: [13, 5], style: 'glass', height: 22, beds: [[3, 8, '#ffbf00']], screens: [[5, 1, '#ffbf00'], [9, 1, '#ffbf00']],
       objects: [{ id: 'ambar-mostrador', name: 'Mostrador de suscripciones Ámbar', at: [7, 4], kind: 'ambar' }] },
     { id: 'boutique-int', name: 'Boutique Aurelia', sign: 'AURELIA', size: 'small', base: 'tile', wall: '#5a4a6a', inAt: [9, 4], style: 'shop', shelves: [[1, 1], [2, 1], [3, 1], [4, 1]], objects: [{ id: 'caja-boutique', name: 'Caja de la boutique', at: [7, 4], kind: 'shop', shop: 'boutique-aurelia' }] },
+    { id: 'concesionario-saeta-int', name: 'Concesionario Saeta', sign: 'SAETA', size: 'big', base: 'tile', wall: '#3a3a50', inAt: [13, 5], style: 'glass', showcars: [[3, 8, '#43f3ff'], [7, 8, '#ff3fa4'], [11, 8, '#ffd23f']], objects: [{ id: 'mostrador-concesionario-saeta-int', name: 'Vendedor de Concesionario Saeta', at: [7, 3], kind: 'dealer', dealer: 'saeta-colinas' }], danger: 'protected' },
+    { id: 'inmobiliaria-kaiten-int', name: 'Inmobiliaria Kaiten', sign: 'KAITEN HOMES', size: 'small', base: 'wood', wall: '#4a5a4a', inAt: [9, 4], style: 'glass', tables: [[3, 5]], screens: [[4, 1, '#7dd3a0'], [7, 1, '#7dd3a0']], objects: [{ id: 'mostrador-kaiten-homes', name: 'Agente de Kaiten Homes', at: [7, 4], kind: 'realty' }] },
+    { id: 'moda-orbita-int', name: 'Moda Órbita', sign: 'ÓRBITA', size: 'small', base: 'tile', wall: '#5a3a5a', inAt: [9, 4], style: 'shop', shelves: [[1, 1], [2, 1], [3, 1], [4, 1]], objects: [{ id: 'caja-moda-orbita-int', name: 'Mostrador de Moda Órbita', at: [7, 4], kind: 'shop', shop: 'moda-orbita' }] },
     { id: 'club-campo-int', name: 'Club de Campo Kaiten', sign: 'CLUB KAITEN', size: 'big', base: 'wood', wall: '#4a6a5a', inAt: [13, 5], style: 'block', tables: [[4, 4], [8, 4], [4, 8], [8, 8]], counters: [[2, 2, 1, 4]], objects: [{ id: 'barra-club-campo', name: 'Barra del club', at: [3, 7], kind: 'shop', shop: 'club-campo' }] },
   ]));
   add(cityDistrict('neon-rojo', 202, [gate('neon-oeste', 'Avenida hacia Colinas', [0, 31], 'colinas', [94, 31]), gate('neon-sur', 'Avenida hacia Forja', [47, 63], 'forja', [47, 1])], [
     { id: 'club-kitsune-int', name: 'Club Kitsune', sign: 'KITSUNE', size: 'big', base: 'metal', wall: '#3a1a3a', inAt: [13, 5], style: 'club', counters: [[2, 3, 1, 5]], neon: [[6, 1, '#b46cff'], [10, 1, '#ff3fa4']], tables: [[7, 7], [10, 7]], objects: [{ id: 'barra-kitsune', name: 'Barra del Kitsune', at: [3, 8], kind: 'shop', shop: 'kitsune-barra' }], danger: 'public' },
     { id: 'casino-loto-int', name: 'Casino Loto', sign: 'CASINO LOTO', size: 'mid', base: 'tile', wall: '#401a2a', inAt: [11, 5], style: 'tower', height: 30, screens: [[2, 1, '#ffd23f'], [5, 1, '#ff3fa4'], [8, 1, '#43f3ff']], objects: [{ id: 'cajero-casino', name: 'Cajero del casino', at: [10, 8], kind: 'atm' }], danger: 'public' },
     { id: 'armeria-callejon-int', name: 'Armería del Callejón', sign: 'ARMAS', size: 'small', base: 'metal', wall: '#2a1a1a', inAt: [9, 4], style: 'shop', shelves: [[1, 1], [2, 1], [3, 1]], objects: [{ id: 'mostrador-callejon', name: 'Mostrador del callejón', at: [7, 4], kind: 'shop', shop: 'armeria-callejon' }], danger: 'public' },
-    { id: 'yuki-int', name: 'Consulta de Doc Yuki', sign: 'DOC YUKI', size: 'small', base: 'metal', wall: '#2a1a40', inAt: [9, 4], style: 'clinic', beds: [[3, 5, '#b46cff']], screens: [[5, 1, '#b46cff']], danger: 'public' },
+    { id: 'motos-kotetsu-int', name: 'Motos Kōtetsu', sign: 'KŌTETSU', size: 'big', base: 'tile', wall: '#3a1a3a', inAt: [13, 5], style: 'glass', showcars: [[3, 8, '#43f3ff'], [7, 8, '#ff3fa4'], [11, 8, '#ffd23f']], objects: [{ id: 'mostrador-motos-kotetsu-int', name: 'Vendedor de Motos Kōtetsu', at: [7, 3], kind: 'dealer', dealer: 'kotetsu-neon' }], danger: 'protected' },
+    { id: 'ropa-neon-int', name: 'Ropa Neón', sign: 'NEÓN WEAR', size: 'small', base: 'tile', wall: '#401a40', inAt: [9, 4], style: 'shop', shelves: [[1, 1], [2, 1], [3, 1], [4, 1]], objects: [{ id: 'caja-ropa-neon-int', name: 'Mostrador de Ropa Neón', at: [7, 4], kind: 'shop', shop: 'ropa-neon' }] },
+    { id: 'electronica-yokai-int', name: 'Electrónica Yōkai', sign: 'YŌKAI', size: 'small', base: 'tile', wall: '#1a2a40', inAt: [9, 4], style: 'shop', shelves: [[1, 1], [2, 1], [3, 1], [4, 1]], objects: [{ id: 'caja-electronica-yokai-int', name: 'Mostrador de Electrónica Yōkai', at: [7, 4], kind: 'shop', shop: 'electronica-yokai' }] },
+    { id: 'yuki-int', name: 'Consulta de Doc Yuki', sign: 'DOC YUKI', hidden: 'yuki', size: 'small', base: 'metal', wall: '#2a1a40', inAt: [9, 4], style: 'clinic', beds: [[3, 5, '#b46cff']], screens: [[5, 1, '#b46cff']], danger: 'public' },
   ]));
   add(cityDistrict('forja', 303, [gate('forja-oeste', 'Avenida hacia Cénit', [0, 31], 'cenit', [94, 31]), gate('forja-norte', 'Avenida hacia Neón Rojo', [47, 0], 'neon-rojo', [47, 62]), gate('forja-este', 'Autopista hacia El Yermo', [95, 31], 'yermo', [1, 47])], [
     { id: 'taller-engranajes-int', name: 'Taller de Los Engranajes', sign: 'ENGRANAJES', size: 'big', base: 'metal', wall: '#4a1a1a', inAt: [13, 5], style: 'industrial', crates: [[2, 2], [3, 2], [10, 8]], beds: [[5, 7, '#ff3040']], objects: [{ id: 'mostrador-engranajes', name: 'Banco de los Engranajes', at: [7, 3], kind: 'shop', shop: 'engranajes-chop' }], danger: 'public' },
+    { id: 'armas-forja-int', name: 'Armas Pesadas de Forja', sign: 'ARMERÍA 9', size: 'small', base: 'tile', wall: '#4a2a1a', inAt: [9, 4], style: 'industrial', shelves: [[1, 1], [2, 1], [3, 1], [4, 1]], objects: [{ id: 'caja-armas-forja-int', name: 'Mostrador de Armas Pesadas de Forja', at: [7, 4], kind: 'shop', shop: 'armas-forja' }] },
+    { id: 'usados-forja-int', name: 'Usados de Forja', sign: 'USADOS', size: 'big', base: 'tile', wall: '#4a4038', inAt: [13, 5], style: 'glass', showcars: [[3, 8, '#43f3ff'], [7, 8, '#ff3fa4'], [11, 8, '#ffd23f']], objects: [{ id: 'mostrador-usados-forja-int', name: 'Vendedor de Usados de Forja', at: [7, 3], kind: 'dealer', dealer: 'usados-forja' }], danger: 'protected' },
     { id: 'comedor-obrero-int', name: 'Comedor obrero', sign: 'COMEDOR', size: 'small', base: 'wood', wall: '#504030', inAt: [9, 4], style: 'shop', tables: [[3, 6], [6, 6]], objects: [{ id: 'barra-comedor', name: 'Barra del comedor', at: [7, 2], kind: 'shop', shop: 'comedor-obrero' }] },
   ]));
   add(cityDistrict('arrabal', 404, [gate('arrabal-norte', 'Avenida hacia Ferro', [47, 0], 'ferro', [31, 62])], [
     { id: 'iglesia-sanciro-int', name: 'Iglesia de San Ciro', sign: 'SAN CIRO', size: 'big', base: 'wood', wall: '#5a4a3a', inAt: [13, 5], style: 'block', tables: [[4, 4], [4, 7], [8, 4], [8, 7]], objects: [{ id: 'comedor-sanciro', name: 'Comedor social de San Ciro', at: [12, 2], kind: 'shop', shop: 'sanciro-comedor' }] },
     { id: 'mercadillo-int', name: 'Mercadillo del Bloque 22', sign: 'MERCADILLO', size: 'big', base: 'dirt', wall: '#4a3a3a', inAt: [13, 5], style: 'mega', crates: [[2, 2], [2, 8]], shelves: [[5, 1], [6, 1], [7, 1]], objects: [{ id: 'puesto-mercadillo', name: 'Puesto del mercadillo', at: [8, 5], kind: 'shop', shop: 'mercadillo-arrabal' }], danger: 'public' },
+    { id: 'ropa-segunda-int', name: 'Ropa de Segunda Mano', sign: 'SEGUNDA MANO', size: 'small', base: 'tile', wall: '#4a3a3a', inAt: [9, 4], style: 'mega', shelves: [[1, 1], [2, 1], [3, 1], [4, 1]], objects: [{ id: 'caja-ropa-segunda-int', name: 'Mostrador de Ropa de Segunda Mano', at: [7, 4], kind: 'shop', shop: 'ropa-segunda' }] },
+    { id: 'autos-vidal-int', name: 'Autos Vidal', sign: 'AUTOS VIDAL', size: 'big', base: 'tile', wall: '#5a4a3a', inAt: [13, 5], style: 'glass', showcars: [[3, 8, '#43f3ff'], [7, 8, '#ff3fa4'], [11, 8, '#ffd23f']], objects: [{ id: 'mostrador-autos-vidal-int', name: 'Vendedor de Autos Vidal', at: [7, 3], kind: 'dealer', dealer: 'vidal-arrabal' }], danger: 'protected' },
     { id: 'nodo-vacio-int', name: 'Nodo del Vacío', sign: 'NODO', size: 'small', base: 'metal', wall: '#0a2a3a', inAt: [9, 4], style: 'block', screens: [[2, 1, '#43f3ff'], [5, 1, '#43f3ff'], [8, 1, '#43f3ff']], objects: [{ id: 'mostrador-nodo', name: 'Mostrador del Nodo', at: [7, 5], kind: 'shop', shop: 'nodo-vacio' }], danger: 'public' },
   ]));
   add(yermo([gate('yermo-oeste', 'Autopista hacia Forja', [0, 47], 'forja', [94, 31])]));

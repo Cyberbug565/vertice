@@ -1,0 +1,987 @@
+[
+ {
+  "id": "pulso-firme",
+  "name": "Pulso firme",
+  "desc": "+10 % de daño con armas a distancia.",
+  "skill": "armas",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "armas": 3
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "rangedDmg": 0.1
+  }
+ },
+ {
+  "id": "recarga-rapida",
+  "name": "Recarga rápida",
+  "desc": "Las armas a distancia disparan un 15 % más rápido.",
+  "skill": "armas",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "armas": 6
+   },
+   "level": 1,
+   "perks": [
+    "pulso-firme"
+   ]
+  },
+  "mods": {
+   "rangedCd": 0.15
+  }
+ },
+ {
+  "id": "tirador",
+  "name": "Tirador",
+  "desc": "+2 a impactar a distancia y 10 % de golpes críticos (doble daño).",
+  "skill": "armas",
+  "tier": 3,
+  "cost": 2,
+  "requires": {
+   "skills": {
+    "armas": 10
+   },
+   "level": 5,
+   "perks": [
+    "recarga-rapida"
+   ]
+  },
+  "mods": {
+   "rangedAcc": 2,
+   "crit": 0.1
+  }
+ },
+ {
+  "id": "a-quemarropa",
+  "name": "A quemarropa",
+  "desc": "+25 % de daño a menos de 3 m con cualquier arma de fuego.",
+  "skill": "armas",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "armas": 12,
+    "atletismo": 5
+   },
+   "level": 5,
+   "perks": [
+    "pulso-firme"
+   ]
+  },
+  "mods": {
+   "closeDmg": 0.25
+  }
+ },
+ {
+  "id": "ojo-de-dios",
+  "name": "Ojo de Dios",
+  "desc": "Nivel 25. Tus disparos no fallan dentro del alcance del arma, sin penalización por distancia, y un 30 % son críticos.",
+  "skill": "armas",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "armas": 25
+   },
+   "level": 15,
+   "perks": [
+    "tirador"
+   ]
+  },
+  "mods": {
+   "crit": 0.2
+  },
+  "flag": "ojo-de-dios"
+ },
+ {
+  "id": "golpe-firme",
+  "name": "Golpe firme",
+  "desc": "+10 % de daño cuerpo a cuerpo.",
+  "skill": "cuerpo",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "cuerpo": 3
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "meleeDmg": 0.1
+  }
+ },
+ {
+  "id": "esquiva",
+  "name": "Esquiva",
+  "desc": "10 % de probabilidad de esquivar por completo un golpe.",
+  "skill": "cuerpo",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "cuerpo": 7,
+    "atletismo": 5
+   },
+   "level": 1,
+   "perks": [
+    "golpe-firme"
+   ]
+  },
+  "mods": {
+   "dodge": 0.1
+  }
+ },
+ {
+  "id": "noqueador",
+  "name": "Noqueador",
+  "desc": "+3 al intentar dejar KO y +20 % de daño no letal.",
+  "skill": "cuerpo",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "cuerpo": 10
+   },
+   "level": 3,
+   "perks": [
+    "golpe-firme"
+   ]
+  },
+  "mods": {
+   "koBonus": 3
+  }
+ },
+ {
+  "id": "frenesi",
+  "name": "Frenesí",
+  "desc": "Al derribar a alguien recuperas 10 de salud y tu siguiente ataque sale al instante.",
+  "skill": "cuerpo",
+  "tier": 4,
+  "cost": 2,
+  "requires": {
+   "skills": {
+    "cuerpo": 15
+   },
+   "level": 8,
+   "perks": [
+    "esquiva"
+   ]
+  },
+  "mods": {},
+  "flag": "frenesi"
+ },
+ {
+  "id": "danza-cuchillas",
+  "name": "Danza de cuchillas",
+  "desc": "Nivel 25. Cada golpe cuerpo a cuerpo alcanza también a todos los enemigos a tu alrededor.",
+  "skill": "cuerpo",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "cuerpo": 25
+   },
+   "level": 15,
+   "perks": [
+    "frenesi"
+   ]
+  },
+  "mods": {
+   "meleeDmg": 0.15
+  },
+  "flag": "danza"
+ },
+ {
+  "id": "buffer",
+  "name": "Búfer ampliado",
+  "desc": "+2 de RAM máxima.",
+  "skill": "interfaz",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "interfaz": 3
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "ram": 2
+  }
+ },
+ {
+  "id": "compilador",
+  "name": "Compilador",
+  "desc": "Los quickhacks cuestan un 20 % menos de RAM.",
+  "skill": "interfaz",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "interfaz": 7
+   },
+   "level": 1,
+   "perks": [
+    "buffer"
+   ]
+  },
+  "mods": {
+   "hackCost": 0.2
+  }
+ },
+ {
+  "id": "subida-rapida",
+  "name": "Subida rápida",
+  "desc": "Los quickhacks suben un 30 % más rápido.",
+  "skill": "interfaz",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "interfaz": 10
+   },
+   "level": 3,
+   "perks": [
+    "compilador"
+   ]
+  },
+  "mods": {
+   "hackSpeed": 0.3
+  }
+ },
+ {
+  "id": "sin-rastro",
+  "name": "Sin rastro",
+  "desc": "La Red Centinela te rastrea la mitad de veces.",
+  "skill": "interfaz",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "interfaz": 12,
+    "sigilo": 6
+   },
+   "level": 5,
+   "perks": [
+    "compilador"
+   ]
+  },
+  "mods": {
+   "trace": 0.5
+  }
+ },
+ {
+  "id": "cadena-red",
+  "name": "Reacción en cadena",
+  "desc": "Si un quickhack deja KO o mata, salta gratis a otra persona cercana.",
+  "skill": "interfaz",
+  "tier": 4,
+  "cost": 2,
+  "requires": {
+   "skills": {
+    "interfaz": 15
+   },
+   "level": 8,
+   "perks": [
+    "subida-rapida"
+   ]
+  },
+  "mods": {},
+  "flag": "cadena"
+ },
+ {
+  "id": "dios-red",
+  "name": "Fantasma en la red",
+  "desc": "Nivel 25. Subidas instantáneas, mitad de RAM y +3 a todos los hackeos.",
+  "skill": "interfaz",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "interfaz": 25
+   },
+   "level": 15,
+   "perks": [
+    "cadena-red"
+   ]
+  },
+  "mods": {
+   "hackChance": 3
+  },
+  "flag": "dios-red"
+ },
+ {
+  "id": "manos-ligeras",
+  "name": "Manos ligeras",
+  "desc": "+2 a robar y a hurtar en tiendas.",
+  "skill": "sigilo",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "sigilo": 3
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "steal": 2
+  }
+ },
+ {
+  "id": "fantasma",
+  "name": "Fantasma",
+  "desc": "Los delitos sin policía a menos de 18 m no suben tu búsqueda.",
+  "skill": "sigilo",
+  "tier": 3,
+  "cost": 2,
+  "requires": {
+   "skills": {
+    "sigilo": 10
+   },
+   "level": 5,
+   "perks": [
+    "manos-ligeras"
+   ]
+  },
+  "mods": {},
+  "flag": "fantasma"
+ },
+ {
+  "id": "carterista",
+  "name": "Carterista experto",
+  "desc": "+3 a robar y el botín de los robos es un 50 % mayor.",
+  "skill": "sigilo",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "sigilo": 15
+   },
+   "level": 6,
+   "perks": [
+    "manos-ligeras"
+   ]
+  },
+  "mods": {
+   "steal": 3,
+   "robLoot": 0.5
+  }
+ },
+ {
+  "id": "sombra",
+  "name": "Sombra",
+  "desc": "Nivel 25. Nadie se da cuenta de tus robos fallidos y la policía no te reconoce.",
+  "skill": "sigilo",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "sigilo": 25
+   },
+   "level": 15,
+   "perks": [
+    "fantasma"
+   ]
+  },
+  "mods": {
+   "steal": 3
+  },
+  "flag": "sombra"
+ },
+ {
+  "id": "zancada",
+  "name": "Zancada",
+  "desc": "+6 % de velocidad al andar.",
+  "skill": "atletismo",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "atletismo": 3
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "speed": 0.06
+  }
+ },
+ {
+  "id": "mula",
+  "name": "Mula de carga",
+  "desc": "+15 kg de capacidad de carga.",
+  "skill": "atletismo",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "atletismo": 6
+   },
+   "level": 1,
+   "perks": [
+    "zancada"
+   ]
+  },
+  "mods": {
+   "carry": 15
+  }
+ },
+ {
+  "id": "aguante",
+  "name": "Aguante",
+  "desc": "+20 de aguante y +10 de salud máxima.",
+  "skill": "atletismo",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "atletismo": 10
+   },
+   "level": 3,
+   "perks": [
+    "mula"
+   ]
+  },
+  "mods": {
+   "stamina": 20,
+   "hpMax": 10
+  }
+ },
+ {
+  "id": "segunda-vida",
+  "name": "Segunda vida",
+  "desc": "Una vez por día de juego, si caes con heridas mortales te levantas a los 6 s con la mitad de salud.",
+  "skill": "atletismo",
+  "tier": 4,
+  "cost": 2,
+  "requires": {
+   "skills": {
+    "atletismo": 12,
+    "medicina": 6
+   },
+   "level": 12,
+   "perks": [
+    "aguante"
+   ]
+  },
+  "mods": {},
+  "flag": "segunda-vida"
+ },
+ {
+  "id": "imparable",
+  "name": "Imparable",
+  "desc": "Nivel 25. +25 % de velocidad y la carga nunca te frena.",
+  "skill": "atletismo",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "atletismo": 25
+   },
+   "level": 15,
+   "perks": [
+    "aguante"
+   ]
+  },
+  "mods": {
+   "speed": 0.25
+  },
+  "flag": "imparable"
+ },
+ {
+  "id": "primeros-auxilios",
+  "name": "Primeros auxilios",
+  "desc": "Recuperas 1 de salud cada 4 s fuera de combate.",
+  "skill": "medicina",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "medicina": 3
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "regen": 0.25
+  }
+ },
+ {
+  "id": "metabolismo",
+  "name": "Metabolismo eficiente",
+  "desc": "El hambre, la sed y el sueño suben un 15 % más despacio.",
+  "skill": "medicina",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "medicina": 8
+   },
+   "level": 1,
+   "perks": [
+    "primeros-auxilios"
+   ]
+  },
+  "mods": {
+   "needs": 0.15
+  }
+ },
+ {
+  "id": "cirujano",
+  "name": "Ojo clínico",
+  "desc": "+5 % de supervivencia en cada operación de cromo.",
+  "skill": "medicina",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "medicina": 12
+   },
+   "level": 5,
+   "perks": [
+    "metabolismo"
+   ]
+  },
+  "mods": {
+   "surgery": 0.05
+  }
+ },
+ {
+  "id": "milagro",
+  "name": "Milagro",
+  "desc": "Nivel 25. Te estabilizas tú solo cuando caes, una vez por hora real, y regeneras el triple.",
+  "skill": "medicina",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "medicina": 25
+   },
+   "level": 15,
+   "perks": [
+    "cirujano"
+   ]
+  },
+  "mods": {
+   "regen": 0.5
+  },
+  "flag": "milagro"
+ },
+ {
+  "id": "regateo",
+  "name": "Regateo",
+  "desc": "Compras un 5 % más barato.",
+  "skill": "negociacion",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "negociacion": 4
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "price": 0.05
+  }
+ },
+ {
+  "id": "buen-vendedor",
+  "name": "Buen vendedor",
+  "desc": "Vendes un 15 % más caro.",
+  "skill": "negociacion",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "negociacion": 8
+   },
+   "level": 1,
+   "perks": [
+    "regateo"
+   ]
+  },
+  "mods": {
+   "sell": 0.15
+  }
+ },
+ {
+  "id": "contactos",
+  "name": "Contactos",
+  "desc": "Los sobornos a la PCV cuestan la mitad y compras otro 5 % más barato.",
+  "skill": "negociacion",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "negociacion": 12
+   },
+   "level": 5,
+   "perks": [
+    "regateo"
+   ]
+  },
+  "mods": {
+   "price": 0.05,
+   "bribe": 0.5
+  }
+ },
+ {
+  "id": "lengua-de-plata",
+  "name": "Lengua de plata",
+  "desc": "Nivel 25. Todo un 20 % más barato (casas y coches incluidos) y la PCV te deja ir sin pagar.",
+  "skill": "negociacion",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "negociacion": 25
+   },
+   "level": 15,
+   "perks": [
+    "contactos"
+   ]
+  },
+  "mods": {
+   "price": 0.1
+  },
+  "flag": "lengua"
+ },
+ {
+  "id": "mirada-dura",
+  "name": "Mirada dura",
+  "desc": "+1 a enfrentamientos y defensa.",
+  "skill": "intimidacion",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "intimidacion": 5
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "confront": 1
+  }
+ },
+ {
+  "id": "extorsion",
+  "name": "Extorsión",
+  "desc": "+2 a robar a la cara y +10 % a las recompensas cobradas.",
+  "skill": "intimidacion",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "intimidacion": 10
+   },
+   "level": 3,
+   "perks": [
+    "mirada-dura"
+   ]
+  },
+  "mods": {
+   "steal": 2,
+   "bounty": 0.1
+  }
+ },
+ {
+  "id": "terror",
+  "name": "Leyenda de la calle",
+  "desc": "Nivel 25. Los PNJ de menor nivel huyen al verte armado y las bandas no se atreven contigo.",
+  "skill": "intimidacion",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "intimidacion": 25
+   },
+   "level": 15,
+   "perks": [
+    "extorsion"
+   ]
+  },
+  "mods": {
+   "confront": 2
+  },
+  "flag": "terror"
+ },
+ {
+  "id": "ojo-avizor",
+  "name": "Ojo avizor",
+  "desc": "Encuentras un 25 % más al rebuscar y +5 % de esquiva.",
+  "skill": "percepcion",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "percepcion": 4
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "rummage": 0.25,
+   "dodge": 0.05
+  }
+ },
+ {
+  "id": "analista",
+  "name": "Analista",
+  "desc": "Los escaneos y el análisis profundo cuestan 1 de RAM y +1 a hackear.",
+  "skill": "percepcion",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "percepcion": 10
+   },
+   "level": 3,
+   "perks": [
+    "ojo-avizor"
+   ]
+  },
+  "mods": {
+   "hackChance": 1
+  },
+  "flag": "analista"
+ },
+ {
+  "id": "lector",
+  "name": "Lector de personas",
+  "desc": "Nivel 25. Ves el nivel, la salud y las estadísticas de cualquiera sin hackear.",
+  "skill": "percepcion",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "percepcion": 25
+   },
+   "level": 12,
+   "perks": [
+    "analista"
+   ]
+  },
+  "mods": {},
+  "flag": "lector"
+ },
+ {
+  "id": "manitas",
+  "name": "Manitas",
+  "desc": "+3 de capacidad de cromo.",
+  "skill": "reparacion",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "reparacion": 5
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "chrome": 3
+  }
+ },
+ {
+  "id": "ingeniero",
+  "name": "Ingeniería de implantes",
+  "desc": "Las habilidades de tus implantes se recargan un 20 % antes.",
+  "skill": "reparacion",
+  "tier": 3,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "reparacion": 12
+   },
+   "level": 5,
+   "perks": [
+    "manitas"
+   ]
+  },
+  "mods": {
+   "cooldown": 0.2
+  }
+ },
+ {
+  "id": "maestro-cromo",
+  "name": "Maestro del cromo",
+  "desc": "Nivel 25. +12 de capacidad de cromo y recargas un 40 % más rápidas.",
+  "skill": "reparacion",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "reparacion": 25
+   },
+   "level": 15,
+   "perks": [
+    "ingeniero"
+   ]
+  },
+  "mods": {
+   "chrome": 12,
+   "cooldown": 0.2
+  }
+ },
+ {
+  "id": "volante",
+  "name": "Buen volante",
+  "desc": "Tus coches van un 10 % más rápido.",
+  "skill": "conduccion",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "conduccion": 4
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "carSpeed": 0.1
+  }
+ },
+ {
+  "id": "piloto",
+  "name": "Piloto",
+  "desc": "Nivel 25. +30 % de velocidad al volante y el viaje en coche entre distritos es instantáneo.",
+  "skill": "conduccion",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "conduccion": 25
+   },
+   "level": 12,
+   "perks": [
+    "volante"
+   ]
+  },
+  "mods": {
+   "carSpeed": 0.3
+  },
+  "flag": "piloto"
+ },
+ {
+  "id": "sangre-de-cromo",
+  "name": "Sangre de cromo",
+  "desc": "+4 de capacidad de cromo.",
+  "skill": "filo",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {
+    "filo": 3
+   },
+   "level": 1,
+   "perks": []
+  },
+  "mods": {
+   "chrome": 4
+  }
+ },
+ {
+  "id": "al-limite",
+  "name": "Al límite",
+  "desc": "+10 de capacidad de cromo y, con menos del 30 % de salud, +3 a todo en combate.",
+  "skill": "filo",
+  "tier": 3,
+  "cost": 2,
+  "requires": {
+   "skills": {
+    "filo": 10
+   },
+   "level": 5,
+   "perks": [
+    "sangre-de-cromo"
+   ]
+  },
+  "mods": {
+   "chrome": 10
+  },
+  "flag": "al-limite"
+ },
+ {
+  "id": "corazon-de-cromo",
+  "name": "Corazón de cromo",
+  "desc": "Nivel 25. Las habilidades de tus implantes se recargan el doble de rápido y hacen un 25 % más de daño.",
+  "skill": "filo",
+  "tier": 5,
+  "cost": 3,
+  "requires": {
+   "skills": {
+    "filo": 25
+   },
+   "level": 15,
+   "perks": [
+    "al-limite"
+   ]
+  },
+  "mods": {
+   "cooldown": 0.5
+  },
+  "flag": "corazon-cromo"
+ },
+ {
+  "id": "aprendiz",
+  "name": "Aprendiz eterno",
+  "desc": "Todas tus habilidades ganan un 15 % más de experiencia.",
+  "skill": "general",
+  "tier": 1,
+  "cost": 1,
+  "requires": {
+   "skills": {},
+   "level": 4,
+   "perks": []
+  },
+  "mods": {
+   "skillXp": 0.15
+  }
+ },
+ {
+  "id": "superviviente",
+  "name": "Superviviente",
+  "desc": "+15 de salud máxima.",
+  "skill": "general",
+  "tier": 2,
+  "cost": 1,
+  "requires": {
+   "skills": {},
+   "level": 8,
+   "perks": []
+  },
+  "mods": {
+   "hpMax": 15
+  }
+ },
+ {
+  "id": "veterano",
+  "name": "Veterano de Vértice",
+  "desc": "+1 a todas las tiradas de enfrentamiento y +10 % de experiencia de personaje.",
+  "skill": "general",
+  "tier": 3,
+  "cost": 2,
+  "requires": {
+   "skills": {},
+   "level": 16,
+   "perks": [
+    "aprendiz"
+   ]
+  },
+  "mods": {
+   "confront": 1,
+   "xp": 0.1
+  }
+ }
+]

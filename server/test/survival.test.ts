@@ -61,7 +61,7 @@ describe('v0.2 · vivir en la ciudad', () => {
     const p = P('compradora');
     for (const it of ['fideos-krill', 'agua-filtrada']) p.inventory.set(it, 0);
     await b.enterDoor('Salida');
-    await b.moveAndArrive(44.5, 37.5);
+    await b.moveAndArrive(48.5, 40.5);
     const money = p.money;
     p.thirst = 75;
     await b.waitFor((m) => m.t === 'notice' && /vas a comprar/.test(m.text), 8000, 'recado de compra');
@@ -158,7 +158,7 @@ describe('v0.2 · vivir en la ciudad', () => {
   it('red de mercado: comprar sube el precio, vender lo baja y las corporaciones revisan márgenes', async () => {
     const { b } = await join('mercader');
     await b.enterDoor('Salida');
-    await b.moveAndArrive(44.5, 37.5);
+    await b.moveAndArrive(48.5, 40.5);
     const vend = b.findEntity((e) => e.objKind === 'vending')!;
     const shopMsg = b.waitFor((m) => m.t === 'shop', 4000, 'tienda');
     await b.cmd({ t: 'interact', target: vend.id });
@@ -190,7 +190,7 @@ describe('v0.2 · vivir en la ciudad', () => {
     await app.db.query("INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,4850,5000,'prueba')", [op(), p.charId]);
     await app.db.query('UPDATE characters SET money=5000 WHERE id=$1', [p.charId]);
     await b.enterDoor('Salida');
-    await b.moveAndArrive(23.5, 51.5);
+    await b.moveAndArrive(24.5, 57.5);
     await b.enterDoor('Clínica');
     await b.interactAndDialog('Sato');
     const cl = b.waitFor((m) => m.t === 'clinic', 4000, 'consulta');

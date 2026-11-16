@@ -11,12 +11,14 @@ import type { Metrics } from '../metrics.js';
 import { Zone } from './zone.js';
 import { spawnOf, type Entity } from './entity.js';
 import { ambientBrain, scheduledBrain, thinkNpc } from './npc.js';
-import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, savePlayerVitals, type PlayerState } from '../game/player.js';
+import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
 import { FactService, InstanceService } from '../game/services.js';
 import { EffectEngine, GameError, type EffectOutcome } from '../game/effects.js';
 import { allOk, buildView, checkNumbers, entryNode } from '../game/dialog.js';
 import { Survival } from './survival.js';
 import { Combat } from './combat.js';
+import { Progress } from './progress.js';
+import { Property, isHouseZone } from './property.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
@@ -51,6 +53,8 @@ export class World {
   private saving = false;
   readonly survival: Survival;
   readonly combat: Combat;
+  readonly progress: Progress;
+  readonly property: Property;
   private spawnAmbientFn: (z: Zone) => void = () => {};
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
@@ -59,26 +63,24 @@ export class World {
     this.effects = new EffectEngine(db, c, this.facts, this.inst);
     this.survival = new Survival(this);
     this.combat = new Combat(this, this.survival);
+    this.progress = new Progress(this);
+    this.property = new Property(this);
   }
 
   // ---------------------------------------------------------------- arranque
   async init() {
     await this.facts.load();
     await this.inst.load();
-    for (const def of this.c.zones) this.zones.set(def.id, new Zone(def));
-    for (const z of this.zones.values()) {
-      for (const d of z.def.doors) {
-        const target = this.zones.get(d.to.zone)!;
-        this.addEntity(z, { kind: 'door', name: d.name, x: d.at[0] + 0.5, y: d.at[1] + 0.5, interactive: true, doorTo: { zone: d.to.zone, at: d.to.at }, danger: d.danger ?? target.def.danger, label: 'Puerta' });
-      }
-      for (const o of z.def.objects) this.addEntity(z, { kind: 'object', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, objKind: o.kind, dialog: o.dialog, label: '', shop: o.shop, sleep: o.sleep, workplace: o.workplace });
-    }
+    // Las plantillas de vivienda no son zonas jugables: cada casa es una instancia que se crea al entrar.
+    for (const def of this.c.zones) if (!def.id.startsWith('casa-')) this.zones.set(def.id, new Zone(def));
+    for (const z of this.zones.values()) this.populateZone(z);
     const h = this.cityHour();
+    const rng0 = seededRng(this.cfg.seed + 99);
     for (const n of this.c.npcs) {
       const entry = n.schedule.find((s) => (s.from <= s.to ? h >= s.from && h < s.to : h >= s.from || h < s.to))!;
       const e = this.addEntity(this.zones.get(entry.zone)!, { kind: 'npc', name: n.name, title: n.title, x: entry.at[0] + 0.5, y: entry.at[1] + 0.5, interactive: true, dialog: n.dialog, appearance: n.appearance, label: entry.label, speed: 2.2, npcShop: n.shop });
       e.npc = scheduledBrain(n, this.cfg.seed + e.id);
-      e.npcType = n.essential === false ? 'civil' : 'essential'; e.faction = n.faction;
+      e.npcType = n.essential === false ? 'civil' : 'essential'; e.faction = n.faction; e.level = 6 + Math.floor(rng0() * 10);
     }
     const rng = seededRng(this.cfg.seed);
     const pick = <T,>(a: T[]) => a[Math.floor(rng() * a.length)];
@@ -89,7 +91,7 @@ export class World {
         appearance: { skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
       e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
       // Transeúntes: civiles con algo de cromo visible y salud propia.
-      e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil' } };
+      e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil' } }; e.level = 1 + Math.floor(rng() * 6);
       const chromeRoll = rng();
       e.chrome = chromeRoll < 0.15 ? ['ojos'] : chromeRoll < 0.25 ? [rng() < 0.5 ? 'brazo_izq' : 'brazo_der'] : chromeRoll < 0.3 ? ['cabeza', 'ojos'] : chromeRoll < 0.34 ? ['pierna_izq', 'pierna_der'] : [];
       (e.appearance as any).build = pick(['delgado', 'medio', 'robusto']); (e.appearance as any).hairStyle = pick(['corto', 'largo', 'coleta', 'rapado', 'afro', 'moño', 'cresta', 'rastas', 'calvo', 'asimetrico']);
@@ -109,7 +111,30 @@ export class World {
     }
     this.spawnAmbientFn = (zone: Zone) => { const wp = pick(zone.def.waypoints); if (wp) mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); };
     await this.survival.init();
+    await this.property.load();
     this.combat.spawnPopulation();
+  }
+
+  private populateZone(z: Zone) {
+    for (const d of z.def.doors) {
+      const target = this.zones.get(d.to.zone);
+      this.addEntity(z, { kind: 'door', name: d.name, x: d.at[0] + 0.5, y: d.at[1] + 0.5, interactive: true, doorTo: { zone: d.to.zone, at: d.to.at }, danger: d.danger ?? target?.def.danger ?? 'public', label: 'Puerta', hiddenDoc: d.hidden });
+    }
+    for (const o of z.def.objects) this.addEntity(z, { kind: 'object', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, objKind: o.kind, dialog: o.dialog, label: '', shop: o.shop, sleep: o.sleep, workplace: o.workplace, objId: o.id, dealer: o.dealer });
+  }
+  /** Devuelve una zona; las viviendas («casa:<id>») se instancian bajo demanda a partir de su plantilla. */
+  ensureZone(id: string): Zone | undefined {
+    const z = this.zones.get(id);
+    if (z || !isHouseZone(id)) return z;
+    const house = this.property.houses.get(id.slice(5));
+    const tpl = house && this.c.zones.find((x) => x.id === house.template);
+    const exit = house && this.property.exitOf(house.id);
+    if (!tpl || !exit) return undefined;
+    const def = { ...structuredClone(tpl), id, name: house.name, doors: tpl.doors.map((d) => ({ ...d, name: 'Salir a la calle', to: { zone: exit.zone, at: exit.at } })) };
+    const nz = new Zone(def);
+    this.zones.set(id, nz);
+    this.populateZone(nz);
+    return nz;
   }
 
   /** Crea un PNJ (lo usa la supervivencia para los fugitivos). */
@@ -199,6 +224,8 @@ export class World {
     // Instantáneas escalonadas: cada cliente recibe una cada `snapshotEveryTicks` ticks, repartidos entre ticks consecutivos.
     { const every = RULES.snapshotEveryTicks, phase = this.tick % every; let i = 0; for (const c of this.conns.values()) { if ((i++ % every) === phase) this.snapshot(c); } }
     this.combat.everyTick();
+    if (this.tick % 20 === 0 && this.tick % 200 === 0) { try { this.property.sample(); } catch (err) { console.error('[propiedad]', err); } }
+    if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
@@ -305,14 +332,14 @@ export class World {
     const vis = e.zone.query(e.x, e.y, this.cfg.viewRadius);
     const visIds = new Set<number>();
     const spawns: EntitySpawn[] = [];
-    const labels: { id: number; label: string; bounty: number; state: 'alive' | 'downed' | 'sleeping' }[] = [];
+    const labels: Entity[] = [];
     let np = 0;
     const NEAR2 = 12 * 12;
     for (const v of vis) {
       visIds.add(v.id);
       const k = c.known.get(v.id);
       if (!k) { spawns.push(spawnOf(v)); c.known.set(v.id, { lv: v.labelVer, sent: this.tick }); continue; }
-      if (k.lv !== v.labelVer) { k.lv = v.labelVer; labels.push({ id: v.id, label: v.label, bounty: v.bounty ?? 0, state: v.state ?? 'alive' }); }
+      if (k.lv !== v.labelVer) { k.lv = v.labelVer; labels.push(v); }
       if (skipPos || v.lastMoveTick <= k.sent) continue;
       // Interés por distancia: cerca a 10 Hz; lejos a 5 Hz. La posición final al detenerse siempre se entrega.
       const dx = v.x - e.x, dy = v.y - e.y;
@@ -333,7 +360,7 @@ export class World {
     try {
       if (gone.length) this.send(c, { t: 'despawn', ids: gone });
       if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
-      for (const l of labels) this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty, state: l.state });
+      for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs }); }
       if (np) {
         POS_DV.setUint8(0, BIN_POSITIONS); POS_DV.setUint32(1, this.tick >>> 0); POS_DV.setUint16(5, np);
         const buf = Buffer.from(POS_BUF.subarray(0, 7 + np * 9)); // copia: el búfer compartido se reutiliza
@@ -386,11 +413,11 @@ export class World {
       if (!charId) { ws.send(JSON.stringify({ t: 'error', reason: 'no_character' })); ws.close(4004, 'no_character'); return null; }
       const p = await loadPlayer(this.db, charId);
       if (!p) { ws.send(JSON.stringify({ t: 'error', reason: 'no_character' })); ws.close(4004, 'no_character'); return null; }
-      let zone = this.zones.get(p.zone);
+      let zone = this.ensureZone(p.zone);
       if (!zone) { zone = this.zones.get(this.c.manifest.startZone)!; p.x = this.c.manifest.startAt[0] + 0.5; p.y = this.c.manifest.startAt[1] + 0.5; }
       if (!isWalkable(zone.grid, p.x, p.y)) { p.x = zone.def.safePoint[0] + 0.5; p.y = zone.def.safePoint[1] + 0.5; }
       conn.p = p;
-      conn.e = this.addEntity(zone, { kind: 'player', name: p.name, title: this.c.roles.find((r) => r.id === p.role)?.name, x: p.x, y: p.y, interactive: true, appearance: p.appearance, role: p.role, label: '', speed: walkSpeed(p.attributes) });
+      conn.e = this.addEntity(zone, { kind: 'player', name: p.name, title: this.c.roles.find((r) => r.id === p.role)?.name, x: p.x, y: p.y, interactive: true, appearance: wornAppearance(this.c, p), role: p.role, label: '', speed: walkSpeed(p.attributes), level: p.level });
       conn.e.chrome = chromeParts(this.c, p);
       await this.combat.loadAmbar(p);
     }
@@ -464,7 +491,7 @@ export class World {
     this.metrics.inc('msgsIn');
     const p = c.p, sv = this.survival;
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
-    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar'];
+    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy'];
     if (p.status === 'downed' && !passive.includes(m.t)) { if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás derribado: espera a que alguien te estabilice.' }); return; }
     // Cualquier orden activa despierta al personaje.
     if (p.sleeping && ['move', 'interact', 'retreat', 'stop', 'jobStart', 'useItem'].includes(m.t)) sv.wake(c, 'Te despiertas.');
@@ -501,6 +528,40 @@ export class World {
       case 'menu': { const t = this.entities.get(m.target); if (t && t.zone === e.zone) this.send(c, { t: 'targetMenu', view: this.combat.menu(c, t) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return; }
       case 'hack': return guarded(m.seq, () => this.combat.hack(c, m));
       case 'equip': return guarded(m.seq, async () => sv.equip(c, m.item));
+      case 'skillUp': return guarded(m.seq, () => this.progress.skillUp(c, m.skill));
+      case 'perkBuy': return guarded(m.seq, () => this.progress.perkBuy(c, m.perk));
+      case 'wear': return guarded(m.seq, async () => sv.wear(c, m.slot, m.item));
+      case 'ability': return guarded(m.seq, () => this.combat.ability(c, m.id));
+      case 'props': this.send(c, { t: 'props', view: this.property.propsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'marketLive': this.property.liveOn(c, m.on); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'house': return guarded(m.seq, async () => {
+        const pr = this.property, hid = m.house ?? '';
+        switch (m.action) {
+          case 'view': this.send(c, { t: 'building', view: pr.buildingView(p, m.building ?? '') }); break;
+          case 'realty': this.send(c, { t: 'realty', view: pr.realtyView(p, m.filter) }); break;
+          case 'buy': { const desk = [...e.zone.entities].some((o) => o.objKind === 'realty' && Math.hypot(o.x - e.x, o.y - e.y) < 5); await pr.buyHouse(c, hid, m.opId ?? randomUUID(), desk); break; }
+          case 'sell': await pr.sellHouse(c, hid, m.opId ?? randomUUID()); this.send(c, { t: 'props', view: pr.propsView(p) }); break;
+          case 'enter': await pr.enterHouse(c, hid); break;
+          case 'ring': pr.ring(c, hid); break;
+          case 'answer': pr.answer(c, hid, m.who ?? 0, !!m.allow); break;
+          case 'permit': await pr.permit(c, hid, m.name ?? '', true); this.send(c, { t: 'props', view: pr.propsView(p) }); break;
+          case 'revoke': await pr.permit(c, hid, m.name ?? '', false); this.send(c, { t: 'props', view: pr.propsView(p) }); break;
+          case 'stash': this.send(c, { t: 'stash', view: await pr.stashView(c, hid) }); break;
+          case 'stashIn': await pr.stashMove(c, hid, m.item ?? '', m.qty ?? 1, 'in'); break;
+          case 'stashOut': await pr.stashMove(c, hid, m.item ?? '', m.qty ?? 1, 'out'); break;
+        }
+      });
+      case 'car': return guarded(m.seq, async () => {
+        const pr = this.property;
+        switch (m.action) {
+          case 'dealer': this.send(c, { t: 'dealer', view: pr.dealerView(p, m.dealer ?? '') }); break;
+          case 'buy': await pr.buyCar(c, m.dealer ?? '', m.car ?? '', m.opId ?? randomUUID()); this.send(c, { t: 'dealer', view: pr.dealerView(p, m.dealer ?? '') }); break;
+          case 'sell': await pr.sellCar(c, m.car ?? '', m.opId ?? randomUUID()); this.send(c, { t: 'props', view: pr.propsView(p) }); break;
+          case 'drive': pr.drive(c, m.car); break;
+          case 'park': pr.park(c); break;
+          case 'travel': await pr.travel(c, m.zone ?? ''); break;
+        }
+      });
       case 'drop': return guarded(m.seq, async () => this.combat.drop(c));
       case 'factions': this.send(c, { t: 'factions', view: this.combat.factionsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'ambar': return guarded(m.seq, async () => { if (m.plan && m.opId) await this.combat.buyAmbar(c, m.plan, m.opId); this.send(c, { t: 'ambar', view: this.combat.ambarView(p) }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); });
@@ -647,8 +708,10 @@ export class World {
   private async transferPlayer(c: PlayerConn, door: Entity) {
     const e = c.e!, p = c.p!;
     if (e.transit || !door.doorTo) return;
-    const to = this.zones.get(door.doorTo.zone);
+    const to = this.ensureZone(door.doorTo.zone);
     if (!to) return;
+    if (p.driving && to.def.kind !== 'exterior') this.property.park(c, true);
+    if (door.hiddenDoc) this.combat.discover(c, door.hiddenDoc);
     e.transit = true;
     e.path = []; e.moving = false;
     const transferId = randomUUID();
@@ -708,6 +771,10 @@ export class World {
       case 'marketterm': return this.handle(c, { t: 'market', seq: 0 });
       case 'atm': return this.send(c, { t: 'targetMenu', view: this.combat.menu(c, o) });
       case 'ambar': return this.send(c, { t: 'ambar', view: this.combat.ambarView(c.p!) });
+      case 'housing': return this.send(c, { t: 'building', view: this.property.buildingView(c.p!, o.objId ?? '') });
+      case 'dealer': return run(() => this.send(c, { t: 'dealer', view: this.property.dealerView(c.p!, o.dealer ?? '') }));
+      case 'realty': return this.send(c, { t: 'realty', view: this.property.realtyView(c.p!) });
+      case 'stash': return run(async () => { const hid = o.zone.id.startsWith('casa:') ? o.zone.id.slice(5) : ''; this.send(c, { t: 'stash', view: await this.property.stashView(c, hid) }); });
       case 'bribe': return run(async () => { if ((c.p!.wanted ?? 0) < 0.5) throw new GameError('La ventanilla está cerrada para quien no tiene expediente.'); await this.combat.bribe(c, `bribe-${randomUUID()}`); });
       case 'workplace': {
         const p = c.p!;
@@ -763,6 +830,7 @@ export class World {
     if (opt.check) {
       const n = checkNumbers(this.c, p, opt);
       const r = await this.effects.commitCheck(p, opt.check.key, m.opId, { attr: opt.check.attr, attrValue: n.attrValue, skill: opt.check.skill, skillValue: n.skillValue, bonus: n.bonus, dv: n.dv }, m.luck);
+      if (!r.reused) this.progress.gain(p, opt.check.skill, r.success ? 6 : 3);
       success = r.success;
       checkExtra = { check: { key: opt.check.key, roll: r.roll, total: r.total, dv: n.dv, success, reused: r.reused, luck: r.luckSpent } };
       const detail = r.reused ? `Resultado ya registrado: ${r.total} contra ${n.dv}` :
@@ -806,7 +874,7 @@ export class World {
     if (out.completed) this.send(c, { t: 'reward', title: `Encargo completado: ${out.completed.title}`, lines: out.lines });
     else if (out.lines.length) this.send(c, { t: 'notice', kind: 'good', text: out.lines.join(' · ') });
     for (const n of out.notices) this.send(c, { t: 'notice', kind: 'good', text: n });
-    if (out.levelUp) this.send(c, { t: 'notice', kind: 'good', text: `¡Has subido al nivel ${out.levelUp}!` });
+    if (out.levelUp) this.progress.onLevelUp(c.p!, out.levelUp - 1);
     if (out.journalChanged) this.send(c, { t: 'journal', journal: this.journal(p) });
     for (const od of out.objectiveDone) {
       if (!od.shared) continue;

@@ -14,9 +14,9 @@ const DURATION = Number(args.duration ?? 60);
 const WARMUP = Number(args.warmup ?? 10);
 const ADMIN = args.token ?? process.env.ADMIN_TOKEN ?? 'dev-admin';
 const RUN = args.run ?? Date.now().toString(36).slice(-4);
-const HOT: [number, number] = [21, 34];
+const HOT: [number, number] = [22, 37];
 const ROLES = ['solo', 'netrunner', 'tech', 'medtech', 'fixer', 'nomad', 'media', 'exec', 'lawman', 'rocker'];
-const FERRO_POINTS: [number, number][] = [[5, 21], [20, 21], [40, 21], [55, 21], [68, 21], [80, 21], [93, 21], [5, 45], [20, 45], [40, 45], [55, 45], [68, 45], [80, 45], [11, 15], [31, 15], [51, 15], [73, 15], [11, 35], [31, 35], [51, 35], [73, 30], [89, 30], [11, 55], [31, 58], [51, 55], [73, 55], [20, 26], [24, 35], [27, 40], [43, 42], [23, 50]];
+const FERRO_POINTS: [number, number][] = [[5,21],[21,21],[44,21],[60,21],[73,21],[88,21],[102,21],[5,48],[21,48],[44,48],[60,48],[73,48],[88,48],[11,15],[32,15],[55,15],[78,15],[11,38],[32,38],[55,38],[78,33],[97,33],[11,61],[32,64],[55,61],[78,61],[21,29],[25,38],[28,43],[47,45],[24,56]];
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);

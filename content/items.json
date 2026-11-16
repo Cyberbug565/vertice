@@ -8,14 +8,6 @@
   "price": 60
  },
  {
-  "id": "ropa-impermeable",
-  "name": "Gabardina impermeable",
-  "desc": "Mejor sueño en la calle cuando llueve (+0,05).",
-  "weight": 1.5,
-  "category": "ropa",
-  "price": 70
- },
- {
   "id": "pulsera-interfaz",
   "name": "Pulsera de interfaz",
   "desc": "Conector provisional para terminales (Netrunner).",
@@ -264,33 +256,6 @@
   "category": "mision"
  },
  {
-  "id": "chaqueta",
-  "name": "Chaqueta reforzada",
-  "desc": "Ropa de calle con forro balístico ligero (blindaje 1).",
-  "weight": 2,
-  "category": "ropa",
-  "price": 80,
-  "armor": 1
- },
- {
-  "id": "chaleco-balistico",
-  "name": "Chaleco balístico",
-  "desc": "Blindaje 3 contra cortes y balas.",
-  "weight": 4,
-  "category": "ropa",
-  "price": 260,
-  "armor": 3
- },
- {
-  "id": "gabardina-blindada",
-  "name": "Gabardina blindada",
-  "desc": "Elegante y con placas cerámicas (blindaje 4).",
-  "weight": 5,
-  "category": "ropa",
-  "price": 520,
-  "armor": 4
- },
- {
   "id": "navaja",
   "name": "Navaja",
   "desc": "Cuerpo a cuerpo · rápida y discreta.",
@@ -304,7 +269,7 @@
     12
    ],
    "range": 1.6,
-   "cooldown": 1.0,
+   "cooldown": 1,
    "accuracy": 1,
    "nonlethal": "opcional",
    "noise": 0.05,
@@ -436,7 +401,7 @@
     16
    ],
    "range": 12,
-   "cooldown": 1.0,
+   "cooldown": 1,
    "accuracy": 1,
    "nonlethal": "no",
    "noise": 0.8,
@@ -604,7 +569,7 @@
     48
    ],
    "range": 24,
-   "cooldown": 3.0,
+   "cooldown": 3,
    "accuracy": 2,
    "nonlethal": "no",
    "noise": 0.6,
@@ -652,7 +617,7 @@
     22
    ],
    "range": 1.7,
-   "cooldown": 1.0,
+   "cooldown": 1,
    "accuracy": 2,
    "nonlethal": "opcional",
    "noise": 0.05,

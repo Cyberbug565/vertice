@@ -124,6 +124,7 @@ export class GameView {
     this.lightsLayer.removeChildren();
     this.lightsLayer.addChild(this.marketLights, this.beaconG);
     this.sky.removeChildren().forEach((c) => c.destroy({ children: true }));
+    for (const t of this.traffic) t.g.destroy(); this.trafficMarks?.destroy(); this.trafficMarks = null;
     this.beacons = []; this.holos = []; this.cars = []; this.traffic = [];
     const z = this.zone, q = settings.quality;
     if (z.kind === 'interior') {
@@ -571,27 +572,63 @@ export class GameView {
 
   /** Tráfico rodado: coches que circulan por las calzadas anchas del distrito. */
   private traffic: { g: Graphics; ax: number; ay: number; bx: number; by: number; t: number; v: number }[] = [];
+  /** Calzadas (asfalto largo) con su orientación y carriles por sentido. */
+  private roads() {
+    if (!this.zone || this.zone.kind !== 'exterior') return [];
+    return this.zone.ground.filter((gr) => gr.type === 'asphalt' && Math.min(gr.rect[2], gr.rect[3]) >= 3 && Math.max(gr.rect[2], gr.rect[3]) >= 16).map((gr) => {
+      const [x, y, w, h] = gr.rect; const horiz = w >= h; const width = horiz ? h : w;
+      return { x, y, w, h, horiz, width, perDir: width >= 6 ? 2 : 1 };
+    });
+  }
   private buildTraffic() {
-    if (!this.zone || this.zone.kind !== 'exterior') return;
-    const lanes = this.zone.ground.filter((gr) => gr.type === 'asphalt' && (gr.rect[2] >= 3 || gr.rect[3] >= 3) && Math.max(gr.rect[2], gr.rect[3]) >= 20);
-    const n = settings.quality === 'high' ? 3 : 1;
-    const cols = [0xffd23f, 0xff5a5a, 0x43f3ff, 0xe8e8f0, 0x2a2a3a, 0xb46cff, 0x7dff7a];
-    for (const [i, l] of lanes.entries()) for (let k = 0; k < n; k++) {
-      const [x, y, w, h] = l.rect;
-      const horiz = w >= h;
-      const lane = k % 2;
-      const ax = horiz ? x : x + (lane ? w - 0.8 : 0.8), ay = horiz ? y + (lane ? h - 0.8 : 0.8) : y;
-      const bx = horiz ? x + w : ax, by = horiz ? ay : y + h;
-      const dir = lane ? -1 : 1;
-      const g = new Graphics();
-      const col = cols[(i * 3 + k) % cols.length];
-      drawBox(g, -0.6, -0.3, 1.2, 0.6, 0.05, 0.35, col); drawBox(g, -0.35, -0.25, 0.7, 0.5, 0.4, 0.25, shade(col, 0.55));
-      const head = worldToScreen(horiz ? 0.6 * dir : 0, horiz ? 0 : 0.6 * dir, 0.25);
-      g.circle(head.x, head.y, 2.5).fill(0xfff1c0);
-      this.markers.addChild(g);
-      this.traffic.push({ g, ax: dir > 0 ? ax : bx, ay: dir > 0 ? ay : by, bx: dir > 0 ? bx : ax, by: dir > 0 ? by : ay, t: (k * 0.37 + i * 0.13) % 1, v: 0.025 + ((i + k) % 3) * 0.01 });
+    const roads = this.roads();
+    if (!roads.length) return;
+    // Marcas viales: doble línea continua en el centro y discontinua entre carriles del mismo sentido.
+    const mk = new Graphics();
+    const crossing = (r: (typeof roads)[number], px: number, py: number) => roads.some((o) => o !== r && o.horiz !== r.horiz && px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h);
+    const line = (r: (typeof roads)[number], off: number, dashed: boolean, color: number, width: number) => {
+      const len = r.horiz ? r.w : r.h;
+      for (let t = 0.3; t < len - 0.3; t += dashed ? 1.6 : 0.5) {
+        const seg = dashed ? 0.8 : 0.5;
+        const ax = r.horiz ? r.x + t : r.x + off, ay = r.horiz ? r.y + off : r.y + t;
+        const bx = r.horiz ? ax + seg : ax, by = r.horiz ? ay : ay + seg;
+        if (crossing(r, ax, ay) || crossing(r, bx, by)) continue;
+        const a = worldToScreen(ax, ay), b = worldToScreen(bx, by);
+        mk.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width, color, alpha: 0.75 });
+      }
+    };
+    for (const r of roads) {
+      const mid = r.width / 2;
+      line(r, mid - 0.06, false, 0xffd23f, 1.2); line(r, mid + 0.06, false, 0xffd23f, 1.2);
+      if (r.perDir === 2) { line(r, mid / 2, true, 0xe8e8f0, 1); line(r, mid + mid / 2, true, 0xe8e8f0, 1); }
+    }
+    this.markers.addChildAt(mk, 0);
+    this.trafficMarks = mk;
+    // Coches por carril: cada sentido circula por su mitad de la calzada.
+    const n = settings.quality === 'high' ? 2 : settings.quality === 'low' ? 0 : 1;
+    const cols = [0xffd23f, 0xff5a5a, 0x43f3ff, 0xe8e8f0, 0x2a2a3a, 0xb46cff, 0x7dff7a, 0xff8a3d];
+    let ci = 0;
+    for (const r of roads) {
+      const mid = r.width / 2;
+      for (const dir of [1, -1]) for (let lane = 0; lane < r.perDir; lane++) for (let k = 0; k < n; k++) {
+        const off = dir > 0 ? mid + (lane + 0.5) * (mid / r.perDir) : (lane + 0.5) * (mid / r.perDir);
+        const ax = r.horiz ? r.x : r.x + off, ay = r.horiz ? r.y + off : r.y;
+        const bx = r.horiz ? r.x + r.w : ax, by = r.horiz ? ay : r.y + r.h;
+        const g = new Graphics();
+        const col = cols[ci++ % cols.length];
+        const [lx, ly] = r.horiz ? [1.3, 0.6] : [0.6, 1.3];
+        drawBox(g, -lx / 2, -ly / 2, lx, ly, 0.05, 0.35, col); drawBox(g, -lx * 0.3, -ly * 0.3, lx * 0.6, ly * 0.6, 0.4, 0.25, shade(col, 0.55));
+        const head = worldToScreen(r.horiz ? 0.65 * dir : 0, r.horiz ? 0 : 0.65 * dir, 0.25);
+        g.circle(head.x, head.y, 2.5).fill(0xfff1c0);
+        const tail = worldToScreen(r.horiz ? -0.65 * dir : 0, r.horiz ? 0 : -0.65 * dir, 0.25);
+        g.circle(tail.x, tail.y, 2).fill(0xff3040);
+        this.markers.addChild(g);
+        const len = r.horiz ? r.w : r.h;
+        this.traffic.push({ g, ax: dir > 0 ? ax : bx, ay: dir > 0 ? ay : by, bx: dir > 0 ? bx : ax, by: dir > 0 ? by : ay, t: (k * 0.5 + lane * 0.27 + ci * 0.137) % 1, v: (2.5 + lane * 1.5 + (ci % 3) * 0.6) / len });
+      }
     }
   }
+  private trafficMarks: Graphics | null = null;
   private animateTraffic(dt: number) {
     for (const c of this.traffic) {
       c.t += c.v * dt * (settings.reduceMotion ? 0.4 : 1);
@@ -599,8 +636,6 @@ export class GameView {
       const x = c.ax + (c.bx - c.ax) * c.t, y = c.ay + (c.by - c.ay) * c.t;
       const p = worldToScreen(x, y);
       c.g.position.set(p.x, p.y);
-      // Los coches se apartan si hay alguien en la calzada (solo visual).
-      c.g.alpha = 1;
     }
   }
   private animateSky(now: number, dt: number) {

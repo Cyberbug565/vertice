@@ -41,8 +41,8 @@
     "to": 19,
     "zone": "ferro",
     "at": [
-     17,
-     29
+     18,
+     32
     ],
     "state": "work",
     "label": "Atiende su puesto de fideos"
@@ -89,8 +89,8 @@
     "to": 24,
     "zone": "ferro",
     "at": [
-     42,
-     54
+     46,
+     60
     ],
     "state": "work",
     "label": "Vigila su desguace"

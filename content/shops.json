@@ -37,7 +37,7 @@
    "ropa-impermeable": 6,
    "bala-pistola": 100
   },
-  "priceMult": 1.0,
+  "priceMult": 1,
   "security": 16
  },
  {
@@ -65,7 +65,7 @@
    "cerveza-kanal": 25,
    "agua-filtrada": 20
   },
-  "priceMult": 1.0,
+  "priceMult": 1,
   "security": 11
  },
  {
@@ -167,12 +167,21 @@
    "bala-rifle": 300,
    "cartucho": 120,
    "carga-taser": 60,
-   "kit-herramientas": 10
+   "kit-herramientas": 10,
+   "tonfa-aturdidora": 6,
+   "rifle-pulsos": 2,
+   "francotirador-inteligente": 1,
+   "revolver-riel": 1,
+   "chaqueta-tactica": 2,
+   "casco-balistico": 3,
+   "visor-tactico": 2,
+   "pantalon-tactico": 3,
+   "botas-militares": 4
   },
   "buys": [
    "arma"
   ],
-  "priceMult": 1.0,
+  "priceMult": 1,
   "security": 22
  },
  {
@@ -235,7 +244,13 @@
    "rifle-riel": 1,
    "bala-pistola": 300,
    "cartucho": 100,
-   "celula-energia": 30
+   "celula-energia": 30,
+   "nunchakus": 5,
+   "lanza-electrica": 2,
+   "espada-monofilamento": 1,
+   "ballesta-carbono": 3,
+   "virote": 120,
+   "pistola-silenciada": 3
   },
   "buys": [
    "arma",
@@ -261,7 +276,7 @@
    "arma",
    "herramienta"
   ],
-  "priceMult": 1.0,
+  "priceMult": 1,
   "security": 18
  },
  {
@@ -304,7 +319,10 @@
    "bate": 4,
    "navaja": 8,
    "bala-pistola": 150,
-   "pistola-ligera": 2
+   "pistola-ligera": 2,
+   "nunchakus": 3,
+   "chaleco-carga": 3,
+   "camiseta-termica": 2
   },
   "buys": [
    "chatarra",
@@ -344,7 +362,13 @@
    "rifle-asalto": 2,
    "bala-rifle": 200,
    "kit-herramientas": 6,
-   "chatarra": 20
+   "chatarra": 20,
+   "ballesta-carbono": 2,
+   "virote": 80,
+   "abrigo-nomada": 4,
+   "rifle-dardos": 2,
+   "dardo-sedante": 60,
+   "botas-militares": 2
   },
   "buys": [
    "chatarra",
@@ -382,5 +406,166 @@
   },
   "priceMult": 1.2,
   "security": 13
+ },
+ {
+  "id": "ropa-lumen",
+  "name": "Ropa Lumen",
+  "owner": "asociacion-lumen",
+  "zone": "ropa-lumen-int",
+  "stock": {
+   "gorra-neon": 6,
+   "capucha-urbana": 6,
+   "bandana-roja": 6,
+   "gafas-sol": 6,
+   "mascara-filtro": 6,
+   "chaqueta": 6,
+   "bomber-cuero": 6,
+   "ropa-impermeable": 6,
+   "camiseta-basica": 6,
+   "camiseta-banda": 6,
+   "sudadera-capucha": 6,
+   "mono-trabajo": 6,
+   "vaqueros": 6,
+   "pantalon-cargo": 6,
+   "shorts-deporte": 6,
+   "deportivas": 6,
+   "botas-trabajo": 6
+  },
+  "buys": [
+   "ropa"
+  ],
+  "priceMult": 0.95,
+  "security": 12
+ },
+ {
+  "id": "moda-orbita",
+  "name": "Moda Órbita",
+  "owner": "kaiten",
+  "zone": "moda-orbita-int",
+  "stock": {
+   "sombrero-ala": 6,
+   "corona-aurelia": 6,
+   "gafas-hud": 6,
+   "americana-ejecutiva": 6,
+   "abrigo-nanofibra": 6,
+   "camisa-seda": 6,
+   "camisa-blindada": 6,
+   "pantalon-traje": 6,
+   "mallas-nanofibra": 6,
+   "zapatos-piel": 6,
+   "zapatillas-led": 6,
+   "botas-gravedad": 6,
+   "visor-neural": 6
+  },
+  "buys": [
+   "ropa"
+  ],
+  "priceMult": 1.3,
+  "security": 22
+ },
+ {
+  "id": "ropa-neon",
+  "name": "Ropa Neón",
+  "owner": "kitsune",
+  "zone": "ropa-neon-int",
+  "stock": {
+   "gorra-neon": 6,
+   "capucha-urbana": 6,
+   "gafas-sol": 6,
+   "gafas-hud": 6,
+   "mascara-oni": 6,
+   "cazadora-neon": 6,
+   "bomber-cuero": 6,
+   "top-malla": 6,
+   "camiseta-banda": 6,
+   "falda-vinilo": 6,
+   "vaqueros": 6,
+   "zapatillas-led": 6,
+   "deportivas": 6,
+   "casco-moto": 6
+  },
+  "buys": [
+   "ropa"
+  ],
+  "priceMult": 1.1,
+  "security": 16
+ },
+ {
+  "id": "ropa-segunda",
+  "name": "Ropa de Segunda Mano",
+  "owner": "hermandad-sol",
+  "zone": "ropa-segunda-int",
+  "stock": {
+   "bandana-roja": 6,
+   "capucha-urbana": 6,
+   "gafas-sol": 6,
+   "chaqueta": 6,
+   "bomber-cuero": 6,
+   "abrigo-nomada": 6,
+   "chaleco-carga": 6,
+   "camiseta-basica": 6,
+   "sudadera-capucha": 6,
+   "mono-trabajo": 6,
+   "camiseta-termica": 6,
+   "vaqueros": 6,
+   "pantalon-cargo": 6,
+   "botas-trabajo": 6,
+   "deportivas": 6
+  },
+  "buys": [
+   "ropa"
+  ],
+  "priceMult": 0.7,
+  "security": 10
+ },
+ {
+  "id": "electronica-yokai",
+  "name": "Electrónica Yōkai",
+  "owner": "teselia",
+  "zone": "electronica-yokai-int",
+  "stock": {
+   "pistola-agujas": 3,
+   "aguja": 300,
+   "gafas-hud": 4,
+   "visor-tactico": 2,
+   "smg-inteligente": 2,
+   "pistola-silenciada": 4,
+   "celula-energia": 200,
+   "pistola-plasma": 2
+  },
+  "buys": [
+   "equipo",
+   "arma"
+  ],
+  "priceMult": 1.15,
+  "security": 18
+ },
+ {
+  "id": "armas-forja",
+  "name": "Armas Pesadas de Forja",
+  "owner": "engranajes",
+  "zone": "armas-forja-int",
+  "stock": {
+   "martillo-neumatico": 3,
+   "hacha-plasma": 2,
+   "ametralladora-rotativa": 2,
+   "escopeta-tecnologica": 2,
+   "lanzagranadas-emp": 1,
+   "granada-emp": 20,
+   "canon-sonico": 2,
+   "bala-rifle": 400,
+   "cartucho": 200,
+   "celula-energia": 120,
+   "chaleco-balistico": 4,
+   "pantalon-tactico": 3,
+   "casco-balistico": 3
+  },
+  "buys": [
+   "arma",
+   "municion",
+   "chatarra"
+  ],
+  "priceMult": 1,
+  "security": 18
  }
 ]

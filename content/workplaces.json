@@ -4,7 +4,7 @@
   "name": "Muelles de Ferro",
   "zone": "ferro",
   "at": [
-   30,
+   31,
    6
   ]
  },
@@ -13,8 +13,8 @@
   "name": "Mercado Lumen",
   "zone": "ferro",
   "at": [
-   22,
-   35
+   23,
+   38
   ]
  },
  {
@@ -22,8 +22,8 @@
   "name": "Desguace de Tomás",
   "zone": "ferro",
   "at": [
-   40,
-   55
+   44,
+   61
   ]
  },
  {
@@ -31,8 +31,8 @@
   "name": "Generador del mercado",
   "zone": "ferro",
   "at": [
-   26,
-   26
+   27,
+   29
   ]
  },
  {
@@ -40,8 +40,8 @@
   "name": "Esquina de Kanal",
   "zone": "ferro",
   "at": [
-   73,
-   40
+   78,
+   43
   ]
  },
  {
@@ -67,8 +67,8 @@
   "name": "Plaza Teselia",
   "zone": "cenit",
   "at": [
-   84,
-   22
+   94,
+   25
   ]
  },
  {
@@ -76,8 +76,8 @@
   "name": "Avenida central de Cénit",
   "zone": "cenit",
   "at": [
-   40,
-   32
+   43,
+   35
   ]
  },
  {

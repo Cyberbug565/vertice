@@ -1,0 +1,142 @@
+{
+ "id": "casa-atico",
+ "name": "Ático",
+ "kind": "interior",
+ "width": 18,
+ "height": 12,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#2a2a3e",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    6
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    15,
+    1
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "table",
+   "at": [
+    12,
+    6
+   ]
+  },
+  {
+   "type": "neon",
+   "at": [
+    9,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "bench",
+   "at": [
+    3,
+    9
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    2,
+    10
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    12,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "shelf",
+   "at": [
+    13,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-casa-atico",
+   "name": "Salir a la calle",
+   "at": [
+    17,
+    6
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     47,
+     44
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "cama-casa-atico",
+   "name": "Tu cama",
+   "at": [
+    3,
+    2
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 1,
+    "price": 0
+   }
+  },
+  {
+   "id": "alijo-casa-atico",
+   "name": "Alijo",
+   "at": [
+    15,
+    2
+   ],
+   "kind": "stash"
+  }
+ ],
+ "waypoints": [
+  [
+   15,
+   6
+  ]
+ ],
+ "safePoint": [
+  15,
+  6
+ ]
+}

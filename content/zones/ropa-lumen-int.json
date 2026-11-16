@@ -1,0 +1,81 @@
+{
+ "id": "ropa-lumen-int",
+ "name": "Ropa Lumen",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#4a3a5a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-ropa-lumen-int",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     5,
+     47
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-ropa-lumen",
+   "name": "Mostrador de Ropa Lumen",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "ropa-lumen"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

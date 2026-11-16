@@ -1,15 +1,72 @@
 [
-  { "id": "sigilo", "name": "Sigilo", "attr": "DEX" },
-  { "id": "investigacion", "name": "Investigación", "attr": "INT" },
-  { "id": "percepcion", "name": "Percepción", "attr": "INT" },
-  { "id": "negociacion", "name": "Negociación", "attr": "COOL" },
-  { "id": "intimidacion", "name": "Intimidación", "attr": "COOL" },
-  { "id": "reparacion", "name": "Reparación", "attr": "TECH" },
-  { "id": "medicina", "name": "Medicina", "attr": "TECH" },
-  { "id": "interfaz", "name": "Interfaz", "attr": "INT" },
-  { "id": "cuerpo", "name": "Cuerpo a cuerpo", "attr": "DEX" },
-  { "id": "armas", "name": "Armas a distancia", "attr": "REF" },
-  { "id": "atletismo", "name": "Atletismo", "attr": "DEX" },
-  { "id": "conduccion", "name": "Conducción", "attr": "REF" },
-  { "id": "actuacion", "name": "Actuación", "attr": "EMP" }
+ {
+  "id": "sigilo",
+  "name": "Sigilo",
+  "attr": "DEX"
+ },
+ {
+  "id": "investigacion",
+  "name": "Investigación",
+  "attr": "INT"
+ },
+ {
+  "id": "percepcion",
+  "name": "Percepción",
+  "attr": "INT"
+ },
+ {
+  "id": "negociacion",
+  "name": "Negociación",
+  "attr": "COOL"
+ },
+ {
+  "id": "intimidacion",
+  "name": "Intimidación",
+  "attr": "COOL"
+ },
+ {
+  "id": "reparacion",
+  "name": "Reparación",
+  "attr": "TECH"
+ },
+ {
+  "id": "medicina",
+  "name": "Medicina",
+  "attr": "TECH"
+ },
+ {
+  "id": "interfaz",
+  "name": "Interfaz",
+  "attr": "INT"
+ },
+ {
+  "id": "cuerpo",
+  "name": "Cuerpo a cuerpo",
+  "attr": "DEX"
+ },
+ {
+  "id": "armas",
+  "name": "Armas a distancia",
+  "attr": "REF"
+ },
+ {
+  "id": "atletismo",
+  "name": "Atletismo",
+  "attr": "DEX"
+ },
+ {
+  "id": "conduccion",
+  "name": "Conducción",
+  "attr": "REF"
+ },
+ {
+  "id": "actuacion",
+  "name": "Actuación",
+  "attr": "EMP"
+ },
+ {
+  "id": "filo",
+  "name": "Filo (vivir al límite del cromo)",
+  "attr": "BODY"
+ }
 ]

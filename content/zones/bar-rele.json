@@ -1,9 +1,99 @@
 {
-  "id": "bar-rele", "name": "Bar El Relé", "kind": "interior", "width": 14, "height": 10, "danger": "protected", "base": "wood", "wallColor": "#2b2d42",
-  "blocks": [ { "type": "counter", "rect": [3, 2, 6, 1], "color": "#6b2140" } ],
-  "props": [ { "type": "table", "at": [6, 7] }, { "type": "table", "at": [9, 7] }, { "type": "screen", "at": [6, 1], "blocking": false, "color": "#ff3fa4" },
-             { "type": "neon", "at": [11, 1], "blocking": false, "color": "#43f3ff" }, { "type": "plant", "at": [1, 8] } ],
-  "doors": [ { "id": "salida-rele", "name": "Salida a la calle (Ferro)", "at": [13, 5], "to": { "zone": "ferro", "at": [43, 40] }, "danger": "public" } ],
-  "waypoints": [ [5, 4], [10, 4], [8, 8] ],
-  "safePoint": [10, 5]
+ "id": "bar-rele",
+ "name": "Bar El Relé",
+ "kind": "interior",
+ "width": 14,
+ "height": 10,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#2b2d42",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    3,
+    2,
+    6,
+    1
+   ],
+   "color": "#6b2140"
+  }
+ ],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    6,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    7
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "neon",
+   "at": [
+    11,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "plant",
+   "at": [
+    1,
+    8
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-rele",
+   "name": "Salida a la calle (Ferro)",
+   "at": [
+    13,
+    5
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     47,
+     43
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "waypoints": [
+  [
+   5,
+   4
+  ],
+  [
+   10,
+   4
+  ],
+  [
+   8,
+   8
+  ]
+ ],
+ "safePoint": [
+  10,
+  5
+ ]
 }

@@ -4,14 +4,20 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { districts } from './districts.mjs';
+import { mapPoint, remapRefs, widenZone } from './widen.mjs';
+import { DEALERS, REGION_OF_SLOT, CYBER_UPGRADES, HOUSE_SIZES, cars, clothing, cyberwareExtra, houseTemplates, perks, placeHousing, weapons } from './v04.mjs';
 
 const C = join(dirname(fileURLToPath(import.meta.url)), '../content');
 const write = (f, d) => writeFileSync(join(C, f), JSON.stringify(d, null, 1) + '\n');
 const read = (f) => JSON.parse(readFileSync(join(C, f), 'utf8'));
+const BASE = join(dirname(fileURLToPath(import.meta.url)), 'base');
+// v0.4: las calles se ensanchan al escribir; todo se diseña en las coordenadas antiguas (96×64).
+const finalize = (z) => { const w = widenZone(z); for (const d of w.doors ?? []) d.to.at = mapPoint(d.to.zone, d.to.at[0], d.to.at[1]); return w; };
 
 // ---------------------------------------------------------------- interiores
 // small: 12×9 con salida en (11,4) → llegada (9,4). big: 16×11 con salida en (15,5) → llegada (13,5). pachinko: 14×10, salida (13,5).
 const SIZE = { small: [12, 9, [11, 4]], big: [16, 11, [15, 5]], mid: [14, 10, [13, 5]] };
+const SHOWCARS = [[3, 8, '#43f3ff'], [7, 8, '#ff3fa4'], [11, 8, '#ffd23f']];
 const interiors = [
   { id: 'tienda-24h-int', name: 'Aurora 24H', size: 'small', base: 'tile', wall: '#405a5a', out: ['ferro', 46, 44], danger: 'protected',
     shelves: [[2, 1], [3, 1], [4, 1], [5, 1], [2, 6], [3, 6], [4, 6]], objects: [{ id: 'caja-24h', name: 'Caja de Aurora 24H', at: [7, 3], kind: 'shop', shop: 'aurora-24h' }],
@@ -53,6 +59,13 @@ const interiors = [
   { id: 'laboratorio-int', name: 'Laboratorios Okami', size: 'big', base: 'tile', wall: '#2e3a46', out: ['cenit', 11, 63], danger: 'protected', tables: [[3, 4], [6, 4], [9, 4]], beds: [[3, 8, '#5affc8']], screens: [[5, 1, '#5affc8'], [9, 1, '#5affc8']],
     work: [['wp-lab-okami', 'Bancada de Laboratorios Okami', [12, 2]], ['wp-lab-ensayos', 'Sala de ensayos clínicos', [12, 8]]] },
   { id: 'vex-int', name: 'Consulta del Dr. Vex', size: 'small', base: 'metal', wall: '#3a3040', out: ['cenit', 32, 58], danger: 'public', beds: [[3, 5, '#ff5a5a']], screens: [[5, 1, '#b46cff']] },
+  // v0.4: tiendas y concesionarios nuevos en Ferro y Cénit.
+  { id: 'ropa-lumen-int', name: 'Ropa Lumen', size: 'small', base: 'wood', wall: '#4a3a5a', out: ['ferro', 5, 44], danger: 'protected', shelves: [[1, 1], [2, 1], [3, 1], [4, 1]],
+    objects: [{ id: 'caja-ropa-lumen', name: 'Mostrador de Ropa Lumen', at: [7, 4], kind: 'shop', shop: 'ropa-lumen' }] },
+  { id: 'autos-ferro-int', name: 'Autos del Muelle', size: 'big', base: 'metal', wall: '#3a4a5a', out: ['ferro', 10, 55], danger: 'protected', showcars: SHOWCARS,
+    objects: [{ id: 'mostrador-autos-ferro', name: 'Vendedor de Autos del Muelle', at: [7, 3], kind: 'dealer', dealer: 'autos-ferro' }] },
+  { id: 'blindados-halcon-int', name: 'Blindados Halcón', size: 'big', base: 'tile', wall: '#2a3a4a', out: ['cenit', 10, 49], danger: 'protected', showcars: SHOWCARS,
+    objects: [{ id: 'mostrador-blindados-halcon', name: 'Vendedor de Blindados Halcón', at: [7, 3], kind: 'dealer', dealer: 'halcon-cenit' }] },
   { id: 'logistica-int', name: 'Centro Logístico Aurora', size: 'big', base: 'metal', wall: '#3a4038', out: ['cenit', 61, 63], danger: 'public', crates: [[2, 2], [3, 2], [4, 2], [2, 7], [3, 7], [9, 2], [10, 2], [9, 7]],
     work: [['wp-logistica-muelle', 'Muelle de carga Aurora', [6, 9]], ['wp-logistica-reparto', 'Mostrador de reparto Aurora', [12, 2]]] },
 ];
@@ -61,20 +74,29 @@ const zones = [];
 // Distritos exteriores generados (megápolis y alrededores) y sus interiores.
 const D = districts();
 for (const it of D.interiors) interiors.push({ danger: 'protected', ...it });
-for (const z of D.zones) write(`zones/${z.id}.json`, z);
+const exteriors = D.zones.map(finalize);
 const ZNAME = { ferro: 'Ferro', cenit: 'Cénit', ...Object.fromEntries(D.zones.map((z) => [z.id, z.name])) };
 // Puertas de Ferro y Cénit hacia los distritos nuevos, policía y bandas (idempotente).
 {
-  const patch = (id, fn) => { const z = read(`zones/${id}.json`); fn(z); write(`zones/${id}.json`, z); };
+  const patch = (id, fn) => { const z = JSON.parse(readFileSync(join(BASE, `${id}.json`), 'utf8')); fn(z); exteriors.push(finalize(z)); };
+  const hide = (z, doorId, doc, building) => { const d = z.doors.find((x) => x.id === doorId); d.name = 'Puerta sin rótulo'; d.hidden = doc; const b = z.buildings.find((x) => x.id === building); if (b) { delete b.sign; delete b.name; } };
   const gate = (gid, name, at, zone, to) => ({ id: gid, name, at, to: { zone, at: to }, danger: 'public' });
   patch('ferro', (z) => {
     z.doors = z.doors.filter((d) => d.id !== 'hacia-arrabal').concat([gate('hacia-arrabal', 'Avenida hacia El Arrabal', [31, 63], 'arrabal', [47, 1])]);
     z.police = 2; z.gangs = [{ faction: 'hojas-rojas', count: 3, area: [80, 40, 10] }, { faction: 'chatarreros', count: 3, area: [40, 56, 6] }, { faction: 'furias', count: 2, area: [86, 52, 8] }];
+    hide(z, 'puerta-carnicero', 'carnicero', 'kanal-se'); hide(z, 'puerta-iruka', 'iruka', 'bloque-kanal'); hide(z, 'puerta-ruiz', 'ruiz', 'taller-sur');
+    z.doors.push({ id: 'puerta-ropa-lumen', name: 'Ropa Lumen', at: [5, 43], to: { zone: 'ropa-lumen-int', at: [9, 4] }, danger: 'protected' },
+      { id: 'puerta-autos-ferro', name: 'Autos del Muelle', at: [9, 55], to: { zone: 'autos-ferro-int', at: [13, 5] }, danger: 'protected' });
+    Object.assign(z.buildings.find((b) => b.id === 'bloque-oeste'), { sign: 'ROPA LUMEN', signColor: '#b46cff' });
+    Object.assign(z.buildings.find((b) => b.id === 'nave-sur'), { sign: 'AUTOS', signColor: '#ffd23f' });
     z.objects = z.objects.filter((o) => !o.id.startsWith('ferro-cajero')).concat([{ id: 'ferro-cajero-1', name: 'Cajero automático', at: [33, 36], kind: 'atm' }, { id: 'ferro-cajero-2', name: 'Cajero automático', at: [71, 36], kind: 'atm' }]);
   });
   patch('cenit', (z) => {
     z.doors = z.doors.filter((d) => !['hacia-colinas', 'hacia-forja'].includes(d.id)).concat([gate('hacia-colinas', 'Avenida hacia Colinas Doradas', [47, 0], 'colinas', [47, 62]), gate('hacia-forja', 'Avenida hacia Forja', [95, 31], 'forja', [1, 31])]);
     z.police = 4; z.gangs = [];
+    hide(z, 'puerta-vex', 'vex', 'dr-vex');
+    z.doors.push({ id: 'puerta-blindados-halcon', name: 'Blindados Halcón', at: [10, 48], to: { zone: 'blindados-halcon-int', at: [13, 5] }, danger: 'protected' });
+    Object.assign(z.buildings.find((b) => b.id === 'bloque-ejecutivo'), { sign: 'BLINDADOS', signColor: '#43f3ff' });
     z.objects = z.objects.filter((o) => !o.id.startsWith('cenit-cajero')).concat([{ id: 'cenit-cajero-1', name: 'Cajero Okami Bank', at: [45, 28], kind: 'atm' }, { id: 'cenit-cajero-2', name: 'Cajero Okami Bank', at: [74, 20], kind: 'atm' }, { id: 'cenit-cajero-3', name: 'Cajero Okami Bank', at: [19, 47], kind: 'atm' }]);
   });
 }
@@ -100,6 +122,7 @@ for (const it of interiors) {
   for (const [x, y, c] of it.beds ?? []) props.push({ type: 'bed', at: [x, y], color: c });
   for (const [x, y, c] of it.screens ?? []) props.push({ type: 'screen', at: [x, y], blocking: false, color: c });
   for (const [x, y, c] of it.neon ?? []) props.push({ type: 'neon', at: [x, y], blocking: false, color: c });
+  for (const [x, y, c] of it.showcars ?? []) props.push({ type: 'car', at: [x, y], color: c });
   if (it.capsules) it.capsules.at.forEach(([x, y], i) => objects.push({ id: `${it.id}-capsula-${i + 1}`, name: `Cápsula ${i + 1} (${it.capsules.price} €$/noche)`, at: [x, y], kind: 'bed', sleep: { quality: it.capsules.quality, price: it.capsules.price } }));
   for (const [id, name, [x, y]] of it.work ?? []) {
     objects.push({ id: `obj-${id}`, name: `Puesto: ${name}`, at: [x, y], kind: 'workplace', workplace: id });
@@ -112,7 +135,15 @@ for (const it of interiors) {
     objects, waypoints: [[exit[0] - 2, exit[1]]], safePoint: [exit[0] - 2, exit[1]],
   });
 }
-for (const z of zones) write(`zones/${z.id}.json`, z);
+// Viviendas: portales en los edificios sin puerta y plantillas de interior.
+// El garaje de los Nómadas es un puesto al aire libre en El Yermo.
+exteriors.find((z) => z.id === 'yermo').objects.push({ id: 'yermo-garaje-nomada', name: 'Garaje de los Nómadas', at: mapPoint('yermo', 56, 43), kind: 'dealer', dealer: 'nomadas-yermo' });
+const houses = placeHousing(exteriors);
+for (const z of exteriors) write(`zones/${z.id}.json`, z);
+for (const z of zones) write(`zones/${z.id}.json`, finalize(z));
+for (const t of houseTemplates()) write(`zones/${t.id}.json`, t);
+write('houses.json', houses);
+remapRefs(workplaces);
 write('workplaces.json', workplaces);
 
 // ---------------------------------------------------------------- 100 empleos (20 oficios × 5)
@@ -281,3 +312,65 @@ write('npcs.json', npcs);
 write('dialogs.json', dialogs);
 write('locale/es.json', locale);
 console.log(`Generados ${zones.length} interiores, ${workplaces.length} puestos, ${jobs.length} empleos y ${docs.length} matasanos.`);
+
+// ---------------------------------------------------------------- v0.4: progresión, ropa, armas, cromo, coches, viviendas y tiendas
+write('perks.json', perks());
+const wear = clothing(), arms = weapons();
+const newIds = new Set([...wear, ...arms].map((i) => i.id));
+write('items.json', read('items.json').filter((i) => !newIds.has(i.id)));
+write('items/ropa.json', wear);
+write('items/armas.json', arms);
+write('cars.json', cars());
+write('dealers.json', DEALERS);
+{
+  const extra = cyberwareExtra();
+  const ids = new Set(extra.map((x) => x.id));
+  const cw = read('cyberware.json').filter((x) => !ids.has(x.id)).map((x) => ({ ...x, region: REGION_OF_SLOT[x.slot] ?? 'corteza', ...(CYBER_UPGRADES[x.id] ?? {}) }));
+  write('cyberware.json', [...cw, ...extra]);
+}
+{
+  const skills = read('skills.json').filter((s) => s.id !== 'filo');
+  skills.push({ id: 'filo', name: 'Filo (vivir al límite del cromo)', attr: 'BODY' });
+  write('skills.json', skills);
+  const q = read('quickhacks.json').filter((x) => x.id !== 'analisis-profundo');
+  q.splice(1, 0, { id: 'analisis-profundo', name: 'Análisis profundo', target: 'person', ram: 2, upload: 1.5, dv: 9, minRank: 0, minSkill: 6, effect: 'deepscan', trace: 0.05,
+    desc: 'Hackeo de edgerunner: muestra el nivel, la salud, los atributos, las mejores habilidades, el arma, el blindaje y el cromo del objetivo. Requiere Interfaz 6.' });
+  write('quickhacks.json', q);
+  const rumors = {
+    carnicero: 'Dicen que en la esquina sureste de Ferro, al final de Kanal, un tal Brann opera sin preguntar de dónde viene el cromo.',
+    iruka: 'Mama Iruka cose a medio Kanal: busca una puerta sin rótulo en la manzana del ramen, la que da a la avenida del sur.',
+    ruiz: 'Ruiz, el protésico, trabaja detrás del taller del sur de Ferro, cerca de la Clínica Sato. Honrado, pero no anuncia nada.',
+    vex: 'El Dr. Vex tiene la consulta en un portal anónimo del sur de Cénit, entre la torre de datos y la logística de Aurora.',
+    yuki: 'En Neón Rojo hay una doctora, Yuki, que trabaja para el Clan. Su puerta no tiene letrero.',
+  };
+  // Implantes nuevos repartidos por las consultas según grado y moral (los mejores, en las más caras o peligrosas).
+  const STOCK = {
+    sato: ['glandula-adrenalina', 'optica-analisis', 'traductor-cultural', 'interfaz-vehiculo', 'compartimento-oculto'],
+    iruka: ['glandula-adrenalina', 'huesos-densos', 'modulador-voz', 'garras-retractiles', 'palma-electrica'],
+    ruiz: ['esqueleto-titanio', 'huesos-densos', 'interfaz-vehiculo', 'implante-mandibula'],
+    carnicero: ['latigo-monofilamento', 'piernas-propulsion', 'garras-retractiles', 'pulso-emp', 'implante-mandibula'],
+    okami: ['segundo-corazon', 'glandula-adrenalina', 'refuerzo-sinaptico', 'optica-analisis', 'esqueleto-titanio', 'proyector-holografico'],
+    vex: ['reflejos-sobrealimentados', 'proyector-holografico', 'refuerzo-sinaptico', 'modulador-voz', 'pulso-emp'],
+    yuki: ['reflejos-sobrealimentados', 'latigo-monofilamento', 'segundo-corazon', 'piernas-propulsion', 'optica-analisis'],
+  };
+  const newCw = new Set(Object.values(STOCK).flat());
+  write('ripperdocs.json', read('ripperdocs.json').map((d) => ({ ...d, hidden: d.id in rumors, rumor: rumors[d.id] ?? '',
+    stock: [...new Set([...d.stock.filter((x) => !newCw.has(x)), ...(STOCK[d.id] ?? [])])], maxGrade: Math.max(d.maxGrade, ...(STOCK[d.id] ?? []).map((id) => cyberwareExtra().find((x) => x.id === id)?.grade ?? 1)) })));
+  const shops = read('shops.json').filter((s) => !['ropa-lumen', 'moda-orbita', 'ropa-neon', 'ropa-segunda', 'electronica-yokai', 'armas-forja'].includes(s.id));
+  const W = (...ids) => Object.fromEntries(ids.map((i) => [i, 6]));
+  shops.push(
+    { id: 'ropa-lumen', name: 'Ropa Lumen', owner: 'asociacion-lumen', zone: 'ropa-lumen-int', stock: W('gorra-neon', 'capucha-urbana', 'bandana-roja', 'gafas-sol', 'mascara-filtro', 'chaqueta', 'bomber-cuero', 'ropa-impermeable', 'camiseta-basica', 'camiseta-banda', 'sudadera-capucha', 'mono-trabajo', 'vaqueros', 'pantalon-cargo', 'shorts-deporte', 'deportivas', 'botas-trabajo'), buys: ['ropa'], priceMult: 0.95, security: 12 },
+    { id: 'moda-orbita', name: 'Moda Órbita', owner: 'kaiten', zone: 'moda-orbita-int', stock: W('sombrero-ala', 'corona-aurelia', 'gafas-hud', 'americana-ejecutiva', 'abrigo-nanofibra', 'camisa-seda', 'camisa-blindada', 'pantalon-traje', 'mallas-nanofibra', 'zapatos-piel', 'zapatillas-led', 'botas-gravedad', 'visor-neural'), buys: ['ropa'], priceMult: 1.3, security: 22 },
+    { id: 'ropa-neon', name: 'Ropa Neón', owner: 'kitsune', zone: 'ropa-neon-int', stock: W('gorra-neon', 'capucha-urbana', 'gafas-sol', 'gafas-hud', 'mascara-oni', 'cazadora-neon', 'bomber-cuero', 'top-malla', 'camiseta-banda', 'falda-vinilo', 'vaqueros', 'zapatillas-led', 'deportivas', 'casco-moto'), buys: ['ropa'], priceMult: 1.1, security: 16 },
+    { id: 'ropa-segunda', name: 'Ropa de Segunda Mano', owner: 'hermandad-sol', zone: 'ropa-segunda-int', stock: W('bandana-roja', 'capucha-urbana', 'gafas-sol', 'chaqueta', 'bomber-cuero', 'abrigo-nomada', 'chaleco-carga', 'camiseta-basica', 'sudadera-capucha', 'mono-trabajo', 'camiseta-termica', 'vaqueros', 'pantalon-cargo', 'botas-trabajo', 'deportivas'), buys: ['ropa'], priceMult: 0.7, security: 10 },
+    { id: 'electronica-yokai', name: 'Electrónica Yōkai', owner: 'teselia', zone: 'electronica-yokai-int', stock: { 'pistola-agujas': 3, aguja: 300, 'gafas-hud': 4, 'visor-tactico': 2, 'smg-inteligente': 2, 'pistola-silenciada': 4, 'celula-energia': 200, 'pistola-plasma': 2 }, buys: ['equipo', 'arma'], priceMult: 1.15, security: 18 },
+    { id: 'armas-forja', name: 'Armas Pesadas de Forja', owner: 'engranajes', zone: 'armas-forja-int', stock: { 'martillo-neumatico': 3, 'hacha-plasma': 2, 'ametralladora-rotativa': 2, 'escopeta-tecnologica': 2, 'lanzagranadas-emp': 1, 'granada-emp': 20, 'canon-sonico': 2, 'bala-rifle': 400, cartucho: 200, 'celula-energia': 120, 'chaleco-balistico': 4, 'pantalon-tactico': 3, 'casco-balistico': 3 }, buys: ['arma', 'municion', 'chatarra'], priceMult: 1, security: 18 },
+  );
+  const add = (id, more) => { const s = shops.find((x) => x.id === id); if (s) Object.assign(s.stock, more); };
+  add('armeria-halcon', { 'tonfa-aturdidora': 6, 'rifle-pulsos': 2, 'francotirador-inteligente': 1, 'revolver-riel': 1, 'chaqueta-tactica': 2, 'casco-balistico': 3, 'visor-tactico': 2, 'pantalon-tactico': 3, 'botas-militares': 4 });
+  add('armeria-callejon', { nunchakus: 5, 'lanza-electrica': 2, 'espada-monofilamento': 1, 'ballesta-carbono': 3, virote: 120, 'pistola-silenciada': 3 });
+  add('nomadas-tienda', { 'ballesta-carbono': 2, virote: 80, 'abrigo-nomada': 4, 'rifle-dardos': 2, 'dardo-sedante': 60, 'botas-militares': 2 });
+  add('mercadillo-arrabal', { nunchakus: 3, 'chaleco-carga': 3, 'camiseta-termica': 2 });
+  write('shops.json', shops);
+}
+console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.length} armas y munición, ${cars().length} coches, ${houses.length} viviendas.`);

@@ -1,0 +1,77 @@
+{
+ "id": "concesionario-saeta-int",
+ "name": "Concesionario Saeta",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#3a3a50",
+ "blocks": [],
+ "props": [
+  {
+   "type": "car",
+   "at": [
+    3,
+    8
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "car",
+   "at": [
+    7,
+    8
+   ],
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "car",
+   "at": [
+    11,
+    8
+   ],
+   "color": "#ffd23f"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-concesionario-saeta-int",
+   "name": "Salida a la calle (Colinas Doradas)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "colinas",
+    "at": [
+     31,
+     32
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-concesionario-saeta-int",
+   "name": "Vendedor de Concesionario Saeta",
+   "at": [
+    7,
+    3
+   ],
+   "kind": "dealer",
+   "dealer": "saeta-colinas"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

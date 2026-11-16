@@ -1,0 +1,77 @@
+{
+ "id": "motos-kotetsu-int",
+ "name": "Motos Kōtetsu",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#3a1a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "car",
+   "at": [
+    3,
+    8
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "car",
+   "at": [
+    7,
+    8
+   ],
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "car",
+   "at": [
+    11,
+    8
+   ],
+   "color": "#ffd23f"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-motos-kotetsu-int",
+   "name": "Salida a la calle (Neón Rojo)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "neon-rojo",
+    "at": [
+     94,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-motos-kotetsu-int",
+   "name": "Vendedor de Motos Kōtetsu",
+   "at": [
+    7,
+    3
+   ],
+   "kind": "dealer",
+   "dealer": "kotetsu-neon"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

@@ -2,8 +2,8 @@
  "id": "ferro",
  "name": "Ferro",
  "kind": "exterior",
- "width": 96,
- "height": 64,
+ "width": 105,
+ "height": 70,
  "chunkSize": 32,
  "danger": "public",
  "base": "sidewalk",
@@ -13,7 +13,7 @@
    "rect": [
     0,
     0,
-    96,
+    105,
     5
    ]
   },
@@ -22,35 +22,35 @@
    "rect": [
     0,
     5,
-    96,
+    105,
     3
    ]
   },
   {
    "type": "water",
    "rect": [
-    60,
+    65,
     0,
     3,
-    64
+    70
    ]
   },
   {
    "type": "bridge",
    "rect": [
-    60,
+    65,
     20,
     3,
-    3
+    6
    ]
   },
   {
    "type": "bridge",
    "rect": [
-    60,
-    44,
+    65,
+    47,
     3,
-    3
+    6
    ]
   },
   {
@@ -58,35 +58,35 @@
    "rect": [
     0,
     20,
-    60,
-    3
+    65,
+    6
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    63,
+    68,
     20,
-    33,
-    3
+    37,
+    6
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    44,
-    60,
-    3
+    47,
+    65,
+    6
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    63,
-    44,
-    33,
-    3
+    68,
+    47,
+    37,
+    6
    ]
   },
   {
@@ -94,44 +94,44 @@
    "rect": [
     10,
     8,
-    3,
-    56
+    4,
+    62
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    30,
+    31,
     8,
-    3,
-    56
+    6,
+    62
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    50,
+    54,
     8,
-    3,
-    56
+    4,
+    62
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    72,
+    77,
     8,
-    3,
-    56
+    6,
+    62
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    88,
+    96,
     8,
-    3,
-    56
+    4,
+    62
    ]
   },
   {
@@ -139,25 +139,25 @@
    "rect": [
     10,
     19,
-    3,
+    4,
     1
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    30,
+    31,
     19,
-    3,
+    6,
     1
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    50,
+    54,
     19,
-    3,
+    4,
     1
    ]
   },
@@ -165,52 +165,52 @@
    "type": "crosswalk",
    "rect": [
     10,
-    43,
-    3,
+    46,
+    4,
     1
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    30,
-    43,
-    3,
+    31,
+    46,
+    6,
     1
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    50,
-    43,
-    3,
+    54,
+    46,
+    4,
     1
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    72,
+    77,
     19,
-    3,
+    6,
     1
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    88,
-    43,
-    3,
+    96,
+    46,
+    4,
     1
    ]
   },
   {
    "type": "market",
    "rect": [
-    14,
-    24,
+    15,
+    27,
     15,
     19
    ]
@@ -218,8 +218,8 @@
   {
    "type": "plaza",
    "rect": [
-    64,
-    33,
+    69,
+    36,
     7,
     1
    ]
@@ -227,8 +227,8 @@
   {
    "type": "gravel",
    "rect": [
-    34,
-    48,
+    38,
+    54,
     15,
     15
    ]
@@ -238,8 +238,8 @@
   {
    "type": "fence",
    "rect": [
-    34,
-    48,
+    38,
+    54,
     7,
     1
    ]
@@ -247,8 +247,8 @@
   {
    "type": "fence",
    "rect": [
-    43,
-    48,
+    47,
+    54,
     6,
     1
    ]
@@ -256,8 +256,8 @@
   {
    "type": "fence",
    "rect": [
-    34,
-    49,
+    38,
+    55,
     1,
     14
    ]
@@ -265,8 +265,8 @@
   {
    "type": "fence",
    "rect": [
-    48,
-    49,
+    52,
+    55,
     1,
     14
    ]
@@ -274,8 +274,8 @@
   {
    "type": "fence",
    "rect": [
-    35,
-    62,
+    39,
+    68,
     13,
     1
    ]
@@ -285,7 +285,7 @@
    "rect": [
     0,
     4,
-    60,
+    65,
     1
    ],
    "height": 0.4
@@ -293,9 +293,9 @@
   {
    "type": "barrier",
    "rect": [
-    63,
+    68,
     4,
-    33,
+    37,
     1
    ],
    "height": 0.4
@@ -321,7 +321,7 @@
    "id": "torre-halcon",
    "name": "Torre Halcón",
    "rect": [
-    14,
+    15,
     9,
     15,
     10
@@ -336,7 +336,7 @@
    "id": "hotel-koi",
    "name": "Hotel Koi",
    "rect": [
-    34,
+    38,
     9,
     15,
     10
@@ -350,7 +350,7 @@
   {
    "id": "nave-norte",
    "rect": [
-    53,
+    58,
     9,
     6,
     10
@@ -363,20 +363,22 @@
    "id": "bloque-oeste",
    "rect": [
     1,
-    24,
+    27,
     8,
     19
    ],
    "height": 20,
    "style": "mega",
-   "color": "#3c4660"
+   "color": "#3c4660",
+   "sign": "ROPA LUMEN",
+   "signColor": "#b46cff"
   },
   {
    "id": "bloque9",
    "name": "Bloque 9",
    "rect": [
-    34,
-    24,
+    38,
+    27,
     14,
     10
    ],
@@ -390,8 +392,8 @@
    "id": "bar-rele",
    "name": "Bar El Relé",
    "rect": [
-    34,
-    37,
+    38,
+    40,
     8,
     6
    ],
@@ -404,8 +406,8 @@
   {
    "id": "tienda-24h",
    "rect": [
-    44,
-    37,
+    48,
+    40,
     5,
     6
    ],
@@ -419,8 +421,8 @@
   {
    "id": "bloque-canal",
    "rect": [
-    53,
-    24,
+    58,
+    27,
     6,
     19
    ],
@@ -432,20 +434,22 @@
    "id": "nave-sur",
    "rect": [
     1,
-    48,
+    54,
     8,
     15
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#4a4640"
+   "color": "#4a4640",
+   "sign": "AUTOS",
+   "signColor": "#ffd23f"
   },
   {
    "id": "clinica-sato",
    "name": "Clínica Sato",
    "rect": [
-    14,
-    48,
+    15,
+    54,
     8,
     6
    ],
@@ -458,8 +462,8 @@
   {
    "id": "bloque-sur",
    "rect": [
-    14,
-    56,
+    15,
+    62,
     15,
     7
    ],
@@ -470,23 +474,21 @@
   {
    "id": "taller-sur",
    "rect": [
-    24,
-    48,
+    25,
+    54,
     5,
     6
    ],
    "height": 4,
    "style": "shop",
    "color": "#574a3a",
-   "sign": "PRÓTESIS",
-   "signColor": "#ff8a3d",
-   "name": "Prótesis Ruiz"
+   "signColor": "#ff8a3d"
   },
   {
    "id": "bloque-sureste",
    "rect": [
-    53,
-    48,
+    58,
+    54,
     6,
     15
    ],
@@ -498,7 +500,7 @@
    "id": "club-voltio",
    "name": "Club Voltio",
    "rect": [
-    64,
+    69,
     9,
     7,
     10
@@ -513,7 +515,7 @@
    "id": "torre-okami",
    "name": "Torre Okami",
    "rect": [
-    76,
+    84,
     9,
     11,
     10
@@ -527,7 +529,7 @@
   {
    "id": "kanal-ne",
    "rect": [
-    92,
+    101,
     9,
     3,
     10
@@ -539,8 +541,8 @@
   {
    "id": "karaoke",
    "rect": [
-    64,
-    24,
+    69,
+    27,
     7,
     9
    ],
@@ -553,8 +555,8 @@
   {
    "id": "kanal-m2",
    "rect": [
-    64,
-    34,
+    69,
+    37,
     7,
     9
    ],
@@ -565,8 +567,8 @@
   {
    "id": "ramen-kanal",
    "rect": [
-    76,
-    24,
+    84,
+    27,
     11,
     8
    ],
@@ -580,23 +582,21 @@
   {
    "id": "bloque-kanal",
    "rect": [
-    76,
-    35,
+    84,
+    38,
     11,
     8
    ],
    "height": 24,
    "style": "arcology",
    "color": "#4c4060",
-   "name": "Bloque Kanal · Clínica Iruka",
-   "sign": "IRUKA",
    "signColor": "#5affc8"
   },
   {
    "id": "kanal-e",
    "rect": [
-    92,
-    24,
+    101,
+    27,
     3,
     19
    ],
@@ -607,8 +607,8 @@
   {
    "id": "nave-kanal",
    "rect": [
-    64,
-    48,
+    69,
+    54,
     7,
     15
    ],
@@ -619,8 +619,8 @@
   {
    "id": "pachinko",
    "rect": [
-    76,
-    48,
+    84,
+    54,
     11,
     15
    ],
@@ -634,16 +634,14 @@
   {
    "id": "kanal-se",
    "rect": [
-    92,
-    48,
+    101,
+    54,
     3,
     15
    ],
    "height": 15,
    "style": "clinic",
    "color": "#3f4655",
-   "name": "El Carnicero",
-   "sign": "CARNICERO",
    "signColor": "#ff5a5a"
   }
  ],
@@ -651,87 +649,87 @@
   {
    "type": "stall",
    "at": [
-    17,
-    28
+    18,
+    31
    ],
    "color": "#ffd23f"
   },
   {
    "type": "stall",
    "at": [
-    21,
-    28
+    22,
+    31
    ],
    "color": "#ff4fa0"
   },
   {
    "type": "stall",
    "at": [
-    25,
-    28
+    26,
+    31
    ],
    "color": "#43f3ff"
   },
   {
    "type": "stall",
    "at": [
-    17,
-    33
+    18,
+    36
    ],
    "color": "#7dff7a"
   },
   {
    "type": "stall",
    "at": [
-    21,
-    33
+    22,
+    36
    ],
    "color": "#ff8a3d"
   },
   {
    "type": "stall",
    "at": [
-    25,
-    33
+    26,
+    36
    ],
    "color": "#b46cff"
   },
   {
    "type": "stall",
    "at": [
-    17,
-    37
+    18,
+    40
    ],
    "color": "#ff5a5a"
   },
   {
    "type": "stall",
    "at": [
-    21,
-    37
+    22,
+    40
    ],
    "color": "#ffd23f"
   },
   {
    "type": "stall",
    "at": [
-    25,
-    37
+    26,
+    40
    ],
    "color": "#43f3ff"
   },
   {
    "type": "bench",
    "at": [
-    20,
-    41
+    21,
+    44
    ]
   },
   {
    "type": "bench",
    "at": [
-    24,
-    41
+    25,
+    44
    ]
   },
   {
@@ -744,14 +742,14 @@
   {
    "type": "lamp",
    "at": [
-    29,
+    30,
     19
    ]
   },
   {
    "type": "lamp",
    "at": [
-    49,
+    53,
     19
    ]
   },
@@ -759,165 +757,165 @@
    "type": "lamp",
    "at": [
     9,
-    43
+    46
    ]
   },
   {
    "type": "lamp",
    "at": [
-    29,
-    43
+    30,
+    46
    ]
   },
   {
    "type": "lamp",
    "at": [
-    49,
-    43
+    53,
+    46
    ]
   },
   {
    "type": "lamp",
    "at": [
-    71,
+    76,
     19
    ]
   },
   {
    "type": "lamp",
    "at": [
-    87,
+    95,
     19
    ]
   },
   {
    "type": "lamp",
    "at": [
-    71,
-    43
+    76,
+    46
    ]
   },
   {
    "type": "lamp",
    "at": [
-    87,
-    43
+    95,
+    46
    ]
   },
   {
    "type": "lamp",
    "at": [
-    29,
-    23
+    30,
+    26
    ]
   },
   {
    "type": "lamp",
    "at": [
-    13,
-    23
+    14,
+    26
    ]
   },
   {
    "type": "car",
    "at": [
     11,
-    30
+    33
    ],
    "color": "#ffd23f"
   },
   {
    "type": "car",
    "at": [
-    73,
-    36
+    78,
+    39
    ],
    "color": "#ff5a5a"
   },
   {
    "type": "car",
    "at": [
-    31,
-    53
+    32,
+    59
    ],
    "color": "#7dd3fc"
   },
   {
    "type": "crate",
    "at": [
-    36,
-    50
+    40,
+    56
    ]
   },
   {
    "type": "crate",
    "at": [
-    37,
-    50
+    41,
+    56
    ]
   },
   {
    "type": "crate",
    "at": [
-    36,
-    51
+    40,
+    57
    ]
   },
   {
    "type": "crate",
    "at": [
-    45,
-    58
+    49,
+    64
    ]
   },
   {
    "type": "crate",
    "at": [
-    46,
-    58
+    50,
+    64
    ]
   },
   {
    "type": "car",
    "at": [
-    46,
-    49
+    50,
+    55
    ],
    "color": "#8a7a5a"
   },
   {
    "type": "plant",
    "at": [
-    33,
-    35
+    37,
+    38
    ]
   },
   {
    "type": "plant",
    "at": [
-    49,
+    53,
+    36
+   ]
+  },
+  {
+   "type": "pipe",
+   "at": [
+    64,
     33
    ]
   },
   {
    "type": "pipe",
    "at": [
-    59,
-    30
-   ]
-  },
-  {
-   "type": "pipe",
-   "at": [
-    63,
-    30
+    68,
+    33
    ]
   },
   {
    "type": "holo",
    "at": [
-    51,
-    30
+    55,
+    33
    ],
    "blocking": false,
    "color": "#ff3fa4",
@@ -927,8 +925,8 @@
   {
    "type": "holo",
    "at": [
-    74,
-    26
+    79,
+    29
    ],
    "blocking": false,
    "color": "#43f3ff",
@@ -938,8 +936,8 @@
   {
    "type": "holo",
    "at": [
-    31,
-    26
+    32,
+    29
    ],
    "blocking": false,
    "color": "#ffd23f",
@@ -949,8 +947,8 @@
   {
    "type": "holo",
    "at": [
-    89,
-    50
+    97,
+    56
    ],
    "blocking": false,
    "color": "#7dff7a",
@@ -960,7 +958,7 @@
   {
    "type": "antenna",
    "at": [
-    21,
+    22,
     14
    ],
    "blocking": false,
@@ -969,7 +967,7 @@
   {
    "type": "antenna",
    "at": [
-    81,
+    89,
     14
    ],
    "blocking": false,
@@ -978,8 +976,8 @@
   {
    "type": "antenna",
    "at": [
-    40,
-    28
+    44,
+    31
    ],
    "blocking": false,
    "z": 28
@@ -987,8 +985,8 @@
   {
    "type": "antenna",
    "at": [
-    81,
-    38
+    89,
+    41
    ],
    "blocking": false,
    "z": 24
@@ -999,8 +997,8 @@
    "id": "puerta-bloque9",
    "name": "Bloque 9 · Vestíbulo",
    "at": [
-    41,
-    34
+    45,
+    37
    ],
    "to": {
     "zone": "bloque9",
@@ -1015,8 +1013,8 @@
    "id": "puerta-rele",
    "name": "Bar El Relé",
    "at": [
-    42,
-    40
+    46,
+    43
    ],
    "to": {
     "zone": "bar-rele",
@@ -1031,8 +1029,8 @@
    "id": "puerta-clinica",
    "name": "Clínica Sato",
    "at": [
-    22,
-    51
+    23,
+    57
    ],
    "to": {
     "zone": "clinica-sato",
@@ -1047,8 +1045,8 @@
    "id": "puerta-24h",
    "name": "Aurora 24H",
    "at": [
-    46,
-    43
+    50,
+    46
    ],
    "to": {
     "zone": "tienda-24h-int",
@@ -1063,8 +1061,8 @@
    "id": "puerta-ramen",
    "name": "Ramen Kanal",
    "at": [
-    80,
-    32
+    88,
+    35
    ],
    "to": {
     "zone": "ramen-int",
@@ -1079,7 +1077,7 @@
    "id": "puerta-voltio",
    "name": "Club Voltio",
    "at": [
-    67,
+    72,
     19
    ],
    "to": {
@@ -1095,8 +1093,8 @@
    "id": "puerta-pachinko",
    "name": "Pachinko Estrella",
    "at": [
-    87,
-    55
+    95,
+    61
    ],
    "to": {
     "zone": "pachinko-int",
@@ -1109,10 +1107,10 @@
   },
   {
    "id": "puerta-carnicero",
-   "name": "El Carnicero (matasanos)",
+   "name": "Puerta sin rótulo",
    "at": [
-    95,
-    52
+    104,
+    58
    ],
    "to": {
     "zone": "carnicero-int",
@@ -1121,14 +1119,15 @@
      4
     ]
    },
-   "danger": "public"
+   "danger": "public",
+   "hidden": "carnicero"
   },
   {
    "id": "puerta-iruka",
-   "name": "Clínica de Mama Iruka",
+   "name": "Puerta sin rótulo",
    "at": [
-    80,
-    43
+    88,
+    46
    ],
    "to": {
     "zone": "iruka-int",
@@ -1137,14 +1136,15 @@
      4
     ]
    },
-   "danger": "protected"
+   "danger": "protected",
+   "hidden": "iruka"
   },
   {
    "id": "puerta-ruiz",
-   "name": "Prótesis Ruiz",
+   "name": "Puerta sin rótulo",
    "at": [
-    26,
-    54
+    27,
+    60
    ],
    "to": {
     "zone": "ruiz-int",
@@ -1153,13 +1153,14 @@
      4
     ]
    },
-   "danger": "protected"
+   "danger": "protected",
+   "hidden": "ruiz"
   },
   {
    "id": "puerta-koi",
    "name": "Hotel Koi · Cápsulas",
    "at": [
-    41,
+    45,
     19
    ],
    "to": {
@@ -1191,14 +1192,14 @@
    "id": "hacia-cenit",
    "name": "Avenida hacia Cénit (distrito corporativo)",
    "at": [
-    95,
+    104,
     21
    ],
    "to": {
     "zone": "cenit",
     "at": [
      2,
-     31
+     34
     ]
    },
    "danger": "public"
@@ -1207,17 +1208,49 @@
    "id": "hacia-arrabal",
    "name": "Avenida hacia El Arrabal",
    "at": [
-    31,
-    63
+    32,
+    69
    ],
    "to": {
     "zone": "arrabal",
     "at": [
-     47,
+     50,
      1
     ]
    },
    "danger": "public"
+  },
+  {
+   "id": "puerta-ropa-lumen",
+   "name": "Ropa Lumen",
+   "at": [
+    5,
+    46
+   ],
+   "to": {
+    "zone": "ropa-lumen-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-autos-ferro",
+   "name": "Autos del Muelle",
+   "at": [
+    9,
+    61
+   ],
+   "to": {
+    "zone": "autos-ferro-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "protected"
   }
  ],
  "objects": [
@@ -1225,8 +1258,8 @@
    "id": "generador-lumen",
    "name": "Generador del mercado",
    "at": [
-    27,
-    25
+    28,
+    28
    ],
    "kind": "generator",
    "dialog": "generador"
@@ -1235,8 +1268,8 @@
    "id": "terminal-desguace",
    "name": "Terminal de inventario",
    "at": [
-    46,
-    52
+    50,
+    58
    ],
    "kind": "terminal",
    "dialog": "terminal-desguace"
@@ -1245,8 +1278,8 @@
    "id": "cajas-desguace",
    "name": "Pila de cajas",
    "at": [
-    37,
-    58
+    41,
+    64
    ],
    "kind": "crates",
    "dialog": "cajas"
@@ -1255,8 +1288,8 @@
    "id": "tablon-lumen",
    "name": "Tablón del mercado",
    "at": [
-    14,
-    25
+    15,
+    28
    ],
    "kind": "board",
    "dialog": "tablon"
@@ -1265,8 +1298,8 @@
    "id": "vending-ferro-1",
    "name": "Máquina Aurora",
    "at": [
-    43,
-    35
+    47,
+    38
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -1275,8 +1308,8 @@
    "id": "vending-ferro-2",
    "name": "Máquina Aurora",
    "at": [
-    49,
-    36
+    53,
+    39
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -1285,8 +1318,8 @@
    "id": "vending-ferro-3",
    "name": "Máquina Aurora",
    "at": [
-    71,
-    30
+    76,
+    33
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -1295,8 +1328,8 @@
    "id": "empleo-lumen",
    "name": "Bolsa de empleo de Ferro",
    "at": [
-    14,
-    42
+    15,
+    45
    ],
    "kind": "jobboard"
   },
@@ -1304,8 +1337,8 @@
    "id": "recompensas-ferro",
    "name": "Tablón de recompensas (PCV)",
    "at": [
-    29,
-    47
+    30,
+    53
    ],
    "kind": "bountyboard"
   },
@@ -1313,8 +1346,8 @@
    "id": "terminal-mercado-ferro",
    "name": "Terminal de la red de mercado",
    "at": [
-    14,
-    33
+    15,
+    36
    ],
    "kind": "marketterm"
   },
@@ -1322,8 +1355,8 @@
    "id": "basura-1",
    "name": "Contenedor de basura",
    "at": [
-    13,
-    47
+    14,
+    53
    ],
    "kind": "trash"
   },
@@ -1331,8 +1364,8 @@
    "id": "basura-2",
    "name": "Contenedor de basura",
    "at": [
-    49,
-    47
+    53,
+    53
    ],
    "kind": "trash"
   },
@@ -1340,8 +1373,8 @@
    "id": "basura-3",
    "name": "Contenedor de basura",
    "at": [
-    71,
-    47
+    76,
+    53
    ],
    "kind": "trash"
   },
@@ -1350,7 +1383,7 @@
    "name": "Contenedor de basura",
    "at": [
     9,
-    23
+    26
    ],
    "kind": "trash"
   },
@@ -1358,8 +1391,8 @@
    "id": "basura-5",
    "name": "Contenedor de basura",
    "at": [
-    87,
-    23
+    95,
+    26
    ],
    "kind": "trash"
   },
@@ -1367,7 +1400,7 @@
    "id": "basura-6",
    "name": "Contenedor de basura",
    "at": [
-    33,
+    37,
     7
    ],
    "kind": "trash"
@@ -1376,8 +1409,8 @@
    "id": "ferro-cajero-1",
    "name": "Cajero automático",
    "at": [
-    33,
-    36
+    37,
+    39
    ],
    "kind": "atm"
   },
@@ -1385,10 +1418,109 @@
    "id": "ferro-cajero-2",
    "name": "Cajero automático",
    "at": [
-    71,
-    36
+    76,
+    39
    ],
    "kind": "atm"
+  },
+  {
+   "id": "ferro-portal-1",
+   "name": "Portal · Torre Halcón",
+   "at": [
+    22,
+    19
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-2",
+   "name": "Portal · Bloque 2",
+   "at": [
+    61,
+    19
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-3",
+   "name": "Portal · Bloque 3",
+   "at": [
+    61,
+    46
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-4",
+   "name": "Portal · Bloque 4",
+   "at": [
+    30,
+    65
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-5",
+   "name": "Portal · Bloque 5",
+   "at": [
+    64,
+    61
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-6",
+   "name": "Portal · Torre Okami",
+   "at": [
+    89,
+    19
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-7",
+   "name": "Portal · Bloque 7",
+   "at": [
+    102,
+    19
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-8",
+   "name": "Portal · Edificio KARAOKE",
+   "at": [
+    72,
+    36
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-9",
+   "name": "Portal · Bloque 9",
+   "at": [
+    72,
+    46
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-10",
+   "name": "Portal · Bloque 10",
+   "at": [
+    102,
+    46
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "ferro-portal-11",
+   "name": "Portal · Bloque 11",
+   "at": [
+    76,
+    61
+   ],
+   "kind": "housing"
   }
  ],
  "sectors": [
@@ -1441,190 +1573,190 @@
    21
   ],
   [
-   20,
+   21,
    21
   ],
   [
-   40,
+   44,
    21
   ],
   [
-   55,
+   60,
    21
   ],
   [
-   68,
+   73,
    21
   ],
   [
-   80,
+   88,
    21
   ],
   [
-   93,
+   102,
    21
   ],
   [
    5,
-   45
+   48
   ],
   [
-   20,
-   45
+   21,
+   48
   ],
   [
-   40,
-   45
+   44,
+   48
+  ],
+  [
+   60,
+   48
+  ],
+  [
+   73,
+   48
+  ],
+  [
+   88,
+   48
+  ],
+  [
+   102,
+   48
+  ],
+  [
+   11,
+   15
+  ],
+  [
+   32,
+   15
   ],
   [
    55,
-   45
-  ],
-  [
-   68,
-   45
-  ],
-  [
-   80,
-   45
-  ],
-  [
-   93,
-   45
-  ],
-  [
-   11,
    15
   ],
   [
-   31,
+   78,
    15
   ],
   [
-   51,
-   15
-  ],
-  [
-   73,
-   15
-  ],
-  [
-   89,
+   97,
    15
   ],
   [
    11,
-   35
+   38
   ],
   [
-   31,
-   35
+   32,
+   38
   ],
   [
-   51,
-   35
+   55,
+   38
   ],
   [
-   73,
-   30
+   78,
+   33
   ],
   [
-   89,
-   30
+   97,
+   33
   ],
   [
    11,
-   55
+   61
   ],
   [
-   31,
-   58
+   32,
+   64
   ],
   [
-   51,
-   55
+   55,
+   61
   ],
   [
-   73,
-   55
+   78,
+   61
   ],
   [
-   89,
-   55
+   97,
+   61
   ],
   [
-   20,
-   26
+   21,
+   29
   ],
   [
-   24,
-   35
+   25,
+   38
   ],
   [
-   18,
-   40
+   19,
+   43
   ],
   [
-   27,
-   40
+   28,
+   43
   ],
   [
    10,
    6
   ],
   [
-   30,
+   31,
    6
   ],
   [
-   50,
+   54,
    6
   ],
   [
-   70,
+   75,
    6
   ],
   [
-   90,
+   98,
    6
   ],
   [
-   43,
-   42
+   47,
+   45
   ],
   [
-   23,
-   50
+   24,
+   56
   ]
  ],
  "safePoint": [
-  41,
-  36
+  45,
+  39
  ],
  "spawn": [
-  41,
-  36
+  45,
+  39
  ],
  "skybridges": [
   {
    "from": [
-    47,
-    28
+    51,
+    31
    ],
    "to": [
-    53,
-    28
+    58,
+    31
    ],
    "z": 15,
    "color": "#43f3ff"
   },
   {
    "from": [
-    87,
+    95,
     13
    ],
    "to": [
-    92,
+    101,
     13
    ],
    "z": 9,
@@ -1632,23 +1764,23 @@
   },
   {
    "from": [
-    70,
-    38
+    75,
+    41
    ],
    "to": [
-    76,
-    38
+    84,
+    41
    ],
    "z": 10,
    "color": "#b46cff"
   },
   {
    "from": [
-    29,
+    30,
     13
    ],
    "to": [
-    34,
+    38,
     13
    ],
    "z": 14,
@@ -1663,8 +1795,8 @@
    "faction": "hojas-rojas",
    "count": 3,
    "area": [
-    80,
-    40,
+    88,
+    43,
     10
    ]
   },
@@ -1672,8 +1804,8 @@
    "faction": "chatarreros",
    "count": 3,
    "area": [
-    40,
-    56,
+    44,
+    62,
     6
    ]
   },
@@ -1681,8 +1813,8 @@
    "faction": "furias",
    "count": 2,
    "area": [
-    86,
-    52,
+    94,
+    58,
     8
    ]
   }

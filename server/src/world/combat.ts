@@ -1,16 +1,16 @@
 // Combate automático por armas, red (quickhacks), facciones, policía, Rescate Ámbar y transporte de cuerpos.
 import { randomUUID } from 'node:crypto';
-import { checkChance, dangerAt, findPath, lineWalkable, nearestWalkable, isWalkable, type ClientMsg, type FactionsView, type AmbarView, type ItemDef, type TargetMenuView, type WeaponDef } from '@vertice/shared';
+import { checkChance, dangerAt, findPath, lineWalkable, nearestWalkable, isWalkable, skillLevelForXp, type ClientMsg, type FactionsView, type AmbarView, type ItemDef, type ScanView, type TargetMenuView, type WeaponDef } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { Entity } from './entity.js';
 import type { Survival } from './survival.js';
 import { ambientBrain } from './npc.js';
 import { GameError } from '../game/effects.js';
-import { NET_RANKS, chromeParts, effective, type PlayerState } from '../game/player.js';
+import { NET_RANKS, chromeParts, effective, perkMods, skillLevel, type PlayerState } from '../game/player.js';
 import type { Bounty } from '../game/bounty.js';
 import type { Zone } from './zone.js';
 
-const FISTS: { id: string; name: string; w: WeaponDef } = { id: 'punos', name: 'Puños', w: { kind: 'melee', family: 'Puños', damage: [3, 7], range: 1.6, cooldown: 1.0, accuracy: 0, nonlethal: 'opcional', noise: 0.1, tech: 'clasica' } };
+const FISTS: { id: string; name: string; w: WeaponDef } = { id: 'punos', name: 'Puños', w: { traits: [], kind: 'melee', family: 'Puños', damage: [3, 7], range: 1.6, cooldown: 1.0, accuracy: 0, nonlethal: 'opcional', noise: 0.1, tech: 'clasica' } };
 const CIVIL_LINES = ['¿Qué miras?', 'Hoy no tengo nada para ti.', 'Cuidado por aquí de noche.', 'Dicen que la PCV ni se asoma a Forja.', 'Si te operas, que sea con alguien de fiar.', 'Las torres de Cénit no duermen nunca.'];
 type Src = { name: string; charId?: string; npc?: Entity; police?: boolean };
 
@@ -53,7 +53,10 @@ export class Combat {
         build: this.rng() < 0.5 ? 'robusto' : 'medio', hairStyle: ['rapado', 'cresta', 'corto', 'coleta', 'calvo'][Math.floor(this.rng() * 5)], top: type === 'police' || type === 'hierro' ? 'chaleco' : ['chaqueta', 'chaleco', 'sudadera', 'top'][Math.floor(this.rng() * 4)], accessory: type === 'hierro' ? 'mascara' : type === 'police' ? 'gorra' : 'ninguno' } as any,
       speed: type === 'hierro' ? 3.2 : 2.4,
     });
-    e.npcType = type; e.faction = faction; e.npcMax = f.hp; e.npcHp = f.hp; e.defense = f.defense; e.weaponId = f.weapon; e.chrome = [...f.chrome];
+    // v0.4: nivel del PNJ según su tipo; la salud y la defensa escalan con él.
+    const lv = type === 'hierro' ? 18 + Math.floor(this.rng() * 7) : type === 'police' ? 8 + Math.floor(this.rng() * 7) : type === 'ambar' ? 15 : faction === 'engranajes' || faction === 'saqueadores' ? 9 + Math.floor(this.rng() * 8) : 4 + Math.floor(this.rng() * 10);
+    const hpScaled = Math.round(f.hp * (1 + (lv - 6) * 0.04));
+    e.npcType = type; e.faction = faction; e.npcMax = hpScaled; e.npcHp = hpScaled; e.defense = f.defense + Math.floor((lv - 6) / 4); e.weaponId = f.weapon; e.chrome = [...f.chrome]; e.level = lv;
     e.dialog = undefined;
     e.npc = ambientBrain(this.w.cfg.seed + e.id * 7, area ? [area[0], area[1]] : undefined, area?.[2]);
     e.respawn = { zone: z.id, template: { faction, type, area } };
@@ -83,13 +86,18 @@ export class Combat {
   attackScore(p: PlayerState) {
     const ef = effective(this.c, p), wp = this.weaponOf(p);
     const skill = wp.w.kind === 'melee' ? ef.skills.cuerpo ?? 0 : ef.skills.armas ?? 0;
-    return ef.attrs.REF + skill + wp.w.accuracy + ef.confront - this.encPenalty(p) - (p.fatigue >= 80 ? 1 : 0);
+    const edge = ef.flags.has('al-limite') && p.hp < ef.hpMax * 0.3 ? 3 : 0;
+    const charge = (p.buffs.carga ?? 0) > Date.now() ? 3 : 0;
+    return ef.attrs.REF + skill + wp.w.accuracy + ef.confront - this.encPenalty(p) - (p.fatigue >= 80 ? 1 : 0) + (wp.w.kind === 'ranged' ? ef.perk.rangedAcc ?? 0 : 0) + edge + charge;
   }
   defenseScore(p: PlayerState) {
     const ef = effective(this.c, p);
-    return ef.attrs.DEX + (ef.skills.atletismo ?? 0) + ef.defense + (p.stance === 'avoid' ? 1 : 0) - (p.sleeping ? 6 : 0) - (p.blindUntil > Date.now() ? 4 : 0) - this.encPenalty(p);
+    const edge = ef.flags.has('al-limite') && p.hp < ef.hpMax * 0.3 ? 3 : 0;
+    return ef.attrs.DEX + (ef.skills.atletismo ?? 0) + ef.defense + (p.stance === 'avoid' ? 1 : 0) - (p.sleeping ? 6 : 0) - (p.blindUntil > Date.now() ? 4 : 0) - (ef.flags.has('imparable') ? 0 : this.encPenalty(p)) + edge;
   }
-  private npcAttackScore(e: Entity) { return (e.defense ?? 10) + this.npcWeapon(e).w.accuracy - (e.blindUntil && e.blindUntil > Date.now() ? 4 : 0); }
+  /** Probabilidad de esquivar por completo (perks, implantes y Tiempo bala). */
+  dodgeOf(p: PlayerState) { return Math.min(0.6, effective(this.c, p).dodge + ((p.buffs['tiempo-bala'] ?? 0) > Date.now() ? 0.3 : 0)); }
+  private npcAttackScore(e: Entity) { return (e.defense ?? 10) + Math.floor((e.level ?? 5) / 5) + this.npcWeapon(e).w.accuracy - (e.blindUntil && e.blindUntil > Date.now() ? 4 : 0); }
   private npcDefenseScore(e: Entity) { return (e.defense ?? 10) - (e.blindUntil && e.blindUntil > Date.now() ? 4 : 0); }
   private armorOf(p: PlayerState) { return effective(this.c, p).armor; }
   private rollDamage(w: WeaponDef, margin: number) { const [a, b] = w.damage; return Math.round(a + this.rng() * (b - a) + Math.max(0, margin) / 2); }
@@ -150,21 +158,30 @@ export class Combat {
     if (ef.ram <= 0) return;
     const kind = target.kind === 'object' ? (target.objKind === 'atm' ? 'atm' : 'shop') : 'person';
     for (const q of this.c.quickhacks) {
-      if (q.target !== kind || (scanOnly && q.effect !== 'scan')) continue;
-      const cost = this.ramCost(p, q.ram);
+      if (q.target !== kind || (scanOnly && q.effect !== 'scan' && q.effect !== 'deepscan')) continue;
+      const cost = this.ramCost(p, q.ram, q.effect);
       const dist = Math.hypot(target.x - e.x, target.y - e.y);
       const chance = this.hackChance(p, target, q);
       let disabled: string | undefined;
       if (p.netRank < q.minRank) disabled = `Requiere rango de red ${q.minRank} (tienes ${p.netRank})`;
+      else if (skillLevel(p, 'interfaz') < q.minSkill) disabled = `Requiere Interfaz ${q.minSkill} (tienes ${skillLevel(p, 'interfaz')})`;
       else if (p.ram < cost) disabled = `RAM insuficiente (${Math.floor(p.ram)}/${cost})`;
       else if (dist > q.range) disabled = `Fuera de alcance (${dist.toFixed(0)}/${q.range} m)`;
-      else if (q.effect !== 'scan' && q.effect !== 'blind' && dangerAt(e.zone.grid, e.x, e.y) === 'protected' && kind === 'person') disabled = 'Zona protegida';
-      opts.push({ id: `hack:${q.id}`, kind: 'hack', group: 'red', label: `${q.name} · ${cost} RAM · ${this.uploadTime(p, q.upload).toFixed(1)} s`, chance, detail: q.desc + (q.trace ? ` Riesgo de rastreo ${Math.round(q.trace * (1 - p.netRank * 0.05) * 100)} %.` : ''), disabled, danger: q.effect === 'kill' });
+      else if (q.effect !== 'scan' && q.effect !== 'deepscan' && q.effect !== 'blind' && dangerAt(e.zone.grid, e.x, e.y) === 'protected' && kind === 'person') disabled = 'Zona protegida';
+      opts.push({ id: `hack:${q.id}`, kind: 'hack', group: 'red', label: `${q.name} · ${cost} RAM · ${this.uploadTime(p, q.upload).toFixed(1)} s`, chance, detail: q.desc + (q.trace ? ` Riesgo de rastreo ${Math.round(this.traceOf(p, q.trace) * 100)} %.` : ''), disabled, danger: q.effect === 'kill' });
     }
   }
-  private ramCost(p: PlayerState, ram: number) { return Math.max(1, ram - Math.floor(p.netRank / 3)); }
-  private uploadTime(p: PlayerState, base: number) { return Math.max(0.5, base * (1 - 0.06 * p.netRank) * (p.role === 'netrunner' ? 0.85 : 1)); }
-  private hackScore(p: PlayerState) { const ef = effective(this.c, p); return ef.attrs.INT + (ef.skills.interfaz ?? 0) + Math.floor(p.netRank / 2) + (p.role === 'netrunner' ? 2 : 0); }
+  private ramCost(p: PlayerState, ram: number, effect?: string) {
+    const pm = perkMods(this.c, p);
+    if (pm.flags.has('analista') && (effect === 'scan' || effect === 'deepscan')) return 1;
+    return Math.max(1, Math.round((ram - Math.floor(p.netRank / 3)) * (1 - (pm.mods.hackCost ?? 0)) * (pm.flags.has('dios-red') ? 0.5 : 1)));
+  }
+  private uploadTime(p: PlayerState, base: number) {
+    const pm = perkMods(this.c, p);
+    if (pm.flags.has('dios-red')) return 0.3;
+    return Math.max(0.4, base * (1 - 0.06 * p.netRank) * (p.role === 'netrunner' ? 0.85 : 1) * (1 - (pm.mods.hackSpeed ?? 0)));
+  }
+  private hackScore(p: PlayerState) { const ef = effective(this.c, p); return ef.attrs.INT + (ef.skills.interfaz ?? 0) + Math.floor(p.netRank / 2) + (p.role === 'netrunner' ? 2 : 0) + (ef.perk.hackChance ?? 0); }
   private hackDefense(target: Entity): number {
     const tp = this.w.playerOf(target);
     if (tp) {
@@ -175,15 +192,17 @@ export class Combat {
     if (target.kind === 'object') { const sh = target.shop ? this.c.shops.find((s) => s.id === target.shop) : undefined; return sh ? Math.floor((sh.security - 12) / 2) : 1; }
     return target.npcType === 'hierro' ? 6 : target.npcType === 'police' ? 2 : target.faction === 'voces-vacio' ? 4 : target.npcType === 'gang' ? 1 : 0;
   }
+  private traceOf(p: PlayerState, base: number) { return base * Math.max(0.2, 1 - p.netRank * 0.05) * (1 - (perkMods(this.c, p).mods.trace ?? 0)); }
   private hackChance(p: PlayerState, target: Entity, q: { dv: number }) { const s = this.hackScore(p), dv = q.dv + this.hackDefense(target); return checkChance(s, 0, dv); }
 
   // ================================================================ acciones
-  bribeCost(p: PlayerState) { return 250 * Math.max(1, Math.ceil(p.wanted)); }
+  bribeCost(p: PlayerState) { const pm = perkMods(this.c, p); return pm.flags.has('lengua') ? 0 : Math.round(250 * Math.max(1, Math.ceil(p.wanted)) * (1 - (pm.mods.bribe ?? 0))); }
   async bribe(c: PlayerConn, opId: string) {
     const p = c.p!;
     if (p.wanted < 0.5) throw new GameError('No tienes ningún expediente abierto.');
     const cost = this.bribeCost(p);
     if (p.money < cost) throw new GameError(`La «tasa de agilización» son ${cost} €$.`);
+    this.w.progress.gain(p, 'negociacion', 5);
     await this.w.db.tx(async (q) => {
       const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
       if (dup.rows.length) throw new GameError('Operación ya procesada');
@@ -279,25 +298,46 @@ export class Combat {
       p.inventory.set(wp.w.ammo, (p.inventory.get(wp.w.ammo) ?? 0) - 1);
       void this.w.db.query('UPDATE inventory_items SET qty = GREATEST(0, qty - 1) WHERE character_id=$1 AND def_id=$2', [p.charId, wp.w.ammo]).catch(() => {});
     }
-    p.nextAttackAt = now + wp.w.cooldown * 1000;
+    const ef = effective(this.c, p);
+    const fast = (p.buffs['tiempo-bala'] ?? 0) > now ? 0.4 : 1;
+    p.nextAttackAt = now + wp.w.cooldown * 1000 * fast * (wp.w.kind === 'ranged' ? 1 - (ef.perk.rangedCd ?? 0) : 1);
+    p.lastCombatAt = now;
     const tp = this.w.playerOf(target);
     if (tp && tp.status !== 'alive') return;
     if (!tp && target.state === 'downed') return;
+    const traits = new Set(wp.w.traits ?? []);
+    const skill = wp.w.kind === 'melee' ? 'cuerpo' : 'armas';
     const dist = Math.hypot(target.x - e.x, target.y - e.y);
-    const rangePenalty = wp.w.kind === 'ranged' && dist > wp.w.range / 2 ? Math.round((dist - wp.w.range / 2) / (wp.w.range / 4)) : 0;
-    const a = this.attackScore(p) - rangePenalty + this.roll();
+    const smart = traits.has('inteligente') || ef.flags.has('ojo-de-dios');
+    const rangePenalty = wp.w.kind === 'ranged' && !smart && dist > wp.w.range / 2 ? Math.round((dist - wp.w.range / 2) / (wp.w.range / 4)) : 0;
+    let a = this.attackScore(p) - rangePenalty + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
     const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + this.roll();
+    if (ef.flags.has('ojo-de-dios') && wp.w.kind === 'ranged' && dist <= wp.w.range) a = Math.max(a, d);
     this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, target.id);
     if (tp?.sleeping && target.conn) this.sv.wake(target.conn);
-    if (a < d) {
-      this.notice(c, 'warn', `Fallas (${a} contra ${d}).`);
+    const silent = traits.has('silenciosa') ? 0.5 : 1;
+    const dodged = tp && a >= d && this.rng() < this.dodgeOf(tp);
+    if (a < d || dodged) {
+      this.notice(c, 'warn', dodged ? `${target.name} esquiva tu ataque.` : `Fallas (${a} contra ${d}).`);
+      if (dodged) this.notice(target.conn, 'good', `Esquivas el ataque de ${p.name}.`);
       if (tp) this.counter(target, e); else this.provokeNpc(target, e, lethal);
-      this.crime(c, target, lethal, 'attempt', legit);
+      this.crime(c, target, lethal, 'attempt', legit, silent);
+      this.w.progress.gain(p, skill, 1);
       return;
     }
     let dmg = this.rollDamage(wp.w, a - d);
-    if (tp) dmg = Math.max(1, dmg - this.armorOf(tp) - (wp.w.tech === 'tecnica' ? -this.armorOf(tp) : 0));
-    this.notice(c, 'good', `${lethal ? 'Impactas' : 'Golpeas'} a ${target.name} con ${wp.name}: −${dmg}.`);
+    dmg *= 1 + (wp.w.kind === 'melee' ? ef.meleeDmg : ef.perk.rangedDmg ?? 0) + (wp.w.kind === 'ranged' && dist < 3 ? ef.perk.closeDmg ?? 0 : 0) + (!lethal && ef.perk.koBonus ? 0.2 : 0);
+    if (ef.flags.has('corazon-cromo') && Object.values(p.buffs).some((u) => u > now)) dmg *= 1.25;
+    const chromed = tp ? chromeParts(this.c, tp).length > 0 : (target.chrome?.length ?? 0) > 0;
+    if (traits.has('emp') && chromed) dmg *= 1.5;
+    if (wp.w.kind === 'ranged' && (p.buffs['disparo-cargado'] ?? 0) > now) { dmg *= 2; delete p.buffs['disparo-cargado']; this.notice(c, 'good', 'Disparo cargado.'); }
+    const crit = this.rng() < (ef.perk.crit ?? 0);
+    if (crit) dmg *= 2;
+    dmg = Math.round(dmg);
+    if (tp && !traits.has('perforante')) dmg = Math.max(1, dmg - this.armorOf(tp) - (wp.w.tech === 'tecnica' ? -this.armorOf(tp) : 0));
+    this.notice(c, 'good', `${crit ? '¡CRÍTICO! ' : ''}${lethal ? 'Impactas' : 'Golpeas'} a ${target.name} con ${wp.name}: −${dmg}.`);
+    this.w.progress.gain(p, skill, 4);
+    this.applyTraits(traits, target, tp, dmg, p.name, e.id);
     if (tp) {
       this.damagePlayer(tp, target, dmg, lethal, { name: p.name, charId: p.charId });
       if (tp.status === 'downed') await this.onNeutralized(c, target, tp.downedLethal, opId);
@@ -306,7 +346,30 @@ export class Combat {
       this.damageNpc(target, dmg, lethal, c);
       if (target.state === 'downed') await this.onNeutralized(c, target, !!target.npcLethalDown, opId);
     }
-    this.crime(c, target, lethal, target.state === 'downed' || tp?.status === 'downed' ? 'down' : 'hit', legit);
+    this.crime(c, target, lethal, target.state === 'downed' || tp?.status === 'downed' ? 'down' : 'hit', legit, silent);
+    // Daño en área (rasgo «área») y «Danza de cuchillas»: alcanza a otros enemigos cercanos.
+    const splash = traits.has('area') ? { at: target, r: 1.8, f: 0.5 } : wp.w.kind === 'melee' && ef.flags.has('danza') ? { at: e, r: 2.2, f: 0.7 } : null;
+    if (splash) for (const o of [...splash.at.zone.query(splash.at.x, splash.at.y, splash.r)]) {
+      if (o === target || o === e || o.kind !== 'npc' || o.state === 'downed' || !o.npcMax || o.npcType === 'essential') continue;
+      const sd = Math.max(1, Math.round(dmg * splash.f));
+      this.applyTraits(traits, o, undefined, sd, p.name, e.id);
+      this.damageNpc(o, sd, lethal, c);
+      if ((o.state as string) === 'downed') await this.onNeutralized(c, o, !!o.npcLethalDown, `${opId}-${o.id}`);
+    }
+  }
+
+  /** Efectos de los rasgos de arma sobre el objetivo: quemaduras, sangrado, aturdimiento y PEM. */
+  private applyTraits(traits: Set<string>, target: Entity, tp: PlayerState | undefined, dmg: number, by: string, byId: number) {
+    const now = Date.now();
+    if (traits.has('quemadura') || traits.has('sangrado')) {
+      (target.dots ??= []).push({ until: now + 3000, dmg: Math.max(1, Math.round(dmg * (traits.has('quemadura') ? 0.2 : 0.15))), next: now + 1000, by: byId });
+      if (target.conn) this.notice(target.conn, 'bad', traits.has('quemadura') ? 'Estás ardiendo.' : 'Sangras.');
+    }
+    if (traits.has('aturdidora') || traits.has('electrica') || traits.has('emp')) {
+      const ms = traits.has('aturdidora') ? 2000 : 1200;
+      if (tp) tp.nextAttackAt = Math.max(tp.nextAttackAt, now + ms); else target.stunUntil = now + ms;
+      void by;
+    }
   }
 
   /** Respuesta del jugador atacado según su postura: Defender/Agresiva devuelve el golpe; Evitar se retira. */
@@ -318,7 +381,7 @@ export class Combat {
   }
 
   damagePlayer(tp: PlayerState, te: Entity, dmg: number, lethal: boolean, src: Src) {
-    tp.hp -= dmg;
+    tp.hp -= dmg; tp.lastCombatAt = Date.now();
     this.notice(te.conn, 'bad', `${src.name} te ${lethal ? 'hiere' : 'golpea'}: −${dmg} de salud.`);
     if (te.conn) this.w.send(te.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) });
     if (tp.hp <= 0) {
@@ -352,6 +415,11 @@ export class Combat {
 
   private async onNeutralized(c: PlayerConn, target: Entity, lethal: boolean, opId: string) {
     const p = c.p!;
+    const tpl = this.w.playerOf(target);
+    this.w.progress.playerXp(p, tpl ? tpl.level * 6 : (target.level ?? 3) * (target.npcType === 'civil' ? 1 : 4));
+    this.w.progress.gain(p, lethal ? 'armas' : 'intimidacion', 3);
+    const pf = perkMods(this.c, p).flags;
+    if (pf.has('frenesi')) { const ef = effective(this.c, p); p.hp = Math.min(ef.hpMax, p.hp + 10); p.nextAttackAt = 0; this.notice(c, 'good', 'Frenesí: +10 de salud y siguiente ataque inmediato.'); }
     const all = this.claimable(target, p);
     const pay = all.filter((b) => !lethal || !b.aliveOnly);
     if (pay.length) {
@@ -401,14 +469,17 @@ export class Combat {
   }
 
   /** Consecuencias legales: solo cuenta donde la PCV patrulla. Cobrar recompensas no es delito. */
-  private crime(c: PlayerConn, target: Entity, lethal: boolean, kind: 'attempt' | 'hit' | 'down' | 'kill', legit?: boolean) {
+  private crime(c: PlayerConn, target: Entity, lethal: boolean, kind: 'attempt' | 'hit' | 'down' | 'kill', legit?: boolean, factor = 1) {
     const p = c.p!;
     if ((legit ?? this.claimable(target, p).length > 0) && kind !== 'kill') return;
     const police = c.e!.zone.def.police || (c.e!.zone.def.kind === 'interior' ? 1 : 0);
     if (!police) return;
+    const flags = perkMods(this.c, p).flags;
+    if (flags.has('fantasma') && ![...c.e!.zone.query(c.e!.x, c.e!.y, 18)].some((o) => o.npcType === 'police' || o.npcType === 'hierro')) return;
+    if ((p.buffs.invisible ?? 0) > Date.now()) return;
     const base = kind === 'kill' ? 2.5 : kind === 'down' ? (lethal ? 1.5 : 1) : kind === 'hit' ? 0.6 : 0.3;
     const cop = target.npcType === 'police' || target.npcType === 'hierro' ? 1.5 : 1;
-    void this.sv.addWanted(c, base * cop, target.npcType === 'police' ? 'agresión a la PCV' : lethal ? 'agresión armada' : 'agresión');
+    void this.sv.addWanted(c, base * cop * factor, target.npcType === 'police' ? 'agresión a la PCV' : lethal ? 'agresión armada' : 'agresión');
     // Los agentes cercanos responden.
     for (const o of c.e!.zone.query(c.e!.x, c.e!.y, 18)) if ((o.npcType === 'police' || o.npcType === 'hierro') && o.state !== 'downed' && !o.aggro && p.wanted >= 1.5) { o.aggro = c.e!.id; o.aggroLethal = o.npcType === 'hierro'; }
   }
@@ -418,16 +489,21 @@ export class Combat {
     const tp = this.w.playerOf(target);
     const ef = effective(this.c, p);
     const blind = ((tp ? tp.blindUntil : target.blindUntil ?? 0) > Date.now()) ? 4 : 0;
-    const total = ef.attrs.DEX + (ef.skills.sigilo ?? 0) + ef.steal + blind + this.roll();
+    const total = ef.attrs.DEX + (ef.skills.sigilo ?? 0) + ef.steal + blind + this.roll() + ((p.buffs.invisible ?? 0) > Date.now() ? 6 : 0);
+    const loot = 1 + (ef.perk.robLoot ?? 0);
+    const shadow = ef.flags.has('sombra');
+    this.w.progress.gain(p, 'sigilo', 3);
     if (tp) {
       const dv = 8 + (effective(this.c, tp).skills.percepcion ?? 0) + Math.floor(effective(this.c, tp).attrs.INT / 2) - (tp.sleeping ? 6 : 0);
       if (total >= dv) {
-        const amount = Math.max(tp.money > 0 ? 1 : 0, Math.floor(tp.money * (0.1 + this.rng() * 0.2)));
+        const hidden = effective(this.c, tp).flags.has('compartimento') ? 0.5 : 1;
+        const amount = Math.min(tp.money, Math.max(tp.money > 0 ? 1 : 0, Math.floor(tp.money * (0.1 + this.rng() * 0.2) * loot * hidden)));
         await this.transfer(tp, p, amount, opId, `Robo de ${p.name}`, `Robo a ${tp.name}`);
         this.notice(c, 'good', `Robas ${amount} €$ a ${tp.name} sin que se dé cuenta.`);
         this.notice(target.conn, 'bad', tp.sleeping ? `Al despertar notarás que te faltan ${amount} €$.` : `Notas que te falta dinero: −${amount} €$.`);
         await this.sv.addWanted(c, 0.5, 'robo');
-      } else {
+      } else if (shadow) { this.notice(c, 'warn', 'No lo consigues, pero nadie se ha dado cuenta.'); }
+      else {
         if (tp.sleeping && target.conn) this.sv.wake(target.conn);
         this.notice(target.conn, 'warn', `${p.name} ha intentado robarte.`);
         this.notice(c, 'bad', `${tp.name} te pilla con la mano en su bolsillo.`);
@@ -437,11 +513,12 @@ export class Combat {
     }
     const dv = 8 + Math.floor((target.defense ?? 10) / 2);
     if (total >= dv) {
-      const amount = Math.floor((target.npcType === 'gang' ? 30 : 8) + this.rng() * (target.npcType === 'gang' ? 120 : 60));
+      const amount = Math.floor(((target.npcType === 'gang' ? 30 : 8) + this.rng() * (target.npcType === 'gang' ? 120 : 60)) * loot);
       await this.credit(p, amount, opId, `Carterista: ${target.name}`);
       this.notice(c, 'good', `Le quitas ${amount} €$ a ${target.name}.`);
       if (target.faction && target.npcType !== 'civil') await this.repChange(c, target.faction, -2, `${opId}:fac`);
-    } else {
+    } else if (shadow) { this.notice(c, 'warn', 'No lo consigues, pero nadie se ha dado cuenta.'); }
+    else {
       this.notice(c, 'bad', `${target.name} te pilla.`);
       this.provokeNpc(target, c.e!, false);
       if (target.npcType === 'civil') await this.sv.addWanted(c, c.e!.zone.def.police ? 0.8 : 0, 'intento de robo');
@@ -482,6 +559,12 @@ export class Combat {
     else if (f && target.npcType === 'gang') { const r = p.rep.get(f.id) ?? 0; line = r >= 30 ? `Eres de los nuestros. ${f.name} cuida de los suyos.` : r <= f.hostileBelow ? `Te tenemos fichado. Lárgate de nuestro territorio.` : `Esto es territorio de ${f.name}. Pórtate bien y no habrá problemas.`; }
     else if (target.fugitive) line = 'No me has visto. ¿Entendido?';
     else if (target.npcType === 'ambar') line = 'Rescate Ámbar. Solo atendemos a suscriptores.';
+    // Rumores: la gente de la calle sabe dónde operan los matasanos que no se anuncian.
+    if ((target.npcType === 'civil' || target.npcType === 'gang') && this.rng() < 0.3) {
+      const docs = this.c.ripperdocs.filter((d) => d.hidden && !p.flags.has(`descubierto:${d.id}`));
+      if (docs.length) { const d = docs[Math.floor(this.rng() * docs.length)]; line = `Te cuento un secreto: ${d.rumor}`; this.discover(c, d.id); }
+    }
+    this.w.progress.gain(p, 'actuacion', 1);
     for (const o of target.zone.query(target.x, target.y, 20)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'speech', id: target.id, text: line });
   }
 
@@ -534,10 +617,11 @@ export class Combat {
     const ef = effective(this.c, p);
     if (ef.ram <= 0) throw new GameError('Necesitas un cyberdeck (o ser Netrunner con interfaz) para hackear.');
     if (p.netRank < q.minRank) throw new GameError(`Requiere rango de red ${q.minRank}.`);
-    const cost = this.ramCost(p, q.ram);
+    if (skillLevel(p, 'interfaz') < q.minSkill) throw new GameError(`Requiere Interfaz ${q.minSkill}.`);
+    const cost = this.ramCost(p, q.ram, q.effect);
     if (p.ram < cost) throw new GameError('RAM insuficiente: espera a que se recargue.');
     if (Math.hypot(target.x - e.x, target.y - e.y) > q.range) throw new GameError('Fuera de alcance de tu deck.');
-    if (target.npcType === 'essential' && q.effect !== 'scan') throw new GameError('Esta persona no se puede atacar.');
+    if (target.npcType === 'essential' && q.effect !== 'scan' && q.effect !== 'deepscan') throw new GameError('Esta persona no se puede atacar.');
     if (['damage', 'knockout', 'kill', 'drain'].includes(q.effect) && dangerAt(e.zone.grid, e.x, e.y) === 'protected') throw new GameError('Zona protegida.');
     if (q.effect === 'cash' && target.objKind === 'atm' && (this.atmCooldown.get(target.name + target.id) ?? 0) > Date.now()) throw new GameError('Este cajero está vacío: se recarga en unas horas.');
     if (p.sleeping) this.sv.wake(c);
@@ -545,7 +629,7 @@ export class Combat {
     const secs = this.uploadTime(p, q.upload);
     this.w.cancelActivity(e);
     const tc = target.conn;
-    if (tc && q.effect !== 'scan') this.notice(tc, 'bad', `¡Intrusión en tu cromo! Alguien está subiendo «${q.name}». Aléjate o rómpele la línea de visión.`);
+    if (tc && q.effect !== 'scan' && q.effect !== 'deepscan') this.notice(tc, 'bad', `¡Intrusión en tu cromo! Alguien está subiendo «${q.name}». Aléjate o rómpele la línea de visión.`);
     this.fx(e, 'hack', e.id, target.id);
     e.channel = { startTick: this.w.tick, endTick: this.w.tick + Math.round(secs * 20), label: `Subiendo ${q.name}`, targetId: target.id, apply: () => this.w.enqueue(c, async () => {
       try { await this.resolveHack(c, target, q.id, m.opId); } catch (err) { if (err instanceof GameError) this.notice(c, 'warn', err.message); else throw err; }
@@ -562,6 +646,8 @@ export class Combat {
     const dv = q.dv + this.hackDefense(target);
     const ok = score >= dv;
     const tp = this.w.playerOf(target);
+    this.w.progress.gain(p, 'interfaz', ok ? 5 : 1);
+    if (q.effect === 'scan' || q.effect === 'deepscan') this.w.progress.gain(p, 'percepcion', 2);
     if (!ok) {
       this.notice(c, 'bad', `✘ ${q.name} rechazado (${score} contra ${dv}).`);
       if (tc(target)) this.notice(target.conn, 'good', `Tu cromo bloquea «${q.name}».`);
@@ -575,8 +661,10 @@ export class Combat {
             : target.kind === 'object' ? `${target.name}: seguridad ${this.hackDefense(target) + 12}` : `${target.name}: salud ${Math.max(0, Math.round(target.npcHp ?? 0))}/${target.npcMax ?? '?'} · ${target.faction ? this.c.factions.find((f) => f.id === target.faction)?.name : 'civil'} · arma ${this.npcWeapon(target).name}`;
           const bounty = this.claimable(target, p);
           this.notice(c, 'info', `Escaneo · ${info}${bounty.length ? ` · recompensa ${bounty.reduce((s, x) => s + x.amount, 0)} €$${bounty.some((x) => x.aliveOnly) ? ' (vivo)' : ''}` : ''}`);
+          if (target.kind !== 'object') this.w.send(c, { t: 'scan', view: this.scanView(p, target, false) });
           break;
         }
+        case 'deepscan': this.w.send(c, { t: 'scan', view: this.scanView(p, target, true) }); break;
         case 'blind': if (tp) tp.blindUntil = Date.now() + a * 1000; else target.blindUntil = Date.now() + a * 1000; this.notice(target.conn, 'bad', 'Tu óptica se reinicia: no ves nada.'); break;
         case 'damage': case 'knockout': case 'kill': {
           const lethal = q.effect !== 'knockout';
@@ -585,6 +673,11 @@ export class Combat {
           if (tp) { this.damagePlayer(tp, target, dmg, lethal, { name: 'un hackeo' }); if (tp.status === 'downed') await this.onNeutralized(c, target, tp.downedLethal, opId); }
           else { this.damageNpc(target, dmg, lethal, c); if (target.state === 'downed') await this.onNeutralized(c, target, lethal, opId); }
           this.notice(c, 'good', `${target.name} sufre ${dmg} de daño ${lethal ? 'neural' : 'no letal'}.`);
+          // «Reacción en cadena»: si cae, el hackeo salta gratis a otra persona cercana.
+          if ((tp?.status === 'downed' || target.state === 'downed') && q.effect !== 'damage' && perkMods(this.c, p).flags.has('cadena')) {
+            const next = [...target.zone.query(target.x, target.y, 6)].find((o) => o !== target && o !== e && o.kind === 'npc' && o.npcMax && o.state !== 'downed' && o.npcType !== 'essential' && o.npcType !== 'civil');
+            if (next) { this.damageNpc(next, dmg, lethal, c); this.fx(e, 'hack', target.id, next.id); this.notice(c, 'good', `Reacción en cadena: ${next.name} también cae fulminado (−${dmg}).`); if (next.state === 'downed') await this.onNeutralized(c, next, lethal, `${opId}-cadena`); }
+          }
           this.crime(c, target, lethal, target.state === 'downed' || tp?.status === 'downed' ? 'down' : 'hit', legit);
           break;
         }
@@ -605,10 +698,11 @@ export class Combat {
       }
       // Experiencia de red y rango.
       p.netXp += 1 + Math.floor(q.ram / 2);
+      this.w.progress.playerXp(p, 3);
       while (p.netRank + 1 < NET_RANKS.length && p.netXp >= NET_RANKS[p.netRank + 1]) { p.netRank++; this.notice(c, 'good', `¡Rango de red ${p.netRank}! Hackeos más rápidos, baratos y fiables.`); }
     }
     // Rastreo de la Red Centinela.
-    if (this.rng() < q.trace * Math.max(0.2, 1 - p.netRank * 0.05)) { this.notice(c, 'bad', 'Red Centinela ha rastreado tu firma.'); await this.sv.addWanted(c, 1, 'intrusión en la red'); }
+    if (this.rng() < this.traceOf(p, q.trace)) { this.notice(c, 'bad', 'Red Centinela ha rastreado tu firma.'); await this.sv.addWanted(c, 1, 'intrusión en la red'); }
     this.w.send(c, { t: 'sheet', sheet: (this.sv as any).sheetOf(p) });
     function tc(t: Entity) { return !!t.conn; }
   }
@@ -757,6 +851,7 @@ export class Combat {
   npcThink(e: Entity): boolean {
     if (e.state === 'downed' || e.carriedBy) return true;
     const now = Date.now();
+    if ((e.stunUntil ?? 0) > now) { e.path = []; e.moving = false; return true; }
     if (e.fleeUntil && e.fleeUntil > now) {
       if (!e.path.length) { const wp = e.zone.def.waypoints[Math.floor(this.rng() * e.zone.def.waypoints.length)]; if (wp) { const r = findPath(e.zone.grid, e.x, e.y, wp[0] + 0.5, wp[1] + 0.5, 4000); if (r.ok) { e.path = r.path; e.moving = true; } } }
       if (e.label !== 'Huyendo') { e.label = 'Huyendo'; this.bump(e); }
@@ -765,7 +860,8 @@ export class Combat {
     if (e.aggro !== undefined) {
       const t = this.w.entities.get(e.aggro);
       const tp = t ? this.w.playerOf(t) : undefined;
-      if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || (e.npcType === 'police' && tp.wanted < 1)) { e.aggro = undefined; if (e.label !== 'Patrullando') { e.label = e.npcType === 'police' ? 'Patrullando' : ''; this.bump(e); } return false; }
+      const hidden = tp && ((tp.buffs.invisible ?? 0) > now || (tp.buffs.senuelo ?? 0) > now);
+      if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || hidden || (e.npcType === 'police' && tp.wanted < 1)) { e.aggro = undefined; if (e.label !== 'Patrullando') { e.label = e.npcType === 'police' ? 'Patrullando' : ''; this.bump(e); } return false; }
       const wp = this.npcWeapon(e);
       const dist = Math.hypot(t.x - e.x, t.y - e.y);
       const inRange = dist <= wp.w.range - 0.2 && (wp.w.kind === 'melee' || lineWalkable(e.zone.grid, e.x, e.y, t.x, t.y));
@@ -783,8 +879,9 @@ export class Combat {
         e.nextAttackAt = now + wp.w.cooldown * 1000 * 1.3;
         const a = this.npcAttackScore(e) + this.roll(), d = this.defenseScore(tp) + this.roll();
         this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id);
-        if (a >= d) {
-          const dmg = Math.max(1, this.rollDamage(wp.w, a - d) - this.armorOf(tp));
+        if (a >= d && this.rng() < this.dodgeOf(tp)) { this.notice(t.conn, 'good', `Esquivas a ${e.name}.`); }
+        else if (a >= d) {
+          const dmg = Math.max(1, this.rollDamage(wp.w, a - d) - (wp.w.traits?.includes('perforante') ? 0 : this.armorOf(tp)));
           const police = e.npcType === 'police';
           this.damagePlayer(tp, t, dmg, police ? false : e.aggroLethal !== false, { name: e.name, police });
           if (tp.status === 'alive') this.counter(t, e);
@@ -798,16 +895,134 @@ export class Combat {
       for (const o of e.zone.query(e.x, e.y, e.npcType === 'police' ? 12 : 7)) {
         const op = o.kind === 'player' ? this.w.playerOf(o) : undefined;
         if (!op || op.status !== 'alive' || dangerAt(o.zone.grid, o.x, o.y) === 'protected') continue;
-        if (e.npcType === 'police' && op.wanted >= 2) { e.aggro = o.id; e.aggroLethal = false; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
-        if (e.npcType === 'gang' && f && f.territory.includes(e.zone.id) && (op.rep.get(f.id) ?? 0) <= f.hostileBelow) { e.aggro = o.id; e.aggroLethal = true; this.notice(o.conn, 'bad', `${f.name} te reconocen en su territorio: ¡te atacan!`); return true; }
+        if ((op.buffs.invisible ?? 0) > now || (op.buffs.senuelo ?? 0) > now) continue;
+        const of = perkMods(this.c, op).flags;
+        if (e.npcType === 'police' && op.wanted >= 2 && !of.has('sombra')) { e.aggro = o.id; e.aggroLethal = false; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
+        if (e.npcType === 'gang' && f && f.territory.includes(e.zone.id) && (op.rep.get(f.id) ?? 0) <= f.hostileBelow && !of.has('terror')) { e.aggro = o.id; e.aggroLethal = true; this.notice(o.conn, 'bad', `${f.name} te reconocen en su territorio: ¡te atacan!`); return true; }
       }
     }
     return false;
   }
 
+  // ================================================================ v0.4: matasanos ocultos, análisis y habilidades de implantes
+  /** Marca una consulta de matasanos como descubierta (aparece en el mapa del jugador). */
+  discover(c: PlayerConn, docId: string) {
+    const p = c.p!;
+    const key = `descubierto:${docId}`;
+    if (p.flags.has(key)) return;
+    const d = this.c.ripperdocs.find((x) => x.id === docId);
+    if (!d) return;
+    p.flags.set(key, { value: true, expiresAt: null });
+    void this.w.db.query(`INSERT INTO character_flags (character_id, key, value) VALUES ($1,$2,$3) ON CONFLICT (character_id, key) DO NOTHING`, [p.charId, key, JSON.stringify(true)]).catch(() => {});
+    this.notice(c, 'good', `Has descubierto la consulta de ${d.name}. Ya aparece en tu mapa.`);
+    this.w.progress.gain(p, 'investigacion', 6);
+    this.w.send(c, { t: 'sheet', sheet: (this.sv as any).sheetOf(p) });
+  }
+
+  /** Ficha de un objetivo: básica (escanear) o completa (análisis profundo de edgerunner). */
+  scanView(p: PlayerState, target: Entity, deep: boolean): ScanView {
+    const tp = this.w.playerOf(target);
+    const fac = target.faction ? this.c.factions.find((f) => f.id === target.faction) : undefined;
+    const bounty = this.claimable(target, p).reduce((s, b) => s + b.amount, 0);
+    if (tp) {
+      const ef = effective(this.c, tp);
+      const lvl = tp.level;
+      const myLv = p.level;
+      return {
+        target: target.id, name: tp.name, title: `${this.c.roles.find((r) => r.id === tp.role)?.name ?? ''} · ${this.c.professions.find((x) => x.id === tp.profession)?.name ?? ''}`, kind: 'player', deep, level: lvl,
+        hp: Math.round(tp.hp), hpMax: ef.hpMax, bounty, wanted: Math.round(tp.wanted * 10) / 10, money: `~${Math.round(tp.money / 100) * 100} €$`,
+        threat: lvl >= myLv + 5 ? 'Muy peligroso' : lvl >= myLv + 2 ? 'Peligroso' : lvl <= myLv - 4 ? 'Inofensivo' : 'Parejo',
+        ...(deep ? {
+          attributes: { ...ef.attrs }, armor: ef.armor, weapon: this.weaponOf(tp).name, chrome: tp.cyber.filter((x) => x.location === 'installed').map((x) => this.c.cyberware.find((d) => d.id === x.def)?.name ?? x.def),
+          skills: Object.entries(tp.skillXp).map(([k, xp]) => ({ name: this.c.skills.find((s) => s.id === k)?.name ?? k, level: skillLevelForXp(xp) })).sort((a, b) => b.level - a.level).slice(0, 6),
+        } : {}),
+      };
+    }
+    const lv = target.level ?? 3;
+    const w = this.npcWeapon(target);
+    const base = (target.defense ?? 10);
+    const attrs = { BODY: Math.min(10, 3 + Math.floor(lv / 4)), REF: Math.min(10, 3 + Math.floor(lv / 4)), DEX: Math.min(10, 3 + Math.floor(lv / 5)), INT: target.faction === 'voces-vacio' ? 8 : 4, COOL: Math.min(10, 3 + Math.floor(lv / 6)), WILL: 5, TECH: 4, EMP: target.npcType === 'civil' ? 6 : 3 };
+    return {
+      target: target.id, name: target.name, title: target.title ?? (target.npcType === 'civil' ? 'Transeúnte' : ''), kind: 'npc', deep, level: lv,
+      hp: Math.max(0, Math.round(target.npcHp ?? target.npcMax ?? 0)), hpMax: target.npcMax ?? 0, faction: fac?.name, factionColor: fac?.color, bounty, rep: fac ? p.rep.get(fac.id) ?? 0 : undefined,
+      threat: lv >= p.level + 5 ? 'Muy peligroso' : lv >= p.level + 2 ? 'Peligroso' : lv <= p.level - 4 ? 'Inofensivo' : 'Parejo',
+      ...(deep ? { attributes: attrs, armor: Math.max(0, Math.floor((base - 9) / 2)), weapon: w.name, chrome: target.chrome ?? [], skills: [{ name: w.w.kind === 'melee' ? 'Cuerpo a cuerpo' : 'Armas a distancia', level: Math.min(25, lv + 2) }, { name: 'Atletismo', level: Math.max(1, lv - 1) }, { name: 'Percepción', level: Math.max(1, lv - 3) }] } : {}),
+    };
+  }
+
+  /** Activa la habilidad de un implante (tecla 1–4). */
+  async ability(c: PlayerConn, cyberId: string) {
+    const p = c.p!, e = c.e!;
+    if (p.status !== 'alive') throw new GameError('Ahora no.');
+    const inst = p.cyber.find((x) => x.location === 'installed' && x.def === cyberId);
+    const d = inst && this.c.cyberware.find((x) => x.id === cyberId);
+    if (!d?.ability) throw new GameError('No tienes ese implante instalado.');
+    const now = Date.now();
+    if ((p.abilityCd[cyberId] ?? 0) > now) throw new GameError(`${d.ability.name}: se recarga en ${Math.ceil(((p.abilityCd[cyberId] ?? 0) - now) / 1000)} s.`);
+    const pm = perkMods(this.c, p);
+    const ab = d.ability;
+    p.abilityCd[cyberId] = now + ab.cooldown * 1000 * Math.max(0.3, 1 - (pm.mods.cooldown ?? 0));
+    const until = now + ab.duration * 1000;
+    const ef = effective(this.c, p);
+    const hostiles = (r: number) => [...e.zone.query(e.x, e.y, r)].filter((o) => o !== e && o.kind === 'npc' && o.npcMax && o.state !== 'downed' && o.npcType !== 'essential');
+    const prot = dangerAt(e.zone.grid, e.x, e.y) === 'protected';
+    switch (ab.kind) {
+      case 'tiempo-bala': p.buffs['tiempo-bala'] = until; this.notice(c, 'good', `${ab.name}: el mundo se ralentiza durante ${ab.duration} s.`); break;
+      case 'invisible': p.buffs.invisible = until; for (const o of e.zone.entities) if (o.aggro === e.id) o.aggro = undefined; this.notice(c, 'good', `${ab.name}: eres invisible ${ab.duration} s. Nadie te persigue ni te denuncia.`); break;
+      case 'senuelo': p.buffs.senuelo = until; for (const o of e.zone.entities) if (o.aggro === e.id) o.aggro = undefined; this.notice(c, 'good', `${ab.name}: tu doble atrae todas las miradas.`); break;
+      case 'curar': p.buffs.curar = until; p.buffs.curarPerSec = Math.ceil((ef.hpMax * ab.power) / Math.max(1, ab.duration)); this.notice(c, 'good', `${ab.name}: recuperas salud durante ${ab.duration} s.`); break;
+      case 'esprint': p.buffs.esprint = until; this.notice(c, 'good', `${ab.name}: corres mucho más rápido ${ab.duration} s.`); break;
+      case 'pico-ram': p.ram = ef.ram; this.notice(c, 'good', `${ab.name}: RAM al máximo.`); break;
+      case 'disparo-cargado': p.buffs['disparo-cargado'] = now + 30000; this.notice(c, 'good', `${ab.name}: tu próximo disparo hará el doble de daño.`); break;
+      case 'pulso': case 'torbellino': {
+        if (prot) throw new GameError('Zona protegida.');
+        const list = hostiles(ab.kind === 'pulso' ? 5 : 2.2);
+        if (!list.length) { this.notice(c, 'info', 'No hay nadie a tu alrededor.'); break; }
+        const boost = pm.flags.has('corazon-cromo') ? 1.25 : 1;
+        for (const o of list) {
+          const dmg = Math.round((ab.kind === 'pulso' ? ab.power * ((o.chrome?.length ?? 0) > 0 ? 2 : 1) : 12 + this.rng() * 10) * boost);
+          if (ab.kind === 'pulso') o.stunUntil = now + ab.duration * 1000;
+          this.fx(e, 'hit', e.id, o.id);
+          this.damageNpc(o, dmg, ab.kind === 'torbellino', c);
+          if (o.state === 'downed') await this.onNeutralized(c, o, ab.kind === 'torbellino', `ab-${randomUUID()}`);
+          this.crime(c, o, ab.kind === 'torbellino', o.state === 'downed' ? 'down' : 'hit');
+        }
+        p.lastCombatAt = now;
+        this.notice(c, 'good', `${ab.name}: alcanzas a ${list.length} ${list.length === 1 ? 'persona' : 'personas'}.`);
+        break;
+      }
+      case 'carga': {
+        const t = (e.pendingAction && this.w.entities.get(e.pendingAction.target)) || hostiles(9).sort((a, b) => Math.hypot(a.x - e.x, a.y - e.y) - Math.hypot(b.x - e.x, b.y - e.y))[0];
+        if (!t) throw new GameError('No hay a quién cargar.');
+        const dist = Math.hypot(t.x - e.x, t.y - e.y);
+        const step = Math.min(ab.power, Math.max(0, dist - 1));
+        const nx = e.x + ((t.x - e.x) / dist) * step, ny = e.y + ((t.y - e.y) / dist) * step;
+        if (step > 0 && lineWalkable(e.zone.grid, e.x, e.y, nx, ny)) { e.x = nx; e.y = ny; e.path = []; e.lastMoveTick = this.w.tick; e.zone.moved(e); }
+        p.nextAttackAt = 0; p.buffs.carga = now + 2500;
+        this.notice(c, 'good', `${ab.name}: te lanzas sobre ${t.name} (+3 al próximo ataque).`);
+        break;
+      }
+    }
+    e.buffs = p.buffs; this.bump(e);
+    this.w.progress.gain(p, 'filo', 3);
+    this.w.send(c, { t: 'sheet', sheet: (this.sv as any).sheetOf(p) });
+  }
+
   /** Cada segundo: PNJ derribados, reapariciones, rescates y Unidad Hierro. */
   async everySecond() {
     const now = Date.now();
+    // Daño continuado (quemaduras y sangrado).
+    for (const z of this.w.zones.values()) for (const e of [...z.entities]) {
+      if (!e.dots?.length) continue;
+      e.dots = e.dots.filter((d) => d.until > now);
+      for (const d of e.dots) if (now >= d.next) {
+        d.next = now + 1000;
+        const tp = this.w.playerOf(e);
+        const by = d.by !== undefined ? this.w.entities.get(d.by) : undefined;
+        if (tp) { if (tp.status === 'alive') this.damagePlayer(tp, e, d.dmg, true, { name: 'las heridas' }); }
+        else if (e.state !== 'downed' && e.npcMax) { this.damageNpc(e, d.dmg, true, by?.conn); if ((e.state as string) === 'downed' && by?.conn) await this.onNeutralized(by.conn, e, true, `dot-${randomUUID()}`); }
+      }
+    }
     for (const z of this.w.zones.values()) for (const e of [...z.entities]) {
       if (e.kind !== 'npc' || e.state !== 'downed' || !e.downedUntil || e.carriedBy) continue;
       if (now < e.downedUntil) continue;
@@ -826,6 +1041,7 @@ export class Combat {
   }
 }
 
+export function opposedChance2(a: number, b: number) { return opposed(a, b); }
 export function opposed(a: number, b: number): number {
   let ok = 0;
   for (let x = 1; x <= 10; x++) for (let y = 1; y <= 10; y++) if (a + x >= b + y) ok++;

@@ -1,0 +1,119 @@
+{
+ "id": "casa-loft",
+ "name": "Loft",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#4a3a2a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    5
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    13,
+    1
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "table",
+   "at": [
+    11,
+    5
+   ]
+  },
+  {
+   "type": "neon",
+   "at": [
+    9,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "bench",
+   "at": [
+    3,
+    8
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-casa-loft",
+   "name": "Salir a la calle",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     47,
+     44
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "cama-casa-loft",
+   "name": "Tu cama",
+   "at": [
+    3,
+    2
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 1,
+    "price": 0
+   }
+  },
+  {
+   "id": "alijo-casa-loft",
+   "name": "Alijo",
+   "at": [
+    13,
+    2
+   ],
+   "kind": "stash"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

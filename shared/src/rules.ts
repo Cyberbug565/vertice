@@ -109,3 +109,30 @@ export function hashString(s: string): number {
   for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
   return h >>> 0;
 }
+
+// ---- v0.4: habilidades 1–25 que suben con el uso ----
+export const SKILL_MAX = 25;
+/** Máximo al que se puede llegar invirtiendo puntos; de ahí al 25 solo se sube usando la habilidad. */
+export const SKILL_POINT_CAP = 20;
+/** XP acumulada para alcanzar un nivel de habilidad (nivel 1 = 0). Cada nivel cuesta más que el anterior. */
+export function skillXpFor(level: number): number {
+  return level <= 1 ? 0 : Math.round(15 * Math.pow(level - 1, 2.1));
+}
+export function skillLevelForXp(xp: number): number {
+  let l = 1;
+  while (l < SKILL_MAX && xp >= skillXpFor(l + 1)) l++;
+  return l;
+}
+/** Bonificación de la habilidad en las tiradas (atributo + habilidad + 1d10): 0 a nivel 1–2, 8 a nivel 24–25. */
+export function skillBonus(level: number): number {
+  return Math.floor(level / 3);
+}
+/** Lo que da cada nivel de personaje: salud, aguante, reservas de comida, bebida y sueño, y puntos. */
+export const LEVEL_GAINS = { hp: 3, stamina: 2, needsPerLevel: 0.012, needsFloor: 0.6, skillPoints: 2, perkPoints: 1 } as const;
+export function levelNeedsMult(level: number): number {
+  return Math.max(LEVEL_GAINS.needsFloor, 1 - LEVEL_GAINS.needsPerLevel * (level - 1));
+}
+/** Nivel de habilidad equivalente a un valor antiguo (0–6) del sistema de la v0.3. */
+export function legacySkillLevel(v: number): number {
+  return Math.max(1, Math.min(SKILL_POINT_CAP, 1 + 3 * v));
+}

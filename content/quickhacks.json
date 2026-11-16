@@ -11,6 +11,19 @@
   "desc": "Revela salud, recompensas, facción, cromo y dinero aproximado."
  },
  {
+  "id": "analisis-profundo",
+  "name": "Análisis profundo",
+  "target": "person",
+  "ram": 2,
+  "upload": 1.5,
+  "dv": 9,
+  "minRank": 0,
+  "minSkill": 6,
+  "effect": "deepscan",
+  "trace": 0.05,
+  "desc": "Hackeo de edgerunner: muestra el nivel, la salud, los atributos, las mejores habilidades, el arma, el blindaje y el cromo del objetivo. Requiere Interfaz 6."
+ },
+ {
   "id": "reinicio-optico",
   "name": "Reinicio óptico",
   "target": "person",

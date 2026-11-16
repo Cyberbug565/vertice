@@ -2,8 +2,8 @@
  "id": "cenit",
  "name": "Cénit",
  "kind": "exterior",
- "width": 96,
- "height": 64,
+ "width": 106,
+ "height": 74,
  "chunkSize": 32,
  "danger": "public",
  "base": "plaza",
@@ -14,18 +14,18 @@
    "type": "asphalt",
    "rect": [
     0,
-    30,
-    96,
-    4
+    33,
+    106,
+    8
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    46,
+    49,
     0,
-    4,
-    64
+    8,
+    74
    ]
   },
   {
@@ -33,17 +33,17 @@
    "rect": [
     0,
     12,
-    96,
-    2
+    106,
+    5
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    50,
-    96,
-    2
+    57,
+    106,
+    5
    ]
   },
   {
@@ -51,60 +51,60 @@
    "rect": [
     20,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    72,
+    79,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    44,
-    30,
+    47,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    50,
-    30,
+    57,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    28,
-    4,
+    49,
+    31,
+    8,
     2
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    34,
-    4,
+    49,
+    41,
+    8,
     2
    ]
   },
   {
    "type": "tile",
    "rect": [
-    76,
-    15,
+    86,
+    18,
     18,
     12
    ]
@@ -112,8 +112,8 @@
   {
    "type": "metal",
    "rect": [
-    22,
-    52,
+    25,
+    62,
     24,
     12
    ]
@@ -123,8 +123,8 @@
   {
    "type": "barrier",
    "rect": [
-    77,
-    16,
+    87,
+    19,
     1,
     3
    ],
@@ -133,8 +133,8 @@
   {
    "type": "barrier",
    "rect": [
-    92,
-    16,
+    102,
+    19,
     1,
     3
    ],
@@ -161,7 +161,7 @@
    "id": "okami-central",
    "name": "Torre Okami Central",
    "rect": [
-    24,
+    27,
     1,
     20,
     9
@@ -176,7 +176,7 @@
    "id": "halcon-hq",
    "name": "Halcón Dynamics",
    "rect": [
-    52,
+    59,
     1,
     18,
     9
@@ -191,7 +191,7 @@
    "id": "teselia-spire",
    "name": "Teselia Neural",
    "rect": [
-    76,
+    86,
     1,
     18,
     9
@@ -207,7 +207,7 @@
    "name": "Hotel Cápsula Nido",
    "rect": [
     2,
-    15,
+    18,
     15,
     12
    ],
@@ -221,8 +221,8 @@
    "id": "okami-super",
    "name": "Supermercado Okami",
    "rect": [
-    24,
-    15,
+    27,
+    18,
     9,
     12
    ],
@@ -236,8 +236,8 @@
    "id": "clinica-okami",
    "name": "Clínica Okami",
    "rect": [
-    35,
-    15,
+    38,
+    18,
     9,
     12
    ],
@@ -251,8 +251,8 @@
    "id": "armeria-halcon",
    "name": "Armería Halcón",
    "rect": [
-    52,
-    15,
+    59,
+    18,
     8,
     12
    ],
@@ -266,8 +266,8 @@
    "id": "oficinas-halcon",
    "name": "Oficinas Halcón",
    "rect": [
-    62,
-    15,
+    69,
+    18,
     8,
     12
    ],
@@ -282,20 +282,22 @@
    "name": "Bloque Ejecutivo",
    "rect": [
     2,
-    35,
+    42,
     16,
     13
    ],
    "height": 24,
    "style": "arcology",
-   "color": "#3a3a58"
+   "color": "#3a3a58",
+   "sign": "BLINDADOS",
+   "signColor": "#43f3ff"
   },
   {
    "id": "torre-datos",
    "name": "Torre de Datos Teselia",
    "rect": [
-    24,
-    35,
+    27,
+    42,
     20,
     13
    ],
@@ -309,8 +311,8 @@
    "id": "comisaria",
    "name": "Comisaría PCV Cénit",
    "rect": [
-    52,
-    35,
+    59,
+    42,
     18,
     13
    ],
@@ -324,8 +326,8 @@
    "id": "arcologia-kaiten",
    "name": "Arcología Kaiten",
    "rect": [
-    76,
-    35,
+    86,
+    42,
     18,
     13
    ],
@@ -340,7 +342,7 @@
    "name": "Laboratorios Okami",
    "rect": [
     2,
-    53,
+    63,
     16,
     10
    ],
@@ -352,24 +354,22 @@
   },
   {
    "id": "dr-vex",
-   "name": "Dr. Vex",
    "rect": [
-    24,
-    53,
+    27,
+    63,
     8,
     8
    ],
    "height": 6,
    "style": "clinic",
    "color": "#3a3040",
-   "sign": "VEX",
    "signColor": "#ff5a5a"
   },
   {
    "id": "bloque-servicio",
    "rect": [
-    36,
-    53,
+    39,
+    63,
     8,
     10
    ],
@@ -381,8 +381,8 @@
    "id": "logistica-aurora",
    "name": "Centro Logístico Aurora",
    "rect": [
-    52,
-    53,
+    59,
+    63,
     18,
     10
    ],
@@ -395,8 +395,8 @@
   {
    "id": "torre-sur",
    "rect": [
-    76,
-    53,
+    86,
+    63,
     18,
     10
    ],
@@ -409,8 +409,8 @@
   {
    "type": "holo",
    "at": [
-    85,
-    21
+    95,
+    24
    ],
    "blocking": false,
    "color": "#ff3fa4",
@@ -420,8 +420,8 @@
   {
    "type": "holo",
    "at": [
-    48,
-    22
+    51,
+    25
    ],
    "blocking": false,
    "color": "#43f3ff",
@@ -431,8 +431,8 @@
   {
    "type": "holo",
    "at": [
-    48,
-    44
+    51,
+    51
    ],
    "blocking": false,
    "color": "#b46cff",
@@ -443,7 +443,7 @@
    "type": "holo",
    "at": [
     10,
-    31
+    34
    ],
    "blocking": false,
    "color": "#7dff7a",
@@ -453,7 +453,7 @@
   {
    "type": "antenna",
    "at": [
-    34,
+    37,
     5
    ],
    "blocking": false,
@@ -462,7 +462,7 @@
   {
    "type": "antenna",
    "at": [
-    61,
+    68,
     5
    ],
    "blocking": false,
@@ -471,7 +471,7 @@
   {
    "type": "antenna",
    "at": [
-    85,
+    95,
     5
    ],
    "blocking": false,
@@ -480,8 +480,8 @@
   {
    "type": "antenna",
    "at": [
-    85,
-    41
+    95,
+    48
    ],
    "blocking": false,
    "z": 36
@@ -489,127 +489,127 @@
   {
    "type": "plant",
    "at": [
-    79,
-    24
+    89,
+    27
    ]
   },
   {
    "type": "plant",
    "at": [
-    90,
-    24
+    100,
+    27
    ]
   },
   {
    "type": "bench",
    "at": [
-    82,
-    25
+    92,
+    28
    ]
   },
   {
    "type": "bench",
    "at": [
-    87,
-    25
+    97,
+    28
    ]
   },
   {
    "type": "lamp",
    "at": [
     19,
-    29
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    29
+    48,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    51,
-    29
+    58,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    71,
-    29
+    78,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
     19,
-    34
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    34
+    48,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    51,
-    34
+    58,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    71,
-    34
+    78,
+    41
    ]
   },
   {
    "type": "car",
    "at": [
     8,
-    32
+    35
    ],
    "color": "#e8e8f0"
   },
   {
    "type": "car",
    "at": [
-    60,
-    31
+    67,
+    34
    ],
    "color": "#2a2a2a"
   },
   {
    "type": "car",
    "at": [
-    47,
-    40
+    50,
+    47
    ],
    "color": "#43f3ff"
   },
   {
    "type": "trash",
    "at": [
-    33,
-    57
+    36,
+    67
    ]
   }
  ],
  "skybridges": [
   {
    "from": [
-    44,
+    47,
     5
    ],
    "to": [
-    52,
+    59,
     5
    ],
    "z": 26,
@@ -617,11 +617,11 @@
   },
   {
    "from": [
-    70,
+    77,
     5
    ],
    "to": [
-    76,
+    86,
     5
    ],
    "z": 22,
@@ -629,24 +629,24 @@
   },
   {
    "from": [
-    44,
-    41
+    47,
+    48
    ],
    "to": [
-    52,
-    41
+    59,
+    48
    ],
    "z": 16,
    "color": "#b46cff"
   },
   {
    "from": [
-    70,
-    41
+    77,
+    48
    ],
    "to": [
-    76,
-    41
+    86,
+    48
    ],
    "z": 20,
    "color": "#ff8a3d"
@@ -654,11 +654,11 @@
   {
    "from": [
     17,
-    20
+    23
    ],
    "to": [
-    24,
-    20
+    27,
+    23
    ],
    "z": 7,
    "color": "#ffd23f"
@@ -670,12 +670,12 @@
    "name": "Avenida hacia Ferro",
    "at": [
     0,
-    31
+    34
    ],
    "to": {
     "zone": "ferro",
     "at": [
-     93,
+     102,
      21
     ]
    },
@@ -686,7 +686,7 @@
    "name": "Hotel Cápsula Nido",
    "at": [
     17,
-    21
+    24
    ],
    "to": {
     "zone": "nido-int",
@@ -701,8 +701,8 @@
    "id": "puerta-okami-super",
    "name": "Supermercado Okami",
    "at": [
-    28,
-    27
+    31,
+    30
    ],
    "to": {
     "zone": "okami-super-int",
@@ -717,8 +717,8 @@
    "id": "puerta-clinica-okami",
    "name": "Clínica Okami (matasanos corporativo)",
    "at": [
-    39,
-    27
+    42,
+    30
    ],
    "to": {
     "zone": "clinica-okami-int",
@@ -733,8 +733,8 @@
    "id": "puerta-armeria",
    "name": "Armería Halcón",
    "at": [
-    56,
-    27
+    63,
+    30
    ],
    "to": {
     "zone": "armeria-int",
@@ -749,8 +749,8 @@
    "id": "puerta-oficinas-halcon",
    "name": "Oficinas Halcón",
    "at": [
-    66,
-    27
+    73,
+    30
    ],
    "to": {
     "zone": "oficinas-halcon-int",
@@ -765,8 +765,8 @@
    "id": "puerta-torre-datos",
    "name": "Torre de Datos Teselia",
    "at": [
-    34,
-    48
+    37,
+    55
    ],
    "to": {
     "zone": "teselia-int",
@@ -781,8 +781,8 @@
    "id": "puerta-comisaria",
    "name": "Comisaría PCV",
    "at": [
-    60,
-    48
+    67,
+    55
    ],
    "to": {
     "zone": "comisaria-int",
@@ -798,7 +798,7 @@
    "name": "Laboratorios Okami",
    "at": [
     10,
-    63
+    73
    ],
    "to": {
     "zone": "laboratorio-int",
@@ -811,10 +811,10 @@
   },
   {
    "id": "puerta-vex",
-   "name": "Dr. Vex (matasanos)",
+   "name": "Puerta sin rótulo",
    "at": [
-    32,
-    57
+    35,
+    67
    ],
    "to": {
     "zone": "vex-int",
@@ -823,14 +823,15 @@
      4
     ]
    },
-   "danger": "public"
+   "danger": "public",
+   "hidden": "vex"
   },
   {
    "id": "puerta-logistica",
    "name": "Centro Logístico Aurora",
    "at": [
-    60,
-    63
+    67,
+    73
    ],
    "to": {
     "zone": "logistica-int",
@@ -845,14 +846,14 @@
    "id": "hacia-colinas",
    "name": "Avenida hacia Colinas Doradas",
    "at": [
-    47,
+    50,
     0
    ],
    "to": {
     "zone": "colinas",
     "at": [
-     47,
-     62
+     50,
+     72
     ]
    },
    "danger": "public"
@@ -861,17 +862,33 @@
    "id": "hacia-forja",
    "name": "Avenida hacia Forja",
    "at": [
-    95,
-    31
+    105,
+    34
    ],
    "to": {
     "zone": "forja",
     "at": [
      1,
-     31
+     34
     ]
    },
    "danger": "public"
+  },
+  {
+   "id": "puerta-blindados-halcon",
+   "name": "Blindados Halcón",
+   "at": [
+    10,
+    55
+   ],
+   "to": {
+    "zone": "blindados-halcon-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "protected"
   }
  ],
  "objects": [
@@ -879,8 +896,8 @@
    "id": "empleo-cenit",
    "name": "Bolsa de empleo de Cénit",
    "at": [
-    80,
-    18
+    90,
+    21
    ],
    "kind": "jobboard"
   },
@@ -888,8 +905,8 @@
    "id": "recompensas-cenit",
    "name": "Tablón de recompensas (PCV)",
    "at": [
-    84,
-    18
+    94,
+    21
    ],
    "kind": "bountyboard"
   },
@@ -897,8 +914,8 @@
    "id": "terminal-mercado-cenit",
    "name": "Terminal de la red de mercado",
    "at": [
-    88,
-    18
+    98,
+    21
    ],
    "kind": "marketterm"
   },
@@ -907,7 +924,7 @@
    "name": "Máquina Aurora",
    "at": [
     19,
-    40
+    47
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -916,8 +933,8 @@
    "id": "vending-cenit-2",
    "name": "Máquina Aurora",
    "at": [
-    74,
-    24
+    84,
+    27
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -926,8 +943,8 @@
    "id": "basura-c1",
    "name": "Contenedor de basura",
    "at": [
-    35,
-    52
+    38,
+    62
    ],
    "kind": "trash"
   },
@@ -935,8 +952,8 @@
    "id": "basura-c2",
    "name": "Contenedor de basura",
    "at": [
-    71,
-    52
+    78,
+    62
    ],
    "kind": "trash"
   },
@@ -944,8 +961,8 @@
    "id": "cenit-cajero-1",
    "name": "Cajero Okami Bank",
    "at": [
-    45,
-    28
+    48,
+    31
    ],
    "kind": "atm"
   },
@@ -953,8 +970,8 @@
    "id": "cenit-cajero-2",
    "name": "Cajero Okami Bank",
    "at": [
-    74,
-    20
+    84,
+    23
    ],
    "kind": "atm"
   },
@@ -963,16 +980,79 @@
    "name": "Cajero Okami Bank",
    "at": [
     19,
-    47
+    54
    ],
    "kind": "atm"
+  },
+  {
+   "id": "cenit-portal-1",
+   "name": "Portal · Aurora Logística",
+   "at": [
+    10,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "cenit-portal-2",
+   "name": "Portal · Torre Okami Central",
+   "at": [
+    37,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "cenit-portal-3",
+   "name": "Portal · Halcón Dynamics",
+   "at": [
+    68,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "cenit-portal-4",
+   "name": "Portal · Teselia Neural",
+   "at": [
+    95,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "cenit-portal-5",
+   "name": "Portal · Arcología Kaiten",
+   "at": [
+    95,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "cenit-portal-6",
+   "name": "Portal · Bloque 6",
+   "at": [
+    47,
+    68
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "cenit-portal-7",
+   "name": "Portal · Bloque 7",
+   "at": [
+    104,
+    68
+   ],
+   "kind": "housing"
   }
  ],
  "dangerAreas": [
   {
    "rect": [
-    76,
-    15,
+    86,
+    18,
     18,
     12
    ],
@@ -1026,120 +1106,120 @@
  "waypoints": [
   [
    5,
-   31
+   34
   ],
   [
    15,
-   32
+   35
   ],
   [
-   30,
-   31
+   33,
+   34
   ],
   [
-   40,
-   32
+   43,
+   35
   ],
   [
-   56,
-   31
+   63,
+   34
   ],
   [
-   66,
-   32
+   73,
+   35
+  ],
+  [
+   90,
+   34
+  ],
+  [
+   102,
+   35
+  ],
+  [
+   50,
+   6
+  ],
+  [
+   50,
+   23
+  ],
+  [
+   50,
+   51
+  ],
+  [
+   50,
+   68
+  ],
+  [
+   21,
+   6
+  ],
+  [
+   21,
+   25
+  ],
+  [
+   21,
+   51
+  ],
+  [
+   21,
+   68
   ],
   [
    80,
-   31
-  ],
-  [
-   92,
-   32
-  ],
-  [
-   47,
    6
-  ],
-  [
-   47,
-   20
-  ],
-  [
-   47,
-   44
-  ],
-  [
-   47,
-   58
-  ],
-  [
-   21,
-   6
-  ],
-  [
-   21,
-   22
-  ],
-  [
-   21,
-   44
-  ],
-  [
-   21,
-   58
-  ],
-  [
-   73,
-   6
-  ],
-  [
-   73,
-   22
-  ],
-  [
-   73,
-   44
-  ],
-  [
-   73,
-   58
-  ],
-  [
-   84,
-   22
   ],
   [
    80,
-   20
+   25
   ],
   [
-   88,
-   21
+   80,
+   51
+  ],
+  [
+   80,
+   68
+  ],
+  [
+   94,
+   25
+  ],
+  [
+   90,
+   23
+  ],
+  [
+   98,
+   24
   ],
   [
    10,
    12
   ],
   [
-   60,
+   67,
    12
   ],
   [
-   85,
-   51
+   95,
+   58
   ],
   [
-   30,
-   51
+   33,
+   58
   ],
   [
-   55,
-   51
+   62,
+   58
   ]
  ],
  "safePoint": [
-  84,
-  22
+  94,
+  25
  ],
  "police": 4,
  "gangs": []

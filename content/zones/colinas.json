@@ -2,8 +2,8 @@
  "id": "colinas",
  "name": "Colinas Doradas",
  "kind": "exterior",
- "width": 96,
- "height": 64,
+ "width": 106,
+ "height": 74,
  "chunkSize": 32,
  "danger": "public",
  "base": "grass",
@@ -17,26 +17,26 @@
    "rect": [
     0,
     0,
-    96,
-    64
+    106,
+    74
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    30,
-    96,
-    4
+    33,
+    106,
+    8
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    46,
+    49,
     0,
-    4,
-    64
+    8,
+    74
    ]
   },
   {
@@ -44,17 +44,17 @@
    "rect": [
     0,
     12,
-    96,
-    2
+    106,
+    5
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    50,
-    96,
-    2
+    57,
+    106,
+    5
    ]
   },
   {
@@ -62,60 +62,60 @@
    "rect": [
     20,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    72,
+    79,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    44,
-    30,
+    47,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    50,
-    30,
+    57,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    28,
-    4,
+    49,
+    31,
+    8,
     2
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    34,
-    4,
+    49,
+    41,
+    8,
     2
    ]
   },
   {
    "type": "grass",
    "rect": [
-    75,
-    15,
+    85,
+    18,
     20,
     14
    ]
@@ -152,7 +152,7 @@
   {
    "id": "colinas-b2",
    "rect": [
-    23,
+    26,
     1,
     10,
     9
@@ -166,7 +166,7 @@
   {
    "id": "colinas-b3",
    "rect": [
-    35,
+    38,
     1,
     9,
     9
@@ -180,7 +180,7 @@
   {
    "id": "colinas-b4",
    "rect": [
-    51,
+    58,
     1,
     9,
     9
@@ -195,7 +195,7 @@
   {
    "id": "colinas-b5",
    "rect": [
-    62,
+    69,
     1,
     8,
     9
@@ -210,7 +210,7 @@
   {
    "id": "colinas-b6",
    "rect": [
-    75,
+    85,
     1,
     19,
     9
@@ -225,7 +225,7 @@
    "id": "colinas-b7",
    "rect": [
     1,
-    15,
+    18,
     17,
     13
    ],
@@ -236,457 +236,490 @@
   {
    "id": "colinas-b8",
    "rect": [
-    23,
-    15,
+    26,
+    18,
     10,
     13
    ],
    "height": 8,
-   "style": "block",
+   "style": "glass",
    "color": "#6a5a7a",
-   "sign": "CLUB KAITEN",
+   "sign": "SAETA",
    "signColor": "#7dd3a0",
-   "name": "Club de Campo Kaiten"
+   "name": "Concesionario Saeta"
   },
   {
    "id": "colinas-b9",
    "rect": [
-    35,
-    15,
+    38,
+    18,
     9,
     13
    ],
    "height": 7,
    "style": "block",
-   "color": "#5a6a7a"
+   "color": "#5a6a7a",
+   "sign": "OKAMI SPA",
+   "signColor": "#7dd3a0"
   },
   {
    "id": "colinas-b10",
    "rect": [
-    51,
-    15,
+    58,
+    18,
     9,
     13
    ],
    "height": 7,
-   "style": "glass",
-   "color": "#6a5a7a"
+   "style": "arcology",
+   "color": "#7a6a5a",
+   "sign": "JARDINES",
+   "signColor": "#ff8a3d"
   },
   {
    "id": "colinas-b11",
    "rect": [
-    62,
-    15,
+    69,
+    18,
     8,
     13
    ],
    "height": 7,
-   "style": "arcology",
-   "color": "#5a6a7a"
+   "style": "glass",
+   "color": "#5a6a7a",
+   "sign": "KAITEN HOMES",
+   "signColor": "#7dd3a0",
+   "name": "Inmobiliaria Kaiten"
   },
   {
    "id": "colinas-b12",
    "rect": [
     1,
-    35,
-    17,
+    42,
+    8,
     13
    ],
-   "height": 7,
-   "style": "glass",
-   "color": "#5a6a7a",
-   "sign": "ÁMBAR",
-   "signColor": "#ffbf00"
+   "height": 9,
+   "style": "shop",
+   "color": "#4a6a6a",
+   "sign": "ÓRBITA",
+   "signColor": "#ffbf00",
+   "name": "Moda Órbita"
   },
   {
    "id": "colinas-b13",
    "rect": [
-    23,
-    35,
-    10,
+    11,
+    42,
+    7,
     13
    ],
-   "height": 8,
-   "style": "glass",
-   "color": "#5a6a7a",
-   "sign": "OKAMI SPA",
-   "signColor": "#ff8a3d"
+   "height": 9,
+   "style": "block",
+   "color": "#6a5a7a"
   },
   {
    "id": "colinas-b14",
    "rect": [
-    35,
-    35,
-    9,
+    26,
+    42,
+    10,
     13
    ],
-   "height": 20,
-   "style": "glass",
+   "height": 4,
+   "style": "arcology",
    "color": "#4a6a6a",
-   "sign": "JARDINES",
-   "signColor": "#ffbf00"
+   "sign": "CLUB PRIVADO",
+   "signColor": "#7dd3a0"
   },
   {
    "id": "colinas-b15",
    "rect": [
-    51,
-    35,
-    19,
+    38,
+    42,
+    9,
     13
    ],
-   "height": 8,
-   "style": "glass",
-   "color": "#6a5a7a"
+   "height": 6,
+   "style": "block",
+   "color": "#4a6a6a"
   },
   {
    "id": "colinas-b16",
    "rect": [
-    75,
-    35,
+    58,
+    42,
     9,
     13
    ],
-   "height": 4,
-   "style": "glass",
-   "color": "#7a6a5a"
+   "height": 6,
+   "style": "block",
+   "color": "#6a5a7a",
+   "sign": "CLUB KAITEN",
+   "signColor": "#ffbf00",
+   "name": "Club de Campo Kaiten"
   },
   {
    "id": "colinas-b17",
    "rect": [
-    86,
-    35,
+    69,
+    42,
     8,
     13
    ],
-   "height": 6,
-   "style": "glass",
-   "color": "#6a5a7a",
-   "sign": "CLUB PRIVADO",
-   "signColor": "#ffbf00"
+   "height": 8,
+   "style": "arcology",
+   "color": "#5a5a7a"
   },
   {
    "id": "colinas-b18",
    "rect": [
-    1,
-    53,
-    8,
-    9
+    85,
+    42,
+    9,
+    13
    ],
-   "height": 8,
-   "style": "arcology",
-   "color": "#7a6a5a",
-   "sign": "KAITEN HOMES",
-   "signColor": "#ffbf00"
+   "height": 5,
+   "style": "block",
+   "color": "#6a5a7a",
+   "sign": "JARDINES",
+   "signColor": "#ff8a3d"
   },
   {
    "id": "colinas-b19",
    "rect": [
-    11,
-    53,
-    7,
-    9
+    96,
+    42,
+    8,
+    13
    ],
-   "height": 5,
-   "style": "block",
-   "color": "#5a5a7a"
+   "height": 7,
+   "style": "arcology",
+   "color": "#7a6a5a"
   },
   {
    "id": "colinas-b20",
    "rect": [
-    23,
-    53,
-    21,
+    1,
+    63,
+    17,
     9
    ],
-   "height": 8,
-   "style": "arcology",
-   "color": "#5a5a7a"
+   "height": 5,
+   "style": "glass",
+   "color": "#7a6a5a"
   },
   {
    "id": "colinas-b21",
    "rect": [
-    51,
-    53,
-    19,
+    26,
+    63,
+    10,
     9
    ],
-   "height": 6,
-   "style": "glass",
-   "color": "#5a5a7a"
+   "height": 5,
+   "style": "arcology",
+   "color": "#5a6a7a",
+   "sign": "CLUB PRIVADO",
+   "signColor": "#7dd3a0"
   },
   {
    "id": "colinas-b22",
    "rect": [
-    75,
-    53,
+    38,
+    63,
     9,
     9
    ],
-   "height": 7,
-   "style": "block",
-   "color": "#5a6a7a",
-   "sign": "CLUB PRIVADO",
+   "height": 24,
+   "style": "glass",
+   "color": "#6a5a7a",
+   "sign": "KAITEN HOMES",
    "signColor": "#ffbf00"
   },
   {
    "id": "colinas-b23",
    "rect": [
-    86,
-    53,
+    58,
+    63,
+    19,
+    9
+   ],
+   "height": 3,
+   "style": "block",
+   "color": "#6a5a7a",
+   "sign": "CLUB PRIVADO",
+   "signColor": "#ff8a3d"
+  },
+  {
+   "id": "colinas-b24",
+   "rect": [
+    85,
+    63,
+    9,
+    9
+   ],
+   "height": 4,
+   "style": "glass",
+   "color": "#4a6a6a"
+  },
+  {
+   "id": "colinas-b25",
+   "rect": [
+    96,
+    63,
     8,
     9
    ],
-   "height": 7,
-   "style": "block",
-   "color": "#6a5a7a",
-   "sign": "KAITEN HOMES",
-   "signColor": "#ff8a3d"
+   "height": 6,
+   "style": "arcology",
+   "color": "#5a5a7a"
   }
  ],
  "props": [
   {
    "type": "palm",
    "at": [
-    77,
-    17
+    87,
+    20
    ]
   },
   {
    "type": "palm",
    "at": [
-    80,
-    22
+    90,
+    25
    ]
   },
   {
    "type": "lamp",
    "at": [
-    83,
-    17
+    93,
+    20
    ]
   },
   {
    "type": "bench",
    "at": [
-    86,
-    22
+    96,
+    25
    ]
   },
   {
    "type": "palm",
    "at": [
-    89,
-    17
+    99,
+    20
    ]
   },
   {
    "type": "lamp",
    "at": [
     4,
-    29
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
     8,
-    34
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
     13,
-    29
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
     17,
-    34
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    22,
-    29
+    25,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    26,
-    34
+    29,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    31,
-    29
+    34,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    35,
-    34
+    38,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    40,
-    29
+    43,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    44,
-    34
+    47,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    58,
-    29
+    65,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    62,
-    34
+    69,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    67,
-    29
+    74,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    71,
-    34
+    78,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    76,
-    29
+    86,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    80,
-    34
+    90,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    85,
-    29
+    95,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    89,
-    34
+    99,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
+    48,
     4
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
+    57,
     4
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
+    48,
     13
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
+    57,
     13
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    22
+    48,
+    25
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    22
+    57,
+    25
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    40
+    48,
+    47
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    40
+    57,
+    47
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    49
+    48,
+    56
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    49
+    57,
+    56
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    58
+    48,
+    68
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    58
+    57,
+    68
    ]
   },
   {
@@ -710,7 +743,7 @@
   {
    "type": "antenna",
    "at": [
-    37,
+    40,
     5
    ],
    "blocking": false,
@@ -719,7 +752,7 @@
   {
    "type": "antenna",
    "at": [
-    53,
+    60,
     5
    ],
    "blocking": false,
@@ -728,7 +761,7 @@
   {
    "type": "antenna",
    "at": [
-    69,
+    76,
     5
    ],
    "blocking": false,
@@ -737,7 +770,7 @@
   {
    "type": "antenna",
    "at": [
-    85,
+    95,
     5
    ],
    "blocking": false,
@@ -747,14 +780,6 @@
    "type": "car",
    "at": [
     8,
-    30
-   ],
-   "color": "#e8e8f0"
-  },
-  {
-   "type": "car",
-   "at": [
-    38,
     33
    ],
    "color": "#ffd23f"
@@ -762,18 +787,26 @@
   {
    "type": "car",
    "at": [
-    58,
-    30
+    41,
+    36
    ],
-   "color": "#ff5a5a"
+   "color": "#2a2a2a"
   },
   {
    "type": "car",
    "at": [
-    86,
+    65,
     33
    ],
-   "color": "#ff5a5a"
+   "color": "#2a2a2a"
+  },
+  {
+   "type": "car",
+   "at": [
+    96,
+    36
+   ],
+   "color": "#e8e8f0"
   }
  ],
  "doors": [
@@ -781,7 +814,7 @@
    "id": "puerta-ambar-hq-int",
    "name": "Sede de Rescate Ámbar",
    "at": [
-    55,
+    62,
     10
    ],
    "to": {
@@ -797,7 +830,7 @@
    "id": "puerta-boutique-int",
    "name": "Boutique Aurelia",
    "at": [
-    66,
+    73,
     10
    ],
    "to": {
@@ -810,11 +843,59 @@
    "danger": "protected"
   },
   {
+   "id": "puerta-concesionario-saeta-int",
+   "name": "Concesionario Saeta",
+   "at": [
+    31,
+    31
+   ],
+   "to": {
+    "zone": "concesionario-saeta-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-inmobiliaria-kaiten-int",
+   "name": "Inmobiliaria Kaiten",
+   "at": [
+    73,
+    31
+   ],
+   "to": {
+    "zone": "inmobiliaria-kaiten-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-moda-orbita-int",
+   "name": "Moda Órbita",
+   "at": [
+    5,
+    55
+   ],
+   "to": {
+    "zone": "moda-orbita-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
    "id": "puerta-club-campo-int",
    "name": "Club de Campo Kaiten",
    "at": [
-    28,
-    28
+    62,
+    55
    ],
    "to": {
     "zone": "club-campo-int",
@@ -829,13 +910,13 @@
    "id": "colinas-sur",
    "name": "Avenida hacia Cénit",
    "at": [
-    47,
-    63
+    50,
+    73
    ],
    "to": {
     "zone": "cenit",
     "at": [
-     47,
+     50,
      1
     ]
    },
@@ -845,14 +926,14 @@
    "id": "colinas-este",
    "name": "Avenida hacia Neón Rojo",
    "at": [
-    95,
-    31
+    105,
+    34
    ],
    "to": {
     "zone": "neon-rojo",
     "at": [
      1,
-     31
+     34
     ]
    },
    "danger": "public"
@@ -864,7 +945,7 @@
    "name": "Cajero automático",
    "at": [
     18,
-    29
+    32
    ],
    "kind": "atm"
   },
@@ -872,8 +953,8 @@
    "id": "colinas-cajero-2",
    "name": "Cajero automático",
    "at": [
-    70,
-    34
+    77,
+    41
    ],
    "kind": "atm"
   },
@@ -881,8 +962,8 @@
    "id": "colinas-cajero-3",
    "name": "Cajero automático",
    "at": [
-    44,
-    14
+    47,
+    17
    ],
    "kind": "atm"
   },
@@ -890,8 +971,8 @@
    "id": "colinas-cajero-4",
    "name": "Cajero automático",
    "at": [
-    51,
-    48
+    58,
+    55
    ],
    "kind": "atm"
   },
@@ -899,8 +980,8 @@
    "id": "colinas-vending-1",
    "name": "Máquina Aurora",
    "at": [
-    24,
-    29
+    27,
+    32
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -909,8 +990,8 @@
    "id": "colinas-vending-2",
    "name": "Máquina Aurora",
    "at": [
-    62,
-    34
+    69,
+    41
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -919,17 +1000,8 @@
    "id": "colinas-basura-1",
    "name": "Contenedor de basura",
    "at": [
-    30,
-    34
-   ],
-   "kind": "trash"
-  },
-  {
-   "id": "colinas-basura-2",
-   "name": "Contenedor de basura",
-   "at": [
-    66,
-    29
+    33,
+    41
    ],
    "kind": "trash"
   },
@@ -938,7 +1010,7 @@
    "name": "Contenedor de basura",
    "at": [
     19,
-    52
+    62
    ],
    "kind": "trash"
   },
@@ -946,10 +1018,190 @@
    "id": "colinas-basura-4",
    "name": "Contenedor de basura",
    "at": [
-    74,
+    84,
     11
    ],
    "kind": "trash"
+  },
+  {
+   "id": "colinas-portal-1",
+   "name": "Portal · Bloque 1",
+   "at": [
+    5,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-2",
+   "name": "Portal · Edificio JARDINES",
+   "at": [
+    14,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-3",
+   "name": "Portal · Edificio VILLA SOL",
+   "at": [
+    31,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-4",
+   "name": "Portal · Edificio OKAMI SPA",
+   "at": [
+    42,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-5",
+   "name": "Portal · Edificio KAITEN HOMES",
+   "at": [
+    94,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-6",
+   "name": "Portal · Bloque 6",
+   "at": [
+    9,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-7",
+   "name": "Portal · Edificio OKAMI SPA",
+   "at": [
+    42,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-8",
+   "name": "Portal · Edificio JARDINES",
+   "at": [
+    62,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-9",
+   "name": "Portal · Bloque 9",
+   "at": [
+    14,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-10",
+   "name": "Portal · Edificio CLUB PRIVADO",
+   "at": [
+    31,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-11",
+   "name": "Portal · Bloque 11",
+   "at": [
+    42,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-12",
+   "name": "Portal · Bloque 12",
+   "at": [
+    73,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-13",
+   "name": "Portal · Edificio JARDINES",
+   "at": [
+    89,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-14",
+   "name": "Portal · Bloque 14",
+   "at": [
+    100,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-15",
+   "name": "Portal · Bloque 15",
+   "at": [
+    9,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-16",
+   "name": "Portal · Edificio CLUB PRIVADO",
+   "at": [
+    31,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-17",
+   "name": "Portal · Edificio KAITEN HOMES",
+   "at": [
+    42,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-18",
+   "name": "Portal · Edificio CLUB PRIVADO",
+   "at": [
+    67,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-19",
+   "name": "Portal · Bloque 19",
+   "at": [
+    89,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "colinas-portal-20",
+   "name": "Portal · Bloque 20",
+   "at": [
+    100,
+    72
+   ],
+   "kind": "housing"
   }
  ],
  "sectors": [
@@ -1000,104 +1252,104 @@
  "waypoints": [
   [
    5,
-   31
+   34
   ],
   [
    15,
-   32
+   35
   ],
   [
-   30,
-   31
+   33,
+   34
   ],
   [
-   40,
-   32
+   43,
+   35
   ],
   [
-   56,
-   31
+   63,
+   34
   ],
   [
-   66,
-   32
+   73,
+   35
+  ],
+  [
+   90,
+   34
+  ],
+  [
+   102,
+   35
+  ],
+  [
+   50,
+   6
+  ],
+  [
+   51,
+   23
+  ],
+  [
+   50,
+   51
+  ],
+  [
+   51,
+   68
+  ],
+  [
+   21,
+   6
+  ],
+  [
+   21,
+   25
+  ],
+  [
+   21,
+   51
+  ],
+  [
+   21,
+   68
   ],
   [
    80,
-   31
-  ],
-  [
-   92,
-   32
-  ],
-  [
-   47,
    6
   ],
   [
-   48,
-   20
+   80,
+   25
   ],
   [
-   47,
-   44
+   80,
+   51
   ],
   [
-   48,
-   58
-  ],
-  [
-   21,
-   6
-  ],
-  [
-   21,
-   22
-  ],
-  [
-   21,
-   44
-  ],
-  [
-   21,
-   58
-  ],
-  [
-   73,
-   6
-  ],
-  [
-   73,
-   22
-  ],
-  [
-   73,
-   44
-  ],
-  [
-   73,
-   58
+   80,
+   68
   ],
   [
    10,
    12
   ],
   [
-   60,
+   67,
    13
   ],
   [
-   85,
-   50
+   95,
+   57
   ],
   [
-   30,
-   51
+   33,
+   58
   ]
  ],
  "safePoint": [
-  47,
-  31
+  50,
+  34
  ],
  "skybridges": []
 }

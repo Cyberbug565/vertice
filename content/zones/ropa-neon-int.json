@@ -1,0 +1,81 @@
+{
+ "id": "ropa-neon-int",
+ "name": "Ropa Neón",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#401a40",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-ropa-neon-int",
+   "name": "Salida a la calle (Neón Rojo)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "neon-rojo",
+    "at": [
+     14,
+     32
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-ropa-neon-int",
+   "name": "Mostrador de Ropa Neón",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "ropa-neon"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

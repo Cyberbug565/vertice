@@ -1,0 +1,81 @@
+{
+ "id": "electronica-yokai-int",
+ "name": "Electrónica Yōkai",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#1a2a40",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-electronica-yokai-int",
+   "name": "Salida a la calle (Neón Rojo)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "neon-rojo",
+    "at": [
+     36,
+     32
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-electronica-yokai-int",
+   "name": "Mostrador de Electrónica Yōkai",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "electronica-yokai"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

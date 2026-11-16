@@ -1,0 +1,77 @@
+{
+ "id": "inmobiliaria-kaiten-int",
+ "name": "Inmobiliaria Kaiten",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#4a5a4a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    3,
+    5
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    4,
+    1
+   ],
+   "blocking": false,
+   "color": "#7dd3a0"
+  },
+  {
+   "type": "screen",
+   "at": [
+    7,
+    1
+   ],
+   "blocking": false,
+   "color": "#7dd3a0"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-inmobiliaria-kaiten-int",
+   "name": "Salida a la calle (Colinas Doradas)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "colinas",
+    "at": [
+     73,
+     32
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-kaiten-homes",
+   "name": "Agente de Kaiten Homes",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "realty"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

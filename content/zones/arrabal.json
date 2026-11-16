@@ -2,8 +2,8 @@
  "id": "arrabal",
  "name": "El Arrabal",
  "kind": "exterior",
- "width": 96,
- "height": 64,
+ "width": 106,
+ "height": 74,
  "chunkSize": 32,
  "danger": "public",
  "base": "dirt",
@@ -14,8 +14,8 @@
    "faction": "hermandad-sol",
    "count": 7,
    "area": [
-    48,
-    32,
+    51,
+    35,
     40
    ]
   },
@@ -23,8 +23,8 @@
    "faction": "voces-vacio",
    "count": 4,
    "area": [
-    48,
-    32,
+    51,
+    35,
     40
    ]
   }
@@ -36,26 +36,26 @@
    "rect": [
     0,
     0,
-    96,
-    64
+    106,
+    74
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    30,
-    96,
-    4
+    33,
+    106,
+    8
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    46,
+    49,
     0,
-    4,
-    64
+    8,
+    74
    ]
   },
   {
@@ -63,17 +63,17 @@
    "rect": [
     0,
     12,
-    96,
-    2
+    106,
+    5
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    50,
-    96,
-    2
+    57,
+    106,
+    5
    ]
   },
   {
@@ -81,60 +81,60 @@
    "rect": [
     20,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    72,
+    79,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    44,
-    30,
+    47,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    50,
-    30,
+    57,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    28,
-    4,
+    49,
+    31,
+    8,
     2
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    34,
-    4,
+    49,
+    41,
+    8,
     2
    ]
   },
   {
    "type": "plaza",
    "rect": [
-    75,
-    15,
+    85,
+    18,
     20,
     14
    ]
@@ -172,7 +172,7 @@
   {
    "id": "arrabal-b2",
    "rect": [
-    23,
+    26,
     1,
     10,
     9
@@ -184,7 +184,7 @@
   {
    "id": "arrabal-b3",
    "rect": [
-    35,
+    38,
     1,
     9,
     9
@@ -199,71 +199,67 @@
   {
    "id": "arrabal-b4",
    "rect": [
-    51,
+    58,
     1,
     19,
     9
    ],
    "height": 13,
-   "style": "block",
+   "style": "mega",
    "color": "#4a3a3a",
-   "sign": "NODO",
+   "sign": "SEGUNDA MANO",
    "signColor": "#ffd23f",
-   "name": "Nodo del Vacío"
+   "name": "Ropa de Segunda Mano"
   },
   {
    "id": "arrabal-b5",
    "rect": [
-    75,
+    85,
     1,
     9,
     9
    ],
    "height": 22,
    "style": "mega",
-   "color": "#3a3a4a"
+   "color": "#3a3a4a",
+   "sign": "SAN CIRO",
+   "signColor": "#43f3ff"
   },
   {
    "id": "arrabal-b6",
    "rect": [
-    86,
+    96,
     1,
     8,
     9
    ],
-   "height": 17,
-   "style": "arcology",
-   "color": "#3a3a4a"
+   "height": 21,
+   "style": "glass",
+   "color": "#5a4a3a",
+   "sign": "AUTOS VIDAL",
+   "signColor": "#43f3ff",
+   "name": "Autos Vidal"
   },
   {
    "id": "arrabal-b7",
    "rect": [
     1,
-    15,
-    8,
+    18,
+    17,
     13
    ],
-   "height": 30,
-   "style": "arcology",
-   "color": "#4a4a3a"
+   "height": 19,
+   "style": "block",
+   "color": "#5a4a4a",
+   "sign": "NODO",
+   "signColor": "#43f3ff",
+   "name": "Nodo del Vacío"
   },
   {
    "id": "arrabal-b8",
    "rect": [
-    11,
-    15,
-    7,
-    13
-   ],
-   "height": 13,
-   "style": "mega",
-   "color": "#5a4a4a"
-  },
-  {
-   "id": "arrabal-b9",
-   "rect": [
-    23,
-    15,
+    26,
+    18,
     10,
     13
    ],
@@ -272,10 +268,10 @@
    "color": "#3a3a4a"
   },
   {
-   "id": "arrabal-b10",
+   "id": "arrabal-b9",
    "rect": [
-    35,
-    15,
+    38,
+    18,
     9,
     13
    ],
@@ -286,10 +282,10 @@
    "signColor": "#43f3ff"
   },
   {
-   "id": "arrabal-b11",
+   "id": "arrabal-b10",
    "rect": [
-    51,
-    15,
+    58,
+    18,
     9,
     13
    ],
@@ -298,10 +294,10 @@
    "color": "#5a4a3a"
   },
   {
-   "id": "arrabal-b12",
+   "id": "arrabal-b11",
    "rect": [
-    62,
-    15,
+    69,
+    18,
     8,
     13
    ],
@@ -310,10 +306,10 @@
    "color": "#5a4a3a"
   },
   {
-   "id": "arrabal-b13",
+   "id": "arrabal-b12",
    "rect": [
     1,
-    35,
+    42,
     8,
     13
    ],
@@ -324,10 +320,10 @@
    "signColor": "#ffd23f"
   },
   {
-   "id": "arrabal-b14",
+   "id": "arrabal-b13",
    "rect": [
     11,
-    35,
+    42,
     7,
     13
    ],
@@ -338,10 +334,10 @@
    "signColor": "#ffb347"
   },
   {
-   "id": "arrabal-b15",
+   "id": "arrabal-b14",
    "rect": [
-    23,
-    35,
+    26,
+    42,
     10,
     13
    ],
@@ -350,10 +346,10 @@
    "color": "#5a4a4a"
   },
   {
-   "id": "arrabal-b16",
+   "id": "arrabal-b15",
    "rect": [
-    35,
-    35,
+    38,
+    42,
     9,
     13
    ],
@@ -364,10 +360,10 @@
    "signColor": "#ffb347"
   },
   {
-   "id": "arrabal-b17",
+   "id": "arrabal-b16",
    "rect": [
-    51,
-    35,
+    58,
+    42,
     9,
     13
    ],
@@ -378,10 +374,10 @@
    "signColor": "#43f3ff"
   },
   {
-   "id": "arrabal-b18",
+   "id": "arrabal-b17",
    "rect": [
-    62,
-    35,
+    69,
+    42,
     8,
     13
    ],
@@ -390,10 +386,10 @@
    "color": "#4a3a3a"
   },
   {
-   "id": "arrabal-b19",
+   "id": "arrabal-b18",
    "rect": [
-    75,
-    35,
+    85,
+    42,
     9,
     13
    ],
@@ -402,10 +398,10 @@
    "color": "#5a4a3a"
   },
   {
-   "id": "arrabal-b20",
+   "id": "arrabal-b19",
    "rect": [
-    86,
-    35,
+    96,
+    42,
     8,
     13
    ],
@@ -416,10 +412,10 @@
    "signColor": "#43f3ff"
   },
   {
-   "id": "arrabal-b21",
+   "id": "arrabal-b20",
    "rect": [
     1,
-    53,
+    63,
     17,
     9
    ],
@@ -430,10 +426,10 @@
    "signColor": "#ffb347"
   },
   {
-   "id": "arrabal-b22",
+   "id": "arrabal-b21",
    "rect": [
-    23,
-    53,
+    26,
+    63,
     21,
     9
    ],
@@ -442,10 +438,10 @@
    "color": "#4a3a3a"
   },
   {
-   "id": "arrabal-b23",
+   "id": "arrabal-b22",
    "rect": [
-    51,
-    53,
+    58,
+    63,
     19,
     9
    ],
@@ -454,10 +450,10 @@
    "color": "#3a3a4a"
   },
   {
-   "id": "arrabal-b24",
+   "id": "arrabal-b23",
    "rect": [
-    75,
-    53,
+    85,
+    63,
     19,
     9
    ],
@@ -470,246 +466,246 @@
   {
    "type": "trash",
    "at": [
-    77,
-    17
+    87,
+    20
    ]
   },
   {
    "type": "stall",
    "at": [
-    80,
-    22
+    90,
+    25
    ]
   },
   {
    "type": "crate",
    "at": [
-    83,
-    17
+    93,
+    20
    ]
   },
   {
    "type": "lamp",
    "at": [
-    86,
-    22
+    96,
+    25
    ]
   },
   {
    "type": "trash",
    "at": [
-    89,
-    17
+    99,
+    20
    ]
   },
   {
    "type": "lamp",
    "at": [
     4,
-    29
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
     8,
-    34
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
     13,
-    29
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
     17,
-    34
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    22,
-    29
+    25,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    26,
-    34
+    29,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    31,
-    29
+    34,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    35,
-    34
+    38,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    40,
-    29
+    43,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    44,
-    34
+    47,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    58,
-    29
+    65,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    62,
-    34
+    69,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    67,
-    29
+    74,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    71,
-    34
+    78,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    76,
-    29
+    86,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    80,
-    34
+    90,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    85,
-    29
+    95,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    89,
-    34
+    99,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
+    48,
     4
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
+    57,
     4
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
+    48,
     13
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
+    57,
     13
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    22
+    48,
+    25
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    22
+    57,
+    25
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    40
+    48,
+    47
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    40
+    57,
+    47
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    49
+    48,
+    56
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    49
+    57,
+    56
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    58
+    48,
+    68
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    58
+    57,
+    68
    ]
   },
   {
@@ -733,7 +729,7 @@
   {
    "type": "antenna",
    "at": [
-    37,
+    40,
     5
    ],
    "blocking": false,
@@ -742,7 +738,7 @@
   {
    "type": "antenna",
    "at": [
-    53,
+    60,
     5
    ],
    "blocking": false,
@@ -751,7 +747,7 @@
   {
    "type": "antenna",
    "at": [
-    69,
+    76,
     5
    ],
    "blocking": false,
@@ -760,7 +756,7 @@
   {
    "type": "antenna",
    "at": [
-    85,
+    95,
     5
    ],
    "blocking": false,
@@ -770,14 +766,6 @@
    "type": "car",
    "at": [
     8,
-    30
-   ],
-   "color": "#43f3ff"
-  },
-  {
-   "type": "car",
-   "at": [
-    38,
     33
    ],
    "color": "#43f3ff"
@@ -785,16 +773,24 @@
   {
    "type": "car",
    "at": [
-    58,
-    30
+    41,
+    36
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "car",
+   "at": [
+    65,
+    33
    ],
    "color": "#ffd23f"
   },
   {
    "type": "car",
    "at": [
-    86,
-    33
+    96,
+    36
    ],
    "color": "#e8e8f0"
   }
@@ -820,7 +816,7 @@
    "id": "puerta-mercadillo-int",
    "name": "Mercadillo del Bloque 22",
    "at": [
-    39,
+    42,
     10
    ],
    "to": {
@@ -833,11 +829,43 @@
    "danger": "public"
   },
   {
+   "id": "puerta-ropa-segunda-int",
+   "name": "Ropa de Segunda Mano",
+   "at": [
+    67,
+    10
+   ],
+   "to": {
+    "zone": "ropa-segunda-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-autos-vidal-int",
+   "name": "Autos Vidal",
+   "at": [
+    100,
+    10
+   ],
+   "to": {
+    "zone": "autos-vidal-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "protected"
+  },
+  {
    "id": "puerta-nodo-vacio-int",
    "name": "Nodo del Vacío",
    "at": [
-    60,
-    10
+    9,
+    31
    ],
    "to": {
     "zone": "nodo-vacio-int",
@@ -852,14 +880,14 @@
    "id": "arrabal-norte",
    "name": "Avenida hacia Ferro",
    "at": [
-    47,
+    50,
     0
    ],
    "to": {
     "zone": "ferro",
     "at": [
-     31,
-     62
+     32,
+     68
     ]
    },
    "danger": "public"
@@ -871,7 +899,7 @@
    "name": "Cajero automático",
    "at": [
     18,
-    29
+    32
    ],
    "kind": "atm"
   },
@@ -879,8 +907,8 @@
    "id": "arrabal-cajero-2",
    "name": "Cajero automático",
    "at": [
-    70,
-    34
+    77,
+    41
    ],
    "kind": "atm"
   },
@@ -888,8 +916,8 @@
    "id": "arrabal-cajero-3",
    "name": "Cajero automático",
    "at": [
-    44,
-    14
+    47,
+    17
    ],
    "kind": "atm"
   },
@@ -897,8 +925,8 @@
    "id": "arrabal-cajero-4",
    "name": "Cajero automático",
    "at": [
-    51,
-    48
+    58,
+    55
    ],
    "kind": "atm"
   },
@@ -906,8 +934,8 @@
    "id": "arrabal-vending-1",
    "name": "Máquina Aurora",
    "at": [
-    24,
-    29
+    27,
+    32
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -916,8 +944,8 @@
    "id": "arrabal-vending-2",
    "name": "Máquina Aurora",
    "at": [
-    62,
-    34
+    69,
+    41
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -926,8 +954,8 @@
    "id": "arrabal-basura-1",
    "name": "Contenedor de basura",
    "at": [
-    30,
-    34
+    33,
+    41
    ],
    "kind": "trash"
   },
@@ -935,8 +963,8 @@
    "id": "arrabal-basura-2",
    "name": "Contenedor de basura",
    "at": [
-    66,
-    29
+    73,
+    32
    ],
    "kind": "trash"
   },
@@ -945,7 +973,7 @@
    "name": "Contenedor de basura",
    "at": [
     19,
-    52
+    62
    ],
    "kind": "trash"
   },
@@ -953,10 +981,181 @@
    "id": "arrabal-basura-4",
    "name": "Contenedor de basura",
    "at": [
-    74,
+    84,
     11
    ],
    "kind": "trash"
+  },
+  {
+   "id": "arrabal-portal-1",
+   "name": "Portal · Bloque 1",
+   "at": [
+    5,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-2",
+   "name": "Portal · Bloque 2",
+   "at": [
+    31,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-3",
+   "name": "Portal · Edificio SAN CIRO",
+   "at": [
+    89,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-4",
+   "name": "Portal · Bloque 4",
+   "at": [
+    31,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-5",
+   "name": "Portal · Edificio SAN CIRO",
+   "at": [
+    42,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-6",
+   "name": "Portal · Bloque 6",
+   "at": [
+    62,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-7",
+   "name": "Portal · Bloque 7",
+   "at": [
+    73,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-8",
+   "name": "Portal · Edificio TACOS 24H",
+   "at": [
+    5,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-9",
+   "name": "Portal · Edificio BLOQUE 41",
+   "at": [
+    14,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-10",
+   "name": "Portal · Bloque 10",
+   "at": [
+    31,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-11",
+   "name": "Portal · Edificio SAN CIRO",
+   "at": [
+    42,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-12",
+   "name": "Portal · Edificio LA ESPERANZA",
+   "at": [
+    62,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-13",
+   "name": "Portal · Bloque 13",
+   "at": [
+    73,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-14",
+   "name": "Portal · Bloque 14",
+   "at": [
+    89,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-15",
+   "name": "Portal · Edificio LA ESPERANZA",
+   "at": [
+    100,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-16",
+   "name": "Portal · Edificio LA ESPERANZA",
+   "at": [
+    9,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-17",
+   "name": "Portal · Bloque 17",
+   "at": [
+    36,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-18",
+   "name": "Portal · Bloque 18",
+   "at": [
+    67,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "arrabal-portal-19",
+   "name": "Portal · Bloque 19",
+   "at": [
+    94,
+    72
+   ],
+   "kind": "housing"
   }
  ],
  "sectors": [
@@ -1007,104 +1206,104 @@
  "waypoints": [
   [
    5,
-   31
+   34
   ],
   [
    15,
-   32
+   35
   ],
   [
-   30,
-   31
+   33,
+   34
   ],
   [
-   40,
-   32
+   43,
+   35
   ],
   [
-   56,
-   31
+   63,
+   34
   ],
   [
-   66,
-   32
+   73,
+   35
+  ],
+  [
+   90,
+   34
+  ],
+  [
+   102,
+   35
+  ],
+  [
+   50,
+   6
+  ],
+  [
+   51,
+   23
+  ],
+  [
+   50,
+   51
+  ],
+  [
+   51,
+   68
+  ],
+  [
+   21,
+   6
+  ],
+  [
+   21,
+   25
+  ],
+  [
+   21,
+   51
+  ],
+  [
+   21,
+   68
   ],
   [
    80,
-   31
-  ],
-  [
-   92,
-   32
-  ],
-  [
-   47,
    6
   ],
   [
-   48,
-   20
+   80,
+   25
   ],
   [
-   47,
-   44
+   80,
+   51
   ],
   [
-   48,
-   58
-  ],
-  [
-   21,
-   6
-  ],
-  [
-   21,
-   22
-  ],
-  [
-   21,
-   44
-  ],
-  [
-   21,
-   58
-  ],
-  [
-   73,
-   6
-  ],
-  [
-   73,
-   22
-  ],
-  [
-   73,
-   44
-  ],
-  [
-   73,
-   58
+   80,
+   68
   ],
   [
    10,
    12
   ],
   [
-   60,
+   67,
    13
   ],
   [
-   85,
-   50
+   95,
+   57
   ],
   [
-   30,
-   51
+   33,
+   58
   ]
  ],
  "safePoint": [
-  47,
-  31
+  50,
+  34
  ],
  "skybridges": []
 }

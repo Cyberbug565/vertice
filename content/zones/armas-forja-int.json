@@ -1,0 +1,81 @@
+{
+ "id": "armas-forja-int",
+ "name": "Armas Pesadas de Forja",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#4a2a1a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-armas-forja-int",
+   "name": "Salida a la calle (Forja)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "forja",
+    "at": [
+     42,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-armas-forja-int",
+   "name": "Mostrador de Armas Pesadas de Forja",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "armas-forja"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

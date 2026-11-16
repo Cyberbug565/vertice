@@ -11,7 +11,7 @@ import { MarketService } from '../game/market.js';
 import { ClinicService } from '../game/clinic.js';
 import { BountyService, type Bounty } from '../game/bounty.js';
 import { GameError } from '../game/effects.js';
-import { buildSheet, chromeParts, effective, savePlayerVitals, type PlayerState } from '../game/player.js';
+import { buildSheet, chromeParts, effective, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
 const SHOP_RANGE = 3.5;
@@ -22,7 +22,7 @@ export { opposed as opposedChance } from './combat.js';
 interface ConnExtra {
   openShop?: { shop: string; entity: number }; openClinic?: { doc: string; entity: number };
   nextAutoAt: number; noFoodWarnAt: number; warned: Record<string, boolean>; lastSheetAt: number; nextHostileAt: number;
-  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean;
+  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean; lastPos?: { zone: string; x: number; y: number };
 }
 
 export class Survival {
@@ -75,6 +75,12 @@ export class Survival {
   private tickPlayer(c: PlayerConn, dtH: number) {
     const p = c.p!, e = c.e!, n = this.w.c.needs, x = this.x(c);
     if (p.status === 'downed') {
+      if (p.revive && Date.now() >= p.revive.at) {
+        const ef0 = effective(this.w.c, p);
+        p.status = 'alive'; p.hp = Math.max(10, Math.round(ef0.hpMax * p.revive.frac)); p.downedUntil = 0; e.label = ''; e.state = 'alive'; this.bump(e);
+        this.notice(c, 'good', `${p.revive.why}: vuelves a levantarte con ${p.hp} de salud.`);
+        p.revive = undefined; this.sheet(c); return;
+      }
       if (Date.now() >= p.downedUntil) {
         if (p.downedLethal) this.w.enqueue(c, () => this.die(p, e, p.downedCause));
         else { p.status = 'alive'; p.hp = 10; p.downedUntil = 0; e.label = ''; e.state = 'alive'; this.bump(e); this.notice(c, 'info', 'Recuperas el sentido con 10 de salud.'); this.sheet(c); }
@@ -110,7 +116,7 @@ export class Survival {
     }
     if (!p.sleeping && p.fatigue >= 100) { this.startSleep(c, this.groundQuality(c) * 0.8, 'desplomado en el suelo'); this.notice(c, 'bad', 'El agotamiento te vence: te desplomas y te duermes donde estás.'); }
     if (p.wanted > 0) {
-      p.wanted = Math.max(0, p.wanted - n.wantedDecayPerGameHour * dtH);
+      p.wanted = Math.max(0, p.wanted - n.wantedDecayPerGameHour * dtH * (ef.flags.has('modulador') ? 2 : 1));
       if (p.wanted < 1) { const pcv = this.bounties.onPlayer(p.charId).filter((b) => b.poster === 'pcv'); if (pcv.length) { void this.bounties.cancel(pcv.map((b) => b.id)).then(() => this.updateMarker(e)); this.notice(c, 'good', 'La PCV ha retirado tu orden de búsqueda.'); } }
     }
     // Avisos al cruzar umbrales.
@@ -119,7 +125,22 @@ export class Survival {
       if (v >= 100 && b < 100) this.notice(c, 'bad', k === 'fatigue' ? 'Agotamiento total.' : `${label === 'hambre' ? 'Te mueres de hambre' : 'Te deshidratas'}: pierdes salud cada hora.`);
     }
     // Velocidad: atributos efectivos, oficio y cansancio.
-    e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0)) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p);
+    const car = this.w.property.carOf(p);
+    if (car && e.zone.def.kind === 'exterior') e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * car.speed * (1 + ef.carSpeed);
+    else {
+      if (p.driving) this.w.property.park(c, true);
+      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1);
+    }
+    // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
+    if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y));
+    x.lastPos = { zone: e.zone.id, x: e.x, y: e.y };
+    // Regeneración (perks de medicina) fuera de combate.
+    const regen = ef.perk.regen ?? 0;
+    if (regen && Date.now() - p.lastCombatAt > 10000 && p.hp < ef.hpMax && p.hunger < 100 && p.thirst < 100) p.hp = Math.min(ef.hpMax, p.hp + regen * (ef.flags.has('milagro') ? 3 : 1));
+    // Adrenalina (implante): curación repartida en el tiempo.
+    if ((p.buffs.curar ?? 0) > Date.now()) p.hp = Math.min(ef.hpMax, p.hp + (p.buffs.curarPerSec ?? 0));
+    // Biomonitor: autoestimulante por debajo del 25 %.
+    if (ef.flags.has('autoestim') && p.hp < ef.hpMax * 0.25 && Date.now() > p.autoStimAt) { p.autoStimAt = Date.now() + 120000; p.hp = Math.min(ef.hpMax, p.hp + 20); this.notice(c, 'good', 'Tu biomonitor inyecta un estimulante: +20 de salud.'); }
     // RAM del deck: se recarga más rápido con rango de red.
     if (ef.ram > 0) p.ram = Math.min(ef.ram, p.ram + (0.25 + p.netRank * 0.03)); else p.ram = 0;
     // Cromo visible y salud para quien mire.
@@ -332,6 +353,14 @@ export class Survival {
     if (c) { this.w.cancelActivity(e); this.w.closeDialog(c); }
     if (p.carrying) { const t = this.w.entities.get(p.carrying); if (t) { t.carriedBy = undefined; t.labelVer++; } p.carrying = null; }
     p.sleeping = null; p.hp = 0; p.status = 'downed'; p.downedCause = cause; p.downedLethal = lethal;
+    if (p.driving && c) this.w.property.park(c, true);
+    // Segundas oportunidades: segundo corazón (implante), «Segunda vida» y «Milagro» (perks).
+    if (lethal) {
+      const ef = effective(this.w.c, p), now = Date.now(), day = 24 * this.w.c.manifest.cityHourMs;
+      if (ef.flags.has('segundo-corazon') && now > p.secondLifeAt) { p.secondLifeAt = now + 2 * day; p.revive = { at: now + 4000, frac: 0.5, why: 'Tu segundo corazón arranca' }; }
+      else if (ef.flags.has('segunda-vida') && now > p.secondLifeAt) { p.secondLifeAt = now + day; p.revive = { at: now + 6000, frac: 0.5, why: 'Segunda vida' }; }
+      else if (ef.flags.has('milagro') && now > p.milagroAt) { p.milagroAt = now + 3600000; p.revive = { at: now + 8000, frac: 0.3, why: 'Te estabilizas tú solo (Milagro)' }; }
+    }
     p.downedUntil = Date.now() + (lethal ? (this.w.cfg.downedSeconds ?? this.w.c.needs.downedSeconds) * 1000 : 45000);
     e.label = lethal ? 'Desangrándose' : 'Inconsciente'; e.state = 'downed'; this.bump(e);
     if (c) {
@@ -369,6 +398,7 @@ export class Survival {
     if (target.conn) this.sheet(target.conn);
     try { const out = await this.w.effects.apply(p, [{ rep: 'calle', delta: 2 }, { xp: 15 }], { opId: `${opId}:rep`, kind: 'rescue' }); this.w.handleOutcome(c, out); } catch {}
     this.notice(c, 'good', `Has estabilizado a ${tp.name}.`);
+    this.w.progress.gain(p, 'medicina', 10);
     this.w.send(c, { t: 'ack', seq, ok: true });
   }
 
@@ -380,6 +410,10 @@ export class Survival {
     let summary: DeathSummary | null = null;
     const refunds = await this.w.db.tx(async (q) => {
       const r = await q.query<any>("UPDATE characters SET status='dead', died_at=now(), cause_of_death=$2, hp=0 WHERE id=$1 AND status <> 'dead' RETURNING created_at, level, money", [p.charId, cause]);
+      // Una sola vida: sus casas vuelven al mercado (el alijo se pierde) y sus coches desaparecen.
+      await q.query('DELETE FROM house_stash WHERE house_id IN (SELECT house_id FROM houses_owned WHERE character_id=$1)', [p.charId]);
+      await q.query('DELETE FROM houses_owned WHERE character_id=$1', [p.charId]);
+      await q.query('DELETE FROM cars_owned WHERE character_id=$1', [p.charId]);
       if (!r.rows.length) return [];
       await q.query("UPDATE cyberware_instances SET location='lost', history = history || $2::jsonb WHERE character_id=$1 AND location IN ('inventory','installed')", [p.charId, JSON.stringify([{ at: new Date().toISOString(), event: 'perdido con la muerte de su portador' }])]);
       const refunds = await this.bounties.expireForCharTx(q, p.charId);
@@ -470,9 +504,26 @@ export class Survival {
     if (!this.bounties.onNpc(f.id).length) await this.bounties.post('npc', { npc: f.id, name: f.name }, f.bounty, f.poster, f.alive ? `${f.crime} (lo quieren VIVO)` : f.crime, f.alive);
     const pos = nearestWalkable(z.grid, f.area[0] + 0.5, f.area[1] + 0.5, 4) ?? { x: z.def.safePoint[0] + 0.5, y: z.def.safePoint[1] + 0.5 };
     const e = this.w.spawnNpc(z, { name: f.name, title: 'Fugitivo', x: pos.x, y: pos.y, appearance: f.appearance, label: `Buscado: ${f.crime}`, speed: 2.4 });
-    e.fugitive = f; e.npcHp = f.hp; e.npcMax = f.hp; e.defense = f.defense; e.weaponId = f.weapon; e.npcType = 'fugitive'; e.dialog = undefined; e.chrome = ['ojos'];
+    e.fugitive = f; e.npcHp = f.hp; e.npcMax = f.hp; e.defense = f.defense; e.weaponId = f.weapon; e.npcType = 'fugitive'; e.dialog = undefined; e.chrome = ['ojos']; e.level = Math.min(25, 6 + Math.floor(f.bounty / 100));
     e.npc = ambientBrain(this.w.cfg.seed + e.id, [f.area[0], f.area[1]], f.area[2]);
     this.updateMarker(e);
+  }
+
+  /** Ponerse o quitarse una prenda: cambia el aspecto, el blindaje y las mejoras. */
+  wear(c: PlayerConn, slot: string, item: string | null) {
+    const p = c.p!, e = c.e!;
+    if (!['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies'].includes(slot)) throw new GameError('Hueco de ropa desconocido.');
+    if (item === null) { delete p.wear[slot]; }
+    else {
+      const def = this.w.c.items.find((i) => i.id === item);
+      if (!def?.wear) throw new GameError('Eso no se puede poner.');
+      if (def.wear.slot !== slot) throw new GameError('Esa prenda va en otro sitio.');
+      if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No la tienes.');
+      p.wear[slot] = item;
+    }
+    e.appearance = wornAppearance(this.w.c, p); this.bump(e);
+    void savePlayerVitals(this.w.db, p).catch(() => {});
+    this.sheet(c);
   }
 
   equip(c: PlayerConn, item: string | null) {
@@ -500,6 +551,7 @@ export class Survival {
   async buy(c: PlayerConn, m: Extract<ClientMsg, { t: 'buy' }>) {
     this.checkShop(c, m.shop);
     const r = await this.market.buy(c.p!, m.shop, m.item, m.qty, m.opId);
+    this.w.progress.gain(c.p!, 'negociacion', 2);
     this.notice(c, 'good', `Compras ${m.qty > 1 ? `${m.qty}× ` : ''}${r.name} por ${r.total} €$.`);
     this.sheet(c);
     this.w.send(c, { t: 'shop', view: this.market.shopView(m.shop, c.p!) });
@@ -507,6 +559,8 @@ export class Survival {
   async sell(c: PlayerConn, m: Extract<ClientMsg, { t: 'sell' }>) {
     this.checkShop(c, m.shop);
     const r = await this.market.sell(c.p!, m.shop, m.item, m.qty, m.opId);
+    this.w.progress.gain(c.p!, 'negociacion', 2);
+    for (const [slot, id] of Object.entries(c.p!.wear)) if (id === m.item && (c.p!.inventory.get(m.item) ?? 0) <= 0) { delete c.p!.wear[slot]; c.e!.appearance = wornAppearance(this.w.c, c.p!); this.bump(c.e!); }
     this.notice(c, 'good', `Vendes ${r.name} por ${r.total} €$.`);
     this.sheet(c);
     this.w.send(c, { t: 'shop', view: this.market.shopView(m.shop, c.p!) });
@@ -515,6 +569,7 @@ export class Survival {
     this.checkShop(c, m.shop);
     const p = c.p!;
     const r = await this.market.steal(p, m.shop, m.item, m.opId);
+    this.w.progress.gain(p, 'sigilo', r.success ? 6 : 2);
     if (r.success) { this.notice(c, 'good', `✔ Te llevas ${r.name} sin pagar (tirada ${r.total} contra ${r.dv}).`); await this.addWanted(c, 0.3, 'hurto'); }
     else {
       const dmg = 5 + Math.floor(this.rng() * 8);
@@ -532,6 +587,7 @@ export class Survival {
     const until = x.rummaged.get(trash.id) ?? 0;
     if (Date.now() < until) throw new GameError('Ya has rebuscado aquí hace poco.');
     x.rummaged.set(trash.id, Date.now() + 2 * this.w.c.manifest.cityHourMs);
+    this.w.progress.gain(p, 'percepcion', 2);
     const e = c.e!;
     this.w.cancelActivity(e);
     e.channel = { startTick: this.w.tick, endTick: this.w.tick + 60, label: 'Rebuscando en la basura', targetId: trash.id, apply: () => this.w.enqueue(c, async () => {
@@ -630,6 +686,7 @@ export class Survival {
       await q.query('UPDATE characters SET money = money + $2, profession_xp = $3, profession_rank = $4, active_job = NULL WHERE id = $1', [p.charId, pay, newXp, rank]);
     });
     p.money += pay; p.professionXp = newXp; p.activeJob = null;
+    this.w.progress.gain(p, pr.skill, ok ? 8 : 3);
     if (rank > p.professionRank) { lines.push(`¡Asciendes a rango ${rank} como ${pr.name}!`); p.professionRank = rank; }
     if (injury) { p.hp -= injury; if (p.hp <= 0) this.downed(c, `accidente laboral (${job.title})`); }
     x.jobCd.set(job.id, Date.now() + job.cooldownGameHours * this.w.c.manifest.cityHourMs);
@@ -676,6 +733,7 @@ export class Survival {
       await this.die(p, c.e!, r.cause!);
       return;
     }
+    if (m.action === 'install') this.w.progress.gain(c.p!, 'filo', 12);
     this.w.send(c, { t: 'reward', title: r.outcome === 'clean' ? `Operación limpia: ${r.def.name}` : `Operación con complicaciones: ${r.def.name}`, lines: r.lines });
     this.sheet(c);
     this.w.send(c, { t: 'clinic', view: this.clinic.view(m.doc, p) });

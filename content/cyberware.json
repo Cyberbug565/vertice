@@ -16,7 +16,8 @@
     "investigacion": 1
    }
   },
-  "visible": "ojos"
+  "visible": "ojos",
+  "region": "ojos"
  },
  {
   "id": "audifono-coclear",
@@ -35,7 +36,8 @@
    }
   },
   "prosthetic": true,
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "cara"
  },
  {
   "id": "filtro-neural",
@@ -53,7 +55,8 @@
     "WILL": 1
    }
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "corteza"
  },
  {
   "id": "brazo-protesico",
@@ -72,7 +75,8 @@
    }
   },
   "prosthetic": true,
-  "visible": "brazo"
+  "visible": "brazo",
+  "region": "brazos"
  },
  {
   "id": "brazos-asistencia",
@@ -92,7 +96,8 @@
    "confront": 2,
    "carry": 15
   },
-  "visible": "brazo"
+  "visible": "brazo",
+  "region": "brazos"
  },
  {
   "id": "pierna-protesica",
@@ -111,7 +116,8 @@
    }
   },
   "prosthetic": true,
-  "visible": "pierna"
+  "visible": "pierna",
+  "region": "piernas"
  },
  {
   "id": "piernas-salto",
@@ -132,7 +138,15 @@
     "atletismo": 2
    }
   },
-  "visible": "piernas"
+  "visible": "piernas",
+  "region": "piernas",
+  "ability": {
+   "kind": "esprint",
+   "name": "Esprint",
+   "cooldown": 30,
+   "duration": 6,
+   "power": 0.7
+  }
  },
  {
   "id": "subdermico",
@@ -149,7 +163,8 @@
    "hpMax": 15,
    "armor": 2
   },
-  "visible": "torso"
+  "visible": "torso",
+  "region": "tegumentario"
  },
  {
   "id": "estomago-sintetico",
@@ -169,7 +184,8 @@
     "fatigue": 1
    }
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "region": "circulatorio"
  },
  {
   "id": "rinon-filtrante",
@@ -189,7 +205,8 @@
     "fatigue": 1
    }
   },
-  "visible": "ninguna"
+  "visible": "ninguna",
+  "region": "circulatorio"
  },
  {
   "id": "regulador-sueno",
@@ -209,7 +226,8 @@
     "fatigue": 0.6
    }
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "corteza"
  },
  {
   "id": "coprocesador",
@@ -228,7 +246,8 @@
     "REF": 1
    }
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "corteza"
  },
  {
   "id": "cyberdeck-operaciones",
@@ -247,7 +266,8 @@
    },
    "ram": 12
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "so"
  },
  {
   "id": "acelerador-neural",
@@ -263,7 +283,8 @@
   "effects": {
    "confront": 3
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "so"
  },
  {
   "id": "sistema-apoyo",
@@ -282,7 +303,8 @@
     "EMP": 1
    }
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "so"
  },
  {
   "id": "ice-aislamiento",
@@ -300,7 +322,8 @@
     "WILL": 2
    }
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "corteza"
  },
  {
   "id": "camuflaje-optico",
@@ -319,7 +342,14 @@
    },
    "steal": 4
   },
-  "visible": "torso"
+  "visible": "torso",
+  "region": "tegumentario",
+  "ability": {
+   "kind": "invisible",
+   "name": "Camuflaje",
+   "cooldown": 90,
+   "duration": 8
+  }
  },
  {
   "id": "biomonitor-experimental",
@@ -336,7 +366,9 @@
    "hpMax": 10,
    "surgery": 0.08
   },
-  "visible": "torso"
+  "visible": "torso",
+  "region": "circulatorio",
+  "unique": "autoestim"
  },
  {
   "id": "cuchillas-antebrazo",
@@ -352,7 +384,14 @@
   "effects": {
    "weapon": "cuchillas-antebrazo-arma"
   },
-  "visible": "brazo"
+  "visible": "brazo",
+  "region": "brazos",
+  "ability": {
+   "kind": "torbellino",
+   "name": "Torbellino",
+   "cooldown": 25,
+   "power": 1
+  }
  },
  {
   "id": "puno-hidraulico",
@@ -372,7 +411,15 @@
     "BODY": 1
    }
   },
-  "visible": "brazo"
+  "visible": "brazo",
+  "region": "brazos",
+  "ability": {
+   "kind": "pulso",
+   "name": "Onda de choque",
+   "cooldown": 40,
+   "duration": 2,
+   "power": 6
+  }
  },
  {
   "id": "canon-antebrazo",
@@ -388,7 +435,14 @@
   "effects": {
    "weapon": "canon-antebrazo-arma"
   },
-  "visible": "brazo"
+  "visible": "brazo",
+  "region": "brazos",
+  "ability": {
+   "kind": "disparo-cargado",
+   "name": "Disparo cargado",
+   "cooldown": 30,
+   "power": 2
+  }
  },
  {
   "id": "ojos-tacticos",
@@ -407,7 +461,8 @@
     "percepcion": 1
    }
   },
-  "visible": "ojos"
+  "visible": "ojos",
+  "region": "ojos"
  },
  {
   "id": "cyberdeck-basico",
@@ -423,7 +478,8 @@
   "effects": {
    "ram": 6
   },
-  "visible": "cabeza"
+  "visible": "cabeza",
+  "region": "so"
  },
  {
   "id": "cyberdeck-militar",
@@ -440,6 +496,358 @@
    "ram": 20,
    "skills": {
     "interfaz": 3
+   }
+  },
+  "visible": "cabeza",
+  "region": "so",
+  "ability": {
+   "kind": "pico-ram",
+   "name": "Pico de RAM",
+   "cooldown": 120
+  }
+ },
+ {
+  "id": "reflejos-sobrealimentados",
+  "name": "Reflejos sobrealimentados",
+  "family": "Sistema nervioso",
+  "slot": "nervioso",
+  "region": "nervioso",
+  "grade": 4,
+  "capacity": 8,
+  "humanity": 5,
+  "price": 6800,
+  "maker": "halcon",
+  "desc": "Acelera tus sinapsis: durante unos segundos todo va a cámara lenta para ti (atacas mucho más rápido y esquivas).",
+  "effects": {},
+  "visible": "ninguna",
+  "ability": {
+   "kind": "tiempo-bala",
+   "name": "Tiempo bala",
+   "cooldown": 60,
+   "duration": 6
+  }
+ },
+ {
+  "id": "refuerzo-sinaptico",
+  "name": "Refuerzo sináptico",
+  "family": "Sistema nervioso",
+  "slot": "nervioso",
+  "region": "nervioso",
+  "grade": 2,
+  "capacity": 3,
+  "humanity": 2,
+  "price": 1500,
+  "maker": "teselia",
+  "desc": "Tus reflejos esquivan solos: 12 % de esquiva.",
+  "effects": {
+   "dodge": 0.12
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "segundo-corazon",
+  "name": "Segundo corazón",
+  "family": "Circulatorio",
+  "slot": "corazon",
+  "region": "circulatorio",
+  "grade": 5,
+  "capacity": 9,
+  "humanity": 5,
+  "price": 9500,
+  "maker": "okami",
+  "desc": "Un corazón de reserva: una vez cada dos días de juego, si te matan, vuelves a la vida con la mitad de salud.",
+  "effects": {},
+  "visible": "ninguna",
+  "unique": "segundo-corazon"
+ },
+ {
+  "id": "glandula-adrenalina",
+  "name": "Glándula de adrenalina",
+  "family": "Circulatorio",
+  "slot": "glandula",
+  "region": "circulatorio",
+  "grade": 2,
+  "capacity": 4,
+  "humanity": 2,
+  "price": 1600,
+  "maker": "okami",
+  "desc": "Libera adrenalina sintética: recuperas un 35 % de salud en 5 s.",
+  "effects": {},
+  "visible": "ninguna",
+  "ability": {
+   "kind": "curar",
+   "name": "Adrenalina",
+   "cooldown": 45,
+   "duration": 5,
+   "power": 0.35
+  }
+ },
+ {
+  "id": "pulso-emp",
+  "name": "Emisor de pulso PEM",
+  "family": "Tegumentario",
+  "slot": "emisor",
+  "region": "tegumentario",
+  "grade": 4,
+  "capacity": 7,
+  "humanity": 4,
+  "price": 5900,
+  "maker": "halcon",
+  "desc": "Suelta un pulso que aturde y daña a todos los que tengas a 5 m, sobre todo a los muy cromados.",
+  "effects": {},
+  "visible": "torso",
+  "ability": {
+   "kind": "pulso",
+   "name": "Pulso PEM",
+   "cooldown": 75,
+   "duration": 3,
+   "power": 8
+  }
+ },
+ {
+  "id": "piernas-propulsion",
+  "name": "Piernas de propulsión",
+  "family": "Piernas",
+  "slot": "piernas",
+  "region": "piernas",
+  "grade": 3,
+  "capacity": 6,
+  "humanity": 3,
+  "price": 3900,
+  "maker": "engranajes",
+  "desc": "Propulsores en los gemelos: te lanzas sobre tu objetivo y golpeas con ventaja.",
+  "effects": {
+   "speed": 0.05
+  },
+  "visible": "piernas",
+  "ability": {
+   "kind": "carga",
+   "name": "Carga",
+   "cooldown": 20,
+   "power": 6
+  }
+ },
+ {
+  "id": "proyector-holografico",
+  "name": "Proyector holográfico",
+  "family": "Corteza frontal",
+  "slot": "proyector",
+  "region": "corteza",
+  "grade": 3,
+  "capacity": 5,
+  "humanity": 3,
+  "price": 3300,
+  "maker": "teselia",
+  "desc": "Proyecta un doble tuyo: quien te ataca pierde tu rastro unos segundos.",
+  "effects": {},
+  "visible": "ninguna",
+  "ability": {
+   "kind": "senuelo",
+   "name": "Señuelo",
+   "cooldown": 60,
+   "duration": 5
+  }
+ },
+ {
+  "id": "latigo-monofilamento",
+  "name": "Látigo de monofilamento",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 4,
+  "capacity": 7,
+  "humanity": 5,
+  "price": 6100,
+  "maker": "engranajes",
+  "desc": "Arma integrada: un látigo de un hilo molecular. Alcance 3 m y corta a varios a la vez.",
+  "effects": {
+   "weapon": "latigo-monofilamento-arma"
+  },
+  "visible": "brazo"
+ },
+ {
+  "id": "garras-retractiles",
+  "name": "Garras retráctiles",
+  "family": "Manos",
+  "slot": "manos",
+  "region": "manos",
+  "grade": 2,
+  "capacity": 4,
+  "humanity": 3,
+  "price": 2200,
+  "maker": "engranajes",
+  "desc": "Arma integrada: cuchillas bajo las uñas, rápidas y sangrantes.",
+  "effects": {
+   "weapon": "garras-arma"
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "palma-electrica",
+  "name": "Palma eléctrica",
+  "family": "Manos",
+  "slot": "manos",
+  "region": "manos",
+  "grade": 2,
+  "capacity": 3,
+  "humanity": 2,
+  "price": 1800,
+  "maker": "halcon",
+  "desc": "Arma integrada no letal: una descarga desde la palma te deja noquear sin armas.",
+  "effects": {
+   "weapon": "palma-taser-arma"
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "optica-analisis",
+  "name": "Óptica de análisis",
+  "family": "Ojos",
+  "slot": "ojos",
+  "region": "ojos",
+  "grade": 2,
+  "capacity": 3,
+  "humanity": 1,
+  "price": 1700,
+  "maker": "teselia",
+  "desc": "Al pasar el ratón ves el nivel y la salud de cualquiera, y el menú muestra sus estadísticas.",
+  "effects": {
+   "skills": {
+    "percepcion": 1
+   }
+  },
+  "visible": "ojos",
+  "unique": "lector"
+ },
+ {
+  "id": "modulador-voz",
+  "name": "Modulador de voz",
+  "family": "Cara",
+  "slot": "laringe",
+  "region": "cara",
+  "grade": 1,
+  "capacity": 2,
+  "humanity": 1,
+  "price": 900,
+  "maker": "teselia",
+  "desc": "Cambia tu voz y tu cara ante las cámaras: tu nivel de búsqueda baja el doble de rápido.",
+  "effects": {
+   "skills": {
+    "actuacion": 1,
+    "negociacion": 1
+   }
+  },
+  "visible": "ninguna",
+  "unique": "modulador"
+ },
+ {
+  "id": "compartimento-oculto",
+  "name": "Compartimento oculto",
+  "family": "Esqueleto",
+  "slot": "compartimento",
+  "region": "esqueleto",
+  "grade": 1,
+  "capacity": 2,
+  "humanity": 1,
+  "price": 800,
+  "maker": "chatarreros",
+  "desc": "Un hueco en las costillas: los robos te quitan la mitad.",
+  "effects": {},
+  "visible": "ninguna",
+  "unique": "compartimento"
+ },
+ {
+  "id": "esqueleto-titanio",
+  "name": "Esqueleto de titanio",
+  "family": "Esqueleto",
+  "slot": "esqueleto",
+  "region": "esqueleto",
+  "grade": 3,
+  "capacity": 7,
+  "humanity": 3,
+  "price": 4600,
+  "maker": "halcon",
+  "desc": "Huesos reforzados: +20 de salud, +20 kg de carga y blindaje 1.",
+  "effects": {
+   "hpMax": 20,
+   "carry": 20,
+   "armor": 1
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "huesos-densos",
+  "name": "Huesos densos",
+  "family": "Esqueleto",
+  "slot": "esqueleto",
+  "region": "esqueleto",
+  "grade": 2,
+  "capacity": 4,
+  "humanity": 2,
+  "price": 1900,
+  "maker": "engranajes",
+  "desc": "+10 de salud y +15 % de daño cuerpo a cuerpo.",
+  "effects": {
+   "hpMax": 10,
+   "meleeDmg": 0.15
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "interfaz-vehiculo",
+  "name": "Interfaz de vehículo",
+  "family": "Corteza frontal",
+  "slot": "interfaz-coche",
+  "region": "corteza",
+  "grade": 1,
+  "capacity": 2,
+  "humanity": 1,
+  "price": 750,
+  "maker": "aurora",
+  "desc": "Conectas el coche a tu cerebro: +20 % de velocidad al volante y +2 a conducción.",
+  "effects": {
+   "carSpeed": 0.2,
+   "skills": {
+    "conduccion": 2
+   }
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "traductor-cultural",
+  "name": "Traductor cultural",
+  "family": "Corteza frontal",
+  "slot": "traductor",
+  "region": "corteza",
+  "grade": 1,
+  "capacity": 2,
+  "humanity": 1,
+  "price": 650,
+  "maker": "teselia",
+  "desc": "+2 a negociación y +1 a actuación.",
+  "effects": {
+   "skills": {
+    "negociacion": 2,
+    "actuacion": 1
+   }
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "implante-mandibula",
+  "name": "Mandíbula de acero",
+  "family": "Cara",
+  "slot": "mandibula",
+  "region": "cara",
+  "grade": 2,
+  "capacity": 3,
+  "humanity": 2,
+  "price": 1200,
+  "maker": "engranajes",
+  "desc": "Cromo a la vista: +2 a intimidación.",
+  "effects": {
+   "skills": {
+    "intimidacion": 2
    }
   },
   "visible": "cabeza"

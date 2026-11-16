@@ -5,8 +5,8 @@
   "crime": "Robo de cromo a mano armada",
   "zone": "ferro",
   "area": [
-   40,
-   56,
+   44,
+   62,
    6
   ],
   "bounty": 400,
@@ -28,8 +28,8 @@
   "crime": "Extorsión en Kanal",
   "zone": "ferro",
   "area": [
-   73,
-   40,
+   78,
+   43,
    8
   ],
   "bounty": 650,
@@ -50,7 +50,7 @@
   "crime": "Sabotaje de grúas en el muelle",
   "zone": "ferro",
   "area": [
-   20,
+   21,
    6,
    10
   ],
@@ -73,8 +73,8 @@
   "crime": "Robo de datos a Teselia",
   "zone": "cenit",
   "area": [
-   34,
-   58,
+   37,
+   68,
    6
   ],
   "bounty": 900,

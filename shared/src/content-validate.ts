@@ -9,11 +9,13 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
   const zones = Object.keys(files).filter((k) => k.startsWith('zones/')).sort().map((k) => files[k]);
   const raw = {
     manifest: get('manifest.json'), attributes: get('attributes.json'), skills: get('skills.json'), roles: get('roles.json'),
-    origins: get('origins.json'), factions: get('factions.json'), items: get('items.json'), npcs: get('npcs.json'),
+    origins: get('origins.json'), factions: get('factions.json'), npcs: get('npcs.json'),
+    items: [get('items.json'), ...Object.keys(files).filter((k) => k.startsWith('items/')).sort().map((k) => files[k])].flat(),
     zones, dialogs: get('dialogs.json'), tasks: get('tasks.json'), contracts: get('contracts.json'), locale: get('locale/es.json'),
     needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: get('cyberware.json'), ripperdocs: get('ripperdocs.json'),
     professions: get('professions.json'), workplaces: get('workplaces.json'), jobs: get('jobs.json'), fugitives: get('fugitives.json'),
     quickhacks: get('quickhacks.json'), ambar: get('ambar.json'), world: get('world.json'),
+    perks: get('perks.json'), cars: get('cars.json'), dealers: get('dealers.json'), houses: get('houses.json'),
   };
   const parsed = ContentSchema.safeParse(raw);
   if (!parsed.success) throw new Error('Contenido inválido:\n' + parsed.error.issues.slice(0, 20).map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n'));
@@ -50,7 +52,7 @@ export function validateContent(c: Content): string[] {
       if (!zoneIds.has(d.to.zone)) { errs.push(`${z.id}/${d.id}: destino ${d.to.zone} desconocido`); continue; }
       walk(d.to.zone, d.to.at, `${z.id}/${d.id} destino`);
       const back = c.zones.find((o) => o.id === d.to.zone)!.doors.some((o) => o.to.zone === z.id);
-      if (!back) errs.push(`${z.id}/${d.id}: la zona ${d.to.zone} no tiene puerta de regreso`);
+      if (!back && !z.id.startsWith('casa-')) errs.push(`${z.id}/${d.id}: la zona ${d.to.zone} no tiene puerta de regreso`); // las casas son instancias: su salida se fija al entrar
     }
     for (const o of z.objects) {
       if (o.dialog && !(o.dialog in c.dialogs)) errs.push(`${z.id}/${o.id}: diálogo ${o.dialog} desconocido`);
@@ -164,6 +166,19 @@ export function validateContent(c: Content): string[] {
   }
   for (const z of c.zones) for (const g of z.gangs) if (!factionIds.has(g.faction)) errs.push(`${z.id}: banda ${g.faction}`);
   for (const cw of c.cyberware) if (cw.effects.weapon && !itemIds.has(cw.effects.weapon)) errs.push(`ciberware ${cw.id}: arma ${cw.effects.weapon}`);
+  // ---- v0.4
+  const perkIds = new Set(c.perks.map((x) => x.id));
+  for (const pk of c.perks) {
+    if (pk.skill !== 'general' && !skillIds.has(pk.skill)) errs.push(`perk ${pk.id}: rama ${pk.skill}`);
+    for (const k of Object.keys(pk.requires.skills)) if (!skillIds.has(k)) errs.push(`perk ${pk.id}: habilidad ${k}`);
+    for (const k of pk.requires.perks) if (!perkIds.has(k)) errs.push(`perk ${pk.id}: requiere ${k}`);
+  }
+  for (const d of c.dealers) { if (!zoneIds.has(d.zone)) errs.push(`concesionario ${d.id}: zona ${d.zone}`); if (!c.cars.some((x) => d.classes.includes(x.class))) errs.push(`concesionario ${d.id}: sin coches`); }
+  const housingObjs = new Set(c.zones.flatMap((z) => z.objects.filter((o) => o.kind === 'housing').map((o) => o.id)));
+  for (const h of c.houses) { if (!housingObjs.has(h.building)) errs.push(`casa ${h.id}: portal ${h.building}`); if (!zoneIds.has(h.template)) errs.push(`casa ${h.id}: plantilla ${h.template}`); }
+  for (const z of c.zones) for (const o of z.objects) if (o.kind === 'dealer' && !c.dealers.some((d) => d.id === o.dealer)) errs.push(`${z.id}/${o.id}: concesionario ${o.dealer}`);
+  for (const it of c.items) for (const k of Object.keys(it.wear?.mods.skills ?? {})) if (!skillIds.has(k)) errs.push(`prenda ${it.id}: habilidad ${k}`);
+  for (const cw of c.cyberware) for (const k of Object.keys(cw.effects.skills ?? {})) if (!skillIds.has(k)) errs.push(`ciberware ${cw.id}: habilidad ${k}`);
   for (const d of c.world.districts) if (!zoneIds.has(d.zone)) errs.push(`mundo: distrito ${d.zone}`);
   for (const p of c.ambar) for (const z of p.zones) if (!zoneIds.has(z)) errs.push(`Ámbar ${p.id}: zona ${z}`);
   const cells = new Set<string>();

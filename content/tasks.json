@@ -1,5 +1,58 @@
 [
-  { "id": "cargar-cajas", "label": "task.carry", "repeat": 3,
-    "steps": [ { "moveTo": [38, 58], "zone": "ferro" }, { "wait": 1.5, "label": "task.loading" }, { "moveTo": [45, 50], "zone": "ferro" }, { "wait": 1, "label": "task.unloading" } ],
-    "onComplete": [ { "item": "acoplamiento", "qty": 1 }, { "completeObjective": "coupling" }, { "xp": 20 }, { "rep": "chatarreros", "delta": 3 }, { "rep": "calle", "delta": 1 }, { "money": 10, "reason": "Propina de Tomás" }, { "notice": "notice.work_done" } ] }
+ {
+  "id": "cargar-cajas",
+  "label": "task.carry",
+  "repeat": 3,
+  "steps": [
+   {
+    "moveTo": [
+     42,
+     64
+    ],
+    "zone": "ferro"
+   },
+   {
+    "wait": 1.5,
+    "label": "task.loading"
+   },
+   {
+    "moveTo": [
+     49,
+     56
+    ],
+    "zone": "ferro"
+   },
+   {
+    "wait": 1,
+    "label": "task.unloading"
+   }
+  ],
+  "onComplete": [
+   {
+    "item": "acoplamiento",
+    "qty": 1
+   },
+   {
+    "completeObjective": "coupling"
+   },
+   {
+    "xp": 20
+   },
+   {
+    "rep": "chatarreros",
+    "delta": 3
+   },
+   {
+    "rep": "calle",
+    "delta": 1
+   },
+   {
+    "money": 10,
+    "reason": "Propina de Tomás"
+   },
+   {
+    "notice": "notice.work_done"
+   }
+  ]
+ }
 ]

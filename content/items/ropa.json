@@ -1,0 +1,831 @@
+[
+ {
+  "id": "gorra-neon",
+  "name": "Gorra de neón",
+  "desc": "Visera con tira luminosa.",
+  "weight": 0.2,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "gorra",
+   "color": "#ff3fa4",
+   "mods": {}
+  }
+ },
+ {
+  "id": "gorra-tactica",
+  "name": "Gorra táctica",
+  "desc": "Con microcámara de retrovisión.",
+  "weight": 0.2,
+  "price": 120,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "gorra",
+   "color": "#3a4a3a",
+   "mods": {
+    "skills": {
+     "percepcion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "capucha-urbana",
+  "name": "Capucha urbana",
+  "desc": "Para pasar desapercibida.",
+  "weight": 0.3,
+  "price": 40,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "capucha",
+   "color": "#2a2a3a",
+   "mods": {
+    "skills": {
+     "sigilo": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "bandana-roja",
+  "name": "Bandana roja",
+  "desc": "Clásica de barrio.",
+  "weight": 0.1,
+  "price": 20,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "bandana",
+   "color": "#a82020",
+   "mods": {}
+  }
+ },
+ {
+  "id": "sombrero-ala",
+  "name": "Sombrero de ala ancha",
+  "desc": "Estilo de detective de los de antes.",
+  "weight": 0.3,
+  "price": 160,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "sombrero",
+   "color": "#3a2a1a",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "casco-moto",
+  "name": "Casco de moto",
+  "desc": "Protege la cabeza en caídas y peleas.",
+  "weight": 1.2,
+  "price": 220,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "armor": 1,
+  "wear": {
+   "slot": "cabeza",
+   "style": "casco",
+   "color": "#e8e8f0",
+   "mods": {}
+  }
+ },
+ {
+  "id": "casco-balistico",
+  "name": "Casco balístico Halcón",
+  "desc": "Placa compuesta de grado militar.",
+  "weight": 1.6,
+  "price": 900,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 2,
+  "wear": {
+   "slot": "cabeza",
+   "style": "casco",
+   "color": "#2a3a4a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "corona-aurelia",
+  "name": "Diadema Aurelia",
+  "desc": "Joya de las Colinas con LED de oro.",
+  "weight": 0.1,
+  "price": 2400,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "cabeza",
+   "style": "bandana",
+   "color": "#ffd23f",
+   "mods": {
+    "skills": {
+     "actuacion": 2,
+     "negociacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "gafas-sol",
+  "name": "Gafas de sol",
+  "desc": "Para el sol y para no mirar a nadie.",
+  "weight": 0.1,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cara",
+   "style": "gafas",
+   "color": "#1a1a1a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "gafas-hud",
+  "name": "Gafas con HUD",
+  "desc": "Superponen distancias y objetivos.",
+  "weight": 0.1,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "gafas",
+   "color": "#43f3ff",
+   "mods": {
+    "skills": {
+     "percepcion": 1,
+     "armas": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "visor-tactico",
+  "name": "Visor táctico",
+  "desc": "Visor de combate con telemetría.",
+  "weight": 0.3,
+  "price": 850,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "cara",
+   "style": "visor",
+   "color": "#ff8a3d",
+   "mods": {
+    "skills": {
+     "armas": 2
+    }
+   }
+  }
+ },
+ {
+  "id": "mascara-filtro",
+  "name": "Máscara de filtro",
+  "desc": "Filtra el aire de Forja.",
+  "weight": 0.3,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cara",
+   "style": "mascara",
+   "color": "#3a3a3a",
+   "mods": {
+    "needs": 0.03
+   }
+  }
+ },
+ {
+  "id": "mascara-oni",
+  "name": "Máscara oni",
+  "desc": "Laca roja del Clan Kitsune.",
+  "weight": 0.4,
+  "price": 1800,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 1,
+  "wear": {
+   "slot": "cara",
+   "style": "mascara",
+   "color": "#a82020",
+   "mods": {
+    "skills": {
+     "intimidacion": 3
+    }
+   }
+  }
+ },
+ {
+  "id": "visor-neural",
+  "name": "Visor neural «Prisma»",
+  "desc": "Interfaz óptica que refuerza la conexión con el deck.",
+  "weight": 0.2,
+  "price": 6500,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 1,
+  "wear": {
+   "slot": "cara",
+   "style": "visor",
+   "color": "#b46cff",
+   "mods": {
+    "skills": {
+     "interfaz": 3,
+     "percepcion": 2
+    }
+   }
+  }
+ },
+ {
+  "id": "chaqueta",
+  "name": "Chaqueta reforzada",
+  "desc": "Ropa de calle con forro balístico ligero (blindaje 1).",
+  "weight": 2,
+  "price": 90,
+  "category": "ropa",
+  "rarity": "comun",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaqueta",
+   "color": "#40506a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "bomber-cuero",
+  "name": "Bomber de cuero sintético",
+  "desc": "Clásica, cálida y con bolsillos.",
+  "weight": 2,
+  "price": 140,
+  "category": "ropa",
+  "rarity": "comun",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaqueta",
+   "color": "#5a2a1a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "cazadora-neon",
+  "name": "Cazadora de neón",
+  "desc": "Paneles luminosos que cambian con la música.",
+  "weight": 1.8,
+  "price": 380,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaqueta",
+   "color": "#ff3fa4",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "chaleco-balistico",
+  "name": "Chaleco balístico",
+  "desc": "Placas de cerámica. Pesa, pero para balas.",
+  "weight": 4,
+  "price": 300,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "armor": 3,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaleco",
+   "color": "#3a3a2a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "ropa-impermeable",
+  "name": "Gabardina impermeable",
+  "desc": "Duermes mejor a la intemperie.",
+  "weight": 1.5,
+  "price": 70,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "gabardina",
+   "color": "#3a4a4a",
+   "mods": {
+    "needs": 0.02
+   }
+  }
+ },
+ {
+  "id": "chaleco-carga",
+  "name": "Chaleco de carga",
+  "desc": "Muchos bolsillos: +12 kg de carga.",
+  "weight": 1.5,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaleco",
+   "color": "#4a4a3a",
+   "mods": {
+    "carry": 12
+   }
+  }
+ },
+ {
+  "id": "gabardina-blindada",
+  "name": "Gabardina blindada",
+  "desc": "Larga, negra y a prueba de navajas.",
+  "weight": 4,
+  "price": 1100,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 4,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "gabardina",
+   "color": "#2a2a30",
+   "mods": {}
+  }
+ },
+ {
+  "id": "abrigo-nomada",
+  "name": "Abrigo nómada",
+  "desc": "Resiste el polvo del Yermo.",
+  "weight": 3,
+  "price": 900,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 2,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "gabardina",
+   "color": "#8a6a3a",
+   "mods": {
+    "needs": 0.05,
+    "carry": 8
+   }
+  }
+ },
+ {
+  "id": "americana-ejecutiva",
+  "name": "Americana ejecutiva",
+  "desc": "Corte de Cénit: abre puertas.",
+  "weight": 1.5,
+  "price": 1300,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "traje",
+   "color": "#1a1a2a",
+   "mods": {
+    "skills": {
+     "negociacion": 2
+    }
+   }
+  }
+ },
+ {
+  "id": "chaqueta-tactica",
+  "name": "Chaqueta táctica Halcón",
+  "desc": "Kevlarina tejida y refuerzos en hombros.",
+  "weight": 3.5,
+  "price": 3600,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 5,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaqueta",
+   "color": "#2a3a4a",
+   "mods": {
+    "carry": 5
+   }
+  }
+ },
+ {
+  "id": "abrigo-nanofibra",
+  "name": "Abrigo de nanofibra «Eclipse»",
+  "desc": "Absorbe la luz y los impactos.",
+  "weight": 2,
+  "price": 9800,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 6,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "gabardina",
+   "color": "#101018",
+   "mods": {
+    "skills": {
+     "sigilo": 2
+    },
+    "speed": 0.03
+   }
+  }
+ },
+ {
+  "id": "camiseta-basica",
+  "name": "Camiseta básica",
+  "desc": "Algodón reciclado.",
+  "weight": 0.2,
+  "price": 15,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "top",
+   "color": "#e8e8f0",
+   "mods": {}
+  }
+ },
+ {
+  "id": "camiseta-banda",
+  "name": "Camiseta de grupo",
+  "desc": "De una banda de rock que ya no existe.",
+  "weight": 0.2,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "top",
+   "color": "#1a1a1a",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "camisa-seda",
+  "name": "Camisa de seda sintética",
+  "desc": "Brilla bajo el neón.",
+  "weight": 0.2,
+  "price": 220,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "traje",
+   "color": "#e8d8f0",
+   "mods": {
+    "skills": {
+     "negociacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "sudadera-capucha",
+  "name": "Sudadera con capucha",
+  "desc": "Cómoda y anónima.",
+  "weight": 0.6,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "sudadera",
+   "color": "#3a3a4a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "top-malla",
+  "name": "Top de malla",
+  "desc": "Para el club.",
+  "weight": 0.1,
+  "price": 120,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "top",
+   "color": "#ff3fa4",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "camiseta-termica",
+  "name": "Camiseta térmica",
+  "desc": "Regula la temperatura: duermes mejor.",
+  "weight": 0.3,
+  "price": 600,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_int",
+   "style": "top",
+   "color": "#2a4a5a",
+   "mods": {
+    "needs": 0.05
+   }
+  }
+ },
+ {
+  "id": "mono-trabajo",
+  "name": "Mono de trabajo",
+  "desc": "De los de Forja.",
+  "weight": 1.2,
+  "price": 70,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "mono",
+   "color": "#ff8a3d",
+   "mods": {
+    "carry": 4
+   }
+  }
+ },
+ {
+  "id": "camisa-blindada",
+  "name": "Camisa con malla de aramida",
+  "desc": "Parece una camisa normal.",
+  "weight": 0.8,
+  "price": 2600,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 2,
+  "wear": {
+   "slot": "torso_int",
+   "style": "traje",
+   "color": "#e8e8f0",
+   "mods": {
+    "skills": {
+     "negociacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "vaqueros",
+  "name": "Vaqueros",
+  "desc": "Duran toda la vida.",
+  "weight": 0.8,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#2a3a5a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "pantalon-cargo",
+  "name": "Pantalón cargo",
+  "desc": "Bolsillos para todo: +6 kg.",
+  "weight": 1,
+  "price": 70,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#4a4a3a",
+   "mods": {
+    "carry": 6
+   }
+  }
+ },
+ {
+  "id": "falda-vinilo",
+  "name": "Falda de vinilo",
+  "desc": "Reflejos de neón.",
+  "weight": 0.4,
+  "price": 160,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "falda",
+   "color": "#1a1a1a",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "shorts-deporte",
+  "name": "Pantalón corto deportivo",
+  "desc": "Ligeros para correr.",
+  "weight": 0.3,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "shorts",
+   "color": "#3a3a6a",
+   "mods": {
+    "speed": 0.02
+   }
+  }
+ },
+ {
+  "id": "pantalon-traje",
+  "name": "Pantalón de traje",
+  "desc": "A juego con la americana.",
+  "weight": 0.6,
+  "price": 200,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#1a1a2a",
+   "mods": {
+    "skills": {
+     "negociacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "pantalon-tactico",
+  "name": "Pantalón táctico blindado",
+  "desc": "Rodilleras y placas en el muslo.",
+  "weight": 2,
+  "price": 950,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 2,
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#2a3a2a",
+   "mods": {
+    "carry": 4
+   }
+  }
+ },
+ {
+  "id": "mallas-nanofibra",
+  "name": "Mallas de nanofibra",
+  "desc": "Ligeras como una segunda piel.",
+  "weight": 0.3,
+  "price": 2900,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 1,
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#101018",
+   "mods": {
+    "speed": 0.06,
+    "skills": {
+     "atletismo": 2
+    }
+   }
+  }
+ },
+ {
+  "id": "deportivas",
+  "name": "Deportivas",
+  "desc": "Para la calle.",
+  "weight": 0.6,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "pies",
+   "style": "deportivas",
+   "color": "#e8e8f0",
+   "mods": {
+    "speed": 0.02
+   }
+  }
+ },
+ {
+  "id": "botas-trabajo",
+  "name": "Botas de trabajo",
+  "desc": "Puntera de acero.",
+  "weight": 1.2,
+  "price": 80,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "pies",
+   "style": "botas",
+   "color": "#5a3a1a",
+   "mods": {}
+  }
+ },
+ {
+  "id": "zapatos-piel",
+  "name": "Zapatos de piel",
+  "desc": "Relucientes.",
+  "weight": 0.6,
+  "price": 240,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "pies",
+   "style": "zapatos",
+   "color": "#1a1010",
+   "mods": {
+    "skills": {
+     "negociacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "botas-militares",
+  "name": "Botas militares",
+  "desc": "Suela antideslizante y refuerzo.",
+  "weight": 1.4,
+  "price": 700,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "pies",
+   "style": "botas",
+   "color": "#2a2a2a",
+   "mods": {
+    "skills": {
+     "atletismo": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "zapatillas-led",
+  "name": "Zapatillas LED «Pulso»",
+  "desc": "Amortiguación activa: más rápido.",
+  "weight": 0.5,
+  "price": 1900,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "pies",
+   "style": "deportivas",
+   "color": "#43f3ff",
+   "mods": {
+    "speed": 0.06,
+    "skills": {
+     "actuacion": 1
+    }
+   }
+  }
+ },
+ {
+  "id": "botas-gravedad",
+  "name": "Botas de grafeno «Ícaro»",
+  "desc": "Lo mejor que se puede llevar en los pies.",
+  "weight": 0.8,
+  "price": 7200,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 1,
+  "wear": {
+   "slot": "pies",
+   "style": "botas",
+   "color": "#ffd23f",
+   "mods": {
+    "speed": 0.1,
+    "skills": {
+     "atletismo": 3
+    }
+   }
+  }
+ }
+]

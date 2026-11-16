@@ -1,0 +1,608 @@
+[
+ {
+  "id": "nunchakus",
+  "name": "Nunchakus",
+  "desc": "Rápidos y difíciles de esquivar. Aturden.",
+  "weight": 0.8,
+  "price": 260,
+  "category": "arma",
+  "rarity": "comun",
+  "weapon": {
+   "kind": "melee",
+   "family": "Contundente",
+   "damage": [
+    7,
+    12
+   ],
+   "range": 1.6,
+   "cooldown": 0.7,
+   "accuracy": 2,
+   "nonlethal": "opcional",
+   "tech": "clasica",
+   "traits": [
+    "aturdidora"
+   ]
+  }
+ },
+ {
+  "id": "tonfa-aturdidora",
+  "name": "Tonfa aturdidora",
+  "desc": "Reglamentaria de la PCV. Solo deja KO.",
+  "weight": 0.9,
+  "price": 450,
+  "category": "arma",
+  "rarity": "poco-comun",
+  "weapon": {
+   "kind": "melee",
+   "family": "Contundente",
+   "damage": [
+    6,
+    10
+   ],
+   "range": 1.5,
+   "cooldown": 0.8,
+   "accuracy": 2,
+   "nonlethal": "solo",
+   "tech": "potencia",
+   "traits": [
+    "aturdidora",
+    "electrica"
+   ]
+  }
+ },
+ {
+  "id": "lanza-electrica",
+  "name": "Lanza eléctrica",
+  "desc": "Alcance largo para un arma de mano.",
+  "weight": 3,
+  "price": 1900,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "melee",
+   "family": "Hoja",
+   "damage": [
+    10,
+    18
+   ],
+   "range": 2.4,
+   "cooldown": 1.2,
+   "accuracy": 1,
+   "nonlethal": "opcional",
+   "tech": "tecnica",
+   "traits": [
+    "electrica"
+   ]
+  }
+ },
+ {
+  "id": "martillo-neumatico",
+  "name": "Martillo neumático",
+  "desc": "Cada golpe sacude a todo el que esté cerca.",
+  "weight": 7,
+  "price": 2400,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "melee",
+   "family": "Contundente",
+   "damage": [
+    18,
+    30
+   ],
+   "range": 1.7,
+   "cooldown": 1.8,
+   "accuracy": -2,
+   "nonlethal": "opcional",
+   "tech": "potencia",
+   "traits": [
+    "aturdidora",
+    "area"
+   ]
+  }
+ },
+ {
+  "id": "hacha-plasma",
+  "name": "Hacha de plasma",
+  "desc": "El filo de plasma ignora el blindaje y quema.",
+  "weight": 3.5,
+  "price": 3200,
+  "category": "arma",
+  "rarity": "epico",
+  "weapon": {
+   "kind": "melee",
+   "family": "Hoja",
+   "damage": [
+    14,
+    26
+   ],
+   "range": 1.8,
+   "cooldown": 1.4,
+   "accuracy": 0,
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "quemadura",
+    "perforante"
+   ]
+  }
+ },
+ {
+  "id": "espada-monofilamento",
+  "name": "Espada de monofilamento",
+  "desc": "Un hilo de una molécula sobre una hoja de carbono.",
+  "weight": 1.5,
+  "price": 5500,
+  "category": "arma",
+  "rarity": "legendario",
+  "weapon": {
+   "kind": "melee",
+   "family": "Hoja",
+   "damage": [
+    16,
+    28
+   ],
+   "range": 1.8,
+   "cooldown": 1.1,
+   "accuracy": 1,
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "perforante",
+    "sangrado"
+   ]
+  }
+ },
+ {
+  "id": "pistola-silenciada",
+  "name": "Pistola silenciada",
+  "desc": "Los delitos con ella suben la búsqueda la mitad.",
+  "weight": 1.2,
+  "price": 900,
+  "category": "arma",
+  "rarity": "poco-comun",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Pistola",
+   "damage": [
+    9,
+    14
+   ],
+   "range": 11,
+   "cooldown": 0.9,
+   "accuracy": 1,
+   "ammo": "bala-pistola",
+   "nonlethal": "no",
+   "tech": "clasica",
+   "traits": [
+    "silenciosa"
+   ]
+  }
+ },
+ {
+  "id": "pistola-plasma",
+  "name": "Pistola de plasma",
+  "desc": "Dispara plasma que sigue quemando.",
+  "weight": 1.4,
+  "price": 2600,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Pistola",
+   "damage": [
+    14,
+    22
+   ],
+   "range": 12,
+   "cooldown": 1,
+   "accuracy": 0,
+   "ammo": "celula-energia",
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "quemadura"
+   ]
+  }
+ },
+ {
+  "id": "revolver-riel",
+  "name": "Revólver de riel",
+  "desc": "Atraviesa paredes, blindajes y lo que haya detrás.",
+  "weight": 2.2,
+  "price": 4200,
+  "category": "arma",
+  "rarity": "epico",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Revólver",
+   "damage": [
+    24,
+    34
+   ],
+   "range": 16,
+   "cooldown": 1.6,
+   "accuracy": -1,
+   "ammo": "celula-energia",
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "perforante"
+   ]
+  }
+ },
+ {
+  "id": "pistola-agujas",
+  "name": "Pistola de agujas",
+  "desc": "Agujas guiadas que no hacen ruido.",
+  "weight": 0.9,
+  "price": 1700,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Pistola",
+   "damage": [
+    6,
+    10
+   ],
+   "range": 10,
+   "cooldown": 0.6,
+   "accuracy": 2,
+   "ammo": "aguja",
+   "nonlethal": "opcional",
+   "tech": "inteligente",
+   "traits": [
+    "silenciosa",
+    "inteligente"
+   ]
+  }
+ },
+ {
+  "id": "smg-inteligente",
+  "name": "Subfusil inteligente",
+  "desc": "Balas autoguiadas: ni la distancia las despista.",
+  "weight": 2.8,
+  "price": 3100,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Subfusil",
+   "damage": [
+    8,
+    12
+   ],
+   "range": 14,
+   "cooldown": 0.5,
+   "accuracy": 1,
+   "ammo": "bala-pistola",
+   "nonlethal": "no",
+   "tech": "inteligente",
+   "traits": [
+    "inteligente"
+   ]
+  }
+ },
+ {
+  "id": "escopeta-tecnologica",
+  "name": "Escopeta tecnológica",
+  "desc": "Perdigones cargados que atraviesan y abren en abanico.",
+  "weight": 4,
+  "price": 3600,
+  "category": "arma",
+  "rarity": "epico",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Escopeta",
+   "damage": [
+    20,
+    34
+   ],
+   "range": 7,
+   "cooldown": 1.5,
+   "accuracy": 0,
+   "ammo": "cartucho",
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "perforante",
+    "area"
+   ]
+  }
+ },
+ {
+  "id": "rifle-pulsos",
+  "name": "Rifle de pulsos",
+  "desc": "Descargas que fríen nervios y circuitos.",
+  "weight": 3.6,
+  "price": 3900,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Rifle",
+   "damage": [
+    12,
+    18
+   ],
+   "range": 18,
+   "cooldown": 0.7,
+   "accuracy": 1,
+   "ammo": "celula-energia",
+   "nonlethal": "opcional",
+   "tech": "tecnica",
+   "traits": [
+    "electrica"
+   ]
+  }
+ },
+ {
+  "id": "ballesta-carbono",
+  "name": "Ballesta de carbono",
+  "desc": "Silenciosa y letal: los virotes desgarran.",
+  "weight": 2.5,
+  "price": 1500,
+  "category": "arma",
+  "rarity": "poco-comun",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Arco",
+   "damage": [
+    16,
+    26
+   ],
+   "range": 16,
+   "cooldown": 1.6,
+   "accuracy": 2,
+   "ammo": "virote",
+   "nonlethal": "no",
+   "tech": "clasica",
+   "traits": [
+    "silenciosa",
+    "sangrado"
+   ]
+  }
+ },
+ {
+  "id": "rifle-dardos",
+  "name": "Rifle de dardos sedantes",
+  "desc": "Para cazar con vida.",
+  "weight": 3,
+  "price": 1300,
+  "category": "arma",
+  "rarity": "poco-comun",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Rifle",
+   "damage": [
+    4,
+    8
+   ],
+   "range": 14,
+   "cooldown": 1.4,
+   "accuracy": 1,
+   "ammo": "dardo-sedante",
+   "nonlethal": "solo",
+   "tech": "clasica",
+   "traits": [
+    "aturdidora",
+    "silenciosa"
+   ]
+  }
+ },
+ {
+  "id": "canon-sonico",
+  "name": "Cañón sónico",
+  "desc": "Onda de choque que derriba a varios a la vez.",
+  "weight": 4.5,
+  "price": 2900,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Especial",
+   "damage": [
+    8,
+    14
+   ],
+   "range": 6,
+   "cooldown": 1.2,
+   "accuracy": 1,
+   "ammo": "celula-energia",
+   "nonlethal": "opcional",
+   "tech": "tecnica",
+   "traits": [
+    "aturdidora",
+    "area"
+   ]
+  }
+ },
+ {
+  "id": "ametralladora-rotativa",
+  "name": "Ametralladora rotativa",
+  "desc": "Lluvia de plomo. Pesa una barbaridad.",
+  "weight": 14,
+  "price": 6900,
+  "category": "arma",
+  "rarity": "epico",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Ametralladora",
+   "damage": [
+    9,
+    14
+   ],
+   "range": 13,
+   "cooldown": 0.35,
+   "accuracy": -2,
+   "ammo": "bala-rifle",
+   "nonlethal": "no",
+   "tech": "potencia",
+   "traits": [
+    "area"
+   ]
+  }
+ },
+ {
+  "id": "francotirador-inteligente",
+  "name": "Francotirador inteligente",
+  "desc": "La bala dobla esquinas para encontrar a su objetivo.",
+  "weight": 6,
+  "price": 7800,
+  "category": "arma",
+  "rarity": "legendario",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Rifle",
+   "damage": [
+    30,
+    44
+   ],
+   "range": 32,
+   "cooldown": 2.2,
+   "accuracy": 3,
+   "ammo": "bala-rifle",
+   "nonlethal": "no",
+   "tech": "inteligente",
+   "traits": [
+    "inteligente",
+    "perforante"
+   ]
+  }
+ },
+ {
+  "id": "lanzagranadas-emp",
+  "name": "Lanzagranadas PEM",
+  "desc": "Funde el cromo y aturde a todo el grupo.",
+  "weight": 6,
+  "price": 6400,
+  "category": "arma",
+  "rarity": "epico",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Especial",
+   "damage": [
+    16,
+    26
+   ],
+   "range": 14,
+   "cooldown": 2.5,
+   "accuracy": -1,
+   "ammo": "granada-emp",
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "emp",
+    "area",
+    "aturdidora"
+   ]
+  }
+ },
+ {
+  "id": "granada-emp",
+  "name": "Granada PEM",
+  "desc": "Munición para el lanzagranadas PEM.",
+  "weight": 0.4,
+  "price": 90,
+  "category": "municion"
+ },
+ {
+  "id": "virote",
+  "name": "Virote de carbono",
+  "desc": "Munición para ballestas.",
+  "weight": 0.05,
+  "price": 6,
+  "category": "municion"
+ },
+ {
+  "id": "aguja",
+  "name": "Agujas guiadas",
+  "desc": "Munición para la pistola de agujas.",
+  "weight": 0.01,
+  "price": 3,
+  "category": "municion"
+ },
+ {
+  "id": "dardo-sedante",
+  "name": "Dardo sedante",
+  "desc": "Munición no letal para el rifle de dardos.",
+  "weight": 0.02,
+  "price": 8,
+  "category": "municion"
+ },
+ {
+  "id": "latigo-monofilamento-arma",
+  "name": "Látigo de monofilamento",
+  "desc": "Un hilo que sale de la muñeca y corta lo que toca.",
+  "weight": 0,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "melee",
+   "family": "Implante",
+   "damage": [
+    12,
+    20
+   ],
+   "range": 3,
+   "cooldown": 1,
+   "accuracy": 1,
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "sangrado",
+    "area"
+   ]
+  }
+ },
+ {
+  "id": "garras-arma",
+  "name": "Garras retráctiles",
+  "desc": "Cinco cuchillas bajo las uñas.",
+  "weight": 0,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "melee",
+   "family": "Implante",
+   "damage": [
+    10,
+    16
+   ],
+   "range": 1.4,
+   "cooldown": 0.6,
+   "accuracy": 2,
+   "nonlethal": "no",
+   "tech": "tecnica",
+   "traits": [
+    "sangrado"
+   ]
+  }
+ },
+ {
+  "id": "palma-taser-arma",
+  "name": "Palma eléctrica",
+  "desc": "Descarga desde la palma de la mano: deja KO.",
+  "weight": 0,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "melee",
+   "family": "Implante",
+   "damage": [
+    6,
+    10
+   ],
+   "range": 1.4,
+   "cooldown": 0.9,
+   "accuracy": 2,
+   "nonlethal": "solo",
+   "tech": "tecnica",
+   "traits": [
+    "electrica",
+    "aturdidora"
+   ]
+  }
+ }
+]

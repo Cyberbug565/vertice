@@ -1,0 +1,77 @@
+{
+ "id": "usados-forja-int",
+ "name": "Usados de Forja",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#4a4038",
+ "blocks": [],
+ "props": [
+  {
+   "type": "car",
+   "at": [
+    3,
+    8
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "car",
+   "at": [
+    7,
+    8
+   ],
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "car",
+   "at": [
+    11,
+    8
+   ],
+   "color": "#ffd23f"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-usados-forja-int",
+   "name": "Salida a la calle (Forja)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "forja",
+    "at": [
+     62,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-usados-forja-int",
+   "name": "Vendedor de Usados de Forja",
+   "at": [
+    7,
+    3
+   ],
+   "kind": "dealer",
+   "dealer": "usados-forja"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { checkChance, type Content, type ItemCategory, type MarketView, type ShopView } from '@vertice/shared';
 import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
-import { effective, flagValue, type PlayerState } from './player.js';
+import { effective, flagValue, perkMods, type PlayerState } from './player.js';
 
 export const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
 
@@ -67,6 +67,8 @@ export class MarketService {
       const corp = this.c.market.corps.some((x) => x.id === sh.owner);
       const mods = this.c.professions.find((x) => x.id === p.profession)?.mods;
       if (corp && mods?.corpDiscount) d = Math.max(d, mods.corpDiscount);
+      const pm = perkMods(this.c, p);
+      d = Math.min(0.5, d + (pm.mods.price ?? 0) + (pm.flags.has('lengua') ? 0.1 : 0));
     }
     return d;
   }
@@ -193,7 +195,7 @@ export class MarketService {
     const def = this.c.items.find((i) => i.id === itemId);
     if (!def || def.category === 'mision' || !(sh.fence || sh.buys.includes(def.category))) throw new GameError('Aquí no compran eso.');
     if ((p.inventory.get(itemId) ?? 0) < qty) throw new GameError('No tienes tantas unidades.');
-    const unit = this.sellPrice(shopId, itemId);
+    const unit = Math.round(this.sellPrice(shopId, itemId) * (1 + (perkMods(this.c, p).mods.sell ?? 0)));
     const total = unit * qty;
     await this.db.tx(async (q) => {
       const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);

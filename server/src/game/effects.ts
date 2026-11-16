@@ -30,6 +30,7 @@ export class EffectEngine {
     const mem: (() => void)[] = [];
     // Copia de trabajo de los valores que se modifican (la memoria solo cambia tras COMMIT).
     let money = p.money, xp = p.xp, hp = p.hp, stamina = p.stamina, luck = p.luck;
+    const xp0 = p.xp;
     const inv = new Map(p.inventory);
     const rep = new Map(p.rep);
     const contracts = new Map([...p.contracts].map(([k, v]) => [k, { ...v, objectives: { ...v.objectives } }]));
@@ -167,7 +168,7 @@ export class EffectEngine {
           out.wanted = (out.wanted ?? 0) + e.wanted;
         }
       }
-      await q.query('UPDATE characters SET money=$2, xp=$3, hp=$4, stamina=$5, luck=$6 WHERE id=$1', [p.charId, money, xp, Math.round(hp), Math.round(stamina), luck]);
+      await q.query('UPDATE characters SET money=$2, xp=xp+$3, hp=$4, stamina=$5, luck=$6 WHERE id=$1', [p.charId, money, xp - xp0, Math.round(hp), Math.round(stamina), luck]);
       if (ctx.dialogId && effects.length) {
         await q.query(`INSERT INTO decisions (op_id, character_id, dialog_id, node_id, option_id, contract_id, contract_version, instance_id, result, rules_version)
                        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
@@ -178,7 +179,7 @@ export class EffectEngine {
     });
 
     // COMMIT correcto: reflejar en memoria.
-    p.money = money; p.xp = xp; p.hp = hp; p.stamina = stamina; p.luck = luck;
+    p.money = money; p.xp += xp - xp0; p.hp = hp; p.stamina = stamina; p.luck = luck;
     p.inventory = inv; p.rep = rep; p.contracts = contracts;
     for (const m of mem) m();
     const before = p.level;

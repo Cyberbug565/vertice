@@ -44,16 +44,56 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('factions'), seq }),
   z.object({ t: z.literal('bribe'), seq, opId }),
   z.object({ t: z.literal('rescue'), seq, target: z.number().int().nonnegative(), opId }),
+  // ---- v0.4
+  z.object({ t: z.literal('skillUp'), seq, skill: z.string().max(32), opId }),
+  z.object({ t: z.literal('perkBuy'), seq, perk: z.string().max(48), opId }),
+  z.object({ t: z.literal('wear'), seq, slot: z.string().max(16), item: z.string().max(64).nullable() }),
+  z.object({ t: z.literal('ability'), seq, id: z.string().max(64) }),
+  z.object({ t: z.literal('house'), seq, action: z.enum(['view', 'buy', 'sell', 'enter', 'ring', 'answer', 'permit', 'revoke', 'stashIn', 'stashOut', 'stash', 'realty']),
+    house: z.string().max(80).optional(), building: z.string().max(80).optional(), name: z.string().max(24).optional(), who: z.number().int().optional(), allow: z.boolean().optional(),
+    item: z.string().max(64).optional(), qty: z.number().int().min(1).max(999).optional(), filter: z.string().max(32).optional(), opId: opId.optional() }),
+  z.object({ t: z.literal('car'), seq, action: z.enum(['dealer', 'buy', 'sell', 'drive', 'park', 'travel']), dealer: z.string().max(48).optional(), car: z.string().max(64).optional(), zone: z.string().max(48).optional(), opId: opId.optional() }),
+  z.object({ t: z.literal('props'), seq }),
+  z.object({ t: z.literal('marketLive'), seq, on: z.boolean() }),
 ]);
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
 export type EntityKind = 'player' | 'npc' | 'door' | 'object';
-export interface Appearance { skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string }
+export interface Appearance {
+  skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string;
+  faceShape?: string; brows?: string; makeup?: string; makeupColor?: string; piercing?: string; scar?: string; bodyTattoo?: string; shirt?: string; shoes?: string;
+  /** Prendas puestas (las calcula el servidor a partir de la ropa equipada). */
+  headwear?: string; headColor?: string; eyewear?: string; legwear?: string; outer?: string; rarityGlow?: string;
+}
 export interface EntitySpawn {
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;
   appearance?: Appearance; role?: string; label?: string; interactive: boolean; objKind?: string; danger?: string;
   bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; fugitive?: boolean;
   chrome?: string[]; faction?: string; factionColor?: string; npcType?: string; hpPct?: number; carried?: boolean;
+  /** v0.4: nivel (los PNJ lo muestran con óptica de análisis o el perk «Lector») y coche que conduce. */
+  level?: number; vehicle?: string | null; buffs?: string[];
+}
+export interface SkillProg { id: string; name: string; attr: string; level: number; xp: number; from: number; to: number; bonus: number }
+export interface BuildingView { building: string; name: string; zone: string; units: { id: string; name: string; size: string; floor: number; price: number; owner: string | null; mine: boolean; allowed: boolean }[] }
+export interface RealtyView { houses: { id: string; name: string; size: string; zone: string; zoneName: string; price: number; floor: number }[]; index: Record<string, number>; mine: string[] }
+export interface DealerView { dealer: string; name: string; desc: string; cars: { id: string; name: string; maker: string; class: string; speed: number; trunk: number; seats: number; armor: number; price: number; color: string; desc: string }[]; owned: { id: string; car: string; name: string; value: number }[] }
+export interface PropsView {
+  houses: { id: string; name: string; zone: string; zoneName: string; size: string; value: number; paid: number; permits: string[] }[];
+  cars: { id: string; car: string; name: string; class: string; value: number; speed: number }[];
+  driving: string | null;
+}
+export interface StashView { house: string; name: string; items: { def: string; name: string; qty: number }[]; inventory: { def: string; name: string; qty: number }[] }
+export interface MarketLiveView {
+  at: number;
+  indices: { id: string; name: string; value: number; change: number; history: number[] }[];
+  items: { item: string; name: string; category: string; price: number; base: number; change: number; history: number[] }[];
+  trades: { at: number; text: string }[];
+  housing: { zone: string; name: string; index: number; forSale: number; cheapest: number }[];
+  cars: { id: string; name: string; class: string; price: number }[];
+}
+export interface ScanView {
+  target: number; name: string; title: string; kind: 'player' | 'npc'; deep: boolean; level: number; hp: number; hpMax: number; faction?: string; factionColor?: string;
+  attributes?: Record<string, number>; skills?: { name: string; level: number }[]; weapon?: string; armor?: number; chrome?: string[]; bounty?: number; wanted?: number; money?: string; rep?: number; threat: string;
 }
 
 export interface ShopView {
@@ -102,7 +142,7 @@ export interface CharacterSheet {
   needs: { hunger: number; thirst: number; fatigue: number }; needsMult: { hunger: number; thirst: number; fatigue: number };
   status: 'alive' | 'downed'; downedLeft: number; sleeping: { quality: number; where: string } | null; wanted: number; autoNeeds: boolean;
   profession: string; professionName: string; professionRank: number; professionXp: number; activeJob: string | null;
-  cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean }[];
+  cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean; region: string; part: string | null; ability?: string; unique?: string }[];
   bonuses: { confront: number; defense: number; steal: number; surgery: number };
   weapon: { id: string; name: string; kind: string; family: string; damage: [number, number]; range: number; cooldown: number; accuracy: number; ammo?: string; ammoName?: string; ammoCount?: number; nonlethal: string; tech: string } | null;
   weapons: { id: string; name: string; integrated: boolean }[];
@@ -110,6 +150,12 @@ export interface CharacterSheet {
   net: { rank: number; xp: number; xpNext: number; ram: number; ramMax: number; canHack: boolean };
   ambar: { plan: string; name: string; usesLeft: number; expiresInMin: number } | null;
   chrome: string[];
+  // ---- v0.4
+  xpLevelStart: number; skillProg: SkillProg[]; skillPoints: number; perkPoints: number; perks: string[];
+  wear: Record<string, string>; look: Appearance;
+  abilities: { id: string; name: string; kind: string; cooldown: number; readyIn: number }[]; buffs: Record<string, number>;
+  houses: string[]; cars: { id: string; car: string }[]; driving: string | null; discovered: string[];
+  speedMult: number; dodge: number; uniques: string[];
 }
 
 export interface JournalEntry {
@@ -130,7 +176,16 @@ export type ServerMsg =
   | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
   | { t: 'spawn'; e: EntitySpawn[] }
   | { t: 'despawn'; ids: number[] }
-  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean }
+  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[] }
+  | { t: 'skillxp'; skill: string; name: string; gain: number; level: number; xp: number; from: number; to: number; up: boolean }
+  | { t: 'building'; view: BuildingView }
+  | { t: 'realty'; view: RealtyView }
+  | { t: 'dealer'; view: DealerView }
+  | { t: 'props'; view: PropsView }
+  | { t: 'stash'; view: StashView }
+  | { t: 'marketLive'; view: MarketLiveView }
+  | { t: 'scan'; view: ScanView }
+  | { t: 'ring'; house: string; houseName: string; from: string; fromId: number }
   | { t: 'shop'; view: ShopView }
   | { t: 'market'; view: MarketView }
   | { t: 'jobs'; view: JobsView }

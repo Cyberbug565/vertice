@@ -2,8 +2,8 @@
  "id": "forja",
  "name": "Forja",
  "kind": "exterior",
- "width": 96,
- "height": 64,
+ "width": 106,
+ "height": 74,
  "chunkSize": 32,
  "danger": "public",
  "base": "gravel",
@@ -14,8 +14,8 @@
    "faction": "engranajes",
    "count": 8,
    "area": [
-    48,
-    32,
+    51,
+    35,
     40
    ]
   }
@@ -27,26 +27,26 @@
    "rect": [
     0,
     0,
-    96,
-    64
+    106,
+    74
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    30,
-    96,
-    4
+    33,
+    106,
+    8
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    46,
+    49,
     0,
-    4,
-    64
+    8,
+    74
    ]
   },
   {
@@ -54,17 +54,17 @@
    "rect": [
     0,
     12,
-    96,
-    2
+    106,
+    5
    ]
   },
   {
    "type": "asphalt",
    "rect": [
     0,
-    50,
-    96,
-    2
+    57,
+    106,
+    5
    ]
   },
   {
@@ -72,60 +72,60 @@
    "rect": [
     20,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "asphalt",
    "rect": [
-    72,
+    79,
     0,
-    2,
-    64
+    5,
+    74
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    44,
-    30,
+    47,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    50,
-    30,
+    57,
+    33,
     2,
-    4
+    8
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    28,
-    4,
+    49,
+    31,
+    8,
     2
    ]
   },
   {
    "type": "crosswalk",
    "rect": [
-    46,
-    34,
-    4,
+    49,
+    41,
+    8,
     2
    ]
   },
   {
    "type": "plaza",
    "rect": [
-    75,
-    15,
+    85,
+    18,
     20,
     14
    ]
@@ -150,7 +150,7 @@
   {
    "id": "forja-b1",
    "rect": [
-    23,
+    26,
     1,
     10,
     9
@@ -165,84 +165,90 @@
   {
    "id": "forja-b2",
    "rect": [
-    35,
+    38,
     1,
     9,
     9
    ],
    "height": 17,
-   "style": "shop",
+   "style": "industrial",
    "color": "#3a3a3a",
-   "sign": "COMEDOR",
+   "sign": "ARMERÍA 9",
    "signColor": "#ffd23f",
-   "name": "Comedor obrero"
+   "name": "Armas Pesadas de Forja"
   },
   {
    "id": "forja-b3",
    "rect": [
-    51,
+    58,
     1,
     9,
     9
    ],
    "height": 6,
-   "style": "industrial",
-   "color": "#504030"
+   "style": "glass",
+   "color": "#504030",
+   "sign": "USADOS",
+   "signColor": "#ff3040",
+   "name": "Usados de Forja"
   },
   {
    "id": "forja-b4",
    "rect": [
-    62,
+    69,
     1,
     8,
     9
    ],
-   "height": 14,
-   "style": "industrial",
+   "height": 17,
+   "style": "block",
    "color": "#504030"
   },
   {
    "id": "forja-b5",
    "rect": [
-    75,
+    85,
     1,
-    19,
+    9,
     9
    ],
-   "height": 6,
-   "style": "industrial",
-   "color": "#3a3a3a"
+   "height": 7,
+   "style": "shop",
+   "color": "#403a34",
+   "sign": "COMEDOR",
+   "signColor": "#ff3040",
+   "name": "Comedor obrero"
   },
   {
    "id": "forja-b6",
    "rect": [
+    96,
     1,
-    15,
-    17,
-    13
+    8,
+    9
    ],
-   "height": 4,
-   "style": "industrial",
-   "color": "#403a34"
+   "height": 9,
+   "style": "block",
+   "color": "#3a3a3a"
   },
   {
    "id": "forja-b7",
    "rect": [
-    23,
-    15,
-    10,
+    1,
+    18,
+    17,
     13
    ],
-   "height": 9,
-   "style": "block",
-   "color": "#4a4038"
+   "height": 5,
+   "style": "industrial",
+   "color": "#3a3a3a"
   },
   {
    "id": "forja-b8",
    "rect": [
-    35,
-    15,
-    9,
+    26,
+    18,
+    21,
     13
    ],
    "height": 8,
@@ -252,141 +258,101 @@
   {
    "id": "forja-b9",
    "rect": [
-    51,
-    15,
+    58,
+    18,
     19,
     13
    ],
-   "height": 9,
+   "height": 8,
    "style": "block",
-   "color": "#4a4038"
+   "color": "#504030",
+   "sign": "ACERÍAS",
+   "signColor": "#ff8a3d"
   },
   {
    "id": "forja-b10",
    "rect": [
     1,
-    35,
+    42,
     17,
     13
    ],
-   "height": 6,
-   "style": "block",
-   "color": "#3a3a3a"
+   "height": 9,
+   "style": "industrial",
+   "color": "#403a34"
   },
   {
    "id": "forja-b11",
    "rect": [
-    23,
-    35,
-    21,
+    26,
+    42,
+    10,
     13
    ],
-   "height": 4,
-   "style": "block",
-   "color": "#504030",
-   "sign": "AURORA DEPÓSITO",
-   "signColor": "#ff3040"
+   "height": 5,
+   "style": "industrial",
+   "color": "#4a4038"
   },
   {
    "id": "forja-b12",
    "rect": [
-    51,
-    35,
+    38,
+    42,
     9,
     13
    ],
-   "height": 19,
-   "style": "block",
-   "color": "#3a3a3a",
+   "height": 6,
+   "style": "industrial",
+   "color": "#504030",
    "sign": "ACERÍAS",
-   "signColor": "#ff3040"
+   "signColor": "#ffd23f"
   },
   {
    "id": "forja-b13",
    "rect": [
-    62,
-    35,
-    8,
+    58,
+    42,
+    19,
     13
    ],
-   "height": 9,
-   "style": "block",
-   "color": "#3a3a3a",
-   "sign": "AURORA DEPÓSITO",
-   "signColor": "#ffd23f"
+   "height": 4,
+   "style": "industrial",
+   "color": "#403a34"
   },
   {
    "id": "forja-b14",
    "rect": [
-    75,
-    35,
-    9,
+    85,
+    42,
+    19,
     13
    ],
-   "height": 7,
-   "style": "industrial",
-   "color": "#504030",
-   "sign": "FUNDICIÓN 7",
+   "height": 4,
+   "style": "block",
+   "color": "#4a4038",
+   "sign": "AURORA DEPÓSITO",
    "signColor": "#ff3040"
   },
   {
    "id": "forja-b15",
    "rect": [
-    86,
-    35,
+    1,
+    63,
     8,
-    13
+    9
    ],
-   "height": 7,
-   "style": "block",
-   "color": "#504030",
+   "height": 8,
+   "style": "industrial",
+   "color": "#3a3a3a",
    "sign": "AURORA DEPÓSITO",
-   "signColor": "#ff3040"
+   "signColor": "#ff8a3d"
   },
   {
    "id": "forja-b16",
    "rect": [
-    1,
-    53,
-    8,
-    9
-   ],
-   "height": 6,
-   "style": "industrial",
-   "color": "#3a3a3a"
-  },
-  {
-   "id": "forja-b17",
-   "rect": [
     11,
-    53,
+    63,
     7,
-    9
-   ],
-   "height": 7,
-   "style": "industrial",
-   "color": "#403a34",
-   "sign": "ENGRANAJES",
-   "signColor": "#ff3040"
-  },
-  {
-   "id": "forja-b18",
-   "rect": [
-    23,
-    53,
-    21,
-    9
-   ],
-   "height": 9,
-   "style": "block",
-   "color": "#504030"
-  },
-  {
-   "id": "forja-b19",
-   "rect": [
-    51,
-    53,
-    9,
     9
    ],
    "height": 6,
@@ -394,27 +360,81 @@
    "color": "#403a34"
   },
   {
-   "id": "forja-b20",
+   "id": "forja-b17",
    "rect": [
-    62,
-    53,
-    8,
+    26,
+    63,
+    10,
+    9
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#403a34",
+   "sign": "ACERÍAS",
+   "signColor": "#ffd23f"
+  },
+  {
+   "id": "forja-b18",
+   "rect": [
+    38,
+    63,
+    9,
+    9
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#504030"
+  },
+  {
+   "id": "forja-b19",
+   "rect": [
+    58,
+    63,
+    9,
     9
    ],
    "height": 7,
    "style": "block",
-   "color": "#504030"
+   "color": "#403a34",
+   "sign": "NAVE 12",
+   "signColor": "#ffd23f"
+  },
+  {
+   "id": "forja-b20",
+   "rect": [
+    69,
+    63,
+    8,
+    9
+   ],
+   "height": 9,
+   "style": "block",
+   "color": "#4a4038",
+   "sign": "FUNDICIÓN 7",
+   "signColor": "#ff3040"
   },
   {
    "id": "forja-b21",
    "rect": [
-    75,
-    53,
-    19,
+    85,
+    63,
+    9,
     9
    ],
-   "height": 6,
-   "style": "industrial",
+   "height": 8,
+   "style": "block",
+   "color": "#4a4038"
+  },
+  {
+   "id": "forja-b22",
+   "rect": [
+    96,
+    63,
+    8,
+    9
+   ],
+   "height": 9,
+   "style": "block",
    "color": "#4a4038"
   }
  ],
@@ -422,246 +442,246 @@
   {
    "type": "smokestack",
    "at": [
-    77,
-    17
+    87,
+    20
    ]
   },
   {
    "type": "pipe",
    "at": [
-    80,
-    22
+    90,
+    25
    ]
   },
   {
    "type": "crate",
    "at": [
-    83,
-    17
+    93,
+    20
    ]
   },
   {
    "type": "crate",
    "at": [
-    86,
-    22
+    96,
+    25
    ]
   },
   {
    "type": "wreck",
    "at": [
-    89,
-    17
+    99,
+    20
    ]
   },
   {
    "type": "lamp",
    "at": [
     4,
-    29
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
     8,
-    34
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
     13,
-    29
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
     17,
-    34
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    22,
-    29
+    25,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    26,
-    34
+    29,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    31,
-    29
+    34,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    35,
-    34
+    38,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    40,
-    29
+    43,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    44,
-    34
+    47,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    58,
-    29
+    65,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    62,
-    34
+    69,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    67,
-    29
+    74,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    71,
-    34
+    78,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    76,
-    29
+    86,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    80,
-    34
+    90,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    85,
-    29
+    95,
+    32
    ]
   },
   {
    "type": "lamp",
    "at": [
-    89,
-    34
+    99,
+    41
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
+    48,
     4
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
+    57,
     4
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
+    48,
     13
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
+    57,
     13
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    22
+    48,
+    25
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    22
+    57,
+    25
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    40
+    48,
+    47
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    40
+    57,
+    47
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    49
+    48,
+    56
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    49
+    57,
+    56
    ]
   },
   {
    "type": "lamp",
    "at": [
-    45,
-    58
+    48,
+    68
    ]
   },
   {
    "type": "lamp",
    "at": [
-    50,
-    58
+    57,
+    68
    ]
   },
   {
@@ -685,7 +705,7 @@
   {
    "type": "antenna",
    "at": [
-    37,
+    40,
     5
    ],
    "blocking": false,
@@ -694,7 +714,7 @@
   {
    "type": "antenna",
    "at": [
-    53,
+    60,
     5
    ],
    "blocking": false,
@@ -703,7 +723,7 @@
   {
    "type": "antenna",
    "at": [
-    69,
+    76,
     5
    ],
    "blocking": false,
@@ -712,7 +732,7 @@
   {
    "type": "antenna",
    "at": [
-    85,
+    95,
     5
    ],
    "blocking": false,
@@ -722,14 +742,6 @@
    "type": "car",
    "at": [
     8,
-    30
-   ],
-   "color": "#ffd23f"
-  },
-  {
-   "type": "car",
-   "at": [
-    38,
     33
    ],
    "color": "#e8e8f0"
@@ -737,18 +749,26 @@
   {
    "type": "car",
    "at": [
-    58,
-    30
+    41,
+    36
    ],
-   "color": "#e8e8f0"
+   "color": "#ff5a5a"
   },
   {
    "type": "car",
    "at": [
-    86,
+    65,
     33
    ],
-   "color": "#ffd23f"
+   "color": "#2a2a2a"
+  },
+  {
+   "type": "car",
+   "at": [
+    96,
+    36
+   ],
+   "color": "#e8e8f0"
   }
  ],
  "doors": [
@@ -756,7 +776,7 @@
    "id": "puerta-taller-engranajes-int",
    "name": "Taller de Los Engranajes",
    "at": [
-    28,
+    31,
     10
    ],
    "to": {
@@ -769,10 +789,42 @@
    "danger": "public"
   },
   {
+   "id": "puerta-armas-forja-int",
+   "name": "Armas Pesadas de Forja",
+   "at": [
+    42,
+    10
+   ],
+   "to": {
+    "zone": "armas-forja-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-usados-forja-int",
+   "name": "Usados de Forja",
+   "at": [
+    62,
+    10
+   ],
+   "to": {
+    "zone": "usados-forja-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "protected"
+  },
+  {
    "id": "puerta-comedor-obrero-int",
    "name": "Comedor obrero",
    "at": [
-    39,
+    89,
     10
    ],
    "to": {
@@ -789,13 +841,13 @@
    "name": "Avenida hacia Cénit",
    "at": [
     0,
-    31
+    34
    ],
    "to": {
     "zone": "cenit",
     "at": [
-     94,
-     31
+     104,
+     34
     ]
    },
    "danger": "public"
@@ -804,14 +856,14 @@
    "id": "forja-norte",
    "name": "Avenida hacia Neón Rojo",
    "at": [
-    47,
+    50,
     0
    ],
    "to": {
     "zone": "neon-rojo",
     "at": [
-     47,
-     62
+     50,
+     72
     ]
    },
    "danger": "public"
@@ -820,8 +872,8 @@
    "id": "forja-este",
    "name": "Autopista hacia El Yermo",
    "at": [
-    95,
-    31
+    105,
+    34
    ],
    "to": {
     "zone": "yermo",
@@ -839,7 +891,7 @@
    "name": "Cajero automático",
    "at": [
     18,
-    29
+    32
    ],
    "kind": "atm"
   },
@@ -847,8 +899,8 @@
    "id": "forja-cajero-2",
    "name": "Cajero automático",
    "at": [
-    70,
-    34
+    77,
+    41
    ],
    "kind": "atm"
   },
@@ -856,8 +908,8 @@
    "id": "forja-cajero-3",
    "name": "Cajero automático",
    "at": [
-    44,
-    14
+    47,
+    17
    ],
    "kind": "atm"
   },
@@ -865,8 +917,8 @@
    "id": "forja-cajero-4",
    "name": "Cajero automático",
    "at": [
-    51,
-    48
+    58,
+    55
    ],
    "kind": "atm"
   },
@@ -874,8 +926,8 @@
    "id": "forja-vending-1",
    "name": "Máquina Aurora",
    "at": [
-    24,
-    29
+    27,
+    32
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -884,8 +936,8 @@
    "id": "forja-vending-2",
    "name": "Máquina Aurora",
    "at": [
-    62,
-    34
+    69,
+    41
    ],
    "kind": "vending",
    "shop": "aurora-vending"
@@ -894,8 +946,8 @@
    "id": "forja-basura-1",
    "name": "Contenedor de basura",
    "at": [
-    30,
-    34
+    33,
+    41
    ],
    "kind": "trash"
   },
@@ -903,8 +955,8 @@
    "id": "forja-basura-2",
    "name": "Contenedor de basura",
    "at": [
-    66,
-    29
+    73,
+    32
    ],
    "kind": "trash"
   },
@@ -913,7 +965,7 @@
    "name": "Contenedor de basura",
    "at": [
     19,
-    52
+    62
    ],
    "kind": "trash"
   },
@@ -921,10 +973,181 @@
    "id": "forja-basura-4",
    "name": "Contenedor de basura",
    "at": [
-    74,
+    84,
     11
    ],
    "kind": "trash"
+  },
+  {
+   "id": "forja-portal-1",
+   "name": "Portal · Edificio AURORA DEPÓSITO",
+   "at": [
+    9,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-2",
+   "name": "Portal · Bloque 2",
+   "at": [
+    73,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-3",
+   "name": "Portal · Bloque 3",
+   "at": [
+    100,
+    10
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-4",
+   "name": "Portal · Bloque 4",
+   "at": [
+    9,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-5",
+   "name": "Portal · Bloque 5",
+   "at": [
+    36,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-6",
+   "name": "Portal · Edificio ACERÍAS",
+   "at": [
+    67,
+    31
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-7",
+   "name": "Portal · Bloque 7",
+   "at": [
+    9,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-8",
+   "name": "Portal · Bloque 8",
+   "at": [
+    31,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-9",
+   "name": "Portal · Edificio ACERÍAS",
+   "at": [
+    42,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-10",
+   "name": "Portal · Bloque 10",
+   "at": [
+    67,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-11",
+   "name": "Portal · Edificio AURORA DEPÓSITO",
+   "at": [
+    94,
+    55
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-12",
+   "name": "Portal · Edificio AURORA DEPÓSITO",
+   "at": [
+    5,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-13",
+   "name": "Portal · Bloque 13",
+   "at": [
+    14,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-14",
+   "name": "Portal · Edificio ACERÍAS",
+   "at": [
+    31,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-15",
+   "name": "Portal · Bloque 15",
+   "at": [
+    42,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-16",
+   "name": "Portal · Edificio NAVE 12",
+   "at": [
+    62,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-17",
+   "name": "Portal · Edificio FUNDICIÓN 7",
+   "at": [
+    73,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-18",
+   "name": "Portal · Bloque 18",
+   "at": [
+    89,
+    72
+   ],
+   "kind": "housing"
+  },
+  {
+   "id": "forja-portal-19",
+   "name": "Portal · Bloque 19",
+   "at": [
+    100,
+    72
+   ],
+   "kind": "housing"
   }
  ],
  "sectors": [
@@ -975,104 +1198,104 @@
  "waypoints": [
   [
    5,
-   31
+   34
   ],
   [
    15,
-   32
+   35
   ],
   [
-   30,
-   31
+   33,
+   34
   ],
   [
-   40,
-   32
+   43,
+   35
   ],
   [
-   56,
-   31
+   63,
+   34
   ],
   [
-   66,
-   32
+   73,
+   35
+  ],
+  [
+   90,
+   34
+  ],
+  [
+   102,
+   35
+  ],
+  [
+   50,
+   6
+  ],
+  [
+   51,
+   23
+  ],
+  [
+   50,
+   51
+  ],
+  [
+   51,
+   68
+  ],
+  [
+   21,
+   6
+  ],
+  [
+   21,
+   25
+  ],
+  [
+   21,
+   51
+  ],
+  [
+   21,
+   68
   ],
   [
    80,
-   31
-  ],
-  [
-   92,
-   32
-  ],
-  [
-   47,
    6
   ],
   [
-   48,
-   20
+   80,
+   25
   ],
   [
-   47,
-   44
+   80,
+   51
   ],
   [
-   48,
-   58
-  ],
-  [
-   21,
-   6
-  ],
-  [
-   21,
-   22
-  ],
-  [
-   21,
-   44
-  ],
-  [
-   21,
-   58
-  ],
-  [
-   73,
-   6
-  ],
-  [
-   73,
-   22
-  ],
-  [
-   73,
-   44
-  ],
-  [
-   73,
-   58
+   80,
+   68
   ],
   [
    10,
    12
   ],
   [
-   60,
+   67,
    13
   ],
   [
-   85,
-   50
+   95,
+   57
   ],
   [
-   30,
-   51
+   33,
+   58
   ]
  ],
  "safePoint": [
-  47,
-  31
+  50,
+  34
  ],
  "skybridges": []
 }

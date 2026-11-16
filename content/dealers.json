@@ -1,0 +1,85 @@
+[
+ {
+  "id": "saeta-colinas",
+  "name": "Concesionario Saeta",
+  "zone": "concesionario-saeta-int",
+  "classes": [
+   "lujo",
+   "hiper",
+   "deportivo"
+  ],
+  "priceMult": 1.05,
+  "desc": "Lujo e hiperdeportivos en las Colinas. Café gratis si puedes pagarlos."
+ },
+ {
+  "id": "kotetsu-neon",
+  "name": "Motos Kōtetsu",
+  "zone": "motos-kotetsu-int",
+  "classes": [
+   "moto",
+   "deportivo"
+  ],
+  "priceMult": 1,
+  "desc": "Motos y deportivos en el corazón de Neón Rojo."
+ },
+ {
+  "id": "usados-forja",
+  "name": "Usados de Forja",
+  "zone": "usados-forja-int",
+  "classes": [
+   "economico",
+   "utilitario",
+   "todoterreno",
+   "moto"
+  ],
+  "priceMult": 0.8,
+  "desc": "Coches de segunda mano. Sin garantía y sin preguntas."
+ },
+ {
+  "id": "vidal-arrabal",
+  "name": "Autos Vidal",
+  "zone": "autos-vidal-int",
+  "classes": [
+   "economico",
+   "utilitario",
+   "moto"
+  ],
+  "priceMult": 0.92,
+  "desc": "Coches de barrio a plazos (que no se pagan a plazos)."
+ },
+ {
+  "id": "halcon-cenit",
+  "name": "Blindados Halcón",
+  "zone": "blindados-halcon-int",
+  "classes": [
+   "blindado",
+   "lujo"
+  ],
+  "priceMult": 1.1,
+  "desc": "Vehículos blindados para quien tiene enemigos."
+ },
+ {
+  "id": "autos-ferro",
+  "name": "Autos del Muelle",
+  "zone": "autos-ferro-int",
+  "classes": [
+   "economico",
+   "utilitario",
+   "moto"
+  ],
+  "priceMult": 0.95,
+  "desc": "Lo que llega en los barcos, a buen precio."
+ },
+ {
+  "id": "nomadas-yermo",
+  "name": "Garaje de los Nómadas",
+  "zone": "yermo",
+  "classes": [
+   "todoterreno",
+   "moto",
+   "utilitario"
+  ],
+  "priceMult": 0.9,
+  "desc": "Vehículos preparados para el Yermo."
+ }
+]

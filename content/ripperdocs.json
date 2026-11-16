@@ -22,9 +22,16 @@
    "cyberdeck-operaciones",
    "cyberdeck-basico",
    "brazo-protesico",
-   "pierna-protesica"
+   "pierna-protesica",
+   "glandula-adrenalina",
+   "optica-analisis",
+   "traductor-cultural",
+   "interfaz-vehiculo",
+   "compartimento-oculto"
   ],
-  "desc": "Buena cirujana y honrada: nunca instala cromo robado."
+  "desc": "Buena cirujana y honrada: nunca instala cromo robado.",
+  "hidden": false,
+  "rumor": ""
  },
  {
   "id": "carnicero",
@@ -42,7 +49,12 @@
    "brazos-asistencia",
    "subdermico",
    "cuchillas-antebrazo",
-   "puno-hidraulico"
+   "puno-hidraulico",
+   "latigo-monofilamento",
+   "piernas-propulsion",
+   "garras-retractiles",
+   "pulso-emp",
+   "implante-mandibula"
   ],
   "stolenStock": [
    "acelerador-neural",
@@ -51,7 +63,9 @@
    "piernas-salto",
    "canon-antebrazo"
   ],
-  "desc": "Barato, rápido y peligroso. Te pone lo que sea, aunque sea robado, y a veces te roba a ti."
+  "desc": "Barato, rápido y peligroso. Te pone lo que sea, aunque sea robado, y a veces te roba a ti.",
+  "hidden": true,
+  "rumor": "Dicen que en la esquina sureste de Ferro, al final de Kanal, un tal Brann opera sin preguntar de dónde viene el cromo."
  },
  {
   "id": "iruka",
@@ -72,12 +86,19 @@
    "pierna-protesica",
    "brazo-protesico",
    "sistema-apoyo",
-   "cyberdeck-basico"
+   "cyberdeck-basico",
+   "glandula-adrenalina",
+   "huesos-densos",
+   "modulador-voz",
+   "garras-retractiles",
+   "palma-electrica"
   ],
   "stolenStock": [
    "coprocesador"
   ],
-  "desc": "Honesta a su manera: acepta cromo robado si se lo dices, con recargo."
+  "desc": "Honesta a su manera: acepta cromo robado si se lo dices, con recargo.",
+  "hidden": true,
+  "rumor": "Mama Iruka cose a medio Kanal: busca una puerta sin rótulo en la manzana del ramen, la que da a la avenida del sur."
  },
  {
   "id": "ruiz",
@@ -89,15 +110,21 @@
   "morality": "estricta",
   "danger": 0,
   "faction": "asociacion-lumen",
-  "maxGrade": 2,
+  "maxGrade": 3,
   "stock": [
    "brazo-protesico",
    "pierna-protesica",
    "audifono-coclear",
    "optica-inspeccion",
-   "rinon-filtrante"
+   "rinon-filtrante",
+   "esqueleto-titanio",
+   "huesos-densos",
+   "interfaz-vehiculo",
+   "implante-mandibula"
   ],
-  "desc": "Prótesis asequibles y cromo básico. Grado máximo II."
+  "desc": "Prótesis asequibles y cromo básico. Grado máximo II.",
+  "hidden": true,
+  "rumor": "Ruiz, el protésico, trabaja detrás del taller del sur de Ferro, cerca de la Clínica Sato. Honrado, pero no anuncia nada."
  },
  {
   "id": "okami",
@@ -122,9 +149,17 @@
    "subdermico",
    "cyberdeck-operaciones",
    "cyberdeck-militar",
-   "ojos-tacticos"
+   "ojos-tacticos",
+   "segundo-corazon",
+   "glandula-adrenalina",
+   "refuerzo-sinaptico",
+   "optica-analisis",
+   "esqueleto-titanio",
+   "proyector-holografico"
   ],
-  "desc": "La mejor y la más cara. Procedencia verificada."
+  "desc": "La mejor y la más cara. Procedencia verificada.",
+  "hidden": false,
+  "rumor": ""
  },
  {
   "id": "vex",
@@ -132,7 +167,7 @@
   "npc": "vex",
   "zone": "vex-int",
   "skill": 4,
-  "priceMult": 1.0,
+  "priceMult": 1,
   "morality": "flexible",
   "danger": 0.1,
   "faction": "hojas-rojas",
@@ -143,13 +178,20 @@
    "regulador-sueno",
    "filtro-neural",
    "cyberdeck-basico",
-   "ojos-tacticos"
+   "ojos-tacticos",
+   "reflejos-sobrealimentados",
+   "proyector-holografico",
+   "refuerzo-sinaptico",
+   "modulador-voz",
+   "pulso-emp"
   ],
   "stolenStock": [
    "ice-aislamiento",
    "acelerador-neural"
   ],
-  "desc": "Muy bueno si le caes bien a las Hojas Rojas; si no, sus manos tiemblan."
+  "desc": "Muy bueno si le caes bien a las Hojas Rojas; si no, sus manos tiemblan.",
+  "hidden": true,
+  "rumor": "El Dr. Vex tiene la consulta en un portal anónimo del sur de Cénit, entre la torre de datos y la logística de Aurora."
  },
  {
   "id": "yuki",
@@ -161,7 +203,7 @@
   "morality": "flexible",
   "danger": 0.08,
   "faction": "kitsune",
-  "maxGrade": 4,
+  "maxGrade": 5,
   "stock": [
    "cuchillas-antebrazo",
    "ojos-tacticos",
@@ -169,12 +211,19 @@
    "subdermico",
    "optica-inspeccion",
    "cyberdeck-basico",
-   "brazo-protesico"
+   "brazo-protesico",
+   "reflejos-sobrealimentados",
+   "latigo-monofilamento",
+   "segundo-corazon",
+   "piernas-propulsion",
+   "optica-analisis"
   ],
   "stolenStock": [
    "camuflaje-optico",
    "puno-hidraulico"
   ],
-  "desc": "Cromo de combate para el Clan Kitsune y para quien pague. Tu fama con el Clan cuenta."
+  "desc": "Cromo de combate para el Clan Kitsune y para quien pague. Tu fama con el Clan cuenta.",
+  "hidden": true,
+  "rumor": "En Neón Rojo hay una doctora, Yuki, que trabaja para el Clan. Su puerta no tiene letrero."
  }
 ]
