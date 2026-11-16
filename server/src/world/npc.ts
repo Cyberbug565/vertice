@@ -20,6 +20,31 @@ const STATE_LABEL: Record<NpcState, string> = { rest: 'Descansando', travel: 'De
 export function scheduledBrain(def: NpcDef, seed: number): NpcBrain {
   return { type: 'scheduled', state: 'travel', nextThink: 0, def, rng: seededRng(seed), pauseUntil: 0 };
 }
+/** v0.9 · Rutinas de los transeúntes: de día y de noche. */
+interface Routine { label: string; len: [number, number]; lines?: string[]; dance?: string }
+const DAY_ROUTINES: Routine[] = [
+  { label: 'Hablando por teléfono', len: [80, 200], lines: ['¿Que no llega el pago? ¡Me debes tres semanas!', 'Sí, mamá, estoy comiendo bien.', 'Te llamo luego, hay un tío raro mirándome.', 'No, no, el chip nuevo funciona de lujo.'] },
+  { label: 'Haciendo fotos', len: [40, 90], lines: ['Esta luz es perfecta.', '¡Sonríe!'] },
+  { label: 'Repartiendo folletos', len: [100, 220], lines: ['¡Implantes dentales a mitad de precio!', 'Nueva tienda de ramen en el Canal, ¡pruébala!', '¡Vota no a la ley de cámaras!'] },
+  { label: 'Haciendo ejercicio', len: [80, 160] },
+  { label: 'Pidiendo limosna', len: [150, 300], lines: ['¿Unos eurodólares para un café?', 'Perdí el brazo en la fábrica. Ayúdame.'] },
+  { label: 'Discutiendo', len: [60, 140], lines: ['¡Eso no es lo que dijiste!', '¿Me estás llamando mentiroso?', '¡Devuélveme mi dinero!'] },
+  { label: 'Paseando al perro robot', len: [60, 120], lines: ['¡Bit, deja eso!', 'Buen chico… creo.'] },
+  { label: 'Esperando el bus', len: [100, 200], lines: ['Siempre llega tarde.'] },
+  { label: 'Bailando con auriculares', len: [60, 140], dance: 'rebote' },
+  { label: 'Predicando', len: [120, 240], lines: ['¡La carne es débil, el cromo es eterno!', 'El fin de la red está cerca.', 'Arrepentíos de vuestros implantes.'] },
+];
+const NIGHT_ROUTINES: Routine[] = [
+  { label: 'Bebiendo en la acera', len: [100, 240], lines: ['Una más y me voy.', '¿Tienes fuego?'] },
+  { label: 'Bailando', len: [80, 160], dance: 'neon' },
+  { label: 'Haciendo pintadas', len: [120, 260], lines: ['Que no te vea la PCV…'] },
+  { label: 'Vigilando la esquina', len: [140, 300], lines: ['¿Buscas algo?', 'Sigue andando.'] },
+  { label: 'Discutiendo a gritos', len: [60, 140], lines: ['¡Lárgate de mi esquina!', '¡Te voy a reventar el cromo!', '¡Llama a la policía, a ver si vienen!'] },
+  { label: 'Fumando en un portal', len: [100, 200] },
+  { label: 'Buscando un taxi', len: [60, 120], lines: ['¡Taxi! ¡Eh, taxi!'] },
+  { label: 'Cantando borracho', len: [80, 160], lines: ['♪ Neón en los ojos, ruido en el corazón ♪', '♪ Vértice, Vértice, ciudad sin final ♪'], dance: 'onda' },
+  { label: 'Trapicheando', len: [100, 220], lines: ['Psst. Neblina, de la buena.', 'Chips sin licencia, baratos.'] },
+];
 export function ambientBrain(seed: number, home?: [number, number], radius?: number): NpcBrain {
   return { type: 'ambient', state: 'travel', nextThink: 0, rng: seededRng(seed), pauseUntil: 0, home, radius };
 }
@@ -70,10 +95,18 @@ function thinkAmbient(w: World, e: Entity) {
   if (e.path.length) return;
   if (b.pauseUntil > w.tick) return;
   // Paradas variadas y naturales: mirar el móvil, un escaparate, charlar, fumar…; a veces solo un respiro.
-  if (b.state === 'travel' && b.rng() < 0.45) {
+  // v0.9 · Muchas más rutinas, distintas de día y de noche, algunas con frase en bocadillo o con baile.
+  if (e.emote && e.emote.move !== 'nausea') { e.emote = undefined; e.labelVer++; }
+  if (b.state === 'travel' && b.rng() < 0.5) {
+    const night = (() => { const h = w.cityHour(); return h >= 21 || h < 6; })();
+    const pool = night ? NIGHT_ROUTINES : DAY_ROUTINES;
     const r = b.rng();
-    const [len, label] = r < 0.35 ? [10 + b.rng() * 25, 'Paseando'] : r < 0.55 ? [40 + b.rng() * 80, 'Mirando el móvil'] : r < 0.7 ? [60 + b.rng() * 100, 'Mirando escaparates'] : r < 0.85 ? [60 + b.rng() * 140, 'Charlando'] : [80 + b.rng() * 120, 'Fumando'];
+    const [len, label] = r < 0.25 ? [10 + b.rng() * 25, 'Paseando'] : r < 0.4 ? [40 + b.rng() * 80, 'Mirando el móvil'] : r < 0.5 ? [60 + b.rng() * 100, 'Mirando escaparates'] : r < 0.62 ? [60 + b.rng() * 140, 'Charlando'] : r < 0.7 ? [80 + b.rng() * 120, 'Fumando']
+      : (() => { const x = pool[Math.floor(b.rng() * pool.length)]; return [x.len[0] + b.rng() * (x.len[1] - x.len[0]), x.label] as [number, string]; })();
     b.pauseUntil = w.tick + Math.floor(len);
+    const routine = [...DAY_ROUTINES, ...NIGHT_ROUTINES].find((x) => x.label === label);
+    if (routine?.dance) { e.emote = { move: routine.dance as any, at: Date.now() }; e.labelVer++; }
+    if (routine?.lines && b.rng() < 0.6) { const line = routine.lines[Math.floor(b.rng() * routine.lines.length)]; for (const o of e.zone.query(e.x, e.y, 18)) if (o.kind === 'player' && o.conn) w.send(o.conn, { t: 'speech', id: e.id, text: line }); }
     // Busca alguien cerca con quien charlar: se giran el uno hacia el otro.
     if (label === 'Charlando') for (const o of e.zone.query(e.x, e.y, 2.5)) if (o !== e && o.kind === 'npc' && o.npc?.type === 'ambient' && !o.path.length) { e.facing = facingToIdx(o.x - e.x, o.y - e.y); o.facing = facingToIdx(e.x - o.x, e.y - o.y); e.lastMoveTick = o.lastMoveTick = w.tick; break; }
     setState(w, e, label === 'Charlando' ? 'talk' : 'rest', label);

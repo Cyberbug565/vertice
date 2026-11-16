@@ -1,6 +1,6 @@
 // Vista isométrica: bloques de suelo bajo demanda, orden por profundidad topológica, atenuación de edificios,
 // interpolación de entidades remotas y predicción del personaje propio.
-import { Application, Container, Graphics, Sprite, Text, type FederatedPointerEvent } from 'pixi.js';
+import { AlphaFilter, Application, Container, Graphics, Sprite, Text, type FederatedPointerEvent } from 'pixi.js';
 import {
   GROUND_TYPES, buildZoneGrid, findPath, isWalkable, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
@@ -19,7 +19,7 @@ export interface CEnt {
   vehX?: Container; vehY?: Container; lvl?: Text;
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
   legL?: Container; legR?: Container; armB?: Container; armF?: Container; hand?: Container; bodyY?: number;
-  weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit'; dropAt?: number; faceSign?: number;
+  weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit' | 'heavy'; dropAt?: number; faceSign?: number; rollAt?: number; kickAt?: number; poolAt?: number; poolSize?: number;
 }
 
 const INTERP_DELAY = 110;
@@ -39,6 +39,14 @@ export class GameView {
   markers = new Container();
   objects = new Container();
   nightOverlay = new Graphics();
+  /** v0.9 · Iluminación dinámica: una capa de oscuridad a la que cada luz (farolas, neones, puertas, fogonazos, explosiones y tú) le abre un hueco. */
+  private darkness = new Container();
+  private darkRect = new Graphics();
+  private lightPool: Sprite[] = [];
+  private lightSrc: { sx: number; sy: number; r: number; k: number }[] = [];
+  private flashes: { x: number; y: number; r: number; k: number; t0: number; until: number }[] = [];
+  /** Destello de luz temporal (fogonazo, explosión, chispa). */
+  flash(x: number, y: number, r: number, k: number, ms: number) { const now = performance.now(); this.flashes.push({ x, y, r, k, t0: now, until: now + ms }); if (this.flashes.length > 60) this.flashes.shift(); }
   lightsLayer = new Container();
   labels = new Container();
   rain = new Graphics();
@@ -83,6 +91,8 @@ export class GameView {
   serverTime = () => Date.now();
   onHover: (e: CEnt | null, sx: number, sy: number) => void = () => {};
   onContextLost: (lost: boolean) => void = () => {};
+  /** v0.9 · Alguien acaba de morir (para el grito). */
+  onDied: (e: CEnt) => void = () => {};
   private rainDrops: { x: number; y: number; v: number }[] = [];
   private cityHourFn: () => number = () => 12;
   private visibleRect = { x0: 0, y0: 0, x1: 0, y1: 0 };
@@ -96,7 +106,8 @@ export class GameView {
     this.cityHourFn = cityHour;
     await this.app.init({ resizeTo: window, background: 0x07070f, antialias: false, preference: 'webgl', resolution: (window.devicePixelRatio || 1) * settings.resScale, autoDensity: true, powerPreference: 'high-performance' });
     parent.appendChild(this.app.canvas);
-    this.app.stage.addChild(this.world, this.nightOverlay, this.lightsLayer, this.rain, this.labels);
+    this.darkness.addChild(this.darkRect); this.darkness.filters = [new AlphaFilter({ alpha: 1 })];
+    this.app.stage.addChild(this.world, this.nightOverlay, this.darkness, this.lightsLayer, this.rain, this.labels);
     this.floor.addChild(...this.floorTiles);
     this.world.addChild(this.ground, this.floor, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
     this.markers.addChild(this.kairosG, this.trailLayer, this.pathG, this.hoverG);
@@ -143,8 +154,47 @@ export class GameView {
     this.rebuild();
   }
 
+  /** Fuentes de luz fijas de la zona (en coordenadas de pantalla del mundo, precalculadas). */
+  private buildLights() {
+    const z = this.zone!; const out: typeof this.lightSrc = [];
+    const add = (x: number, y: number, r: number, k: number) => { const p = worldToScreen(x, y, 0); out.push({ sx: p.x, sy: p.y, r, k }); };
+    for (const p of z.props) {
+      const [x, y] = p.at;
+      if (p.type === 'lamp') add(x + 1.1, y + 0.5, 5.5, 1);
+      else if (p.type === 'neonstrip') add(x + 0.5, y + 0.5, 3.2, 0.7);
+      else if (p.type === 'holo' || p.type === 'billboard') add(x + 0.5, y + 0.5, 4.5, 0.8);
+      else if (p.type === 'kiosk' || p.type === 'busstop' || p.type === 'stall') add(x + 0.5, y + 0.5, 2.6, 0.55);
+    }
+    for (const d of (z as any).doors ?? []) if (d.at) add(d.at[0] + 0.5, d.at[1] + 0.5, 2.8, 0.6);
+    for (const s of z.skybridges ?? []) { add((s.from[0] + s.to[0]) / 2, (s.from[1] + s.to[1]) / 2, 4, 0.45); }
+    this.lightSrc = out;
+  }
+  private drawLighting(darkA: number, interior: boolean) {
+    const W = this.app.screen.width, H = this.app.screen.height;
+    let used = 0;
+    const use = () => { let s = this.lightPool[used]; if (!s) { s = new Sprite(glowTexture()); s.anchor.set(0.5); s.blendMode = 'erase'; this.darkness.addChild(s); this.lightPool.push(s); } s.visible = true; used++; return s; };
+    if (darkA > 0.02 && !interior) {
+      this.darkRect.clear().rect(0, 0, W, H).fill({ color: 0x02030c, alpha: darkA });
+      const wx = this.world.position.x, wy = this.world.position.y, z = this.world.scale.x;
+      const put = (sx: number, sy: number, r: number, k: number) => {
+        const gx = wx + sx * z, gy = wy + sy * z, rx = r * 34 * z;
+        if (gx < -rx || gy < -rx || gx > W + rx || gy > H + rx) return;
+        const s = use(); s.position.set(gx, gy); s.width = rx * 2.2; s.height = rx * 1.15; s.alpha = Math.min(1, k);
+      };
+      for (const l of this.lightSrc) put(l.sx, l.sy, l.r, l.k);
+      const now = performance.now();
+      this.flashes = this.flashes.filter((f) => f.until > now);
+      for (const f of this.flashes) { const p = worldToScreen(f.x, f.y, 0); put(p.x, p.y, f.r, f.k * (1 - (now - f.t0) / (f.until - f.t0))); }
+      // Un poco de luz alrededor de ti para que nunca te pierdas en un callejón (y la de las linternas/visores ajenos).
+      const me = worldToScreen(this.me.x, this.me.y, 0); put(me.x, me.y, 2.4, 0.5);
+      for (const e of this.ents.values()) if (e.s.vehicle) { const p = worldToScreen(e.x, e.y, 0); put(p.x, p.y, 4, 0.8); }
+    } else this.darkRect.clear();
+    for (let i = used; i < this.lightPool.length; i++) this.lightPool[i].visible = false;
+  }
+
   rebuild() {
     if (!this.zone) return;
+    this.buildLights();
     for (const c of this.chunks.values()) c.destroy({ children: true });
     for (const c of this.chunkLights.values()) c.destroy({ children: true });
     this.chunks.clear(); this.chunkLights.clear();
@@ -369,6 +419,21 @@ export class GameView {
         g.poly([a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y]).fill({ color: col, alpha: 0.18 }).stroke({ width: 2, color: col, alpha: 0.9 });
         const m = worldToScreen(fx + 0.5, fy + 0.5);
         g.poly([m.x - 6, m.y - 30, m.x + 6, m.y - 30, m.x, m.y - 20]).fill(col);
+        // v0.9 · Rótulo luminoso del local (COMISARÍA, FARMACIA, MATASANOS…) con su icono.
+        if (s.sign) {
+          const sc = s.sign.color ? parseInt(s.sign.color.slice(1), 16) : 0xffd23f;
+          const w = Math.max(40, s.sign.text.length * 6.4 + (s.sign.icon ? 14 : 0) + 10);
+          g.roundRect(m.x - w / 2 - 5, m.y - 62, w + 10, 24, 6).fill({ color: sc, alpha: 0.12 });
+          g.roundRect(m.x - w / 2, m.y - 58, w, 16, 3).fill({ color: 0x07070d, alpha: 0.88 }).stroke({ width: 1.5, color: sc, alpha: 0.95 });
+          g.moveTo(m.x, m.y - 42).lineTo(m.x, m.y - 31).stroke({ width: 1.5, color: 0x2a2a38 });
+          const ix = m.x - w / 2 + 9, iy = m.y - 50;
+          if (s.sign.icon === 'cruz') g.rect(ix - 1.5, iy - 5, 3, 10).fill(sc).rect(ix - 5, iy - 1.5, 10, 3).fill(sc);
+          else if (s.sign.icon === 'escudo') g.poly([ix - 5, iy - 5, ix + 5, iy - 5, ix + 5, iy + 1, ix, iy + 5, ix - 5, iy + 1]).fill(sc);
+          else if (s.sign.icon === 'diana') g.circle(ix, iy, 5).stroke({ width: 1.5, color: sc }).circle(ix, iy, 1.5).fill(sc);
+          else if (s.sign.icon === 'flecha') g.poly([ix, iy - 6, ix + 5, iy + 1, ix + 2, iy + 1, ix + 2, iy + 5, ix - 2, iy + 5, ix - 2, iy + 1, ix - 5, iy + 1]).fill(sc);
+          const t = new Text({ text: s.sign.text, style: { fontFamily: 'system-ui, sans-serif', fontWeight: '800', fontSize: 10, fill: sc, letterSpacing: 1 } });
+          t.anchor.set(0.5); t.position.set(m.x + (s.sign.icon ? 6 : 0), m.y - 50); g.addChild(t);
+        }
       });
     } else if (s.objKind === 'generator') {
       const col = this.powered ? 0x5affc8 : 0xff5a5a;
@@ -422,6 +487,7 @@ export class GameView {
         e.s.emote = extra.emote ?? undefined;
       }
       e.s.bleeding = extra.bleeding || undefined;
+      if (extra.dead && !e.s.dead) this.onDied(e);
       e.s.dead = extra.dead || undefined;
       const lostChanged = (extra.lost ?? []).join() !== (e.s.lost ?? []).join();
       const wChanged = (extra.weapon ?? undefined) !== (e.s.weapon ?? undefined);
@@ -465,10 +531,132 @@ export class GameView {
   /** Balas trazadoras que viajan, arcos de golpe según el arma, salpicaduras y charcos de sangre. */
   private bullets: { g: Graphics; ax: number; ay: number; bx: number; by: number; t0: number; dur: number; col: number; w: number; hit: boolean; tx: number; ty: number; part?: string; target: number }[] = [];
   private decals: { g: Graphics; until: number }[] = [];
-  fx(kind: 'shot' | 'hit' | 'hack' | 'ko', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean } = {}) {
+  /** v0.9 · Partículas: gotas de sangre con gravedad que manchan el suelo al caer, casquillos y chispas. */
+  private parts: { g: Graphics; x: number; y: number; vx: number; vy: number; floor: number; t0: number; life: number; kind: 'blood' | 'shell' | 'spark'; wx?: number; wy?: number }[] = [];
+  private spray(b: CEnt, x: number, y: number, dirX: number, dirY: number, n: number, force = 1) {
+    if (settings.reduceFlashes) n = Math.ceil(n / 2);
+    const len = Math.hypot(dirX, dirY) || 1;
+    for (let i = 0; i < n; i++) {
+      const sp = (40 + Math.random() * 120) * force;
+      const ang = Math.atan2(dirY / len, dirX / len) + (Math.random() - 0.5) * 1.1;
+      const g = new Graphics().circle(0, 0, 0.9 + Math.random() * 1.6).fill({ color: Math.random() < 0.3 ? 0xd01020 : 0x8a0610, alpha: 0.95 });
+      this.lightsLayer.addChild(g);
+      this.parts.push({ g, x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp * 0.6 - 30 - Math.random() * 60, floor: y + 18 + Math.random() * 14, t0: performance.now(), life: 900, kind: 'blood', wx: b.x + (dirX / len) * (0.3 + Math.random() * 0.9) * force, wy: b.y + (dirY / len) * (0.3 + Math.random() * 0.9) * force });
+    }
+  }
+  private stepParts(now: number, dt: number) {
+    for (let i = this.parts.length - 1; i >= 0; i--) {
+      const q = this.parts[i];
+      q.vy += 380 * dt; q.x += q.vx * dt; q.y += q.vy * dt;
+      q.g.position.set(q.x, q.y);
+      if (q.kind === 'shell') q.g.rotation += dt * 14;
+      if (q.y >= q.floor || now - q.t0 > q.life) {
+        if (q.kind === 'blood' && q.wx !== undefined) this.blood(q.wx, q.wy!, 0.08 + Math.random() * 0.14, 30000);
+        q.g.destroy(); this.parts.splice(i, 1);
+      } else if (q.kind === 'spark') q.g.alpha = 1 - (now - q.t0) / q.life;
+    }
+  }
+  /** v0.9 · Onda Carmín: explosión de aura (roja letal, amarilla de noqueo) con glifos de código que se expanden. */
+  private waves: { g: Graphics; glyphs: Text[]; x: number; y: number; r: number; ko: boolean; t0: number }[] = [];
+  wave(wx: number, wy: number, r: number, ko: boolean, mine: boolean) {
+    const g = new Graphics();
+    this.lightsLayer.addChild(g);
+    const glyphs: Text[] = [];
+    const set = ko ? ['⌁', '01', 'KO', '▣', '//', '◇', 'ZZ', '⟐'] : ['◆', '0x', 'ERR', '▓', '#', '∆', '██', '⟁'];
+    const n = settings.reduceFlashes ? 10 : 22;
+    for (let i = 0; i < n; i++) {
+      const t = new Text({ text: set[i % set.length], style: { fontFamily: 'monospace', fontSize: 10 + Math.random() * 8, fill: ko ? 0xffe060 : 0xff3050, fontWeight: 'bold' } });
+      t.anchor.set(0.5); (t as any).ang = (i / n) * Math.PI * 2 + Math.random() * 0.3; (t as any).spd = 0.75 + Math.random() * 0.5;
+      this.lightsLayer.addChild(t); glyphs.push(t);
+    }
+    this.waves.push({ g, glyphs, x: wx, y: wy, r, ko, t0: performance.now() });
+    if (mine) this.shake(5, 320);
+  }
+  private animateWaves(now: number) {
+    for (let i = this.waves.length - 1; i >= 0; i--) {
+      const w = this.waves[i];
+      const k = (now - w.t0) / 900;
+      if (k >= 1) { w.g.destroy(); for (const t of w.glyphs) t.destroy(); this.waves.splice(i, 1); continue; }
+      const c = worldToScreen(w.x, w.y, 0), col = w.ko ? 0xffd23f : 0xff2040, col2 = w.ko ? 0xfff2a0 : 0xff90a0;
+      const ease = 1 - Math.pow(1 - k, 3);
+      const rx = w.r * ease * 32, ry = w.r * ease * 16, fade = 1 - k;
+      const g = w.g; g.clear();
+      // Halo interior, anillo principal, anillo secundario y rejilla hexagonal que se deshace.
+      g.ellipse(c.x, c.y, rx, ry).fill({ color: col, alpha: 0.14 * fade });
+      g.ellipse(c.x, c.y, rx, ry).stroke({ width: 6 * fade + 1, color: col, alpha: 0.85 * fade });
+      g.ellipse(c.x, c.y, rx * 0.72, ry * 0.72).stroke({ width: 2, color: col2, alpha: 0.6 * fade });
+      for (let j = 0; j < 12; j++) {
+        const a = (j / 12) * Math.PI * 2 + k * 1.5;
+        const hx = c.x + Math.cos(a) * rx * 0.85, hy = c.y + Math.sin(a) * ry * 0.85;
+        g.poly([hx, hy - 6, hx + 5, hy - 3, hx + 5, hy + 3, hx, hy + 6, hx - 5, hy + 3, hx - 5, hy - 3]).stroke({ width: 1.5, color: col2, alpha: 0.7 * fade });
+      }
+      // Columna de luz en el centro al principio.
+      if (k < 0.35) g.rect(c.x - 6 * (1 - k * 2.5), c.y - 90, 12 * (1 - k * 2.5), 90).fill({ color: col2, alpha: 0.5 * (1 - k / 0.35) });
+      for (const t of w.glyphs) {
+        const a = (t as any).ang + k * 0.8, rr = (t as any).spd * ease;
+        t.position.set(c.x + Math.cos(a) * rx * rr, c.y + Math.sin(a) * ry * rr - 10 * k);
+        t.alpha = fade; t.scale.set(1 + k * 0.6);
+      }
+    }
+  }
+  /** v0.9 · Visión térmica / objetivos marcados: chevrones rojos sobre los hostiles cercanos, también tras las paredes. */
+  thermal = false;
+  private thermalG = new Graphics();
+  private drawThermal(now: number) {
+    const g = this.thermalG;
+    if (!g.parent) this.lightsLayer.addChild(g);
+    g.clear();
+    if (!this.thermal) return;
+    const pulse = 0.6 + 0.4 * Math.sin(now / 180);
+    for (const e of this.ents.values()) {
+      if (e.s.kind !== 'npc' || e.s.dead || e.s.state === 'downed' || !e.s.npcType || e.s.npcType === 'civil' || e.s.npcType === 'essential') continue;
+      if (Math.hypot(e.x - this.me.x, e.y - this.me.y) > 18) continue;
+      const l = worldToScreen(e.x, e.y, 0);
+      g.ellipse(l.x, l.y - 20, 10, 24).stroke({ width: 1.5, color: 0xff3040, alpha: 0.55 * pulse });
+      g.poly([l.x - 5, l.y - 62, l.x + 5, l.y - 62, l.x, l.y - 55]).fill({ color: 0xff3040, alpha: 0.9 * pulse });
+    }
+  }
+  /** Pequeño temblor de cámara al recibir o dar golpes fuertes. */
+  shakeUntil = 0; shakeAmp = 0;
+  shake(amp: number, ms: number) { if (settings.reduceMotion) return; this.shakeAmp = Math.max(this.shakeAmp, amp); this.shakeUntil = Math.max(this.shakeUntil, performance.now() + ms); }
+  /** v0.9 · Esquiva propia: se predice al instante con las mismas reglas que el servidor. */
+  dash(dx: number, dy: number) {
+    const me = this.me, g = this.grid;
+    if (!g) return;
+    const len = Math.hypot(dx, dy); if (!len) return;
+    dx /= len; dy /= len;
+    let x = me.x, y = me.y;
+    for (let i = 1; i <= 13; i++) { const nx = me.x + dx * 0.2 * i, ny = me.y + dy * 0.2 * i; if (!isWalkable(g, nx, ny)) break; x = nx; y = ny; }
+    me.x = x; me.y = y;
+  }
+
+  fx(kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean } = {}) {
+    if (kind === 'wave') { this.flash(extra.x ?? this.me.x, extra.y ?? this.me.y, (extra.r ?? 11) * 1.1, 1, 800); this.wave(extra.x ?? this.me.x, extra.y ?? this.me.y, extra.r ?? 11, !!extra.ko, from === this.meId); return; }
     const a = this.ents.get(from), b = this.ents.get(to);
     if (!a || !b) return;
-    a.attackAt = performance.now(); a.attackKind = kind === 'shot' ? 'shot' : kind === 'hit' ? 'hit' : undefined;
+    const now0 = performance.now();
+    if (kind === 'dodge') {
+      // Rodar: estela de siluetas desde donde estaba.
+      a.rollAt = now0;
+      const fx0 = extra.x ?? a.x, fy0 = extra.y ?? a.y;
+      const g = new Graphics();
+      for (let i = 0; i < 5; i++) { const k = i / 5; const p = worldToScreen(fx0 + (a.x - fx0) * k, fy0 + (a.y - fy0) * k, 0.6); g.ellipse(p.x, p.y, 7, 13).fill({ color: 0x43f3ff, alpha: 0.08 + k * 0.12 }); }
+      this.lightsLayer.addChild(g); this.fxList.push({ g, until: now0 + 260 });
+      return;
+    }
+    if (a !== b && a.body) a.body.scale.x = (b.x - a.x) - (b.y - a.y) >= 0 ? 1 : -1;
+    if (kind === 'kick') {
+      a.kickAt = now0;
+      const pb = worldToScreen(b.x, b.y, 0.8);
+      if (extra.hit !== false) {
+        const g = new Graphics().star(pb.x, pb.y, 7, 11, 5).fill({ color: 0xfff2c0, alpha: 0.9 }).star(pb.x, pb.y, 7, 6, 3).fill({ color: 0xffffff, alpha: 0.95 });
+        this.lightsLayer.addChild(g); this.fxList.push({ g, until: now0 + 160 });
+        if (from === this.meId || to === this.meId) this.shake(3, 140);
+      }
+      return;
+    }
+    a.attackAt = now0; a.attackKind = kind === 'shot' ? 'shot' : kind === 'hit' ? 'hit' : kind === 'heavy' ? 'heavy' : undefined;
+    if (kind === 'heavy') kind = 'hit';
     if (a !== b && a.body) a.body.scale.x = (b.x - a.x) - (b.y - a.y) >= 0 ? 1 : -1;
     const partZ = extra.part === 'cabeza' ? 1.55 : extra.part?.startsWith('pierna') ? 0.45 : 1.1;
     const pa = worldToScreen(a.x, a.y, 1.15), pb = worldToScreen(b.x, b.y, partZ);
@@ -482,36 +670,52 @@ export class GameView {
     if (kind === 'shot') {
       const id = extra.weapon ?? '';
       const col = /plasma|termica/.test(id) ? 0xff7a30 : /riel|pulsos|sonico|emp|inteligente/.test(id) ? 0x43c8ff : fam === 'Táser' ? 0xffd23f : fam === 'Arco' ? 0xd8e0ec : 0xfff1a0;
-      const pellets = fam === 'Escopeta' ? 5 : fam === 'Ametralladora' ? 4 : fam === 'Subfusil' ? 3 : 1;
+      const pellets = (fam === 'Escopeta' ? 5 : fam === 'Ametralladora' ? 4 : fam === 'Subfusil' ? 3 : 1) * Math.max(1, extra.burst ?? 1);
+      if (from === this.meId || to === this.meId) this.shake(fam === 'Escopeta' || (extra.burst ?? 1) > 1 ? 3 : 1.5, 110);
+      this.flash(a.x, a.y, 3.2, 0.95, 90 + (extra.burst ?? 1) * 60);
+      // Casquillos que saltan del arma.
+      if (!/Arco|Táser/.test(fam)) for (let i = 0; i < Math.min(4, pellets); i++) { const sg = new Graphics().rect(-1.5, -0.8, 3, 1.6).fill(0xd8b040); this.lightsLayer.addChild(sg); this.parts.push({ g: sg, x: pa.x, y: pa.y, vx: (pb.x > pa.x ? -1 : 1) * (30 + Math.random() * 40), vy: -60 - Math.random() * 40, floor: pa.y + 22, t0: now0 + i * 55, life: 700, kind: 'shell' }); }
       const dist = Math.hypot(b.x - a.x, b.y - a.y);
       // Fogonazo en la boca del arma.
-      if (!settings.reduceFlashes) { const mf = new Graphics().circle(pa.x + (pb.x > pa.x ? 6 : -6), pa.y - 2, 4).fill({ color: 0xfff6c0, alpha: 0.95 }); this.lightsLayer.addChild(mf); this.fxList.push({ g: mf, until: performance.now() + 60 }); }
+      if (!settings.reduceFlashes) {
+        const mx = pa.x + (pb.x > pa.x ? 7 : -7), my = pa.y - 2;
+        const mf = new Graphics().circle(mx, my, 16).fill({ color: col, alpha: 0.18 }).star(mx, my, 7, 9, 3, Math.random()).fill({ color: 0xfff6c0, alpha: 0.95 }).circle(mx, my, 3).fill({ color: 0xffffff });
+        this.lightsLayer.addChild(mf); this.fxList.push({ g: mf, until: now0 + 85 });
+      }
       for (let i = 0; i < pellets; i++) {
         const spread = pellets > 1 ? (Math.random() - 0.5) * 16 : 0;
         const miss = !hit ? { x: (Math.random() - 0.5) * 40, y: (Math.random() - 0.5) * 24 } : { x: 0, y: 0 };
         const g = new Graphics();
         this.lightsLayer.addChild(g);
-        this.bullets.push({ g, ax: pa.x, ay: pa.y, bx: pb.x + spread + miss.x, by: pb.y + spread * 0.5 + miss.y, t0: performance.now() + i * (fam === 'Escopeta' ? 0 : 55), dur: Math.min(260, 40 + dist * 9) / this.timeScaleAt(b.x, b.y, a), col, w: fam === 'Rifle' || fam === 'Especial' ? 2.4 : 1.6, hit: hit && i === 0, tx: b.x, ty: b.y, part: extra.part, target: b.s.id });
+        this.bullets.push({ g, ax: pa.x, ay: pa.y, bx: pb.x + spread + miss.x, by: pb.y + spread * 0.5 + miss.y, t0: performance.now() + i * (fam === 'Escopeta' ? 0 : 55), dur: Math.min(320, 70 + dist * 12) / this.timeScaleAt(b.x, b.y, a), col, w: fam === 'Rifle' || fam === 'Especial' ? 3.2 : 2.4, hit: hit && (i === 0 || (extra.burst ?? 1) > 1 && i % Math.max(1, pellets / (extra.burst ?? 1)) === 0), tx: b.x, ty: b.y, part: extra.part, target: b.s.id });
       }
     } else if (kind === 'hit') {
       // Arco del golpe: ancho con armas largas, corto con cuchillos y puños.
       const g = new Graphics();
-      const r = fam === 'Hoja' ? 16 : fam === 'Contundente' ? 13 : fam === 'Cuchillo' ? 9 : 8;
+      const heavyHit = a.attackKind === 'heavy';
+      const r = (fam === 'Hoja' ? 16 : fam === 'Contundente' ? 13 : fam === 'Cuchillo' ? 9 : 8) * (heavyHit ? 1.6 : 1);
+      if (heavyHit && (from === this.meId || to === this.meId) && hit) this.shake(4, 180);
       const col = /termica|plasma/.test(extra.weapon ?? '') ? 0xff7a30 : /electrica|aturdidora|taser|choque/.test(extra.weapon ?? '') ? 0x43c8ff : fam === 'Hoja' || fam === 'Cuchillo' || fam === 'Implante' ? 0xe8f0ff : 0xffffff;
       const dir = pb.x >= pa.x ? 1 : -1;
-      g.arc(pa.x + dir * 4, pa.y, r, dir > 0 ? -1.4 : Math.PI - 0.2, dir > 0 ? 0.2 : Math.PI + 1.4).stroke({ width: fam === 'Hoja' ? 3 : 2, color: col, alpha: 0.9 });
+      g.arc(pa.x + dir * 4, pa.y, r + 3, dir > 0 ? -1.4 : Math.PI - 0.2, dir > 0 ? 0.2 : Math.PI + 1.4).stroke({ width: 7, color: col, alpha: 0.15 });
+      g.arc(pa.x + dir * 4, pa.y, r, dir > 0 ? -1.4 : Math.PI - 0.2, dir > 0 ? 0.2 : Math.PI + 1.4).stroke({ width: (fam === 'Hoja' ? 3 : 2) * (heavyHit ? 1.8 : 1), color: col, alpha: 0.95 });
       this.lightsLayer.addChild(g); this.fxList.push({ g, until: performance.now() + 180 });
-      if (hit) this.impact(b, pb.x, pb.y, extra, fam === 'Contundente' || fam === 'Puños' || fam === '');
+      if (hit) this.impact(b, pb.x, pb.y, extra, fam === 'Contundente' || fam === 'Puños' || fam === '', pb.x - pa.x, pb.y - pa.y, heavyHit ? 1.6 : 1);
+      if (hit && (to === this.meId)) this.shake(2, 120);
     } else if (kind === 'ko') {
       const g = new Graphics().circle(pb.x, pb.y - 6, 7).stroke({ width: 1.5, color: 0xffd23f });
       this.lightsLayer.addChild(g); this.fxList.push({ g, until: performance.now() + 500 });
     }
-    if (extra.sever) this.blood(b.x, b.y, 1.4, 60000);
+    if (extra.sever) { this.blood(b.x, b.y, 1.4, 60000); this.spray(b, pb.x, pb.y, pb.x - pa.x, pb.y - pa.y, 26, 1.8); }
   }
   /** Impacto en el cuerpo: salpicadura (más con armas de filo y balas), chispas en el cromo y sangre en el suelo. */
-  private impact(b: CEnt, x: number, y: number, extra: { part?: string; crit?: boolean; sever?: boolean }, blunt: boolean) {
+  private impact(b: CEnt, x: number, y: number, extra: { part?: string; crit?: boolean; sever?: boolean }, blunt: boolean, dirX = 1, dirY = 0, force = 1) {
     const g = new Graphics();
     const n = blunt ? 3 : extra.crit || extra.sever ? 14 : 8;
+    // El cromo no sangra: saltan chispas. La carne salpica en la dirección del impacto.
+    const chrome = !!b.s.chrome?.length && Math.random() < 0.35;
+    if (chrome) for (let i = 0; i < 8; i++) { const sg = new Graphics().rect(0, 0, 2, 2).fill(0xffe080); this.lightsLayer.addChild(sg); this.parts.push({ g: sg, x, y, vx: (Math.random() - 0.5) * 160, vy: -40 - Math.random() * 80, floor: y + 20, t0: performance.now(), life: 380, kind: 'spark' }); }
+    else this.spray(b, x, y, dirX, dirY, blunt ? 4 : extra.crit || extra.sever ? 22 : 12, force * (extra.part === 'cabeza' ? 1.4 : 1));
     for (let i = 0; i < n; i++) { const ang = Math.random() * Math.PI * 2, d = 2 + Math.random() * (extra.sever ? 16 : 9); g.circle(x + Math.cos(ang) * d, y + Math.sin(ang) * d * 0.6, 0.8 + Math.random() * 1.8).fill({ color: 0xb0101a, alpha: 0.9 }); }
     if (blunt) g.circle(x, y, 5).stroke({ width: 1.5, color: 0xffffff, alpha: 0.7 });
     this.lightsLayer.addChild(g); this.fxList.push({ g, until: performance.now() + 260 });
@@ -523,8 +727,9 @@ export class GameView {
     const p = worldToScreen(wx, wy, 0);
     const g = new Graphics();
     const r = 4 + size * 9;
-    g.ellipse(0, 0, r, r * 0.5).fill({ color: 0x5a0408, alpha: 0.8 });
-    for (let i = 0; i < 3; i++) g.ellipse((Math.random() - 0.5) * r * 1.4, (Math.random() - 0.5) * r * 0.6, r * 0.35, r * 0.18).fill({ color: 0x7a0810, alpha: 0.75 });
+    g.ellipse(0, 0, r, r * 0.5).fill({ color: 0x4a0306, alpha: 0.85 });
+    for (let i = 0; i < 3 + Math.floor(size * 4); i++) g.ellipse((Math.random() - 0.5) * r * 1.6, (Math.random() - 0.5) * r * 0.7, r * (0.2 + Math.random() * 0.25), r * (0.1 + Math.random() * 0.12)).fill({ color: 0x7a0810, alpha: 0.8 });
+    if (size > 0.3) g.ellipse(-r * 0.25, -r * 0.12, r * 0.35, r * 0.1).fill({ color: 0xff6070, alpha: 0.18 }); // brillo húmedo
     g.position.set(p.x, p.y);
     this.decalLayer.addChild(g);
     this.decals.push({ g, until: performance.now() + ms });
@@ -548,15 +753,21 @@ export class GameView {
       if (k >= 1) {
         b.g.destroy(); this.bullets.splice(i, 1);
         const t = this.ents.get(b.target);
-        if (b.hit && t) this.impact(t, b.bx, b.by, { part: b.part }, false);
-        else { const s = new Graphics().circle(b.bx, b.by, 2).fill({ color: 0xffe0a0, alpha: 0.8 }); this.lightsLayer.addChild(s); this.fxList.push({ g: s, until: now + 90 }); }
+        if (b.hit && t) this.impact(t, b.bx, b.by, { part: b.part }, false, b.bx - b.ax, b.by - b.ay);
+        else {
+          const s = new Graphics().circle(b.bx, b.by, 5).fill({ color: 0xffe0a0, alpha: 0.35 }).circle(b.bx, b.by, 2).fill({ color: 0xffffff, alpha: 0.9 });
+          this.lightsLayer.addChild(s); this.fxList.push({ g: s, until: now + 110 });
+          for (let j = 0; j < 4; j++) { const sg = new Graphics().rect(0, 0, 1.6, 1.6).fill(0xffd070); this.lightsLayer.addChild(sg); this.parts.push({ g: sg, x: b.bx, y: b.by, vx: (Math.random() - 0.5) * 140, vy: -30 - Math.random() * 70, floor: b.by + 10, t0: now, life: 300, kind: 'spark' }); }
+        }
         continue;
       }
       const x = b.ax + (b.bx - b.ax) * k, y = b.ay + (b.by - b.ay) * k;
-      const tl = 0.18;
+      // v0.9 · Trazadora más visible: halo ancho, núcleo de color y punta blanca.
+      const tl = 0.32;
       const x0 = b.ax + (b.bx - b.ax) * Math.max(0, k - tl), y0 = b.ay + (b.by - b.ay) * Math.max(0, k - tl);
-      b.g.moveTo(x0, y0).lineTo(x, y).stroke({ width: b.w, color: b.col, alpha: 0.95 });
-      b.g.circle(x, y, b.w * 0.8).fill({ color: 0xffffff, alpha: 0.9 });
+      b.g.moveTo(x0, y0).lineTo(x, y).stroke({ width: b.w * 3.6, color: b.col, alpha: 0.22 });
+      b.g.moveTo(x0, y0).lineTo(x, y).stroke({ width: b.w, color: b.col, alpha: 1 });
+      b.g.circle(x, y, b.w * 1.9).fill({ color: b.col, alpha: 0.35 }).circle(x, y, b.w * 0.9).fill({ color: 0xffffff, alpha: 1 });
     }
     for (let i = this.decals.length - 1; i >= 0; i--) { const d = this.decals[i]; const left = d.until - now; if (left <= 0) { d.g.destroy(); this.decals.splice(i, 1); } else if (left < 4000) d.g.alpha = left / 4000; }
   }
@@ -770,7 +981,8 @@ export class GameView {
     const c = worldToScreen(this.cam.x, this.cam.y);
     const W = this.app.screen.width, H = this.app.screen.height;
     this.world.scale.set(this.zoom);
-    this.world.position.set(Math.round(W / 2 - c.x * this.zoom), Math.round(H / 2 - c.y * this.zoom));
+    const sh = performance.now() < this.shakeUntil ? this.shakeAmp : (this.shakeAmp = 0);
+    this.world.position.set(Math.round(W / 2 - c.x * this.zoom + (sh ? (Math.random() - 0.5) * sh * 2 : 0)), Math.round(H / 2 - c.y * this.zoom + (sh ? (Math.random() - 0.5) * sh * 2 : 0)));
     this.lightsLayer.position.copyFrom(this.world.position); this.lightsLayer.scale.copyFrom(this.world.scale);
     this.visibleRect = { x0: (-this.world.x) / this.zoom - 80, y0: (-this.world.y) / this.zoom - 120, x1: (W - this.world.x) / this.zoom + 80, y1: (H - this.world.y) / this.zoom + 400 };
     if ((this.sortCounter++ & 15) === 0) this.ensureChunks();
@@ -857,6 +1069,9 @@ export class GameView {
   }
   private animateSky(now: number, dt: number) {
     this.animateFx(now);
+    this.stepParts(now, dt);
+    this.animateWaves(now);
+    this.drawThermal(now);
     for (const f of [...this.fxList]) if (now > f.until) { f.g.destroy(); this.fxList.splice(this.fxList.indexOf(f), 1); }
     this.animateTraffic(dt);
     const g = this.beaconG; g.clear();
@@ -922,12 +1137,19 @@ export class GameView {
       front = pose.front;
       back = pose.back;
     }
+    // v0.9 · Rodar (esquiva) y patada.
+    const rollT = e.rollAt ? now - e.rollAt : 1e9;
+    if (rollT < 380 && !rm) { const k = rollT / 380; e.body!.rotation = (e.faceSign ?? 1) * k * Math.PI * 2; e.body!.y = (e.bodyY ?? 0) + Math.sin(k * Math.PI) * 6; front = -2.2; back = -2.2; if (e.legL) e.legL.rotation = -1.2; if (e.legR) e.legR.rotation = -1.0; }
+    const kickT = e.kickAt ? now - e.kickAt : 1e9;
+    if (kickT < 300) { const k = Math.sin((kickT / 300) * Math.PI); if (e.legR) e.legR.rotation = -1.5 * k; e.body!.rotation = 0.18 * k * (e.faceSign ?? 1); front = -0.6; }
+    if (e.attackKind === 'heavy' && since < 420) { const k = since / 420; front = k < 0.4 ? 2.6 : 2.6 - (k - 0.4) * 7; back = front + 0.3; e.body!.rotation = (k < 0.4 ? -0.15 : 0.2) * (e.faceSign ?? 1); }
     if (e.armF) e.armF.rotation = front;
     if (e.armB) e.armB.rotation = back;
     // El arma se mantiene más o menos horizontal (fuego) o en la línea del brazo (cuerpo a cuerpo).
     if (e.hand && e.weaponKind === 'ranged') e.hand.rotation = -front - (since < 380 ? 0 : 0.35);
     else if (e.hand) e.hand.rotation = 0.6;
     // Gotas de sangre al andar si se desangra.
+    if (e.s.state === 'downed' && (e.s.bleeding || e.s.dead) && now > (e.poolAt ?? 0) && (e.poolSize ?? 0) < 2.2) { e.poolAt = now + 1400; e.poolSize = (e.poolSize ?? 0.5) + 0.25; this.blood(e.x + 0.15, e.y + 0.1, e.poolSize, 90000); }
     if (e.s.bleeding && now > (e.dropAt ?? 0)) { e.dropAt = now + (e.moving ? 260 : 900); this.blood(e.x + (Math.random() - 0.5) * 0.3, e.y + (Math.random() - 0.5) * 0.3, 0.35 + Math.random() * 0.3, 14000); }
   }
 
@@ -1160,7 +1382,9 @@ export class GameView {
     else if (h < 21) { const t = (h - 17) / 4; color = t < 0.5 ? 0xff6a3a : 0x3a1a5a; alpha = lerp(0.1, 0.6, t); }
     const interior = this.zone?.kind === 'interior';
     const W = this.app.screen.width, H = this.app.screen.height;
-    this.nightOverlay.clear().rect(0, 0, W, H).fill({ color: interior ? 0x080a2a : color, alpha: interior ? 0.12 : alpha });
+    // v0.9 · El tinte de color es suave; la oscuridad de verdad la pone la capa de iluminación dinámica (más oscuro donde no hay farolas).
+    this.nightOverlay.clear().rect(0, 0, W, H).fill({ color: interior ? 0x080a2a : color, alpha: interior ? 0.12 : alpha * 0.35 });
+    this.drawLighting(interior ? 0 : alpha * 0.95, interior);
     // Farolas, neones y ventanas brillan más cuanto más oscuro está.
     const dark = h >= 21 || h < 5 ? 1 : h < 8 ? lerp(1, 0, (h - 5) / 3) : h < 17 ? 0 : lerp(0, 1, (h - 17) / 4);
     this.lightsLayer.alpha = interior ? 0.75 : 0.25 + dark * 0.95;

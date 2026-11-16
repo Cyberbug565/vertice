@@ -200,9 +200,11 @@ export class Threats {
     if (!city || this.psychos.size >= PSYCHO_CAP) return null;
     const ds = city.def.districts.filter((d) => d.waypoints.length);
     const hard = ds.filter((d) => dangerAt(city.grid, d.waypoints[0][0], d.waypoints[0][1]) !== 'public');
-    const d = (this.rng() < 0.85 && hard.length ? hard : ds)[Math.floor(this.rng() * (this.rng() < 0.85 && hard.length ? hard : ds).length)];
-    const wp = d.waypoints[Math.floor(this.rng() * d.waypoints.length)];
-    const pos = at ?? nearestWalkable(city.grid, wp[0] + 0.5, wp[1] + 0.5, 5);
+    // Un solo dado para elegir la lista (antes se tiraba dos veces y el índice podía salirse).
+    const dPool = this.rng() < 0.85 && hard.length ? hard : ds;
+    const d = dPool[Math.floor(this.rng() * dPool.length)];
+    const wp = d?.waypoints[Math.floor(this.rng() * d.waypoints.length)];
+    const pos = at ?? (wp ? nearestWalkable(city.grid, wp[0] + 0.5, wp[1] + 0.5, 5) : null);
     if (!pos) return null;
     const name = PSYCHO_NAMES[Math.floor(this.rng() * PSYCHO_NAMES.length)];
     const e = this.w.spawnNpc(city, { name: `Ciberpsicópata ${name}`, title: 'CIBERPSICOSIS', x: pos.x, y: pos.y, label: 'Fuera de control', speed: 3,
@@ -268,7 +270,7 @@ export class Threats {
     if (ef.matrix.psyImmune || !p.psyche) return;
     const ps = p.psyche;
     const before = ps.level;
-    ps.level = Math.min(100, ps.level + amount * ef.matrix.psyGain * (1 - ef.matrix.psyResist));
+    ps.level = Math.min(100, ps.level + amount * ef.matrix.psyGain * (1 - ef.matrix.psyResist) * (ef.flags.has('calma') ? 0.7 : 1));
     if (before < 45 && ps.level >= 45 && !(ps.episode && ps.episode.until > Date.now())) this.startEpisode(c, p, kairos);
   }
   /** Episodio de ciberpsicosis: dura de 1 a 3 semanas de juego (horas reales). Mientras dura, el nivel no baja de su suelo. */

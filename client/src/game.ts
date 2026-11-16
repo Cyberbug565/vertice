@@ -5,6 +5,7 @@ import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
 import { settings, onSettings } from './settings';
 import { audioScene, blip, initAudio, setAmbientActive } from './audio';
+import * as sfx from './sfx';
 import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
 import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
 import { $ui, clearUi, fmtMoney, h } from './ui/dom';
@@ -27,8 +28,8 @@ const STANCES = [
   { id: 'aggressive', label: 'Agresiva', desc: 'Agresiva: ataca objetivos elegibles dentro de la orden seleccionada, gastando munición y cromo autorizados.' },
 ] as const;
 
-const ABIL_ICON: Record<string, string> = { kairos: '⏩', onda: '🌊', proyeccion: '👻', 'tiempo-bala': '⏱', invisible: '👻', curar: '💉', pulso: '💥', esprint: '💨', carga: '🚀', senuelo: '🎭', torbellino: '🌀', 'disparo-cargado': '🎯', 'pico-ram': '🧠' };
-const BUFF_NAME: Record<string, string> = { 'tiempo-bala': '⏱ Tiempo bala', invisible: '👻 Invisible', curar: '💉 Curando', esprint: '💨 Esprint', senuelo: '🎭 Señuelo', carga: '🚀 Carga', 'disparo-cargado': '🎯 Cargado' };
+const ABIL_ICON: Record<string, string> = { kairos: '⏩', onda: '🌊', proyeccion: '👻', 'tiempo-bala': '⏱', invisible: '👻', curar: '💉', pulso: '💥', esprint: '💨', carga: '🚀', senuelo: '🎭', torbellino: '🌀', 'disparo-cargado': '🎯', 'pico-ram': '🧠', 'onda-ko': '⚡', marcar: '📡', escudo: '🛡', salto: '🦘' };
+const BUFF_NAME: Record<string, string> = { 'tiempo-bala': '⏱ Tiempo bala', invisible: '👻 Invisible', curar: '💉 Curando', esprint: '💨 Esprint', senuelo: '🎭 Señuelo', carga: '🚀 Carga', 'disparo-cargado': '🎯 Cargado', marcar: '📡 Objetivos marcados', escudo: '🛡 Escudo' };
 
 export async function startGame(token: string, onExit0: (reason?: string) => void) {
   const timers: number[] = [];
@@ -53,7 +54,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const room = zoneDef(st.zone);
     if (!room) return;
     const indoor = room.kind === 'interior';
-    const theme = Date.now() < combatMusicUntil ? 'accion' : room.nightlife?.music ?? (indoor ? 'chill' : st.danger === 'lawless' ? 'yermo' : 'calle');
+    const hour = ((((Date.now() + net.clockOffset) / st.cityHourMs + st.cityEpoch) % 24) + 24) % 24;
+    const night = hour >= 21 || hour < 6;
+    const theme = Date.now() < combatMusicUntil ? 'accion' : room.nightlife?.music ?? (indoor ? 'chill' : st.danger === 'lawless' ? 'yermo' : night ? 'noche' : 'calle');
     audioScene(theme, indoor);
   };
   view.serverTime = () => Date.now() + net.clockOffset;
@@ -189,7 +192,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const setAction = (text: string, duration?: number) => {
     st.action = text;
-    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · clic en alguien: menú · mantén clic derecho para apuntar o bloquear · Esc: menú`;
+    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · clic: interactuar a distancia · clic der. + clic: atacar (Ctrl: fuerte) · ${keyOf('hack')}: hackear · ${keyOf('dodge')}: esquivar · ${keyOf('kick')}: patada`;
     const bar = progress.firstChild as HTMLElement;
     if (duration) {
       progress.style.display = 'block';
@@ -386,29 +389,75 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   // v0.7 · Ratón: el suelo ya no mueve (se anda con WASD). Clic izquierdo en una persona (o en ti) abre su menú;
   // en una puerta u objeto, interactúa. Con el clic derecho mantenido (apuntar o bloquear), clic izquierdo en alguien = atacar.
   let aimPart: string = 'torso';
+  // v0.9 · Gritos al morir y ambiente de tráfico y sirenas.
+  view.onDied = (e) => { const d = Math.hypot(e.x - view.me.x, e.y - view.me.y); if (d < 30) sfx.voice('muerte', (e.s.id * 2654435761) % 2 === 0, d, ((e.x - view.me.x) - (e.y - view.me.y)) / 12); };
+  timers.push(window.setInterval(() => {
+    const z = zoneDef(st.zone);
+    if (!z || z.kind !== 'exterior' || z.cyber) return;
+    const r = Math.random();
+    if (r < 0.07) sfx.carPass(4 + Math.random() * 14, Math.random() * 2 - 1, Math.random() < 0.3);
+    else if (r < 0.08) sfx.horn(6 + Math.random() * 20, Math.random() * 2 - 1);
+    const cop = [...view.ents.values()].find((e) => (e.s.npcType === 'police' || e.s.npcType === 'hierro') && !e.s.dead && Math.hypot(e.x - view.me.x, e.y - view.me.y) < 30);
+    if (cop && (st.sheet?.wanted ?? 0) >= 1) sfx.siren(Math.hypot(cop.x - view.me.x, cop.y - view.me.y), ((cop.x - view.me.x) - (cop.y - view.me.y)) / 12);
+  }, 1000));
+  let ctrlHeld = false;
+  window.addEventListener('keydown', (ev) => { if (ev.key === 'Control') ctrlHeld = true; }, { signal: eventScope.signal });
+  window.addEventListener('keyup', (ev) => { if (ev.key === 'Control') ctrlHeld = false; }, { signal: eventScope.signal });
+  window.addEventListener('blur', () => { ctrlHeld = false; }, { signal: eventScope.signal });
+  /** v0.9 · Esquivar (Espacio) y patada (Q) al objetivo señalado o al enemigo más cercano. */
+  let lastSteerDir = { dx: 1, dy: 0 };
+  const dodge = () => {
+    const d = view.steer.dx || view.steer.dy ? view.steer : lastSteerDir;
+    const seq = net.send({ t: 'dodge', dx: d.dx, dy: d.dy } as any);
+    st.pending.set(seq, (a) => { if (!a.ok) toast(a.reason ?? 'No puedes esquivar', 'warn'); });
+    view.dash(d.dx, d.dy);
+  };
+  const kick = () => {
+    const isPerson = (x: CEnt) => (x.s.kind === 'npc' || x.s.kind === 'player') && x.s.id !== view.meId && !x.s.dead && x.s.state !== 'downed' && x.s.npcType !== 'essential';
+    let t = view.hovered && isPerson(view.hovered) && Math.hypot(view.hovered.x - view.me.x, view.hovered.y - view.me.y) < 2.4 ? view.hovered : null;
+    if (!t) t = [...view.ents.values()].filter((x) => isPerson(x) && Math.hypot(x.x - view.me.x, x.y - view.me.y) < 2.2).sort((p1, p2) => Math.hypot(p1.x - view.me.x, p1.y - view.me.y) - Math.hypot(p2.x - view.me.x, p2.y - view.me.y))[0] ?? null;
+    if (!t) { toast('No hay nadie a tiro de patada.', 'info'); return; }
+    const seq = net.send({ t: 'hostile', target: t.s.id, action: 'kick', opId: newOpId(), remote: true } as any);
+    st.pending.set(seq, (a) => { if (!a.ok) toast(a.reason ?? 'No puedes', 'warn'); });
+  };
+  // v0.9 · Modo hackeo: R y luego clic sobre una persona, cámara, cajero o terminal → panel de hackeo.
+  let hackMode = false;
+  const hackBadge = h('div', { class: 'hack-badge', style: { display: 'none' } }, h('b', {}, '⌁ MODO HACKEO'), h('span', {}, ' · clic en un objetivo · R o Esc para salir'));
+  $ui().append(hackBadge);
+  const setHackMode = (on: boolean) => {
+    hackMode = on;
+    document.body.classList.toggle('hack-mode', on);
+    hackBadge.style.display = on ? '' : 'none';
+    if (on) { document.getElementById('target-menu')?.remove(); blip('ui'); }
+  };
   view.onGroundClick = () => {
+    if (hackMode) { setHackMode(false); return; }
     closeDanceMenus();
     document.getElementById('underworld-panel')?.remove();
     document.getElementById('target-menu')?.remove();
   };
   view.onEntityClick = (e: CEnt) => {
     closeDanceMenus();
+    if (hackMode) {
+      setHackMode(false);
+      if (e.s.id === view.meId) return;
+      const seq = net.send({ t: 'hackMenu', target: e.s.id } as any);
+      st.pending.set(seq, (a) => { if (!a.ok) toast(a.reason ?? 'Nada que hackear', 'warn'); });
+      return;
+    }
     const person = e.s.kind === 'player' || e.s.kind === 'npc';
     if (e.s.id === view.meId) { selfMenu(); return; }
     if (person && view.guarding) {
+      // v0.9 · Ctrl + clic: golpe fuerte (cuerpo a cuerpo) o ráfaga (a distancia).
       const lethal = st.sheet?.weapon?.nonlethal !== 'solo';
-      net.send({ t: 'hostile', target: e.s.id, action: lethal ? 'attack' : 'knockout', opId: newOpId(), part: aimPart } as any);
+      const seq = net.send({ t: 'hostile', target: e.s.id, action: ctrlHeld ? 'heavy' : lethal ? 'attack' : 'knockout', opId: newOpId(), part: aimPart, remote: true } as any);
+      st.pending.set(seq, (a) => { if (!a.ok) toast(a.reason ?? 'No puedes', 'warn'); });
       return;
     }
     if (person && e.s.kind === 'player' || (person && e.s.npcType && e.s.npcType !== 'essential') || (person && e.s.dead)) { net.send({ t: 'menu', target: e.s.id } as any); return; }
     if (e.s.kind === 'door' && e.s.danger === 'disputed' && !confirm(`${e.s.name} lleva a una zona peligrosa (roja). ¿Cruzar?`)) return;
-    const seq = net.send({ t: 'interact', target: e.s.id } as any);
-    st.destination = e.s.name;
-    setAction(e.s.kind === 'door' ? 'Yendo a la puerta' : `Yendo hacia ${e.s.name}`);
-    st.pending.set(seq, (a) => {
-      if (a.ok && a.path) view.confirmPath(a.path);
-      else if (!a.ok) { toast(a.reason ?? 'No disponible', 'warn'); st.destination = ''; setAction(''); }
-    });
+    const seq = net.send({ t: 'interact', target: e.s.id, remote: true } as any);
+    st.pending.set(seq, (a) => { if (!a.ok) { toast(a.reason ?? 'No disponible', 'warn'); st.destination = ''; } });
   };
   /** Menú propio (clic izquierdo sobre tu personaje). */
   const selfMenu = () => {
@@ -470,7 +519,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   $ui().addEventListener('pointerover', (ev) => { if (ev.target !== $ui()) tooltip.style.display = 'none'; });
   view.onHover = (e, sx, sy) => {
     if (!e) { tooltip.style.display = 'none'; return; }
-    const hint = e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? 'Clic: examinar' : view.guarding ? 'Clic: ¡atacar!' : 'Clic: menú · clic derecho mantenido + clic: atacar';
+    const hint = hackMode ? (e.s.id === view.meId ? 'Modo hackeo: elige a otro' : 'Clic: ver hackeos posibles') : e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? 'Clic: examinar' : view.guarding ? 'Clic: ¡atacar! · Ctrl+clic: golpe fuerte o ráfaga · Q: patada · Espacio: esquivar' : 'Clic: menú (a distancia) · clic derecho mantenido + clic: atacar · R + clic: hackear';
     tooltip.replaceChildren(h('b', {}, e.s.name), e.s.title ? ` · ${e.s.title}` : '', e.s.label ? h('div', { class: 'muted' }, e.s.label) : '', h('div', { class: 'cy' }, hint));
     tooltip.style.display = 'block'; tooltip.style.left = `${sx + 14}px`; tooltip.style.top = `${sy + 14}px`;
   };
@@ -486,10 +535,11 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const pushSteer = (force = false) => {
     let sx = 0, sy = 0;
     for (const a of held) { const v = MOVE[a]; if (v) { sx += v[0]; sy += v[1]; } }
-    // Pantalla → mundo isométrico: arriba = (−1,−1), derecha = (1,−1).
-    let dx = sx - sy, dy = -sx - sy;
+    // Pantalla → mundo isométrico: arriba = (−1,−1), derecha = (1,−1). (v0.9: W y S iban al revés.)
+    let dx = sx + sy, dy = sy - sx;
     const len = Math.hypot(dx, dy); if (len) { dx /= len; dy /= len; }
     view.steer = { dx, dy };
+    if (dx || dy) lastSteerDir = { dx, dy };
     const changed = dx !== lastSteer.dx || dy !== lastSteer.dy;
     if (changed || force || ((dx || dy) && performance.now() - lastSteerAt > 450)) {
       if (changed && (dx || dy)) { closeDanceMenus(); if (st.dialog) net.send({ t: 'closeDialog' } as any); view.cancelPrediction(); st.destination = ''; }
@@ -510,6 +560,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const k = e.key.toLowerCase();
     if (document.getElementById('dance-wheel')) return;
     if (k === 'escape') {
+      if (hackMode) { setHackMode(false); return; }
       if (closeDanceMenus()) return;
       if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove();
       else if (document.getElementById('target-menu')) document.getElementById('target-menu')!.remove();
@@ -524,6 +575,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     if (st.dialog && /^[1-9]$/.test(k)) { document.getElementById(`opt-${st.dialog.options[Number(k) - 1]?.id}`)?.click(); return; }
     switch (a) {
       case 'run': toggleRun(); break;
+      case 'hack': if (onWorld()) setHackMode(!hackMode); break;
+      case 'dodge': if (onWorld()) { e.preventDefault(); dodge(); } break;
+      case 'kick': if (onWorld()) kick(); break;
       case 'interact': if (onWorld() && view.hovered && !st.dialog) { e.preventDefault(); view.onEntityClick(view.hovered); } break;
       case 'cancel': stop(); break;
       case 'retreat': retreat(); break;
@@ -633,18 +687,32 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'underworld': underworldPanel(net, m.view); break;
       case 'ambar': ambarPanel(life, m.view); break;
       case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
-      case 'fx':
-        view.fx(m.kind, m.from, m.to, { part: m.part, weapon: m.weapon, hit: m.hit, sever: m.sever, crit: m.crit });
-        if (m.kind === 'shot') blip('step');
+      case 'fx': {
+        // v0.9 · Sonido espacial de cada acción de combate.
+        const at = (id: number) => { const e = view.ents.get(id); if (!e) return { d: 0, p: 0, e }; return { d: Math.hypot(e.x - view.me.x, e.y - view.me.y), p: ((e.x - view.me.x) - (e.y - view.me.y)) / 12, e }; };
+        const src = at(m.from), dst = at(m.to);
+        const high = (id: number) => (id * 2654435761) % 2 === 0;
+        const person = dst.e && (dst.e.s.kind === 'npc' || dst.e.s.kind === 'player');
+        const wi = m.weapon ? content.items.find((i) => i.id === m.weapon) : undefined;
+        const fam = wi?.weapon?.family ?? '';
+        if (m.kind === 'shot') { sfx.gunshot(sfx.gunKind(fam, m.weapon ?? ''), src.d, src.p, m.burst ?? 1); if (m.hit !== false && person) { sfx.impact(dst.e!.s.chrome?.length && Math.random() < 0.35 ? 'cromo' : 'bala', dst.d, dst.p); if (Math.random() < 0.55) sfx.voice(m.crit || m.sever ? 'grito' : 'quejido', high(m.to), dst.d, dst.p); } }
+        else if (m.kind === 'hit' || m.kind === 'heavy') { sfx.swing(src.d, src.p, m.kind === 'heavy'); if (m.hit !== false && person) { sfx.impact(/Hoja|Cuchillo|Implante/.test(fam) ? 'filo' : 'puño', dst.d, dst.p, m.kind === 'heavy'); if (Math.random() < 0.6) sfx.voice(m.crit || m.sever ? 'grito' : 'quejido', high(m.to), dst.d, dst.p); } }
+        else if (m.kind === 'kick') { sfx.whoosh(src.d, src.p); if (m.hit !== false) { sfx.kick(dst.d, dst.p); sfx.voice('quejido', high(m.to), dst.d, dst.p); } }
+        else if (m.kind === 'dodge') sfx.whoosh(src.d, src.p);
+        else if (m.kind === 'wave') sfx.wave(!!m.ko, src.d, src.p);
+        else if (m.kind === 'hack') sfx.hackChirp(src.d, src.p);
+        else if (m.kind === 'ko' && person) sfx.voice('grito', high(m.to), dst.d, dst.p);
+        view.fx(m.kind, m.from, m.to, { part: m.part, weapon: m.weapon, hit: m.hit, sever: m.sever, crit: m.crit, burst: m.burst, x: m.x, y: m.y, r: m.r, ko: m.ko });
         if (m.from === view.meId || m.to === view.meId) { combatMusicUntil = Date.now() + 11_000; refreshScore(); }
         break;
+      }
       case 'shop': shopPanel(life, m.view); break;
       case 'market': marketPanel(life, m.view); break;
       case 'jobs': jobsPanel(life, m.view); break;
       case 'clinic': clinicPanel(life, m.view); break;
       case 'bounties': bountyPanel(life, m.view); break;
-      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId() } as any); else net.send({ t: 'interact', target: m.view.target } as any); }); break; }
-      case 'death': net.close(); audioScene(null); deathScreen(m.summary, () => onExit('dead')); break;
+      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target, remote: true } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId(), remote: true } as any); else net.send({ t: 'interact', target: m.view.target, remote: true } as any); }); break; }
+      case 'death': sfx.voice('muerte', false, 0, 0); net.close(); audioScene(null); deathScreen(m.summary, () => onExit('dead')); break;
       case 'ack': { const cb = st.pending.get(m.seq); st.pending.delete(m.seq); if (cb) cb(m); else if (!m.ok && m.reason) toast(m.reason, 'warn'); else if (m.ok && m.path && m.seq === 0) view.confirmPath(m.path); if (m.info && m.ok && !cb) toast(m.info); break; }
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;
       case 'dialogClose': st.dialog = null; renderDialog(); break;
@@ -656,7 +724,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if (m.target) goalEl.replaceChildren(h('span', {}, '🎯 ', m.target.label), h('button', { class: 'btn small', title: 'Desmarcar destino', 'aria-label': 'Desmarcar destino', onclick: () => net.send({ t: 'goto', kind: 'cancel' } as any) }, '✕'));
         break;
       }
-      case 'sheet': st.sheet = m.sheet; view.combat = { range: m.sheet.weapon?.range ?? 1.5, aim: m.sheet.aim?.range ?? 0, ranged: m.sheet.weapon?.kind === 'ranged' }; renderSheet(); break;
+      case 'sheet': st.sheet = m.sheet; view.thermal = m.sheet.uniques.includes('vision-termica') || 'marcar' in (m.sheet.buffs ?? {}); view.combat = { range: m.sheet.weapon?.range ?? 1.5, aim: m.sheet.aim?.range ?? 0, ranged: m.sheet.weapon?.kind === 'ranged' }; renderSheet(); break;
       case 'skillxp': xpPop(m); break;
       case 'building': buildingPanel(pctx, m.view); break;
       case 'realty': realtyPanel(pctx, m.view); break;

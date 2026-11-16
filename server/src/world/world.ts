@@ -3,8 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
   RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
-  type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption,
-} from '@vertice/shared';
+  type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db } from '../db/db.js';
 import type { Metrics } from '../metrics.js';
@@ -135,6 +134,7 @@ export class World {
       e.chrome = chromeRoll < 0.15 ? ['ojos'] : chromeRoll < 0.25 ? [rng() < 0.5 ? 'brazo_izq' : 'brazo_der'] : chromeRoll < 0.3 ? ['cabeza', 'ojos'] : chromeRoll < 0.34 ? ['pierna_izq', 'pierna_der'] : [];
       (e.appearance as any).build = pick([...BUILDS, 'medio', 'medio']); (e.appearance as any).hairStyle = pick([...HAIR_STYLES]); (e.appearance as any).faceShape = pick([...FACE_SHAPES]); (e.appearance as any).nose = pick([...NOSES]); (e.appearance as any).mouth = pick([...MOUTHS]); (e.appearance as any).legwear = pick(['pantalon', 'pantalon', 'pantalon', 'shorts', 'falda']);
       (e.appearance as any).top = pick(['chaqueta', 'gabardina', 'sudadera', 'top', 'traje', 'chaleco', 'mono']); (e.appearance as any).accessory = pick(['ninguno', 'ninguno', 'gafas', 'gorra', 'capucha', 'auriculares', 'visor']);
+      diversifyAppearance(e.appearance as any, rng, 'civil'); // v0.9: más ropa, tejidos, tatuajes y calzado
       (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
       e.npc.nextThink = Math.floor(rng() * 20);
     };
@@ -169,7 +169,7 @@ export class World {
   private populateZone(z: Zone) {
     for (const d of z.def.doors) {
       const target = this.zones.get(d.to.zone);
-      this.addEntity(z, { kind: 'door', name: d.name, x: d.at[0] + 0.5, y: d.at[1] + 0.5, interactive: true, doorTo: { zone: d.to.zone, at: d.to.at }, danger: d.danger ?? target?.def.danger ?? 'public', label: 'Puerta', hiddenDoc: d.hidden });
+      this.addEntity(z, { kind: 'door', name: d.name, x: d.at[0] + 0.5, y: d.at[1] + 0.5, interactive: true, doorTo: { zone: d.to.zone, at: d.to.at }, danger: d.danger ?? target?.def.danger ?? 'public', label: 'Puerta', hiddenDoc: d.hidden, sign: d.sign ? { text: d.sign, color: d.signColor, icon: d.signIcon } : undefined });
     }
     for (const o of z.def.objects) this.addEntity(z, { kind: 'object', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, objKind: o.kind, dialog: o.dialog, label: '', shop: o.shop, sleep: o.sleep, workplace: o.workplace, objId: o.id, dealer: o.dealer });
   }
@@ -644,15 +644,17 @@ export class World {
         if (moving && !e.steer) { this.cancelActivity(e); this.closeDialog(c); this.intel.cancel(c); if (p.auto.on) this.autopilot.takeOver(c); }
         if (moving && e.path.length) { e.path = []; e.pendingInteract = undefined; }
         e.steer = moving ? { dx: m.dx / len, dy: m.dy / len, at: Date.now() } : undefined;
+        if (moving) e.lastDir = { dx: m.dx / len, dy: m.dy / len };
         if (!moving) { e.moving = false; e.lastMoveTick = this.tick; }
         return;
       }
+      case 'dodge': return guarded(m.seq, async () => this.combat.dodge(c, m.dx, m.dy));
       case 'guard': {
         e.guard = m.on; e.guardSince = m.on ? Date.now() : undefined; e.labelVer++;
         this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       }
       case 'stop': this.cancelActivity(e); this.closeDialog(c); this.send(c, { t: 'ack', seq: m.seq, ok: true, info: 'Orden cancelada' }); return;
-      case 'interact': return this.onInteract(c, e, m.seq, m.target);
+      case 'interact': return this.onInteract(c, e, m.seq, m.target, m.remote);
       case 'retreat': return this.onRetreat(c, e, m.seq);
       case 'closeDialog': this.closeDialog(c); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'stance': p.stance = m.stance; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
@@ -674,6 +676,7 @@ export class World {
       case 'clinicDo': return guarded(m.seq, () => sv.clinicDo(c, m));
       case 'bounties': this.send(c, { t: 'bounties', view: sv.bountyView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'bountyPlace': return guarded(m.seq, () => sv.placeBounty(c, m));
+      case 'hackMenu': { const t = this.entities.get(m.target); if (!t || t.zone !== e.zone || t === e) return this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Nada que hackear ahí.' }); this.send(c, { t: 'targetMenu', view: this.combat.hackMenu(c, t) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return; }
       case 'menu': { const t = this.entities.get(m.target); if (t && t.zone === e.zone) this.send(c, { t: 'targetMenu', view: this.combat.menu(c, t) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return; }
       case 'hack': return guarded(m.seq, () => this.combat.hack(c, m));
       case 'equip': return guarded(m.seq, async () => sv.equip(c, m.item));
@@ -784,11 +787,22 @@ export class World {
     return true;
   }
 
-  private onInteract(c: PlayerConn, e: Entity, seq: number, targetId: number) {
+  private onInteract(c: PlayerConn, e: Entity, seq: number, targetId: number, remote = false) {
     if (e.transit) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Cruzando una puerta…' });
     const target = this.entities.get(targetId);
     if (e.ghostOf && target?.kind !== 'door') return this.send(c, { t: 'ack', seq, ok: false, reason: 'Eres una proyección: nadie te ve y no puedes tocar nada. Espía, atraviesa paredes y cruza puertas.' });
     if (!target || target.zone !== e.zone || !target.interactive || target === e) return this.send(c, { t: 'ack', seq, ok: false, reason: 'No puedes interactuar con eso.' });
+    // v0.9 · Clic del jugador: nunca camina. Interactúa a distancia (REMOTE_RANGE) o pide acercarse con WASD.
+    if (remote) {
+      const d = Math.hypot(target.x - e.x, target.y - e.y);
+      const max = target.kind === 'door' ? REMOTE_DOOR_RANGE : REMOTE_RANGE;
+      if (d > max) return this.send(c, { t: 'ack', seq, ok: false, reason: target.kind === 'door' ? `Acércate a la puerta (WASD): estás a ${d.toFixed(0)} m.` : `Demasiado lejos (${d.toFixed(0)} m de ${REMOTE_RANGE} m). Acércate con WASD.` });
+      if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil')) { this.send(c, { t: 'targetMenu', view: this.combat.menu(c, target) }); return this.send(c, { t: 'ack', seq, ok: true }); }
+      this.closeDialog(c);
+      if (target.kind === 'door') { void this.transferPlayer(c, target); return this.send(c, { t: 'ack', seq, ok: true }); }
+      this.tryInteract(c, target, 0, REMOTE_RANGE);
+      return this.send(c, { t: 'ack', seq, ok: true });
+    }
     if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil')) {
       // Menú de acciones sobre personas: se calcula en el servidor con probabilidades y bloqueos.
       if (Math.hypot(target.x - e.x, target.y - e.y) > 2.6) {
@@ -822,7 +836,7 @@ export class World {
   }
 
   /** Abre la interacción si está al alcance. `retries` permite perseguir a un PNJ que se ha movido. */
-  private tryInteract(c: PlayerConn, target: Entity, retries: number): boolean {
+  private tryInteract(c: PlayerConn, target: Entity, retries: number, reach = INTERACT_RANGE): boolean {
     const e = c.e!;
     const d = Math.hypot(target.x - e.x, target.y - e.y);
     if (target.kind === 'door') {
@@ -830,7 +844,7 @@ export class World {
       void this.transferPlayer(c, target);
       return true;
     }
-    if (d > INTERACT_RANGE) { if (retries > 0) this.reapproach(c, target, retries); return false; }
+    if (d > reach) { if (retries > 0) this.reapproach(c, target, retries); return false; }
     if (target.marketSite) { this.underworld.open(c, target); return true; }
     if (target.legendId) { this.legends.open(c, target.legendId); return true; }
     if (target.kind === 'object' && target.objKind && !target.dialog) { this.objectAction(c, target); return true; }
@@ -1017,7 +1031,7 @@ export class World {
     if (!opt || !allOk(this.c, p, this.facts, opt.if)) return fail('Esa opción ya no está disponible.');
     if (opt.require.length && !allOk(this.c, p, this.facts, opt.require)) return fail(t(this.c, opt.requireText!));
     const target = this.entities.get(d.targetId);
-    if (!target || target.zone !== e.zone || Math.hypot(target.x - e.x, target.y - e.y) > INTERACT_RANGE + 1.5) { this.closeDialog(c); return fail('Te has alejado demasiado.'); }
+    if (!target || target.zone !== e.zone || Math.hypot(target.x - e.x, target.y - e.y) > REMOTE_RANGE + 1.5) { this.closeDialog(c); return fail('Te has alejado demasiado.'); }
     if (e.task || e.channel) return fail('Ya hay otra acción en curso. Cancélala primero.');
     if (target.kind === 'npc') target.talkingUntil = this.tick + RULES.tickRate * 30;
 

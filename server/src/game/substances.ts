@@ -21,7 +21,7 @@ function dependence(habit: Habit | undefined, now: number) {
   return habit ? remaining(habit.value, habit.at, now, HABIT_DECAY_MS) : 0;
 }
 
-export function takeDose(state: SubstanceUse, item: ItemDef, now: number) {
+export function takeDose(state: SubstanceUse, item: ItemDef, now: number, crashMult = 1) {
   const dose = item.substance!;
   if (dose.kind === 'alcohol') {
     const prev = state.alcohol, load = Math.min(100, intoxication(state, now) + dose.strength);
@@ -39,7 +39,7 @@ export function takeDose(state: SubstanceUse, item: ItemDef, now: number) {
   const prev = state.drugs?.[item.id];
   const habit = dependence(prev?.habit, now), value = Math.min(100, habit + dose.habit);
   const activeUntil = now + dose.seconds * 1000;
-  const use: DrugUse = { habit: { value, at: now }, activeUntil, crashUntil: activeUntil + dose.crashSeconds * 1000 };
+  const use: DrugUse = { habit: { value, at: now }, activeUntil, crashUntil: activeUntil + dose.crashSeconds * 1000 * crashMult };
   return { state: { ...state, drugs: { ...state.drugs, [item.id]: use } }, sick: false, newDependence: habit < ADDICTION && value >= ADDICTION };
 }
 

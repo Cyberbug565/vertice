@@ -76,7 +76,7 @@ describe('v0.8 · implantes, matrices, leyendas y ciberespacio', () => {
     await app.db.query("INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES (gen_random_uuid(),$1,'matriz-carmin',1),(gen_random_uuid(),$1,'matriz-eco',1)", [p.charId]);
     const cap0 = effective(app.world.c, p).chromeCapacity, used0 = effective(app.world.c, p).chromeUsed, hp0 = effective(app.world.c, p).hpMax;
     expect((await b.cmd({ t: 'matrix', action: 'equip', item: 'matriz-carmin' })).ok).toBe(true);
-    expect(effective(app.world.c, p).chromeCapacity).toBe(cap0 + 25);
+    expect(effective(app.world.c, p).chromeCapacity).toBe(cap0 + 45); // v0.9: CARMÍN da +45
     expect(effective(app.world.c, p).chromeUsed).toBe(used0);
     expect(effective(app.world.c, p).matrix.hackImmune).toBe(true);
     const no = await b.cmd({ t: 'matrix', action: 'remove', item: 'matriz-carmin' });

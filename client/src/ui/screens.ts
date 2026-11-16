@@ -5,7 +5,7 @@ import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 
 export function loginScreen(onDone: () => void) {
@@ -70,6 +70,7 @@ const JACKET = ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e'
 const ACCENT = ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff', '#ff2040', '#ffffff', '#3a6bff', '#00ffa8', '#ff00ff', '#c0ff00', '#ffb020', '#8a8aff', '#ff6a6a', '#2affff'];
 const PANTS = ['#1a1a24', '#2a2a3a', '#3a2a1a', '#24384a', '#4a1a2a', '#5a5a64', '#1a3a2a'];
 const TATTOO = ['', '#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#1a1a1a'];
+const INK = ['#14141e', '#1a2a6a', '#6a1010', '#0a4a2a', '#43f3ff', '#ff3fa4'];
 const SHIRT = ['#e8e8f0', '#1a1a1a', '#2a2a3a', '#a82020', '#2a6aa8', '#3a8a4a', '#ff3fa4', '#ffd23f'];
 const SHOES = ['#101018', '#e8e8f0', '#5a3a1a', '#a82020', '#43f3ff', '#3a3a3a'];
 const MAKEUP_COL = ['#ff3fa4', '#43f3ff', '#ffd23f', '#b46cff', '#a82020', '#1a1a1a'];
@@ -79,7 +80,8 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   clearUi();
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
     appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
-      faceShape: 'ovalada', nose: 'recta', mouth: 'neutra', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0] },
+      faceShape: 'ovalada', nose: 'recta', mouth: 'neutra', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0],
+      tattooZone: 'brazos', tattooInk: INK[0], faceTattoo: 'ninguno', topPattern: 'liso', pantsPattern: 'liso', shoeStyle: 'botas', topDetail: 'ninguno' },
     attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes,
     bio: { objective: 'rico', childhood: 'calle', event: 'traicion' }, skillPoints: {} as Record<string, number> };
   const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Historia', 'Rol', 'Oficio', 'Atributos', 'Habilidades', 'Revisión'];
@@ -104,7 +106,8 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   const randomize = () => {
     Object.assign(st.appearance, { skin: pick(SKIN), hair: pick(HAIR), jacket: pick(JACKET), accent: pick(ACCENT), eyes: pick(EYE_COLORS), pants: pick(PANTS),
       build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(TOPS), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO),
-      faceShape: pick(FACE_SHAPES), nose: pick(NOSES), mouth: pick(MOUTHS), brows: pick(BROWS), makeup: pick(MAKEUPS), makeupColor: pick(MAKEUP_COL), piercing: pick(PIERCINGS), scar: pick(SCARS), bodyTattoo: pick(BODY_TATTOOS), shirt: pick(SHIRT), shoes: pick(SHOES) });
+      faceShape: pick(FACE_SHAPES), nose: pick(NOSES), mouth: pick(MOUTHS), brows: pick(BROWS), makeup: pick(MAKEUPS), makeupColor: pick(MAKEUP_COL), piercing: pick(PIERCINGS), scar: pick(SCARS), bodyTattoo: pick(BODY_TATTOOS), shirt: pick(SHIRT), shoes: pick(SHOES),
+      tattooZone: pick(TATTOO_ZONES), tattooInk: pick(INK), faceTattoo: pick(FACE_TATTOOS), topPattern: pick(FABRICS), pantsPattern: pick(FABRICS), shoeStyle: pick(SHOE_STYLES), topDetail: pick(TOP_DETAILS) });
     render();
   };
 
@@ -128,9 +131,12 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
         optRow('Peinado', 'hairStyle', HAIR_STYLES), swatchRow('Color de pelo', 'hair', HAIR), optRow('Vello facial', 'facial', FACIALS),
         h('h4', { class: 'creator-sec' }, 'Detalles'),
         optRow('Maquillaje', 'makeup', MAKEUPS), swatchRow('Color del maquillaje', 'makeupColor', MAKEUP_COL), optRow('Piercing', 'piercing', PIERCINGS), optRow('Cicatriz', 'scar', SCARS),
-        swatchRow('Tatuaje facial', 'tattoo', TATTOO), optRow('Tatuaje en brazos y piernas', 'bodyTattoo', BODY_TATTOOS),
+        h('h4', { class: 'creator-sec' }, 'Tatuajes'),
+        optRow('Diseño', 'bodyTattoo', BODY_TATTOOS), optRow('Dónde', 'tattooZone', TATTOO_ZONES), swatchRow('Tinta', 'tattooInk', INK),
+        optRow('Tatuaje facial', 'faceTattoo', FACE_TATTOOS), swatchRow('Color del tatuaje facial', 'tattoo', TATTOO),
         h('h4', { class: 'creator-sec' }, 'Ropa de partida'),
-        optRow('Prenda', 'top', TOPS), swatchRow('Color de la prenda', 'jacket', JACKET), swatchRow('Camiseta', 'shirt', SHIRT), swatchRow('Pantalón', 'pants', PANTS), swatchRow('Calzado', 'shoes', SHOES),
+        optRow('Prenda', 'top', TOPS), optRow('Tejido de la prenda', 'topPattern', FABRICS), optRow('Detalle', 'topDetail', TOP_DETAILS), swatchRow('Color de la prenda', 'jacket', JACKET), swatchRow('Camiseta', 'shirt', SHIRT),
+        swatchRow('Pantalón', 'pants', PANTS), optRow('Tejido del pantalón', 'pantsPattern', FABRICS), optRow('Calzado', 'shoeStyle', SHOE_STYLES), swatchRow('Color del calzado', 'shoes', SHOES),
         optRow('Accesorio', 'accessory', ACCESSORIES), swatchRow('Acento (luces y cromo)', 'accent', ACCENT),
         h('p', { class: 'muted small' }, 'En el juego podrás cambiarte de ropa: chaquetas, camisetas, pantalones, calzado, gorros y gafas, algunas con mejoras.'));
       body = h('div', { class: 'creator' },

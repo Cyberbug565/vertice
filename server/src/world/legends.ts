@@ -120,7 +120,7 @@ export class Legends {
     if (action === 'accept') {
       if (s.done) throw new GameError('Ya no te queda nada por hacer con ella.');
       const npc = [...c.e!.zone.entities].find((o) => o.legendId === L.npc);
-      if (!npc || Math.hypot(npc.x - c.e!.x, npc.y - c.e!.y) > 4) throw new GameError(`Tienes que estar con ${L.name}.`);
+      if (!npc || Math.hypot(npc.x - c.e!.x, npc.y - c.e!.y) > 8) throw new GameError(`Tienes que estar con ${L.name}.`);
       s.active = true; s.count = 0;
       const step = L.steps[s.step];
       this.notice(c, 'good', `Encargo aceptado: «${step.title}». ${step.desc}`);

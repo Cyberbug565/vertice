@@ -36,7 +36,7 @@ describe('v0.5 · ciudad única, puestos y automático', () => {
     const city = app.world.zones.get('vertice')!;
     expect(city.def.width).toBeGreaterThan(500);
     expect(city.def.ground.some((g) => g.type === 'alley')).toBe(true);
-    expect(city.def.doors.some((d) => d.to.zone.startsWith('pasarela-'))).toBe(true);
+    expect(city.def.doors.some((d) => d.to.zone === 'pasarelas')).toBe(true); // v0.9: el Nivel 2 sustituye a las pasarelas sueltas
     expect(city.def.doors.some((d) => d.to.zone === 'torre-halcon-p0')).toBe(true);
     expect(city.def.doors.some((d) => d.to.zone === 'base-marea')).toBe(true);
     expect(app.world.zones.get('torre-halcon-p7')?.def.tower?.access).toBe('restringido');

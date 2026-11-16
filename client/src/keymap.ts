@@ -8,8 +8,11 @@ export const KEY_ACTIONS: KeyAction[] = [
   { id: 'right', label: 'Andar a la derecha', group: 'Movimiento', def: 'd' },
   { id: 'run', label: 'Correr / andar', group: 'Movimiento', def: 'shift' },
   { id: 'interact', label: 'Interactuar con lo señalado', group: 'Acción', def: 'e' },
-  { id: 'cancel', label: 'Cancelar la acción', group: 'Acción', def: 'q' },
-  { id: 'retreat', label: 'Retirada al refugio', group: 'Acción', def: 'r' },
+  { id: 'kick', label: 'Patada (empuja y desequilibra)', group: 'Acción', def: 'q' },
+  { id: 'cancel', label: 'Cancelar la acción', group: 'Acción', def: 'backspace' },
+  { id: 'hack', label: 'Modo hackeo (luego clic en el objetivo)', group: 'Acción', def: 'r' },
+  { id: 'dodge', label: 'Esquivar (rodar hacia donde andas)', group: 'Acción', def: ' ' },
+  { id: 'retreat', label: 'Retirada al refugio', group: 'Acción', def: ',' },
   { id: 'body', label: 'Panel del cuerpo (heridas)', group: 'Acción', def: 'f' },
   { id: 'target', label: 'Señalar lo siguiente cercano', group: 'Acción', def: 'tab' },
   { id: 'dance', label: 'Bailar', group: 'Acción', def: 'b' },
@@ -40,6 +43,10 @@ const KEY = 'vertice.keys.v1';
 function load(): Record<string, string> {
   const out: Record<string, string> = Object.fromEntries(KEY_ACTIONS.map((a) => [a.id, a.def]));
   try { Object.assign(out, JSON.parse(localStorage.getItem(KEY) ?? '{}')); } catch {}
+  // v0.9 · R pasa a ser el modo hackeo; la retirada se mueve a la coma (solo si no la habías cambiado tú).
+  for (const a of KEY_ACTIONS) if (out[a.id] === undefined) out[a.id] = a.def;
+  if (out.retreat === 'r' && out.hack === 'r') out.retreat = ',';
+  if (out.cancel === 'q' && out.kick === 'q') out.cancel = 'backspace';
   return out;
 }
 export const keymap: Record<string, string> = load();
@@ -60,7 +67,7 @@ export function actionFor(key: string): string | undefined {
 }
 /** Nombre legible de una tecla para la interfaz. */
 export function keyLabel(k: string) {
-  const map: Record<string, string> = { shift: 'Mayús', enter: 'Intro', tab: 'Tab', ' ': 'Espacio', arrowup: '↑', arrowdown: '↓', arrowleft: '←', arrowright: '→', escape: 'Esc', '.': '.', '': '—' };
+  const map: Record<string, string> = { backspace: 'Retroceso', ',': ',', shift: 'Mayús', enter: 'Intro', tab: 'Tab', ' ': 'Espacio', arrowup: '↑', arrowdown: '↓', arrowleft: '←', arrowright: '→', escape: 'Esc', '.': '.', '': '—' };
   return map[k] ?? k.toUpperCase();
 }
 export const keyOf = (action: string) => keyLabel(keymap[action] ?? '');

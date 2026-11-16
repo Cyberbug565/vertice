@@ -21,7 +21,7 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('cheat'), seq, cmd: z.string().max(32), arg: z.string().max(80).optional(), n: z.number().finite().optional() }),
   z.object({ t: z.literal('treat'), seq, part: z.enum(['cabeza', 'torso', 'brazo_izq', 'brazo_der', 'mano_izq', 'mano_der', 'pierna_izq', 'pierna_der']), item: z.string().max(64), opId }),
   z.object({ t: z.literal('repairChrome'), seq, doc: z.string().max(64), opId }),
-  z.object({ t: z.literal('interact'), seq, target: z.number().int().nonnegative() }),
+  z.object({ t: z.literal('interact'), seq, target: z.number().int().nonnegative(), remote: z.boolean().optional() }),
   z.object({ t: z.literal('choose'), seq, dialog: z.number().int(), option: z.string().max(64), luck: z.number().int().min(0).max(10).default(0), opId }),
   z.object({ t: z.literal('closeDialog'), seq }),
   z.object({ t: z.literal('stance'), seq, stance: z.enum(['avoid', 'defend', 'aggressive']) }),
@@ -45,8 +45,10 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('clinicDo'), seq, doc: z.string().max(64), action: z.enum(['install', 'remove']), source: z.enum(['stock', 'stolen', 'inventory', 'installed']), ref: z.string().max(64), opId }),
   z.object({ t: z.literal('bounties'), seq }),
   z.object({ t: z.literal('bountyPlace'), seq, kind: z.enum(['player', 'npc']), target: z.string().min(1).max(64), amount: z.number().int().min(100).max(1_000_000), reason: z.string().min(1).max(120), aliveOnly: z.boolean().default(false), opId }),
-  z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim', 'attack', 'knockout', 'finish', 'carry', 'talk', 'aim', 'search', 'extract']), opId, part: z.enum(['torso', 'cabeza', 'brazos', 'manos', 'piernas']).optional(), chrome: z.string().max(64).optional() }),
+  z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim', 'attack', 'knockout', 'finish', 'carry', 'talk', 'aim', 'search', 'extract', 'heavy', 'kick']), opId, part: z.enum(['torso', 'cabeza', 'brazos', 'manos', 'piernas']).optional(), chrome: z.string().max(64).optional(), remote: z.boolean().optional() }),
   z.object({ t: z.literal('menu'), seq, target: z.number().int().nonnegative() }),
+  z.object({ t: z.literal('hackMenu'), seq, target: z.number().int().nonnegative() }),
+  z.object({ t: z.literal('dodge'), seq, dx: z.number().min(-1).max(1), dy: z.number().min(-1).max(1) }),
   z.object({ t: z.literal('hack'), seq, target: z.number().int().nonnegative(), hack: z.string().max(64), opId }),
   z.object({ t: z.literal('equip'), seq, item: z.string().max(64).nullable() }),
   z.object({ t: z.literal('drop'), seq }),
@@ -87,6 +89,8 @@ export type EntityKind = 'player' | 'npc' | 'door' | 'object';
 export interface Appearance {
   skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string; nose?: string; mouth?: string;
   faceShape?: string; brows?: string; makeup?: string; makeupColor?: string; piercing?: string; scar?: string; bodyTattoo?: string; shirt?: string; shoes?: string;
+  /** v0.9 · Tatuajes por zonas, tejidos, calzado y detalles de la ropa. */
+  tattooZone?: string; tattooInk?: string; faceTattoo?: string; topPattern?: string; pantsPattern?: string; shoeStyle?: string; topDetail?: string; accent2?: string;
   /** Prendas puestas (las calcula el servidor a partir de la ropa equipada). */
   headwear?: string; headColor?: string; eyewear?: string; legwear?: string; outer?: string; rarityGlow?: string;
 }
@@ -97,6 +101,8 @@ export interface EntitySpawn {
   chrome?: string[]; faction?: string; factionColor?: string; npcType?: string; hpPct?: number; carried?: boolean;
   /** v0.4: nivel (los PNJ lo muestran con óptica de análisis o el perk «Lector») y coche que conduce. */
   level?: number; vehicle?: string | null; buffs?: string[];
+  /** v0.9 · Rótulo luminoso sobre una puerta. */
+  sign?: { text: string; color?: string; icon?: string };
   /** v0.6: miembros perdidos, si sangra, arma en la mano y si es un cadáver. */
   lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EmoteState;
 }
@@ -152,7 +158,7 @@ export interface BountyView {
   targets: { kind: 'player' | 'npc'; id: string; name: string }[];
 }
 export interface TargetMenuView {
-  target: number; name: string; subtitle?: string; color?: string;
+  target: number; name: string; subtitle?: string; color?: string; hackMode?: boolean;
   options: { id: string; kind: 'action' | 'hack' | 'interact'; group: 'social' | 'combate' | 'red' | 'ayuda'; label: string; chance?: number; disabled?: string; detail?: string; danger?: boolean }[];
 }
 export interface FactionsView { factions: { id: string; name: string; kind: string; color: string; archetype: string; desc: string; territory: string[]; rep: number; standing: string; allies: string[]; enemies: string[] }[] }
@@ -197,7 +203,7 @@ export interface CharacterSheet {
   needs: { hunger: number; thirst: number; fatigue: number }; needsMult: { hunger: number; thirst: number; fatigue: number };
   status: 'alive' | 'downed'; downedLeft: number; sleeping: { quality: number; where: string } | null; wanted: number; autoNeeds: boolean;
   profession: string; professionName: string; professionRank: number; professionXp: number; activeJob: string | null;
-  cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean; region: string; part: string | null; ability?: string; unique?: string; rarity?: string }[];
+  cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean; region: string; part: string | null; ability?: string; unique?: string; passive?: string; rarity?: string }[];
   bonuses: { confront: number; defense: number; steal: number; surgery: number };
   weapon: { id: string; name: string; kind: string; family: string; damage: [number, number]; range: number; cooldown: number; accuracy: number; ammo?: string; ammoName?: string; ammoCount?: number; nonlethal: string; tech: string } | null;
   weapons: { id: string; name: string; integrated: boolean }[];
@@ -272,7 +278,7 @@ export type ServerMsg =
   | { t: 'underworld'; view: UnderworldView }
   | { t: 'ambar'; view: AmbarView }
   | { t: 'speech'; id: number; text: string }
-  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean }
+  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean }
   | { t: 'searchResults'; device: 'phone' | 'computer'; results: SearchResult[] }
   | { t: 'gotoTarget'; target: { label: string; zone: string; x: number; y: number } | null }
   | { t: 'trunk'; view: TrunkView }

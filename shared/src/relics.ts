@@ -14,7 +14,7 @@ export const KAIROS: KairosTier[] = [
   { tier: 3, radius: 5, slow: 0.55, boost: 1.5, ramPerSec: 2.6, hpPerSec: 4, psyPerSec: 0.18, trail: 6 },
   { tier: 4, radius: 7, slow: 0.4, boost: 1.65, ramPerSec: 3.2, hpPerSec: 5, psyPerSec: 0.24, trail: 8 },
   { tier: 5, radius: 9, slow: 0.28, boost: 1.85, ramPerSec: 4, hpPerSec: 6, psyPerSec: 0.32, trail: 10 },
-  { tier: 6, radius: 12, slow: 0.15, boost: 2.2, ramPerSec: 5, hpPerSec: 8, psyPerSec: 0.45, trail: 14 },
+  { tier: 6, radius: 16, slow: 0.07, boost: 2.4, ramPerSec: 5, hpPerSec: 8, psyPerSec: 0.45, trail: 18 }, // v0.9: el mítico, mucho más grande y lento para los demás
 ];
 export const kairosOf = (tier: number) => KAIROS[Math.max(1, Math.min(6, tier)) - 1];
 /** Escala de tiempo de alguien dentro de la zona de un Kairós de nivel `field`, si él lleva uno activo de nivel `own` (0 = ninguno). */
@@ -28,16 +28,19 @@ export function kairosScale(field: number, own: number) {
 export interface MatrixDef {
   id: string; name: string; rarity: string; chrome: number; desc: string; locked?: boolean;
   capBonus?: number; psyResist?: number; psyImmune?: boolean; hackImmune?: boolean; cameraGhost?: boolean; hackSpeed?: number; hackCost?: number;
-  ramRegen?: number; ramBonus?: number; stopBleed?: boolean; hpMax?: number; meleeDmg?: number; rangedDmg?: number; armor?: number; aim?: number; psyGain?: number; stealth?: number;
+  ramRegen?: number; ramBonus?: number; ramSave?: number; humanityBonus?: number; stopBleed?: boolean; hpMax?: number; meleeDmg?: number; rangedDmg?: number; armor?: number; aim?: number; psyGain?: number; stealth?: number;
   ability?: { kind: 'onda' | 'proyeccion'; name: string; cooldown: number; ram?: number; duration?: number };
+  /** v0.9 · Segunda habilidad (la Onda Carmín de noqueo). Se usa con el id `<matriz>:ko`. */
+  ability2?: { kind: 'onda-ko'; name: string; cooldown: number; ram?: number };
   companion?: { name: string; color: string; lines: string[] };
 }
 export const MATRICES: Record<string, MatrixDef> = {
   'matriz-carmin': {
     id: 'matriz-carmin', name: 'Matriz CARMÍN', rarity: 'mitico', chrome: 0, locked: true,
-    desc: 'La IA que se tragó a las demás, encerrada (más o menos) en tu cabeza. No ocupa cromo, pero no se puede quitar hasta que mueras. +25 de capacidad de cromo, resistencia a la ciberpsicosis, inmune a hackeos, las cámaras nunca te identifican, hackeos casi instantáneos, RAM rapidísima, corta cualquier hemorragia y lanza la Onda Carmín.',
-    capBonus: 25, psyResist: 0.85, hackImmune: true, cameraGhost: true, hackSpeed: 0.92, hackCost: 0.5, ramRegen: 3.5, ramBonus: 8, stopBleed: true,
-    ability: { kind: 'onda', name: 'Onda Carmín', cooldown: 25, ram: 12 },
+    desc: 'La IA que se tragó a las demás, encerrada (más o menos) en tu cabeza. No ocupa cromo, pero no se puede quitar hasta que mueras. +45 de capacidad de cromo, +20 de RAM, el cromo cuesta 25 puntos menos de humanidad, todo lo que gasta RAM (Kairós, hackeos, habilidades) cuesta un 45 % menos, resistencia a la ciberpsicosis, inmune a hackeos, las cámaras nunca te identifican, hackeos casi instantáneos, RAM rapidísima y corta cualquier hemorragia. Dos ondas: la roja fríe y la amarilla noquea; su fuerza depende de tu Interfaz.',
+    capBonus: 45, psyResist: 0.9, hackImmune: true, cameraGhost: true, hackSpeed: 0.92, hackCost: 0.5, ramRegen: 3.5, ramBonus: 20, ramSave: 0.45, humanityBonus: 25, stopBleed: true,
+    ability: { kind: 'onda', name: 'Onda Carmín', cooldown: 25, ram: 14 },
+    ability2: { kind: 'onda-ko', name: 'Onda Carmín · noqueo', cooldown: 20, ram: 10 },
     companion: { name: 'CARMÍN', color: '#ff2040', lines: ['¿Eso era un plan? Qué tierno.', 'Te late el corazón como a un ratón. Me encanta.', 'Podría hacerlo yo mejor. Lo hago yo mejor.', 'No me mires así, sigo aquí.', '¿Otra vez a pie? Qué primitivo.', 'Ese de ahí te está mirando. Mátalo. Es broma. ¿O no?', 'Tu cerebro es pequeño, pero acogedor.', 'Tic, tac. Tus neuronas me aburren.'] },
   },
   'matriz-eco': {
@@ -49,6 +52,10 @@ export const MATRICES: Record<string, MatrixDef> = {
   },
   'matriz-centinela': { id: 'matriz-centinela', name: 'Matriz Centinela', rarity: 'legendario', chrome: 8, desc: 'Protocolo táctico militar: +3 de blindaje, +2 de puntería, +20 de salud.', armor: 3, aim: 2, hpMax: 20 },
   'matriz-berserker': { id: 'matriz-berserker', name: 'Matriz Berserker', rarity: 'legendario', chrome: 9, desc: '+40 % de daño cuerpo a cuerpo y +30 de salud. Acelera la ciberpsicosis.', meleeDmg: 0.4, hpMax: 30, psyGain: 1.6 },
+  // v0.9 · Matrices de flujo: ahorran RAM en todo (Kairós, hackeos, habilidades). Cuanto más rara, más ahorran (CARMÍN sigue muy por encima).
+  'matriz-flujo': { id: 'matriz-flujo', name: 'Matriz Flujo', rarity: 'raro', chrome: 4, desc: 'Compresor de procesos: −12 % de gasto de RAM y +4 de RAM.', ramSave: 0.12, ramBonus: 4 },
+  'matriz-cauce': { id: 'matriz-cauce', name: 'Matriz Cauce', rarity: 'epico', chrome: 6, desc: 'Canaliza los picos de carga: −20 % de gasto de RAM, +6 de RAM y recarga algo más rápida.', ramSave: 0.2, ramBonus: 6, ramRegen: 1.4 },
+  'matriz-delta': { id: 'matriz-delta', name: 'Matriz Delta', rarity: 'legendario', chrome: 8, desc: 'Firmware militar de gestión de memoria: −30 % de gasto de RAM, +10 de RAM y recarga mucho más rápida.', ramSave: 0.3, ramBonus: 10, ramRegen: 1.9 },
   'matriz-espectro': { id: 'matriz-espectro', name: 'Matriz Espectro', rarity: 'epico', chrome: 6, desc: 'Firma térmica y digital mínima: +3 de Sigilo, las cámaras tardan en reconocerte.', stealth: 3 },
 };
 export const SOCKET_BASE = 2, SOCKET_MAX = 4;

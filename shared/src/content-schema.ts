@@ -29,9 +29,11 @@ export const ZoneSchema = z.object({
     style: z.enum(['mega', 'block', 'shop', 'club', 'clinic', 'industrial', 'tower', 'arcology', 'spire', 'glass']),
     color: z.string(), sign: z.string().optional(), signColor: z.string().optional(),
   })).default([]),
-  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window', 'column', 'sofa', 'desk', 'locker', 'fridge', 'planter', 'arcade', 'barrel', 'dumpster', 'hydrant', 'kiosk', 'jersey', 'busstop', 'monolith', 'datastream', 'glitch', 'node', 'codewall']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
+  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window', 'column', 'sofa', 'desk', 'locker', 'fridge', 'planter', 'arcade', 'barrel', 'dumpster', 'hydrant', 'kiosk', 'jersey', 'busstop', 'monolith', 'datastream', 'glitch', 'node', 'codewall', 'citylights']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
   skybridges: z.array(z.object({ from: xy, to: xy, z: z.number(), color: z.string().optional() })).default([]),
-  doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional(), hidden: z.string().optional() })).default([]),
+  doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional(), hidden: z.string().optional(),
+    /** v0.9 · Rótulo sobre la puerta (COMISARÍA, FARMACIA, MATASANOS…). */
+    sign: z.string().optional(), signColor: z.string().optional(), signIcon: z.string().optional() })).default([]),
   objects: z.array(z.object({
     id: z.string(), name: z.string(), at: xy,
     kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot', 'camera', 'computer', 'neuralchair', 'jackout']),
@@ -182,6 +184,12 @@ export const WEAPON_TRAITS = ['perforante', 'inteligente', 'quemadura', 'sangrad
 export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario', 'mitico'] as const;
 export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies'] as const;
 export type WearSlot = (typeof WEAR_SLOTS)[number];
+/** v0.9 · Cuántos implantes caben en cada ranura: dos ojos, dos oídos, dos brazos, dos manos, cuatro dedos (dos por mano), dos piernas… */
+export const CYBER_SLOT_CAPACITY: Record<string, number> = { ojos: 2, oidos: 2, brazo: 2, manos: 2, dedos: 4, pierna: 2, cortex: 3, esqueleto: 2, circulatorio: 2, nervioso: 2, tegumento: 2, glandula: 2, bateria: 2, hombros: 2, columna: 1 };
+export const cyberSlotCapacity = (slot: string) => CYBER_SLOT_CAPACITY[slot] ?? 1;
+/** Nombre de cada hueco de una ranura doble (para la pantalla de ciberware). */
+export const CYBER_SLOT_SIDES: Record<string, string[]> = { ojos: ['Ojo izq.', 'Ojo der.'], oidos: ['Oído izq.', 'Oído der.'], brazo: ['Brazo izq.', 'Brazo der.'], manos: ['Mano izq.', 'Mano der.'],
+  dedos: ['Dedos izq. 1', 'Dedos izq. 2', 'Dedos der. 1', 'Dedos der. 2'], pierna: ['Pierna izq.', 'Pierna der.'], hombros: ['Hombro izq.', 'Hombro der.'] };
 export const CYBER_REGIONS = ['so', 'corteza', 'ojos', 'cara', 'brazos', 'manos', 'esqueleto', 'nervioso', 'circulatorio', 'tegumentario', 'piernas'] as const;
 export type CyberRegion = (typeof CYBER_REGIONS)[number];
 export const WeaponSchema = z.object({
@@ -211,7 +219,13 @@ export const ItemSchema = z.object({
   /** Ropa: hueco donde se lleva, estilo y color con que se dibuja y mejoras. */
   wear: z.object({
     slot: z.enum(WEAR_SLOTS), style: z.string(), color: z.string(),
-    mods: z.object({ skills: z.record(z.string(), z.number()).default({}), carry: z.number().default(0), speed: z.number().default(0), needs: z.number().default(0) }).prefault({}),
+    /** v0.9 · Tejido, detalle y segundo color con que se dibuja. */
+    pattern: z.string().optional(), detail: z.string().optional(), accent: z.string().optional(),
+    mods: z.object({ skills: z.record(z.string(), z.number()).default({}), carry: z.number().default(0), speed: z.number().default(0), needs: z.number().default(0),
+      /** v0.9 · Mejoras de prendas especiales: esquiva, salud, puntería, RAM y ahorro de RAM. */
+      dodge: z.number().default(0), hpMax: z.number().default(0), aim: z.number().default(0), ramPlus: z.number().default(0), ramSave: z.number().default(0) }).prefault({}),
+    /** v0.9 · Capacidad especial de la prenda (camaleon, termica, aislante, reflejos, anticamaras…). */
+    perk: z.string().optional(),
   }).optional(),
 });
 export type ItemDef = z.infer<typeof ItemSchema>;
@@ -255,14 +269,18 @@ export const CyberwareSchema = z.object({
     hpMax: z.number().default(0), confront: z.number().default(0), steal: z.number().default(0), surgery: z.number().default(0),
     carry: z.number().default(0), ram: z.number().default(0), armor: z.number().default(0), weapon: z.string().optional(),
     meleeDmg: z.number().default(0), speed: z.number().default(0), carSpeed: z.number().default(0), dodge: z.number().default(0),
+    /** v0.9 · RAM extra, ahorro de RAM, regeneración de salud por segundo y probabilidad de crítico. */
+    ramPlus: z.number().optional(), ramSave: z.number().optional(), regen: z.number().optional(), crit: z.number().optional(),
   }).prefault({}),
   /** v0.4: zona del cuerpo en la pantalla de ciberware. */
   region: z.enum(CYBER_REGIONS).optional(),
   /** Habilidad que se activa (tecla) con enfriamiento. */
   rarity: z.enum(RARITIES).optional(),
-  ability: z.object({ kind: z.enum(['tiempo-bala', 'invisible', 'curar', 'pulso', 'esprint', 'carga', 'senuelo', 'torbellino', 'disparo-cargado', 'pico-ram', 'kairos']), name: z.string(), cooldown: z.number(), duration: z.number().default(0), power: z.number().default(0) }).optional(),
+  ability: z.object({ kind: z.enum(['tiempo-bala', 'invisible', 'curar', 'pulso', 'esprint', 'carga', 'senuelo', 'torbellino', 'disparo-cargado', 'pico-ram', 'kairos', 'marcar', 'escudo', 'salto']), name: z.string(), cooldown: z.number(), duration: z.number().default(0), power: z.number().default(0) }).optional(),
   /** Efecto pasivo único (segundo-corazon, autoestim, lector, modulador, compartimento, refuerzo). */
   unique: z.string().optional(),
+  /** v0.9 · Capacidad pasiva especial (ojo-absoluto, vampiro, desvio-balas, segundo-aliento, ejecutor…). */
+  passive: z.string().optional(),
   prosthetic: z.boolean().default(false),
   /** Parte del cuerpo donde se ve: se dibuja en el personaje. */
   visible: z.enum(['cabeza', 'ojos', 'torso', 'brazo', 'pierna', 'piernas', 'ninguna']).default('ninguna'),

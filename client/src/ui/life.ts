@@ -156,12 +156,12 @@ export function targetMenu(ctx: LifeCtx, v: TargetMenuView, at: { x: number; y: 
       ...list.map((o) => h('button', { class: `ctx-opt${o.danger ? ' danger' : ''}`, role: 'menuitem', disabled: !!o.disabled, style: { borderLeftColor: GROUPS[g].color }, title: o.disabled ?? o.detail ?? '', onclick: () => {
         if (o.kind === 'interact') onInteract?.(o.id);
         else if (o.kind === 'hack') ctx.net.send({ t: 'hack', target: v.target, hack: o.id.slice(5), opId: newOpId() } as any);
-        else if (o.id.startsWith('extract:')) ctx.net.send({ t: 'hostile', target: v.target, action: 'extract', chrome: o.id.slice(8), opId: newOpId() } as any);
+        else if (o.id.startsWith('extract:')) ctx.net.send({ t: 'hostile', target: v.target, action: 'extract', chrome: o.id.slice(8), opId: newOpId(), remote: true } as any);
         else if (o.id === 'rescue') ctx.net.send({ t: 'rescue', target: v.target, opId: newOpId() } as any);
         else if (o.id === 'drop') ctx.net.send({ t: 'drop' } as any);
         else if (o.id === 'bribe') ctx.net.send({ t: 'bribe', opId: newOpId() } as any);
-        else if (['attack', 'knockout', 'aim', 'claim'].includes(o.id)) ctx.net.send({ t: 'hostile', target: v.target, action: o.id, opId: newOpId(), part: aimPart } as any);
-        else ctx.net.send({ t: 'hostile', target: v.target, action: o.id, opId: newOpId() } as any);
+        else if (['attack', 'knockout', 'aim', 'claim'].includes(o.id)) ctx.net.send({ t: 'hostile', target: v.target, action: o.id, opId: newOpId(), part: aimPart, remote: true } as any);
+        else ctx.net.send({ t: 'hostile', target: v.target, action: o.id, opId: newOpId(), remote: true } as any);
         m.remove(); blip();
       } }, h('span', {}, o.label), o.chance !== undefined ? h('span', { class: 'ctx-chance', style: { color: o.chance >= 0.7 ? 'var(--green)' : o.chance >= 0.4 ? 'var(--yellow)' : 'var(--red)' } }, pct(o.chance)) : null,
         h('div', { class: 'ctx-detail' }, o.disabled ?? o.detail ?? ''))))) : [h('p', { class: 'muted' }, 'No hay acciones posibles.')]));

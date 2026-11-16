@@ -1,6 +1,6 @@
 // Matasanos: catálogo, retirada, procedencia del cromo, precio, riesgo y resultado de la cirugía en una sola transacción.
 import { randomUUID } from 'node:crypto';
-import { humanityBase, surgeryRisk, type ClinicOffer, type ClinicView, type Content, type CyberwareDef, type RipperdocDef } from '@vertice/shared';
+import { cyberSlotCapacity, humanityBase, surgeryRisk, type ClinicOffer, type ClinicView, type Content, type CyberwareDef, type RipperdocDef } from '@vertice/shared';
 import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
 import { chromeParts, effective, type PlayerState } from './player.js';
@@ -39,8 +39,10 @@ export class ClinicService {
     if (!removal) {
       if (def.grade > d.maxGrade) blocked = `${d.name} no trabaja cromo de grado ${ROMAN[def.grade - 1]} (máximo ${ROMAN[d.maxGrade - 1]}).`;
       else if (stolen && d.morality === 'estricta') blocked = 'Se niega: no instala cromo robado.';
-      const occupied = p.cyber.find((x) => x.location === 'installed' && this.c.cyberware.find((y) => y.id === x.def)?.slot === def.slot);
-      if (!blocked && occupied) { replaces = this.c.cyberware.find((y) => y.id === occupied.def)!.name; blocked = `La ranura «${def.slot}» está ocupada por ${replaces}. Retíralo primero: dos implantes no pueden compartir ranura.`; }
+      // v0.9 · Ranuras dobles: dos ojos, dos brazos, cuatro dedos… Solo se bloquea cuando todos los huecos están ocupados.
+      const inSlot = p.cyber.filter((x) => x.location === 'installed' && this.c.cyberware.find((y) => y.id === x.def)?.slot === def.slot);
+      const cap = cyberSlotCapacity(def.slot);
+      if (!blocked && inSlot.length >= cap) { replaces = inSlot.map((o) => this.c.cyberware.find((y) => y.id === o.def)!.name).join(', '); blocked = cap > 1 ? `Los ${cap} huecos de «${def.slot}» están ocupados (${replaces}). Retira uno primero.` : `La ranura «${def.slot}» está ocupada por ${replaces}. Retíralo primero: dos implantes no pueden compartir ranura.`; }
       // v0.7: se puede pasar del límite (hasta un 50 % más) con matasanos poco escrupulosos… a cambio de arriesgarse a la ciberpsicosis.
       if (!blocked && capacityAfter > ef.chromeCapacity) {
         if (d.morality === 'estricta') blocked = `Superarías tu capacidad de cromo (${capacityAfter}/${ef.chromeCapacity}). ${d.name} no trabaja por encima del límite.`;

@@ -54,6 +54,8 @@ export interface PlayerState {
   psyche: { level: number; heavy: number; peak: number; debuff?: { amount: number; until: number }; episode?: { until: number; floor: number; grave: boolean }; episodes?: number };
   /** v0.8: matrices puestas en el zócalo y ranuras extra; Kairós encendido; progreso con las leyendas. */
   relics: { matrices: string[]; socketExtra: number };
+  /** v0.9 · Escudo cinético restante. */
+  shield?: number;
   kairos?: { tier: number; since: number };
   legends: Record<string, { trust: number; step: number; active: boolean; count: number; done?: boolean }>;
   underworld: UnderworldState;
@@ -92,16 +94,19 @@ export function perkMods(c: Content, p: PlayerState) {
   return { mods, flags };
 }
 /** Aspecto con la ropa puesta encima. */
+/** Estilos de calzado antiguos → v0.9. */
+const SHOE_STYLE: Record<string, string> = { calzado: 'botas', deportivas: 'zapatillas', zapatos: 'mocasines' };
 export function wornAppearance(c: Content, p: PlayerState): Appearance {
   const a: any = { ...p.appearance };
   for (const [slot, id] of Object.entries(p.wear)) {
     const it = id ? c.items.find((i) => i.id === id) : undefined;
     if (!it?.wear || (p.inventory.get(it.id) ?? 0) <= 0) continue;
     const w = it.wear;
-    if (slot === 'torso_ext') { a.top = w.style; a.jacket = w.color; a.outer = w.style; }
-    else if (slot === 'torso_int') { a.shirt = w.color; if (!p.wear.torso_ext || (p.inventory.get(p.wear.torso_ext) ?? 0) <= 0) { a.top = w.style; a.jacket = w.color; } }
-    else if (slot === 'piernas') { a.pants = w.color; a.legwear = w.style; }
-    else if (slot === 'pies') a.shoes = w.color;
+    const ww = w as typeof w & { pattern?: string; detail?: string; accent?: string };
+    if (slot === 'torso_ext') { a.top = w.style; a.jacket = w.color; a.outer = w.style; a.topPattern = ww.pattern ?? 'liso'; a.topDetail = ww.detail ?? 'ninguno'; if (ww.accent) a.accent2 = ww.accent; }
+    else if (slot === 'torso_int') { a.shirt = w.color; if (!p.wear.torso_ext || (p.inventory.get(p.wear.torso_ext) ?? 0) <= 0) { a.top = w.style; a.jacket = w.color; a.topPattern = ww.pattern ?? 'liso'; a.topDetail = ww.detail ?? 'ninguno'; if (ww.accent) a.accent2 = ww.accent; } }
+    else if (slot === 'piernas') { a.pants = w.color; a.legwear = w.style; a.pantsPattern = ww.pattern ?? 'liso'; }
+    else if (slot === 'pies') { a.shoes = w.color; a.shoeStyle = SHOE_STYLE[w.style] ?? w.style; }
     else if (slot === 'cabeza') { a.headwear = w.style; a.headColor = w.color; }
     else if (slot === 'cara') { a.eyewear = w.style; a.accessory = 'ninguno'; }
     if (it.rarity === 'legendario' || it.rarity === 'epico') a.rarityGlow = it.rarity === 'legendario' ? '#ffd23f' : '#b46cff';
@@ -129,7 +134,7 @@ export function effective(c: Content, p: PlayerState) {
     if (d.effects.needs) { needs.hunger *= d.effects.needs.hunger; needs.thirst *= d.effects.needs.thirst; needs.fatigue *= d.effects.needs.fatigue; }
   }
   // v0.8: matrices del zócalo neural (solo si el zócalo está instalado).
-  const matrix = { rangedDmg: 0, aim: 0, hackImmune: false, cameraGhost: false, psyResist: 0, psyImmune: false, hackSpeed: 0, hackCost: 0, ramRegen: 1, ramBonus: 0, stopBleed: false, psyGain: 1, capBonus: 0, meleeDmg: 0, armor: 0 };
+  const matrix = { rangedDmg: 0, aim: 0, hackImmune: false, cameraGhost: false, psyResist: 0, psyImmune: false, hackSpeed: 0, hackCost: 0, ramRegen: 1, ramBonus: 0, ramSave: 0, humanityBonus: 0, stopBleed: false, psyGain: 1, capBonus: 0, meleeDmg: 0, armor: 0 };
   if (p.cyber.some((ci) => ci.location === 'installed' && ci.def === 'zocalo-matrices')) for (const id of p.relics?.matrices ?? []) {
     const m = MATRICES[id]; if (!m) continue;
     chromeUsed += m.chrome; hpMax += m.hpMax ?? 0;
@@ -137,7 +142,7 @@ export function effective(c: Content, p: PlayerState) {
     matrix.rangedDmg += m.rangedDmg ?? 0; matrix.meleeDmg += m.meleeDmg ?? 0; matrix.aim += m.aim ?? 0; matrix.armor += m.armor ?? 0;
     matrix.hackImmune ||= !!m.hackImmune; matrix.cameraGhost ||= !!m.cameraGhost; matrix.psyImmune ||= !!m.psyImmune; matrix.stopBleed ||= !!m.stopBleed;
     matrix.psyResist = Math.max(matrix.psyResist, m.psyResist ?? 0); matrix.hackSpeed = Math.max(matrix.hackSpeed, m.hackSpeed ?? 0); matrix.hackCost = Math.max(matrix.hackCost, m.hackCost ?? 0);
-    matrix.ramRegen = Math.max(matrix.ramRegen, m.ramRegen ?? 1); matrix.ramBonus += m.ramBonus ?? 0; matrix.psyGain *= m.psyGain ?? 1; matrix.capBonus += m.capBonus ?? 0;
+    matrix.ramRegen = Math.max(matrix.ramRegen, m.ramRegen ?? 1); matrix.ramBonus += m.ramBonus ?? 0; matrix.psyGain *= m.psyGain ?? 1; matrix.capBonus += m.capBonus ?? 0; matrix.ramSave += m.ramSave ?? 0; matrix.humanityBonus += m.humanityBonus ?? 0;
   }
   hpMax += 5 * (attrs.BODY - p.attributes.BODY) + 3 * (attrs.WILL - p.attributes.WILL);
   hpMax += LEVEL_GAINS.hp * (p.level - 1) + (pm.mods.hpMax ?? 0);
@@ -153,11 +158,20 @@ export function effective(c: Content, p: PlayerState) {
   let armor = wearItems.reduce((a, it) => a + (it.armor ?? 0), 0), carryBonus = wearItems.reduce((a, it) => a + it.wear!.mods.carry, 0) + (pm.mods.carry ?? 0), ram = 0;
   let speed = wearItems.reduce((a, it) => a + it.wear!.mods.speed, 0) + (pm.mods.speed ?? 0), meleeDmg = pm.mods.meleeDmg ?? 0, dodge = pm.mods.dodge ?? 0, carSpeed = pm.mods.carSpeed ?? 0, chromeBonus = pm.mods.chrome ?? 0;
   const integrated: string[] = [];
+  let cyberRamSave = 0, ramPlus = 0, regen = 0, crit = 0, aimBonus = 0;
+  // v0.9 · Capacidades especiales: perks, prendas con capacidad y pasivas de los implantes, todo en un mismo conjunto.
+  const flags = new Set(pm.flags);
+  for (const it of wearItems) {
+    const m = it.wear!.mods;
+    dodge += m.dodge ?? 0; hpMax += m.hpMax ?? 0; aimBonus += m.aim ?? 0; ramPlus += m.ramPlus ?? 0; cyberRamSave += m.ramSave ?? 0;
+    const perk = (it.wear as any).perk; if (perk) flags.add(perk);
+  }
   for (const ci of p.cyber) {
     if (ci.location !== 'installed') continue;
     const d = c.cyberware.find((x) => x.id === ci.def);
     if (!d) continue;
-    armor += d.effects.armor ?? 0; carryBonus += d.effects.carry ?? 0; ram = Math.max(ram, d.effects.ram ?? 0);
+    armor += d.effects.armor ?? 0; carryBonus += d.effects.carry ?? 0; ram = Math.max(ram, d.effects.ram ?? 0); cyberRamSave += d.effects.ramSave ?? 0; ramPlus += d.effects.ramPlus ?? 0;
+    regen += d.effects.regen ?? 0; crit += d.effects.crit ?? 0; if (d.passive) flags.add(d.passive);
     speed += d.effects.speed ?? 0; meleeDmg += d.effects.meleeDmg ?? 0; dodge += d.effects.dodge ?? 0; carSpeed += d.effects.carSpeed ?? 0;
     if (d.effects.weapon) integrated.push(d.effects.weapon);
   }
@@ -175,8 +189,8 @@ export function effective(c: Content, p: PlayerState) {
   const weapon = eq?.weapon && armsLost < 2 && !(armsLost && twoHanded(eq)) ? eq : undefined;
   const weight = [...p.inventory].reduce((acc, [d, q]) => acc + (c.items.find((i) => i.id === d)?.weight ?? 0) * q, 0);
   const carryMax = carryCapacity(attrs) + carryBonus;
-  return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor: armor + matrix.armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs) + chromeBonus + matrix.capBonus - ((p.psyche?.debuff?.until ?? 0) > Date.now() ? p.psyche!.debuff!.amount : 0), humanityLoad: load, needs, mods, weapon, integrated, ram: ram + matrix.ramBonus, weight, carryMax,
-    staminaMax: maxStamina(attrs) + LEVEL_GAINS.stamina * (p.level - 1) + (pm.mods.stamina ?? 0), speed, meleeDmg: meleeDmg + matrix.meleeDmg, dodge: Math.min(0.5, dodge), carSpeed, perk: pm.mods, flags: pm.flags,
+  return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor: armor + matrix.armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs) + chromeBonus + matrix.capBonus - ((p.psyche?.debuff?.until ?? 0) > Date.now() ? p.psyche!.debuff!.amount : 0), humanityLoad: Math.max(0, load - matrix.humanityBonus), needs, mods, weapon, integrated, ram: ram ? ram + matrix.ramBonus + ramPlus : 0, ramSave: Math.min(0.6, matrix.ramSave + cyberRamSave), weight, carryMax,
+    staminaMax: maxStamina(attrs) + LEVEL_GAINS.stamina * (p.level - 1) + (pm.mods.stamina ?? 0), speed, meleeDmg: meleeDmg + matrix.meleeDmg, dodge: Math.min(0.5, dodge), carSpeed, perk: pm.mods, flags, regen, crit, aimBonus,
     matrix, armsLost, legsLost, limbMult: (legsLost === 2 ? 0.25 : legsLost ? 0.5 : 1) * (brokenLegs === 2 ? 0.5 : brokenLegs ? 0.75 : 1), chromeBroken, brokenArms };
 }
 /** v0.7 · Un miembro de cromo muy dañado (24+) no sangra, pero falla hasta que lo repara un matasanos. */
@@ -362,7 +376,8 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     skillPoints: pointsAvailable(c, p).skill, perkPoints: pointsAvailable(c, p).perk, perks: [...p.perks],
     wear: { ...p.wear } as Record<string, string>, look: wornAppearance(c, p),
     abilities: [...p.cyber.filter((ci) => ci.location === 'installed').map((ci) => c.cyberware.find((d) => d.id === ci.def)).filter((d) => d?.ability).map((d) => ({ id: d!.id, name: d!.ability!.name, kind: d!.ability!.kind as string, cooldown: d!.ability!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[d!.id] ?? 0) - Date.now()) / 1000)) })),
-      ...(p.cyber.some((ci) => ci.location === 'installed' && ci.def === 'zocalo-matrices') ? (p.relics?.matrices ?? []) : []).filter((id) => MATRICES[id]?.ability).map((id) => ({ id, name: MATRICES[id].ability!.name, kind: MATRICES[id].ability!.kind as string, cooldown: MATRICES[id].ability!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[id] ?? 0) - Date.now()) / 1000)) }))],
+      ...(p.cyber.some((ci) => ci.location === 'installed' && ci.def === 'zocalo-matrices') ? (p.relics?.matrices ?? []) : []).filter((id) => MATRICES[id]?.ability).flatMap((id) => [{ id, name: MATRICES[id].ability!.name, kind: MATRICES[id].ability!.kind as string, cooldown: MATRICES[id].ability!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[id] ?? 0) - Date.now()) / 1000)) },
+        ...(MATRICES[id].ability2 ? [{ id: `${id}:ko`, name: MATRICES[id].ability2!.name, kind: MATRICES[id].ability2!.kind as string, cooldown: MATRICES[id].ability2!.cooldown, readyIn: Math.max(0, Math.round(((p.abilityCd[`${id}:ko`] ?? 0) - Date.now()) / 1000)) }] : [])])],
     buffs: Object.fromEntries(Object.entries(p.buffs).filter(([, u]) => u > Date.now()).map(([k, u]) => [k, Math.round((u - Date.now()) / 1000)])),
     houses: [...p.houses], cars: p.cars.map((x) => ({ id: x.id, car: x.car })), driving: p.driving,
     discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
@@ -390,7 +405,7 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     wanted: Math.round(p.wanted * 10) / 10, autoNeeds: p.autoNeeds,
     profession: p.profession, professionName: c.professions.find((x) => x.id === p.profession)?.name ?? p.profession, professionRank: p.professionRank, professionXp: p.professionXp,
     activeJob: p.activeJob,
-    cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen, region: d.region ?? 'corteza', part: ci.part ?? null, ability: d.ability?.name, unique: d.unique, rarity: d.rarity ?? (d.grade <= 1 ? 'comun' : d.grade === 2 ? 'raro' : d.grade === 3 ? 'epico' : 'legendario') }; }),
+    cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen, region: d.region ?? 'corteza', part: ci.part ?? null, ability: d.ability?.name, unique: d.unique, passive: d.passive, rarity: d.rarity ?? (d.grade <= 1 ? 'comun' : d.grade === 2 ? 'raro' : d.grade === 3 ? 'epico' : 'legendario') }; }),
     bonuses: { confront: ef.confront, defense: ef.defense, steal: ef.steal, surgery: Math.round(ef.surgery * 100) },
     weapon: ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, kind: ef.weapon.weapon.kind, family: ef.weapon.weapon.family, damage: ef.weapon.weapon.damage, range: ef.weapon.weapon.range, cooldown: ef.weapon.weapon.cooldown, accuracy: ef.weapon.weapon.accuracy,
       ammo: ef.weapon.weapon.ammo, ammoName: ef.weapon.weapon.ammo ? c.items.find((i) => i.id === ef.weapon!.weapon!.ammo)?.name : undefined, ammoCount: ef.weapon.weapon.ammo ? p.inventory.get(ef.weapon.weapon.ammo) ?? 0 : undefined, nonlethal: ef.weapon.weapon.nonlethal, tech: ef.weapon.weapon.tech } : null,

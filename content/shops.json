@@ -36,7 +36,14 @@
    "analgesicos": 15,
    "ropa-impermeable": 6,
    "bala-pistola": 100,
-   "venda": 20
+   "venda": 20,
+   "gorro-punto-ceniza": 6,
+   "gafas-sol-espejo": 6,
+   "bandana-cara-roja": 6,
+   "bomber-orbita": 6,
+   "vaquero-gastado": 6,
+   "bermudas-cuadros": 6,
+   "falda-tartan": 6
   },
   "priceMult": 1,
   "security": 16
@@ -119,7 +126,9 @@
    "revolver-pesado": 3,
    "bala-pistola": 200,
    "matriz-centinela": 1,
-   "matriz-berserker": 1
+   "matriz-berserker": 1,
+   "matriz-delta": 1,
+   "matriz-cauce": 1
   },
   "buys": [
    "chatarra",
@@ -181,7 +190,27 @@
    "casco-balistico": 3,
    "visor-tactico": 2,
    "pantalon-tactico": 3,
-   "botas-militares": 4
+   "botas-militares": 4,
+   "monoculo-tasador": 3,
+   "visor-tactico-lince": 2,
+   "visor-tactico-halcon": 1,
+   "mascara-demonio-hueso": 1,
+   "bomber-neon-rosa": 3,
+   "biker-kevlar": 2,
+   "armadura-ligera-patrulla": 2,
+   "armadura-ligera-ronin": 2,
+   "armadura-centurion": 2,
+   "chaqueta-carbono-fantasma": 1,
+   "tirantes-kevlar": 3,
+   "arnes-tactico": 2,
+   "sudadera-glitch": 3,
+   "cargo-tactico-urbano": 2,
+   "tactico-rodilleras": 2,
+   "tactico-kevlar": 2,
+   "pantalon-exo-sprinter": 1,
+   "botas-tacticas-delta": 3,
+   "botas-tacticas-magneticas": 2,
+   "botas-sigilo-pluma": 1
   },
   "buys": [
    "arma"
@@ -198,7 +227,14 @@
    "gabardina-blindada": 4,
    "chaqueta": 10,
    "ropa-impermeable": 8,
-   "chaleco-balistico": 4
+   "chaleco-balistico": 4,
+   "diadema-sinapsis": 2,
+   "capucha-camaleonica": 1,
+   "monoculo-balistico": 2,
+   "abrigo-blindado-ejecutivo": 1,
+   "armadura-centurion": 1,
+   "gabardina-serpiente": 2,
+   "botas-tacticas-magneticas": 2
   },
   "buys": [
    "ropa"
@@ -331,7 +367,16 @@
    "pistola-ligera": 2,
    "nunchakus": 3,
    "chaleco-carga": 3,
-   "camiseta-termica": 2
+   "camiseta-termica": 2,
+   "diadema-led-coral": 6,
+   "bandana-ruido": 6,
+   "chubasquero-acido": 6,
+   "camiseta-reflectante": 6,
+   "camisa-cuadros-lenador": 6,
+   "vaquero-negro-pitillo": 6,
+   "pana-marron": 6,
+   "bermudas-cargo": 6,
+   "botas-faena": 6
   },
   "buys": [
    "chatarra",
@@ -354,7 +399,9 @@
    "cafe-sintetico": 20,
    "matriz-espectro": 1,
    "ampliacion-zocalo": 1,
-   "cuna-neural": 1
+   "cuna-neural": 1,
+   "matriz-flujo": 2,
+   "matriz-cauce": 1
   },
   "buys": [
    "equipo",
@@ -380,7 +427,18 @@
    "abrigo-nomada": 4,
    "rifle-dardos": 2,
    "dardo-sedante": 60,
-   "botas-militares": 2
+   "botas-militares": 2,
+   "biker-tachuelas": 6,
+   "abrigo-acolchado-norte": 6,
+   "poncho-camuflaje": 6,
+   "gabardina-detective": 6,
+   "tirantes-camuflaje": 6,
+   "arnes-cuero-negro": 6,
+   "mono-mecanico-pana": 6,
+   "cargo-camuflaje": 6,
+   "falda-larga-seda": 6,
+   "zapatillas-neon": 6,
+   "tacones-rojos": 6
   },
   "buys": [
    "chatarra",
@@ -483,7 +541,16 @@
    "pantalon-cargo": 6,
    "shorts-deporte": 6,
    "deportivas": 6,
-   "botas-trabajo": 6
+   "botas-trabajo": 6,
+   "casco-moto-relampago": 3,
+   "mascara-gas-filtro": 6,
+   "abrigo-sastre-noir": 3,
+   "haori-tormenta": 3,
+   "camisa-seda-flores": 6,
+   "camisa-lentejuelas": 3,
+   "leggins-holo": 3,
+   "pantalon-cuero": 3,
+   "botas-altas-cordones": 6
   },
   "buys": [
    "ropa"
@@ -509,7 +576,30 @@
    "zapatos-piel": 6,
    "zapatillas-led": 6,
    "botas-gravedad": 6,
-   "visor-neural": 6
+   "visor-neural": 6,
+   "gorro-led-pulso": 6,
+   "casco-moto-sombra": 2,
+   "casco-asalto-k9": 3,
+   "gafas-sol-ambar": 6,
+   "visor-tactico-lince": 3,
+   "mascara-gas-plaga": 3,
+   "bandana-cara-forajido": 6,
+   "mascara-demonio-carmesi": 2,
+   "bomber-escuadron": 6,
+   "biker-ruta-roja": 3,
+   "blazer-corporativo": 6,
+   "blazer-terciopelo": 3,
+   "haori-grulla": 2,
+   "armadura-ligera-patrulla": 3,
+   "chubasquero-transparente": 3,
+   "top-holo-iris": 3,
+   "arnes-tactico": 3,
+   "tactico-rodilleras": 3,
+   "pantalon-serpiente": 2,
+   "zapatillas-cohete": 3,
+   "botas-altas-vinilo": 3,
+   "tacones-aguja-cromo": 3,
+   "plataformas-punk": 6
   },
   "buys": [
    "ropa"
@@ -536,7 +626,17 @@
    "vaqueros": 6,
    "zapatillas-led": 6,
    "deportivas": 6,
-   "casco-moto": 6
+   "casco-moto": 6,
+   "sombrero-alas-noche": 6,
+   "gorra-ruta-38": 6,
+   "cortavientos-rayo": 6,
+   "cortavientos-maraton": 6,
+   "camiseta-banda-ruido": 6,
+   "camiseta-tigre": 6,
+   "camisa-blanca-oficina": 6,
+   "cargo-tactico-urbano": 6,
+   "leggins-carrera": 6,
+   "mocasines-ejecutivos": 6
   },
   "buys": [
    "ropa"
@@ -564,7 +664,15 @@
    "vaqueros": 6,
    "pantalon-cargo": 6,
    "botas-trabajo": 6,
-   "deportivas": 6
+   "deportivas": 6,
+   "boina-distrito": 6,
+   "poncho-yermo": 6,
+   "camiseta-logo-pixel": 6,
+   "tirantes-malla": 6,
+   "sudadera-punto-gruesa": 6,
+   "cargo-urbano": 6,
+   "shorts-vaquero": 6,
+   "zapatillas-blancas": 6
   },
   "buys": [
    "ropa"
@@ -585,7 +693,13 @@
    "smg-inteligente": 2,
    "pistola-silenciada": 4,
    "celula-energia": 200,
-   "pistola-plasma": 2
+   "pistola-plasma": 2,
+   "biker-kevlar": 2,
+   "blazer-holo": 2,
+   "armadura-ligera-ronin": 2,
+   "top-circuito": 2,
+   "tactico-kevlar": 2,
+   "plataformas-holo": 2
   },
   "buys": [
    "equipo",

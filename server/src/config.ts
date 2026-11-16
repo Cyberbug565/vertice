@@ -30,7 +30,7 @@ export function loadConfig(overrides: Partial<Config> = {}): Config {
     databaseUrl: e.DATABASE_URL || undefined,
     pgliteDir: e.PGLITE_DIR ?? join(ROOT, 'data/pglite'),
     staticDir: e.STATIC_DIR ?? join(ROOT, 'client/dist'),
-    ambientNpcs: Number(e.AMBIENT_NPCS ?? 48),
+    ambientNpcs: Number(e.AMBIENT_NPCS ?? 72), // v0.9: más gente por la calle
     threats: e.THREATS !== '0',
     crowdNpcs: Number(e.CROWD_NPCS ?? 0),
     crowdAt: crowd,

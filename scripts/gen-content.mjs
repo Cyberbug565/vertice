@@ -445,6 +445,21 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log('v0.8: 6 aceleradores Kairós, zócalo y 5 matrices, ciberespacio, el Velo y 3 guaridas de leyendas.');
 }
 
+// ---------------------------------------------------------------- v0.9: 100 prendas, 100 implantes con ranuras dobles y matrices de flujo
+{
+  const v9 = await import('./v09.mjs');
+  const clothes = v9.clothesV09();
+  write('items/ropa-v09.json', clothes);
+  const cyber = v9.cyberwareV09(read('cyberware.json'));
+  write('cyberware.json', cyber);
+  write('items.json', v9.itemsV09(read('items.json')));
+  write('shops.json', v9.shopsV09(read('shops.json'), clothes));
+  write('ripperdocs.json', v9.ripperdocsV09(read('ripperdocs.json'), cyber));
+  console.log(`v0.9: ${clothes.length} prendas nuevas, ${v9.NEW_CYBER_IDS.length} implantes nuevos y 3 matrices de flujo.`);
+  const r = v9.zonesV09(C);
+  console.log(`v0.9: farolas recolocadas ${r.moved} (quitadas ${r.removed}), ${r.signs} rótulos y ${r.stairs} escaleras al Nivel 2.`);
+}
+
 // ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
 {
   const { applyOverlays } = await import('./overlay.mjs');

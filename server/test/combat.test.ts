@@ -38,7 +38,7 @@ describe('v0.3 · combate, red y ciudad', () => {
   it('la megápolis tiene siete distritos conectados y las bandas y la policía patrullan', () => {
     // v0.5: una sola zona exterior con todos los distritos dentro.
     const ext = [...app.world.zones.values()].filter((z) => z.def.kind === 'exterior').map((z) => z.id);
-    expect(ext).toEqual(['vertice']);
+    expect(ext.sort()).toEqual(['pasarelas', 'vertice']); // v0.9: la ciudad y su Nivel 2
     const city = app.world.zones.get('vertice')!;
     expect(city.def.districts.map((d) => d.id)).toEqual(expect.arrayContaining(['arrabal', 'cenit', 'colinas', 'ferro', 'forja', 'neon-rojo', 'yermo', 'muelles-viejos']));
     const npcs = [...app.world.entities.values()];

@@ -19,10 +19,11 @@ const SLOT_ICON: Record<string, string> = { cabeza: '🧢', cara: '🕶', torso_
 const CAT_ICON: Record<string, string> = { comida: '🍜', bebida: '🥤', medicina: '💉', municion: '▮', herramienta: '🔧', chatarra: '⚙', ciberware: '🦾', equipo: '📟', contrabando: '📦', mision: '★', ropa: '🧥', arma: '🔫' };
 const FILTERS: [string, string][] = [['todo', 'Todo'], ['arma', 'Armas'], ['ropa', 'Ropa'], ['consumible', 'Consumibles'], ['municion', 'Munición'], ['otros', 'Otros']];
 const REGIONS: { id: string; name: string; slots: number; side: 'l' | 'r'; y: number }[] = [
-  { id: 'corteza', name: 'Corteza frontal', slots: 3, side: 'l', y: 0 }, { id: 'brazos', name: 'Brazos', slots: 2, side: 'l', y: 1 }, { id: 'esqueleto', name: 'Esqueleto', slots: 2, side: 'l', y: 2 },
-  { id: 'nervioso', name: 'Sistema nervioso', slots: 2, side: 'l', y: 3 }, { id: 'piernas', name: 'Piernas', slots: 1, side: 'l', y: 4 },
-  { id: 'so', name: 'Sistema operativo', slots: 1, side: 'r', y: 0 }, { id: 'ojos', name: 'Ojos', slots: 1, side: 'r', y: 1 }, { id: 'cara', name: 'Cara', slots: 2, side: 'r', y: 2 },
-  { id: 'manos', name: 'Manos', slots: 1, side: 'r', y: 3 }, { id: 'circulatorio', name: 'Circulatorio', slots: 3, side: 'r', y: 4 }, { id: 'tegumentario', name: 'Tegumentario', slots: 2, side: 'r', y: 5 },
+  // v0.9 · Más huecos: dos ojos, dos brazos (y hombros), dos piernas, dos manos y cuatro dedos, dos oídos…
+  { id: 'corteza', name: 'Corteza frontal', slots: 3, side: 'l', y: 0 }, { id: 'brazos', name: 'Brazos y hombros', slots: 4, side: 'l', y: 1 }, { id: 'esqueleto', name: 'Esqueleto y columna', slots: 3, side: 'l', y: 2 },
+  { id: 'nervioso', name: 'Sistema nervioso', slots: 2, side: 'l', y: 3 }, { id: 'piernas', name: 'Piernas (izq./der.)', slots: 2, side: 'l', y: 4 },
+  { id: 'so', name: 'Sistema operativo y memoria', slots: 3, side: 'r', y: 0 }, { id: 'ojos', name: 'Ojos (izq./der.)', slots: 2, side: 'r', y: 1 }, { id: 'cara', name: 'Cara y oídos', slots: 4, side: 'r', y: 2 },
+  { id: 'manos', name: 'Manos y dedos', slots: 6, side: 'r', y: 3 }, { id: 'circulatorio', name: 'Circulatorio', slots: 4, side: 'r', y: 4 }, { id: 'tegumentario', name: 'Piel', slots: 3, side: 'r', y: 5 },
 ];
 
 const st: { tab: Tab; filter: string; skill: string; preview: Preview | null; ctx: CharCtx | null; sheet: CharacterSheet | null } = { tab: 'inv', filter: 'todo', skill: 'armas', preview: null, ctx: null, sheet: null };
@@ -175,6 +176,12 @@ function invTab(s: CharacterSheet, ctx: CharCtx) {
 const stat = (k: string, v: string) => h('div', { class: 'cs-stat' }, h('span', { class: 'muted small' }, k), h('b', { class: 'mono' }, v));
 
 // ---------------------------------------------------------------- ciberware
+/** Nombre del hueco en las regiones con lados (ojo izq./der., mano y dedos…). */
+function sideLabel(region: string, i: number) {
+  const L: Record<string, string[]> = { ojos: ['Ojo izq.', 'Ojo der.'], piernas: ['Pierna izq.', 'Pierna der.'], brazos: ['Brazo izq.', 'Brazo der.', 'Hombro izq.', 'Hombro der.'],
+    manos: ['Mano izq.', 'Mano der.', 'Dedos izq.', 'Dedos izq.', 'Dedos der.', 'Dedos der.'], cara: ['Oído izq.', 'Oído der.', 'Cara', 'Cara'] };
+  return L[region]?.[i] ?? '';
+}
 function cyberTab(s: CharacterSheet) {
   const installed = s.cyber.filter((c) => c.location === 'installed');
   const box = (r: (typeof REGIONS)[number]) => {
@@ -184,13 +191,13 @@ function cyberTab(s: CharacterSheet) {
       h('div', { class: 'cy-title' }, r.name.toUpperCase()),
       h('div', { class: 'cy-slots' }, ...Array.from({ length: slots }, (_, i) => {
         const c = list[i];
-        if (!c) return h('div', { class: 'cy-slot empty', title: 'Hueco libre: instálalo en un matasanos' });
+        if (!c) return h('div', { class: 'cy-slot empty', title: 'Hueco libre: instálalo en un matasanos' }, h('span', { class: 'cy-side' }, sideLabel(r.id, i)));
         const rc = RARITY_COLOR[c.rarity ?? 'comun'];
         const el = h('div', { class: `cy-slot g${c.grade} r-${c.rarity ?? 'comun'}`, style: { borderColor: rc } }, h('span', { class: 'cs-ico' }, c.ability ? '⚡' : '🦾'), h('span', { class: 'cy-name', style: { color: rc } }, c.name));
         el.addEventListener('mouseenter', () => showTip(el, h('div', { class: 'cs-card', style: { borderColor: rc } },
           h('div', { class: 'cs-card-rar', style: { color: rc } }, `${(RARITY_LABEL[c.rarity ?? 'comun'] ?? '').toUpperCase()} · ${c.family.toUpperCase()} · GRADO ${['I', 'II', 'III', 'IV', 'V'][c.grade - 1]}`), h('b', {}, c.name), h('p', { class: 'muted' }, c.desc),
           h('div', { class: 'mono' }, `Capacidad ${c.capacity} · Humanidad −${c.humanity}`), c.part ? h('div', {}, `Lado: ${c.part.endsWith('izq') ? 'izquierdo' : 'derecho'}`) : null,
-          c.ability ? h('div', { class: 'good' }, `Habilidad activa: ${c.ability} (teclas 1–4)`) : null, c.unique ? h('div', { class: 'good' }, 'Efecto único pasivo') : null,
+          c.ability ? h('div', { class: 'good' }, `Habilidad activa: ${c.ability} (teclas 1–4)`) : null, c.unique || (c as any).passive ? h('div', { class: 'good' }, 'Capacidad pasiva especial') : null,
           c.stolen ? h('div', { class: 'netbad' }, 'Procedencia: robado') : null)));
         el.addEventListener('mouseleave', hideTip);
         return el;

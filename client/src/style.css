@@ -599,3 +599,12 @@ body.psy3 #ui::after { content: ''; position: fixed; inset: 0; pointer-events: n
 .cheat-list { max-height: 260px; overflow: auto; border: 1px solid #2a2a4a; margin-top: 6px; }
 .cheat-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 2px 6px; border-bottom: 1px solid #1a1a30; font-size: 0.9em; }
 .cheat-row:hover { background: #14142a; }
+
+/* v0.9 · Modo hackeo (R): aviso centrado y cursor de mira morada. */
+.hack-badge { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 40; padding: 6px 16px; border: 1px solid #b46cff;
+  background: linear-gradient(90deg, rgba(40, 10, 60, 0.92), rgba(10, 6, 20, 0.92)); color: #e8d8ff; font-size: 0.85em; letter-spacing: 0.04em;
+  box-shadow: 0 0 18px rgba(180, 108, 255, 0.45); clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); pointer-events: none; animation: hackpulse 1.2s ease-in-out infinite; }
+.hack-badge b { color: #b46cff; }
+@keyframes hackpulse { 50% { box-shadow: 0 0 28px rgba(180, 108, 255, 0.8); } }
+body.hack-mode canvas { cursor: crosshair !important; filter: hue-rotate(-12deg) saturate(1.15); }
+.cy-side { font-size: 0.7em; opacity: 0.55; letter-spacing: 0.03em; }

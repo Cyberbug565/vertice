@@ -13,7 +13,7 @@ type Site = UnderworldDef['contacts'][number];
 type SiteAt = { def: Site; entity: Entity } & ({ kind: 'contact' } | { kind: 'buyer'; buyer: Buyer } | { kind: 'base'; crew: Crew });
 type Command = Extract<ClientMsg, { t: 'underworld' }>;
 
-const REACH = 2.4;
+const REACH = 8; // v0.9: se trata a distancia (clic), sin caminar
 const DRUG_INVENTORY_LIMIT = 30;
 const commissionRate = (crew: Crew) => crew.tier === 'principal' ? 0.28 : 0.24;
 

@@ -807,5 +807,32 @@
   "category": "equipo",
   "rarity": "legendario",
   "price": 90000
+ },
+ {
+  "id": "matriz-flujo",
+  "name": "Matriz Flujo",
+  "desc": "Compresor de procesos para el zócalo de matrices: −12 % de gasto de RAM.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "raro",
+  "price": 9000
+ },
+ {
+  "id": "matriz-cauce",
+  "name": "Matriz Cauce",
+  "desc": "Canaliza los picos de carga: −20 % de gasto de RAM.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "epico",
+  "price": 22000
+ },
+ {
+  "id": "matriz-delta",
+  "name": "Matriz Delta",
+  "desc": "Firmware militar de gestión de memoria: −30 % de gasto de RAM.",
+  "weight": 0,
+  "category": "matriz",
+  "rarity": "legendario",
+  "price": 48000
  }
 ]

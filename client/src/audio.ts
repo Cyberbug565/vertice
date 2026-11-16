@@ -66,4 +66,8 @@ export function blip(kind: 'ui' | 'good' | 'bad' | 'step' = 'ui') {
   o.connect(g).connect(kind === 'ui' ? gains.ui! : gains.sfx!);
   o.start(); o.stop(ctx.currentTime + 0.2);
 }
+/** v0.9 · Acceso al contexto y al bus de efectos para los sonidos sintetizados (sfx.ts). */
+export const audioCtx = () => ctx;
+export const sfxBus = () => gains.sfx;
+export const musicBus = () => gains.music;
 export function setAmbientActive(active: boolean) { if (ctx) void (active ? ctx.resume() : ctx.suspend()).catch(() => {}); }

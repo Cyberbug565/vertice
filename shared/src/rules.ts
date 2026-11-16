@@ -3,6 +3,10 @@ export const ATTRIBUTE_IDS = ['INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'LUCK
 export type AttributeId = (typeof ATTRIBUTE_IDS)[number];
 export type Attributes = Record<AttributeId, number>;
 
+/** v0.9 · Alcance de la interacción a distancia con el clic izquierdo (hablar, examinar, comprar…). Andar solo con WASD. */
+export const REMOTE_RANGE = 7;
+/** v0.9 · Alcance para cruzar una puerta con el clic (hay que llegar andando). */
+export const REMOTE_DOOR_RANGE = 2.2;
 export const RULES = {
   version: 'reglas-0.1.0',
   creationPoints: 55,

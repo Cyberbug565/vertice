@@ -2,8 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   checkChance, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
-  OBJECTIVES, PART_NAMES, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView,
-} from '@vertice/shared';
+  OBJECTIVES, PART_NAMES, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView, REMOTE_RANGE } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { MythicTransfer } from './mythics.js';
 import type { Entity, RunningTask } from './entity.js';
@@ -16,7 +15,7 @@ import { isSick, substanceEffects, takeDose } from '../game/substances.js';
 import { buildSheet, chromeParts, effective, objectiveStatus, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
-const SHOP_RANGE = 3.5;
+const SHOP_RANGE = REMOTE_RANGE + 1;
 const HOSTILE_RANGE = 2.6;
 
 export { opposed as opposedChance } from './combat.js';
@@ -148,7 +147,9 @@ export class Survival {
       const run = p.running && p.stamina > 3 && !p.carrying && !p.sleeping && ef.legsLost === 0;
       if (p.running && ef.legsLost > 0 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin una pierna no puedes correr: busca un matasanos que te implante una prótesis.'); }
       if (run && e.moving) p.stamina = Math.max(0, p.stamina - 3);
-      else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1));
+      else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1) * (ef.flags.has('corazon-reactor') ? 2 : 1));
+      // v0.9 · Nanobots sanguíneos: regeneran salud fuera de combate.
+      if (ef.regen && p.status === 'alive' && Date.now() - p.lastCombatAt > 8000 && p.hp < ef.hpMax) p.hp = Math.min(ef.hpMax, p.hp + ef.regen);
       if (p.running && p.stamina <= 3 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.'); }
       if (p.stamina > 20) x.breathless = false;
       e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > Date.now() ? 0.55 : 1);
@@ -305,7 +306,7 @@ export class Survival {
     const p = c.p!, e = c.e!;
     if (p.status !== 'alive' || p.sleeping || p.driving || isSick(p.substances)) throw new GameError('No puedes consumirlo ahora.');
     if ((p.inventory.get(d.id) ?? 0) < 1) throw new GameError('No te quedan.');
-    const next = takeDose(p.substances, d, Date.now());
+    const next = takeDose(p.substances, d, Date.now(), effective(this.w.c, p).flags.has('filtro') ? 0.5 : 1); // v0.9: filtro → bajón a la mitad
     const thirst = Math.max(0, Math.min(100, p.thirst + cons.thirst + (next.sick ? 18 : 0)));
     const fatigue = Math.max(0, Math.min(100, p.fatigue + cons.fatigue + (next.sick ? 15 : 0)));
     const stamina = Math.max(0, Math.min(effective(this.w.c, p).staminaMax,
@@ -378,7 +379,7 @@ export class Survival {
   async repairChrome(c: PlayerConn, docId: string, opId: string) {
     const o = this.x(c).openClinic;
     const src = o && this.w.entities.get(o.entity);
-    if (!o || o.doc !== docId || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > 4) throw new GameError('Tienes que estar en la consulta.');
+    if (!o || o.doc !== docId || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
     const p = c.p!;
     const doc = this.w.c.ripperdocs.find((d) => d.id === docId)!;
     const parts = chromeParts(this.w.c, p).filter((k) => (p.body.wounds[k as BodyPart] ?? 0) > 0) as BodyPart[];
@@ -505,7 +506,9 @@ export class Survival {
     // Segundas oportunidades: segundo corazón (implante), «Segunda vida» y «Milagro» (perks).
     if (lethal) {
       const ef = effective(this.w.c, p), now = Date.now(), day = 24 * this.w.c.manifest.cityHourMs;
-      if (ef.flags.has('segundo-corazon') && now > p.secondLifeAt) { p.secondLifeAt = now + 2 * day; p.revive = { at: now + 4000, frac: 0.5, why: 'Tu segundo corazón arranca' }; }
+      // v0.9 · Corazón «Segundo aliento»: una vez cada 30 min te levantas al momento con un tercio de la salud.
+      if (ef.flags.has('segundo-aliento') && now > ((p as any).alientoAt ?? 0)) { (p as any).alientoAt = now + 30 * 60_000; p.revive = { at: now + 1500, frac: 0.34, why: 'El desfibrilador interno te arranca el corazón otra vez' }; }
+      else if (ef.flags.has('segundo-corazon') && now > p.secondLifeAt) { p.secondLifeAt = now + 2 * day; p.revive = { at: now + 4000, frac: 0.5, why: 'Tu segundo corazón arranca' }; }
       else if (ef.flags.has('segunda-vida') && now > p.secondLifeAt) { p.secondLifeAt = now + day; p.revive = { at: now + 6000, frac: 0.5, why: 'Segunda vida' }; }
       else if (ef.flags.has('milagro') && now > p.milagroAt) { p.milagroAt = now + 3600000; p.revive = { at: now + 8000, frac: 0.3, why: 'Te estabilizas tú solo (Milagro)' }; }
     }
@@ -885,7 +888,7 @@ export class Survival {
   async clinicDo(c: PlayerConn, m: Extract<ClientMsg, { t: 'clinicDo' }>) {
     const o = this.x(c).openClinic;
     const src = o && this.w.entities.get(o.entity);
-    if (!o || o.doc !== m.doc || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > 4) throw new GameError('Tienes que estar en la consulta.');
+    if (!o || o.doc !== m.doc || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
     const p = c.p!;
     if (p.sleeping) this.wake(c);
     const r = await this.clinic.operate(p, m.doc, m.action, m.source, m.ref, m.opId);

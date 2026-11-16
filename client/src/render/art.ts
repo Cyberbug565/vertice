@@ -223,11 +223,13 @@ export function drawProp(g: Graphics, lightsIn: Graphics, p: ZoneDef['props'][nu
       const a = worldToScreen(x + 0.5, y + 0.5, 0), t = worldToScreen(x + 0.5, y + 0.5, 4.2), arm = worldToScreen(x + 1.1, y + 0.5, 4.1);
       g.moveTo(a.x, a.y).lineTo(t.x, t.y).stroke({ width: 4, color: 0x2a2a38 });
       g.moveTo(t.x, t.y).lineTo(arm.x, arm.y).stroke({ width: 3, color: 0x2a2a38 });
-      g.roundRect(arm.x - 6, arm.y - 2, 12, 5, 2).fill(0xfff1c0);
-      lights.circle(arm.x, arm.y, 14).fill({ color: 0xfff1c0, alpha: 0.4 });
+      // v0.9 · Cada distrito tiene su color de farola (p.color); por defecto, sodio cálido.
+      const lc = p.color ? c : 0xfff1c0, pool = p.color ? c : 0xff9a30;
+      g.roundRect(arm.x - 6, arm.y - 2, 12, 5, 2).fill(lc);
+      lights.circle(arm.x, arm.y, 14).fill({ color: lc, alpha: 0.4 });
       const fl = worldToScreen(x + 1.1, y + 0.5, 0);
-      lights.ellipse(fl.x, fl.y, 70, 35).fill({ color: 0xff9a30, alpha: 0.16 });
-      lights.ellipse(fl.x, fl.y, 36, 18).fill({ color: 0xffc060, alpha: 0.14 });
+      lights.ellipse(fl.x, fl.y, 70, 35).fill({ color: pool, alpha: 0.16 });
+      lights.ellipse(fl.x, fl.y, 36, 18).fill({ color: lc, alpha: 0.14 });
       break;
     }
     case 'crate': drawBox(g, x + 0.05, y + 0.05, 0.9, 0.9, 0, 0.9, 0x7a5b3a); drawBox(g, x + 0.05, y + 0.05, 0.9, 0.9, 0.9, 0.04, 0x5a4128); break;
@@ -294,232 +296,14 @@ export function drawProp(g: Graphics, lightsIn: Graphics, p: ZoneDef['props'][nu
     case 'glitch': { const s0 = worldToScreen(x + 0.5, y + 0.5, 0.2); for (let i = 0; i < 4; i++) g.rect(s0.x - 18 + i * 9, s0.y - 6 + ((i * 7) % 10), 6 + (i % 3) * 5, 3).fill({ color: i % 2 ? c : 0xffffff, alpha: 0.55 }); break; }
     case 'node': drawBox(g, x + 0.25, y + 0.25, 0.5, 0.5, 0, 0.4, 0x0a1a2a); { const s0 = worldToScreen(x + 0.5, y + 0.5, 1.2); g.poly([s0.x, s0.y - 12, s0.x + 9, s0.y, s0.x, s0.y + 12, s0.x - 9, s0.y]).fill({ color: c, alpha: 0.7 }); lights.circle(s0.x, s0.y, 22).fill({ color: c, alpha: 0.2 }); } break;
     case 'codewall': drawBox(g, x, y + 0.4, 1, 0.2, 0, 2.6, 0x031a0c); { for (let i = 0; i < 6; i++) { const q = worldToScreen(x + 0.15 + (i % 3) * 0.3, y + 0.6, 0.4 + Math.floor(i / 3) * 1.1); g.rect(q.x - 3, q.y - 6, 6, 4).fill({ color: c, alpha: 0.8 }); } } break;
+    // v0.9 · Abismo bajo las pasarelas: luces de la ciudad muy abajo y estelas de coches.
+    case 'citylights': { const s0 = worldToScreen(x + 0.5, y + 0.5, -2.5); const r = seededRng(hashString(`${x},${y}`)); for (let i = 0; i < 5; i++) lights.rect(s0.x - 22 + r() * 44, s0.y - 8 + r() * 18, 1.5 + r() * 2, 1.5).fill({ color: r() < 0.5 ? c : 0xfff1c0, alpha: 0.35 + r() * 0.4 }); if (r() < 0.3) lights.moveTo(s0.x - 20, s0.y + 6).lineTo(s0.x + 20, s0.y - 4).stroke({ width: 1, color: 0xff3040, alpha: 0.35 }); break; }
     case 'busstop': drawBox(g, x, y + 0.6, 1, 0.08, 0, 1.8, 0x6a7a8a, 0.55); drawBox(g, x - 0.05, y + 0.1, 1.1, 0.6, 1.8, 0.1, 0x3a4a5a); drawBox(g, x + 0.1, y + 0.35, 0.8, 0.25, 0, 0.4, 0x4a4a5a); { const s1 = worldToScreen(x + 0.5, y + 0.65, 1.1); lights.rect(s1.x - 12, s1.y - 10, 24, 16).fill({ color: 0x43a8ff, alpha: 0.25 }); } break;
   }
 }
 
-/** Personaje por partes (cabeza, torso, brazos y piernas izquierdos y derechos) con capas de ropa, rasgos y cromo visible. */
-export interface CharParts { root: Container; legs: Container; body: Container; visor: Graphics; legL: Container; legR: Container; armB: Container; armF: Container; hand: Container; handB: Container; bodyY: number }
-/** Figura de un personaje: piernas y brazos articulados (cadera y hombro) para andar con naturalidad y empuñar armas. */
-export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: string[] = [], lost: string[] = []): CharParts {
-  const a = { skin: '#c89070', hair: '#222222', jacket: '#40506a', accent: '#43f3ff', eyes: '#3a2a1a', pants: '#1a1a24', build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
-    faceShape: 'ovalada', brows: 'normales', makeup: 'ninguno', makeupColor: '#ff3fa4', piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: '', shoes: '#101018',
-    headwear: '', headColor: '', eyewear: '', legwear: 'pantalon', rarityGlow: '', ...(ap ?? {}) } as Required<Appearance>;
-  const cr = new Set(chrome);
-  const B = a.build;
-  const bf = B === 'delgado' ? 0.85 : B === 'robusto' ? 1.2 : B === 'corpulento' ? 1.38 : B === 'atletico' ? 1.06 : B === 'alto' ? 0.95 : 1;
-  const hf = B === 'bajo' ? 0.8 : B === 'alto' ? 1.24 : B === 'atletico' ? 1.05 : 1;
-  const gone = new Set(lost);
-  const BLOOD = 0x8a0a12, BLOOD_D = 0x4a0408;
-  const skin = HEX(a.skin), hair = HEX(a.hair), jacket = HEX(a.jacket), accent = HEX(a.accent), pants = HEX(a.pants), eyes = HEX(a.eyes);
-  const shirt = a.shirt ? HEX(a.shirt) : shade(jacket, 0.7), shoes = HEX(a.shoes || '#101018'), mk = HEX(a.makeupColor || '#ff3fa4');
-  const tattooCol = a.tattoo ? HEX(a.tattoo) : 0x1a1a2a;
-  const metal = 0xa8b0c0, metalDark = 0x5a6070;
-  const root = new Container();
-  if (kind === 'player') root.addChild(new Graphics().ellipse(0, 0, 14, 7).stroke({ width: 1.5, color: accent, alpha: 0.85 }));
-  if (a.rarityGlow) root.addChild(new Graphics().ellipse(0, 0, 16, 8).stroke({ width: 1, color: HEX(a.rarityGlow), alpha: 0.6 }));
-  root.addChild(new Graphics().ellipse(0, 0, 12 * bf, 6).fill({ color: 0x000000, alpha: 0.4 }));
-  // ---- Piernas (pantalón, falda o pantalón corto) y calzado
-  const legs = new Container();
-  const lw = a.legwear || 'pantalon';
-  const leg = (side: -1 | 1) => {
-    const g = new Graphics();
-    const x = side * 3.2 * bf - 2.4 * bf, w = 4.8 * bf;
-    const holder = new Container();
-    holder.pivot.set(x + w / 2, -19); holder.position.set(x + w / 2, -19);
-    holder.addChild(g);
-    if (gone.has(side < 0 ? 'pierna_izq' : 'pierna_der')) { g.roundRect(x, -19, w, 4, 1.5).fill(pants); g.ellipse(x + w / 2, -15, w / 2, 1.4).fill(BLOOD); return holder; }
-    const isChrome = cr.has(side < 0 ? 'pierna_izq' : 'pierna_der');
-    if (isChrome) {
-      g.roundRect(x, -19, w, 18, 1.5).fill(metal);
-      g.rect(x, -11, w, 1.2).fill(metalDark); g.circle(x + w / 2, -10.5, 1.6).fill(accent);
-      g.rect(x + w - 1.2, -18, 1.2, 15).fill({ color: accent, alpha: 0.6 });
-    } else if (lw === 'shorts' || lw === 'falda') {
-      g.roundRect(x, -19, w, 18, 1.5).fill(skin);
-      if (lw === 'shorts') g.roundRect(x - 0.2, -19, w + 0.4, 7, 1.5).fill(pants);
-      if (a.bodyTattoo !== 'ninguno' && side > 0) g.moveTo(x + 1, -10).lineTo(x + w - 1, -7).stroke({ width: 0.9, color: tattooCol, alpha: 0.8 });
-    } else {
-      g.roundRect(x, -19, w, 18, 1.5).fill(pants);
-      g.rect(x + w * 0.45, -18, 0.6, 15).fill({ color: shade(pants, 0.7), alpha: 0.7 });
-    }
-    g.roundRect(x - 0.6, -2.8, w + 1.8, 3.4, 1).fill(shoes);
-    g.rect(x - 0.6, -0.4, w + 1.8, 0.8).fill(shade(shoes, 0.55));
-    return holder;
-  };
-  const legL = leg(-1), legR = leg(1);
-  legs.addChild(legL, legR);
-  legs.scale.y = hf;
-  if (lw === 'falda') legs.addChild(new Graphics().poly([-6 * bf, -20, 6 * bf, -20, 8 * bf, -11, -8 * bf, -11]).fill(pants));
-  // ---- Torso, brazos y cabeza
-  const body = new Container();
-  const tw = 16 * bf, tx = -tw / 2;
-  const top = a.top;
-  const sleeveless = top === 'top' || top === 'chaleco';
-  const arm = (side: -1 | 1) => {
-    const g = new Graphics();
-    const x = side < 0 ? tx - 3.4 : tx + tw - 0.6;
-    const holder = new Container();
-    holder.pivot.set(x + 2, -34.5); holder.position.set(x + 2, -34.5);
-    holder.addChild(g);
-    const hand = new Container(); hand.position.set(x + 2, -19.5); holder.addChild(hand);
-    (holder as any).hand = hand;
-    const sideK = side < 0 ? 'izq' : 'der';
-    if (gone.has(`brazo_${sideK}`)) { g.roundRect(x, -36, 4, 5, 1.5).fill(sleeveless ? skin : shade(jacket, 0.85)); g.ellipse(x + 2, -31, 2, 1.2).fill(BLOOD); hand.visible = false; return holder; }
-    const isChrome = cr.has(side < 0 ? 'brazo_izq' : 'brazo_der');
-    if (isChrome) {
-      g.roundRect(x, -36, 4, 16, 1.5).fill(metal);
-      g.rect(x, -28, 4, 1).fill(metalDark); g.circle(x + 2, -28, 1.4).fill(accent);
-      g.rect(x + 1.4, -35, 1, 13).fill({ color: accent, alpha: 0.55 });
-      g.roundRect(x - 0.3, -21, 4.6, 4, 1.5).fill(metalDark);
-    } else {
-      g.roundRect(x, -36, 4, 16, 1.5).fill(sleeveless ? skin : shade(jacket, side < 0 ? 0.8 : 0.95));
-      if (top === 'gabardina') g.roundRect(x - 0.4, -36, 4.8, 15, 1.5).fill(shade(jacket, side < 0 ? 0.72 : 0.88));
-      if (sleeveless && a.bodyTattoo !== 'ninguno') {
-        const t = a.bodyTattoo;
-        if (t === 'tribal') g.moveTo(x + 0.5, -34).lineTo(x + 3.5, -31).lineTo(x + 0.5, -28).lineTo(x + 3.5, -25).stroke({ width: 1, color: tattooCol, alpha: 0.9 });
-        if (t === 'circuito') { g.moveTo(x + 2, -35).lineTo(x + 2, -29).lineTo(x + 3.4, -27).stroke({ width: 0.7, color: accent, alpha: 0.9 }); g.circle(x + 2, -29, 0.7).fill(accent); }
-        if (t === 'floral') { g.circle(x + 2, -31, 1.4).fill({ color: 0xff6aa8, alpha: 0.85 }); g.circle(x + 1.6, -26, 1).fill({ color: 0x7dff7a, alpha: 0.7 }); }
-        if (t === 'codigo') for (let yy = -35; yy < -23; yy += 2) g.rect(x + 0.8 + (yy % 4 ? 1 : 0), yy, 1.4, 0.6).fill({ color: 0x5affc8, alpha: 0.85 });
-      } else if (a.tattoo && sleeveless) g.moveTo(x + 2, -34).lineTo(x + 2, -24).stroke({ width: 1.2, color: tattooCol, alpha: 0.9 });
-      if (gone.has(`mano_${sideK}`)) { g.ellipse(x + 2, -20.5, 2, 1.1).fill(BLOOD); hand.visible = false; }
-      else g.roundRect(x, -21, 4, 3.6, 1.5).fill(skin);
-    }
-    return holder;
-  };
-  const armBack = arm(-1), armFront = arm(1);
-  const torso = new Graphics();
-  // Complexión: hombros anchos (atlético) o barriga (corpulento).
-  if (B === 'atletico') torso.poly([tx - 1.6, -37, tx + tw + 1.6, -37, tx + tw - 1, -27, tx + 1, -27]).fill(top === 'top' ? shade(accent, 0.45) : jacket);
-  if (B === 'corpulento') torso.ellipse(1, -24, tw / 2 + 1.5, 6).fill(top === 'top' ? skin : shade(jacket, 0.92));
-  if (top === 'gabardina') torso.roundRect(tx - 1, -37, tw + 2, 30, 3).fill(shade(jacket, 0.9));
-  torso.roundRect(tx, -37, tw, 19, 4).fill(top === 'top' ? shade(accent, 0.45) : jacket);
-  if (top === 'top') { torso.roundRect(tx, -37, tw, 12, 4).fill(a.shirt ? shirt : shade(accent, 0.45)); torso.rect(tx + 1, -25, tw - 2, 6).fill(skin); }
-  if (top === 'chaqueta' || top === 'gabardina') {
-    // Cuello abierto: se ve la camiseta de debajo.
-    torso.poly([-3.4, -37, 3.4, -37, 0, -26]).fill(shirt);
-    torso.poly([0, -37, -3.5, -30, 0, -24]).fill(shade(jacket, 0.7)); torso.poly([0, -37, 3.5, -30, 0, -24]).fill(shade(jacket, 0.8));
-    torso.rect(tx, -27, tw, 2).fill(accent);
-    torso.rect(tx + tw - 5, -33, 3, 2).fill(shade(jacket, 0.6));
-  }
-  if (top === 'chaleco') { torso.rect(-1, -37, 2, 19).fill(shade(jacket, 0.6)); torso.rect(tx + 2, -28, 4, 3).fill(shade(jacket, 0.7)); torso.rect(tx + tw - 6, -28, 4, 3).fill(shade(jacket, 0.7)); torso.poly([-2.5, -37, 2.5, -37, 0, -33]).fill(shirt); }
-  if (top === 'sudadera') { torso.roundRect(tx + 3, -26, tw - 6, 5, 2).fill(shade(jacket, 0.8)); torso.moveTo(-2, -36).lineTo(-2, -31).moveTo(2, -36).lineTo(2, -31).stroke({ width: 0.8, color: accent }); }
-  if (top === 'traje') { torso.poly([-3, -37, 0, -32, 3, -37]).fill(a.shirt ? shirt : 0xe8e8f0); torso.rect(-0.8, -34, 1.6, 9).fill(accent); torso.poly([-3, -37, -5, -30, -1, -28]).fill(shade(jacket, 0.75)); torso.poly([3, -37, 5, -30, 1, -28]).fill(shade(jacket, 0.85)); }
-  if (top === 'mono') { torso.rect(tx, -22, tw, 2).fill(0x2a2a2a); torso.rect(tx + 3, -34, 3, 3).fill(shade(jacket, 0.75)); }
-  if (cr.has('torso')) { torso.moveTo(tx + 3, -33).lineTo(tx + tw - 3, -33).moveTo(tx + 4, -30).lineTo(tx + tw - 4, -30).stroke({ width: 1, color: accent, alpha: 0.8 }); torso.circle(0, -31, 1.6).fill(accent); }
-  // ---- Pelo de detrás (por detrás de la cara: afro, melenas, trenzas, coletas)
-  const hairBack = new Graphics();
-  // ---- Cabeza
-  const head = new Graphics();
-  const hw = a.headwear, ew = a.eyewear;
-  const hood = hw === 'capucha' || (!hw && (a.accessory === 'capucha' || top === 'sudadera'));
-  if (hood) head.ellipse(0, -44, 8.5, 9).fill(hw === 'capucha' && a.headColor ? HEX(a.headColor) : shade(jacket, 0.85));
-  head.rect(-2, -39.5, 4, 3).fill(shade(skin, 0.9));
-  const fs = a.faceShape;
-  const [fw, fh, fr, fy] = fs === 'angulosa' ? [12, 13, 2, -52] : fs === 'redonda' ? [13, 12.5, 6, -51.5] : fs === 'alargada' ? [11, 14.5, 4, -53]
-    : fs === 'cuadrada' ? [13, 13, 1.5, -52] : fs === 'corazon' ? [12.5, 12.5, 5, -52] : fs === 'ancha' ? [14, 12.5, 4.5, -51.5] : fs === 'afilada' ? [11, 14, 3, -52.5] : [12, 13, 5, -52];
-  head.roundRect(-fw / 2, fy, fw, fh, fr).fill(skin);
-  // Barbilla: en punta (corazón y afilada) o recta y marcada (cuadrada).
-  if (fs === 'corazon' || fs === 'afilada') head.poly([-fw / 2 + 1, fy + fh - 4, fw / 2 - 1, fy + fh - 4, 1, fy + fh + 1.6]).fill(skin);
-  if (fs === 'cuadrada') head.rect(-fw / 2, fy + fh - 3, fw, 2).fill(shade(skin, 0.94));
-  if (fs === 'angulosa') head.poly([-6, -42, -3, -38.6, 4, -38.6, 6, -42]).fill(shade(skin, 0.92));
-  head.ellipse(-fw / 2, -45, 1.4, 2).fill(shade(skin, 0.85));
-  // Cejas, ojos, nariz y boca (vista de tres cuartos mirando a la derecha).
-  const browC = shade(hair, 0.9);
-  const bw = a.brows === 'finas' ? 0.5 : a.brows === 'gruesas' ? 1.4 : 0.9;
-  if (a.brows === 'arqueadas') { head.moveTo(-1.6, -48).lineTo(0, -49.2).lineTo(1.5, -48.4).stroke({ width: 0.9, color: browC }); head.moveTo(3, -48.4).lineTo(4.4, -49.2).lineTo(5.6, -48).stroke({ width: 0.9, color: browC }); }
-  else { head.rect(-1.5, -48.6, 3, bw).fill(browC); head.rect(3, -48.6, 2.6, bw).fill(browC); if (a.brows === 'cortadas') head.rect(4, -48.8, 0.6, 1.4).fill(skin); }
-  const eyeCol = cr.has('ojos') ? accent : eyes;
-  for (const ex of [0, 4.3]) { head.rect(ex - 1.1, -47, 2.4, 1.8).fill(0xf4f4f4); head.rect(ex - 0.2, -47, 1.2, 1.8).fill(eyeCol); }
-  if (cr.has('ojos')) head.rect(-1.6, -47.4, 7.6, 2.4).fill({ color: accent, alpha: 0.25 });
-  if (a.makeup === 'delineado') { head.moveTo(-1.4, -47.2).lineTo(1.6, -47.2).moveTo(3.1, -47.2).lineTo(6.2, -47.6).stroke({ width: 0.6, color: 0x101010 }); }
-  if (a.makeup === 'neon') { head.rect(-1.4, -44.8, 3, 0.7).fill(mk); head.rect(3, -44.8, 3, 0.7).fill(mk); }
-  if (a.makeup === 'pintura') head.rect(-fw / 2, -46, fw, 1.6).fill({ color: mk, alpha: 0.7 });
-  // Nariz (perfil de tres cuartos) y boca.
-  const ns = (a as any).nose ?? 'recta', nc = shade(skin, 0.7);
-  if (ns === 'chata') head.moveTo(5.6, -45.5).lineTo(6.3, -43.6).lineTo(5.2, -43.4).stroke({ width: 1, color: nc });
-  else if (ns === 'aguilena') head.moveTo(5.6, -46.4).quadraticCurveTo(7.6, -45.2, 6.6, -43.2).lineTo(5.4, -43.2).stroke({ width: 0.9, color: nc });
-  else if (ns === 'pequena') head.moveTo(5.6, -44.6).lineTo(6, -43.6).lineTo(5.3, -43.5).stroke({ width: 0.7, color: nc });
-  else if (ns === 'ancha') { head.moveTo(5.6, -46).lineTo(6.8, -43.4).lineTo(4.6, -43.1).stroke({ width: 1.1, color: nc }); head.circle(4.9, -43.5, 0.6).fill(nc); }
-  else head.moveTo(5.8, -46).lineTo(6.6, -43.5).lineTo(5.4, -43.2).stroke({ width: 0.8, color: nc });
-  const ms = (a as any).mouth ?? 'neutra', lipC = a.makeup === 'labios' ? mk : shade(skin, 0.55), lipW = a.makeup === 'labios' ? 1.4 : 0.9;
-  if (ms === 'sonrisa') head.moveTo(1.4, -42).quadraticCurveTo(3, -40.6, 4.8, -42.2).stroke({ width: lipW, color: lipC });
-  else if (ms === 'seria') head.moveTo(1.5, -41.4).quadraticCurveTo(3, -42.2, 4.6, -41.4).stroke({ width: lipW, color: lipC });
-  else if (ms === 'labios-gruesos') { head.roundRect(1.3, -42.4, 3.6, 1.8, 0.9).fill(a.makeup === 'labios' ? mk : shade(skin, 0.68)); head.moveTo(1.4, -41.5).lineTo(4.8, -41.5).stroke({ width: 0.5, color: shade(skin, 0.5) }); }
-  else if (ms === 'fina') head.moveTo(1.8, -41.6).lineTo(4.4, -41.7).stroke({ width: 0.6, color: lipC });
-  else head.moveTo(1.5, -41.6).lineTo(4.6, -41.8).stroke({ width: lipW, color: lipC });
-  // Vello facial.
-  const f = a.facial;
-  if (f === 'barba') head.poly([-5, -44, -4, -39.5, 0, -38, 4, -39.5, 6, -43, 5.5, -41, 1, -40.5, -2, -41]).fill(hair);
-  if (f === 'barba-larga') head.poly([-5, -44, -4, -37, 0, -34.5, 4, -37, 6, -43, 5.5, -41, 1, -40.5, -2, -41]).fill(hair);
-  if (f === 'bigote' || f === 'candado') head.rect(1, -42.8, 4.6, 1.3).fill(hair);
-  if (f === 'perilla' || f === 'candado') head.rect(2, -40.5, 2.4, 2.2).fill(hair);
-  if (f === 'patillas') { head.rect(-5.6, -48, 1.6, 6).fill(hair); head.rect(4.8, -48, 1.2, 4).fill(hair); }
-  // Cicatrices, tatuaje facial y piercings.
-  if (a.scar === 'mejilla') head.moveTo(3, -45).lineTo(5.5, -42.5).stroke({ width: 0.8, color: shade(skin, 0.6) });
-  if (a.scar === 'ojo') head.moveTo(4, -50).lineTo(5, -44).stroke({ width: 0.8, color: shade(skin, 0.6) });
-  if (a.scar === 'frente') head.moveTo(-2, -50.5).lineTo(3, -49.6).stroke({ width: 0.8, color: shade(skin, 0.6) });
-  if (a.tattoo) head.moveTo(-5.5, -46).lineTo(-3.5, -42).stroke({ width: 1, color: tattooCol, alpha: 0.85 });
-  const pierce = 0xd8dce8;
-  if (a.piercing === 'nariz') head.circle(6.4, -43.8, 0.6).fill(pierce);
-  if (a.piercing === 'septum') head.circle(5.8, -42.8, 0.7).stroke({ width: 0.5, color: pierce });
-  if (a.piercing === 'ceja') head.circle(5.4, -48.8, 0.5).fill(pierce);
-  if (a.piercing === 'labio') head.circle(3, -41, 0.5).fill(pierce);
-  if (a.piercing === 'orejas') { head.circle(-6, -43.4, 0.8).stroke({ width: 0.5, color: pierce }); head.circle(-6.2, -45.5, 0.5).fill(pierce); }
-  if (cr.has('cabeza')) { head.roundRect(-6.2, -49, 3, 5, 1).fill(metal); head.circle(-4.7, -46.5, 1).fill(accent); head.rect(-3, -40, 6, 1).fill({ color: metal, alpha: 0.8 }); }
-  // Peinados (si no hay casco ni sombrero que los tape).
-  const hs = a.hairStyle;
-  const covered = hw === 'casco';
-  if (!covered) {
-    if (hs !== 'calvo' && hs !== 'rapado' && hs !== 'mohicano') head.roundRect(-6.5, -53.5, 13, 5, 3).fill(hair);
-    if (hs === 'rapado' || hs === 'mohicano') head.roundRect(-6, -52.4, 12, 3, 2).fill({ color: hair, alpha: 0.5 });
-    if (hs === 'cresta') head.poly([-3, -52, -1, -59, 1, -58.5, 3, -60, 4, -52]).fill(hair);
-    if (hs === 'mohicano') head.poly([-5, -52, -3, -62, -1, -60, 1, -63, 3, -60, 5, -52]).fill(hair);
-    if (hs === 'largo') head.roundRect(-7, -52, 4, 15, 2).fill(hair);
-    if (hs === 'melena') { head.roundRect(-7.2, -52, 4.2, 18, 2).fill(hair); head.roundRect(4.6, -52, 2.6, 10, 1.5).fill(hair); }
-    if (hs === 'coleta') { head.roundRect(-9, -50, 4, 3, 1.5).fill(hair); head.roundRect(-10.5, -48, 3, 9, 1.5).fill(hair); }
-    if (hs === 'coleta-alta') { head.roundRect(-6, -58, 4, 5, 2).fill(hair); head.roundRect(-9, -57, 3.4, 14, 1.6).fill(hair); }
-    if (hs === 'afro') { hairBack.circle(-1.2, -50.5, 10).fill(hair); hairBack.circle(-4.5, -46, 6).fill(hair); head.roundRect(-7, -56, 14, 6.5, 3.5).fill(hair); head.ellipse(-6.4, -49, 2.2, 4.2).fill(hair); }
-    if (hs === 'afro-corto') { hairBack.circle(-1, -51, 7.6).fill(hair); head.roundRect(-6.8, -55, 13.6, 5.5, 3).fill(hair); }
-    if (hs === 'pompadour') { head.roundRect(-6, -58, 12, 6, 3).fill(hair); head.ellipse(4, -56, 4.5, 3).fill(hair); head.rect(-6.6, -51, 1.4, 4).fill({ color: hair, alpha: 0.6 }); }
-    if (hs === 'bob') { hairBack.roundRect(-8, -54, 15, 14, 4).fill(hair); head.roundRect(-7, -54.5, 14, 5.5, 3).fill(hair); head.roundRect(4.4, -52, 2.8, 9, 1.4).fill(hair); }
-    if (hs === 'media-melena') { hairBack.roundRect(-8, -53, 9, 17, 3).fill(hair); head.roundRect(4.8, -52, 2.2, 7, 1.2).fill(hair); }
-    if (hs === 'trenza-larga') { hairBack.roundRect(-9, -50, 3.4, 4, 1.4).fill(hair); for (let i = 0; i < 6; i++) hairBack.ellipse(-8.6 + (i % 2) * 0.8, -45 + i * 3.4, 1.9, 2).fill(i % 2 ? shade(hair, 0.85) : hair); }
-    if (hs === 'erizo') for (let i = -6; i <= 5; i += 2.2) head.poly([i - 1.2, -52, i, -57.5 - Math.abs(i) * 0.15, i + 1.2, -52]).fill(hair);
-    if (hs === 'largo') hairBack.roundRect(-8, -52, 6, 17, 2.5).fill(hair);
-    if (hs === 'melena') hairBack.roundRect(-8.4, -52, 7, 20, 3).fill(hair);
-    if (hs === 'rastas') for (let i = -8; i <= -2; i += 2) hairBack.roundRect(i, -50, 1.6, 15, 0.8).fill(shade(hair, 0.9));
-    if (hs === 'rizos') for (const [cx, cy] of [[-5, -53], [-2, -55], [1.5, -55], [4.5, -53], [-6.5, -49.5]]) head.circle(cx, cy, 2.6).fill(hair);
-    if (hs === 'moño') head.circle(-3.5, -55, 3.4).fill(hair);
-    if (hs === 'dos-moños') { head.circle(-4.5, -55, 2.8).fill(hair); head.circle(3.5, -55.5, 2.8).fill(hair); }
-    if (hs === 'rastas') for (let i = -6; i <= -2; i += 2) head.roundRect(i, -50, 1.6, 12, 0.8).fill(hair);
-    if (hs === 'trenzas') { head.roundRect(-7.6, -50, 2.2, 14, 1).fill(hair); head.roundRect(5.2, -50, 2.2, 12, 1).fill(hair); }
-    if (hs === 'asimetrico') head.poly([-6.5, -53, 6.5, -53, 6.5, -46, 3, -49]).fill(hair);
-    if (hs === 'undercut') { head.roundRect(-6.5, -55, 10, 4, 2).fill(hair); head.poly([3, -55, 7.5, -52, 6.5, -49, 2, -51]).fill(hair); }
-    if (hs === 'flequillo') head.poly([-1, -53, 7, -53, 6.5, -48.6, 3, -49.8, 0, -48.8]).fill(hair);
-    if (hs === 'puntas') head.poly([-6.5, -52, -5, -57, -3, -53.5, -1, -58, 1, -53.5, 3, -58, 4.5, -53.5, 6.5, -56, 6.5, -52]).fill(hair);
-    if (hs === 'lobo') { head.roundRect(-7, -54.5, 14, 6, 3).fill(hair); head.poly([-7, -50, -8, -42, -5, -46]).fill(hair); head.poly([6, -50, 7, -44, 4.5, -47]).fill(hair); }
-  }
-  // Prendas de cabeza y cara (de la ropa) o accesorio elegido al crear el personaje.
-  const visor = new Graphics();
-  const hc = a.headColor ? HEX(a.headColor) : shade(accent, 0.6);
-  const headItem = hw || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : '');
-  const eyeItem = ew || (['gafas', 'visor', 'mascara'].includes(a.accessory) ? a.accessory : '');
-  if (headItem === 'gorra') { visor.roundRect(-6.5, -55, 13, 5, 2.5).fill(hc); visor.roundRect(3, -51.5, 7, 1.8, 0.8).fill(shade(hc, 0.75)); }
-  if (headItem === 'capucha') head.roundRect(-7.5, -54.5, 15, 6, 3).fill(hw ? hc : shade(jacket, 0.85));
-  if (headItem === 'casco') { visor.roundRect(-7.2, -56, 14.4, 10, 5).fill(hc); visor.roundRect(-1, -50, 8, 3.4, 1.2).fill({ color: 0x101820, alpha: 0.9 }); visor.rect(-7, -51, 2, 1).fill(accent); }
-  if (headItem === 'sombrero') { visor.ellipse(0, -52.5, 11, 2.6).fill(hc); visor.roundRect(-5.5, -59, 11, 7, 2).fill(hc); visor.rect(-5.5, -54, 11, 1.2).fill(shade(hc, 0.6)); }
-  if (headItem === 'bandana') { visor.roundRect(-6.6, -52.5, 13.2, 2.6, 1).fill(hc); visor.poly([-6.6, -51.5, -9.5, -49, -8, -48.5]).fill(hc); }
-  if (eyeItem === 'gafas') { visor.roundRect(-1.8, -47.6, 3.4, 2.4, 0.8).fill(ew ? 0x101018 : 0x101018); visor.roundRect(3, -47.6, 3.2, 2.4, 0.8).fill(0x101018); visor.rect(1.6, -46.8, 1.4, 0.7).fill(0x101018); if (ew) visor.rect(-1.6, -47.4, 7.6, 0.6).fill({ color: accent, alpha: 0.6 }); }
-  if (eyeItem === 'visor') visor.roundRect(-2, -48, 9, 3, 1).fill({ color: accent, alpha: 0.85 });
-  if (eyeItem === 'mascara') visor.roundRect(-1, -43.5, 7.5, 4.5, 1.5).fill(0x202028);
-  if (a.accessory === 'auriculares' && !hw) { visor.roundRect(-7.4, -48, 2.6, 5, 1).fill(0x202028); visor.moveTo(-6, -48).quadraticCurveTo(0, -57, 5.8, -50).stroke({ width: 1.2, color: 0x303038 }); visor.circle(-6.1, -45.5, 0.8).fill(accent); }
-  const bodyY = -19 * (hf - 1);
-  body.y = bodyY;
-  body.addChild(armBack, torso, hairBack, head, visor, armFront);
-  root.addChild(legs, body);
-  if (B === 'bajo') root.scale.set(0.96); if (B === 'alto') root.scale.set(1.02);
-  return { root, legs, body, visor, legL, legR, armB: armBack, armF: armFront, hand: (armFront as any).hand, handB: (armBack as any).hand, bodyY };
-}
+// v0.9 · El personaje vive en character.ts (más detalle, tejidos y tatuajes de alta resolución).
+export { makeCharacter, type CharParts } from './character';
 
 /** Vehículo de un jugador al volante: caja isométrica con cabina, faros y neón por debajo. */
 export function makeVehicle(cls: string, color: string, accentHex = '#43f3ff'): Container {

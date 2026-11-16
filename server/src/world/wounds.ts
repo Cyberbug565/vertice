@@ -1,7 +1,7 @@
 // v0.6 · Heridas por zonas del cuerpo: daño según la zona, desangrado, conmociones (KO) y amputaciones.
 // Los miembros de cromo no sangran ni se pierden; un miembro perdido se recupera implantando una prótesis en un matasanos.
 import { AIM, PART_NAMES, isLimb, newBody, zoneOfPart, type BodyPart, type BodyState, type WeaponDef } from '@vertice/shared';
-import { chromeParts, type PlayerState } from '../game/player.js';
+import { chromeParts, effective, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
 import type { World } from './world.js';
 
@@ -70,6 +70,7 @@ export class Wounds {
       }
       // Las heridas leves cortan solas; las graves siguen sangrando.
       body.bleed = body.bleed > 1.5 ? body.bleed * 0.996 : body.bleed * 0.97 - 0.01;
+      if (tp && effective(this.w.c, tp).flags.has('coagulante')) body.bleed = body.bleed * 0.85 - 0.05; // v0.9: coagulante sintético
       if (body.bleed < 0.05) body.bleed = 0;
       if (was !== body.bleed > 0.2) e.labelVer++;
     }

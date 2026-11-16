@@ -1,7 +1,7 @@
 // Combate automático por armas, red (quickhacks), facciones, policía, Rescate Ámbar y transporte de cuerpos.
 import { isSick, substanceEffects } from '../game/substances.js';
 import { randomUUID } from 'node:crypto';
-import { AIM, COVER_FULL, COVER_HALF, PART_NAMES, hitPart, type AimZone, type BodyPart } from '@vertice/shared';
+import { AIM, COVER_FULL, COVER_HALF, PART_NAMES, hitPart, type AimZone, type BodyPart, diversifyAppearance } from '@vertice/shared';
 import { checkChance, dangerAt, findPath, lineWalkable, nearestWalkable, isWalkable, skillLevelForXp, type ClientMsg, type FactionsView, type AmbarView, type ItemDef, type ScanView, type TargetMenuView, type WeaponDef } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { Entity } from './entity.js';
@@ -29,7 +29,7 @@ export class Combat {
   private get c() { return this.w.c; }
   private roll() { return 1 + Math.floor(this.rng() * 10); }
   private notice(conn: PlayerConn | undefined, kind: 'info' | 'good' | 'warn' | 'bad', text: string) { if (conn) this.w.send(conn, { t: 'notice', kind, text }); }
-  private fx(e: Entity, kind: 'shot' | 'hit' | 'hack' | 'ko', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean } = {}) { for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind, from, to, ...extra }); }
+  private fx(e: Entity, kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number } = {}) { for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind, from, to, ...extra }); }
   /** v0.6: heridas por zonas del cuerpo. */
   get wounds() { return (this._wounds ??= new Wounds(this.w, () => this.rng())); }
   private _wounds?: Wounds;
@@ -65,6 +65,7 @@ export class Combat {
         build: this.rng() < 0.5 ? 'robusto' : 'medio', hairStyle: ['rapado', 'cresta', 'corto', 'coleta', 'calvo'][Math.floor(this.rng() * 5)], top: type === 'police' || type === 'hierro' ? 'chaleco' : ['chaqueta', 'chaleco', 'sudadera', 'top'][Math.floor(this.rng() * 4)], accessory: type === 'hierro' ? 'mascara' : type === 'police' ? 'gorra' : 'ninguno' } as any,
       speed: type === 'hierro' ? 3.2 : 2.4,
     });
+    if (e.appearance) diversifyAppearance(e.appearance as any, () => this.rng(), type === 'police' ? 'police' : type === 'hierro' ? 'hierro' : type === 'gang' ? 'gang' : 'civil');
     // v0.4: nivel del PNJ según su tipo; la salud y la defensa escalan con él.
     const lv = type === 'hierro' ? 18 + Math.floor(this.rng() * 7) : type === 'police' ? 8 + Math.floor(this.rng() * 7) : type === 'ambar' ? 15 : faction === 'engranajes' || faction === 'saqueadores' ? 9 + Math.floor(this.rng() * 8) : 4 + Math.floor(this.rng() * 10);
     const hpScaled = Math.round(f.hp * (1 + (lv - 6) * 0.04));
@@ -188,10 +189,25 @@ export class Combat {
     return { target: target.id, name: target.name, subtitle, color: fac?.color ?? (target.fugitive ? '#ff3040' : undefined), options: opts };
   }
 
+  /** v0.9 · Modo hackeo (tecla R + clic): solo las opciones de red sobre lo señalado (persona, cámara, cajero, terminal…). */
+  hackMenu(c: PlayerConn, target: Entity): TargetMenuView {
+    const p = c.p!, e = c.e!;
+    const opts: TargetMenuView['options'] = [];
+    const tp = this.w.playerOf(target);
+    const fac = target.faction ? this.c.factions.find((f) => f.id === target.faction) : undefined;
+    const what = target.kind === 'object' ? (target.objKind === 'camera' ? 'Cámara de vigilancia' : target.objKind === 'atm' ? 'Cajero automático' : 'Terminal') : tp ? 'Jugador' : fac ? fac.name : 'Persona';
+    const hackable = target.kind === 'player' || target.kind === 'npc' || (target.kind === 'object' && ['camera', 'atm', 'shop', 'vending', 'computer', 'terminal'].includes(target.objKind ?? ''));
+    if (!hackable) return { target: target.id, name: target.name, subtitle: 'Sin puertos abiertos: no hay nada que hackear aquí.', hackMode: true, options: [] };
+    if (effective(this.c, p).ram <= 0) opts.push({ id: 'noop', kind: 'interact', group: 'red', label: 'Necesitas un cyberdeck', disabled: 'Instálate un cyberdeck en un matasanos (o sé Netrunner).' });
+    else this.hackOptions(p, e, target, opts, target.npcType === 'essential');
+    const dist = Math.hypot(target.x - e.x, target.y - e.y);
+    return { target: target.id, name: target.name, subtitle: `${what} · a ${dist.toFixed(0)} m · RAM ${Math.floor(p.ram)}/${effective(this.c, p).ram}`, color: '#b46cff', hackMode: true, options: opts };
+  }
+
   private hackOptions(p: PlayerState, e: Entity, target: Entity, opts: TargetMenuView['options'], scanOnly = false) {
     const ef = effective(this.c, p);
     if (ef.ram <= 0) return;
-    const kind = target.kind === 'object' ? (target.objKind === 'atm' ? 'atm' : target.objKind === 'camera' ? 'camera' : 'shop') : 'person';
+    const kind = target.kind === 'object' ? (target.objKind === 'atm' ? 'atm' : target.objKind === 'camera' ? 'camera' : 'shop') : 'person'; // terminales y máquinas usan los hackeos de comercio
     for (const q of this.c.quickhacks) {
       if (q.target !== kind || (scanOnly && q.effect !== 'scan' && q.effect !== 'deepscan')) continue;
       const cost = this.ramCost(p, q.ram, q.effect);
@@ -277,6 +293,7 @@ export class Combat {
     if (action === 'extract') { await this.w.threats.extract(c, target, m.chrome); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true }); }
     if (action === 'search') {
       if (!(target.state === 'downed' || target.dead) || target.kind !== 'npc') return fail('Solo se puede registrar a alguien caído.');
+      if (m.remote && Math.hypot(target.x - e.x, target.y - e.y) > 2.2) return fail('Acércate al cuerpo (WASD) para registrarlo.');
       if (Math.hypot(target.x - e.x, target.y - e.y) > 2.2) { const dest = nearestWalkable(e.zone.grid, target.x, target.y, 2); const r = dest ? findPath(e.zone.grid, e.x, e.y, dest.x, dest.y, 20000) : null; if (!r?.ok) return fail('No puedes llegar.'); e.path = r.path; e.moving = true; e.pendingAction = { target: target.id, action: 'search', opId: m.opId }; return this.w.send(c, { t: 'ack', seq: m.seq, ok: true, path: e.path }); }
       await this.searchBody(c, target); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
     }
@@ -301,12 +318,16 @@ export class Combat {
       return this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
     }
     if (target.npcType === 'essential' || (target.kind === 'npc' && !target.npcMax && !target.fugitive)) return fail('Esta persona no se puede atacar.');
-    const hostile = ['rob', 'knockout', 'attack', 'finish'].includes(action);
+    const hostile = ['rob', 'knockout', 'attack', 'finish', 'heavy', 'kick'].includes(action);
     if (hostile && (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected')) return fail('Zona protegida: aquí no se permiten agresiones.');
     const wp = this.weaponFor(p, action !== 'knockout');
-    const range = action === 'knockout' || action === 'attack' ? wp.w.range : action === 'rob' || action === 'carry' || action === 'finish' ? 1.8 : 2.6;
+    const range = action === 'knockout' || action === 'attack' || action === 'heavy' ? wp.w.range : action === 'kick' ? 1.9 : action === 'rob' || action === 'carry' || action === 'finish' ? 1.8 : 2.6;
     const dist = Math.hypot(target.x - e.x, target.y - e.y);
-    const los = wp.w.kind === 'melee' || this.lineClear(e, target);
+    const los = wp.w.kind === 'melee' || action === 'kick' || this.lineClear(e, target);
+    if ((dist > range || !los) && m.remote) {
+      // v0.9 · Sin persecución automática: el jugador se acerca con WASD.
+      return fail(!los ? `No tienes línea de tiro hasta ${target.name}.` : `Fuera de alcance: ${dist.toFixed(1)} m (tu ${wp.w.kind === 'melee' ? 'golpe' : 'arma'} llega a ${range.toFixed(1)} m). Acércate con WASD.`);
+    }
     if (dist > range || !los) {
       const dest = nearestWalkable(e.zone.grid, target.x, target.y, 2);
       const r = dest ? findPath(e.zone.grid, e.x, e.y, dest.x, dest.y, 20000) : null;
@@ -349,6 +370,79 @@ export class Combat {
     if (action === 'rescue') return this.sv.rescue(c, 0, target.id, opId);
     if (action === 'finish') return this.finish(c, target, opId);
     if (action === 'knockout' || action === 'attack') return this.attack(c, target, action === 'attack', opId, { part });
+    if (action === 'heavy') return this.attack(c, target, this.weaponOf(p).w.nonlethal !== 'solo', opId, { part, style: 'heavy' });
+    if (action === 'kick') return this.kick(c, target, opId);
+  }
+
+  /** v0.9 · Esquiva: un rodar rápido de 2,6 m hacia donde andas. Durante medio segundo casi nada te alcanza. */
+  dodge(c: PlayerConn, dx: number, dy: number) {
+    const p = c.p!, e = c.e!;
+    const now = Date.now();
+    if (p.status !== 'alive' || p.sleeping || p.driving || e.transit) throw new GameError('Ahora no puedes esquivar.');
+    if ((e.stunUntil ?? 0) > now) throw new GameError('Estás aturdido.');
+    if ((e.dodgeReadyAt ?? 0) > now) throw new GameError('Aún te estás recuperando del último rodar.');
+    if (effective(this.c, p).legsLost >= 1) throw new GameError('Sin una pierna no puedes rodar.');
+    const ef = effective(this.c, p);
+    const cost = ef.flags.has('salto-reforzado') || ef.flags.has('reflejos') ? 5 : 10;
+    if (p.stamina < cost) throw new GameError('Sin aguante para esquivar.');
+    const len = Math.hypot(dx, dy);
+    if (len < 0.1) throw new GameError('Muévete hacia algún lado para esquivar.');
+    dx /= len; dy /= len;
+    p.stamina -= cost;
+    const g = e.zone.grid;
+    let x = e.x, y = e.y;
+    const steps = ef.flags.has('salto-reforzado') ? 20 : 13;
+    for (let i = 1; i <= steps; i++) { const nx = e.x + dx * 0.2 * i, ny = e.y + dy * 0.2 * i; if (!isWalkable(g, nx, ny)) break; x = nx; y = ny; }
+    const fromX = e.x, fromY = e.y;
+    e.x = x; e.y = y; e.path = []; e.moving = false; e.pendingAction = undefined; e.zone.moved(e);
+    e.dodgeUntil = now + 450; e.dodgeReadyAt = now + 900;
+    this.w.cancelActivity(e);
+    for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind: 'dodge', from: e.id, to: e.id, x: fromX, y: fromY });
+    this.w.send(c, { t: 'sheet', sheet: (this.sv as any).sheetOf(p) });
+  }
+
+  /** Empuja a alguien `dist` metros en la dirección del golpe (las paredes lo frenan) y lo aturde `ms`. */
+  private shove(from: Entity, target: Entity, dist: number, ms: number) {
+    const len = Math.max(0.01, Math.hypot(target.x - from.x, target.y - from.y));
+    const ux = (target.x - from.x) / len, uy = (target.y - from.y) / len;
+    for (let i = 0; i < Math.round(dist * 4); i++) { const nx = target.x + ux * 0.25, ny = target.y + uy * 0.25; if (!isWalkable(target.zone.grid, nx, ny)) break; target.x = nx; target.y = ny; }
+    target.path = []; target.zone.moved(target);
+    const tp = this.w.playerOf(target), now = Date.now();
+    if (tp) tp.nextAttackAt = Math.max(tp.nextAttackAt, now + ms); else target.stunUntil = Math.max(target.stunUntil ?? 0, now + ms);
+  }
+
+  /** v0.9 · Patada: empuja 1,5 m, tumba un instante y rompe la guardia. No letal y no gasta munición. */
+  async kick(c: PlayerConn, target: Entity, opId: string) {
+    const p = c.p!, e = c.e!;
+    const now = Date.now();
+    if (now < p.nextAttackAt) return;
+    if ((e.stunUntil ?? 0) > now) throw new GameError('Estás aturdido.');
+    if (effective(this.c, p).legsLost >= 1) throw new GameError('Sin una pierna no puedes dar patadas.');
+    if (p.stamina < 8) throw new GameError('Sin aguante para dar una patada.');
+    const tp = this.w.playerOf(target);
+    if ((tp && tp.status !== 'alive') || (!tp && target.state === 'downed')) return;
+    p.stamina -= 8; p.lastCombatAt = now;
+    p.nextAttackAt = now + 900 / (e.timeScale ?? 1);
+    const ef = effective(this.c, p);
+    const a = this.attackScore(p) + 1 + this.roll();
+    const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + this.roll();
+    if (a < d || ((target.dodgeUntil ?? 0) > now && this.rng() < 0.9)) {
+      this.fx(e, 'kick', e.id, target.id, { hit: false });
+      this.notice(c, 'warn', `${target.name} se aparta de tu patada.`);
+      if (tp) this.counter(target, e); else this.provokeNpc(target, e, false);
+      return;
+    }
+    // Empujón: 1,5 m en la dirección de la patada (3 m con la Pierna «Pistón»); las paredes lo frenan.
+    const piston = ef.flags.has('patada-piston');
+    this.shove(e, target, piston ? 3 : 1.5, 0);
+    const dmg = Math.max(2, Math.round((3 + ef.attrs.BODY * 0.8 + this.rng() * 4) * (piston ? 1.5 : 1)));
+    if (tp) { tp.nextAttackAt = Math.max(tp.nextAttackAt, now + 1300); this.damagePlayer(tp, target, dmg, false, { name: p.name, charId: p.charId }); if (tp.status === 'downed') await this.onNeutralized(c, target, false, opId); else this.counter(target, e); }
+    else { target.stunUntil = Math.max(target.stunUntil ?? 0, now + 1300); this.damageNpc(target, dmg, false, c); if (target.state === 'downed') await this.onNeutralized(c, target, false, opId); }
+    target.lastHitBy = e.id; target.lastHitAt = now;
+    this.fx(e, 'kick', e.id, target.id, { hit: true });
+    this.notice(c, 'good', `Patada a ${target.name}: −${dmg} y lo desequilibras.`);
+    this.w.progress.gain(p, 'cuerpo', 3);
+    this.crime(c, target, false, tp?.status === 'downed' || target.state === 'downed' ? 'down' : 'hit', this.claimable(target, p).length > 0, 1);
   }
 
   /** Línea de tiro: solo la tapan edificios y paredes (los muebles dan cobertura, no la cortan). */
@@ -437,7 +531,7 @@ export class Combat {
     try { await this.onNeutralized(by.conn, e, true, `sangre-${randomUUID()}`); } catch (err) { if (!(err instanceof GameError)) console.error('[desangrado]', err); }
   }
 
-  async attack(c: PlayerConn, target: Entity, lethal: boolean, opId: string, opts: { part?: AimZone; aimed?: boolean } = {}) {
+  async attack(c: PlayerConn, target: Entity, lethal: boolean, opId: string, opts: { part?: AimZone; aimed?: boolean; style?: 'heavy' } = {}) {
     const p = c.p!, e = c.e!;
     const now = Date.now();
     if (isSick(p.substances, now)) return;
@@ -449,14 +543,18 @@ export class Combat {
     if (lethal && this.weaponOf(p).w.nonlethal === 'solo') lethal = false;
     const wp = this.weaponFor(p, lethal);
     const legit = this.claimable(target, p).length > 0;
+    // v0.9 · Golpe fuerte (cuerpo a cuerpo) o ráfaga (a distancia): más daño y aturde, pero más lento y menos preciso.
+    const heavy = opts.style === 'heavy';
+    const rounds = heavy && wp.w.kind === 'ranged' ? Math.max(1, Math.min(3, p.inventory.get(wp.w.ammo ?? '') ?? 3)) : 1;
+    if (heavy && wp.w.kind === 'melee') { if (p.stamina < 6) throw new GameError('Sin aguante para un golpe fuerte.'); p.stamina -= 6; }
     if (wp.w.ammo) {
       if ((p.inventory.get(wp.w.ammo) ?? 0) < 1) throw new GameError(`Sin munición: necesitas ${this.c.items.find((i) => i.id === wp.w.ammo)?.name}.`);
-      p.inventory.set(wp.w.ammo, (p.inventory.get(wp.w.ammo) ?? 0) - 1);
-      void this.w.db.query('UPDATE inventory_items SET qty = GREATEST(0, qty - 1) WHERE character_id=$1 AND def_id=$2', [p.charId, wp.w.ammo]).catch(() => {});
+      p.inventory.set(wp.w.ammo, (p.inventory.get(wp.w.ammo) ?? 0) - rounds);
+      void this.w.db.query('UPDATE inventory_items SET qty = GREATEST(0, qty - $3) WHERE character_id=$1 AND def_id=$2', [p.charId, wp.w.ammo, rounds]).catch(() => {});
     }
     const ef = effective(this.c, p);
     const fast = (p.buffs['tiempo-bala'] ?? 0) > now ? 0.4 : 1;
-    p.nextAttackAt = now + (wp.w.cooldown * 1000 * fast * (wp.w.kind === 'ranged' ? 1 - (ef.perk.rangedCd ?? 0) : 1)) / (e.timeScale ?? 1);
+    p.nextAttackAt = now + (wp.w.cooldown * 1000 * fast * (heavy ? 1.8 : 1) * (wp.w.kind === 'ranged' ? (1 - (ef.perk.rangedCd ?? 0)) * (ef.flags.has('gatillo-neural') ? 0.7 : 1) : 1)) / (e.timeScale ?? 1);
     p.lastCombatAt = now;
     const tp = this.w.playerOf(target);
     if (tp && tp.status !== 'alive') return;
@@ -476,19 +574,29 @@ export class Combat {
     const aimPen = opts.part && !opts.aimed ? AIM[opts.part].penalty : 0;
     const cover = wp.w.kind === 'ranged' ? this.coverOf(e, target) * (opts.aimed ? 0.5 : 1) : 0;
     const tremor = (p.psyche?.level ?? 0) >= 70 ? 4 : (p.psyche?.level ?? 0) >= 45 ? 2 : 0;
-    let a = this.attackScore(p) - rangePenalty - aimPen - ef.armsLost * 3 - ef.brokenArms * 2 - tremor + ef.matrix.aim + steady + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
+    let a = this.attackScore(p) + (wp.w.kind === 'ranged' ? ef.aimBonus : 0) + ((p.buffs.marcar ?? 0) > now ? 2 : 0) - (heavy ? (wp.w.kind === 'ranged' ? 2 : 1) : 0) - rangePenalty - aimPen - ef.armsLost * 3 - ef.brokenArms * 2 - tremor + ef.matrix.aim + steady + this.roll() + (lethal ? 0 : ef.perk.koBonus ?? 0);
     // Bloqueo: quien se defiende con un arma cuerpo a cuerpo para mejor los golpes (no las balas).
-    const blocking = !!(tp && target.guard && wp.w.kind === 'melee' && this.weaponOf(tp).w.kind === 'melee');
+    const blocking = !heavy && !!(tp && target.guard && wp.w.kind === 'melee' && this.weaponOf(tp).w.kind === 'melee'); // el golpe fuerte rompe la guardia
     const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + cover + (blocking ? 3 : 0) + this.roll();
     if (ef.flags.has('ojo-de-dios') && wp.w.kind === 'ranged' && dist <= wp.w.range) a = Math.max(a, d);
     const substances = substanceEffects(this.c, p.substances, now);
     if (opts.aimed) a = substances.aim >= 0 ? Math.max(a, d + 1) : a + Math.max(0, 5 + substances.aim);
+    // v0.9 · Ojo «Absoluto»: el 90 % de los disparos acierta aunque estés fuera del alcance seguro.
+    else if (wp.w.kind === 'ranged' && ef.flags.has('ojo-absoluto') && dist <= wp.w.range * 1.5 && this.rng() < 0.9) a = Math.max(a, d + 1);
     const part = hitPart(() => this.rng(), opts.part);
     if (tp?.sleeping && target.conn) this.sv.wake(target.conn);
     const silent = traits.has('silenciosa') ? 0.5 : 1;
-    const dodged = tp && a >= d && this.rng() < this.dodgeOf(tp);
+    const rolling = (target.dodgeUntil ?? 0) > now; // v0.9 · rodando: esquiva casi todo
+    // v0.9 · Brazo «Desviador»: en guardia con un arma blanca, desvía el 60 % de las balas.
+    if (tp && wp.w.kind === 'ranged' && target.guard && this.weaponOf(tp).w.kind === 'melee' && effective(this.c, tp).flags.has('desvio-balas') && this.rng() < 0.6) {
+      this.fx(e, 'shot', e.id, target.id, { weapon: wp.id, hit: false });
+      this.notice(c, 'warn', `${target.name} desvía tu bala con su hoja.`); this.notice(target.conn, 'good', `Desvías la bala de ${p.name}.`);
+      this.counter(target, e); this.crime(c, target, lethal, 'attempt', legit, silent);
+      return;
+    }
+    const dodged = (rolling && this.rng() < (wp.w.kind === 'melee' ? 0.95 : 0.7)) || (tp && a >= d && this.rng() < this.dodgeOf(tp));
     if (a < d || dodged) {
-      this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, target.id, { weapon: wp.id, hit: false });
+      this.fx(e, wp.w.kind === 'ranged' ? 'shot' : heavy ? 'heavy' : 'hit', e.id, target.id, { weapon: wp.id, hit: false, burst: heavy ? rounds : undefined });
       this.notice(c, 'warn', dodged ? `${target.name} esquiva tu ataque.` : `Fallas (${a} contra ${d}${cover ? `, se cubre tras el decorado: +${cover}` : ''}).`);
       if (dodged) this.notice(target.conn, 'good', `Esquivas el ataque de ${p.name}.`);
       if (tp) this.counter(target, e); else this.provokeNpc(target, e, lethal);
@@ -503,11 +611,21 @@ export class Combat {
     if (traits.has('emp') && chromed) dmg *= 1.5;
     if (traits.has('emp')) this.w.relics.emp(target.zone.id, target.x, target.y, 3);
     if (wp.w.kind === 'ranged' && (p.buffs['disparo-cargado'] ?? 0) > now) { dmg *= 2; delete p.buffs['disparo-cargado']; this.notice(c, 'good', 'Disparo cargado.'); }
-    const crit = this.rng() < (ef.perk.crit ?? 0) + (opts.aimed ? 0.15 : 0);
+    const crit = this.rng() < (ef.perk.crit ?? 0) + ef.crit + (opts.aimed ? 0.15 : 0);
     if (crit) dmg *= 2;
+    if (heavy) dmg *= wp.w.kind === 'ranged' ? 0.8 * rounds : 1.8;
+    // v0.9 · Córtex «Ejecutor»: doble daño a quien está por debajo del 30 % de salud.
+    if (ef.flags.has('ejecutor') && (tp ? tp.hp < effective(this.c, tp).hpMax * 0.3 : (target.npcHp ?? 1) < (target.npcMax ?? 1) * 0.3)) dmg *= 2;
     dmg = Math.round(dmg);
     if (tp && !traits.has('perforante')) dmg = Math.max(1, dmg - this.armorOf(tp) - (wp.w.tech === 'tecnica' ? -this.armorOf(tp) : 0));
     if (blocking) { dmg = Math.max(1, Math.round(dmg * 0.35)); if (target.conn) this.notice(target.conn, 'good', `Bloqueas el golpe de ${p.name}.`); }
+    if (tp) {
+      const tf = effective(this.c, tp).flags;
+      // v0.9 · Blindaje reactivo: el primer golpe cada 8 s pierde un 80 %.
+      if (tf.has('blindaje-reactivo') && now - ((tp as any).reactiveAt ?? 0) > 8000) { (tp as any).reactiveAt = now; dmg = Math.max(1, Math.round(dmg * 0.2)); this.notice(target.conn, 'good', 'Tu blindaje reactivo se endurece y absorbe el impacto.'); }
+      // v0.9 · Piel «Espejo»: devuelve un 25 % del daño cuerpo a cuerpo.
+      if (tf.has('piel-espejo') && wp.w.kind === 'melee') { const back = Math.max(1, Math.round(dmg * 0.25)); this.damagePlayer(p, e, back, false, { name: `la piel espejo de ${tp.name}`, charId: tp.charId }); }
+    }
     // Herida en la zona alcanzada: sangrado, amputación o conmoción.
     const wnd = this.wounds.hit(target, tp, part, dmg, wp, lethal);
     dmg = wnd.dmg;
@@ -517,10 +635,17 @@ export class Combat {
       if (tp && tp.equipped) { tp.equipped = null; if (target.conn) { this.notice(target.conn, 'bad', 'Te han dado en la mano: se te cae el arma (vuelve a empuñarla desde el inventario).'); this.w.send(target.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) }); } }
       else if (!tp && target.weaponId) { target.weaponId = undefined; target.labelVer++; this.notice(c, 'good', `${target.name} suelta el arma.`); }
     }
-    this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, target.id, { weapon: wp.id, hit: true, part: wnd.part, sever: !!wnd.severed, crit });
+    this.fx(e, wp.w.kind === 'ranged' ? 'shot' : heavy ? 'heavy' : 'hit', e.id, target.id, { weapon: wp.id, hit: true, part: wnd.part, sever: !!wnd.severed, crit, burst: heavy ? rounds : undefined });
+    if (heavy) { const ms = wp.w.kind === 'melee' ? 1100 : 500; if (tp) tp.nextAttackAt = Math.max(tp.nextAttackAt, now + ms); else target.stunUntil = Math.max(target.stunUntil ?? 0, now + ms); }
     this.notice(c, 'good', `${crit ? '¡CRÍTICO! ' : ''}${opts.aimed ? 'Disparo apuntado: ' : ''}${lethal ? 'Impactas' : 'Golpeas'} a ${target.name} en ${PART_NAMES[wnd.part]} con ${wp.name}: −${dmg}.${wnd.severed ? ` ¡Le arrancas ${PART_NAMES[wnd.severed]}!` : ''}${wnd.ko ? ' Cae conmocionado/a.' : ''}`);
     if (tp && target.conn && (wnd.severed || wnd.part === 'cabeza')) this.notice(target.conn, 'bad', wnd.severed ? `¡Has perdido ${PART_NAMES[wnd.severed]}! Un matasanos puede implantarte una prótesis.` : 'Te han dado en la cabeza.');
     this.w.progress.gain(p, skill, 4);
+    if (wp.w.kind === 'melee') {
+      // v0.9 · Mano «Vampiro»: recupera el 20 % del daño; Brazo «Sísmico»: empuja y aturde; Guante de choque: aturde.
+      if (ef.flags.has('vampiro')) { p.hp = Math.min(ef.hpMax, p.hp + Math.max(1, Math.round(dmg * 0.2))); }
+      if (ef.flags.has('puno-sismico')) this.shove(e, target, 1, 600);
+      if (ef.flags.has('puno-electrico') && !(tp && effective(this.c, tp).flags.has('aislante'))) { if (tp) tp.nextAttackAt = Math.max(tp.nextAttackAt, now + 500); else target.stunUntil = Math.max(target.stunUntil ?? 0, now + 500); }
+    }
     this.applyTraits(traits, target, tp, dmg, p.name, e.id);
     if (tp) {
       if (wnd.ko && tp.status === 'alive') { tp.hp -= dmg; this.sv.downed(target.conn, `conmoción (golpe de ${p.name} en la cabeza)`, tp, target, false); }
@@ -547,6 +672,9 @@ export class Combat {
   /** Efectos de los rasgos de arma sobre el objetivo: quemaduras, sangrado, aturdimiento y PEM. */
   private applyTraits(traits: Set<string>, target: Entity, tp: PlayerState | undefined, dmg: number, by: string, byId: number) {
     const now = Date.now();
+    const tfl = tp ? effective(this.c, tp).flags : undefined;
+    if (tfl?.has('ignifugo')) traits = new Set([...traits].filter((t) => t !== 'quemadura'));
+    if (tfl?.has('aislante')) traits = new Set([...traits].filter((t) => t !== 'aturdidora' && t !== 'electrica' && t !== 'emp'));
     if (traits.has('quemadura') || traits.has('sangrado')) {
       (target.dots ??= []).push({ until: now + 3000, dmg: Math.max(1, Math.round(dmg * (traits.has('quemadura') ? 0.2 : 0.15))), next: now + 1000, by: byId });
       if (target.conn) this.notice(target.conn, 'bad', traits.has('quemadura') ? 'Estás ardiendo.' : 'Sangras.');
@@ -572,6 +700,8 @@ export class Combat {
     // La proyección de Eco se corta si alguien hiere el cuerpo.
     if (te.ghostOwner) this.w.relics.endGhost(te.ghostOwner, false);
     this.w.nightlife.stop(te);
+    // v0.9 · Escudo cinético: absorbe daño mientras dura.
+    if ((tp.buffs.escudo ?? 0) > Date.now() && (tp.shield ?? 0) > 0) { const ab = Math.min(tp.shield!, dmg); tp.shield! -= ab; dmg -= ab; if (dmg <= 0) { this.notice(te.conn, 'good', `Tu escudo absorbe el golpe de ${src.name}.`); return; } }
     tp.hp -= dmg; tp.lastCombatAt = Date.now();
     this.notice(te.conn, 'bad', `${src.name} te ${lethal ? 'hiere' : 'golpea'}: −${dmg} de salud.`);
     if (te.conn) this.w.send(te.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) });
@@ -676,11 +806,11 @@ export class Combat {
     // v0.6: zona negra, sin ley; zona roja, solo si hay agentes cerca; zona amarilla, vigilada (cámaras y patrullas).
     const lvl = dangerAt(c.e!.zone.grid, c.e!.x, c.e!.y);
     if (lvl === 'lawless') return;
-    const cops = [...c.e!.zone.query(c.e!.x, c.e!.y, 18)].some((o) => (o.npcType === 'police' || o.npcType === 'hierro') && o.state !== 'downed');
+    const cops = [...c.e!.zone.query(c.e!.x, c.e!.y, effective(this.c, c.p!).flags.has('pasos-silenciosos') ? 11 : 18)].some((o) => (o.npcType === 'police' || o.npcType === 'hierro') && o.state !== 'downed');
     if (lvl === 'disputed' && !cops) return;
     const police = lvl === 'public' ? 1 : this.policeAt(c.e!);
     if (!police) return;
-    if ((kind === 'kill' || (kind === 'down' && lethal)) && this.cameraSees(c.e!) && !((p.buffs.invisible ?? 0) > Date.now()) && !effective(this.c, p).matrix.cameraGhost) void this.identify(c, kind === 'kill' ? 'asesinato' : 'intento de asesinato');
+    if ((kind === 'kill' || (kind === 'down' && lethal)) && this.cameraSees(c.e!) && !((p.buffs.invisible ?? 0) > Date.now()) && !effective(this.c, p).matrix.cameraGhost && !(effective(this.c, p).flags.has('anticamaras') && this.rng() < 0.5)) void this.identify(c, kind === 'kill' ? 'asesinato' : 'intento de asesinato');
     const flags = perkMods(this.c, p).flags;
     if (flags.has('fantasma') && ![...c.e!.zone.query(c.e!.x, c.e!.y, 18)].some((o) => o.npcType === 'police' || o.npcType === 'hierro')) return;
     if ((p.buffs.invisible ?? 0) > Date.now()) return;
@@ -1114,7 +1244,7 @@ export class Combat {
         const a = this.npcAttackScore(e) + this.roll(), d = this.defenseScore(tp) + this.roll();
         const cover = wp.w.kind === 'ranged' ? this.coverOf(e, t) : 0;
         const hitOk = a >= d + cover;
-        if (hitOk && this.rng() < this.dodgeOf(tp)) { this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id, { weapon: wp.id, hit: false }); this.notice(t.conn, 'good', `Esquivas a ${e.name}.`); }
+        if (hitOk && ((t.dodgeUntil ?? 0) > Date.now() ? this.rng() < 0.8 : this.rng() < this.dodgeOf(tp))) { this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id, { weapon: wp.id, hit: false }); this.notice(t.conn, 'good', `Esquivas a ${e.name}.`); }
         else if (hitOk) {
           const police = e.npcType === 'police';
           const lethal = police ? !!e.aggroLethal : e.aggroLethal !== false;
@@ -1285,6 +1415,26 @@ export class Combat {
         }
         p.lastCombatAt = now;
         this.notice(c, 'good', `${ab.name}: alcanzas a ${list.length} ${list.length === 1 ? 'persona' : 'personas'}.`);
+        break;
+      }
+      // v0.9 · Habilidades nuevas.
+      case 'marcar': {
+        const list = hostiles(15);
+        p.buffs.marcar = until;
+        for (const o of list) o.markedUntil = until;
+        this.notice(c, 'good', `${ab.name}: ${list.length} ${list.length === 1 ? 'objetivo marcado' : 'objetivos marcados'} durante ${ab.duration} s (+2 a acertarles; los ves a través de las paredes).`);
+        break;
+      }
+      case 'escudo': p.buffs.escudo = until; p.shield = ab.power; this.notice(c, 'good', `${ab.name}: absorbes los próximos ${ab.power} puntos de daño durante ${ab.duration} s.`); break;
+      case 'salto': {
+        const dir = e.steer && Date.now() - e.steer.at < 1500 ? e.steer : e.lastDir ?? { dx: 1, dy: 0 };
+        const len = Math.hypot(dir.dx, dir.dy) || 1;
+        let x = e.x, y = e.y;
+        for (let i = 1; i <= ab.power * 4; i++) { const nx = e.x + (dir.dx / len) * 0.25 * i, ny = e.y + (dir.dy / len) * 0.25 * i; if (!isWalkable(e.zone.grid, nx, ny)) break; x = nx; y = ny; }
+        const fx0 = e.x, fy0 = e.y;
+        e.x = x; e.y = y; e.path = []; e.moving = false; e.zone.moved(e); e.dodgeUntil = now + 300;
+        for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind: 'dodge', from: e.id, to: e.id, x: fx0, y: fy0 });
+        this.notice(c, 'good', `${ab.name}: saltas ${Math.hypot(x - fx0, y - fy0).toFixed(1)} m.`);
         break;
       }
       case 'carga': {

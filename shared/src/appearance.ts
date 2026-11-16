@@ -1,7 +1,7 @@
 // Opciones de personalización del personaje (validadas en el servidor y usadas por el creador del cliente).
 export const BUILDS = ['delgado', 'medio', 'robusto', 'atletico', 'corpulento', 'bajo', 'alto'] as const;
 export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños', 'afro-corto', 'pompadour', 'bob', 'media-melena', 'trenza-larga', 'erizo'] as const;
-export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono'] as const;
+export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono', 'camiseta', 'tirantes', 'camisa', 'bomber', 'biker', 'abrigo', 'blazer', 'haori', 'poncho', 'armadura', 'arnes', 'cortavientos', 'chubasquero'] as const;
 export const FACIALS = ['ninguno', 'barba', 'bigote', 'perilla', 'barba-larga', 'patillas', 'candado'] as const;
 export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada', 'cuadrada', 'corazon', 'ancha', 'afilada'] as const;
 export const NOSES = ['recta', 'chata', 'aguilena', 'pequena', 'ancha'] as const;
@@ -10,7 +10,15 @@ export const BROWS = ['normales', 'finas', 'gruesas', 'arqueadas', 'cortadas'] a
 export const MAKEUPS = ['ninguno', 'delineado', 'labios', 'neon', 'pintura'] as const;
 export const PIERCINGS = ['ninguno', 'nariz', 'ceja', 'labio', 'orejas', 'septum'] as const;
 export const SCARS = ['ninguna', 'mejilla', 'ojo', 'frente'] as const;
-export const BODY_TATTOOS = ['ninguno', 'tribal', 'circuito', 'floral', 'codigo'] as const;
+export const BODY_TATTOOS = ['ninguno', 'tribal', 'circuito', 'floral', 'codigo', 'dragon', 'calavera', 'geometrico', 'mandala', 'olas', 'llamas', 'telarana', 'alas', 'koi', 'estrellas',
+  'rosa', 'serpiente', 'barras', 'glitch', 'runas', 'biomecanico', 'puntillismo', 'acuarela'] as const;
+/** v0.9 · Dónde va el tatuaje corporal, estilo del facial, tejidos de la ropa y calzado. */
+export const TATTOO_ZONES = ['brazos', 'brazo', 'piernas', 'cuello', 'pecho', 'todo'] as const;
+export const FACE_TATTOOS = ['ninguno', 'linea', 'lagrimas', 'codigo', 'puntos', 'barras', 'circuito', 'rayas', 'luna', 'tribal'] as const;
+export const FABRICS = ['liso', 'cuero', 'vaquero', 'camuflaje', 'camuflaje-urbano', 'cuadros', 'punto', 'kevlar', 'carbono', 'holografico', 'lentejuelas', 'rayas', 'serpiente', 'neon',
+  'malla', 'acolchado', 'pana', 'seda', 'lona', 'tactico', 'pixel', 'tigre', 'reflectante', 'circuito'] as const;
+export const SHOE_STYLES = ['zapatillas', 'botas', 'botas-altas', 'botas-tacticas', 'tacones', 'mocasines', 'plataformas'] as const;
+export const TOP_DETAILS = ['ninguno', 'cremallera', 'tachuelas', 'parches', 'led', 'cuello-pelo', 'reflectante', 'cinturon', 'placas'] as const;
 export const ACCESSORIES = ['ninguno', 'gafas', 'visor', 'mascara', 'gorra', 'capucha', 'auriculares'] as const;
 export const EYE_COLORS = ['#3a2a1a', '#2a6aa8', '#3a8a4a', '#8a8a8a', '#43f3ff', '#ff3fa4', '#ffd23f', '#ff3040'] as const;
 export const LABELS: Record<string, string> = {
@@ -23,7 +31,14 @@ export const LABELS: Record<string, string> = {
   'barba-larga': 'Barba larga', patillas: 'Patillas', candado: 'Candado', ovalada: 'Ovalada', angulosa: 'Angulosa', redonda: 'Redonda', alargada: 'Alargada',
   normales: 'Normales', finas: 'Finas', gruesas: 'Gruesas', arqueadas: 'Arqueadas', cortadas: 'Con corte', delineado: 'Delineado', labios: 'Labios', neon: 'Neón', pintura: 'Pintura de guerra',
   nariz: 'Nariz', ceja: 'Ceja', labio: 'Labio', orejas: 'Orejas', septum: 'Septum', ninguna: 'Ninguna', mejilla: 'Mejilla', ojo: 'Ojo', frente: 'Frente',
-  tribal: 'Tribal', circuito: 'Circuito', floral: 'Floral', codigo: 'Código',
+  tribal: 'Tribal', circuito: 'Circuito', floral: 'Floral', codigo: 'Código', dragon: 'Dragón', calavera: 'Calavera', geometrico: 'Geométrico', mandala: 'Mandala', olas: 'Olas', llamas: 'Llamas', telarana: 'Telaraña', alas: 'Alas', koi: 'Carpa', estrellas: 'Estrellas',
+  rosa: 'Rosa', serpiente: 'Serpiente', barras: 'Código de barras', glitch: 'Glitch', runas: 'Glifos', biomecanico: 'Biomecánico', puntillismo: 'Puntillismo', acuarela: 'Acuarela',
+  brazos: 'Los dos brazos', brazo: 'Un brazo', piernas: 'Piernas', cuello: 'Cuello', pecho: 'Pecho', todo: 'Todo el cuerpo', linea: 'Línea', lagrimas: 'Lágrimas', puntos: 'Puntos', rayas: 'Rayas', luna: 'Luna',
+  liso: 'Liso', cuero: 'Cuero', vaquero: 'Vaquero', camuflaje: 'Camuflaje', 'camuflaje-urbano': 'Camuflaje urbano', cuadros: 'Cuadros', punto: 'Punto', kevlar: 'Kevlar', carbono: 'Fibra de carbono', holografico: 'Holográfico', lentejuelas: 'Lentejuelas',
+  malla: 'Malla', acolchado: 'Acolchado', pana: 'Pana', seda: 'Seda', lona: 'Lona', tactico: 'Táctico', pixel: 'Píxel', tigre: 'Tigre', reflectante: 'Reflectante',
+  zapatillas: 'Zapatillas', botas: 'Botas', 'botas-altas': 'Botas altas', 'botas-tacticas': 'Botas tácticas', tacones: 'Tacones', mocasines: 'Mocasines', plataformas: 'Plataformas',
+  cremallera: 'Cremallera', tachuelas: 'Tachuelas', parches: 'Parches', led: 'Luces LED', 'cuello-pelo': 'Cuello de pelo', cinturon: 'Cinturón', placas: 'Placas',
+  camiseta: 'Camiseta', tirantes: 'Camiseta de tirantes', camisa: 'Camisa', bomber: 'Bomber', biker: 'Cazadora motera', abrigo: 'Abrigo largo', blazer: 'Americana', haori: 'Haori urbano', poncho: 'Poncho', armadura: 'Armadura ligera', arnes: 'Arnés', cortavientos: 'Cortavientos', chubasquero: 'Chubasquero',
   ninguno: 'Ninguno', barba: 'Barba', bigote: 'Bigote', perilla: 'Perilla', gafas: 'Gafas', visor: 'Visor', mascara: 'Máscara', gorra: 'Gorra', capucha: 'Capucha', auriculares: 'Auriculares',
 };
 export const CHROME_PARTS = ['cabeza', 'ojos', 'torso', 'brazo_izq', 'brazo_der', 'pierna_izq', 'pierna_der'] as const;
@@ -37,11 +52,43 @@ export function normalizeAppearance(a: any): { ok: true; value: Record<string, s
   const v: Record<string, string> = { skin: a.skin, hair: a.hair, jacket: a.jacket, accent: a.accent,
     eyes: a.eyes ?? '#3a2a1a', pants: a.pants ?? '#1a1a24', build: a.build ?? 'medio', hairStyle: a.hairStyle ?? 'corto', top: a.top ?? 'chaqueta', facial: a.facial ?? 'ninguno', accessory: a.accessory ?? 'ninguno', tattoo: a.tattoo ?? '',
     faceShape: a.faceShape ?? 'ovalada', brows: a.brows ?? 'normales', makeup: a.makeup ?? 'ninguno', makeupColor: a.makeupColor ?? '#ff3fa4', piercing: a.piercing ?? 'ninguno', scar: a.scar ?? 'ninguna', bodyTattoo: a.bodyTattoo ?? 'ninguno',
-    shirt: a.shirt ?? '#2a2a3a', shoes: a.shoes ?? '#1a1a1a', nose: a.nose ?? 'recta', mouth: a.mouth ?? 'neutra' };
-  if (![v.eyes, v.pants, v.makeupColor, v.shirt, v.shoes].every((x) => HEX.test(x))) return { ok: false, error: 'Color inválido' };
+    shirt: a.shirt ?? '#2a2a3a', shoes: a.shoes ?? '#1a1a1a', nose: a.nose ?? 'recta', mouth: a.mouth ?? 'neutra',
+    tattooZone: a.tattooZone ?? 'brazos', tattooInk: a.tattooInk ?? '#14141e', faceTattoo: a.faceTattoo ?? 'ninguno', topPattern: a.topPattern ?? 'liso', pantsPattern: a.pantsPattern ?? 'liso', shoeStyle: a.shoeStyle ?? 'botas', topDetail: a.topDetail ?? 'ninguno' };
+  if (![v.eyes, v.pants, v.makeupColor, v.shirt, v.shoes, v.tattooInk].every((x) => HEX.test(x))) return { ok: false, error: 'Color inválido' };
   if (v.tattoo && !HEX.test(v.tattoo)) return { ok: false, error: 'Tatuaje inválido' };
   const enumOk = (val: string, list: readonly string[], n: string) => (list.includes(val) ? null : `Opción inválida: ${n}`);
   const e = enumOk(v.build, BUILDS, 'complexión') ?? enumOk(v.hairStyle, HAIR_STYLES, 'peinado') ?? enumOk(v.top, TOPS, 'ropa') ?? enumOk(v.facial, FACIALS, 'vello facial') ?? enumOk(v.accessory, ACCESSORIES, 'accesorio')
-    ?? enumOk(v.faceShape, FACE_SHAPES, 'cara') ?? enumOk(v.nose, NOSES, 'nariz') ?? enumOk(v.mouth, MOUTHS, 'boca') ?? enumOk(v.brows, BROWS, 'cejas') ?? enumOk(v.makeup, MAKEUPS, 'maquillaje') ?? enumOk(v.piercing, PIERCINGS, 'piercing') ?? enumOk(v.scar, SCARS, 'cicatriz') ?? enumOk(v.bodyTattoo, BODY_TATTOOS, 'tatuaje corporal');
+    ?? enumOk(v.faceShape, FACE_SHAPES, 'cara') ?? enumOk(v.nose, NOSES, 'nariz') ?? enumOk(v.mouth, MOUTHS, 'boca') ?? enumOk(v.brows, BROWS, 'cejas') ?? enumOk(v.makeup, MAKEUPS, 'maquillaje') ?? enumOk(v.piercing, PIERCINGS, 'piercing') ?? enumOk(v.scar, SCARS, 'cicatriz') ?? enumOk(v.bodyTattoo, BODY_TATTOOS, 'tatuaje corporal')
+    ?? enumOk(v.tattooZone, TATTOO_ZONES, 'zona del tatuaje') ?? enumOk(v.faceTattoo, FACE_TATTOOS, 'tatuaje facial') ?? enumOk(v.topPattern, FABRICS, 'tejido') ?? enumOk(v.pantsPattern, FABRICS, 'tejido') ?? enumOk(v.shoeStyle, SHOE_STYLES, 'calzado') ?? enumOk(v.topDetail, TOP_DETAILS, 'detalle');
   return e ? { ok: false, error: e } : { ok: true, value: v };
+}
+
+/** v0.9 · Variedad de PNJ: estilos de ropa, tejidos, tatuajes, calzado y complementos según su tipo (transeúnte, banda o policía). */
+export function diversifyAppearance(a: Record<string, any>, rnd: () => number, kind: 'civil' | 'gang' | 'police' | 'hierro' = 'civil') {
+  const pick = <T,>(l: readonly T[]) => l[Math.floor(rnd() * l.length)];
+  const chance = (p: number) => rnd() < p;
+  if (kind === 'police' || kind === 'hierro') {
+    Object.assign(a, { top: kind === 'hierro' ? 'armadura' : pick(['chaleco', 'armadura', 'cortavientos']), topPattern: kind === 'hierro' ? 'carbono' : 'tactico', topDetail: pick(['reflectante', 'placas', 'cinturon']),
+      legwear: 'tactico', pantsPattern: 'tactico', shoeStyle: 'botas-tacticas', eyewear: kind === 'hierro' ? 'visor-tactico' : pick(['', 'gafas-sol', 'visor-tactico']), headwear: kind === 'hierro' ? 'casco' : pick(['gorra', '', 'casco']) });
+    return a;
+  }
+  const gang = kind === 'gang';
+  a.top = pick(gang ? ['chaqueta', 'chaleco', 'sudadera', 'top', 'biker', 'bomber', 'tirantes', 'arnes', 'camiseta', 'haori', 'poncho'] : TOPS);
+  a.topPattern = chance(0.45) ? 'liso' : pick(FABRICS);
+  a.topDetail = chance(0.5) ? 'ninguno' : pick(gang ? ['tachuelas', 'parches', 'led', 'cremallera', 'placas'] : TOP_DETAILS);
+  a.legwear = pick(['pantalon', 'pantalon', 'cargo', 'leggins', 'tactico', 'shorts', 'falda', 'bermudas', 'falda-larga']);
+  a.pantsPattern = chance(0.5) ? 'liso' : pick(['vaquero', 'vaquero', 'camuflaje', 'camuflaje-urbano', 'cuero', 'cuadros', 'pana', 'lona', 'serpiente', 'holografico']);
+  a.shoeStyle = pick(SHOE_STYLES);
+  a.shoes = pick(['#101018', '#e8e8f0', '#5a3a1a', '#a82020', '#43f3ff', '#3a3a3a', '#d8b040']);
+  a.shirt = pick(['#2a2a3a', '#e8eaf0', '#a02020', '#1a1a1a', '#43f3ff', '#ffd23f', '#5a2a6a']);
+  if (chance(gang ? 0.75 : 0.35)) { a.bodyTattoo = pick(BODY_TATTOOS.slice(1)); a.tattooZone = pick(TATTOO_ZONES); a.tattooInk = pick(['#14141e', '#1a2a6a', '#6a1010', '#0a4a2a', '#43f3ff', '#ff3fa4']); }
+  if (chance(gang ? 0.35 : 0.08)) { a.faceTattoo = pick(FACE_TATTOOS.slice(1)); a.tattoo = pick(['#1a1a1a', '#43f3ff', '#ff4fa0', '#ffd23f']); }
+  if (chance(0.3)) a.headwear = pick(['gorra', 'gorro', 'boina', 'bandana', 'capucha', 'sombrero', 'diadema-led', 'casco-moto']);
+  if (chance(0.3)) a.eyewear = pick(['gafas', 'gafas-sol', 'visor', 'monoculo', gang ? 'bandana-cara' : 'gafas', gang ? 'mascara-demonio' : 'gafas-sol', 'mascara-gas']);
+  a.headColor = pick(['#1a1a1a', '#a02020', '#43f3ff', '#ffd23f', '#3a4a3a', '#ff3fa4', '#e8e8f0']);
+  a.piercing = chance(gang ? 0.5 : 0.2) ? pick(PIERCINGS.slice(1)) : 'ninguno';
+  a.makeup = chance(0.18) ? pick(MAKEUPS.slice(1)) : 'ninguno';
+  a.brows = pick(BROWS);
+  a.scar = chance(gang ? 0.3 : 0.06) ? pick(SCARS.slice(1)) : 'ninguna';
+  return a;
 }

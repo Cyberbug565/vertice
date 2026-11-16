@@ -44,10 +44,44 @@ async function createCharacter(page, user, name, roleId) {
 const me = (p) => p.evaluate(() => window.__vt.me());
 const ents = (p) => p.evaluate(() => window.__vt.entities());
 const clickWorld = async (p, x, y, button = 'left') => { const s = await p.evaluate(([x, y]) => window.__vt.screenOf(x, y), [x, y]); await p.mouse.click(s.x, s.y, { button }); };
+/** v0.9 · Ya no se camina con el clic: se acerca con WASD (como un jugador) hasta tener el objetivo a mano. */
+const walkTo = async (p, pred, near) => {
+  const t0 = Date.now(); let best = Infinity, bestAt = Date.now(), side = 0;
+  const held = new Set();
+  const set = async (keys) => { for (const k of [...held]) if (!keys.includes(k)) { await p.keyboard.up(k); held.delete(k); } for (const k of keys) if (!held.has(k)) { await p.keyboard.down(k); held.add(k); } };
+  try {
+    // Trayectos largos: la aproximación automática del servidor (la que usan los bots y el destino marcado); el final, a mano.
+    { const e = (await ents(p)).find(pred); const me = await p.evaluate(() => window.__vt.me());
+      if (e && Math.hypot(e.x - me.x, e.y - me.y) > near) {
+        const z0 = me.zone;
+        await p.evaluate((id) => window.__vt.net.send({ t: 'interact', target: id }), e.id);
+        await p.waitForFunction(([x, y, n, z]) => { const m = window.__vt.me(); return m.zone !== z || Math.hypot(m.x - x, m.y - y) <= n; }, [e.x, e.y, near, z0], { timeout: 40000 }).catch(() => {});
+        if ((await p.evaluate(() => window.__vt.me().zone)) !== z0) return 'entered';
+      } }
+    while (Date.now() - t0 < 60000) {
+      const me = await p.evaluate(() => window.__vt.me());
+      const e = (await ents(p)).find(pred);
+      if (!e) throw new Error('entidad no visible');
+      const dx = e.x - me.x, dy = e.y - me.y, d = Math.hypot(dx, dy);
+      if (d <= near) return;
+      if (d < best - 0.3) { best = d; bestAt = Date.now(); } else if (Date.now() - bestAt > 1500) { side = (side + 1) % 4; bestAt = Date.now(); best = d; }
+      // Mundo → pantalla isométrica: derecha = x − y, abajo = x + y. Si se atasca, rodea por un lado.
+      let sx = dx - dy, sy = dx + dy;
+      if (side === 1) [sx, sy] = [-sy, sx]; else if (side === 3) [sx, sy] = [sy, -sx];
+      const keys = [];
+      if (sx > 0.4) keys.push('d'); else if (sx < -0.4) keys.push('a');
+      if (sy > 0.4) keys.push('s'); else if (sy < -0.4) keys.push('w');
+      await set(keys);
+      await p.waitForTimeout(side ? 500 : 120);
+    }
+    { const e = (await ents(p)).find(pred); const me = await p.evaluate(() => window.__vt.me()); throw new Error(`no llega andando (a ${Math.hypot(e.x - me.x, e.y - me.y).toFixed(1)} m de ${e.name}; yo ${me.x.toFixed(1)},${me.y.toFixed(1)} → ${e.x},${e.y})`); }
+  } finally { await set([]); }
+};
 const clickEntity = async (p, pred) => {
   const list = await ents(p);
   const e = list.find(pred);
   if (!e) throw new Error('entidad no visible');
+  if ((await walkTo(p, pred, e.kind === 'door' ? 1.6 : 5)) === 'entered') return;
   const s = await p.evaluate(([x, y]) => window.__vt.screenOf(x, y), [e.x, e.y]);
   await p.mouse.click(s.x, s.y - (e.kind === 'npc' ? 20 : 8));
 };

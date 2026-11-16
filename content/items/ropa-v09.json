@@ -1,0 +1,2814 @@
+[
+ {
+  "id": "gorro-punto-ceniza",
+  "name": "Gorro de punto «Ceniza»",
+  "desc": "Lana sintética gruesa. Abriga y no llama la atención.",
+  "weight": 0.4,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "gorro",
+   "color": "#3a3a44",
+   "pattern": "punto",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "gorro-led-pulso",
+  "name": "Gorro «Pulso» con LED",
+  "desc": "Una franja de luz late al ritmo de la música más cercana.",
+  "weight": 0.4,
+  "price": 140,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "gorro",
+   "color": "#14141e",
+   "pattern": "punto",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "boina-distrito",
+  "name": "Boina de distrito",
+  "desc": "La llevan los viejos del mercado. Te tratan como a uno de ellos.",
+  "weight": 0.4,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "boina",
+   "color": "#5a2a3a",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "casco-moto-relampago",
+  "name": "Casco de moto «Relámpago»",
+  "desc": "Integral con visor ahumado y HUD de velocidad.",
+  "weight": 0.4,
+  "price": 680,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 2,
+  "wear": {
+   "slot": "cabeza",
+   "style": "casco-moto",
+   "color": "#d82020",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "conduccion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "casco-moto-sombra",
+  "name": "Casco de moto «Sombra»",
+  "desc": "Fibra de carbono mate. No refleja ni las farolas.",
+  "weight": 0.4,
+  "price": 2400,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 3,
+  "wear": {
+   "slot": "cabeza",
+   "style": "casco-moto",
+   "color": "#101014",
+   "pattern": "carbono",
+   "mods": {
+    "skills": {
+     "conduccion": 2,
+     "sigilo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "diadema-led-coral",
+  "name": "Diadema LED «Coral»",
+  "desc": "Cuatro diodos que cambian de color.",
+  "weight": 0.4,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "diadema-led",
+   "color": "#ff6aa8",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "diadema-sinapsis",
+  "name": "Diadema «Sinapsis»",
+  "desc": "Amplificador de señal para netrunners: +2 de RAM.",
+  "weight": 0.4,
+  "price": 3800,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "cabeza",
+   "style": "diadema-led",
+   "color": "#43f3ff",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "interfaz": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 2,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "casco-asalto-k9",
+  "name": "Casco de asalto K-9",
+  "desc": "Casco militar con visor balístico.",
+  "weight": 0.4,
+  "price": 1200,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 4,
+  "wear": {
+   "slot": "cabeza",
+   "style": "casco",
+   "color": "#3a4030",
+   "pattern": "tactico",
+   "mods": {
+    "skills": {
+     "percepcion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sombrero-alas-noche",
+  "name": "Sombrero «Alas de noche»",
+  "desc": "Ala ancha y cinta de seda. Para los tratos en sombra.",
+  "weight": 0.4,
+  "price": 220,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "sombrero",
+   "color": "#1a1a20",
+   "pattern": "seda",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "bandana-ruido",
+  "name": "Bandana «Ruido»",
+  "desc": "Estampado de cuadros, gastada por el sol del Yermo.",
+  "weight": 0.4,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "bandana",
+   "color": "#2a6ab8",
+   "pattern": "cuadros",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "capucha-camaleonica",
+  "name": "Capucha camaleónica",
+  "desc": "Tejido que copia el color de lo que tiene detrás. Capacidad: las cámaras no consiguen identificarte la mitad de las veces.",
+  "weight": 0.4,
+  "price": 9500,
+  "category": "ropa",
+  "rarity": "legendario",
+  "wear": {
+   "slot": "cabeza",
+   "style": "capucha",
+   "color": "#2a3a3a",
+   "pattern": "holografico",
+   "mods": {
+    "skills": {
+     "sigilo": 3
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "anticamaras"
+  }
+ },
+ {
+  "id": "gorra-ruta-38",
+  "name": "Gorra «Ruta 38»",
+  "desc": "Gorra de camionero nómada.",
+  "weight": 0.4,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "gorra",
+   "color": "#ffb020",
+   "pattern": "lona",
+   "mods": {
+    "skills": {
+     "conduccion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "gafas-sol-espejo",
+  "name": "Gafas de sol espejo",
+  "desc": "Nadie sabe adónde miras.",
+  "weight": 0.4,
+  "price": 55,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cara",
+   "style": "gafas-sol",
+   "color": "#101010",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "gafas-sol-ambar",
+  "name": "Gafas de sol «Ámbar»",
+  "desc": "Cristal tintado que realza el contraste: +1 de puntería.",
+  "weight": 0.4,
+  "price": 180,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "gafas-sol",
+   "color": "#d89020",
+   "pattern": "liso",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 1,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "monoculo-tasador",
+  "name": "Monóculo del tasador",
+  "desc": "Lee etiquetas, precios y mentiras.",
+  "weight": 0.4,
+  "price": 900,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "cara",
+   "style": "monoculo",
+   "color": "#ffd23f",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "negociacion": 2,
+     "percepcion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "monoculo-balistico",
+  "name": "Monóculo balístico",
+  "desc": "Calcula la caída de la bala en tiempo real.",
+  "weight": 0.4,
+  "price": 4200,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "cara",
+   "style": "monoculo",
+   "color": "#ff3040",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "armas": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 2,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "visor-tactico-lince",
+  "name": "Visor táctico «Lince»",
+  "desc": "Cuatro lentes de visión nocturna.",
+  "weight": 0.4,
+  "price": 1500,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "cara",
+   "style": "visor-tactico",
+   "color": "#43f3ff",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "percepcion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "visor-tactico-halcon",
+  "name": "Visor táctico «Rapaz»",
+  "desc": "Óptica militar con marcado de objetivos: +3 de puntería.",
+  "weight": 0.4,
+  "price": 11000,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 1,
+  "wear": {
+   "slot": "cara",
+   "style": "visor-tactico",
+   "color": "#ffb020",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "percepcion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 3,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mascara-gas-filtro",
+  "name": "Máscara de gas con filtro",
+  "desc": "El aire de la ciudad, por fin respirable. Capacidad: inmune a gases y humos, y los bajones de las drogas duran la mitad.",
+  "weight": 0.4,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "mascara-gas",
+   "color": "#2a2a30",
+   "pattern": "liso",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0.03,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "filtro"
+  }
+ },
+ {
+  "id": "mascara-gas-plaga",
+  "name": "Máscara «Plaga»",
+  "desc": "Filtro doble y aspecto de pesadilla. Capacidad: inmune a gases y humos, y los bajones de las drogas duran la mitad.",
+  "weight": 0.4,
+  "price": 1100,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "cara",
+   "style": "mascara-gas",
+   "color": "#4a5a3a",
+   "pattern": "tactico",
+   "mods": {
+    "skills": {
+     "intimidacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "filtro"
+  }
+ },
+ {
+  "id": "bandana-cara-roja",
+  "name": "Bandana de cara roja",
+  "desc": "Tapa la cara de nariz para abajo.",
+  "weight": 0.4,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cara",
+   "style": "bandana-cara",
+   "color": "#a01010",
+   "pattern": "cuadros",
+   "mods": {
+    "skills": {
+     "sigilo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "bandana-cara-forajido",
+  "name": "Bandana del forajido",
+  "desc": "Las cámaras odian esta bandana. Capacidad: las cámaras no consiguen identificarte la mitad de las veces.",
+  "weight": 0.4,
+  "price": 120,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "bandana-cara",
+   "color": "#1a1a1a",
+   "pattern": "cuadros",
+   "mods": {
+    "skills": {
+     "sigilo": 1,
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "anticamaras"
+  }
+ },
+ {
+  "id": "mascara-demonio-carmesi",
+  "name": "Máscara de demonio carmesí",
+  "desc": "Cuernos, colmillos y una sonrisa de laca roja.",
+  "weight": 0.4,
+  "price": 3600,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "cara",
+   "style": "mascara-demonio",
+   "color": "#b01020",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "intimidacion": 3
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mascara-demonio-hueso",
+  "name": "Máscara «Hueso»",
+  "desc": "Laca blanca y ojos negros. Dicen que trae suerte en los tiroteos. Capacidad: las cámaras no consiguen identificarte la mitad de las veces.",
+  "weight": 0.4,
+  "price": 8800,
+  "category": "ropa",
+  "rarity": "legendario",
+  "wear": {
+   "slot": "cara",
+   "style": "mascara-demonio",
+   "color": "#e8e0d0",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "intimidacion": 3,
+     "sigilo": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "anticamaras"
+  }
+ },
+ {
+  "id": "bomber-orbita",
+  "name": "Bomber «Órbita»",
+  "desc": "Bomber de satén con puños de punto.",
+  "weight": 1.2,
+  "price": 160,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "bomber",
+   "color": "#2a3a5a",
+   "pattern": "seda",
+   "accent": "#ff6a20",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "bomber-escuadron",
+  "name": "Bomber de escuadrón",
+  "desc": "Con los parches de una unidad que ya no existe.",
+  "weight": 1.2,
+  "price": 420,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "bomber",
+   "color": "#3a4a2a",
+   "pattern": "lona",
+   "detail": "parches",
+   "accent": "#ffb020",
+   "mods": {
+    "skills": {
+     "atletismo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "bomber-neon-rosa",
+  "name": "Bomber de neón rosa",
+  "desc": "Brilla en la oscuridad. Imposible pasar desapercibida.",
+  "weight": 1.2,
+  "price": 1300,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "bomber",
+   "color": "#ff3fa4",
+   "pattern": "neon",
+   "detail": "led",
+   "accent": "#43f3ff",
+   "mods": {
+    "skills": {
+     "actuacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "biker-tachuelas",
+  "name": "Cazadora motera con tachuelas",
+  "desc": "Cuero grueso, cremallera cruzada y tachuelas en los hombros.",
+  "weight": 1.2,
+  "price": 520,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "biker",
+   "color": "#14141a",
+   "pattern": "cuero",
+   "detail": "tachuelas",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "biker-ruta-roja",
+  "name": "Cazadora «Ruta roja»",
+  "desc": "La cazadora de una banda de motoristas ya disuelta.",
+  "weight": 1.2,
+  "price": 1600,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 2,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "biker",
+   "color": "#6a1010",
+   "pattern": "cuero",
+   "detail": "cremallera",
+   "mods": {
+    "skills": {
+     "conduccion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "biker-kevlar",
+  "name": "Cazadora motera de kevlar",
+  "desc": "Parece cuero; para balas de pequeño calibre.",
+  "weight": 1.2,
+  "price": 4800,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 4,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "biker",
+   "color": "#2a2a30",
+   "pattern": "kevlar",
+   "detail": "cremallera",
+   "mods": {
+    "skills": {
+     "conduccion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0.03,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "abrigo-sastre-noir",
+  "name": "Abrigo largo «Noir»",
+  "desc": "Lana fría y corte impecable hasta los tobillos.",
+  "weight": 1.2,
+  "price": 1900,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "abrigo",
+   "color": "#1a1a22",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "intimidacion": 1,
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "abrigo-acolchado-norte",
+  "name": "Abrigo acolchado «Norte»",
+  "desc": "Plumón sintético y cuello de pelo. Abriga en las noches de lluvia ácida.",
+  "weight": 1.2,
+  "price": 380,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "abrigo",
+   "color": "#2a4a6a",
+   "pattern": "acolchado",
+   "detail": "cuello-pelo",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0.05,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "abrigo-blindado-ejecutivo",
+  "name": "Abrigo blindado ejecutivo",
+  "desc": "Paño de lana sobre tejido balístico de grado militar.",
+  "weight": 1.2,
+  "price": 14000,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 6,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "abrigo",
+   "color": "#2a2a34",
+   "pattern": "kevlar",
+   "mods": {
+    "skills": {
+     "negociacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 15,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "blazer-corporativo",
+  "name": "Americana corporativa",
+  "desc": "El uniforme de las plantas altas.",
+  "weight": 1.2,
+  "price": 480,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "blazer",
+   "color": "#2a2a3a",
+   "pattern": "liso",
+   "accent": "#43f3ff",
+   "mods": {
+    "skills": {
+     "negociacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "blazer-terciopelo",
+  "name": "Americana de pana «Viejo cine»",
+  "desc": "Pana marrón y solapa ancha, como en las películas antiguas.",
+  "weight": 1.2,
+  "price": 1100,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "blazer",
+   "color": "#5a2a1a",
+   "pattern": "pana",
+   "accent": "#d8b040",
+   "mods": {
+    "skills": {
+     "actuacion": 2,
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "blazer-holo",
+  "name": "Americana holográfica",
+  "desc": "Cambia de color con cada paso. Para las fiestas de las azoteas.",
+  "weight": 1.2,
+  "price": 5200,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "blazer",
+   "color": "#8a6aff",
+   "pattern": "holografico",
+   "mods": {
+    "skills": {
+     "actuacion": 3,
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "haori-tormenta",
+  "name": "Haori urbano «Tormenta»",
+  "desc": "Manga ancha, seda pesada y un forro con relámpagos.",
+  "weight": 1.2,
+  "price": 1400,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "haori",
+   "color": "#1a2a4a",
+   "pattern": "seda",
+   "accent": "#43f3ff",
+   "mods": {
+    "skills": {
+     "filo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "haori-grulla",
+  "name": "Haori «Grulla blanca»",
+  "desc": "Tan ligero que parece que flotas.",
+  "weight": 1.2,
+  "price": 4400,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "haori",
+   "color": "#e8e4dc",
+   "pattern": "seda",
+   "accent": "#d02020",
+   "mods": {
+    "skills": {
+     "filo": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0.04,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "poncho-yermo",
+  "name": "Poncho del Yermo",
+  "desc": "Lona encerada contra el polvo y la lluvia.",
+  "weight": 1.2,
+  "price": 110,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "poncho",
+   "color": "#8a5a2a",
+   "pattern": "lona",
+   "mods": {
+    "skills": {},
+    "carry": 2,
+    "speed": 0,
+    "needs": 0.04,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "poncho-camuflaje",
+  "name": "Poncho de camuflaje",
+  "desc": "Desaparece entre la chatarra.",
+  "weight": 1.2,
+  "price": 340,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "poncho",
+   "color": "#4a5a3a",
+   "pattern": "camuflaje",
+   "mods": {
+    "skills": {
+     "sigilo": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "armadura-ligera-patrulla",
+  "name": "Armadura ligera de patrulla",
+  "desc": "Placas de cerámica sobre tejido táctico.",
+  "weight": 1.2,
+  "price": 2600,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 5,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "armadura",
+   "color": "#2a3a4a",
+   "pattern": "tactico",
+   "detail": "placas",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": -0.03,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "armadura-ligera-ronin",
+  "name": "Armadura «Rōnin»",
+  "desc": "Placas lacadas en rojo oscuro, inspiradas en armaduras antiguas.",
+  "weight": 1.2,
+  "price": 7800,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 6,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "armadura",
+   "color": "#3a1a1a",
+   "pattern": "kevlar",
+   "detail": "placas",
+   "mods": {
+    "skills": {
+     "filo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 10,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "armadura-centurion",
+  "name": "Armadura «Centurión»",
+  "desc": "Blindaje corporal completo de una unidad de élite privada.",
+  "weight": 1.2,
+  "price": 18000,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 8,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "armadura",
+   "color": "#c8ccd8",
+   "pattern": "carbono",
+   "detail": "placas",
+   "mods": {
+    "skills": {
+     "intimidacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 20,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cortavientos-rayo",
+  "name": "Cortavientos «Rayo»",
+  "desc": "Ligero y de colores chillones.",
+  "weight": 1.2,
+  "price": 90,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "cortavientos",
+   "color": "#ffd23f",
+   "pattern": "liso",
+   "detail": "reflectante",
+   "accent": "#2a2a30",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0.02,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cortavientos-maraton",
+  "name": "Cortavientos de maratón",
+  "desc": "Transpirable y aerodinámico: corres más.",
+  "weight": 1.2,
+  "price": 300,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "cortavientos",
+   "color": "#43f3ff",
+   "pattern": "malla",
+   "detail": "reflectante",
+   "accent": "#ff3fa4",
+   "mods": {
+    "skills": {
+     "atletismo": 1
+    },
+    "carry": 0,
+    "speed": 0.04,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chubasquero-acido",
+  "name": "Chubasquero antiácido",
+  "desc": "Plástico verde ácido contra la lluvia corrosiva.",
+  "weight": 1.2,
+  "price": 75,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chubasquero",
+   "color": "#7aff5a",
+   "pattern": "liso",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0.03,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chubasquero-transparente",
+  "name": "Chubasquero transparente",
+  "desc": "Vinilo translúcido con un cordón de luz en el dobladillo.",
+  "weight": 1.2,
+  "price": 980,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chubasquero",
+   "color": "#a8c8e8",
+   "pattern": "seda",
+   "detail": "led",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "gabardina-detective",
+  "name": "Gabardina de detective",
+  "desc": "Bolsillos profundos para libretas, grabadoras y secretos.",
+  "weight": 1.2,
+  "price": 460,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "gabardina",
+   "color": "#8a7a5a",
+   "pattern": "lona",
+   "detail": "cinturon",
+   "mods": {
+    "skills": {
+     "investigacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "gabardina-serpiente",
+  "name": "Gabardina de piel de serpiente",
+  "desc": "Escamas sintéticas que cambian de tono con la luz.",
+  "weight": 1.2,
+  "price": 5600,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 2,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "gabardina",
+   "color": "#4a6a2a",
+   "pattern": "serpiente",
+   "mods": {
+    "skills": {
+     "intimidacion": 2,
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaqueta-carbono-fantasma",
+  "name": "Chaqueta «Fantasma» de carbono",
+  "desc": "Ultraligera. Cuando corres, apenas pesa: +8 % de esquiva. Capacidad: rodar para esquivar cuesta la mitad de aguante.",
+  "weight": 1.2,
+  "price": 16000,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 3,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaqueta",
+   "color": "#1a1a1e",
+   "pattern": "carbono",
+   "detail": "led",
+   "mods": {
+    "skills": {
+     "sigilo": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0.08,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "reflejos"
+  }
+ },
+ {
+  "id": "camiseta-logo-pixel",
+  "name": "Camiseta «Píxel»",
+  "desc": "Un logotipo de videojuego antiguo, hecho de cuadraditos.",
+  "weight": 0.4,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camiseta",
+   "color": "#2a2a3a",
+   "pattern": "pixel",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camiseta-banda-ruido",
+  "name": "Camiseta de la banda «Ruido Blanco»",
+  "desc": "Gira de despedida. Otra vez.",
+  "weight": 0.4,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camiseta",
+   "color": "#101010",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camiseta-tigre",
+  "name": "Camiseta de tigre",
+  "desc": "Rayas negras sobre naranja.",
+  "weight": 0.4,
+  "price": 90,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camiseta",
+   "color": "#ff9a20",
+   "pattern": "tigre",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camiseta-reflectante",
+  "name": "Camiseta reflectante de obra",
+  "desc": "Te ven a kilómetros. A veces eso es bueno.",
+  "weight": 0.4,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camiseta",
+   "color": "#ff7a10",
+   "pattern": "lona",
+   "detail": "reflectante",
+   "mods": {
+    "skills": {},
+    "carry": 1,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tirantes-malla",
+  "name": "Camiseta de tirantes de malla",
+  "desc": "Para lucir cromo y tatuajes.",
+  "weight": 0.4,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "tirantes",
+   "color": "#101014",
+   "pattern": "malla",
+   "mods": {
+    "skills": {
+     "atletismo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tirantes-camuflaje",
+  "name": "Tirantes de camuflaje urbano",
+  "desc": "Gris, negro y hormigón.",
+  "weight": 0.4,
+  "price": 70,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "tirantes",
+   "color": "#5a5e66",
+   "pattern": "camuflaje-urbano",
+   "mods": {
+    "skills": {
+     "sigilo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tirantes-kevlar",
+  "name": "Tirantes de kevlar",
+  "desc": "Tejido balístico fino bajo la ropa.",
+  "weight": 0.4,
+  "price": 900,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 2,
+  "wear": {
+   "slot": "torso_int",
+   "style": "tirantes",
+   "color": "#2a2a30",
+   "pattern": "kevlar",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camisa-cuadros-lenador",
+  "name": "Camisa de cuadros",
+  "desc": "Franela gruesa de cuadros rojos y negros.",
+  "weight": 0.4,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camisa",
+   "color": "#a02020",
+   "pattern": "cuadros",
+   "accent": "#101010",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camisa-seda-flores",
+  "name": "Camisa de seda estampada",
+  "desc": "Flores tropicales que nunca has visto en la ciudad.",
+  "weight": 0.4,
+  "price": 160,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camisa",
+   "color": "#2a8a8a",
+   "pattern": "seda",
+   "mods": {
+    "skills": {
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camisa-blanca-oficina",
+  "name": "Camisa blanca de oficina",
+  "desc": "Planchada. Algo es algo.",
+  "weight": 0.4,
+  "price": 40,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camisa",
+   "color": "#e8eaf0",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camisa-lentejuelas",
+  "name": "Camisa de lentejuelas",
+  "desc": "Para que los focos te encuentren.",
+  "weight": 0.4,
+  "price": 780,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_int",
+   "style": "camisa",
+   "color": "#c8c8d8",
+   "pattern": "lentejuelas",
+   "mods": {
+    "skills": {
+     "actuacion": 3
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "top-holo-iris",
+  "name": "Top holográfico «Iris»",
+  "desc": "Arcoíris líquido.",
+  "weight": 0.4,
+  "price": 860,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_int",
+   "style": "top",
+   "color": "#c774e8",
+   "pattern": "holografico",
+   "mods": {
+    "skills": {
+     "actuacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "top-circuito",
+  "name": "Top de circuitos",
+  "desc": "Pistas conductoras bordadas que hacen de antena para tu deck: +1 de RAM.",
+  "weight": 0.4,
+  "price": 2800,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "torso_int",
+   "style": "top",
+   "color": "#0a1a1a",
+   "pattern": "circuito",
+   "mods": {
+    "skills": {
+     "interfaz": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 1,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "arnes-cuero-negro",
+  "name": "Arnés de cuero negro",
+  "desc": "Correas y hebillas sobre la piel desnuda.",
+  "weight": 0.4,
+  "price": 150,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "arnes",
+   "color": "#14141a",
+   "pattern": "cuero",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "arnes-tactico",
+  "name": "Arnés táctico",
+  "desc": "Anillas y correas para colgar lo que haga falta: +4 kg de carga.",
+  "weight": 0.4,
+  "price": 650,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_int",
+   "style": "arnes",
+   "color": "#3a4030",
+   "pattern": "tactico",
+   "mods": {
+    "skills": {},
+    "carry": 4,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sudadera-glitch",
+  "name": "Sudadera «Glitch»",
+  "desc": "El estampado parpadea como una pantalla rota.",
+  "weight": 0.4,
+  "price": 720,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_int",
+   "style": "sudadera",
+   "color": "#1a1a2a",
+   "pattern": "pixel",
+   "detail": "led",
+   "mods": {
+    "skills": {
+     "interfaz": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sudadera-punto-gruesa",
+  "name": "Sudadera de punto gruesa",
+  "desc": "Calentita y con bolsillo canguro.",
+  "weight": 0.4,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "sudadera",
+   "color": "#6a5a4a",
+   "pattern": "punto",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0.02,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mono-mecanico-pana",
+  "name": "Mono de mecánico",
+  "desc": "Bolsillos para cada herramienta.",
+  "weight": 0.4,
+  "price": 190,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "mono",
+   "color": "#2a4a6a",
+   "pattern": "lona",
+   "detail": "parches",
+   "mods": {
+    "skills": {
+     "reparacion": 2
+    },
+    "carry": 2,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "vaquero-gastado",
+  "name": "Vaquero gastado",
+  "desc": "Desteñido de verdad, no de fábrica.",
+  "weight": 0.4,
+  "price": 50,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#3a5a8a",
+   "pattern": "vaquero",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "vaquero-negro-pitillo",
+  "name": "Vaquero negro pitillo",
+  "desc": "Ajustado y elástico.",
+  "weight": 0.4,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "leggins",
+   "color": "#14141a",
+   "pattern": "vaquero",
+   "mods": {
+    "skills": {
+     "atletismo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cargo-urbano",
+  "name": "Pantalón cargo urbano",
+  "desc": "Seis bolsillos: +2 kg de carga.",
+  "weight": 0.4,
+  "price": 70,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "cargo",
+   "color": "#4a4a3a",
+   "pattern": "lona",
+   "mods": {
+    "skills": {},
+    "carry": 2,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cargo-camuflaje",
+  "name": "Cargo de camuflaje",
+  "desc": "Bolsillos y manchas verdes.",
+  "weight": 0.4,
+  "price": 160,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "cargo",
+   "color": "#4a5a3a",
+   "pattern": "camuflaje",
+   "mods": {
+    "skills": {
+     "sigilo": 1
+    },
+    "carry": 3,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cargo-tactico-urbano",
+  "name": "Cargo de camuflaje urbano",
+  "desc": "Gris hormigón para la jungla de cemento.",
+  "weight": 0.4,
+  "price": 180,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "cargo",
+   "color": "#5a5e66",
+   "pattern": "camuflaje-urbano",
+   "mods": {
+    "skills": {
+     "sigilo": 1
+    },
+    "carry": 3,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tactico-rodilleras",
+  "name": "Pantalón táctico con rodilleras",
+  "desc": "Rodilleras para arrodillarse tras cobertura sin pensarlo.",
+  "weight": 0.4,
+  "price": 900,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 2,
+  "wear": {
+   "slot": "piernas",
+   "style": "tactico",
+   "color": "#2a2a30",
+   "pattern": "tactico",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0.03,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tactico-kevlar",
+  "name": "Pantalón táctico de kevlar",
+  "desc": "Blindado y flexible.",
+  "weight": 0.4,
+  "price": 3400,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 3,
+  "wear": {
+   "slot": "piernas",
+   "style": "tactico",
+   "color": "#1a1a1e",
+   "pattern": "kevlar",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0.04,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "leggins-holo",
+  "name": "Leggins holográficos",
+  "desc": "Brillan como la gasolina en un charco.",
+  "weight": 0.4,
+  "price": 640,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "piernas",
+   "style": "leggins",
+   "color": "#ad8cff",
+   "pattern": "holografico",
+   "mods": {
+    "skills": {
+     "actuacion": 1,
+     "atletismo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "leggins-carrera",
+  "name": "Mallas de carrera",
+  "desc": "Compresión muscular: corres un 4 % más rápido.",
+  "weight": 0.4,
+  "price": 220,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "leggins",
+   "color": "#101014",
+   "pattern": "malla",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0.04,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "pana-marron",
+  "name": "Pantalón de pana",
+  "desc": "Como los del abuelo, pero con los bajos remangados.",
+  "weight": 0.4,
+  "price": 55,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#6a4a2a",
+   "pattern": "pana",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "pantalon-cuero",
+  "name": "Pantalón de cuero",
+  "desc": "Cruje al andar.",
+  "weight": 0.4,
+  "price": 980,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#101014",
+   "pattern": "cuero",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "pantalon-serpiente",
+  "name": "Pantalón de serpiente",
+  "desc": "Escamas verdes que brillan con el neón.",
+  "weight": 0.4,
+  "price": 2600,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "piernas",
+   "style": "pantalon",
+   "color": "#6a8a2a",
+   "pattern": "serpiente",
+   "mods": {
+    "skills": {
+     "actuacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "bermudas-cuadros",
+  "name": "Bermudas de cuadros",
+  "desc": "Para los días de calor pegajoso.",
+  "weight": 0.4,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "bermudas",
+   "color": "#2a6a4a",
+   "pattern": "cuadros",
+   "accent": "#e8e4dc",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "bermudas-cargo",
+  "name": "Bermudas cargo",
+  "desc": "Cortas y llenas de bolsillos.",
+  "weight": 0.4,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "bermudas",
+   "color": "#8a7a5a",
+   "pattern": "lona",
+   "mods": {
+    "skills": {},
+    "carry": 1,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "shorts-vaquero",
+  "name": "Shorts vaqueros rotos",
+  "desc": "Bajo deshilachado y medias de rejilla debajo.",
+  "weight": 0.4,
+  "price": 40,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "shorts",
+   "color": "#4a6a9a",
+   "pattern": "vaquero",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "falda-larga-seda",
+  "name": "Falda larga de seda",
+  "desc": "Se mueve como el humo.",
+  "weight": 0.4,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "falda-larga",
+   "color": "#5a1a3a",
+   "pattern": "seda",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "falda-tartan",
+  "name": "Falda de tartán",
+  "desc": "Cuadros verdes y una cadena en la cintura.",
+  "weight": 0.4,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "falda",
+   "color": "#1a3a2a",
+   "pattern": "cuadros",
+   "accent": "#d02020",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "pantalon-exo-sprinter",
+  "name": "Pantalón «Esprínter» con exomúsculo",
+  "desc": "Fibras musculares artificiales cosidas al tejido: +10 % de velocidad. Capacidad: rodar para esquivar cuesta la mitad de aguante.",
+  "weight": 0.4,
+  "price": 15000,
+  "category": "ropa",
+  "rarity": "legendario",
+  "armor": 2,
+  "wear": {
+   "slot": "piernas",
+   "style": "tactico",
+   "color": "#2a3a4a",
+   "pattern": "carbono",
+   "mods": {
+    "skills": {
+     "atletismo": 3
+    },
+    "carry": 0,
+    "speed": 0.1,
+    "needs": 0,
+    "dodge": 0.05,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "reflejos"
+  }
+ },
+ {
+  "id": "zapatillas-blancas",
+  "name": "Zapatillas blancas",
+  "desc": "Impolutas. Por poco tiempo.",
+  "weight": 0.8,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "pies",
+   "style": "zapatillas",
+   "color": "#e8eaf0",
+   "pattern": "liso",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0.01,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "zapatillas-neon",
+  "name": "Zapatillas de neón",
+  "desc": "Suela de gel y cordones luminosos.",
+  "weight": 0.8,
+  "price": 180,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "pies",
+   "style": "zapatillas",
+   "color": "#2a2a3a",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "atletismo": 1
+    },
+    "carry": 0,
+    "speed": 0.02,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "zapatillas-cohete",
+  "name": "Zapatillas «Cohete»",
+  "desc": "Placa de carbono en la suela: +5 % de velocidad.",
+  "weight": 0.8,
+  "price": 1200,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "pies",
+   "style": "zapatillas",
+   "color": "#ff3040",
+   "pattern": "malla",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0.05,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-faena",
+  "name": "Botas de faena",
+  "desc": "Puntera de acero.",
+  "weight": 0.8,
+  "price": 80,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "pies",
+   "style": "botas",
+   "color": "#6a4a2a",
+   "pattern": "cuero",
+   "mods": {
+    "skills": {},
+    "carry": 1,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-altas-cordones",
+  "name": "Botas altas de cordones",
+  "desc": "Veinte agujeros de cordón y una suela que suena a amenaza.",
+  "weight": 0.8,
+  "price": 240,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "pies",
+   "style": "botas-altas",
+   "color": "#101014",
+   "pattern": "cuero",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-altas-vinilo",
+  "name": "Botas altas de vinilo",
+  "desc": "Brillantes como un coche recién pintado.",
+  "weight": 0.8,
+  "price": 860,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "pies",
+   "style": "botas-altas",
+   "color": "#b01060",
+   "pattern": "seda",
+   "mods": {
+    "skills": {
+     "actuacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-tacticas-delta",
+  "name": "Botas tácticas «Delta»",
+  "desc": "Suela silenciosa y tobillera reforzada.",
+  "weight": 0.8,
+  "price": 1100,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "pies",
+   "style": "botas-tacticas",
+   "color": "#2a2a24",
+   "pattern": "tactico",
+   "mods": {
+    "skills": {
+     "sigilo": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0.02,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-tacticas-magneticas",
+  "name": "Botas tácticas magnéticas",
+  "desc": "Agarre perfecto en cualquier superficie metálica.",
+  "weight": 0.8,
+  "price": 3900,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 1,
+  "wear": {
+   "slot": "pies",
+   "style": "botas-tacticas",
+   "color": "#3a3e48",
+   "pattern": "carbono",
+   "mods": {
+    "skills": {
+     "atletismo": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0.04,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tacones-aguja-cromo",
+  "name": "Tacones de aguja cromados",
+  "desc": "Tacón de acero de doce centímetros.",
+  "weight": 0.8,
+  "price": 950,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "pies",
+   "style": "tacones",
+   "color": "#c8ccd8",
+   "pattern": "liso",
+   "mods": {
+    "skills": {
+     "actuacion": 2,
+     "negociacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tacones-rojos",
+  "name": "Tacones rojos",
+  "desc": "Clásicos. Peligrosos.",
+  "weight": 0.8,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "pies",
+   "style": "tacones",
+   "color": "#c01020",
+   "pattern": "seda",
+   "mods": {
+    "skills": {
+     "actuacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mocasines-ejecutivos",
+  "name": "Mocasines ejecutivos",
+  "desc": "Piel auténtica (eso dicen).",
+  "weight": 0.8,
+  "price": 320,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "pies",
+   "style": "mocasines",
+   "color": "#3a2010",
+   "pattern": "cuero",
+   "mods": {
+    "skills": {
+     "negociacion": 2
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "plataformas-punk",
+  "name": "Plataformas punk",
+  "desc": "Seis centímetros de suela y hebillas por todas partes.",
+  "weight": 0.8,
+  "price": 280,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "pies",
+   "style": "plataformas",
+   "color": "#14141a",
+   "pattern": "cuero",
+   "mods": {
+    "skills": {
+     "intimidacion": 1,
+     "actuacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "plataformas-holo",
+  "name": "Plataformas holográficas",
+  "desc": "La suela proyecta un pequeño arcoíris en el suelo.",
+  "weight": 0.8,
+  "price": 2900,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "pies",
+   "style": "plataformas",
+   "color": "#94d0ff",
+   "pattern": "holografico",
+   "mods": {
+    "skills": {
+     "actuacion": 3
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-sigilo-pluma",
+  "name": "Botas «Pluma»",
+  "desc": "Suela de espuma inteligente: no hacen ningún ruido. Capacidad: los PNJ tardan más en darse cuenta de que te acercas.",
+  "weight": 0.8,
+  "price": 12500,
+  "category": "ropa",
+  "rarity": "legendario",
+  "wear": {
+   "slot": "pies",
+   "style": "botas",
+   "color": "#2a2a30",
+   "pattern": "malla",
+   "mods": {
+    "skills": {
+     "sigilo": 3
+    },
+    "carry": 0,
+    "speed": 0.03,
+    "needs": 0,
+    "dodge": 0.05,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "pasos-silenciosos"
+  }
+ }
+]

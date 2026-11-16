@@ -1,0 +1,3720 @@
+{
+ "id": "pasarelas",
+ "name": "Nivel 2 · Pasarelas de Vértice",
+ "kind": "exterior",
+ "width": 112,
+ "height": 66,
+ "chunkSize": 16,
+ "danger": "public",
+ "base": "void",
+ "ground": [
+  {
+   "type": "plaza",
+   "rect": [
+    42,
+    14,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    66,
+    14,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    66,
+    31,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    18,
+    48,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    18,
+    30,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    27,
+    26,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    23,
+    32,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    14,
+    26,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    41,
+    25,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    47,
+    25,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    41,
+    33,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    47,
+    33,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    35,
+    28,
+    7,
+    5
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    49,
+    29,
+    14,
+    9
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    13,
+    9,
+    10,
+    7
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    89,
+    51,
+    10,
+    7
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    43,
+    15,
+    4,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    43,
+    15,
+    3,
+    14
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    43,
+    26,
+    9,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    49,
+    26,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    43,
+    26,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    43,
+    26,
+    3,
+    11
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    43,
+    34,
+    9,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    49,
+    34,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    49,
+    34,
+    9,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    55,
+    32,
+    3,
+    5
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    37,
+    26,
+    9,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    37,
+    26,
+    3,
+    6
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    29,
+    29,
+    11,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    29,
+    27,
+    3,
+    5
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    25,
+    27,
+    7,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    25,
+    27,
+    3,
+    9
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    20,
+    33,
+    8,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    20,
+    31,
+    3,
+    5
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    16,
+    31,
+    7,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    16,
+    27,
+    3,
+    7
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    55,
+    32,
+    16,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    68,
+    32,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    16,
+    27,
+    4,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    17,
+    11,
+    3,
+    19
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    68,
+    32,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    68,
+    15,
+    3,
+    20
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    20,
+    31,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    20,
+    31,
+    3,
+    21
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    68,
+    32,
+    28,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    93,
+    32,
+    3,
+    24
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    44,
+    32,
+    14,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    44,
+    15,
+    3,
+    20
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    17,
+    11,
+    79,
+    3
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    93,
+    11,
+    3,
+    45
+   ]
+  }
+ ],
+ "blocks": [],
+ "buildings": [
+  {
+   "id": "n2-bar",
+   "name": "Bar Altura",
+   "rect": [
+    58,
+    29,
+    4,
+    3
+   ],
+   "height": 3,
+   "style": "club",
+   "color": "#2a1a3a",
+   "sign": "ALTURA",
+   "signColor": "#ff3fa4"
+  },
+  {
+   "id": "n2-kiosco",
+   "name": "Kiosco del Mirador",
+   "rect": [
+    14,
+    9,
+    3,
+    2
+   ],
+   "height": 2.5,
+   "style": "shop",
+   "color": "#1a2a3a",
+   "sign": "MIRADOR",
+   "signColor": "#43f3ff"
+  }
+ ],
+ "props": [
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    47,
+    26
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    30
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    47,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    53,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    41,
+    26
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    33,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    27,
+    31
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    59,
+    32
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    66,
+    32
+   ]
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    62,
+    34
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    19,
+    15
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    19,
+    22
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    70,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    70,
+    26
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    22,
+    35
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    22,
+    42
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    72,
+    32
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    79,
+    32
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    86,
+    32
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    36
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    43
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    50
+   ]
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    75,
+    34
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    84,
+    34
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    48,
+    32
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    46,
+    19
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    46,
+    26
+   ]
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    51,
+    34
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    21,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    28,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    35,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    42,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    49,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    56,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    63,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    70,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    77,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    84,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    91,
+    11
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    15
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    22
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    36
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    43
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    95,
+    50
+   ]
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    24,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    33,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    42,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    51,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    60,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    69,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    78,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    87,
+    13
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "holo",
+   "at": [
+    45,
+    14
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    69,
+    14
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    69,
+    31
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    21,
+    48
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    21,
+    30
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    30,
+    26
+   ],
+   "color": "#ff3fa4",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    26,
+    32
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    17,
+    26
+   ],
+   "color": "#ffd23f",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    44,
+    25
+   ],
+   "color": "#ff3fa4",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    50,
+    25
+   ],
+   "color": "#43f3ff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    44,
+    33
+   ],
+   "color": "#b46cff",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    50,
+    33
+   ],
+   "color": "#ff8a3d",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    38,
+    28
+   ],
+   "color": "#ffd23f",
+   "blocking": false
+  },
+  {
+   "type": "stall",
+   "at": [
+    50,
+    30
+   ]
+  },
+  {
+   "type": "stall",
+   "at": [
+    53,
+    30
+   ]
+  },
+  {
+   "type": "stall",
+   "at": [
+    56,
+    30
+   ]
+  },
+  {
+   "type": "stall",
+   "at": [
+    59,
+    30
+   ]
+  },
+  {
+   "type": "stall",
+   "at": [
+    62,
+    30
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    54,
+    36
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    57,
+    36
+   ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    60,
+    36
+   ]
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    62,
+    33
+   ]
+  },
+  {
+   "type": "billboard",
+   "at": [
+    56,
+    29
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    90,
+    52
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    92,
+    52
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    94,
+    52
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    96,
+    52
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    90,
+    55
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    92,
+    55
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    94,
+    55
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    96,
+    55
+   ]
+  },
+  {
+   "type": "citylights",
+   "at": [
+    0,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    37,
+    53
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    74,
+    40
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    111,
+    27
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    36,
+    14
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    73,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    110,
+    54
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    35,
+    42
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    72,
+    29
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    109,
+    16
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    34,
+    3
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    71,
+    56
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    108,
+    43
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    107,
+    5
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    32,
+    58
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    69,
+    45
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    106,
+    32
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    31,
+    19
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    68,
+    6
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    105,
+    60
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    30,
+    47
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    104,
+    21
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    29,
+    8
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    66,
+    61
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    103,
+    48
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    65,
+    23
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    102,
+    10
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    27,
+    63
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    64,
+    50
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    101,
+    37
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    26,
+    24
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    100,
+    65
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    25,
+    52
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    62,
+    39
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    99,
+    26
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    61,
+    0
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    23,
+    41
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    60,
+    28
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    97,
+    15
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    22,
+    2
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    59,
+    55
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    96,
+    42
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    58,
+    17
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    95,
+    4
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    20,
+    57
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    57,
+    44
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    56,
+    6
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    93,
+    59
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    18,
+    46
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    92,
+    20
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    17,
+    7
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    54,
+    60
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    91,
+    48
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    16,
+    35
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    53,
+    22
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    90,
+    9
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    15,
+    62
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    52,
+    49
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    89,
+    36
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    14,
+    24
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    88,
+    64
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    13,
+    51
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    50,
+    38
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    87,
+    25
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    12,
+    12
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    49,
+    0
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    86,
+    53
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    11,
+    40
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    85,
+    14
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    10,
+    1
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    47,
+    54
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    84,
+    42
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    9,
+    29
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    83,
+    3
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    8,
+    56
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    45,
+    43
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    82,
+    30
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    7,
+    18
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    44,
+    5
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    81,
+    58
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    6,
+    45
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    80,
+    19
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    5,
+    6
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    42,
+    60
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    79,
+    47
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    4,
+    34
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    41,
+    21
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    78,
+    8
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    3,
+    61
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    40,
+    48
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    77,
+    36
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    2,
+    23
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    39,
+    10
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    76,
+    63
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    1,
+    50
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    38,
+    37
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    75,
+    24
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    0,
+    12
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    37,
+    65
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    74,
+    52
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    111,
+    39
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    36,
+    26
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    110,
+    0
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    35,
+    54
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    72,
+    41
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    109,
+    28
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    34,
+    15
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    71,
+    2
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    108,
+    55
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    33,
+    42
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    107,
+    17
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    32,
+    4
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    69,
+    57
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    106,
+    44
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    105,
+    6
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    30,
+    59
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    67,
+    46
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    104,
+    33
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    29,
+    20
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    66,
+    7
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    103,
+    60
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    28,
+    48
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    65,
+    35
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    102,
+    22
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    27,
+    9
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    64,
+    62
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    101,
+    49
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    63,
+    24
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    100,
+    11
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    25,
+    64
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    62,
+    51
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    99,
+    38
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    24,
+    25
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    98,
+    0
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    23,
+    53
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    60,
+    40
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    97,
+    27
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    59,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    20,
+    3
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    57,
+    56
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    56,
+    18
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    93,
+    5
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    18,
+    58
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    55,
+    45
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    54,
+    6
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    91,
+    60
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    16,
+    47
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    90,
+    21
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    15,
+    8
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    52,
+    61
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    89,
+    48
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    14,
+    36
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    51,
+    23
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    88,
+    10
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    13,
+    63
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    50,
+    50
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    87,
+    37
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    12,
+    24
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    86,
+    65
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    11,
+    52
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    48,
+    39
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    85,
+    26
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    10,
+    13
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    47,
+    0
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    84,
+    54
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    9,
+    41
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    83,
+    15
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    8,
+    2
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    45,
+    55
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    82,
+    42
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    7,
+    30
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    81,
+    4
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    6,
+    57
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    43,
+    44
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    80,
+    31
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    5,
+    18
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    42,
+    6
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    79,
+    59
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    4,
+    46
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    78,
+    20
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    3,
+    7
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    40,
+    60
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    77,
+    48
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    2,
+    35
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    39,
+    22
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    76,
+    9
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    1,
+    62
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    38,
+    49
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    75,
+    36
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    0,
+    24
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    74,
+    64
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    111,
+    51
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    36,
+    38
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    73,
+    25
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    110,
+    12
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    35,
+    0
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    72,
+    53
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    109,
+    40
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    34,
+    27
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    108,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    33,
+    54
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    70,
+    42
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    107,
+    29
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    32,
+    16
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    69,
+    3
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    106,
+    56
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    31,
+    43
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    105,
+    18
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    30,
+    5
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    67,
+    58
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    104,
+    45
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    66,
+    19
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    103,
+    6
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    28,
+    60
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    65,
+    47
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    102,
+    34
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    27,
+    21
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    64,
+    8
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    101,
+    61
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    26,
+    48
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "citylights",
+   "at": [
+    63,
+    36
+   ],
+   "blocking": false,
+   "color": "#ff8a3d"
+  }
+ ],
+ "doors": [
+  {
+   "id": "n2-bajar-0-0",
+   "name": "Bajar a la calle",
+   "at": [
+    43,
+    16
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     233,
+     51
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-0-1",
+   "name": "Bajar a la calle",
+   "at": [
+    47,
+    16
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     235,
+     66
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-1-0",
+   "name": "Bajar a la calle",
+   "at": [
+    67,
+    16
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     383,
+     50
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-1-1",
+   "name": "Bajar a la calle",
+   "at": [
+    71,
+    16
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     385,
+     66
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-2-0",
+   "name": "Bajar a la calle",
+   "at": [
+    67,
+    33
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     383,
+     162
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-2-1",
+   "name": "Bajar a la calle",
+   "at": [
+    71,
+    33
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     385,
+     178
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-3-0",
+   "name": "Bajar a la calle",
+   "at": [
+    19,
+    50
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     83,
+     274
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-3-1",
+   "name": "Bajar a la calle",
+   "at": [
+    23,
+    50
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     85,
+     290
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-4-0",
+   "name": "Bajar a la calle",
+   "at": [
+    19,
+    32
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     79,
+     165
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-4-1",
+   "name": "Bajar a la calle",
+   "at": [
+    23,
+    32
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     84,
+     165
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-5-0",
+   "name": "Bajar a la calle",
+   "at": [
+    28,
+    28
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     136,
+     142
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-5-1",
+   "name": "Bajar a la calle",
+   "at": [
+    32,
+    28
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     141,
+     141
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-6-0",
+   "name": "Bajar a la calle",
+   "at": [
+    24,
+    34
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     110,
+     179
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-6-1",
+   "name": "Bajar a la calle",
+   "at": [
+    28,
+    34
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     119,
+     178
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-7-0",
+   "name": "Bajar a la calle",
+   "at": [
+    15,
+    28
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     50,
+     142
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-7-1",
+   "name": "Bajar a la calle",
+   "at": [
+    19,
+    28
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     57,
+     141
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-8-0",
+   "name": "Bajar a la calle",
+   "at": [
+    42,
+    27
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     221,
+     129
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-8-1",
+   "name": "Bajar a la calle",
+   "at": [
+    46,
+    27
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     237,
+     129
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-9-0",
+   "name": "Bajar a la calle",
+   "at": [
+    48,
+    27
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     261,
+     129
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-9-1",
+   "name": "Bajar a la calle",
+   "at": [
+    52,
+    27
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     273,
+     129
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-10-0",
+   "name": "Bajar a la calle",
+   "at": [
+    42,
+    35
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     221,
+     187
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-10-1",
+   "name": "Bajar a la calle",
+   "at": [
+    46,
+    35
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     234,
+     186
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-11-0",
+   "name": "Bajar a la calle",
+   "at": [
+    48,
+    35
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     261,
+     187
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-11-1",
+   "name": "Bajar a la calle",
+   "at": [
+    52,
+    35
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     273,
+     187
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-12-0",
+   "name": "Bajar a la calle",
+   "at": [
+    36,
+    30
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     181,
+     153
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "n2-bajar-12-1",
+   "name": "Bajar a la calle",
+   "at": [
+    40,
+    30
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     192,
+     152
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "n2-vending-1",
+   "name": "Máquina Aurora",
+   "at": [
+    61,
+    35
+   ],
+   "kind": "vending",
+   "shop": "aurora-vending"
+  },
+  {
+   "id": "n2-vending-2",
+   "name": "Máquina Aurora",
+   "at": [
+    21,
+    12
+   ],
+   "kind": "vending",
+   "shop": "aurora-vending"
+  },
+  {
+   "id": "n2-cam-1",
+   "name": "Cámara de seguridad",
+   "at": [
+    50,
+    36
+   ],
+   "kind": "camera"
+  }
+ ],
+ "skybridges": [],
+ "dangerAreas": [
+  {
+   "level": "protected",
+   "rect": [
+    49,
+    28,
+    14,
+    10
+   ]
+  }
+ ],
+ "sectors": [],
+ "waypoints": [
+  [
+   45,
+   16
+  ],
+  [
+   69,
+   16
+  ],
+  [
+   69,
+   33
+  ],
+  [
+   21,
+   50
+  ],
+  [
+   21,
+   32
+  ],
+  [
+   30,
+   28
+  ],
+  [
+   26,
+   34
+  ],
+  [
+   17,
+   28
+  ],
+  [
+   44,
+   27
+  ],
+  [
+   50,
+   27
+  ],
+  [
+   44,
+   35
+  ],
+  [
+   50,
+   35
+  ],
+  [
+   38,
+   30
+  ],
+  [
+   56,
+   33
+  ],
+  [
+   18,
+   12
+  ],
+  [
+   94,
+   54
+  ],
+  [
+   46,
+   17
+  ],
+  [
+   70,
+   17
+  ],
+  [
+   70,
+   34
+  ],
+  [
+   22,
+   51
+  ],
+  [
+   22,
+   33
+  ],
+  [
+   31,
+   29
+  ],
+  [
+   27,
+   35
+  ],
+  [
+   18,
+   29
+  ],
+  [
+   45,
+   28
+  ],
+  [
+   51,
+   28
+  ],
+  [
+   45,
+   36
+  ],
+  [
+   51,
+   36
+  ],
+  [
+   39,
+   31
+  ]
+ ],
+ "safePoint": [
+  56,
+  33
+ ],
+ "ambient": 6,
+ "police": 1,
+ "gangs": [],
+ "districts": [],
+ "furnished": true
+}

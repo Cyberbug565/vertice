@@ -2,11 +2,16 @@
 // y la Proyección de Eco (controlar al fantasma: nadie lo ve y atraviesa paredes y puertas).
 import { MATRICES, SOCKET_BASE, SOCKET_MAX, dangerAt, kairosOf, kairosScale, nearestWalkable } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
-import { effective, type PlayerState } from '../game/player.js';
+import { effective, skillLevel, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
 import type { PlayerConn, World } from './world.js';
 
 interface Ghost { ghost: Entity; body: Entity; until: number }
+
+/** Radio de la Onda Carmín (v0.9: antes 7 m). */
+export const ONDA_RADIUS = 11;
+/** Jefes: los de las leyendas, los ciberpsicópatas y cualquier PNJ con mucha vida. */
+export const isBoss = (o: Entity) => !!o.legendBoss || o.npcType === 'psycho' || (o.npcMax ?? 0) >= 250;
 
 export class Relics {
   readonly ghosts = new Map<PlayerConn, Ghost>();
@@ -56,32 +61,54 @@ export class Relics {
   }
 
   // ================================================================ habilidades de las matrices
-  async ability(c: PlayerConn, id: string) {
+  async ability(c: PlayerConn, fullId: string) {
     const p = c.p!, e = this.bodyOf(c);
+    const [id, variant] = fullId.split(':');
     const def = MATRICES[id];
     if (!def?.ability || !this.equipped(p).includes(id)) throw new GameError('No llevas esa matriz.');
     const now = Date.now();
     if (def.ability.kind === 'proyeccion' && this.ghosts.has(c)) { this.endGhost(c, false); return; }
-    if ((p.abilityCd[id] ?? 0) > now) throw new GameError(`${def.ability.name}: se recarga en ${Math.ceil(((p.abilityCd[id] ?? 0) - now) / 1000)} s.`);
+    if (def.ability.kind !== 'onda' && (p.abilityCd[id] ?? 0) > now) throw new GameError(`${def.ability.name}: se recarga en ${Math.ceil(((p.abilityCd[id] ?? 0) - now) / 1000)} s.`);
     if (def.ability.kind === 'onda') {
-      const cost = def.ability.ram ?? 10;
-      if (p.ram < cost) throw new GameError(`La Onda Carmín necesita ${cost} de RAM (tienes ${Math.floor(p.ram)}).`);
+      // v0.9 · Dos ondas: la roja (letal) y la amarilla (noqueo, id «matriz-carmin:ko»). Radio de 11 m y fuerza según Interfaz.
+      const ko = variant === 'ko';
+      const ab = ko ? def.ability2! : def.ability;
+      const cdKey = ko ? `${id}:ko` : id;
+      if ((p.abilityCd[cdKey] ?? 0) > now) throw new GameError(`${ab.name}: se recarga en ${Math.ceil(((p.abilityCd[cdKey] ?? 0) - now) / 1000)} s.`);
+      const ef = effective(this.w.c, p);
+      const cost = Math.max(1, Math.round((ab.ram ?? 10) * (1 - ef.ramSave)));
+      if (p.ram < cost) throw new GameError(`${ab.name} necesita ${cost} de RAM (tienes ${Math.floor(p.ram)}).`);
       if (dangerAt(e.zone.grid, e.x, e.y) === 'protected') throw new GameError('Zona protegida.');
-      p.ram -= cost; p.abilityCd[id] = now + def.ability.cooldown * 1000;
-      const lethal = p.stance === 'aggressive';
-      let n = 0;
-      for (const o of [...e.zone.query(e.x, e.y, 7)]) {
-        if (o === e || (o.kind !== 'npc' && o.kind !== 'player') || o.state === 'downed' || o.dead || o.npcType === 'essential') continue;
+      p.ram -= cost; p.abilityCd[cdKey] = now + ab.cooldown * 1000;
+      const iface = skillLevel(p, 'interfaz');
+      const R = ONDA_RADIUS;
+      let n = 0, bosses = 0;
+      for (const o of [...e.zone.query(e.x, e.y, R)]) {
+        if (o === e || (o.kind !== 'npc' && o.kind !== 'player') || o.state === 'downed' || o.dead || o.npcType === 'essential' || o.ghostOf) continue;
         const tp = this.w.playerOf(o);
         if (tp && (tp.status !== 'alive' || dangerAt(o.zone.grid, o.x, o.y) === 'protected')) continue;
         if (!tp && !o.npcMax) continue;
+        const d = Math.hypot(o.x - e.x, o.y - e.y);
+        const fall = 1 - 0.35 * (d / R); // más fuerte en el centro
         n++;
+        const boss = !tp && isBoss(o);
+        if (tp) {
+          if (!ko) this.w.combat.damagePlayer(tp, o, Math.round((45 + iface * 3) * fall), true, { name: `la Onda Carmín de ${p.name}`, charId: p.charId });
+          else { tp.hp = Math.min(tp.hp, 0); this.w.survival.downed(o.conn, `onda neural de ${p.name}`, tp, o, false); }
+        } else if (boss) {
+          // Un jefe nunca cae de una onda: pierde una gran parte de la vida (o queda aturdido), según tu Interfaz.
+          bosses++;
+          const hpNow = o.npcHp ?? o.npcMax!;
+          if (!ko) { const cap = Math.round(o.npcMax! * Math.min(0.75, 0.35 + iface * 0.016)); this.w.combat.damageNpc(o, Math.max(1, Math.min(hpNow - 1, Math.round(cap * fall))), true, c); }
+          else if (Math.random() < Math.min(0.7, 0.2 + iface * 0.02)) this.w.combat.knockOut(o, c);
+          else { o.stunUntil = Math.max(o.stunUntil ?? 0, now + (2500 + iface * 150)); this.w.combat.damageNpc(o, Math.max(1, Math.min(hpNow - 1, Math.round(o.npcMax! * 0.12))), false, c); }
+        } else if (!ko) this.w.combat.damageNpc(o, Math.round((80 + iface * 8) * fall), true, c);
+        else this.w.combat.knockOut(o, c);
         this.w.send(c, { t: 'fx', kind: 'hack', from: e.id, to: o.id });
-        if (tp) { if (lethal) this.w.combat.damagePlayer(tp, o, 55, true, { name: `la Onda Carmín de ${p.name}`, charId: p.charId }); else { tp.hp = Math.min(tp.hp, 0); this.w.survival.downed(o.conn, `onda neural de ${p.name}`, tp, o, false); } }
-        else if (lethal) this.w.combat.damageNpc(o, 90, true, c); else this.w.combat.knockOut(o, c);
       }
-      this.emp(e.zone.id, e.x, e.y, 7, c);
-      this.notice(c, 'good', `CARMÍN: «¿Así? ¿Así de fácil?» La onda ${lethal ? 'fríe' : 'apaga'} a ${n} ${n === 1 ? 'objetivo' : 'objetivos'}.`);
+      this.emp(e.zone.id, e.x, e.y, R, c);
+      for (const o of e.zone.query(e.x, e.y, 30)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind: 'wave', from: e.id, to: e.id, x: e.x, y: e.y, r: R, ko });
+      this.notice(c, 'good', `CARMÍN: «¿Así? ¿Así de fácil?» La onda ${ko ? 'apaga' : 'fríe'} a ${n} ${n === 1 ? 'objetivo' : 'objetivos'}${bosses ? ` (${bosses} ${bosses === 1 ? 'jefe aguanta' : 'jefes aguantan'} en pie)` : ''}.`);
       this.sheet(c);
       return;
     }
@@ -212,7 +239,8 @@ export class Relics {
       if (p.kairos) {
         const k = kairosOf(p.kairos.tier);
         if (p.status !== 'alive') { p.kairos = undefined; this.bodyOf(c).kairosTier = undefined; continue; }
-        p.ram = Math.max(0, p.ram - k.ramPerSec);
+        // v0.9 · CARMÍN, las matrices de flujo y el cromo de memoria reducen el gasto (hasta un 60 %).
+        p.ram = Math.max(0, p.ram - k.ramPerSec * (1 - effective(this.w.c, p).ramSave));
         if (p.ram <= 0) {
           p.hp -= k.hpPerSec;
           if (now - (c.kairosWarnAt ?? 0) > 6000) { c.kairosWarnAt = now; this.notice(c, 'bad', `¡Sin RAM! El Kairós te está quemando los nervios (−${k.hpPerSec}/s). Apágalo.`); }
