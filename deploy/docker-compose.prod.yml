@@ -1,0 +1,30 @@
+# Servidor propio (VPS): juego + PostgreSQL + Caddy con HTTPS automático.
+# Uso: cp deploy/.env.prod.example deploy/.env.prod && edita DOMINIO y contraseñas
+#      docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env.prod up -d --build
+services:
+  db:
+    image: postgres:16.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vertice
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: vertice
+    volumes: [ "pgdata:/var/lib/postgresql/data" ]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U vertice"], interval: 10s, retries: 10 }
+  game:
+    build: { context: .., dockerfile: Dockerfile }
+    restart: unless-stopped
+    depends_on: { db: { condition: service_healthy } }
+    environment:
+      DATABASE_URL: postgres://vertice:${DB_PASSWORD}@db:5432/vertice
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+      TRUST_PROXY: "true"
+      AMBIENT_NPCS: "24"
+  caddy:
+    image: caddy:2.8
+    restart: unless-stopped
+    ports: [ "80:80", "443:443" ]
+    environment: { DOMINIO: "${DOMINIO}" }
+    volumes: [ "./Caddyfile:/etc/caddy/Caddyfile:ro", "caddy_data:/data" ]
+    depends_on: [ game ]
+volumes: { pgdata: {}, caddy_data: {} }

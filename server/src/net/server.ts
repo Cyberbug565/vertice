@@ -43,7 +43,9 @@ export function startServer(cfg: Config, db: Db, world: World, metrics: Metrics)
   const http = createServer(async (req, res) => {
     try {
       const url = new URL(req.url ?? '/', 'http://x');
-      const ip = req.socket.remoteAddress ?? '?';
+      // Detrás de un proxy (Render, Fly, Caddy) la IP real llega en X-Forwarded-For.
+      const fwd = process.env.TRUST_PROXY === 'true' ? String(req.headers['x-forwarded-for'] ?? '').split(',')[0].trim() : '';
+      const ip = fwd || req.socket.remoteAddress || '?';
       if (url.pathname.startsWith('/api/')) {
         if (req.method === 'POST' && (url.pathname === '/api/register' || url.pathname === '/api/login')) {
           if (!authLimiter.ok(ip)) return json(res, 429, { error: 'Demasiados intentos. Espera un minuto.' });
@@ -55,7 +57,7 @@ export function startServer(cfg: Config, db: Db, world: World, metrics: Metrics)
         }
         if (url.pathname === '/api/content-version') return json(res, 200, { hash: world.contentHash, protocol: PROTOCOL_VERSION });
         if (url.pathname === '/api/metrics') {
-          const local = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+          const local = !fwd && (ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1');
           if (!local && url.searchParams.get('token') !== cfg.adminToken) return json(res, 403, { error: 'forbidden' });
           if (url.searchParams.get('reset') === '1') metrics.resetWindows();
           const mem = process.memoryUsage();

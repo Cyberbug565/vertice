@@ -1,0 +1,5 @@
+# HTTPS automático (Let's Encrypt) y WebSocket hacia el juego.
+{$DOMINIO} {
+  encode zstd gzip
+  reverse_proxy game:8080
+}

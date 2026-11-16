@@ -11,7 +11,9 @@ export interface Db extends Queryable {
 
 export async function openDb(url: string | undefined, pgliteDir: string): Promise<Db> {
   if (url) {
-    const pool = new pg.Pool({ connectionString: url, max: 10 });
+    // Bases gestionadas (Render, Fly, Supabase, Neon…) exigen TLS: DATABASE_SSL=true o sslmode=require en la URL.
+    const wantSsl = process.env.DATABASE_SSL === 'true' || /sslmode=require/.test(url);
+    const pool = new pg.Pool({ connectionString: url.replace(/[?&]sslmode=require/, ''), max: Number(process.env.DATABASE_POOL ?? 10), ssl: wantSsl ? { rejectUnauthorized: false } : undefined });
     pool.on('error', (e) => console.error('[db] error de conexión', e.message));
     await pool.query('SELECT 1');
     return {
