@@ -9,6 +9,7 @@ import { $ui, clearUi, fmtMoney, h } from './ui/dom';
 import { Minimap, renderZoneMap } from './ui/minimap';
 import { settingsPanel } from './ui/screens';
 import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen } from './ui/charscreen';
+import { autoPanel, elevatorPanel, hiringPanel } from './ui/work';
 import { buildingPanel, dealerPanel, marketLivePanel, propsPanel, realtyPanel, ringPrompt, scanCard, stashPanel, type PropCtx } from './ui/property';
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
 
@@ -60,7 +61,10 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const mm = h('canvas', { id: 'minimap', title: 'Mapa grande (M)', onclick: () => bigMap() }) as HTMLCanvasElement;
   const minimap = new Minimap(mm);
   const sectorEl = h('div', { style: { fontWeight: '600', marginTop: '4px' } }), dangerEl = h('span', { class: 'badge' }), clockEl = h('span', { class: 'mono' }), netEl = h('span', { class: 'mono' });
-  const tr = h('div', { class: 'hud hud-tr' }, mm, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockEl), h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
+  // Reloj de la ciudad (un día dura 1 h 30 min reales) y turno del puesto de trabajo.
+  const phaseEl = h('span', { class: 'phase' }), shiftEl = h('div', { class: 'shift' });
+  const clockBox = h('div', { class: 'clockbox' }, h('span', { class: 'clock mono' }, clockEl), phaseEl);
+  const tr = h('div', { class: 'hud hud-tr' }, mm, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
   const actionEl = h('div', { class: 'actionline', 'aria-live': 'polite', id: 'action' });
   const progress = h('div', { class: 'progress', style: { display: 'none' } }, h('i'));
   const stanceSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Postura' });
@@ -69,6 +73,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const bottom = h('div', { class: 'hud hud-bottom' }, actionEl, progress,
     h('div', { class: 'toolbar' },
       ib('✋', 'Cancelar', 'S', () => stop(), 'btn-stop'), ib('🏃', 'Retirada', 'R', () => retreat(), 'btn-retreat', 'danger'), stanceSeg,
+      ib('👟', 'Correr', 'Mayús', () => toggleRun(), 'btn-run'), ib('🤖', 'Automático', 'A', () => toggleAuto(), 'btn-auto'),
       ib('💤', 'Dormir', 'Z', () => toggleSleep(), 'btn-sleep')),
     h('div', { class: 'toolbar' },
       ib('📓', 'Diario', 'J', () => journalPanel(), 'btn-journal'), ib('🧍', 'Personaje', 'C', () => charScreen('sheet'), 'btn-sheet'), ib('🎒', 'Inventario', 'I', () => charScreen('inv'), 'btn-inv'),
@@ -92,6 +97,17 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         h('span', { class: 'abil-key' }, String(i + 1)), h('span', { class: 'abil-ico' }, ABIL_ICON[a.kind] ?? '⚡'), h('span', { class: 'abil-name' }, a.name), ready ? null : h('span', { class: 'abil-cd' }, `${left}s`));
       return b;
     }), ...Object.entries(s.buffs).filter(([k]) => !k.endsWith('PerSec')).map(([k, v]) => h('span', { class: 'buff' }, `${BUFF_NAME[k] ?? k} ${v}s`)));
+  };
+  // Turno: cuánto falta para empezar o terminar y botón para ir a trabajar.
+  const renderShift = (hr: number) => {
+    const p = st.sheet?.post;
+    if (!p) { shiftEl.replaceChildren(); return; }
+    const [a, b] = p.shift;
+    const on = a <= b ? hr >= a && hr < b : hr >= a || hr < b;
+    const until = (t: number) => { let d = t - hr; if (d < 0) d += 24; return `${Math.floor(d)} h ${String(Math.floor((d % 1) * 60)).padStart(2, '0')} min`; };
+    shiftEl.replaceChildren(h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', { class: 'small' }, `💼 ${p.name.split(' · ')[0]}`), h('span', { class: 'mono small' }, `${String(a).padStart(2, '0')}–${String(b % 24).padStart(2, '0')} h`)),
+      h('div', { class: `small ${on ? (p.worked ? 'muted' : 'netok') : 'muted'}` }, on ? (p.worked ? 'Turno ya trabajado' : `¡Estás en horario! Termina en ${until(b)}`) : `Empieza en ${until(a)} · ${p.place}`),
+      on && !p.worked ? h('button', { class: 'btn small primary', onclick: () => net.send({ t: 'post', action: 'work' } as any) }, 'Trabajar turno') : '');
   };
   const xpPop = (m: Extract<ServerMsg, { t: 'skillxp' }>) => {
     const key = `pop-${m.skill}`;
@@ -165,6 +181,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     if (s.activeJob) st2.push(h('span', { class: 'netmid' }, ' · empleo aceptado'));
     if (!s.autoNeeds) st2.push(h('span', { class: 'muted' }, ' · autonomía apagada'));
     statusEl.replaceChildren(...st2);
+    document.getElementById('btn-run')?.setAttribute('aria-pressed', String(s.running));
+    document.getElementById('btn-auto')?.setAttribute('aria-pressed', String(s.auto.on));
+    renderShift(cityHour());
     const sb = document.getElementById('btn-sleep'); if (sb) { sb.querySelector('.ico')!.textContent = s.sleeping ? '☀' : '💤'; sb.querySelector('.lbl')!.textContent = s.sleeping ? 'Despertar' : 'Dormir'; }
     renderStance();
     view.setMyAttributes(s.attributes as any);
@@ -208,7 +227,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
 
   // ---------------------------------------------------------------- paneles
-  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
@@ -346,6 +365,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     else if (k === 'h') charScreen('skills');
     else if (k === 'p') net.send({ t: 'props' } as any);
     else if (k === 'v') toggleDrive();
+    else if (k === 'shift') toggleRun();
+    else if (k === 'a') toggleAuto();
     else if (k === 'm') mapPanel();
     else if (!st.dialog && /^[1-4]$/.test(k) && st.sheet?.abilities[Number(k) - 1]) net.send({ t: 'ability', id: st.sheet.abilities[Number(k) - 1].id } as any);
     else if (k === 'f') net.send({ t: 'factions' } as any);
@@ -375,8 +396,10 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   window.addEventListener('keydown', keys);
   onSettings(() => renderSheet());
   function charScreen(tab: 'inv' | 'cyber' | 'skills' | 'sheet') { if (!st.sheet) return; closePanels(); tooltip.style.display = 'none'; openCharScreen({ net, toast }, st.sheet, tab); }
+  function toggleRun() { if (st.sheet) { net.send({ t: 'run', on: !st.sheet.running } as any); toast(st.sheet.running ? 'Andas.' : 'Corres: más rápido, pero gastas aguante.', 'info'); } }
+  function toggleAuto() { if (!st.sheet) return; if (st.sheet.auto.on) net.send({ t: 'auto', on: false } as any); else autoPanel(st.sheet.auto.personality, (personality) => net.send({ t: 'auto', on: true, personality } as any)); }
   function toggleDrive() { if (!st.sheet) return; if (st.sheet.driving) net.send({ t: 'car', action: 'park' } as any); else if (!st.sheet.cars.length) toast('No tienes coche: cómpralo en un concesionario (mira el mapa).', 'warn'); else net.send({ t: 'car', action: 'drive' } as any); }
-  function mapPanel() { worldMapPanel(st.zone, { discovered: st.sheet?.discovered ?? [], hasCar: (st.sheet?.cars.length ?? 0) > 0, travel: (zone) => net.send({ t: 'car', action: 'travel', zone } as any) }); }
+  function mapPanel() { worldMapPanel(st.zone, { discovered: st.sheet?.discovered ?? [], hasCar: (st.sheet?.cars.length ?? 0) > 0, travel: (zone) => net.send({ t: 'car', action: 'travel', zone } as any), me: { x: view.me.x, y: view.me.y } }); }
   let liveOn = false, livePending = false;
   function marketLive(on: boolean) { if (on && liveOn && document.getElementById('market-live-panel')) { closePanels(); marketLive(false); return; } liveOn = on; livePending = on; net.send({ t: 'marketLive', on } as any); }
   const pctx: PropCtx = { net, toast, money: () => st.sheet?.money ?? 0 };
@@ -439,6 +462,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       }
       case 'scan': scanCard(m.view); break;
       case 'ring': ringPrompt(pctx, m.house, m.houseName, m.from, m.fromId); break;
+      case 'hiring': hiringPanel(net, m.view); break;
+      case 'elevator': elevatorPanel(net, m.view); break;
       case 'journal': st.journal = m.journal; if (document.getElementById('journal-panel')) { closePanels(); journalPanel(); } break;
       case 'notice': toast(m.text, m.kind); break;
       case 'reward': {
@@ -467,6 +492,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   timers.push(window.setInterval(() => {
     const hr = cityHour();
     clockEl.textContent = `${String(Math.floor(hr)).padStart(2, '0')}:${String(Math.floor((hr % 1) * 60)).padStart(2, '0')}`;
+    const ph = view.dayPhase(hr);
+    phaseEl.textContent = `${ph === 'día' ? '☀' : ph === 'noche' ? '🌙' : ph === 'amanecer' ? '🌅' : '🌇'} ${ph}`;
+    renderShift(hr);
     const kbs = (net.bytesIn - lastBytes) / 1024; lastBytes = net.bytesIn;
     const cls = net.status !== 'online' ? 'netbad' : net.rtt > 200 ? 'netmid' : 'netok';
     netEl.className = `mono ${cls}`;

@@ -33,6 +33,8 @@ const MAX_POS = 4000;
 const POS_BUF = new Uint8Array(7 + MAX_POS * 9);
 const POS_DV = new DataView(POS_BUF.buffer);
 const DOOR_RANGE = 1.3;
+/** Presupuesto de búsqueda de caminos según la distancia (en la ciudad única hay trayectos de cientos de losetas). */
+const pathBudgetFor = (ax: number, ay: number, bx: number, by: number) => { const d = Math.hypot(bx - ax, by - ay); return Math.min(160000, 9000 + Math.round(d * d * 2.5)); };
 const AMBIENT_NAMES = ['Repartidor', 'Vecina del Bloque 9', 'Estibador', 'Turista perdido', 'Estudiante', 'Mensajera', 'Jubilado', 'Guardia de turno', 'Camarera', 'Mecánico'];
 const PALETTE = { skin: ['#f0c8a8', '#e0b48c', '#c89070', '#b07a5a', '#8a5a3c', '#6a4028'], hair: ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#c0c0c0'], jacket: ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a'], accent: ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'] };
 
@@ -319,7 +321,7 @@ export class World {
       if (e.zone.id !== step.zone) { this.cancelActivity(e, 'Tarea cancelada: estás en otra zona'); return; }
       if (!tk.started) {
         tk.started = true;
-        const r = findPath(e.zone.grid, e.x, e.y, tx, ty);
+        const r = findPath(e.zone.grid, e.x, e.y, tx, ty, pathBudgetFor(e.x, e.y, tx, ty));
         if (!r.ok) { this.cancelActivity(e, 'Tarea cancelada: ruta bloqueada'); return; }
         e.path = r.path;
         if (conn) this.send(conn, { t: 'action', text: `${t(this.c, tk.def.label)} (${tk.rep + 1}/${tk.def.repeat}) · caminando` });
@@ -582,7 +584,7 @@ export class World {
       case 'run': p.running = m.on; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
       case 'auto': return guarded(m.seq, async () => this.autopilot.set(c, m.on, m.personality));
       case 'post': return guarded(m.seq, async () => {
-        if (m.action === 'apply') { await this.posts.apply(c, m.post ?? ''); this.send(c, { t: 'hiring', view: this.posts.hiringView(c, m.obj) }); }
+        if (m.action === 'apply') { await this.posts.apply(c, m.post ?? ''); this.send(c, { t: 'hiring', view: this.posts.hiringView(c, m.obj ?? this.c.posts.find((x) => x.id === m.post)?.obra) }); }
         else if (m.action === 'quit') await this.posts.quit(c);
         else if (m.action === 'work') await this.posts.work(c);
         else this.send(c, { t: 'hiring', view: this.posts.hiringView(c, m.obj) });
@@ -639,7 +641,7 @@ export class World {
 
   playerPath(e: Entity, x: number, y: number): { ok: true } | { ok: false; reason: string } {
     this.metrics.inc('pathRequests');
-    const r = findPath(e.zone.grid, e.x, e.y, x, y, 9000);
+    const r = findPath(e.zone.grid, e.x, e.y, x, y, pathBudgetFor(e.x, e.y, x, y));
     this.metrics.inc('pathExpanded', r.expanded);
     if (!r.ok) {
       this.metrics.inc('pathFailures');
@@ -736,7 +738,7 @@ export class World {
     let best: { door: Entity; path: [number, number][]; len: number } | null = null;
     for (const d of e.zone.entities) {
       if (d.kind !== 'door' || d.danger !== 'protected') continue;
-      const r = findPath(e.zone.grid, e.x, e.y, d.x, d.y, 9000);
+      const r = findPath(e.zone.grid, e.x, e.y, d.x, d.y, pathBudgetFor(e.x, e.y, d.x, d.y));
       if (!r.ok) continue;
       let len = 0, px = e.x, py = e.y;
       for (const [x, y] of r.path) { len += Math.hypot(x - px, y - py); px = x; py = y; }

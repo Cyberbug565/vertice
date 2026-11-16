@@ -1,6 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.4)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.5)
 
-Novedades de la v0.4 (niveles, habilidades 1–25 y perks, pantalla de personaje, ropa, casas, coches, mercado en tiempo real, cromo con habilidades y calles con carriles): [`docs/NOVEDADES-v0.4.md`](docs/NOVEDADES-v0.4.md). Las de la v0.3: [`docs/NOVEDADES-v0.3.md`](docs/NOVEDADES-v0.3.md). Las de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md). Publicarlo en internet: [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
+Novedades de la v0.5 (ciudad única más grande, día y noche de 1 h 30, correr, modo automático, puestos fijos con horario, torres por plantas y bases de bandas): [`docs/NOVEDADES-v0.5.md`](docs/NOVEDADES-v0.5.md). Las de la v0.4 (niveles, habilidades 1–25 y perks, pantalla de personaje, ropa, casas, coches, mercado en tiempo real, cromo con habilidades y calles con carriles): [`docs/NOVEDADES-v0.4.md`](docs/NOVEDADES-v0.4.md). Las de la v0.3: [`docs/NOVEDADES-v0.3.md`](docs/NOVEDADES-v0.3.md). Las de la v0.2: [`docs/NOVEDADES-v0.2.md`](docs/NOVEDADES-v0.2.md). Publicarlo en internet: [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
 
 RPG de ambientación cyberpunk que se juega en el navegador. Es persistente, multijugador, con cámara isométrica 2.5D y control por clic. El servidor es autoritativo: Node.js con WebSocket y PostgreSQL. El cliente usa TypeScript, Vite y PixiJS 8 sobre WebGL 2.
 
@@ -58,6 +58,7 @@ Para un mundo que siga abierto aunque apagues el ordenador, consulta [`docs/DESP
 | Personaje: ficha, inventario y ropa, ciberware, habilidades y perks | — | `C`, `I`, `X`, `H` |
 | Habilidades de los implantes | — | `1`–`4` |
 | Conducir o aparcar · propiedades (casas, permisos, coches) · mercado en tiempo real | — | `V` · `P` · `K` |
+| Correr o andar · modo automático | — | `Mayús` · `A` |
 | Facciones, Rescate Ámbar | — | `F`, `U` |
 | Dormir o despertar | — | `Z` o el botón **Dormir** |
 | Empleos, recompensas | — | `O`, `B` |

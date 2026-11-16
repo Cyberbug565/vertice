@@ -22,7 +22,7 @@ export { opposed as opposedChance } from './combat.js';
 interface ConnExtra {
   openShop?: { shop: string; entity: number }; openClinic?: { doc: string; entity: number };
   nextAutoAt: number; noFoodWarnAt: number; warned: Record<string, boolean>; lastSheetAt: number; nextHostileAt: number;
-  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean; lastPos?: { zone: string; x: number; y: number };
+  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean; lastPos?: { zone: string; x: number; y: number }; breathless?: boolean;
 }
 
 export class Survival {
@@ -133,8 +133,9 @@ export class Survival {
       // Correr: más rápido a cambio de aguante; sin aguante se vuelve a andar.
       const run = p.running && p.stamina > 3 && !p.carrying && !p.sleeping;
       if (run && e.moving) p.stamina = Math.max(0, p.stamina - 3);
-      else if (!e.moving || !p.running) p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1));
-      if (p.running && p.stamina <= 3 && e.moving) this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.');
+      else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1));
+      if (p.running && p.stamina <= 3 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.'); }
+      if (p.stamina > 20) x.breathless = false;
       e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1);
     }
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).

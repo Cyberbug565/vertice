@@ -213,29 +213,51 @@ export function drawProp(g: Graphics, lightsIn: Graphics, p: ZoneDef['props'][nu
       break;
     }
     case 'lamp': {
-      const a = worldToScreen(x + 0.5, y + 0.5, 0), t = worldToScreen(x + 0.5, y + 0.5, 2.6);
-      g.moveTo(a.x, a.y).lineTo(t.x, t.y).stroke({ width: 3, color: 0x2a2a38 });
-      g.circle(t.x, t.y, 4).fill(0xfff1c0);
-      lights.circle(t.x, t.y, 10).fill({ color: 0xfff1c0, alpha: 0.35 });
-      lights.ellipse(a.x, a.y, 46, 23).fill({ color: 0xffe9a0, alpha: 0.08 });
+      // Farola alta con brazo y cono de luz en el suelo.
+      const a = worldToScreen(x + 0.5, y + 0.5, 0), t = worldToScreen(x + 0.5, y + 0.5, 4.2), arm = worldToScreen(x + 1.1, y + 0.5, 4.1);
+      g.moveTo(a.x, a.y).lineTo(t.x, t.y).stroke({ width: 4, color: 0x2a2a38 });
+      g.moveTo(t.x, t.y).lineTo(arm.x, arm.y).stroke({ width: 3, color: 0x2a2a38 });
+      g.roundRect(arm.x - 6, arm.y - 2, 12, 5, 2).fill(0xfff1c0);
+      lights.circle(arm.x, arm.y, 14).fill({ color: 0xfff1c0, alpha: 0.4 });
+      const fl = worldToScreen(x + 1.1, y + 0.5, 0);
+      lights.ellipse(fl.x, fl.y, 70, 35).fill({ color: 0xff9a30, alpha: 0.16 });
+      lights.ellipse(fl.x, fl.y, 36, 18).fill({ color: 0xffc060, alpha: 0.14 });
       break;
     }
-    case 'crate': drawBox(g, x + 0.15, y + 0.15, 0.7, 0.7, 0, 0.6, 0x7a5b3a); break;
-    case 'bench': drawBox(g, x + 0.1, y + 0.3, 0.8, 0.4, 0, 0.3, 0x5a5a6a); break;
+    case 'crate': drawBox(g, x + 0.05, y + 0.05, 0.9, 0.9, 0, 0.9, 0x7a5b3a); drawBox(g, x + 0.05, y + 0.05, 0.9, 0.9, 0.9, 0.04, 0x5a4128); break;
+    case 'bench': drawBox(g, x, y + 0.25, 1, 0.5, 0, 0.45, 0x5a5a6a); drawBox(g, x, y + 0.65, 1, 0.12, 0.45, 0.4, 0x4a4a5a); break;
     case 'table': drawBox(g, x + 0.15, y + 0.15, 0.7, 0.7, 0, 0.55, 0x3a2a24); break;
     case 'bed': drawBox(g, x, y + 0.1, 1, 0.8, 0, 0.4, 0xd8e0e8); { const s = worldToScreen(x + 0.5, y + 0.5, 0.5); lights.circle(s.x, s.y, 18).fill({ color: c, alpha: 0.15 }); } break;
     case 'plant': { drawBox(g, x + 0.3, y + 0.3, 0.4, 0.4, 0, 0.35, 0x4a4a5a); const s = worldToScreen(x + 0.5, y + 0.5, 0.8); g.circle(s.x, s.y, 10).fill(0x2f6b4f); g.circle(s.x + 4, s.y - 5, 7).fill(0x3d8a62); break; }
-    case 'vending': drawBox(g, x + 0.15, y + 0.2, 0.7, 0.6, 0, 1.6, 0x2a2a3a); { const s = worldToScreen(x + 0.5, y + 0.8, 0.9); g.rect(s.x - 7, s.y - 14, 14, 20).fill(c); lights.rect(s.x - 10, s.y - 17, 20, 26).fill({ color: c, alpha: 0.2 }); } break;
+    case 'vending': drawBox(g, x + 0.1, y + 0.15, 0.8, 0.7, 0, 2.2, 0x2a2a3a); { const s = worldToScreen(x + 0.5, y + 0.8, 0.9); g.rect(s.x - 7, s.y - 14, 14, 20).fill(c); lights.rect(s.x - 10, s.y - 17, 20, 26).fill({ color: c, alpha: 0.2 }); } break;
     case 'car': {
-      drawBox(g, x - 0.2, y + 0.1, 1.4, 0.8, 0.1, 0.4, c);
-      drawBox(g, x + 0.1, y + 0.2, 0.8, 0.6, 0.5, 0.3, shade(c, 0.6));
-      const hl = worldToScreen(x + 1.2, y + 0.5, 0.3); lights.circle(hl.x, hl.y, 8).fill({ color: 0xfff1c0, alpha: 0.4 });
+      drawBox(g, x - 0.5, y, 2, 1, 0.12, 0.55, c);
+      drawBox(g, x - 0.05, y + 0.12, 1.1, 0.76, 0.67, 0.45, shade(c, 0.55));
+      const hl = worldToScreen(x + 1.5, y + 0.5, 0.4); lights.circle(hl.x, hl.y, 10).fill({ color: 0xfff1c0, alpha: 0.45 });
       break;
     }
     case 'screen': case 'neon': { const s = worldToScreen(x + 0.5, y, 1.6); g.rect(s.x - 16, s.y - 10, 32, 18).fill(shade(c, 0.6)); lights.rect(s.x - 20, s.y - 14, 40, 26).fill({ color: c, alpha: 0.3 }); break; }
-    case 'pipe': drawBox(g, x + 0.35, y + 0.35, 0.3, 0.3, 0, 1.2, 0x55606a); break;
+    case 'pipe': drawBox(g, x + 0.3, y + 0.3, 0.4, 0.4, 0, 1.8, 0x55606a); break;
+    case 'crane': {
+      // Grúa de obra: torre de celosía, pluma larga y luz roja en la punta.
+      drawBox(g, x + 0.3, y + 0.3, 0.4, 0.4, 0, 14, 0xffb020);
+      const t0 = worldToScreen(x + 0.5, y + 0.5, 14), t1 = worldToScreen(x + 6, y + 0.5, 14), t2 = worldToScreen(x - 2, y + 0.5, 14);
+      g.moveTo(t2.x, t2.y).lineTo(t1.x, t1.y).stroke({ width: 3, color: 0xffb020 });
+      const hook = worldToScreen(x + 4.5, y + 0.5, 8); g.moveTo(worldToScreen(x + 4.5, y + 0.5, 14).x, worldToScreen(x + 4.5, y + 0.5, 14).y).lineTo(hook.x, hook.y).stroke({ width: 1, color: 0x888888 });
+      drawBox(g, x - 2, y + 0.3, 0.6, 0.4, 13.4, 0.6, 0x5a5a5a);
+      lights.circle(t1.x, t1.y, 5).fill({ color: 0xff3040, alpha: 0.8 }); void t0;
+      break;
+    }
+    case 'window': {
+      // Ventanal de la pasarela: cristal con el brillo de la ciudad detrás.
+      const s = worldToScreen(x + 0.5, y, 1.4);
+      g.rect(s.x - 14, s.y - 16, 28, 24).fill(0x0a1426).stroke({ width: 2, color: 0x3a4a5a });
+      for (let i = 0; i < 5; i++) g.rect(s.x - 11 + i * 5, s.y - 6 - ((i * 7) % 9), 3, 10 + ((i * 5) % 7)).fill(i % 2 ? 0x2a3a6a : 0x3a2a5a);
+      lights.rect(s.x - 14, s.y - 16, 28, 24).fill({ color: c, alpha: 0.14 });
+      break;
+    }
     case 'shelf': drawBox(g, x + 0.05, y + 0.25, 0.9, 0.5, 0, 1.4, 0x4a4a5a); { const s1 = worldToScreen(x + 0.5, y + 0.75, 0.6); g.rect(s1.x - 12, s1.y - 4, 24, 3).fill(0xffd23f); g.rect(s1.x - 12, s1.y - 16, 24, 3).fill(0x43f3ff); } break;
-    case 'trash': drawBox(g, x + 0.2, y + 0.2, 0.6, 0.6, 0, 0.7, 0x2f5a3a); break;
+    case 'trash': drawBox(g, x + 0.05, y + 0.1, 0.9, 0.8, 0, 1.0, 0x2f5a3a); drawBox(g, x + 0.05, y + 0.1, 0.9, 0.8, 1.0, 0.08, 0x23452c); break;
     case 'antenna': case 'holo': break;
     case 'tent': { const p1 = worldToScreen(x, y + 1), p2 = worldToScreen(x + 1, y + 1), p3 = worldToScreen(x + 1, y), top = worldToScreen(x + 0.5, y + 0.5, 1.1); g.poly([p1.x, p1.y, p2.x, p2.y, top.x, top.y]).fill(shade(c, 0.8)); g.poly([p2.x, p2.y, p3.x, p3.y, top.x, top.y]).fill(c); break; }
     case 'smokestack': drawBox(g, x + 0.2, y + 0.2, 0.6, 0.6, 0, 6, 0x5a4a40); { const t = worldToScreen(x + 0.5, y + 0.5, 6.2); lights.circle(t.x, t.y, 6).fill({ color: 0xff8a3d, alpha: 0.35 }); g.circle(t.x, t.y - 10, 9).fill({ color: 0x8a8a8a, alpha: 0.25 }); g.circle(t.x + 6, t.y - 20, 12).fill({ color: 0x8a8a8a, alpha: 0.18 }); } break;

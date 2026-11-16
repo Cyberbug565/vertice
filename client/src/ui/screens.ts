@@ -27,7 +27,7 @@ export function loginScreen(onDone: () => void) {
     h('label', { for: 'username' }, 'Usuario'), user, h('label', { for: 'password' }, 'Contraseña'), pass, err,
     h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'submit', id: 'btn-login' }, 'Entrar'), h('button', { class: 'btn', type: 'button', id: 'btn-register', onclick: () => go('register') }, 'Crear cuenta')));
   $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card narrow' },
-    h('h1', { class: 'logo neon' }, 'VÉRTICE'), h('p', { class: 'muted' }, 'Ciudad Vértice · megápolis de siete distritos. Edición de universo original. Alfa v0.4.'), form)));
+    h('h1', { class: 'logo neon' }, 'VÉRTICE'), h('p', { class: 'muted' }, 'Ciudad Vértice · una sola ciudad enorme. Edición de universo original. Alfa v0.5.'), form)));
   user.focus();
 }
 

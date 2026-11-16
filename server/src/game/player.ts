@@ -281,7 +281,7 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
     speedMult: Math.round((1 + ef.speed) * 100) / 100, dodge: Math.round(ef.dodge * 100), uniques: [...ef.flags],
     running: p.running, auto: { on: p.auto.on, personality: p.auto.personality }, post: sheetHooks.post(p),
-    hp: p.hp, hpMax: ef.hpMax, stamina: p.stamina, staminaMax: ef.staminaMax, luck: p.luck, luckMax: p.attributes.LUCK,
+    hp: Math.round(p.hp), hpMax: ef.hpMax, stamina: Math.round(p.stamina), staminaMax: ef.staminaMax, luck: p.luck, luckMax: p.attributes.LUCK,
     humanity: p.humanity, humanityMax: p.humanityMax, chromeCapacity: ef.chromeCapacity, chromeUsed: ef.chromeUsed,
     carry: Math.round(ef.weight * 10) / 10, carryMax: ef.carryMax,
     money: p.money, streetRep: p.rep.get('calle') ?? 0, reputation: Object.fromEntries([...p.rep].filter(([k]) => k !== 'calle')),

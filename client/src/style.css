@@ -212,7 +212,7 @@ table.sheet tr:hover td { background: rgba(67, 243, 255, 0.04); }
 @keyframes pulse { 50% { opacity: 0.55; } }
 
 /* Avisos de experiencia de habilidad */
-.xp-pops { position: fixed; right: 260px; bottom: 120px; display: flex; flex-direction: column; gap: 6px; width: 220px; pointer-events: none; }
+.xp-pops { position: fixed; right: 260px; bottom: 200px; display: flex; flex-direction: column; gap: 6px; width: 220px; pointer-events: none; }
 .xp-pop { background: rgba(10, 14, 36, 0.92); border: 1px solid #2a4aa8; border-left: 3px solid #43c8ff; border-radius: 8px; padding: 6px 8px; font-size: 0.82em; animation: popin 0.2s ease-out; }
 .xp-pop.up { border-left-color: var(--yellow); box-shadow: 0 0 16px #ffd23f55; }
 @keyframes popin { from { transform: translateX(20px); opacity: 0; } }
@@ -346,3 +346,23 @@ button.chip { cursor: pointer; }
 .ring p { margin: 6px 0; }
 .creator-sec { margin: 8px 0 0; font-size: 0.75em; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); }
 @media (max-width: 1100px) { .cs-inv { grid-template-columns: 1fr 1fr; } .cs-bag { grid-column: 1 / -1; } .cy { grid-template-columns: 40px 1fr 1fr 40px; } .cy-figure { display: none; } .pk-tree { grid-template-columns: repeat(5, 200px); } .xp-pops { right: 10px; bottom: 200px; } .scan { right: 10px; } }
+
+/* ===== v0.5: reloj, turnos, correr/automático, mapa único, ascensor ===== */
+.clockbox { display: inline-flex; gap: 6px; align-items: baseline; }
+.clock { font-size: 1.1em; font-weight: 700; color: var(--yellow); }
+.phase { font-size: 0.78em; color: var(--muted); }
+.shift { margin-top: 4px; display: flex; flex-direction: column; gap: 2px; }
+.shift:empty { display: none; }
+.ibtn[aria-pressed="true"]#btn-run { border-color: var(--green); box-shadow: 0 0 10px #5affc855; }
+.ibtn[aria-pressed="true"]#btn-auto { border-color: var(--cyan); box-shadow: 0 0 12px #43f3ff66; animation: pulse 2s infinite; }
+.citymap { position: relative; width: 100%; margin: 6px 0 10px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #070710; }
+.citymap-img { display: block; width: 100%; image-rendering: pixelated; }
+.citymap-label { position: absolute; transform: translate(-50%, -50%); padding: 2px 8px; font-size: 0.72em; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(5, 5, 12, 0.78); border: 1px solid; border-radius: 4px; white-space: nowrap; }
+.citymap-label.here { box-shadow: 0 0 0 2px #fff; }
+.citymap-label:hover { background: rgba(30, 30, 60, 0.95); }
+.citymap-mark { position: absolute; transform: translate(-50%, -100%); font-size: 0.85em; pointer-events: auto; text-shadow: 0 0 3px #000; }
+.citymap-me { position: absolute; width: 12px; height: 12px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--pink); box-shadow: 0 0 0 3px #fff, 0 0 12px var(--pink); animation: pulse 1.2s infinite; }
+.floors { display: flex; flex-direction: column; gap: 4px; }
+.floor { display: grid; grid-template-columns: 36px 1fr auto auto; gap: 10px; align-items: center; padding: 6px 10px; background: rgba(14, 14, 32, 0.85); border: 1px solid #23234a; border-left: 4px solid; }
+.floor.here { background: rgba(40, 20, 50, 0.85); }
+.floor-n { font-size: 1.2em; font-weight: 800; text-align: center; color: var(--yellow); }

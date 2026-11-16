@@ -69,7 +69,7 @@ async function runBot(i: number, contentHash: string, until: number, stats: BotS
       } else if (r < 0.82) {
         // Entrar en un interior, quedarse un rato y salir.
         if (b.zone !== 'vertice') { await b.enterDoor('Salida', 30000); continue; }
-        const [door, ax, ay] = pick([['Relé', 43.5, 40.5], ['Clínica', 23.5, 51.5], ['Bloque 9', 41.5, 35.5]] as [string, number, number][]);
+        const [door, ax, ay] = pick([['Relé', 71.5, 183.5], ['Clínica', 40.5, 202.5], ['Bloque 9', 69.5, 175.5]] as [string, number, number][]);
         await walkTo(ax, ay, 40000);
         await b.enterDoor(door, 40000); stats.doors++;
         await walkTo(rnd(3, 9), rnd(3, 8), 8000);

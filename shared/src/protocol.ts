@@ -228,7 +228,8 @@ export type ServerMsg =
 // [u8 tipo=1][u32 tick][u16 n] + n × [u32 id][u16 x*256][u16 y*256][u8 flags]
 // flags: bit0 en movimiento, bits1-3 dirección (8 sectores), bit4 acelerado
 export const BIN_POSITIONS = 1;
-export const POS_SCALE = 256;
+// v0.5: 1/64 de loseta de precisión y hasta 1024 losetas de mapa (la ciudad única mide 608×344).
+export const POS_SCALE = 64;
 const REC = 9;
 
 export function encodePositions(tick: number, ents: { id: number; x: number; y: number; flags: number }[]): Uint8Array {

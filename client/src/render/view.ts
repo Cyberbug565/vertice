@@ -18,6 +18,8 @@ export interface CEnt {
 }
 
 const INTERP_DELAY = 110;
+/** Las personas se dibujan algo más pequeñas que antes para que farolas, coches y edificios tengan escala real. */
+const CHAR_SCALE = 0.74;
 const FACTION_COLORS: Record<string, number> = { engranajes: 0xff3040, kitsune: 0xb46cff, 'hermandad-sol': 0xffb347, furias: 0xff4fa0, 'voces-vacio': 0x43f3ff, 'nomadas-polvo': 0xd9a066, saqueadores: 0x8a6a3a, pcv: 0x60a5fa, 'unidad-hierro': 0x1e3a8a, ambar: 0xffbf00, chatarreros: 0xff8a3d, 'hojas-rojas': 0xff5a5a };
 const CHUNK = 16;
 
@@ -266,6 +268,7 @@ export class GameView {
     const ent: CEnt = { s, x: s.x, y: s.y, samples: [{ t: performance.now(), x: s.x, y: s.y }], flags: 0, moving: false, view, obj: null as any, phase: Math.random() * 6 };
     if (s.kind === 'player' || s.kind === 'npc') {
       const ch = makeCharacter(s.appearance, s.kind, s.chrome ?? []);
+      ch.root.scale.set(CHAR_SCALE);
       view.addChild(ch.root);
       ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor; ent.charRoot = ch.root;
       // Al volante: el coche sustituye a la figura (en moto, la figura va montada encima).
@@ -274,15 +277,15 @@ export class GameView {
         ent.vehX = makeVehicle(car.class, car.color, s.appearance?.accent);
         ent.vehY = makeVehicle(car.class, car.color, s.appearance?.accent); ent.vehY.scale.x = -1;
         view.addChildAt(ent.vehX, 0); view.addChildAt(ent.vehY, 0); ent.vehY.visible = false;
-        if (car.class === 'moto') { ch.root.scale.set(0.8); ch.root.y = -10; ch.legs.visible = false; } else ch.root.visible = false;
+        if (car.class === 'moto') { ch.root.scale.set(CHAR_SCALE * 0.85); ch.root.y = -10; ch.legs.visible = false; } else ch.root.visible = false;
       }
       if (s.level && s.kind === 'npc') {
         ent.lvl = new Text({ text: `Nv ${s.level}`, style: { fontFamily: 'system-ui', fontSize: 10, fontWeight: '700', fill: 0xffd23f, stroke: { color: 0x000000, width: 3 } } });
-        ent.lvl.anchor.set(0.5, 1); ent.lvl.position.set(0, -70); ent.lvl.visible = false;
+        ent.lvl.anchor.set(0.5, 1); ent.lvl.position.set(0, -54); ent.lvl.visible = false;
         view.addChild(ent.lvl);
       }
       ent.zz = new Text({ text: 'Zz', style: { fontFamily: 'system-ui', fontSize: 14, fontWeight: '700', fill: 0x9ad8ff, stroke: { color: 0x000000, width: 3 } } });
-      ent.zz.anchor.set(0.5); ent.zz.position.set(14, -30); ent.zz.visible = false;
+      ent.zz.anchor.set(0.5); ent.zz.position.set(12, -24); ent.zz.visible = false;
       view.addChild(ent.zz);
       if (s.kind === 'player') {
         ent.label = new Text({ text: s.name, style: { fontFamily: 'system-ui, sans-serif', fontSize: 12, fill: s.id === this.meId ? 0xffd23f : 0xffffff, stroke: { color: 0x000000, width: 3 } } });
@@ -391,16 +394,16 @@ export class GameView {
   private statusVisuals(e: CEnt, now: number) {
     if (e.bubble) {
       if (now > (e.bubbleUntil ?? 0)) { e.bubble.destroy({ children: true }); e.bubble = undefined; }
-      else { const g = this.world.toGlobal(worldToScreen(e.x, e.y, 2.3)); e.bubble.position.set(g.x, g.y); }
+      else { const g = this.world.toGlobal(worldToScreen(e.x, e.y, 1.8)); e.bubble.position.set(g.x, g.y); }
     }
     // Barra de salud de PNJ heridos y marca de facción.
     if (e.s.npcType && e.s.npcType !== 'essential' && e.s.hpPct !== undefined && e.s.hpPct < 100) {
       if (!e.hpBar) { e.hpBar = new Graphics(); e.view.addChild(e.hpBar); }
-      e.hpBar.clear().rect(-12, -68, 24, 3).fill(0x301018).rect(-12, -68, 24 * Math.max(0, e.s.hpPct) / 100, 3).fill(0xff3040);
+      e.hpBar.clear().rect(-10, -50, 20, 3).fill(0x301018).rect(-10, -50, 20 * Math.max(0, e.s.hpPct) / 100, 3).fill(0xff3040);
     }
     if (e.s.factionColor === undefined && e.s.faction && !e.tag && e.s.npcType !== 'civil' && e.s.npcType !== 'essential') {
       const col = FACTION_COLORS[e.s.faction] ?? 0x9a9ac0;
-      e.tag = new Graphics().poly([0, -64, 4, -60, 0, -56, -4, -60]).fill(col).stroke({ width: 1, color: 0x000000, alpha: 0.6 });
+      e.tag = new Graphics().poly([0, -58, 4, -54, 0, -50, -4, -54]).fill(col).stroke({ width: 1, color: 0x000000, alpha: 0.6 });
       e.view.addChild(e.tag);
     }
     if (e.lvl) e.lvl.visible = this.showLevels && (e === this.hovered || (e.s.npcType !== 'civil' && Math.hypot(e.x - this.me.x, e.y - this.me.y) < 10));
@@ -412,11 +415,11 @@ export class GameView {
     const downed = e.s.state === 'downed' || (e.flags & 64) === 64;
     const lying = sleeping || downed;
     e.charRoot.rotation = lying ? -Math.PI / 2 : 0;
-    e.charRoot.position.set(lying ? -18 : 0, lying ? -4 : 0);
-    if (e.zz) { e.zz.visible = sleeping; e.zz.y = -30 - (settings.reduceMotion ? 0 : (now / 120) % 10); }
+    e.charRoot.position.set(lying ? -13 : 0, lying ? -3 : 0);
+    if (e.zz) { e.zz.visible = sleeping; e.zz.y = -24 - (settings.reduceMotion ? 0 : (now / 120) % 10); }
     if (downed) e.charRoot.alpha = settings.reduceFlashes ? 0.7 : 0.55 + 0.35 * Math.abs(Math.sin(now / 300));
     else e.charRoot.alpha = 1;
-    if (e.s.carried) { e.charRoot.rotation = -Math.PI / 2; e.charRoot.position.set(-6, -26); }
+    if (e.s.carried) { e.charRoot.rotation = -Math.PI / 2; e.charRoot.position.set(-4, -19); }
     const amt = e.s.bounty ?? 0;
     if (amt !== (e.markerAmt ?? 0)) {
       e.marker?.destroy({ children: true }); e.marker = undefined; e.markerAmt = amt;
@@ -485,7 +488,7 @@ export class GameView {
       if (!e.s.interactive || e.s.id === this.meId) continue;
       const p = worldToScreen(e.x, e.y);
       const dx = l.x - p.x, dy = l.y - p.y;
-      const hit = e.s.kind === 'door' ? Math.abs(dx) < 24 && dy > -36 && dy < 14 : e.s.kind === 'object' ? Math.abs(dx) < 22 && dy > -44 && dy < 14 : Math.abs(dx) < 16 && dy > -62 && dy < 8;
+      const hit = e.s.kind === 'door' ? Math.abs(dx) < 24 && dy > -36 && dy < 14 : e.s.kind === 'object' ? Math.abs(dx) < 22 && dy > -44 && dy < 14 : Math.abs(dx) < 13 && dy > -48 && dy < 8;
       if (hit && e.view.zIndex > bestDepth) { best = e; bestDepth = e.view.zIndex; }
     }
     return best;
@@ -569,7 +572,7 @@ export class GameView {
       }
       if (e.label) {
         e.label.visible = settings.showNames || e === this.hovered;
-        const p = worldToScreen(e.x, e.y, 1.6);
+        const p = worldToScreen(e.x, e.y, 1.25);
         const g = this.world.toGlobal(p);
         e.label.position.set(g.x, g.y);
         e.label.scale.set(Math.max(0.8, this.zoom));
@@ -745,15 +748,23 @@ export class GameView {
     g.ellipse(p.x, p.y, 16, 8).stroke({ width: 2, color: 0xffd23f, alpha: 0.9 });
   }
 
+  /** Fase del día (para el HUD): madrugada, amanecer, día, atardecer o noche. */
+  dayPhase(h = this.cityHourFn()) { return h >= 5 && h < 8 ? 'amanecer' : h >= 8 && h < 18 ? 'día' : h >= 18 && h < 21 ? 'atardecer' : 'noche'; }
   private drawNight() {
     const h = this.cityHourFn();
-    // 0 de día (9–17 h), hasta 0,55 de noche (21–5 h).
-    const dark = h >= 9 && h < 17 ? 0 : h >= 21 || h < 5 ? 0.55 : h >= 17 ? ((h - 17) / 4) * 0.55 : ((9 - h) / 4) * 0.55;
+    // Ciclo de 24 h de juego (1 h 30 min reales): amanecer anaranjado, día claro, atardecer violeta y noche azul con luces.
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * Math.max(0, Math.min(1, t));
+    let color = 0x080a2a, alpha = 0;
+    if (h >= 21 || h < 5) { color = 0x05082a; alpha = 0.6; }
+    else if (h < 8) { const t = (h - 5) / 3; color = t < 0.5 ? 0x3a1a4a : 0xff8a4a; alpha = lerp(0.55, 0.08, t); }
+    else if (h < 17) { color = 0xfff1d0; alpha = 0.03; }
+    else if (h < 21) { const t = (h - 17) / 4; color = t < 0.5 ? 0xff6a3a : 0x3a1a5a; alpha = lerp(0.1, 0.6, t); }
     const interior = this.zone?.kind === 'interior';
-    const a = interior ? 0.12 : dark;
     const W = this.app.screen.width, H = this.app.screen.height;
-    this.nightOverlay.clear().rect(0, 0, W, H).fill({ color: 0x080a2a, alpha: a });
-    this.lightsLayer.alpha = interior ? 0.7 : 0.35 + dark * 1.2;
+    this.nightOverlay.clear().rect(0, 0, W, H).fill({ color: interior ? 0x080a2a : color, alpha: interior ? 0.12 : alpha });
+    // Farolas, neones y ventanas brillan más cuanto más oscuro está.
+    const dark = h >= 21 || h < 5 ? 1 : h < 8 ? lerp(1, 0, (h - 5) / 3) : h < 17 ? 0 : lerp(0, 1, (h - 17) / 4);
+    this.lightsLayer.alpha = interior ? 0.75 : 0.25 + dark * 0.95;
   }
 
   private drawRain(dt: number) {

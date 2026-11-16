@@ -41,12 +41,13 @@ describe('proyección isométrica', () => {
 });
 
 describe('codec binario de posiciones', () => {
-  it('ida y vuelta con precisión de 1/256 de loseta', () => {
-    const ents = [{ id: 1, x: 12.3456, y: 40.5, flags: 3 }, { id: 4000000000, x: 95.99, y: 0, flags: 16 }];
+  it('ida y vuelta con precisión de 1/64 de loseta y mapas de hasta 1024 losetas', () => {
+    const ents = [{ id: 1, x: 12.3456, y: 40.5, flags: 3 }, { id: 4000000000, x: 600.25, y: 340, flags: 16 }];
     const d = decodePositions(encodePositions(77, ents))!;
     expect(d.tick).toBe(77);
     expect(d.ents[1].id).toBe(4000000000);
-    expect(d.ents[0].x).toBeCloseTo(12.3456, 2);
+    expect(d.ents[0].x).toBeCloseTo(12.3456, 1);
+    expect(d.ents[1].x).toBeCloseTo(600.25, 2);
     expect(d.ents[1].flags).toBe(16);
   });
 });
