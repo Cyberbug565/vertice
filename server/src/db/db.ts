@@ -15,7 +15,11 @@ export async function openDb(url: string | undefined, pgliteDir: string): Promis
     const wantSsl = process.env.DATABASE_SSL === 'true' || /sslmode=require/.test(url);
     const pool = new pg.Pool({ connectionString: url.replace(/[?&]sslmode=require/, ''), max: Number(process.env.DATABASE_POOL ?? 10), ssl: wantSsl ? { rejectUnauthorized: false } : undefined });
     pool.on('error', (e) => console.error('[db] error de conexión', e.message));
-    await pool.query('SELECT 1');
+    try { await pool.query('SELECT 1'); }
+    catch (e: any) {
+      await pool.end().catch(() => {});
+      throw new Error(`No se puede conectar a PostgreSQL (${e.code ?? e.message}). Arranca tu base de datos o borra DATABASE_URL de .env para usar la base embebida (PGlite).`);
+    }
     return {
       kind: 'postgres',
       query: (sql, params) => pool.query(sql, params as any[]) as any,

@@ -14,7 +14,8 @@
     "typecheck": "tsc -p shared --noEmit && tsc -p server --noEmit && tsc -p client --noEmit && tsc -p tools/loadtest --noEmit",
     "test": "vitest run",
     "test:e2e": "node e2e/two-browsers.mjs",
-    "loadtest": "npm run run -w tools/loadtest --"
+    "loadtest": "npm run run -w tools/loadtest --",
+    "publicar": "node scripts/publicar.mjs"
   },
   "devDependencies": {
     "@types/node": "26.6.5",

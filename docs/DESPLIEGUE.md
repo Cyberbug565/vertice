@@ -12,6 +12,10 @@ El juego es **un solo proceso Node** que sirve la web, la API y el WebSocket, m�
 
 **Recomendación:** 2 vCPU y 2–4 GiB de RAM para la alfa (hasta unas 200 personas). Para cientos de jugadores, el siguiente paso es repartir los distritos entre procesos (ver `docs/DISENO.md`).
 
+## Opción 0 · Desde tu ordenador con un túnel gratuito de Cloudflare
+
+Ejecuta `npm run publicar` (o doble clic en `publicar.bat` / `publicar.command`): arranca el servidor y crea un enlace público `https://….trycloudflare.com`. Es gratis y no requiere cuenta. Solo funciona mientras tu ordenador y esa ventana sigan abiertos, el enlace cambia en cada arranque y Cloudflare no garantiza disponibilidad. Para jugar con amigos es ideal; para un mundo permanente, usa una de las opciones siguientes.
+
 ## Opción A · Render (la más sencilla, con panel web)
 
 1. Sube el código a un repositorio de GitHub.

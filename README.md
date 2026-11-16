@@ -16,7 +16,7 @@ RPG de ambientación cyberpunk que se juega en el navegador. Es persistente, mul
 
 ```bash
 npm ci
-cp .env.example .env          # ajusta DATABASE_URL o déjalo vacío para usar PGlite
+cp .env.example .env          # opcional: por defecto usa PGlite (no hace falta instalar PostgreSQL)
 docker compose up -d db       # opcional: PostgreSQL 16 local
 npm run db:migrate            # crea el esquema (también se aplica al arrancar)
 npm run build                 # compila el cliente en client/dist
@@ -24,6 +24,19 @@ npm start                     # http://localhost:8080
 ```
 
 Para desarrollo con recarga en caliente, ejecuta `npm run dev` y abre http://localhost:5173. Vite redirige `/api` y `/ws` al servidor del puerto 8080.
+
+## Jugar con amigos por internet, gratis (túnel de Cloudflare)
+
+Tu ordenador hace de servidor y Cloudflare te da un enlace público `https://….trycloudflare.com`. No necesitas cuenta ni pagar.
+
+1. Instala Node.js 22 (https://nodejs.org) y `cloudflared`:
+   - **Windows:** `winget install --id Cloudflare.cloudflared`
+   - **macOS:** `brew install cloudflared`
+2. **Windows:** doble clic en `publicar.bat`. **macOS:** doble clic en `publicar.command`. **Cualquier sistema:** `npm run publicar`.
+3. La primera vez instala y compila (unos minutos). Después aparece el enlace en un recuadro: compártelo.
+4. El juego está en internet mientras esa ventana siga abierta. Ctrl+C lo cierra y guarda a todos los personajes. Cada vez que lo abras, el enlace será distinto; los personajes se conservan en `data/pglite`.
+
+Para un mundo que siga abierto aunque apagues el ordenador, consulta [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
 
 ## Dos jugadores en la misma ciudad
 
