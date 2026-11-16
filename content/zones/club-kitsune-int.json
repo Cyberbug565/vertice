@@ -51,6 +51,69 @@
    ],
    "blocking": false,
    "color": "#ff3fa4"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3a1a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#3a1a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#3a1a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#3a1a3a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    11,
+    9
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    5,
+    5
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    1
+   ]
+  },
+  {
+   "type": "arcade",
+   "at": [
+    11,
+    6
+   ],
+   "color": "#ff3fa4"
   }
  ],
  "doors": [
@@ -92,5 +155,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

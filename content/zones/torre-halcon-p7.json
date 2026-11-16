@@ -31,6 +31,118 @@
     5,
     11
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "planter",
+   "at": [
+    7,
+    4
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "desk",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    13,
+    6
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    17,
+    4
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    1,
+    9
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    11,
+    11
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    11,
+    12
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "desk",
+   "at": [
+    8,
+    1
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    2,
+    4
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#2a2a3a"
   }
  ],
  "doors": [],
@@ -79,5 +191,6 @@
   "floor": 7,
   "access": "restringido",
   "corp": "halcon"
- }
+ },
+ "furnished": true
 }

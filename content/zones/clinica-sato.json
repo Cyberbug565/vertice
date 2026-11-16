@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 12,
  "height": 10,
- "danger": "protected",
+ "danger": "public",
  "base": "metal",
  "wallColor": "#2f5d62",
  "blocks": [
@@ -43,6 +43,46 @@
     10,
     8
    ]
+  },
+  {
+   "type": "desk",
+   "at": [
+    5,
+    7
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    1,
+    1
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    4,
+    8
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    7,
+    2
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    1,
+    5
+   ],
+   "color": "#d8e0e8"
   }
  ],
  "doors": [
@@ -72,5 +112,7 @@
  "safePoint": [
   8,
   5
- ]
+ ],
+ "objects": [],
+ "furnished": true
 }

@@ -51,6 +51,118 @@
     1
    ],
    "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "planter",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#e8f0f0"
+  },
+  {
+   "type": "locker",
+   "at": [
+    8,
+    11
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    9,
+    5
+   ],
+   "color": "#e8f0f0"
+  },
+  {
+   "type": "locker",
+   "at": [
+    12,
+    9
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "locker",
+   "at": [
+    5,
+    2
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    6
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "desk",
+   "at": [
+    10,
+    7
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    2,
+    9
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    2
+   ],
+   "color": "#4a5a6a"
   }
  ],
  "doors": [],
@@ -99,5 +211,6 @@
   "floor": 5,
   "access": "restringido",
   "corp": "halcon"
- }
+ },
+ "furnished": true
 }

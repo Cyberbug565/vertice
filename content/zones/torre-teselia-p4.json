@@ -51,6 +51,118 @@
     1
    ],
    "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "planter",
+   "at": [
+    10,
+    3
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    4
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    8,
+    2
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "locker",
+   "at": [
+    1,
+    10
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    5
+   ],
+   "color": "#4a5a6a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    11,
+    2
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    1,
+    6
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    8,
+    10
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    9,
+    11
+   ],
+   "color": "#2f6b4f"
   }
  ],
  "doors": [],
@@ -99,5 +211,6 @@
   "floor": 4,
   "access": "restringido",
   "corp": "teselia"
- }
+ },
+ "furnished": true
 }

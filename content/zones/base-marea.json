@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 28,
  "height": 18,
- "danger": "disputed",
+ "danger": "lawless",
  "base": "metal",
  "wallColor": "#2a4a5a",
  "blocks": [
@@ -163,6 +163,183 @@
    ],
    "blocking": false,
    "color": "#ff3040"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    23,
+    14
+   ],
+   "color": "#2a4a5a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    8,
+    15
+   ]
+  },
+  {
+   "type": "barrel",
+   "at": [
+    2,
+    3
+   ],
+   "color": "#3a5a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    13,
+    3
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    11,
+    4
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    7,
+    7
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    5,
+    14
+   ]
+  },
+  {
+   "type": "barrel",
+   "at": [
+    17,
+    12
+   ],
+   "color": "#3a5a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    16,
+    1
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    11,
+    5
+   ]
+  },
+  {
+   "type": "barrel",
+   "at": [
+    4,
+    8
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    1,
+    12
+   ]
+  },
+  {
+   "type": "barrel",
+   "at": [
+    2,
+    12
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    11,
+    2
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    23,
+    4
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    23,
+    5
+   ]
+  },
+  {
+   "type": "locker",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    21,
+    4
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    23,
+    16
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    21,
+    14
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    26,
+    5
+   ],
+   "color": "#3a5a3a"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    13,
+    9
+   ],
+   "color": "#3a5a3a"
   }
  ],
  "doors": [
@@ -230,5 +407,6 @@
  "gangBase": {
   "faction": "marea",
   "boss": "El Capitán Iriarte"
- }
+ },
+ "furnished": true
 }

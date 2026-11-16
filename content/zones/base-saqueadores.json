@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 28,
  "height": 18,
- "danger": "disputed",
+ "danger": "lawless",
  "base": "metal",
  "wallColor": "#5a4a3a",
  "blocks": [
@@ -163,6 +163,186 @@
    ],
    "blocking": false,
    "color": "#ff3040"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    23,
+    14
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    10,
+    13
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    23,
+    12
+   ]
+  },
+  {
+   "type": "locker",
+   "at": [
+    24,
+    12
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    5,
+    14
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    13,
+    13
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    11,
+    9
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    8,
+    7
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    10,
+    10
+   ],
+   "color": "#3a5a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    25,
+    5
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    21,
+    8
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    26,
+    11
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    10,
+    15
+   ]
+  },
+  {
+   "type": "barrel",
+   "at": [
+    13,
+    3
+   ],
+   "color": "#3a5a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    21,
+    5
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#4a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    8,
+    5
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    9,
+    2
+   ],
+   "color": "#3a5a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    1,
+    10
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    12,
+    10
+   ],
+   "color": "#3a3a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    6,
+    4
+   ],
+   "color": "#4a4a3a"
   }
  ],
  "doors": [
@@ -230,5 +410,6 @@
  "gangBase": {
   "faction": "saqueadores",
   "boss": "Calavera Ruiz"
- }
+ },
+ "furnished": true
 }

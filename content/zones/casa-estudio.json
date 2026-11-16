@@ -39,6 +39,46 @@
    ],
    "blocking": false,
    "color": "#b46cff"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    5,
+    6
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "locker",
+   "at": [
+    9,
+    5
+   ],
+   "color": "#40506a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    1,
+    3
+   ],
+   "color": "#4a3a5a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    4,
+    4
+   ],
+   "color": "#4a3a5a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    1,
+    1
+   ],
+   "color": "#40506a"
   }
  ],
  "doors": [
@@ -81,6 +121,15 @@
     2
    ],
    "kind": "stash"
+  },
+  {
+   "id": "ordenador-casa-estudio",
+   "name": "Ordenador personal",
+   "at": [
+    5,
+    2
+   ],
+   "kind": "computer"
   }
  ],
  "waypoints": [
@@ -92,5 +141,6 @@
  "safePoint": [
   9,
   4
- ]
+ ],
+ "furnished": true
 }

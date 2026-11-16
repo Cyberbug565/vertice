@@ -30,7 +30,7 @@ export function loadConfig(overrides: Partial<Config> = {}): Config {
     databaseUrl: e.DATABASE_URL || undefined,
     pgliteDir: e.PGLITE_DIR ?? join(ROOT, 'data/pglite'),
     staticDir: e.STATIC_DIR ?? join(ROOT, 'client/dist'),
-    ambientNpcs: Number(e.AMBIENT_NPCS ?? 24),
+    ambientNpcs: Number(e.AMBIENT_NPCS ?? 48),
     crowdNpcs: Number(e.CROWD_NPCS ?? 0),
     crowdAt: crowd,
     adminToken: e.ADMIN_TOKEN ?? 'dev-admin',

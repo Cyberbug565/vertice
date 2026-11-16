@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 22,
  "height": 14,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#262c48",
  "blocks": [
@@ -55,6 +55,118 @@
     1
    ],
    "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "desk",
+   "at": [
+    9,
+    10
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "desk",
+   "at": [
+    10,
+    12
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "locker",
+   "at": [
+    1,
+    12
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    2,
+    4
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "locker",
+   "at": [
+    18,
+    1
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    15,
+    7
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    9
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "locker",
+   "at": [
+    15,
+    6
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    11
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    5,
+    3
+   ],
+   "color": "#2a2a3a"
   }
  ],
  "doors": [
@@ -68,8 +180,8 @@
    "to": {
     "zone": "vertice",
     "at": [
-     212,
-     137
+     289,
+     187
     ]
    },
    "danger": "public"
@@ -110,5 +222,6 @@
   "floor": 0,
   "access": "publico",
   "corp": "teselia"
- }
+ },
+ "furnished": true
 }

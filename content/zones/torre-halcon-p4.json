@@ -99,6 +99,118 @@
     18,
     11
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "planter",
+   "at": [
+    5,
+    12
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    18,
+    12
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    3,
+    6
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    15,
+    6
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    1,
+    9
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    8
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "locker",
+   "at": [
+    19,
+    9
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    1,
+    10
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    4,
+    8
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    8
+   ],
+   "color": "#2a3040"
   }
  ],
  "doors": [],
@@ -147,5 +259,6 @@
   "floor": 4,
   "access": "restringido",
   "corp": "halcon"
- }
+ },
+ "furnished": true
 }

@@ -35,6 +35,53 @@
    ],
    "blocking": false,
    "color": "#43f3ff"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#401a2a"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    3
+   ],
+   "color": "#401a2a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    6
+   ],
+   "color": "#401a2a"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    6
+   ],
+   "color": "#401a2a"
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    5
+   ]
+  },
+  {
+   "type": "sofa",
+   "at": [
+    5,
+    7
+   ],
+   "color": "#6b2140"
   }
  ],
  "doors": [
@@ -75,5 +122,6 @@
  "safePoint": [
   11,
   5
- ]
+ ],
+ "furnished": true
 }

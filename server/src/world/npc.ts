@@ -1,5 +1,5 @@
 // Cerebros de PNJ: lógica compartida con parámetros (horario, deambular, multitud). Decisiones escalonadas a 4 Hz cerca y 1 Hz lejos.
-import { nearestWalkable, seededRng, isWalkable, type NpcDef } from '@vertice/shared';
+import { facingToIdx, nearestWalkable, seededRng, isWalkable, type NpcDef } from '@vertice/shared';
 import type { Entity } from './entity.js';
 import type { World } from './world.js';
 
@@ -69,9 +69,14 @@ function thinkAmbient(w: World, e: Entity) {
   const b = e.npc!;
   if (e.path.length) return;
   if (b.pauseUntil > w.tick) return;
-  if (b.state === 'travel' && b.rng() < 0.35) {
-    b.pauseUntil = w.tick + Math.floor(40 + b.rng() * 80);
-    setState(w, e, b.rng() < 0.5 ? 'talk' : 'rest', b.rng() < 0.5 ? 'Charlando' : 'Mirando escaparates');
+  // Paradas variadas y naturales: mirar el móvil, un escaparate, charlar, fumar…; a veces solo un respiro.
+  if (b.state === 'travel' && b.rng() < 0.45) {
+    const r = b.rng();
+    const [len, label] = r < 0.35 ? [10 + b.rng() * 25, 'Paseando'] : r < 0.55 ? [40 + b.rng() * 80, 'Mirando el móvil'] : r < 0.7 ? [60 + b.rng() * 100, 'Mirando escaparates'] : r < 0.85 ? [60 + b.rng() * 140, 'Charlando'] : [80 + b.rng() * 120, 'Fumando'];
+    b.pauseUntil = w.tick + Math.floor(len);
+    // Busca alguien cerca con quien charlar: se giran el uno hacia el otro.
+    if (label === 'Charlando') for (const o of e.zone.query(e.x, e.y, 2.5)) if (o !== e && o.kind === 'npc' && o.npc?.type === 'ambient' && !o.path.length) { e.facing = facingToIdx(o.x - e.x, o.y - e.y); o.facing = facingToIdx(e.x - o.x, e.y - o.y); e.lastMoveTick = o.lastMoveTick = w.tick; break; }
+    setState(w, e, label === 'Charlando' ? 'talk' : 'rest', label);
     return;
   }
   let tx: number, ty: number;

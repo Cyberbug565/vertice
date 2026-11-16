@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 22,
  "height": 14,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#3a2e44",
  "blocks": [
@@ -55,6 +55,118 @@
     1
    ],
    "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    19,
+    10
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    18,
+    2
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    2,
+    5
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "column",
+   "at": [
+    8,
+    2
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    4,
+    8
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "locker",
+   "at": [
+    3,
+    10
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    17,
+    8
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "desk",
+   "at": [
+    12,
+    7
+   ],
+   "color": "#2a3040"
   }
  ],
  "doors": [
@@ -110,5 +222,6 @@
   "floor": 0,
   "access": "publico",
   "corp": "okami"
- }
+ },
+ "furnished": true
 }

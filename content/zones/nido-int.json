@@ -4,11 +4,76 @@
  "kind": "interior",
  "width": 16,
  "height": 11,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#3e3550",
  "blocks": [],
- "props": [],
+ "props": [
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3e3550"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#3e3550"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#3e3550"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#3e3550"
+  },
+  {
+   "type": "locker",
+   "at": [
+    11,
+    9
+   ],
+   "color": "#40506a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    1,
+    7
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    9
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    3
+   ],
+   "color": "#3a3a4a"
+  }
+ ],
  "doors": [
   {
    "id": "salida-nido-int",
@@ -152,5 +217,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

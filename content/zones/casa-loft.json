@@ -62,6 +62,70 @@
     3,
     8
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#4a3a2a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#4a3a2a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#4a3a2a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#4a3a2a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    11,
+    4
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    12,
+    9
+   ],
+   "color": "#b46cff"
+  },
+  {
+   "type": "locker",
+   "at": [
+    5,
+    3
+   ],
+   "color": "#40506a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    14,
+    8
+   ],
+   "color": "#4a3a5a"
   }
  ],
  "doors": [
@@ -104,6 +168,15 @@
     2
    ],
    "kind": "stash"
+  },
+  {
+   "id": "ordenador-casa-loft",
+   "name": "Ordenador personal",
+   "at": [
+    5,
+    2
+   ],
+   "kind": "computer"
   }
  ],
  "waypoints": [
@@ -115,5 +188,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

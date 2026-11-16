@@ -64,6 +64,67 @@
     10,
     3
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3a3f5c"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#3a3f5c"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#3a3f5c"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#3a3f5c"
+  },
+  {
+   "type": "crate",
+   "at": [
+    11,
+    5
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    12,
+    6
+   ]
+  },
+  {
+   "type": "barrel",
+   "at": [
+    8,
+    5
+   ],
+   "color": "#3a5a3a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    5,
+    5
+   ]
   }
  ],
  "doors": [
@@ -115,5 +176,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

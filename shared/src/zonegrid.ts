@@ -11,8 +11,8 @@ export interface ZoneGrid {
   buildingAt: Int16Array; // índice de edificio o -1
 }
 
-const DANGER_IDX: Record<DangerLevel, number> = { protected: 0, public: 1, disputed: 2 };
-export const DANGER_FROM_IDX: DangerLevel[] = ['protected', 'public', 'disputed'];
+const DANGER_IDX: Record<DangerLevel, number> = { protected: 0, public: 1, disputed: 2, lawless: 3 };
+export const DANGER_FROM_IDX: DangerLevel[] = ['protected', 'public', 'disputed', 'lawless'];
 
 function fillRect(arr: { [i: number]: number }, w: number, h: number, r: readonly number[], v: number) {
   const [x0, y0, rw, rh] = r;

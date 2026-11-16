@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 16,
  "height": 11,
- "danger": "protected",
+ "danger": "public",
  "base": "wood",
  "wallColor": "#6a4a3a",
  "blocks": [
@@ -19,7 +19,72 @@
    "color": "#6a4a3a"
   }
  ],
- "props": [],
+ "props": [
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#6a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#6a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#6a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#6a4a3a"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    10,
+    6
+   ],
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "column",
+   "at": [
+    2,
+    8
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    14,
+    1
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#6b2140"
+  }
+ ],
  "doors": [
   {
    "id": "salida-motel-int",
@@ -111,5 +176,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

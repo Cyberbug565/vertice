@@ -64,6 +64,86 @@
     2
    ],
    "color": "#ffd23f"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#5a4b6e"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    8
+   ],
+   "color": "#5a4b6e"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    8
+   ],
+   "color": "#5a4b6e"
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    7
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    4
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    4
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#40506a"
+  },
+  {
+   "type": "column",
+   "at": [
+    5,
+    7
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    8,
+    5
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    10
+   ],
+   "color": "#3a3a4a"
   }
  ],
  "doors": [
@@ -117,5 +197,6 @@
   8,
   8
  ],
- "sleepQuality": 0.6
+ "sleepQuality": 0.6,
+ "furnished": true
 }

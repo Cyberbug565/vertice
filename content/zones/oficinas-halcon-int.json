@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 16,
  "height": 11,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#2c3444",
  "blocks": [],
@@ -68,6 +68,70 @@
    ],
    "blocking": false,
    "color": "#43f3ff"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    11,
+    1
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    1,
+    4
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    2,
+    9
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "column",
+   "at": [
+    7,
+    9
+   ],
+   "color": "#4a4a5a"
   }
  ],
  "doors": [
@@ -129,5 +193,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

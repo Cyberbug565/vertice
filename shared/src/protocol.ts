@@ -35,7 +35,7 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('clinicDo'), seq, doc: z.string().max(64), action: z.enum(['install', 'remove']), source: z.enum(['stock', 'stolen', 'inventory', 'installed']), ref: z.string().max(64), opId }),
   z.object({ t: z.literal('bounties'), seq }),
   z.object({ t: z.literal('bountyPlace'), seq, kind: z.enum(['player', 'npc']), target: z.string().min(1).max(64), amount: z.number().int().min(100).max(1_000_000), reason: z.string().min(1).max(120), aliveOnly: z.boolean().default(false), opId }),
-  z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim', 'attack', 'knockout', 'finish', 'carry', 'talk']), opId }),
+  z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim', 'attack', 'knockout', 'finish', 'carry', 'talk', 'aim', 'search']), opId, part: z.enum(['torso', 'cabeza', 'brazos', 'manos', 'piernas']).optional() }),
   z.object({ t: z.literal('menu'), seq, target: z.number().int().nonnegative() }),
   z.object({ t: z.literal('hack'), seq, target: z.number().int().nonnegative(), hack: z.string().max(64), opId }),
   z.object({ t: z.literal('equip'), seq, item: z.string().max(64).nullable() }),
@@ -60,6 +60,10 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('auto'), seq, on: z.boolean(), personality: z.string().max(24).optional() }),
   z.object({ t: z.literal('post'), seq, action: z.enum(['apply', 'quit', 'work', 'view']), post: z.string().max(80).optional(), obj: z.string().max(80).optional() }),
   z.object({ t: z.literal('elevator'), seq, floor: z.number().int().min(0).max(40).optional(), hack: z.boolean().optional() }),
+  // ---- v0.6
+  z.object({ t: z.literal('searchPeople'), seq, query: z.string().min(2).max(24), device: z.enum(['phone', 'computer']) }),
+  z.object({ t: z.literal('goto'), seq, kind: z.enum(['place', 'person', 'door', 'cancel']), x: z.number().finite().optional(), y: z.number().finite().optional(), key: z.string().max(80).optional(), door: z.number().int().optional() }),
+  z.object({ t: z.literal('trunk'), seq, action: z.enum(['view', 'in', 'out']), item: z.string().max(64).optional(), qty: z.number().int().min(1).max(999).optional() }),
 ]);
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
@@ -77,7 +81,11 @@ export interface EntitySpawn {
   chrome?: string[]; faction?: string; factionColor?: string; npcType?: string; hpPct?: number; carried?: boolean;
   /** v0.4: nivel (los PNJ lo muestran con óptica de análisis o el perk «Lector») y coche que conduce. */
   level?: number; vehicle?: string | null; buffs?: string[];
+  /** v0.6: miembros perdidos, si sangra, arma en la mano y si es un cadáver. */
+  lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean;
 }
+export interface SearchResult { key: string; name: string; kind: 'player' | 'npc'; level: number; title: string; faction?: string; bounty: number; record: string[]; online: boolean; location: { zone: string; place: string; x?: number; y?: number; precise: boolean } | null }
+export interface TrunkView { car: string; name: string; capacity: number; used: number; items: { def: string; name: string; qty: number }[]; inventory: { def: string; name: string; qty: number }[] }
 export interface SkillProg { id: string; name: string; attr: string; level: number; xp: number; from: number; to: number; bonus: number }
 export interface BuildingView { building: string; name: string; zone: string; units: { id: string; name: string; size: string; floor: number; price: number; owner: string | null; mine: boolean; allowed: boolean }[] }
 export interface RealtyView { houses: { id: string; name: string; size: string; zone: string; zoneName: string; price: number; floor: number }[]; index: Record<string, number>; mine: string[] }
@@ -164,6 +172,12 @@ export interface CharacterSheet {
   // ---- v0.5
   running: boolean; auto: { on: boolean; personality: string };
   post: { id: string; name: string; place: string; shift: [number, number]; pay: number; onShift: boolean; worked: boolean } | null;
+  // ---- v0.6
+  body: { wounds: Record<string, number>; lost: string[]; bleed: number };
+  weaponSlots: { grande: number; pequena: number; maxGrande: number; maxPequena: number };
+  aim: { range: number; time: number };
+  bio: { objective: string; objectiveName: string; childhood: string; event: string; done: boolean; progress: string } | null;
+  identified: { crime: string; district: string } | null;
 }
 export interface HiringView { place: string; posts: { id: string; name: string; desc: string; skill: string; minLevel: number; level: number; pay: number; shift: string; employer: string; holder: string | null; canApply: boolean; reason: string }[]; mine: { id: string; name: string; shift: string } | null }
 export interface ElevatorView { tower: string; name: string; current: number; floors: { floor: number; zone: string; name: string; access: string; allowed: boolean }[] }
@@ -186,7 +200,7 @@ export type ServerMsg =
   | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
   | { t: 'spawn'; e: EntitySpawn[] }
   | { t: 'despawn'; ids: number[] }
-  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[] }
+  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean }
   | { t: 'skillxp'; skill: string; name: string; gain: number; level: number; xp: number; from: number; to: number; up: boolean }
   | { t: 'building'; view: BuildingView }
   | { t: 'realty'; view: RealtyView }
@@ -208,7 +222,10 @@ export type ServerMsg =
   | { t: 'factions'; view: FactionsView }
   | { t: 'ambar'; view: AmbarView }
   | { t: 'speech'; id: number; text: string }
-  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko'; from: number; to: number }
+  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean }
+  | { t: 'searchResults'; device: 'phone' | 'computer'; results: SearchResult[] }
+  | { t: 'gotoTarget'; target: { label: string; zone: string; x: number; y: number } | null }
+  | { t: 'trunk'; view: TrunkView }
   | { t: 'ack'; seq: number; ok: boolean; reason?: string; path?: [number, number][]; info?: string }
   | { t: 'dialog'; view: DialogView }
   | { t: 'dialogClose' }

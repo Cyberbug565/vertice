@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 14,
  "height": 10,
- "danger": "protected",
+ "danger": "public",
  "base": "wood",
  "wallColor": "#2b2d42",
  "blocks": [
@@ -58,6 +58,54 @@
     1,
     8
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2b2d42"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    3
+   ],
+   "color": "#2b2d42"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    6
+   ],
+   "color": "#2b2d42"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    6
+   ],
+   "color": "#2b2d42"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    9,
+    5
+   ],
+   "color": "#6b2140"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    2,
+    5
+   ],
+   "color": "#ff3fa4"
   }
  ],
  "doors": [
@@ -95,5 +143,7 @@
  "safePoint": [
   10,
   5
- ]
+ ],
+ "objects": [],
+ "furnished": true
 }

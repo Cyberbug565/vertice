@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 22,
  "height": 14,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#3a2e44",
  "blocks": [],
@@ -71,6 +71,118 @@
     20,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    5,
+    10
+   ],
+   "color": "#4a5a6a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    3
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    20,
+    11
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "locker",
+   "at": [
+    15,
+    2
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    14,
+    3
+   ],
+   "color": "#e8f0f0"
+  },
+  {
+   "type": "locker",
+   "at": [
+    5,
+    12
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    5
+   ],
+   "color": "#4a5a6a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    4,
+    1
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    13,
+    8
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    4,
+    12
+   ],
+   "color": "#e8f0f0"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    4
+   ],
+   "color": "#4a5a6a"
   }
  ],
  "doors": [],
@@ -109,5 +221,6 @@
   "floor": 1,
   "access": "publico",
   "corp": "okami"
- }
+ },
+ "furnished": true
 }

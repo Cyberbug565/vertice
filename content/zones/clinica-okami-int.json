@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 12,
  "height": 9,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#26404a",
  "blocks": [],
@@ -42,6 +42,46 @@
    ],
    "blocking": false,
    "color": "#5affc8"
+  },
+  {
+   "type": "locker",
+   "at": [
+    4,
+    6
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "desk",
+   "at": [
+    5,
+    5
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "column",
+   "at": [
+    7,
+    5
+   ],
+   "color": "#4a5a6a"
+  },
+  {
+   "type": "column",
+   "at": [
+    8,
+    5
+   ],
+   "color": "#4a5a6a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    8,
+    7
+   ],
+   "color": "#d8e0e8"
   }
  ],
  "doors": [
@@ -83,5 +123,6 @@
  "safePoint": [
   9,
   4
- ]
+ ],
+ "furnished": true
 }

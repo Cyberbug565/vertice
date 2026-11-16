@@ -7,6 +7,7 @@ import { districts } from './districts.mjs';
 import { mapPoint, remapRefs, widenZone } from './widen.mjs';
 import { GRID, WASTE, scaleDistrict, remapToCity } from './merge.mjs';
 import { MAREA, enrichDistrict, mergeCity } from './v05.mjs';
+import { addComputer, cityDanger, dangerPolicy, furnishCity, furnishInterior, placeCameras } from './v06.mjs';
 import { readdirSync, unlinkSync, existsSync, statSync, mkdirSync } from 'node:fs';
 import { DEALERS, REGION_OF_SLOT, CYBER_UPGRADES, HOUSE_SIZES, cars, clothing, cyberwareExtra, houseTemplates, perks, placeHousing, weapons } from './v04.mjs';
 
@@ -150,6 +151,9 @@ scaled.forEach((z, i) => { const r = enrichDistrict(z, 500 + i * 13); for (const
 const houses = placeHousing(scaled);
 for (const h of houses) { h.district = h.zone; h.zone = 'vertice'; }
 const city = mergeCity(scaled, { city: 'Ciudad Vértice' });
+// v0.6: zonas de color, mobiliario urbano con cobertura y cámaras en las zonas vigiladas.
+cityDanger(city.zone);
+const nStreet = furnishCity(city.zone), nCams = placeCameras(city.zone);
 write('zones/vertice.json', city.zone);
 for (const z of [...extraZones, ...city.bases]) write(`zones/${z.id}.json`, z);
 for (const id of Object.keys(GRID)) if (existsSync(join(C, `zones/${id}.json`))) unlinkSync(join(C, `zones/${id}.json`));
@@ -162,7 +166,7 @@ write('posts.json', posts);
   write('factions.json', [...read('factions.json').filter((f) => f.id !== 'marea'), MAREA]);
 }
 for (const z of zones) write(`zones/${z.id}.json`, finalize(z));
-for (const t of houseTemplates()) write(`zones/${t.id}.json`, t);
+for (const t of houseTemplates()) { addComputer(t); write(`zones/${t.id}.json`, t); }
 write('houses.json', houses);
 remapRefs(workplaces);
 write('workplaces.json', workplaces);
@@ -356,6 +360,8 @@ write('dealers.json', DEALERS);
   const q = read('quickhacks.json').filter((x) => x.id !== 'analisis-profundo');
   q.splice(1, 0, { id: 'analisis-profundo', name: 'Análisis profundo', target: 'person', ram: 2, upload: 1.5, dv: 9, minRank: 0, minSkill: 6, effect: 'deepscan', trace: 0.05,
     desc: 'Hackeo de edgerunner: muestra el nivel, la salud, los atributos, las mejores habilidades, el arma, el blindaje y el cromo del objetivo. Requiere Interfaz 6.' });
+  if (!q.some((x) => x.id === 'apagar-camara')) q.push({ id: 'apagar-camara', name: 'Apagar cámara', target: 'camera', ram: 3, upload: 2, dv: 10, minRank: 0, minSkill: 2, effect: 'disable', amount: [90, 90], trace: 0.1,
+    desc: 'Corta la grabación de una cámara de vigilancia durante 90 s: lo que hagas delante no quedará registrado.' });
   write('quickhacks.json', q);
   const rumors = {
     carnicero: 'Dicen que en la esquina sureste de Ferro, al final de Kanal, un tal Brann opera sin preguntar de dónde viene el cromo.',
@@ -399,17 +405,29 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
 // ---------------------------------------------------------------- v0.5: todo lo que apunta a un distrito pasa a la ciudad única
 {
   const shops = read('shops.json').filter((x) => x.id !== 'farmacia');
-  shops.push({ id: 'farmacia', name: 'Farmacia', owner: 'okami', zone: 'vertice', stock: { estim: 12, analgesicos: 30, estabilizador: 6, 'agua-filtrada': 20, 'bebida-isotonica': 12, 'barrita-proteica': 20 }, buys: ['medicina'], priceMult: 1.05, security: 16 });
+  // v0.6: vendas para cortar hemorragias.
+  write('items.json', [...read('items.json').filter((i) => i.id !== 'venda'), { id: 'venda', name: 'Venda hemostática', desc: 'Corta la mayor parte de una hemorragia (70 %) y da salud +5. El estimulante médico la corta del todo.', weight: 0.1, category: 'medicina', price: 15, consumable: { restore: 'hp', amount: 5 } }]);
+  for (const sh of shops) if (sh.id === 'aurora-24h') sh.stock.venda = 20;
+  shops.push({ id: 'farmacia', name: 'Farmacia', owner: 'okami', zone: 'vertice', stock: { venda: 30, estim: 12, analgesicos: 30, estabilizador: 6, 'agua-filtrada': 20, 'bebida-isotonica': 12, 'barrita-proteica': 20 }, buys: ['medicina'], priceMult: 1.05, security: 16 });
   write('shops.json', shops);
   const walk = (dir) => readdirSync(dir).flatMap((f) => { const p = join(dir, f); return statSync(p).isDirectory() ? walk(p) : f.endsWith('.json') ? [p] : []; });
-  let changed = 0;
+  let changed = 0, furnished = 0;
+  // Puntos que el mobiliario no puede tapar: horarios de PNJ, puestos de trabajo y empleos.
+  const keep = new Map();
+  const addKeep = (zone, at) => { if (!keep.has(zone)) keep.set(zone, []); keep.get(zone).push(at); };
+  for (const n of read('npcs.json')) for (const sc of n.schedule) addKeep(sc.zone, sc.at);
+  for (const w of read('workplaces.json')) addKeep(w.zone, w.at);
+  for (const x of posts) addKeep(x.zone, x.at);
   for (const f of walk(C)) {
     if (/world\.json$|ambar\.json$|zones[\/\\]vertice\.json$/.test(f)) continue;
     const before = readFileSync(f, 'utf8');
     const data = JSON.parse(before);
     remapToCity(data);
+    // v0.6: zonas de color y muebles con cobertura en todos los interiores (sin cortar el paso a puertas, objetos ni puestos).
+    if (/zones[\/\\]/.test(f) && data.kind === 'interior') { dangerPolicy(data); furnished += furnishInterior(data, keep.get(data.id) ?? []); }
     const after = JSON.stringify(data, null, 1) + '\n';
     if (after !== before && JSON.stringify(JSON.parse(before)) !== JSON.stringify(data)) { writeFileSync(f, after); changed++; }
   }
   console.log(`v0.5: ciudad única ${city.zone.width}×${city.zone.height}, ${posts.length} puestos fijos, ${extraZones.length + city.bases.length} zonas nuevas, ${changed} ficheros traducidos.`);
+  console.log(`v0.6: ${furnished} muebles en interiores, ${nStreet} elementos urbanos, ${nCams} cámaras.`);
 }

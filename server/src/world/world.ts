@@ -11,7 +11,7 @@ import type { Metrics } from '../metrics.js';
 import { Zone } from './zone.js';
 import { spawnOf, type Entity } from './entity.js';
 import { ambientBrain, scheduledBrain, thinkNpc } from './npc.js';
-import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, savePlayerVitals, sheetHooks, wornAppearance, type PlayerState } from '../game/player.js';
+import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, objectiveStatus, savePlayerVitals, sheetHooks, wornAppearance, type PlayerState } from '../game/player.js';
 import { FactService, InstanceService } from '../game/services.js';
 import { EffectEngine, GameError, type EffectOutcome } from '../game/effects.js';
 import { allOk, buildView, checkNumbers, entryNode } from '../game/dialog.js';
@@ -21,6 +21,7 @@ import { Progress } from './progress.js';
 import { Property, isHouseZone } from './property.js';
 import { Posts } from './posts.js';
 import { Autopilot } from './autopilot.js';
+import { Intel } from './intel.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
@@ -61,6 +62,7 @@ export class World {
   readonly property: Property;
   readonly posts: Posts;
   readonly autopilot: Autopilot;
+  readonly intel: Intel;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => void = () => {};
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
@@ -73,7 +75,9 @@ export class World {
     this.property = new Property(this);
     this.posts = new Posts(this);
     this.autopilot = new Autopilot(this);
+    this.intel = new Intel(this);
     sheetHooks.post = (p) => this.posts.status(p);
+    sheetHooks.objective = (p) => objectiveStatus(p).text;
   }
 
   // ---------------------------------------------------------------- arranque
@@ -98,7 +102,7 @@ export class World {
     const districtsAll = exteriors.flatMap((z) => z.def.districts.map((d) => ({ z, d })));
     const ref = districtsAll.find((x) => x.d.id === 'ferro')?.d.ambient || this.zones.get('ferro')?.def.ambient || exteriors.reduce((acc, z) => acc + z.def.ambient, 0) || 1;
     const mkAmbient = (zone: Zone, x: number, y: number, home?: [number, number], radius?: number) => {
-      const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES), title: 'Transeúnte', x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.6 + rng() * 0.8,
+      const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES), title: 'Transeúnte', x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.3 + rng() * 1.1,
         appearance: { skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
       e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
       // Transeúntes: civiles con algo de cromo visible y salud propia.
@@ -112,7 +116,7 @@ export class World {
     };
     for (const zone of exteriors) {
       if (zone.def.districts.length) {
-        for (const d of zone.def.districts) { const n = Math.round((this.cfg.ambientNpcs * d.ambient) / ref); for (let i = 0; i < n && d.waypoints.length; i++) { const wp = pick(d.waypoints); mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); } }
+        for (const d of zone.def.districts) { const n = Math.round((this.cfg.ambientNpcs * d.ambient) / ref); for (let i = 0; i < n && d.waypoints.length; i++) { const wp = pick(d.waypoints); const local = rng() < 0.7; mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5, local ? [wp[0], wp[1]] : undefined, local ? 14 + Math.floor(rng() * 18) : undefined); } }
         continue;
       }
       const n = Math.round((this.cfg.ambientNpcs * zone.def.ambient) / ref);
@@ -202,6 +206,8 @@ export class World {
   /** Retira de la simulación a un personaje fallecido y cierra su sesión. */
   removeDead(p: PlayerState, e: Entity) {
     this.removeEntity(e);
+    this.property.clearParked(p);
+    this.intel.goto.delete(p.charId);
     for (const [k, l] of this.lingering) if (l.p === p) { clearTimeout(l.timer); this.lingering.delete(k); }
     const c = e.conn;
     if (c) {
@@ -211,7 +217,7 @@ export class World {
     }
   }
 
-  private addEntity(z: Zone, o: Partial<Entity> & { kind: Entity['kind']; name: string; x: number; y: number; interactive: boolean; label: string; speed?: number }): Entity {
+  addEntity(z: Zone, o: Partial<Entity> & { kind: Entity['kind']; name: string; x: number; y: number; interactive: boolean; label: string; speed?: number }): Entity {
     const e: Entity = {
       id: this.nextId++, zone: z, cellKey: 0, sectorId: '', path: [], facing: 2, moving: false, lastMoveTick: 0, labelVer: 0, ...o,
       speed: (o.speed ?? 2.6) * this.cfg.speedScale,
@@ -269,6 +275,7 @@ export class World {
     { const every = RULES.snapshotEveryTicks, phase = this.tick % every; let i = 0; for (const c of this.conns.values()) { if ((i++ % every) === phase) this.snapshot(c); } }
     this.combat.everyTick();
     if (this.tick % 20 === 0 && this.tick % 200 === 0) { try { this.property.sample(); } catch (err) { console.error('[propiedad]', err); } }
+    if (this.tick % 20 === 10) { try { this.intel.tick(); } catch (err) { console.error('[objetivo]', err); } }
     if (this.tick % 40 === 20) { try { this.autopilot.tick(); } catch (err) { console.error('[automático]', err); } }
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
@@ -464,7 +471,9 @@ export class World {
       conn.p = p;
       conn.e = this.addEntity(zone, { kind: 'player', name: p.name, title: this.c.roles.find((r) => r.id === p.role)?.name, x: p.x, y: p.y, interactive: true, appearance: wornAppearance(this.c, p), role: p.role, label: '', speed: walkSpeed(p.attributes), level: p.level });
       conn.e.chrome = chromeParts(this.c, p);
+      conn.e.body = p.body; conn.e.weaponId = p.equipped ?? undefined;
       await this.combat.loadAmbar(p);
+      await this.property.restoreParked(p).catch((err) => console.error('[coches]', err));
     }
     const e = conn.e!;
     e.conn = conn;
@@ -498,6 +507,8 @@ export class World {
   }
 
   private async removePlayer(_accountId: string, e: Entity, p: PlayerState) {
+    this.property.clearParked(p);
+    this.intel.goto.delete(p.charId);
     e.zone.remove(e);
     this.entities.delete(e.id);
     p.x = e.x; p.y = e.y; p.zone = e.zone.id;
@@ -538,6 +549,7 @@ export class World {
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
     const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto'];
     // Una orden manual del jugador (no del piloto automático, que usa seq 0) le devuelve el control.
+    if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'retreat', 'stop'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
     if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop'].includes(m.t)) this.autopilot.takeOver(c);
     if (p.status === 'downed' && !passive.includes(m.t)) { if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás derribado: espera a que alguien te estabilice.' }); return; }
     // Cualquier orden activa despierta al personaje.
@@ -619,6 +631,12 @@ export class World {
         }
       });
       case 'drop': return guarded(m.seq, async () => this.combat.drop(c));
+      case 'searchPeople': return guarded(m.seq, async () => this.intel.search(c, m.query, m.device));
+      case 'goto': return guarded(m.seq, async () => this.intel.start(c, m));
+      case 'trunk': return guarded(m.seq, async () => {
+        if (m.action === 'view') this.send(c, { t: 'trunk', view: await this.property.trunkView(c) });
+        else await this.property.trunkMove(c, m.item ?? '', m.qty ?? 1, m.action);
+      });
       case 'factions': this.send(c, { t: 'factions', view: this.combat.factionsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'ambar': return guarded(m.seq, async () => { if (m.plan && m.opId) await this.combat.buyAmbar(c, m.plan, m.opId); this.send(c, { t: 'ambar', view: this.combat.ambarView(p) }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); });
       case 'bribe': return guarded(m.seq, () => this.combat.bribe(c, m.opId));
@@ -736,8 +754,10 @@ export class World {
       return this.send(c, r.ok ? { t: 'ack', seq, ok: true, path: e.path, info: 'Retirada al punto seguro del local' } : { t: 'ack', seq, ok: false, reason: r.reason });
     }
     let best: { door: Entity; path: [number, number][]; len: number } | null = null;
-    for (const d of e.zone.entities) {
-      if (d.kind !== 'door' || d.danger !== 'protected') continue;
+    // Refugio: zonas protegidas o, en su defecto, cualquier local público cercano (no casas ajenas ni bases de bandas).
+    const refuges = [...e.zone.entities].filter((d) => d.kind === 'door' && d.doorTo && (d.danger === 'protected' ? !d.doorTo.zone.startsWith('casa:') && !/^casa-/.test(d.doorTo.zone) : d.danger === 'public' && this.zones.get(d.doorTo.zone)?.def.kind === 'interior' && !this.zones.get(d.doorTo.zone)?.def.gangBase && !/^casa/.test(d.doorTo.zone)))
+      .sort((a, b) => Math.hypot(a.x - e.x, a.y - e.y) - Math.hypot(b.x - e.x, b.y - e.y)).slice(0, 6);
+    for (const d of refuges) {
       const r = findPath(e.zone.grid, e.x, e.y, d.x, d.y, pathBudgetFor(e.x, e.y, d.x, d.y));
       if (!r.ok) continue;
       let len = 0, px = e.x, py = e.y;
@@ -825,7 +845,12 @@ export class World {
       case 'jobboard': return run(async () => this.send(c, { t: 'jobs', view: await sv.jobsView(c) }));
       case 'bountyboard': return this.send(c, { t: 'bounties', view: sv.bountyView(c.p!) });
       case 'marketterm': return this.handle(c, { t: 'market', seq: 0 });
-      case 'atm': return this.send(c, { t: 'targetMenu', view: this.combat.menu(c, o) });
+      case 'computer': return this.send(c, { t: 'searchResults', device: 'computer', results: [] });
+      case 'mycar': {
+        if (o.ownerChar !== c.p!.charId) return this.send(c, { t: 'notice', kind: 'info', text: `${o.name}. Cerrado con llave.` });
+        return run(async () => this.send(c, { t: 'trunk', view: await this.property.trunkView(c) }));
+      }
+      case 'atm': case 'camera': return this.send(c, { t: 'targetMenu', view: this.combat.menu(c, o) });
       case 'ambar': return this.send(c, { t: 'ambar', view: this.combat.ambarView(c.p!) });
       case 'hiring': return this.send(c, { t: 'hiring', view: this.posts.hiringView(c, o.objId) });
       case 'elevator': return run(async () => this.send(c, { t: 'elevator', view: this.posts.elevatorView(c) }));

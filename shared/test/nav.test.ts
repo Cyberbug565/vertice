@@ -15,8 +15,8 @@ describe('navegación', () => {
     expect(r.path.length).toBeGreaterThan(0);
   });
   it('rechaza destinos dentro de edificios o en el agua', () => {
-    expect(isWalkable(ferro, 38.5, 143.5)).toBe(false); // Torre Halcón
-    expect(findPath(ferro, 37.5, 163.5, 38.5, 143.5).ok).toBe(false);
+    expect(isWalkable(ferro, 38.5, 140.5)).toBe(false); // Torre Halcón
+    expect(findPath(ferro, 37.5, 163.5, 38.5, 140.5).ok).toBe(false);
     expect(isWalkable(ferro, 97.5, 169.5)).toBe(false); // canal
   });
   it('respeta el límite de expansiones', () => {

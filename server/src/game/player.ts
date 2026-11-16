@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import {
   ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
+  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, twoHanded, weaponSize, type BodyState, SKILL_POINT_CAP,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
@@ -41,6 +42,11 @@ export interface PlayerState {
   revive?: { at: number; frac: number; why: string };
   // ---- v0.5
   running: boolean; auto: { on: boolean; personality: string; status: string };
+  // ---- v0.6
+  body: BodyState;
+  bio: { objective: string; childhood: string; event: string; done: boolean } | null;
+  identified: { crime: string; district: string; at: number } | null;
+  intel: Map<string, { name: string; zone: string; x: number; y: number; at: number; precise: boolean }>;
 }
 
 export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean; part?: string | null }
@@ -138,18 +144,23 @@ export function effective(c: Content, p: PlayerState) {
   if (!ram && p.role === 'netrunner') ram = 3;
   if (ram) ram += pm.mods.ram ?? 0;
   // Arma equipada: debe estar en la mochila o ser un implante instalado; si no, puños.
+  // v0.6: sin un brazo (o una mano) no se pueden usar armas a dos manos; sin los dos, ninguna.
+  const lost = new Set(p.body?.lost ?? []);
+  const armsLost = (['izq', 'der'] as const).filter((s) => lost.has(`brazo_${s}`) || lost.has(`mano_${s}`)).length;
+  const legsLost = (['izq', 'der'] as const).filter((s) => lost.has(`pierna_${s}`)).length;
   const eq = p.equipped && ((p.inventory.get(p.equipped) ?? 0) > 0 || integrated.includes(p.equipped)) ? c.items.find((i) => i.id === p.equipped) : undefined;
-  const weapon = eq?.weapon ? eq : undefined;
+  const weapon = eq?.weapon && armsLost < 2 && !(armsLost && twoHanded(eq)) ? eq : undefined;
   const weight = [...p.inventory].reduce((acc, [d, q]) => acc + (c.items.find((i) => i.id === d)?.weight ?? 0) * q, 0);
   const carryMax = carryCapacity(attrs) + carryBonus;
   return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs) + chromeBonus, humanityLoad: load, needs, mods, weapon, integrated, ram, weight, carryMax,
-    staminaMax: maxStamina(attrs) + LEVEL_GAINS.stamina * (p.level - 1) + (pm.mods.stamina ?? 0), speed, meleeDmg, dodge: Math.min(0.5, dodge), carSpeed, perk: pm.mods, flags: pm.flags };
+    staminaMax: maxStamina(attrs) + LEVEL_GAINS.stamina * (p.level - 1) + (pm.mods.stamina ?? 0), speed, meleeDmg, dodge: Math.min(0.5, dodge), carSpeed, perk: pm.mods, flags: pm.flags,
+    armsLost, legsLost, limbMult: legsLost === 2 ? 0.25 : legsLost ? 0.5 : 1 };
 }
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
 const NAME = /^[\p{L}0-9 _'.-]{3,20}$/u;
 
-export interface CreateCharacterInput { name: string; origin: string; role: string; attributes: Record<string, number>; appearance: Appearance; profession?: string }
+export interface CreateCharacterInput { name: string; origin: string; role: string; attributes: Record<string, number>; appearance: Appearance; profession?: string; bio?: { objective: string; childhood: string; event: string }; skillPoints?: Record<string, number> }
 
 export function validateCreate(c: Content, input: any): string | null {
   if (!input || typeof input !== 'object') return 'Datos inválidos';
@@ -161,6 +172,20 @@ export function validateCreate(c: Content, input: any): string | null {
   if (a) return a;
   const ap = normalizeAppearance(input.appearance);
   if (!ap.ok) return ap.error;
+  if (input.bio) {
+    if (!OBJECTIVES.some((o) => o.id === input.bio.objective)) return 'Objetivo desconocido';
+    if (!CHILDHOODS.some((o) => o.id === input.bio.childhood)) return 'Infancia desconocida';
+    if (!EVENTS.some((o) => o.id === input.bio.event)) return 'Giro vital desconocido';
+  }
+  if (input.skillPoints) {
+    const extra = (input.bio?.objective === 'maestria' ? 2 : 0) + (input.bio?.event === 'deuda' ? 2 : 0);
+    let sum = 0;
+    for (const [k, v] of Object.entries(input.skillPoints)) {
+      if (!c.skills.some((s) => s.id === k) || !Number.isInteger(v) || (v as number) < 0 || (v as number) > CREATION_SKILL_MAX) return `Reparto de habilidades inválido (${k})`;
+      sum += v as number;
+    }
+    if (sum > CREATION_SKILL_POINTS + extra) return `Solo puedes repartir ${CREATION_SKILL_POINTS + extra} puntos de habilidad`;
+  }
   return null;
 }
 
@@ -173,7 +198,15 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
   const skills: Record<string, number> = Object.fromEntries(c.skills.map((s) => [s.id, 0]));
   for (const [k, v] of Object.entries(role.skills)) skills[k] = v;
   for (const k of ['percepcion', 'atletismo', 'negociacion']) skills[k] = Math.max(skills[k], 1);
-  const skillXp = Object.fromEntries(Object.entries(skills).map(([k, v]) => [k, skillXpFor(legacySkillLevel(v))]));
+  // Niveles de partida: rol + infancia + giro vital + objetivo + puntos repartidos (máx. 20 con puntos).
+  const lv: Record<string, number> = Object.fromEntries(Object.entries(skills).map(([k, v]) => [k, legacySkillLevel(v)]));
+  const bio = input.bio;
+  const add = (m: Record<string, number> | undefined) => { for (const [k, v] of Object.entries(m ?? {})) lv[k] = (lv[k] ?? 1) + v; };
+  if (bio) { add(OBJECTIVES.find((o) => o.id === bio.objective)?.skills); add(CHILDHOODS.find((o) => o.id === bio.childhood)?.skills); add(EVENTS.find((o) => o.id === bio.event)?.skills); }
+  add(input.skillPoints);
+  const skillXp = Object.fromEntries(Object.entries(lv).map(([k, v]) => [k, skillXpFor(Math.min(SKILL_POINT_CAP, Math.max(1, v)))]));
+  const bioMoney = bio ? (OBJECTIVES.find((o) => o.id === bio.objective)?.money ?? 0) + (CHILDHOODS.find((o) => o.id === bio.childhood)?.money ?? 0) + (EVENTS.find((o) => o.id === bio.event)?.money ?? 0) : 0;
+  const startMoney = Math.max(20, origin.startMoney + bioMoney);
   const id = randomUUID();
   const items: [string, number][] = [['agente', 1], ['chaqueta', 1], ['camiseta-basica', 1], ['vaqueros', 1], ['deportivas', 1], ['navaja', 1], ['fideos-krill', 2], ['agua-filtrada', 2]];
   const wear = { torso_ext: 'chaqueta', torso_int: 'camiseta-basica', piernas: 'vaqueros', pies: 'deportivas' };
@@ -191,8 +224,8 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$13)`,
         [id, accountId, input.name.trim(), origin.id, role.id, JSON.stringify(attrs), JSON.stringify(skills), JSON.stringify((normalizeAppearance(input.appearance) as any).value), 0,
           maxHp(attrs), maxStamina(attrs), attrs.LUCK, humanityBase(attrs.EMP), c.manifest.startZone, c.manifest.startAt[0] + 0.5, c.manifest.startAt[1] + 0.5, RULES.version, contentVersion, input.profession ?? 'vagabundo']);
-      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$3,$4)', [`start-${id}`, id, origin.startMoney, `Fondos iniciales (${origin.name})`]);
-      await q.query('UPDATE characters SET money = $2, equipped = $3, skill_xp = $4, wear = $5 WHERE id = $1', [id, origin.startMoney, equipped, JSON.stringify(skillXp), JSON.stringify(wear)]);
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$3,$4)', [`start-${id}`, id, startMoney, `Fondos iniciales (${origin.name})`]);
+      await q.query('UPDATE characters SET money = $2, equipped = $3, skill_xp = $4, wear = $5, bio = $6 WHERE id = $1', [id, startMoney, equipped, JSON.stringify(skillXp), JSON.stringify(wear), bio ? JSON.stringify({ ...bio, done: false }) : null]);
       for (const [def, qty] of items) await q.query('INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4)', [randomUUID(), id, def, qty]);
     });
   } catch (e: any) {
@@ -248,6 +281,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     secondLifeAt: Number(row.second_life_at ?? 0), milagroAt: 0, autoStimAt: 0,
     houses: houses.rows.map((x: any) => x.house_id), cars: cars.rows.map((x: any) => ({ id: x.id, car: x.car_id })), driving: null, lastCombatAt: 0, walked: 0,
     running: false, auto: { on: !!row.autopilot?.on, personality: row.autopilot?.personality ?? 'responsable', status: '' },
+    body: row.body ?? newBody(), bio: row.bio ?? null, identified: row.identified ?? null, intel: new Map(),
   };
   for (const x of prog.rows) {
     p.contracts.set(x.contract_id, { instanceId: x.instance_id, contractId: x.contract_id, version: x.version, state: x.state, objectives: { ...x.shared_obj, ...x.objectives }, outcome: x.outcome });
@@ -263,7 +297,32 @@ export function flagValue(p: PlayerState, key: string): unknown {
 }
 
 /** Ganchos que rellena el mundo (datos que no viven en el estado del personaje). */
-export const sheetHooks: { post: (p: PlayerState) => CharacterSheet['post'] } = { post: () => null };
+export const sheetHooks: { post: (p: PlayerState) => CharacterSheet['post']; objective: (p: PlayerState) => string } = { post: () => null, objective: () => '' };
+/** Armas que llevas encima por tamaño (las integradas no cuentan). */
+export function weaponSlotsOf(c: Content, p: PlayerState) {
+  let grande = 0, pequena = 0;
+  for (const [id, q] of p.inventory) { if (q <= 0) continue; const it = c.items.find((i) => i.id === id); const sz = it && weaponSize(it); if (sz === 'grande') grande += q; else if (sz === 'pequena') pequena += q; }
+  return { grande, pequena, maxGrande: WEAPON_SLOTS.grande, maxPequena: WEAPON_SLOTS.pequena };
+}
+/** ¿Cabe un arma más? Devuelve el motivo si no. */
+export function weaponFits(c: Content, p: PlayerState, itemId: string, qty = 1): string | null {
+  const it = c.items.find((i) => i.id === itemId);
+  const sz = it && weaponSize(it);
+  if (!sz) return null;
+  const s = weaponSlotsOf(c, p);
+  if (sz === 'grande' && s.grande + qty > s.maxGrande) return `Ya llevas ${s.grande} armas largas (máximo ${s.maxGrande}). Guarda alguna en el maletero del coche o en tu piso franco.`;
+  if (sz === 'pequena' && s.pequena + qty > s.maxPequena) return `Ya llevas ${s.pequena} armas cortas (máximo ${s.maxPequena}). Guarda alguna en el maletero del coche o en tu piso franco.`;
+  return null;
+}
+/** Tiro apuntado: alcance de tiro seguro y tiempo quieto apuntando (mejoran con Armas a distancia y REF). */
+export function aimOf(c: Content, p: PlayerState) {
+  const ef = effective(c, p);
+  const w = ef.weapon?.weapon;
+  if (!w || w.kind !== 'ranged') return { range: 0, time: 0 };
+  const lv = skillLevelForXp(p.skillXp.armas ?? 0);
+  const f = Math.max(0.35, Math.min(0.85, 0.3 + lv * 0.02 + ef.attrs.REF * 0.025 + (w.traits?.includes('inteligente') ? 0.1 : 0)));
+  return { range: Math.round(w.range * f * 10) / 10, time: Math.round(Math.max(0.7, 2.4 - lv * 0.05 - ef.attrs.REF * 0.06) * 10) / 10 };
+}
 
 export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
   const ef = effective(c, p);
@@ -281,6 +340,10 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
     speedMult: Math.round((1 + ef.speed) * 100) / 100, dodge: Math.round(ef.dodge * 100), uniques: [...ef.flags],
     running: p.running, auto: { on: p.auto.on, personality: p.auto.personality }, post: sheetHooks.post(p),
+    body: { wounds: { ...p.body.wounds } as Record<string, number>, lost: [...p.body.lost], bleed: Math.round(p.body.bleed * 10) / 10 },
+    weaponSlots: weaponSlotsOf(c, p), aim: aimOf(c, p),
+    bio: p.bio ? { ...p.bio, objectiveName: OBJECTIVES.find((o) => o.id === p.bio!.objective)?.name ?? p.bio.objective, progress: sheetHooks.objective(p) } : null,
+    identified: p.identified ? { crime: p.identified.crime, district: p.identified.district } : null,
     hp: Math.round(p.hp), hpMax: ef.hpMax, stamina: Math.round(p.stamina), staminaMax: ef.staminaMax, luck: p.luck, luckMax: p.attributes.LUCK,
     humanity: p.humanity, humanityMax: p.humanityMax, chromeCapacity: ef.chromeCapacity, chromeUsed: ef.chromeUsed,
     carry: Math.round(ef.weight * 10) / 10, carryMax: ef.carryMax,
@@ -323,10 +386,10 @@ export function buildJournal(c: Content, p: PlayerState, participants: (instance
 export async function savePlayerVitals(db: Queryable, p: PlayerState) {
   await db.query(`UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4, hp=$5, stamina=$6, luck=$7, stance=$8, hunger=$9, thirst=$10, fatigue=$11, wanted=$12,
      auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16, equipped=$17, net_xp=$18, net_rank=$19, downed_lethal=$20,
-     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27, autopilot=$28 WHERE id=$1 AND status <> 'dead'`,
+     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27, autopilot=$28, body=$29, bio=$30, identified=$31 WHERE id=$1 AND status <> 'dead'`,
     [p.charId, p.zone, p.x, p.y, Math.round(p.hp), Math.round(p.stamina), p.luck, p.stance, p.hunger, p.thirst, p.fatigue, p.wanted, p.autoNeeds, p.activeJob,
       p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null, p.equipped, p.netXp, p.netRank, p.downedLethal,
-      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp, JSON.stringify({ on: p.auto.on, personality: p.auto.personality })]);
+      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp, JSON.stringify({ on: p.auto.on, personality: p.auto.personality }), JSON.stringify(p.body), p.bio ? JSON.stringify(p.bio) : null, p.identified ? JSON.stringify(p.identified) : null]);
 }
 
 /** Puntos de habilidad y de perk disponibles: se ganan al subir de nivel (y los de perk también cada 5 niveles de habilidad). */
@@ -335,11 +398,25 @@ export function pointsAvailable(c: Content, p: PlayerState) {
   // De habilidad: un punto de perk al llegar a 10, 15, 20 y 25 en cualquiera de ellas.
   const perkEarned = LEVEL_GAINS.perkPoints * (p.level - 1) + 1 + Object.values(p.skillXp).reduce((a, xp) => { const lv = skillLevelForXp(xp); return a + (lv >= 10 ? Math.floor(lv / 5) - 1 : 0); }, 0);
   const perkSpent = p.perks.reduce((a, id) => a + (c.perks.find((x) => x.id === id)?.cost ?? 0), 0);
-  return { skill: Math.max(0, skillEarned - p.skillPointsSpent), perk: Math.max(0, perkEarned - perkSpent) };
+  const bonus = p.bio?.done ? 2 : 0;
+  return { skill: Math.max(0, skillEarned - p.skillPointsSpent), perk: Math.max(0, perkEarned + bonus - perkSpent) };
 }
 
 export function recomputeLevel(p: PlayerState) {
   const before = p.level;
   p.level = levelForXp(p.xp);
   return p.level > before;
+}
+
+/** v0.6 · Objetivo vital elegido al crear el personaje: progreso en texto y si ya se ha cumplido. */
+export function objectiveStatus(p: PlayerState): { text: string; done: boolean } {
+  const o = p.bio?.objective;
+  switch (o) {
+    case 'rico': return { text: `${p.money.toLocaleString('es-ES')} / 50.000 €$`, done: p.money >= 50000 };
+    case 'leyenda': { const r = p.rep.get('calle') ?? 0; return { text: `Reputación callejera ${r} / 40`, done: r >= 40 }; }
+    case 'cromo': { const n = p.cyber.filter((x) => x.location === 'installed').length; return { text: `${n} / 5 implantes`, done: n >= 5 }; }
+    case 'hogar': return { text: p.houses.length ? 'Ya tienes casa' : 'Aún sin casa propia', done: p.houses.length > 0 };
+    case 'maestria': { const best = Math.max(0, ...Object.values(p.skillXp).map((x) => skillLevelForXp(x))); return { text: `Mejor habilidad: nivel ${best} / 20`, done: best >= 20 }; }
+    default: return { text: '', done: false };
+  }
 }

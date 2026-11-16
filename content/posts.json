@@ -202,8 +202,8 @@
   "name": "Peón · Urbanización Mirador",
   "zone": "vertice",
   "at": [
-   161,
-   99
+   216,
+   39
   ],
   "skill": "atletismo",
   "minLevel": 4,
@@ -221,8 +221,8 @@
   "name": "Operador/a de grúa · Urbanización Mirador",
   "zone": "vertice",
   "at": [
-   162,
-   97
+   217,
+   37
   ],
   "skill": "conduccion",
   "minLevel": 8,
@@ -240,8 +240,8 @@
   "name": "Jefe/a de obra · Urbanización Mirador",
   "zone": "vertice",
   "at": [
-   163,
-   104
+   217,
+   39
   ],
   "skill": "reparacion",
   "minLevel": 12,
@@ -349,8 +349,8 @@
   "name": "Peón · Obra del Casino Fénix",
   "zone": "vertice",
   "at": [
-   350,
-   99
+   316,
+   39
   ],
   "skill": "atletismo",
   "minLevel": 4,
@@ -368,8 +368,8 @@
   "name": "Operador/a de grúa · Obra del Casino Fénix",
   "zone": "vertice",
   "at": [
-   351,
-   97
+   317,
+   37
   ],
   "skill": "conduccion",
   "minLevel": 8,
@@ -387,8 +387,8 @@
   "name": "Jefe/a de obra · Obra del Casino Fénix",
   "zone": "vertice",
   "at": [
-   353,
-   104
+   317,
+   39
   ],
   "skill": "reparacion",
   "minLevel": 12,
@@ -496,8 +496,8 @@
   "name": "Peón · Ampliación de la fundición",
   "zone": "vertice",
   "at": [
-   311,
-   128
+   366,
+   183
   ],
   "skill": "atletismo",
   "minLevel": 4,
@@ -515,8 +515,8 @@
   "name": "Operador/a de grúa · Ampliación de la fundición",
   "zone": "vertice",
   "at": [
-   312,
-   126
+   367,
+   181
   ],
   "skill": "conduccion",
   "minLevel": 8,
@@ -534,8 +534,8 @@
   "name": "Jefe/a de obra · Ampliación de la fundición",
   "zone": "vertice",
   "at": [
-   313,
-   133
+   367,
+   183
   ],
   "skill": "reparacion",
   "minLevel": 12,
@@ -643,8 +643,8 @@
   "name": "Peón · Obra del Bloque 60",
   "zone": "vertice",
   "at": [
-   11,
-   323
+   66,
+   263
   ],
   "skill": "atletismo",
   "minLevel": 4,
@@ -662,8 +662,8 @@
   "name": "Operador/a de grúa · Obra del Bloque 60",
   "zone": "vertice",
   "at": [
-   12,
-   321
+   67,
+   261
   ],
   "skill": "conduccion",
   "minLevel": 8,
@@ -681,8 +681,8 @@
   "name": "Jefe/a de obra · Obra del Bloque 60",
   "zone": "vertice",
   "at": [
-   13,
-   328
+   67,
+   263
   ],
   "skill": "reparacion",
   "minLevel": 12,
@@ -791,7 +791,7 @@
   "zone": "vertice",
   "at": [
    31,
-   211
+   148
   ],
   "skill": "atletismo",
   "minLevel": 4,
@@ -810,7 +810,7 @@
   "zone": "vertice",
   "at": [
    32,
-   209
+   146
   ],
   "skill": "conduccion",
   "minLevel": 8,
@@ -829,7 +829,7 @@
   "zone": "vertice",
   "at": [
    32,
-   214
+   147
   ],
   "skill": "reparacion",
   "minLevel": 12,
@@ -991,8 +991,8 @@
   "name": "Peón · Obra de la Torre Kaiten II",
   "zone": "vertice",
   "at": [
-   162,
-   128
+   274,
+   218
   ],
   "skill": "atletismo",
   "minLevel": 4,
@@ -1010,8 +1010,8 @@
   "name": "Operador/a de grúa · Obra de la Torre Kaiten II",
   "zone": "vertice",
   "at": [
-   163,
-   126
+   275,
+   216
   ],
   "skill": "conduccion",
   "minLevel": 8,
@@ -1029,8 +1029,8 @@
   "name": "Jefe/a de obra · Obra de la Torre Kaiten II",
   "zone": "vertice",
   "at": [
-   164,
-   133
+   277,
+   217
   ],
   "skill": "reparacion",
   "minLevel": 12,

@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 12,
  "height": 9,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#401a40",
  "blocks": [],
@@ -36,6 +36,44 @@
     4,
     1
    ]
+  },
+  {
+   "type": "planter",
+   "at": [
+    7,
+    6
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "crate",
+   "at": [
+    7,
+    3
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    9,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    1
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "column",
+   "at": [
+    5,
+    6
+   ],
+   "color": "#3a3a4a"
   }
  ],
  "doors": [
@@ -77,5 +115,6 @@
  "safePoint": [
   9,
   4
- ]
+ ],
+ "furnished": true
 }

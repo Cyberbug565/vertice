@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   checkChance, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
-  type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type JobsView, type TargetMenuView,
+  OBJECTIVES, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type JobsView, type TargetMenuView,
 } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { Entity, RunningTask } from './entity.js';
@@ -11,7 +11,7 @@ import { MarketService } from '../game/market.js';
 import { ClinicService } from '../game/clinic.js';
 import { BountyService, type Bounty } from '../game/bounty.js';
 import { GameError } from '../game/effects.js';
-import { buildSheet, chromeParts, effective, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
+import { buildSheet, chromeParts, effective, objectiveStatus, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
 const SHOP_RANGE = 3.5;
@@ -64,6 +64,11 @@ export class Survival {
     const dtH = this.gameHoursPerSecond();
     for (const c of this.w.conns.values()) if (c.p && c.e && !c.closed) this.tickPlayer(c, dtH);
     const now = Date.now();
+    // Objetivo vital (v0.6): al cumplirlo, +2 puntos de perk.
+    if (this.w.tick % 200 === 0) for (const c of this.w.conns.values()) {
+      const p = c.p; if (!p?.bio || p.bio.done) continue;
+      if (objectiveStatus(p).done) { p.bio.done = true; this.w.send(c, { t: 'reward', title: 'Objetivo vital cumplido', lines: [OBJECTIVES.find((o) => o.id === p.bio!.objective)?.name ?? '', '+2 puntos de perk'] }); this.sheet(c); }
+    }
     for (const [id, at] of this.fugitiveRespawn) if (now >= at) { this.fugitiveRespawn.delete(id); const f = this.w.c.fugitives.find((x) => x.id === id); if (f) void this.spawnFugitive(f); }
     if (!this.marketBusy && this.w.tick % (20 * 5) < 20) {
       this.marketBusy = true;
@@ -104,7 +109,7 @@ export class Survival {
         const full = p.sleeping.quality >= 0.8;
         if (full) p.luck = p.attributes.LUCK;
         this.wake(c, full ? 'Te despiertas como nueva persona: sueño, Suerte y algo de salud recuperados.' : 'Te despiertas. No has descansado del todo bien.');
-      } else if (dangerAt(e.zone.grid, e.x, e.y) !== 'protected') this.streetEvent(c, dtH);
+      } else if (dangerAt(e.zone.grid, e.x, e.y) !== 'protected' && e.zone.def.kind !== 'interior') this.streetEvent(c, dtH);
     } else {
       p.fatigue = Math.min(100, p.fatigue + n.perGameHour.fatigue * ef.needs.fatigue * mult * (p.profession === 'estibador' && working ? 0.7 : 1) * dtH);
     }
@@ -125,18 +130,23 @@ export class Survival {
       if (v >= n.warnThreshold && b < n.warnThreshold) this.notice(c, 'warn', `Tienes mucha ${label}${k === 'fatigue' ? ': busca un sitio seguro para dormir' : ''}.`);
       if (v >= 100 && b < 100) this.notice(c, 'bad', k === 'fatigue' ? 'Agotamiento total.' : `${label === 'hambre' ? 'Te mueres de hambre' : 'Te deshidratas'}: pierdes salud cada hora.`);
     }
+    // v0.6: el arma en la mano y las heridas se ven en el mundo.
+    e.body = p.body;
+    const shown = p.equipped && !p.driving ? p.equipped : undefined;
+    if (e.weaponId !== shown) { e.weaponId = shown; e.labelVer++; }
     // Velocidad: atributos efectivos, oficio y cansancio.
     const car = this.w.property.carOf(p);
     if (car && e.zone.def.kind === 'exterior') e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * car.speed * (1 + ef.carSpeed);
     else {
       if (p.driving) this.w.property.park(c, true);
       // Correr: más rápido a cambio de aguante; sin aguante se vuelve a andar.
-      const run = p.running && p.stamina > 3 && !p.carrying && !p.sleeping;
+      const run = p.running && p.stamina > 3 && !p.carrying && !p.sleeping && ef.legsLost === 0;
+      if (p.running && ef.legsLost > 0 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin una pierna no puedes correr: busca un matasanos que te implante una prótesis.'); }
       if (run && e.moving) p.stamina = Math.max(0, p.stamina - 3);
       else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1));
       if (p.running && p.stamina <= 3 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.'); }
       if (p.stamina > 20) x.breathless = false;
-      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1);
+      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult;
     }
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
     if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y) * (p.running && !p.driving ? 2 : 1));
@@ -261,7 +271,9 @@ export class Survival {
     const ef = effective(this.w.c, p);
     if (cons.restore === 'hp') p.hp = Math.min(ef.hpMax, p.hp + cons.amount);
     if (cons.restore === 'stamina') p.stamina = p.stamina + cons.amount;
-    this.notice(c, 'info', `${auto ? 'Automático: ' : ''}consumes ${d.name}.`);
+    const bleeding = p.body.bleed > 0.05;
+    if (item === 'venda' || item === 'estim') this.w.combat.wounds.treat(p, c.e, item === 'estim' ? 1 : 0.7);
+    this.notice(c, 'info', `${auto ? 'Automático: ' : ''}${item === 'venda' ? 'te vendas' : `consumes ${d.name}`}${bleeding && (item === 'venda' || item === 'estim') ? (p.body.bleed > 0.05 ? ': la hemorragia baja, pero sigue.' : ': la hemorragia se detiene.') : '.'}`);
     this.sheet(c);
   }
 
@@ -399,7 +411,7 @@ export class Survival {
       p.inventory.set('estim', (p.inventory.get('estim') ?? 1) - 1);
     }
     if (tp.status !== 'downed') return this.w.send(c, { t: 'ack', seq, ok: false, reason: 'Ya no está derribado.' });
-    tp.status = 'alive'; tp.hp = 15; tp.downedUntil = 0;
+    tp.status = 'alive'; tp.hp = 15; tp.downedUntil = 0; this.w.combat.wounds.treat(tp, target, 1);
     target.label = ''; target.state = 'alive'; this.bump(target);
     await savePlayerVitals(this.w.db, tp).catch(() => {});
     this.notice(target.conn, 'good', `${p.name} te ha estabilizado. Vuelves en ti con 15 de salud.`);
@@ -743,7 +755,10 @@ export class Survival {
       await this.die(p, c.e!, r.cause!);
       return;
     }
-    if (m.action === 'install') this.w.progress.gain(c.p!, 'filo', 12);
+    if (m.action === 'install') {
+      this.w.progress.gain(c.p!, 'filo', 12);
+      if (this.w.combat.wounds.restore(p, r.def.visible)) { c.e!.labelVer++; this.notice(c, 'good', `${r.def.name}: vuelves a tener el miembro que perdiste.`); }
+    }
     this.w.send(c, { t: 'reward', title: r.outcome === 'clean' ? `Operación limpia: ${r.def.name}` : `Operación con complicaciones: ${r.def.name}`, lines: r.lines });
     this.sheet(c);
     this.w.send(c, { t: 'clinic', view: this.clinic.view(m.doc, p) });

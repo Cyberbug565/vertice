@@ -85,6 +85,110 @@
     15,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    15,
+    3
+   ],
+   "color": "#3a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#3a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    15,
+    10
+   ],
+   "color": "#3a4a3a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    4
+   ],
+   "color": "#3a3040"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    14,
+    12
+   ],
+   "color": "#4a3a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    15,
+    4
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    3,
+    10
+   ],
+   "color": "#4a3a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    7,
+    1
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "locker",
+   "at": [
+    6,
+    9
+   ],
+   "color": "#40506a"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    13,
+    6
+   ],
+   "color": "#b46cff"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    13,
+    5
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    5,
+    7
+   ],
+   "color": "#d8e0e8"
   }
  ],
  "doors": [
@@ -127,6 +231,15 @@
     2
    ],
    "kind": "stash"
+  },
+  {
+   "id": "ordenador-casa-villa",
+   "name": "Ordenador personal",
+   "at": [
+    5,
+    2
+   ],
+   "kind": "computer"
   }
  ],
  "waypoints": [
@@ -138,5 +251,6 @@
  "safePoint": [
   17,
   7
- ]
+ ],
+ "furnished": true
 }

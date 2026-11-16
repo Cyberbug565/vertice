@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 22,
  "height": 14,
- "danger": "protected",
+ "danger": "public",
  "base": "tile",
  "wallColor": "#262c48",
  "blocks": [],
@@ -71,6 +71,118 @@
     20,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    18,
+    8
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    10
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    8,
+    9
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    8
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    20,
+    10
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    11
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    10,
+    7
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    15,
+    3
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "column",
+   "at": [
+    2,
+    9
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    5,
+    1
+   ],
+   "color": "#2f6b4f"
   }
  ],
  "doors": [],
@@ -109,5 +221,6 @@
   "floor": 1,
   "access": "publico",
   "corp": "teselia"
- }
+ },
+ "furnished": true
 }

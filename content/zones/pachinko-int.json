@@ -44,6 +44,53 @@
    ],
    "blocking": false,
    "color": "#7dff7a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#39465a"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    3
+   ],
+   "color": "#39465a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    6
+   ],
+   "color": "#39465a"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    6
+   ],
+   "color": "#39465a"
+  },
+  {
+   "type": "table",
+   "at": [
+    9,
+    1
+   ]
+  },
+  {
+   "type": "barrel",
+   "at": [
+    12,
+    8
+   ],
+   "color": "#5a3a2a"
   }
  ],
  "doors": [
@@ -105,5 +152,6 @@
  "safePoint": [
   11,
   5
- ]
+ ],
+ "furnished": true
 }

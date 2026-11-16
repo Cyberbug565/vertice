@@ -7,3 +7,5 @@ export * from './protocol.js';
 export * from './content-validate.js';
 export * from './surgery.js';
 export * from './appearance.js';
+export * from './body.js';
+export * from './bio.js';

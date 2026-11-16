@@ -85,6 +85,86 @@
     13,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2a2a3e"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    3
+   ],
+   "color": "#2a2a3e"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    8
+   ],
+   "color": "#2a2a3e"
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    8
+   ],
+   "color": "#2a2a3e"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    11,
+    6
+   ],
+   "color": "#4a3a5a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    14,
+    5
+   ],
+   "color": "#4a3a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    9,
+    3
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    1,
+    1
+   ],
+   "color": "#4a3a5a"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    7,
+    6
+   ],
+   "color": "#b46cff"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    2,
+    6
+   ],
+   "color": "#b46cff"
   }
  ],
  "doors": [
@@ -127,6 +207,15 @@
     2
    ],
    "kind": "stash"
+  },
+  {
+   "id": "ordenador-casa-atico",
+   "name": "Ordenador personal",
+   "at": [
+    5,
+    2
+   ],
+   "kind": "computer"
   }
  ],
  "waypoints": [
@@ -138,5 +227,6 @@
  "safePoint": [
   15,
   6
- ]
+ ],
+ "furnished": true
 }

@@ -71,6 +71,118 @@
     20,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#262c48"
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    11
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    13,
+    8
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "column",
+   "at": [
+    5,
+    2
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    17,
+    1
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    10,
+    8
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    19,
+    5
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "desk",
+   "at": [
+    8,
+    11
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    13,
+    1
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    7,
+    3
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    19,
+    12
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    19,
+    7
+   ],
+   "color": "#2f6b4f"
   }
  ],
  "doors": [],
@@ -109,5 +221,6 @@
   "floor": 2,
   "access": "empleados",
   "corp": "teselia"
- }
+ },
+ "furnished": true
 }

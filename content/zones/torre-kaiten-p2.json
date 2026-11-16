@@ -71,6 +71,118 @@
     20,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#4a5a4a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#4a5a4a"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#4a5a4a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    7
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "desk",
+   "at": [
+    5,
+    11
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    14,
+    10
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    1,
+    8
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    15,
+    2
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "desk",
+   "at": [
+    17,
+    6
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    2,
+    1
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    1
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    15,
+    5
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    10
+   ],
+   "color": "#2a3040"
   }
  ],
  "doors": [],
@@ -109,5 +221,6 @@
   "floor": 2,
   "access": "empleados",
   "corp": "kaiten"
- }
+ },
+ "furnished": true
 }

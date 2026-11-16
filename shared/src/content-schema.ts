@@ -4,7 +4,8 @@ import { ATTRIBUTE_IDS } from './rules.js';
 
 const xy = z.tuple([z.number().int(), z.number().int()]);
 const rect = z.tuple([z.number().int(), z.number().int(), z.number().int().positive(), z.number().int().positive()]);
-export const DangerLevel = z.enum(['protected', 'public', 'disputed']);
+/** v0.6: verde (protected, solo el inicio y tu casa), amarilla (public, vigilada), roja (disputed) y negra (lawless, sin ley). */
+export const DangerLevel = z.enum(['protected', 'public', 'disputed', 'lawless']);
 export type DangerLevel = z.infer<typeof DangerLevel>;
 
 export const GROUND_TYPES = ['void', 'asphalt', 'sidewalk', 'plaza', 'market', 'dirt', 'water', 'bridge', 'wood', 'tile', 'metal', 'crosswalk', 'deck', 'gravel', 'grass', 'sand', 'alley'] as const;
@@ -28,12 +29,12 @@ export const ZoneSchema = z.object({
     style: z.enum(['mega', 'block', 'shop', 'club', 'clinic', 'industrial', 'tower', 'arcology', 'spire', 'glass']),
     color: z.string(), sign: z.string().optional(), signColor: z.string().optional(),
   })).default([]),
-  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
+  props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window', 'column', 'sofa', 'desk', 'locker', 'fridge', 'planter', 'arcade', 'barrel', 'dumpster', 'hydrant', 'kiosk', 'jersey', 'busstop']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
   skybridges: z.array(z.object({ from: xy, to: xy, z: z.number(), color: z.string().optional() })).default([]),
   doors: z.array(z.object({ id: z.string(), name: z.string(), at: xy, to: z.object({ zone: z.string(), at: xy }), danger: DangerLevel.optional(), hidden: z.string().optional() })).default([]),
   objects: z.array(z.object({
     id: z.string(), name: z.string(), at: xy,
-    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot']),
+    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot', 'camera', 'computer']),
     dialog: z.string().optional(), shop: z.string().optional(), workplace: z.string().optional(), dealer: z.string().optional(),
     sleep: z.object({ quality: z.number().min(0).max(1), price: z.number().int().nonnegative().default(0) }).optional(),
   })).default([]),
@@ -61,7 +62,12 @@ export const ZoneSchema = z.object({
   /** Base de una banda o de narcos: sus miembros atacan a quien no sea de los suyos. */
   gangBase: z.object({ faction: z.string(), boss: z.string() }).optional(),
   skywalk: z.boolean().optional(),
+  furnished: z.boolean().optional(),
 });
+
+/** v0.6: cobertura que da cada elemento del escenario frente a disparos (total o parcial). */
+export const COVER_FULL: ReadonlySet<string> = new Set(['column', 'locker', 'dumpster', 'jersey', 'kiosk', 'car', 'vending', 'fridge', 'arcade', 'crane']);
+export const COVER_HALF: ReadonlySet<string> = new Set(['crate', 'barrel', 'sofa', 'desk', 'table', 'planter', 'wreck', 'shelf', 'bench', 'trash', 'counter', 'busstop', 'hydrant']);
 export type ZoneDef = z.infer<typeof ZoneSchema>;
 
 const Condition = z.union([
@@ -278,8 +284,8 @@ export const FugitiveSchema = z.object({ id: z.string(), name: z.string(), crime
 export type FugitiveDef = z.infer<typeof FugitiveSchema>;
 
 export const QuickhackSchema = z.object({
-  id: z.string(), name: z.string(), target: z.enum(['person', 'atm', 'shop']), ram: z.number().int(), upload: z.number(), dv: z.number().int(), minRank: z.number().int().default(0),
-  effect: z.enum(['scan', 'deepscan', 'blind', 'damage', 'knockout', 'kill', 'drain', 'cash']), minSkill: z.number().int().default(0), amount: z.tuple([z.number(), z.number()]).default([0, 0]), trace: z.number().min(0).max(1), range: z.number().default(12), desc: z.string(),
+  id: z.string(), name: z.string(), target: z.enum(['person', 'atm', 'shop', 'camera']), ram: z.number().int(), upload: z.number(), dv: z.number().int(), minRank: z.number().int().default(0),
+  effect: z.enum(['scan', 'deepscan', 'blind', 'damage', 'knockout', 'kill', 'drain', 'cash', 'disable']), minSkill: z.number().int().default(0), amount: z.tuple([z.number(), z.number()]).default([0, 0]), trace: z.number().min(0).max(1), range: z.number().default(12), desc: z.string(),
 });
 export type QuickhackDef = z.infer<typeof QuickhackSchema>;
 export const AmbarPlanSchema = z.object({ id: z.string(), name: z.string(), price: z.number().int(), days: z.number(), arrival: z.number(), uses: z.number().int(), revive: z.number(), zones: z.array(z.string()), color: z.string(), desc: z.string() });

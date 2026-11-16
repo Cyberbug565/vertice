@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 16,
  "height": 11,
- "danger": "protected",
+ "danger": "public",
  "base": "wood",
  "wallColor": "#5a4a3a",
  "blocks": [],
@@ -35,6 +35,68 @@
    "at": [
     8,
     7
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#5a4a3a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "locker",
+   "at": [
+    9,
+    5
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    10,
+    5
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    4
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "crate",
+   "at": [
+    10,
+    2
    ]
   }
  ],
@@ -77,5 +139,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

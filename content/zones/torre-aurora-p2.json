@@ -134,6 +134,118 @@
     18,
     9
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3a4038"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ],
+   "color": "#3a4038"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#3a4038"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#3a4038"
+  },
+  {
+   "type": "desk",
+   "at": [
+    10,
+    10
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "desk",
+   "at": [
+    17,
+    5
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    12
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    3,
+    2
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "locker",
+   "at": [
+    7,
+    1
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    18,
+    4
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    5,
+    3
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    15,
+    1
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    18,
+    2
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    1,
+    9
+   ],
+   "color": "#2a2a3a"
   }
  ],
  "doors": [],
@@ -172,5 +284,6 @@
   "floor": 2,
   "access": "empleados",
   "corp": "aurora"
- }
+ },
+ "furnished": true
 }

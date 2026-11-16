@@ -707,5 +707,17 @@
   "weight": 0.02,
   "category": "municion",
   "price": 5
+ },
+ {
+  "id": "venda",
+  "name": "Venda hemostática",
+  "desc": "Corta la mayor parte de una hemorragia (70 %) y da salud +5. El estimulante médico la corta del todo.",
+  "weight": 0.1,
+  "category": "medicina",
+  "price": 15,
+  "consumable": {
+   "restore": "hp",
+   "amount": 5
+  }
  }
 ]

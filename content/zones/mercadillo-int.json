@@ -43,6 +43,70 @@
     2,
     8
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#4a3a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#4a3a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#4a3a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#4a3a3a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    7
+   ],
+   "color": "#3a3040"
+  },
+  {
+   "type": "planter",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    8,
+    9
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "desk",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#3a3040"
   }
  ],
  "doors": [
@@ -84,5 +148,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

@@ -1,8 +1,8 @@
 // v0.4 · Propiedades: viviendas (instancias privadas con permisos y alijo), coches, viaje en coche e índices de mercado en tiempo real.
 import { randomUUID } from 'node:crypto';
-import type { BuildingView, DealerView, HouseDef, MarketLiveView, PropsView, RealtyView, StashView } from '@vertice/shared';
+import { nearestWalkable, type BuildingView, type DealerView, type HouseDef, type MarketLiveView, type PropsView, type RealtyView, type StashView, type TrunkView } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
-import { buildSheet, perkMods, type PlayerState } from '../game/player.js';
+import { buildSheet, perkMods, weaponFits, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
 import type { PlayerConn, World } from './world.js';
 
@@ -230,6 +230,7 @@ export class Property {
       } else {
         const r = await q.query<any>('SELECT qty FROM house_stash WHERE house_id=$1 AND def_id=$2', [houseId, item]);
         if ((r.rows[0]?.qty ?? 0) < qty) throw new GameError('No hay tantos en el alijo.');
+        const full = weaponFits(this.w.c, p, item, qty); if (full) throw new GameError(full);
         await q.query('UPDATE house_stash SET qty = qty - $3 WHERE house_id=$1 AND def_id=$2', [houseId, item, qty]);
         await q.query(`INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4) ON CONFLICT (character_id, def_id) DO UPDATE SET qty = inventory_items.qty + EXCLUDED.qty`, [randomUUID(), p.charId, item, qty]);
       }
@@ -316,6 +317,9 @@ export class Property {
     const own = (ownedId ? p.cars.find((x) => x.id === ownedId) : undefined) ?? [...p.cars].sort((a, b) => this.w.c.cars.find((x) => x.id === b.car)!.speed - this.w.c.cars.find((x) => x.id === a.car)!.speed)[0];
     p.driving = own.id;
     e.vehicle = own.car; e.labelVer++;
+    // Si estaba aparcado, deja de estarlo (de cerca te subes; de lejos llega solo con el piloto automático).
+    const parked = this.parked.get(own.id);
+    if (parked) { const far = parked.zone !== e.zone || Math.hypot(parked.x - e.x, parked.y - e.y) > 4; this.w.removeEntity(parked); this.parked.delete(own.id); if (far) this.w.send(c, { t: 'notice', kind: 'info', text: 'Tu coche llega solo desde donde lo aparcaste (piloto automático).' }); }
     const car = this.w.c.cars.find((x) => x.id === own.car)!;
     this.w.send(c, { t: 'notice', kind: 'good', text: `Al volante del ${car.maker} ${car.name}. V para bajarte.` });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
@@ -323,10 +327,82 @@ export class Property {
   park(c: PlayerConn, quiet = false) {
     const p = c.p!, e = c.e!;
     if (!p.driving) return;
+    const ownedId = p.driving;
     p.driving = null; e.vehicle = null; e.labelVer++;
-    if (!quiet) this.w.send(c, { t: 'notice', kind: 'info', text: 'Aparcas y bajas del coche.' });
+    if (e.zone.def.kind === 'exterior') this.spawnParked(p, ownedId, e.zone.id, e.x, e.y, true);
+    if (!quiet) this.w.send(c, { t: 'notice', kind: 'info', text: 'Aparcas y bajas del coche. Haz clic en él para abrir el maletero.' });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
   }
+  // ---------------------------------------------------------------- v0.6: coches aparcados y maletero
+  readonly parked = new Map<string, Entity>();
+  /** Deja el coche aparcado en la calle (visible para todos) y guarda dónde. */
+  spawnParked(p: PlayerState, ownedId: string, zoneId: string, x: number, y: number, save: boolean) {
+    const z = this.w.zones.get(zoneId);
+    const own = p.cars.find((k) => k.id === ownedId);
+    const car = own && this.w.c.cars.find((k) => k.id === own.car);
+    if (!z || !car) return;
+    const old = this.parked.get(ownedId); if (old) this.w.removeEntity(old);
+    const at = nearestWalkable(z.grid, x, y, 6) ?? { x, y };
+    const ent = this.w.addEntity(z, { kind: 'object', name: `${car.maker} ${car.name} de ${p.name}`, x: at.x, y: at.y, interactive: true, objKind: 'mycar', label: '', vehicle: car.id });
+    ent.ownerChar = p.charId; ent.carOwnedId = ownedId;
+    this.parked.set(ownedId, ent);
+    if (save) void this.w.db.query('UPDATE cars_owned SET zone=$2, pos_x=$3, pos_y=$4 WHERE id=$1', [ownedId, zoneId, ent.x, ent.y]).catch(() => {});
+  }
+  /** Al entrar en el juego, sus coches vuelven a estar donde los dejó. */
+  async restoreParked(p: PlayerState) {
+    const r = await this.w.db.query<any>('SELECT id, zone, pos_x, pos_y FROM cars_owned WHERE character_id=$1 AND zone IS NOT NULL', [p.charId]);
+    for (const row of r.rows) if (!this.parked.has(row.id)) this.spawnParked(p, row.id, row.zone, Number(row.pos_x), Number(row.pos_y), false);
+  }
+  /** Al salir del juego (o morir), sus coches aparcados desaparecen de la calle. */
+  clearParked(p: PlayerState) { for (const k of p.cars) { const ent = this.parked.get(k.id); if (ent) { this.w.removeEntity(ent); this.parked.delete(k.id); } } }
+  /** Coche cuyo maletero puedes usar: el que conduces o uno tuyo aparcado a menos de 3 m. */
+  private trunkCar(c: PlayerConn) {
+    const p = c.p!, e = c.e!;
+    if (p.driving) return p.cars.find((k) => k.id === p.driving)!;
+    const near = p.cars.find((k) => { const ent = this.parked.get(k.id); return ent && ent.zone === e.zone && Math.hypot(ent.x - e.x, ent.y - e.y) <= 3; });
+    if (!near) throw new GameError('Acércate a tu coche aparcado (o súbete a él) para usar el maletero.');
+    return near;
+  }
+  async trunkView(c: PlayerConn): Promise<TrunkView> {
+    const p = c.p!;
+    const own = this.trunkCar(c);
+    const car = this.w.c.cars.find((k) => k.id === own.car)!;
+    const r = await this.w.db.query<any>('SELECT def_id, qty FROM car_trunk WHERE car_id=$1 AND qty > 0 ORDER BY def_id', [own.id]);
+    const nm = (id: string) => this.w.c.items.find((i) => i.id === id)?.name ?? id;
+    const wt = (id: string) => this.w.c.items.find((i) => i.id === id)?.weight ?? 0;
+    const items = r.rows.map((x: any) => ({ def: x.def_id, name: nm(x.def_id), qty: x.qty }));
+    return { car: own.id, name: `${car.maker} ${car.name}`, capacity: car.trunk, used: Math.round(items.reduce((s2: number, x: any) => s2 + wt(x.def) * x.qty, 0) * 10) / 10,
+      items, inventory: [...p.inventory].filter(([, q]) => q > 0).map(([def, qty]) => ({ def, name: nm(def), qty })) };
+  }
+  async trunkMove(c: PlayerConn, item: string, qty: number, dir: 'in' | 'out') {
+    const p = c.p!;
+    const own = this.trunkCar(c);
+    const car = this.w.c.cars.find((k) => k.id === own.car)!;
+    const def = this.w.c.items.find((i) => i.id === item);
+    if (!def) throw new GameError('Objeto desconocido.');
+    if (dir === 'in') {
+      if ((p.inventory.get(item) ?? 0) < qty) throw new GameError('No llevas tantos.');
+      const v = await this.trunkView(c);
+      if (v.used + def.weight * qty > car.trunk) throw new GameError(`No cabe: el maletero aguanta ${car.trunk} kg (lleva ${v.used} kg).`);
+    } else { const full = weaponFits(this.w.c, p, item, qty); if (full) throw new GameError(full); }
+    await this.w.db.tx(async (q) => {
+      if (dir === 'in') {
+        await q.query('UPDATE inventory_items SET qty = qty - $3 WHERE character_id=$1 AND def_id=$2', [p.charId, item, qty]);
+        await q.query('INSERT INTO car_trunk (car_id, def_id, qty) VALUES ($1,$2,$3) ON CONFLICT (car_id, def_id) DO UPDATE SET qty = car_trunk.qty + EXCLUDED.qty', [own.id, item, qty]);
+      } else {
+        const r = await q.query<any>('SELECT qty FROM car_trunk WHERE car_id=$1 AND def_id=$2', [own.id, item]);
+        if ((r.rows[0]?.qty ?? 0) < qty) throw new GameError('No hay tantos en el maletero.');
+        await q.query('UPDATE car_trunk SET qty = qty - $3 WHERE car_id=$1 AND def_id=$2', [own.id, item, qty]);
+        await q.query(`INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4) ON CONFLICT (character_id, def_id) DO UPDATE SET qty = inventory_items.qty + EXCLUDED.qty`, [randomUUID(), p.charId, item, qty]);
+      }
+    });
+    p.inventory.set(item, (p.inventory.get(item) ?? 0) + (dir === 'in' ? -qty : qty));
+    if (dir === 'in' && p.equipped === item && (p.inventory.get(item) ?? 0) <= 0) p.equipped = null;
+    for (const [slot, id] of Object.entries(p.wear)) if (id === item && (p.inventory.get(item) ?? 0) <= 0) delete p.wear[slot];
+    this.w.send(c, { t: 'trunk', view: await this.trunkView(c) });
+    this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
+  }
+
   /** Viaje en coche a otro distrito: unos segundos de trayecto (instantáneo con el perk «Piloto»). */
   async travel(c: PlayerConn, zoneId: string) {
     const p = c.p!, e = c.e!;

@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 12,
  "height": 9,
- "danger": "protected",
+ "danger": "public",
  "base": "wood",
  "wallColor": "#3d5250",
  "blocks": [
@@ -33,6 +33,44 @@
     6,
     6
    ]
+  },
+  {
+   "type": "table",
+   "at": [
+    1,
+    4
+   ]
+  },
+  {
+   "type": "sofa",
+   "at": [
+    5,
+    3
+   ],
+   "color": "#6b2140"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    3,
+    7
+   ],
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "table",
+   "at": [
+    4,
+    3
+   ]
+  },
+  {
+   "type": "arcade",
+   "at": [
+    1,
+    2
+   ],
+   "color": "#ff3fa4"
   }
  ],
  "doors": [
@@ -94,5 +132,6 @@
  "safePoint": [
   9,
   4
- ]
+ ],
+ "furnished": true
 }

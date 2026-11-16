@@ -19,18 +19,29 @@ const used = new Set();
 /** Callejones: los edificios anchos se parten con un callejón oscuro de 2 losetas (zona disputada, sin farolas). */
 export function carveAlleys(z) {
   if (z.id === 'yermo') return;
-  const out = [];
-  for (const b of z.buildings) {
-    const [bx, by, bw, bh] = b.rect;
-    if (bw >= 14 && !hasDoor(z, b) && bh >= 6) {
-      const ax = bx + Math.floor(bw / 3);
-      out.push({ ...b, rect: [bx, by, ax - bx, bh] }, { ...b, id: `${b.id}-b`, rect: [ax + 2, by, bx + bw - ax - 2, bh], sign: undefined, name: undefined });
-      z.ground.push({ type: 'alley', rect: [ax, by, 2, bh] });
-      z.dangerAreas.push({ rect: [ax, by, 2, bh], level: 'disputed' });
-      z.props.push({ type: 'trash', at: [ax, by + 1] }, { type: 'pipe', at: [ax + 1, by + Math.floor(bh / 2)] });
-    } else out.push(b);
+  // v0.6: más callejones. Los edificios anchos se parten en vertical y los muy profundos también en horizontal.
+  let list = z.buildings;
+  for (const pass of ['v', 'h']) {
+    const out = [];
+    for (const b of list) {
+      const [bx, by, bw, bh] = b.rect;
+      if (pass === 'v' && bw >= 10 && !hasDoor(z, b) && bh >= 5) {
+        const ax = bx + Math.floor(bw / 3);
+        out.push({ ...b, rect: [bx, by, ax - bx, bh] }, { ...b, id: `${b.id}-b`, rect: [ax + 2, by, bx + bw - ax - 2, bh], sign: undefined, name: undefined });
+        z.ground.push({ type: 'alley', rect: [ax, by, 2, bh] });
+        z.dangerAreas.push({ rect: [ax, by, 2, bh], level: 'disputed' });
+        z.props.push({ type: 'trash', at: [ax, by + 1] }, { type: 'pipe', at: [ax + 1, by + Math.floor(bh / 2)] });
+      } else if (pass === 'h' && bh >= 12 && bw >= 5 && !hasDoor(z, b)) {
+        const ay = by + Math.floor(bh / 2) - 1;
+        out.push({ ...b, rect: [bx, by, bw, ay - by] }, { ...b, id: `${b.id}-h`, rect: [bx, ay + 2, bw, by + bh - ay - 2], sign: undefined, name: undefined });
+        z.ground.push({ type: 'alley', rect: [bx, ay, bw, 2] });
+        z.dangerAreas.push({ rect: [bx, ay, bw, 2], level: 'disputed' });
+        z.props.push({ type: 'dumpster', at: [bx + 1, ay] });
+      } else out.push(b);
+    }
+    list = out;
   }
-  z.buildings = out;
+  z.buildings = list;
 }
 
 /** Iluminación: farolas a lo largo de todas las calzadas y tiras de neón en las fachadas. */

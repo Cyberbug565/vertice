@@ -35,7 +35,8 @@
    "estim": 10,
    "analgesicos": 15,
    "ropa-impermeable": 6,
-   "bala-pistola": 100
+   "bala-pistola": 100,
+   "venda": 20
   },
   "priceMult": 1,
   "security": 16
@@ -574,6 +575,7 @@
   "owner": "okami",
   "zone": "vertice",
   "stock": {
+   "venda": 30,
    "estim": 12,
    "analgesicos": 30,
    "estabilizador": 6,

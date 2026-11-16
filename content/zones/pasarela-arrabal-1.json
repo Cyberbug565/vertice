@@ -150,6 +150,37 @@
     9,
     3
    ]
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    2
+   ]
+  },
+  {
+   "type": "planter",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    11,
+    1
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    10,
+    3
+   ],
+   "color": "#2f6b4f"
   }
  ],
  "doors": [
@@ -201,5 +232,6 @@
   3,
   2
  ],
- "skywalk": true
+ "skywalk": true,
+ "furnished": true
 }

@@ -4,7 +4,7 @@
  "kind": "interior",
  "width": 12,
  "height": 9,
- "danger": "protected",
+ "danger": "public",
  "base": "metal",
  "wallColor": "#574a3a",
  "blocks": [],
@@ -30,6 +30,46 @@
     5
    ],
    "color": "#ff8a3d"
+  },
+  {
+   "type": "desk",
+   "at": [
+    9,
+    1
+   ],
+   "color": "#5a6a7a"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    3,
+    2
+   ],
+   "color": "#e8f0f0"
+  },
+  {
+   "type": "column",
+   "at": [
+    3,
+    6
+   ],
+   "color": "#4a5a6a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    1,
+    7
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "desk",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#5a6a7a"
   }
  ],
  "doors": [
@@ -71,5 +111,6 @@
  "safePoint": [
   9,
   4
- ]
+ ],
+ "furnished": true
 }

@@ -4,11 +4,76 @@
  "kind": "interior",
  "width": 16,
  "height": 11,
- "danger": "protected",
+ "danger": "public",
  "base": "wood",
  "wallColor": "#4a3a5c",
  "blocks": [],
- "props": [],
+ "props": [
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#4a3a5c"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ],
+   "color": "#4a3a5c"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    7
+   ],
+   "color": "#4a3a5c"
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    7
+   ],
+   "color": "#4a3a5c"
+  },
+  {
+   "type": "column",
+   "at": [
+    8,
+    9
+   ],
+   "color": "#3a3a4a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    10,
+    6
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    9,
+    7
+   ],
+   "color": "#3a3550"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    9
+   ],
+   "color": "#3a3a4a"
+  }
+ ],
  "doors": [
   {
    "id": "salida-koi-int",
@@ -126,5 +191,6 @@
  "safePoint": [
   13,
   5
- ]
+ ],
+ "furnished": true
 }

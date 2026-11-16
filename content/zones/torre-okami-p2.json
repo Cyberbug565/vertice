@@ -71,6 +71,118 @@
     20,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#3a2e44"
+  },
+  {
+   "type": "locker",
+   "at": [
+    4,
+    12
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    19,
+    12
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "locker",
+   "at": [
+    12,
+    10
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    12,
+    12
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    17,
+    9
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    7,
+    7
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "locker",
+   "at": [
+    18,
+    10
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    4
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    15,
+    7
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    7,
+    3
+   ],
+   "color": "#2a3040"
   }
  ],
  "doors": [],
@@ -109,5 +221,6 @@
   "floor": 2,
   "access": "empleados",
   "corp": "okami"
- }
+ },
+ "furnished": true
 }

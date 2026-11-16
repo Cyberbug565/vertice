@@ -71,6 +71,118 @@
     20,
     1
    ]
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    10
+   ],
+   "color": "#2c3444"
+  },
+  {
+   "type": "desk",
+   "at": [
+    1,
+    9
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    16,
+    1
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    1,
+    1
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "locker",
+   "at": [
+    16,
+    9
+   ],
+   "color": "#3a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    1,
+    8
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    8,
+    6
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "desk",
+   "at": [
+    15,
+    1
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    8
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "planter",
+   "at": [
+    2,
+    4
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "planter",
+   "at": [
+    15,
+    12
+   ],
+   "color": "#2f6b4f"
+  },
+  {
+   "type": "locker",
+   "at": [
+    7,
+    11
+   ],
+   "color": "#3a4a5a"
   }
  ],
  "doors": [],
@@ -109,5 +221,6 @@
   "floor": 2,
   "access": "empleados",
   "corp": "halcon"
- }
+ },
+ "furnished": true
 }

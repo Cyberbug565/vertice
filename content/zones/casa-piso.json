@@ -39,6 +39,54 @@
    ],
    "blocking": false,
    "color": "#b46cff"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    3
+   ],
+   "color": "#2f4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    3
+   ],
+   "color": "#2f4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    6
+   ],
+   "color": "#2f4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    6
+   ],
+   "color": "#2f4a5a"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    12,
+    1
+   ],
+   "color": "#d8e0e8"
+  },
+  {
+   "type": "locker",
+   "at": [
+    7,
+    1
+   ],
+   "color": "#40506a"
   }
  ],
  "doors": [
@@ -81,6 +129,15 @@
     2
    ],
    "kind": "stash"
+  },
+  {
+   "id": "ordenador-casa-piso",
+   "name": "Ordenador personal",
+   "at": [
+    5,
+    2
+   ],
+   "kind": "computer"
   }
  ],
  "waypoints": [
@@ -92,5 +149,6 @@
  "safePoint": [
   11,
   5
- ]
+ ],
+ "furnished": true
 }

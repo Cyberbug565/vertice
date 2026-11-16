@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { checkChance, type Content, type ItemCategory, type MarketView, type ShopView } from '@vertice/shared';
 import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
-import { effective, flagValue, perkMods, type PlayerState } from './player.js';
+import { effective, flagValue, perkMods, weaponFits, type PlayerState } from './player.js';
 
 export const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
 
@@ -126,6 +126,7 @@ export class MarketService {
     const e = this.stock.get(shopId)?.get(itemId);
     if (!e) throw new GameError('Esa tienda no vende eso.');
     if (e.stock < qty) throw new GameError('No quedan existencias suficientes.');
+    const full = weaponFits(this.c, p, itemId, qty); if (full) throw new GameError(full);
     const unit = this.price(shopId, itemId, p);
     const total = unit * qty;
     if (p.money < total) throw new GameError(`No tienes suficientes eurodólares (${total} €$).`);
