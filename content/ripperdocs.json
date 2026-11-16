@@ -1,14 +1,180 @@
 [
- { "id": "sato", "name": "Clínica Sato", "npc": "sato", "zone": "clinica-sato", "skill": 4, "priceMult": 1.1, "morality": "estricta", "danger": 0, "faction": "asociacion-lumen", "maxGrade": 4,
-   "stock": ["optica-inspeccion", "filtro-neural", "brazos-asistencia", "subdermico", "estomago-sintetico", "rinon-filtrante", "regulador-sueno", "sistema-apoyo", "cyberdeck-operaciones"], "desc": "Buena cirujana y honrada: nunca instala cromo robado." },
- { "id": "carnicero", "name": "El Carnicero", "npc": "brann", "zone": "carnicero-int", "skill": 2, "priceMult": 0.6, "morality": "sin_escrupulos", "danger": 0.35, "faction": "hojas-rojas", "maxGrade": 5,
-   "stock": ["optica-inspeccion", "brazos-asistencia", "subdermico"], "stolenStock": ["acelerador-neural", "camuflaje-optico", "coprocesador", "piernas-salto"], "desc": "Barato, rápido y peligroso. Te pone lo que sea, aunque sea robado, y a veces te roba a ti." },
- { "id": "iruka", "name": "Clínica de Mama Iruka", "npc": "iruka", "zone": "iruka-int", "skill": 3, "priceMult": 0.85, "morality": "flexible", "danger": 0.05, "faction": "calle", "maxGrade": 4,
-   "stock": ["optica-inspeccion", "filtro-neural", "estomago-sintetico", "rinon-filtrante", "pierna-protesica", "brazo-protesico", "sistema-apoyo"], "stolenStock": ["coprocesador"], "desc": "Honesta a su manera: acepta cromo robado si se lo dices, con recargo." },
- { "id": "ruiz", "name": "Prótesis Ruiz", "npc": "ruiz", "zone": "ruiz-int", "skill": 2, "priceMult": 0.7, "morality": "estricta", "danger": 0, "faction": "asociacion-lumen", "maxGrade": 2,
-   "stock": ["brazo-protesico", "pierna-protesica", "audifono-coclear", "optica-inspeccion", "rinon-filtrante"], "desc": "Prótesis asequibles y cromo básico. Grado máximo II." },
- { "id": "okami", "name": "Clínica Okami", "npc": "ito", "zone": "clinica-okami-int", "skill": 5, "priceMult": 1.6, "morality": "estricta", "danger": 0, "faction": "okami", "maxGrade": 5,
-   "stock": ["optica-inspeccion", "filtro-neural", "coprocesador", "regulador-sueno", "estomago-sintetico", "ice-aislamiento", "biomonitor-experimental", "piernas-salto", "subdermico", "cyberdeck-operaciones"], "desc": "La mejor y la más cara. Procedencia verificada." },
- { "id": "vex", "name": "Dr. Vex", "npc": "vex", "zone": "vex-int", "skill": 4, "priceMult": 1.0, "morality": "flexible", "danger": 0.1, "faction": "hojas-rojas", "maxGrade": 5,
-   "stock": ["coprocesador", "cyberdeck-operaciones", "regulador-sueno", "filtro-neural"], "stolenStock": ["ice-aislamiento", "acelerador-neural"], "desc": "Muy bueno si le caes bien a las Hojas Rojas; si no, sus manos tiemblan." }
+ {
+  "id": "sato",
+  "name": "Clínica Sato",
+  "npc": "sato",
+  "zone": "clinica-sato",
+  "skill": 4,
+  "priceMult": 1.1,
+  "morality": "estricta",
+  "danger": 0,
+  "faction": "asociacion-lumen",
+  "maxGrade": 4,
+  "stock": [
+   "optica-inspeccion",
+   "filtro-neural",
+   "brazos-asistencia",
+   "subdermico",
+   "estomago-sintetico",
+   "rinon-filtrante",
+   "regulador-sueno",
+   "sistema-apoyo",
+   "cyberdeck-operaciones",
+   "cyberdeck-basico",
+   "brazo-protesico",
+   "pierna-protesica"
+  ],
+  "desc": "Buena cirujana y honrada: nunca instala cromo robado."
+ },
+ {
+  "id": "carnicero",
+  "name": "El Carnicero",
+  "npc": "brann",
+  "zone": "carnicero-int",
+  "skill": 2,
+  "priceMult": 0.6,
+  "morality": "sin_escrupulos",
+  "danger": 0.35,
+  "faction": "hojas-rojas",
+  "maxGrade": 5,
+  "stock": [
+   "optica-inspeccion",
+   "brazos-asistencia",
+   "subdermico",
+   "cuchillas-antebrazo",
+   "puno-hidraulico"
+  ],
+  "stolenStock": [
+   "acelerador-neural",
+   "camuflaje-optico",
+   "coprocesador",
+   "piernas-salto",
+   "canon-antebrazo"
+  ],
+  "desc": "Barato, rápido y peligroso. Te pone lo que sea, aunque sea robado, y a veces te roba a ti."
+ },
+ {
+  "id": "iruka",
+  "name": "Clínica de Mama Iruka",
+  "npc": "iruka",
+  "zone": "iruka-int",
+  "skill": 3,
+  "priceMult": 0.85,
+  "morality": "flexible",
+  "danger": 0.05,
+  "faction": "calle",
+  "maxGrade": 4,
+  "stock": [
+   "optica-inspeccion",
+   "filtro-neural",
+   "estomago-sintetico",
+   "rinon-filtrante",
+   "pierna-protesica",
+   "brazo-protesico",
+   "sistema-apoyo",
+   "cyberdeck-basico"
+  ],
+  "stolenStock": [
+   "coprocesador"
+  ],
+  "desc": "Honesta a su manera: acepta cromo robado si se lo dices, con recargo."
+ },
+ {
+  "id": "ruiz",
+  "name": "Prótesis Ruiz",
+  "npc": "ruiz",
+  "zone": "ruiz-int",
+  "skill": 2,
+  "priceMult": 0.7,
+  "morality": "estricta",
+  "danger": 0,
+  "faction": "asociacion-lumen",
+  "maxGrade": 2,
+  "stock": [
+   "brazo-protesico",
+   "pierna-protesica",
+   "audifono-coclear",
+   "optica-inspeccion",
+   "rinon-filtrante"
+  ],
+  "desc": "Prótesis asequibles y cromo básico. Grado máximo II."
+ },
+ {
+  "id": "okami",
+  "name": "Clínica Okami",
+  "npc": "ito",
+  "zone": "clinica-okami-int",
+  "skill": 5,
+  "priceMult": 1.6,
+  "morality": "estricta",
+  "danger": 0,
+  "faction": "okami",
+  "maxGrade": 5,
+  "stock": [
+   "optica-inspeccion",
+   "filtro-neural",
+   "coprocesador",
+   "regulador-sueno",
+   "estomago-sintetico",
+   "ice-aislamiento",
+   "biomonitor-experimental",
+   "piernas-salto",
+   "subdermico",
+   "cyberdeck-operaciones",
+   "cyberdeck-militar",
+   "ojos-tacticos"
+  ],
+  "desc": "La mejor y la más cara. Procedencia verificada."
+ },
+ {
+  "id": "vex",
+  "name": "Dr. Vex",
+  "npc": "vex",
+  "zone": "vex-int",
+  "skill": 4,
+  "priceMult": 1.0,
+  "morality": "flexible",
+  "danger": 0.1,
+  "faction": "hojas-rojas",
+  "maxGrade": 5,
+  "stock": [
+   "coprocesador",
+   "cyberdeck-operaciones",
+   "regulador-sueno",
+   "filtro-neural",
+   "cyberdeck-basico",
+   "ojos-tacticos"
+  ],
+  "stolenStock": [
+   "ice-aislamiento",
+   "acelerador-neural"
+  ],
+  "desc": "Muy bueno si le caes bien a las Hojas Rojas; si no, sus manos tiemblan."
+ },
+ {
+  "id": "yuki",
+  "name": "Consulta de Doc Yuki",
+  "npc": "yuki",
+  "zone": "yuki-int",
+  "skill": 3,
+  "priceMult": 0.9,
+  "morality": "flexible",
+  "danger": 0.08,
+  "faction": "kitsune",
+  "maxGrade": 4,
+  "stock": [
+   "cuchillas-antebrazo",
+   "ojos-tacticos",
+   "acelerador-neural",
+   "subdermico",
+   "optica-inspeccion",
+   "cyberdeck-basico",
+   "brazo-protesico"
+  ],
+  "stolenStock": [
+   "camuflaje-optico",
+   "puno-hidraulico"
+  ],
+  "desc": "Cromo de combate para el Clan Kitsune y para quien pague. Tu fama con el Clan cuenta."
+ }
 ]

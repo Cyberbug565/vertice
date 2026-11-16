@@ -1,0 +1,123 @@
+[
+ {
+  "id": "escanear",
+  "name": "Escanear",
+  "target": "person",
+  "ram": 1,
+  "upload": 1,
+  "dv": 8,
+  "effect": "scan",
+  "trace": 0,
+  "desc": "Revela salud, recompensas, facción, cromo y dinero aproximado."
+ },
+ {
+  "id": "reinicio-optico",
+  "name": "Reinicio óptico",
+  "target": "person",
+  "ram": 3,
+  "upload": 2,
+  "dv": 12,
+  "effect": "blind",
+  "amount": [
+   10,
+   10
+  ],
+  "trace": 0.05,
+  "desc": "Ciega al objetivo 10 s: −4 a su defensa y no ve quién le roba."
+ },
+ {
+  "id": "cortocircuito",
+  "name": "Cortocircuito",
+  "target": "person",
+  "ram": 4,
+  "upload": 2.5,
+  "dv": 13,
+  "effect": "damage",
+  "amount": [
+   10,
+   18
+  ],
+  "trace": 0.15,
+  "desc": "Daño eléctrico letal a través de su cromo."
+ },
+ {
+  "id": "sobrecarga-sinaptica",
+  "name": "Sobrecarga sináptica",
+  "target": "person",
+  "ram": 6,
+  "upload": 3.5,
+  "dv": 15,
+  "minRank": 2,
+  "effect": "knockout",
+  "amount": [
+   18,
+   30
+  ],
+  "trace": 0.2,
+  "desc": "Daño no letal al sistema nervioso: lo deja KO."
+ },
+ {
+  "id": "quemar-sinapsis",
+  "name": "Quemar sinapsis",
+  "target": "person",
+  "ram": 8,
+  "upload": 4.5,
+  "dv": 17,
+  "minRank": 4,
+  "effect": "kill",
+  "amount": [
+   30,
+   45
+  ],
+  "trace": 0.35,
+  "desc": "Ataque letal al cerebro. Deja rastro: Centinela lo investiga."
+ },
+ {
+  "id": "vaciar-cuenta",
+  "name": "Vaciar cuenta",
+  "target": "person",
+  "ram": 5,
+  "upload": 4,
+  "dv": 14,
+  "minRank": 1,
+  "effect": "drain",
+  "amount": [
+   0.1,
+   0.25
+  ],
+  "trace": 0.25,
+  "desc": "Transfiere entre un 10 y un 25 % de su saldo a tu cuenta."
+ },
+ {
+  "id": "saquear-cajero",
+  "name": "Saquear cajero",
+  "target": "atm",
+  "ram": 6,
+  "upload": 6,
+  "dv": 15,
+  "minRank": 2,
+  "effect": "cash",
+  "amount": [
+   100,
+   400
+  ],
+  "trace": 0.3,
+  "desc": "Vacía parte de un cajero automático. Cada cajero se recupera en unas horas."
+ },
+ {
+  "id": "saquear-caja",
+  "name": "Saquear caja registradora",
+  "target": "shop",
+  "ram": 5,
+  "upload": 5,
+  "dv": 14,
+  "minRank": 1,
+  "effect": "cash",
+  "amount": [
+   60,
+   250
+  ],
+  "trace": 0.25,
+  "desc": "Desvía dinero de la caja de una tienda."
+ }
+]

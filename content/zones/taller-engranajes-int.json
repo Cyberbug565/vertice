@@ -1,0 +1,82 @@
+{
+ "id": "taller-engranajes-int",
+ "name": "Taller de Los Engranajes",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#4a1a1a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "crate",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    3,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    10,
+    8
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    5,
+    7
+   ],
+   "color": "#ff3040"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-taller-engranajes-int",
+   "name": "Salida a la calle (Forja)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "forja",
+    "at": [
+     28,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-engranajes",
+   "name": "Banco de los Engranajes",
+   "at": [
+    7,
+    3
+   ],
+   "kind": "shop",
+   "shop": "engranajes-chop"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

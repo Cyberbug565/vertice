@@ -1,0 +1,81 @@
+{
+ "id": "gasolinera-int",
+ "name": "Gasolinera Ruta 9",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#4a5a6a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-gasolinera-int",
+   "name": "Salida a la calle (El Yermo)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "yermo",
+    "at": [
+     48,
+     45
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-gasolinera",
+   "name": "Caja de la gasolinera",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "gasolinera-tienda"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

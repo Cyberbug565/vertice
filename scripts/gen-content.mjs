@@ -3,6 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { districts } from './districts.mjs';
 
 const C = join(dirname(fileURLToPath(import.meta.url)), '../content');
 const write = (f, d) => writeFileSync(join(C, f), JSON.stringify(d, null, 1) + '\n');
@@ -47,7 +48,7 @@ const interiors = [
   { id: 'teselia-int', name: 'Torre de Datos Teselia', size: 'big', base: 'tile', wall: '#262c48', out: ['cenit', 34, 49], danger: 'protected', tables: [[3, 4], [6, 4], [9, 4], [3, 7], [6, 7]], screens: [[3, 1, '#b46cff'], [6, 1, '#b46cff'], [9, 1, '#b46cff']],
     work: [['wp-teselia-red', 'Granja de servidores Teselia', [12, 2]], ['wp-teselia-lab', 'Laboratorio neural Teselia', [12, 8]], ['wp-teselia-oficina', 'Oficinas Teselia', [2, 2]]] },
   { id: 'comisaria-int', name: 'Comisaría PCV Cénit', size: 'big', base: 'tile', wall: '#2c3a52', out: ['cenit', 60, 49], danger: 'protected', tables: [[4, 4], [7, 4], [4, 7], [7, 7]], screens: [[5, 1, '#60a5fa']],
-    objects: [{ id: 'recompensas-comisaria', name: 'Tablón de recompensas de la comisaría', at: [10, 1], kind: 'bountyboard' }],
+    objects: [{ id: 'recompensas-comisaria', name: 'Tablón de recompensas de la comisaría', at: [10, 1], kind: 'bountyboard' }, { id: 'ventanilla-tasas', name: 'Ventanilla de «tasas de agilización»', at: [2, 4], kind: 'bribe' }],
     work: [['wp-comisaria', 'Mostrador de denuncias', [12, 8]], ['wp-comisaria-calabozos', 'Calabozos', [2, 9]]] },
   { id: 'laboratorio-int', name: 'Laboratorios Okami', size: 'big', base: 'tile', wall: '#2e3a46', out: ['cenit', 11, 63], danger: 'protected', tables: [[3, 4], [6, 4], [9, 4]], beds: [[3, 8, '#5affc8']], screens: [[5, 1, '#5affc8'], [9, 1, '#5affc8']],
     work: [['wp-lab-okami', 'Bancada de Laboratorios Okami', [12, 2]], ['wp-lab-ensayos', 'Sala de ensayos clínicos', [12, 8]]] },
@@ -57,6 +58,26 @@ const interiors = [
 ];
 
 const zones = [];
+// Distritos exteriores generados (megápolis y alrededores) y sus interiores.
+const D = districts();
+for (const it of D.interiors) interiors.push({ danger: 'protected', ...it });
+for (const z of D.zones) write(`zones/${z.id}.json`, z);
+const ZNAME = { ferro: 'Ferro', cenit: 'Cénit', ...Object.fromEntries(D.zones.map((z) => [z.id, z.name])) };
+// Puertas de Ferro y Cénit hacia los distritos nuevos, policía y bandas (idempotente).
+{
+  const patch = (id, fn) => { const z = read(`zones/${id}.json`); fn(z); write(`zones/${id}.json`, z); };
+  const gate = (gid, name, at, zone, to) => ({ id: gid, name, at, to: { zone, at: to }, danger: 'public' });
+  patch('ferro', (z) => {
+    z.doors = z.doors.filter((d) => d.id !== 'hacia-arrabal').concat([gate('hacia-arrabal', 'Avenida hacia El Arrabal', [31, 63], 'arrabal', [47, 1])]);
+    z.police = 2; z.gangs = [{ faction: 'hojas-rojas', count: 3, area: [80, 40, 10] }, { faction: 'chatarreros', count: 3, area: [40, 56, 6] }, { faction: 'furias', count: 2, area: [86, 52, 8] }];
+    z.objects = z.objects.filter((o) => !o.id.startsWith('ferro-cajero')).concat([{ id: 'ferro-cajero-1', name: 'Cajero automático', at: [33, 36], kind: 'atm' }, { id: 'ferro-cajero-2', name: 'Cajero automático', at: [71, 36], kind: 'atm' }]);
+  });
+  patch('cenit', (z) => {
+    z.doors = z.doors.filter((d) => !['hacia-colinas', 'hacia-forja'].includes(d.id)).concat([gate('hacia-colinas', 'Avenida hacia Colinas Doradas', [47, 0], 'colinas', [47, 62]), gate('hacia-forja', 'Avenida hacia Forja', [95, 31], 'forja', [1, 31])]);
+    z.police = 4; z.gangs = [];
+    z.objects = z.objects.filter((o) => !o.id.startsWith('cenit-cajero')).concat([{ id: 'cenit-cajero-1', name: 'Cajero Okami Bank', at: [45, 28], kind: 'atm' }, { id: 'cenit-cajero-2', name: 'Cajero Okami Bank', at: [74, 20], kind: 'atm' }, { id: 'cenit-cajero-3', name: 'Cajero Okami Bank', at: [19, 47], kind: 'atm' }]);
+  });
+}
 const workplaces = [
   { id: 'wp-muelles-ferro', name: 'Muelles de Ferro', zone: 'ferro', at: [30, 6] },
   { id: 'wp-mercado-lumen', name: 'Mercado Lumen', zone: 'ferro', at: [22, 35] },
@@ -87,7 +108,7 @@ for (const it of interiors) {
   }
   zones.push({
     id: it.id, name: it.name, kind: 'interior', width: w, height: h, danger: it.danger, base: it.base, wallColor: it.wall, blocks, props,
-    doors: [{ id: `salida-${it.id}`, name: `Salida a la calle (${it.out[0] === 'ferro' ? 'Ferro' : 'Cénit'})`, at: exit, to: { zone: it.out[0], at: [it.out[1], it.out[2]] }, danger: 'public' }],
+    doors: [{ id: `salida-${it.id}`, name: `Salida a la calle (${ZNAME[it.out[0]] ?? it.out[0]})`, at: exit, to: { zone: it.out[0], at: [it.out[1], it.out[2]] }, danger: 'public' }],
     objects, waypoints: [[exit[0] - 2, exit[1]]], safePoint: [exit[0] - 2, exit[1]],
   });
 }
@@ -233,6 +254,8 @@ const npcs = read('npcs.json').filter((n) => !n.generated);
 const dialogs = read('dialogs.json');
 const locale = read('locale/es.json');
 const docs = [
+  ['yuki', 'Doc Yuki', 'Matasanos de Neón Rojo', 'yuki-int', [4, 4], 'yuki', { skin: '#f0d8c0', hair: '#ff4fa0', jacket: '#2a1a40', accent: '#b46cff' },
+    'Doc Yuki lleva implantes en las dos manos y una sonrisa que no llega a los ojos. «El Clan paga mis facturas, pero tu dinero también vale. ¿Qué te pongo?»'],
   ['brann', 'Brann «El Carnicero»', 'Matasanos sin escrúpulos', 'carnicero-int', [4, 4], 'carnicero', { skin: '#d8b090', hair: '#5a1a1a', jacket: '#7a2a2a', accent: '#ff5a5a' },
     'Brann se limpia las manos en un delantal que fue blanco. «¿Cromo nuevo, cromo usado, cromo de otro? Aquí no pregunto. Tú tampoco.»'],
   ['iruka', 'Mama Iruka', 'Matasanos de barrio', 'iruka-int', [4, 4], 'iruka', { skin: '#a8805a', hair: '#e8e8e8', jacket: '#2f6b4f', accent: '#5affc8' },

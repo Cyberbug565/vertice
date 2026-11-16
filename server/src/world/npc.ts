@@ -34,7 +34,8 @@ function setState(w: World, e: Entity, s: NpcState, label?: string) {
 
 export function thinkNpc(w: World, e: Entity) {
   const b = e.npc!;
-  // Prioridad: derribo > huida > peligro inmediato > orden válida > rutina. (Hito 1: solo conversación y rutina.)
+  // Prioridad: derribo > huida > peligro inmediato (combate) > orden válida > rutina.
+  if (w.combat.npcThink(e)) return;
   if (e.talkingUntil && e.talkingUntil > w.tick) { if (e.path.length) { e.path = []; } setState(w, e, 'talk', 'Conversando'); return; }
   if (b.type === 'scheduled') return thinkScheduled(w, e);
   return thinkAmbient(w, e);

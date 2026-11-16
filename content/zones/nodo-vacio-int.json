@@ -1,0 +1,80 @@
+{
+ "id": "nodo-vacio-int",
+ "name": "Nodo del Vacío",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#0a2a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "screen",
+   "at": [
+    2,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    8,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-nodo-vacio-int",
+   "name": "Salida a la calle (El Arrabal)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "arrabal",
+    "at": [
+     60,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-nodo",
+   "name": "Mostrador del Nodo",
+   "at": [
+    7,
+    5
+   ],
+   "kind": "shop",
+   "shop": "nodo-vacio"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

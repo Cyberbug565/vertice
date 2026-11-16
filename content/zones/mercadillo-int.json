@@ -1,0 +1,88 @@
+{
+ "id": "mercadillo-int",
+ "name": "Mercadillo del Bloque 22",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "public",
+ "base": "dirt",
+ "wallColor": "#4a3a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    5,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    6,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    7,
+    1
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    2,
+    2
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    2,
+    8
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-mercadillo-int",
+   "name": "Salida a la calle (El Arrabal)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "arrabal",
+    "at": [
+     39,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "puesto-mercadillo",
+   "name": "Puesto del mercadillo",
+   "at": [
+    8,
+    5
+   ],
+   "kind": "shop",
+   "shop": "mercadillo-arrabal"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

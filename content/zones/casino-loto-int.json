@@ -1,0 +1,79 @@
+{
+ "id": "casino-loto-int",
+ "name": "Casino Loto",
+ "kind": "interior",
+ "width": 14,
+ "height": 10,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#401a2a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "screen",
+   "at": [
+    2,
+    1
+   ],
+   "blocking": false,
+   "color": "#ffd23f"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  },
+  {
+   "type": "screen",
+   "at": [
+    8,
+    1
+   ],
+   "blocking": false,
+   "color": "#43f3ff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-casino-loto-int",
+   "name": "Salida a la calle (Neón Rojo)",
+   "at": [
+    13,
+    5
+   ],
+   "to": {
+    "zone": "neon-rojo",
+    "at": [
+     33,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "cajero-casino",
+   "name": "Cajero del casino",
+   "at": [
+    10,
+    8
+   ],
+   "kind": "atm"
+  }
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ]
+ ],
+ "safePoint": [
+  11,
+  5
+ ]
+}

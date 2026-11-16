@@ -1,0 +1,115 @@
+{
+ "id": "motel-int",
+ "name": "Motel Atardecer",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#6a4a3a",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    2,
+    6,
+    4,
+    1
+   ],
+   "color": "#6a4a3a"
+  }
+ ],
+ "props": [],
+ "doors": [
+  {
+   "id": "salida-motel-int",
+   "name": "Salida a la calle (El Yermo)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "yermo",
+    "at": [
+     26,
+     43
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-motel",
+   "name": "Barra del motel",
+   "at": [
+    7,
+    6
+   ],
+   "kind": "shop",
+   "shop": "motel-barra"
+  },
+  {
+   "id": "motel-int-capsula-1",
+   "name": "Cápsula 1 (10 €$/noche)",
+   "at": [
+    2,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.75,
+    "price": 10
+   }
+  },
+  {
+   "id": "motel-int-capsula-2",
+   "name": "Cápsula 2 (10 €$/noche)",
+   "at": [
+    5,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.75,
+    "price": 10
+   }
+  },
+  {
+   "id": "motel-int-capsula-3",
+   "name": "Cápsula 3 (10 €$/noche)",
+   "at": [
+    8,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.75,
+    "price": 10
+   }
+  },
+  {
+   "id": "motel-int-capsula-4",
+   "name": "Cápsula 4 (10 €$/noche)",
+   "at": [
+    11,
+    1
+   ],
+   "kind": "bed",
+   "sleep": {
+    "quality": 0.75,
+    "price": 10
+   }
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

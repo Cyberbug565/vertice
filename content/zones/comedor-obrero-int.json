@@ -1,0 +1,67 @@
+{
+ "id": "comedor-obrero-int",
+ "name": "Comedor obrero",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#504030",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    3,
+    6
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    6
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-comedor-obrero-int",
+   "name": "Salida a la calle (Forja)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "forja",
+    "at": [
+     39,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-comedor",
+   "name": "Barra del comedor",
+   "at": [
+    7,
+    2
+   ],
+   "kind": "shop",
+   "shop": "comedor-obrero"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

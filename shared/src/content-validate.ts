@@ -13,6 +13,7 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
     zones, dialogs: get('dialogs.json'), tasks: get('tasks.json'), contracts: get('contracts.json'), locale: get('locale/es.json'),
     needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: get('cyberware.json'), ripperdocs: get('ripperdocs.json'),
     professions: get('professions.json'), workplaces: get('workplaces.json'), jobs: get('jobs.json'), fugitives: get('fugitives.json'),
+    quickhacks: get('quickhacks.json'), ambar: get('ambar.json'), world: get('world.json'),
   };
   const parsed = ContentSchema.safeParse(raw);
   if (!parsed.success) throw new Error('Contenido inválido:\n' + parsed.error.issues.slice(0, 20).map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n'));
@@ -154,6 +155,19 @@ export function validateContent(c: Content): string[] {
     else walk(f.zone, [f.area[0], f.area[1]], `fugitivo ${f.id}`);
     if (!factionIds.has(f.poster)) errs.push(`fugitivo ${f.id}: anunciante ${f.poster}`);
   }
+  // ---- v0.3: armas, facciones, mundo, ciberware visible.
+  for (const it of c.items) if (it.weapon?.ammo && !itemIds.has(it.weapon.ammo)) errs.push(`arma ${it.id}: munición ${it.weapon.ammo}`);
+  for (const f of c.factions) {
+    for (const r of Object.keys(f.relations)) if (!factionIds.has(r)) errs.push(`facción ${f.id}: relación con ${r} desconocida`);
+    for (const z of f.territory) if (!zoneIds.has(z)) errs.push(`facción ${f.id}: territorio ${z}`);
+    if (f.weapon && !itemIds.has(f.weapon)) errs.push(`facción ${f.id}: arma ${f.weapon}`);
+  }
+  for (const z of c.zones) for (const g of z.gangs) if (!factionIds.has(g.faction)) errs.push(`${z.id}: banda ${g.faction}`);
+  for (const cw of c.cyberware) if (cw.effects.weapon && !itemIds.has(cw.effects.weapon)) errs.push(`ciberware ${cw.id}: arma ${cw.effects.weapon}`);
+  for (const d of c.world.districts) if (!zoneIds.has(d.zone)) errs.push(`mundo: distrito ${d.zone}`);
+  for (const p of c.ambar) for (const z of p.zones) if (!zoneIds.has(z)) errs.push(`Ámbar ${p.id}: zona ${z}`);
+  const cells = new Set<string>();
+  for (const d of c.world.districts) { const k = `${d.gx},${d.gy}`; if (cells.has(k)) errs.push(`mundo: dos distritos en ${k}`); cells.add(k); }
   return errs;
 }
 

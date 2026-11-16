@@ -1,0 +1,96 @@
+{
+ "id": "club-kitsune-int",
+ "name": "Club Kitsune",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#3a1a3a",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    2,
+    3,
+    1,
+    5
+   ],
+   "color": "#3a1a3a"
+  }
+ ],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    7,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    10,
+    7
+   ]
+  },
+  {
+   "type": "neon",
+   "at": [
+    6,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  },
+  {
+   "type": "neon",
+   "at": [
+    10,
+    1
+   ],
+   "blocking": false,
+   "color": "#ff3fa4"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-club-kitsune-int",
+   "name": "Salida a la calle (Neón Rojo)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "neon-rojo",
+    "at": [
+     5,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-kitsune",
+   "name": "Barra del Kitsune",
+   "at": [
+    3,
+    8
+   ],
+   "kind": "shop",
+   "shop": "kitsune-barra"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "id": "yuki-int",
+ "name": "Consulta de Doc Yuki",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#2a1a40",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#b46cff"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#b46cff"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-yuki-int",
+   "name": "Salida a la calle (Neón Rojo)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "neon-rojo",
+    "at": [
+     84,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

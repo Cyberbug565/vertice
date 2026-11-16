@@ -6,3 +6,4 @@ export * from './nav.js';
 export * from './protocol.js';
 export * from './content-validate.js';
 export * from './surgery.js';
+export * from './appearance.js';

@@ -1,0 +1,56 @@
+[
+ {
+  "id": "plata",
+  "name": "Ámbar Plata",
+  "price": 350,
+  "days": 3,
+  "arrival": 25,
+  "uses": 1,
+  "revive": 0.3,
+  "zones": [
+   "cenit",
+   "colinas",
+   "ferro"
+  ],
+  "color": "#c0c0c8",
+  "desc": "Un rescate en los distritos centrales. Llegada en ~25 s."
+ },
+ {
+  "id": "oro",
+  "name": "Ámbar Oro",
+  "price": 900,
+  "days": 3,
+  "arrival": 15,
+  "uses": 2,
+  "revive": 0.5,
+  "zones": [
+   "cenit",
+   "colinas",
+   "ferro",
+   "neon-rojo",
+   "forja"
+  ],
+  "color": "#ffbf00",
+  "desc": "Dos rescates, también en Neón Rojo y Forja. Llegada en ~15 s."
+ },
+ {
+  "id": "platino",
+  "name": "Ámbar Platino",
+  "price": 2200,
+  "days": 3,
+  "arrival": 8,
+  "uses": 99,
+  "revive": 0.8,
+  "zones": [
+   "cenit",
+   "colinas",
+   "ferro",
+   "neon-rojo",
+   "forja",
+   "arrabal",
+   "yermo"
+  ],
+  "color": "#e5e4e2",
+  "desc": "Rescates ilimitados en toda la ciudad y el Yermo. Llegada en ~8 s."
+ }
+]

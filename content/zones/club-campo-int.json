@@ -1,0 +1,92 @@
+{
+ "id": "club-campo-int",
+ "name": "Club de Campo Kaiten",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#4a6a5a",
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    2,
+    2,
+    1,
+    4
+   ],
+   "color": "#4a6a5a"
+  }
+ ],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    4,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    4,
+    8
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    8
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-club-campo-int",
+   "name": "Salida a la calle (Colinas Doradas)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "colinas",
+    "at": [
+     28,
+     29
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "barra-club-campo",
+   "name": "Barra del club",
+   "at": [
+    3,
+    7
+   ],
+   "kind": "shop",
+   "shop": "club-campo"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

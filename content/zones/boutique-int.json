@@ -1,0 +1,81 @@
+{
+ "id": "boutique-int",
+ "name": "Boutique Aurelia",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#5a4a6a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-boutique-int",
+   "name": "Salida a la calle (Colinas Doradas)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "colinas",
+    "at": [
+     66,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "caja-boutique",
+   "name": "Caja de la boutique",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "boutique-aurelia"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

@@ -11,18 +11,13 @@ import { MarketService } from '../game/market.js';
 import { ClinicService } from '../game/clinic.js';
 import { BountyService, type Bounty } from '../game/bounty.js';
 import { GameError } from '../game/effects.js';
-import { buildSheet, effective, savePlayerVitals, type PlayerState } from '../game/player.js';
+import { buildSheet, chromeParts, effective, savePlayerVitals, type PlayerState } from '../game/player.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
 const SHOP_RANGE = 3.5;
 const HOSTILE_RANGE = 2.6;
 
-/** Probabilidad exacta de que a + 1d10 ≥ b + 1d10. */
-export function opposedChance(a: number, b: number): number {
-  let ok = 0;
-  for (let x = 1; x <= 10; x++) for (let y = 1; y <= 10; y++) if (a + x >= b + y) ok++;
-  return ok / 100;
-}
+export { opposed as opposedChance } from './combat.js';
 
 interface ConnExtra {
   openShop?: { shop: string; entity: number }; openClinic?: { doc: string; entity: number };
@@ -57,6 +52,7 @@ export class Survival {
     return e;
   }
   gameHoursPerSecond() { return (1000 / this.w.c.manifest.cityHourMs) * this.w.cfg.needsScale; }
+  sheetOf(p: PlayerState) { return buildSheet(this.w.c, p); }
   private sheet(c: PlayerConn) { this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, c.p!) }); this.x(c).lastSheetAt = Date.now(); }
   private notice(c: PlayerConn | undefined, kind: 'info' | 'good' | 'warn' | 'bad', text: string) { if (c) this.w.send(c, { t: 'notice', kind, text }); }
   private bump(e: Entity) { e.labelVer++; }
@@ -79,7 +75,10 @@ export class Survival {
   private tickPlayer(c: PlayerConn, dtH: number) {
     const p = c.p!, e = c.e!, n = this.w.c.needs, x = this.x(c);
     if (p.status === 'downed') {
-      if (Date.now() >= p.downedUntil) this.w.enqueue(c, () => this.die(p, e, p.downedCause));
+      if (Date.now() >= p.downedUntil) {
+        if (p.downedLethal) this.w.enqueue(c, () => this.die(p, e, p.downedCause));
+        else { p.status = 'alive'; p.hp = 10; p.downedUntil = 0; e.label = ''; e.state = 'alive'; this.bump(e); this.notice(c, 'info', 'Recuperas el sentido con 10 de salud.'); this.sheet(c); }
+      }
       else if (Date.now() - x.lastSheetAt > 2000) this.sheet(c);
       return;
     }
@@ -120,7 +119,12 @@ export class Survival {
       if (v >= 100 && b < 100) this.notice(c, 'bad', k === 'fatigue' ? 'Agotamiento total.' : `${label === 'hambre' ? 'Te mueres de hambre' : 'Te deshidratas'}: pierdes salud cada hora.`);
     }
     // Velocidad: atributos efectivos, oficio y cansancio.
-    e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0)) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1);
+    e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0)) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p);
+    // RAM del deck: se recarga más rápido con rango de red.
+    if (ef.ram > 0) p.ram = Math.min(ef.ram, p.ram + (0.25 + p.netRank * 0.03)); else p.ram = 0;
+    // Cromo visible y salud para quien mire.
+    const parts = chromeParts(this.w.c, p);
+    if (parts.join() !== (e.chrome ?? []).join()) { e.chrome = parts; this.bump(e); }
     this.autoNeeds(c);
     if (Date.now() - x.lastSheetAt > 4000) this.sheet(c);
   }
@@ -322,17 +326,19 @@ export class Survival {
   }
 
   // ================================================================ derribo, rescate y muerte
-  downed(c: PlayerConn | undefined, cause: string, p0?: PlayerState, e0?: Entity) {
+  downed(c: PlayerConn | undefined, cause: string, p0?: PlayerState, e0?: Entity, lethal = true) {
     const p = p0 ?? c!.p!, e = e0 ?? c!.e!;
     if (p.status !== 'alive') return;
     if (c) { this.w.cancelActivity(e); this.w.closeDialog(c); }
-    p.sleeping = null; p.hp = 0; p.status = 'downed'; p.downedCause = cause;
-    p.downedUntil = Date.now() + (this.w.cfg.downedSeconds ?? this.w.c.needs.downedSeconds) * 1000;
-    e.label = 'Derribado'; e.state = 'downed'; this.bump(e);
+    if (p.carrying) { const t = this.w.entities.get(p.carrying); if (t) { t.carriedBy = undefined; t.labelVer++; } p.carrying = null; }
+    p.sleeping = null; p.hp = 0; p.status = 'downed'; p.downedCause = cause; p.downedLethal = lethal;
+    p.downedUntil = Date.now() + (lethal ? (this.w.cfg.downedSeconds ?? this.w.c.needs.downedSeconds) * 1000 : 45000);
+    e.label = lethal ? 'Desangrándose' : 'Inconsciente'; e.state = 'downed'; this.bump(e);
     if (c) {
-      this.notice(c, 'bad', `Estás derribado (${cause}). Tienes ${this.w.cfg.downedSeconds ?? this.w.c.needs.downedSeconds} s para que alguien te estabilice con un estimulante o un médico.`);
+      this.notice(c, 'bad', lethal ? `Estás derribado (${cause}). Tienes ${this.w.cfg.downedSeconds ?? this.w.c.needs.downedSeconds} s para que alguien te estabilice con un estimulante o un médico.` : `Te han dejado KO (${cause}). Recuperarás el sentido en unos 45 s.`);
       this.sheet(c);
     }
+    this.w.combat.onPlayerDowned(c, p, e);
     void savePlayerVitals(this.w.db, p).catch(() => {});
     for (const o of e.zone.query(e.x, e.y, 20)) if (o.kind === 'player' && o.conn && o !== e) this.notice(o.conn, 'warn', `${p.name} está derribado cerca de ti. Haz clic sobre su cuerpo para estabilizarlo.`);
   }
@@ -397,154 +403,7 @@ export class Survival {
     setTimeout(() => this.w.removeDead(p, e), 1500);
   }
 
-  // ================================================================ agresiones y recompensas
-  private hostileStats(p: PlayerState) { const ef = effective(this.w.c, p); return { attack: ef.attrs.REF + Math.max(ef.skills.cuerpo ?? 0, ef.skills.armas ?? 0) + ef.confront, defense: ef.attrs.DEX + (ef.skills.atletismo ?? 0) + ef.defense, rob: ef.attrs.DEX + (ef.skills.sigilo ?? 0) + ef.steal, notice: 8 + (ef.skills.percepcion ?? 0) + Math.floor(ef.attrs.INT / 2) }; }
-  private claimable(target: Entity, me: PlayerState): Bounty[] {
-    const tp = this.w.playerOf(target);
-    const list = tp ? this.bounties.onPlayer(tp.charId) : target.fugitive ? this.bounties.onNpc(target.fugitive.id) : [];
-    return list.filter((b) => b.placedBy !== me.charId);
-  }
-
-  targetMenu(c: PlayerConn, target: Entity): TargetMenuView {
-    const p = c.p!, e = c.e!;
-    const prot = dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected';
-    const block = prot ? 'Zona protegida: aquí no se permiten agresiones.' : undefined;
-    const me = this.hostileStats(p);
-    const opts: TargetMenuView['options'] = [];
-    const tp = this.w.playerOf(target);
-    if (tp) {
-      const them = this.hostileStats(tp);
-      const asleep = tp.sleeping ? 6 : 0;
-      if (tp.status === 'downed') {
-        const medic = p.profession === 'medico' || p.role === 'medtech';
-        opts.push({ id: 'rescue', label: 'Estabilizar', detail: medic ? 'Como médico/Medtech no necesitas material.' : 'Gasta un estimulante médico.', disabled: !medic && (p.inventory.get('estim') ?? 0) < 1 ? 'Necesitas un estimulante médico' : undefined });
-      } else {
-        opts.push({ id: 'rob', label: `Robar${tp.sleeping ? ' (duerme)' : ''}`, chance: checkChance(me.rob, 0, them.notice - asleep), detail: 'Le quitas un 10–30 % de su dinero. Si fallas, te descubre y subes en búsqueda.', disabled: block });
-        opts.push({ id: 'beat', label: `Dar una paliza${tp.sleeping ? ' (duerme)' : ''}`, chance: opposedChance(me.attack, them.defense - asleep), detail: 'Daño 9–18 + margen. A 0 de salud queda derribado. Sin recompensa: delito.', disabled: block });
-        const cl = this.claimable(target, p);
-        if (cl.length) opts.push({ id: 'claim', label: `Cobrar recompensa (${cl.reduce((s, b) => s + b.amount, 0)} €$)`, chance: opposedChance(me.attack + (effective(this.w.c, p).mods.confront ? 0 : 0), them.defense - asleep), detail: 'Enfrentamiento legal: al derribarlo cobras todas sus recompensas.', disabled: block });
-      }
-    } else if (target.fugitive) {
-      const cl = this.claimable(target, p);
-      opts.push({ id: 'claim', label: `Capturar (${cl.reduce((s, b) => s + b.amount, 0)} €$)`, chance: opposedChance(me.attack, target.fugitive.defense), detail: `${target.fugitive.crime}. Salud ${Math.max(0, Math.round(target.npcHp ?? 0))}/${target.fugitive.hp}. Si fallas, te devuelve el golpe.`, disabled: block ?? (cl.length ? undefined : 'Sin recompensa activa') });
-    }
-    return { target: target.id, name: target.name, options: opts };
-  }
-
-  async hostile(c: PlayerConn, m: Extract<ClientMsg, { t: 'hostile' }>) {
-    const p = c.p!, e = c.e!, x = this.x(c);
-    const fail = (reason: string) => this.w.send(c, { t: 'ack', seq: m.seq, ok: false, reason });
-    if (p.status !== 'alive') return fail('No puedes hacer eso ahora.');
-    if (p.sleeping) this.wake(c);
-    if (Date.now() < x.nextHostileAt) return fail('Recupera el aliento antes de volver a intentarlo.');
-    const target = this.w.entities.get(m.target);
-    if (!target || target.zone !== e.zone || target === e) return fail('Objetivo no válido.');
-    if (Math.hypot(target.x - e.x, target.y - e.y) > HOSTILE_RANGE) return fail('Demasiado lejos: acércate primero.');
-    if (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected') return fail('Zona protegida: aquí no se permiten agresiones.');
-    x.nextHostileAt = Date.now() + 2500;
-    const me = this.hostileStats(p);
-    const roll = () => 1 + Math.floor(this.rng() * 10);
-    const tp = this.w.playerOf(target);
-    const tc = target.conn;
-    if (tp) {
-      if (tp.status !== 'alive') return fail('Ya está derribado.');
-      const them = this.hostileStats(tp);
-      const asleep = tp.sleeping ? 6 : 0;
-      if (m.action === 'rob') {
-        const total = me.rob + roll();
-        const ok = total >= them.notice - asleep;
-        if (ok) {
-          const amount = Math.max(tp.money > 0 ? 1 : 0, Math.floor(tp.money * (0.1 + this.rng() * 0.2)));
-          await this.w.db.tx(async (q) => {
-            const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [m.opId]);
-            if (dup.rows.length) throw new GameError('Operación ya procesada');
-            if (amount) {
-              await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${m.opId}:v`, tp.charId, -amount, tp.money - amount, `Robo de ${p.name}`]);
-              await q.query('UPDATE characters SET money = money - $2 WHERE id = $1', [tp.charId, amount]);
-              await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${m.opId}:a`, p.charId, amount, p.money + amount, `Robo a ${tp.name}`]);
-              await q.query('UPDATE characters SET money = money + $2 WHERE id = $1', [p.charId, amount]);
-            }
-            await q.query('INSERT INTO incidents (kind, actor_char, victim_char, zone, detail) VALUES ($1,$2,$3,$4,$5)', ['robo', p.charId, tp.charId, e.zone.id, JSON.stringify({ amount, total })]);
-            await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [m.opId, p.charId, 'rob', JSON.stringify({ amount })]);
-          });
-          tp.money -= amount; p.money += amount;
-          this.notice(c, 'good', `Robas ${amount} €$ a ${tp.name} sin que se dé cuenta.`);
-          if (tc) { this.notice(tc, 'bad', tp.sleeping ? `Al despertar notarás que te faltan ${amount} €$.` : `Notas que te falta dinero: −${amount} €$.`); this.sheet(tc); }
-          await this.addWanted(c, 0.5, 'robo');
-        } else {
-          if (tp.sleeping && tc) this.wake(tc);
-          this.notice(tc, 'warn', `${p.name} ha intentado robarte.`);
-          this.notice(c, 'bad', `${tp.name} te pilla con la mano en su bolsillo.`);
-          await this.addWanted(c, 1, 'intento de robo');
-        }
-        this.sheet(c);
-        return this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
-      }
-      const bounties = this.claimable(target, p);
-      if (m.action === 'claim' && !bounties.length) return fail('No tiene recompensas que puedas cobrar.');
-      const a = me.attack + roll(), d = them.defense - asleep + roll();
-      if (tp.sleeping && tc) this.wake(tc);
-      if (a >= d) {
-        const dmg = 8 + roll() + Math.max(0, a - d);
-        tp.hp -= dmg;
-        this.notice(c, 'good', `Golpeas a ${tp.name}: −${dmg} de salud.`);
-        this.notice(tc, 'bad', `${p.name} te ataca: −${dmg} de salud.`);
-        void this.w.db.query('INSERT INTO incidents (kind, actor_char, victim_char, zone, detail) VALUES ($1,$2,$3,$4,$5)', [m.action === 'claim' ? 'captura' : 'agresion', p.charId, tp.charId, e.zone.id, JSON.stringify({ dmg, a, d })]).catch(() => {});
-        if (tp.hp <= 0) {
-          this.downed(tc, `agresión de ${p.name}`, tp, target);
-          if (bounties.length) {
-            const mods = this.w.c.professions.find((x) => x.id === p.profession)?.mods;
-            const paid = await this.bounties.claim(p, bounties, mods?.bounty ?? 0, m.opId);
-            if (paid) this.w.send(c, { t: 'reward', title: `Recompensa cobrada: ${tp.name}`, lines: [`+${paid} €$`, ...bounties.map((b) => `${b.poster === 'particular' ? 'Particular' : b.poster.toUpperCase()}: ${b.reason}`)] });
-            this.updateMarker(target);
-          } else await this.addWanted(c, 1.5, 'agresión con resultado de derribo');
-        } else if (!bounties.length) await this.addWanted(c, 1, 'agresión');
-        if (tc) this.sheet(tc);
-      } else {
-        const dmg = 4 + Math.floor(this.rng() * 6);
-        p.hp -= dmg;
-        this.notice(c, 'bad', `${tp.name} te esquiva y te devuelve el golpe: −${dmg} de salud.`);
-        this.notice(tc, 'warn', `${p.name} intenta agredirte; le devuelves el golpe.`);
-        if (!bounties.length) await this.addWanted(c, 1, 'agresión');
-        if (p.hp <= 0) this.downed(c, `pelea con ${tp.name}`);
-      }
-      this.sheet(c);
-      return this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
-    }
-    if (target.fugitive) {
-      const f = target.fugitive;
-      const bounties = this.claimable(target, p);
-      if (!bounties.length) return fail('Ese fugitivo ya no tiene recompensa.');
-      const a = me.attack + roll(), d = f.defense + roll();
-      if (a >= d) {
-        const dmg = 8 + roll() + Math.max(0, a - d);
-        target.npcHp = (target.npcHp ?? f.hp) - dmg;
-        this.notice(c, 'good', `Alcanzas a ${f.name}: −${dmg} (${Math.max(0, Math.round(target.npcHp))}/${f.hp}).`);
-        if (target.npcHp <= 0) {
-          const mods = this.w.c.professions.find((x) => x.id === p.profession)?.mods;
-          const paid = await this.bounties.claim(p, bounties, mods?.bounty ?? 0, m.opId);
-          await this.w.db.query('INSERT INTO incidents (kind, actor_char, victim_npc, zone, detail) VALUES ($1,$2,$3,$4,$5)', ['captura', p.charId, f.id, e.zone.id, JSON.stringify({ paid })]).catch(() => {});
-          this.w.send(c, { t: 'reward', title: `Fugitivo capturado: ${f.name}`, lines: [`+${paid} €$`, f.crime, 'La PCV se lo lleva. Otro fugitivo ocupará su lugar en unas horas.'] });
-          try { const out = await this.w.effects.apply(p, [{ rep: 'pcv', delta: 3 }, { rep: 'calle', delta: 2 }, { xp: 40 }], { opId: `${m.opId}:rep`, kind: 'capture' }); this.w.handleOutcome(c, out); } catch {}
-          this.w.removeEntity(target);
-          this.fugitiveRespawn.set(f.id, Date.now() + 3 * this.w.c.manifest.cityHourMs);
-        } else {
-          // Huye dentro de su zona.
-          const dest = nearestWalkable(target.zone.grid, f.area[0] + (this.rng() * 2 - 1) * f.area[2], f.area[1] + (this.rng() * 2 - 1) * f.area[2], 3);
-          if (dest) { const r = findPath(target.zone.grid, target.x, target.y, dest.x, dest.y, 3000); if (r.ok) { target.path = r.path; target.moving = true; } }
-        }
-      } else {
-        const dmg = 5 + Math.floor(this.rng() * 8);
-        p.hp -= dmg;
-        this.notice(c, 'bad', `${f.name} te esquiva y te hiere: −${dmg} de salud.`);
-        if (p.hp <= 0) this.downed(c, `enfrentamiento con ${f.name}`);
-      }
-      this.sheet(c);
-      return this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
-    }
-    return fail('No puedes hacer eso.');
-  }
-
+  // ================================================================ recompensas (las agresiones viven en combat.ts)
   async addWanted(c: PlayerConn, amount: number, why: string) {
     const p = c.p!;
     const before = p.wanted;
@@ -573,7 +432,7 @@ export class Survival {
       let zone: string | undefined, online: boolean | undefined;
       if (b.kind === 'player' && b.targetChar) { const oc = this.connOf(b.targetChar); online = !!oc; zone = oc?.e?.zone.def.name; }
       if (b.kind === 'npc') { const f = this.w.c.fugitives.find((x) => x.id === b.targetNpc); zone = f ? this.w.zones.get(f.zone)?.def.name : undefined; }
-      return { id: b.id, targetName: b.targetName, kind: b.kind, amount: b.amount, poster: b.poster === 'particular' ? 'Particular' : this.w.c.factions.find((f) => f.id === b.poster)?.name ?? b.poster, reason: b.reason, zone, online, mine: b.placedBy === p.charId, onMe: b.targetChar === p.charId };
+      return { id: b.id, targetName: b.targetName, kind: b.kind, amount: b.amount, poster: b.poster === 'particular' ? 'Particular' : this.w.c.factions.find((f) => f.id === b.poster)?.name ?? b.poster, reason: b.reason, zone, online, mine: b.placedBy === p.charId, onMe: b.targetChar === p.charId, aliveOnly: b.aliveOnly };
     }).sort((a, b) => b.amount - a.amount);
     const targets: BountyView['targets'] = [];
     for (const c of this.w.conns.values()) if (c.p && c.p.charId !== p.charId) targets.push({ kind: 'player', id: c.p.name, name: `${c.p.name} (jugador)` });
@@ -594,7 +453,7 @@ export class Survival {
       target = { npc: f.id, name: f.name };
     }
     const reason = m.reason.replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 120);
-    await this.bounties.place(p, m.kind, target, m.amount, reason, m.opId);
+    await this.bounties.place(p, m.kind, target, m.amount, reason, m.opId, m.aliveOnly);
     this.notice(c, 'good', `Recompensa publicada: ${m.amount} €$ por ${target.name}.`);
     this.sheet(c);
     if (target.charId) {
@@ -604,15 +463,28 @@ export class Survival {
     this.w.send(c, { t: 'bounties', view: this.bountyView(p) });
   }
 
+  scheduleFugitive(id: string) { this.fugitiveRespawn.set(id, Date.now() + 3 * this.w.c.manifest.cityHourMs); }
   private async spawnFugitive(f: FugitiveDef) {
     const z = this.w.zones.get(f.zone);
     if (!z) return;
-    if (!this.bounties.onNpc(f.id).length) await this.bounties.post('npc', { npc: f.id, name: f.name }, f.bounty, f.poster, f.crime);
+    if (!this.bounties.onNpc(f.id).length) await this.bounties.post('npc', { npc: f.id, name: f.name }, f.bounty, f.poster, f.alive ? `${f.crime} (lo quieren VIVO)` : f.crime, f.alive);
     const pos = nearestWalkable(z.grid, f.area[0] + 0.5, f.area[1] + 0.5, 4) ?? { x: z.def.safePoint[0] + 0.5, y: z.def.safePoint[1] + 0.5 };
     const e = this.w.spawnNpc(z, { name: f.name, title: 'Fugitivo', x: pos.x, y: pos.y, appearance: f.appearance, label: `Buscado: ${f.crime}`, speed: 2.4 });
-    e.fugitive = f; e.npcHp = f.hp; e.dialog = undefined;
+    e.fugitive = f; e.npcHp = f.hp; e.npcMax = f.hp; e.defense = f.defense; e.weaponId = f.weapon; e.npcType = 'fugitive'; e.dialog = undefined; e.chrome = ['ojos'];
     e.npc = ambientBrain(this.w.cfg.seed + e.id, [f.area[0], f.area[1]], f.area[2]);
     this.updateMarker(e);
+  }
+
+  equip(c: PlayerConn, item: string | null) {
+    const p = c.p!;
+    if (item === null) { p.equipped = null; this.notice(c, 'info', 'Vas con los puños.'); this.sheet(c); return; }
+    const def = this.w.c.items.find((i) => i.id === item);
+    const ef = effective(this.w.c, p);
+    if (!def?.weapon) throw new GameError('Eso no es un arma.');
+    if ((p.inventory.get(item) ?? 0) < 1 && !ef.integrated.includes(item)) throw new GameError('No tienes esa arma.');
+    p.equipped = item;
+    this.notice(c, 'info', `Empuñas ${def.name}.`);
+    this.sheet(c);
   }
 
   // ================================================================ tiendas, mercado, basura

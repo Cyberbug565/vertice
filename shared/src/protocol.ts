@@ -34,18 +34,26 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('profession'), seq, profession: z.string().max(64), opId }),
   z.object({ t: z.literal('clinicDo'), seq, doc: z.string().max(64), action: z.enum(['install', 'remove']), source: z.enum(['stock', 'stolen', 'inventory', 'installed']), ref: z.string().max(64), opId }),
   z.object({ t: z.literal('bounties'), seq }),
-  z.object({ t: z.literal('bountyPlace'), seq, kind: z.enum(['player', 'npc']), target: z.string().min(1).max(64), amount: z.number().int().min(100).max(1_000_000), reason: z.string().min(1).max(120), opId }),
-  z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim']), opId }),
+  z.object({ t: z.literal('bountyPlace'), seq, kind: z.enum(['player', 'npc']), target: z.string().min(1).max(64), amount: z.number().int().min(100).max(1_000_000), reason: z.string().min(1).max(120), aliveOnly: z.boolean().default(false), opId }),
+  z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim', 'attack', 'knockout', 'finish', 'carry', 'talk']), opId }),
+  z.object({ t: z.literal('menu'), seq, target: z.number().int().nonnegative() }),
+  z.object({ t: z.literal('hack'), seq, target: z.number().int().nonnegative(), hack: z.string().max(64), opId }),
+  z.object({ t: z.literal('equip'), seq, item: z.string().max(64).nullable() }),
+  z.object({ t: z.literal('drop'), seq }),
+  z.object({ t: z.literal('ambar'), seq, plan: z.string().max(32).optional(), opId: opId.optional() }),
+  z.object({ t: z.literal('factions'), seq }),
+  z.object({ t: z.literal('bribe'), seq, opId }),
   z.object({ t: z.literal('rescue'), seq, target: z.number().int().nonnegative(), opId }),
 ]);
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
 export type EntityKind = 'player' | 'npc' | 'door' | 'object';
-export interface Appearance { skin: string; hair: string; jacket: string; accent: string }
+export interface Appearance { skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string }
 export interface EntitySpawn {
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;
   appearance?: Appearance; role?: string; label?: string; interactive: boolean; objKind?: string; danger?: string;
   bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; fugitive?: boolean;
+  chrome?: string[]; faction?: string; factionColor?: string; npcType?: string; hpPct?: number; carried?: boolean;
 }
 
 export interface ShopView {
@@ -71,10 +79,15 @@ export interface ClinicOffer {
 export interface ClinicView { doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[] }
 export interface BountyView {
   money: number;
-  active: { id: string; targetName: string; kind: 'player' | 'npc'; amount: number; poster: string; reason: string; zone?: string; online?: boolean; mine: boolean; onMe: boolean }[];
+  active: { id: string; targetName: string; kind: 'player' | 'npc'; amount: number; poster: string; reason: string; zone?: string; online?: boolean; mine: boolean; onMe: boolean; aliveOnly: boolean }[];
   targets: { kind: 'player' | 'npc'; id: string; name: string }[];
 }
-export interface TargetMenuView { target: number; name: string; options: { id: 'rob' | 'beat' | 'claim' | 'rescue'; label: string; chance?: number; disabled?: string; detail?: string }[] }
+export interface TargetMenuView {
+  target: number; name: string; subtitle?: string; color?: string;
+  options: { id: string; kind: 'action' | 'hack' | 'interact'; group: 'social' | 'combate' | 'red' | 'ayuda'; label: string; chance?: number; disabled?: string; detail?: string; danger?: boolean }[];
+}
+export interface FactionsView { factions: { id: string; name: string; kind: string; color: string; archetype: string; desc: string; territory: string[]; rep: number; standing: string; allies: string[]; enemies: string[] }[] }
+export interface AmbarView { active: { plan: string; name: string; usesLeft: number; expiresInMin: number } | null; plans: { id: string; name: string; price: number; days: number; arrival: number; uses: number; revive: number; zones: string[]; color: string; desc: string }[]; money: number }
 export interface DeathSummary { name: string; role: string; profession: string; level: number; cause: string; place: string; money: number; minutesAlive: number; jobs: number; contracts: number }
 
 export interface CharacterSheet {
@@ -91,6 +104,12 @@ export interface CharacterSheet {
   profession: string; professionName: string; professionRank: number; professionXp: number; activeJob: string | null;
   cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean }[];
   bonuses: { confront: number; defense: number; steal: number; surgery: number };
+  weapon: { id: string; name: string; kind: string; family: string; damage: [number, number]; range: number; cooldown: number; accuracy: number; ammo?: string; ammoName?: string; ammoCount?: number; nonlethal: string; tech: string } | null;
+  weapons: { id: string; name: string; integrated: boolean }[];
+  armor: number; encumbrance: 'normal' | 'cargado' | 'sobrecargado'; carrying: string | null;
+  net: { rank: number; xp: number; xpNext: number; ram: number; ramMax: number; canHack: boolean };
+  ambar: { plan: string; name: string; usesLeft: number; expiresInMin: number } | null;
+  chrome: string[];
 }
 
 export interface JournalEntry {
@@ -111,7 +130,7 @@ export type ServerMsg =
   | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
   | { t: 'spawn'; e: EntitySpawn[] }
   | { t: 'despawn'; ids: number[] }
-  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping' }
+  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean }
   | { t: 'shop'; view: ShopView }
   | { t: 'market'; view: MarketView }
   | { t: 'jobs'; view: JobsView }
@@ -119,6 +138,10 @@ export type ServerMsg =
   | { t: 'bounties'; view: BountyView }
   | { t: 'targetMenu'; view: TargetMenuView }
   | { t: 'death'; summary: DeathSummary }
+  | { t: 'factions'; view: FactionsView }
+  | { t: 'ambar'; view: AmbarView }
+  | { t: 'speech'; id: number; text: string }
+  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko'; from: number; to: number }
   | { t: 'ack'; seq: number; ok: boolean; reason?: string; path?: [number, number][]; info?: string }
   | { t: 'dialog'; view: DialogView }
   | { t: 'dialogClose' }

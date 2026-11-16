@@ -1,33 +1,746 @@
 [
- { "id": "agente", "name": "Agente personal", "desc": "Teléfono, agenda y acceso a la red de mercado.", "weight": 0.2, "category": "equipo", "price": 60 },
- { "id": "chaqueta", "name": "Chaqueta reforzada", "desc": "Ropa de calle con forro balístico ligero.", "weight": 2, "category": "ropa", "price": 80 },
- { "id": "ropa-impermeable", "name": "Gabardina impermeable", "desc": "Mejor sueño en la calle cuando llueve (+0,05).", "weight": 1.5, "category": "ropa", "price": 70 },
- { "id": "chaleco-balistico", "name": "Chaleco balístico", "desc": "+2 al defenderte en un enfrentamiento.", "weight": 4, "category": "ropa", "price": 260, "confront": 2 },
- { "id": "navaja", "name": "Navaja", "desc": "Herramienta y último recurso (+1 en enfrentamientos).", "weight": 0.3, "category": "arma", "price": 30, "confront": 1 },
- { "id": "porra-electrica", "name": "Porra eléctrica", "desc": "+2 en enfrentamientos.", "weight": 1, "category": "arma", "price": 120, "confront": 2 },
- { "id": "pistola-ligera", "name": "Pistola ligera", "desc": "+3 en enfrentamientos.", "weight": 1.2, "category": "arma", "price": 300, "confront": 3 },
- { "id": "escopeta-corta", "name": "Escopeta corta", "desc": "+4 en enfrentamientos.", "weight": 3.5, "category": "arma", "price": 620, "confront": 4 },
- { "id": "pulsera-interfaz", "name": "Pulsera de interfaz", "desc": "Conector provisional para terminales (Netrunner).", "weight": 0.2, "category": "equipo", "price": 90 },
- { "id": "kit-herramientas", "name": "Kit de herramientas", "desc": "Llaves, soldador y multímetro.", "weight": 3, "category": "herramienta", "price": 110 },
- { "id": "ganzua-electronica", "name": "Ganzúa electrónica", "desc": "+2 al robar.", "weight": 0.3, "category": "herramienta", "price": 180 },
- { "id": "credencial-falsa", "name": "Credencial falsa", "desc": "Pase corporativo falsificado (contrabando ficticio).", "weight": 0.1, "category": "contrabando", "price": 400 },
- { "id": "neblina", "name": "«Neblina» (sustancia ficticia)", "desc": "Lote de una sustancia ficticia del juego. Ilegal: se vende al perista.", "weight": 0.2, "category": "contrabando", "price": 90 },
- { "id": "chatarra", "name": "Chatarra", "desc": "Metal y piezas aprovechables. Tomás y el perista la compran.", "weight": 1, "category": "chatarra", "price": 12 },
- { "id": "fideos-krill", "name": "Fideos de krill", "desc": "Hambre −35.", "weight": 0.5, "category": "comida", "price": 15, "consumable": { "hunger": -35, "thirst": 5 } },
- { "id": "ramen-kanal", "name": "Ramen de Kanal", "desc": "Hambre −45, sed −10.", "weight": 0.6, "category": "comida", "price": 22, "consumable": { "hunger": -45, "thirst": -10 } },
- { "id": "barrita-proteica", "name": "Barrita proteica", "desc": "Hambre −20.", "weight": 0.1, "category": "comida", "price": 8, "consumable": { "hunger": -20, "thirst": 5 } },
- { "id": "sandwich-algas", "name": "Sándwich de algas", "desc": "Hambre −30.", "weight": 0.3, "category": "comida", "price": 12, "consumable": { "hunger": -30 } },
- { "id": "racion-sintetica", "name": "Ración sintética Okami", "desc": "Hambre −50.", "weight": 0.5, "category": "comida", "price": 20, "consumable": { "hunger": -50, "thirst": 5 } },
- { "id": "nutribrick", "name": "Nutribrick", "desc": "Hambre −40. Sabe a cartón.", "weight": 0.4, "category": "comida", "price": 10, "consumable": { "hunger": -40, "thirst": 8 } },
- { "id": "sushi-real", "name": "Sushi de pescado real", "desc": "Hambre −60, aguante +20. Lujo.", "weight": 0.4, "category": "comida", "price": 95, "consumable": { "hunger": -60, "restore": "stamina", "amount": 20 } },
- { "id": "sobras", "name": "Sobras", "desc": "Hambre −15. Encontradas en la basura.", "weight": 0.3, "category": "comida", "price": 1, "consumable": { "hunger": -15, "thirst": 5 } },
- { "id": "agua-filtrada", "name": "Agua filtrada", "desc": "Sed −45.", "weight": 0.5, "category": "bebida", "price": 6, "consumable": { "thirst": -45 } },
- { "id": "refresco-neon", "name": "Refresco Neón", "desc": "Sed −30, sueño −5.", "weight": 0.4, "category": "bebida", "price": 7, "consumable": { "thirst": -30, "fatigue": -5 } },
- { "id": "cafe-sintetico", "name": "Café sintético", "desc": "Sed −15, sueño −15.", "weight": 0.3, "category": "bebida", "price": 8, "consumable": { "thirst": -15, "fatigue": -15 } },
- { "id": "bebida-isotonica", "name": "Bebida isotónica", "desc": "Sed −55, aguante +10.", "weight": 0.5, "category": "bebida", "price": 12, "consumable": { "thirst": -55, "restore": "stamina", "amount": 10 } },
- { "id": "cerveza-kanal", "name": "Cerveza Kanal", "desc": "Sed −25, sueño +5.", "weight": 0.5, "category": "bebida", "price": 9, "consumable": { "thirst": -25, "fatigue": 5 } },
- { "id": "estim", "name": "Estimulante médico", "desc": "Salud +20. Sirve para estabilizar a un derribado.", "weight": 0.1, "category": "medicina", "price": 40, "consumable": { "restore": "hp", "amount": 20 } },
- { "id": "analgesicos", "name": "Analgésicos", "desc": "Salud +8, sueño +5.", "weight": 0.1, "category": "medicina", "price": 15, "consumable": { "restore": "hp", "amount": 8, "fatigue": 5 } },
- { "id": "estabilizador", "name": "Estabilizador neural", "desc": "Salud +10 y alivia la presión neural (hito 2).", "weight": 0.1, "category": "medicina", "price": 70, "consumable": { "restore": "hp", "amount": 10 } },
- { "id": "acoplamiento", "name": "Acoplamiento de potencia", "desc": "Pieza para el generador del Mercado Lumen.", "weight": 4, "category": "mision" }
+ {
+  "id": "agente",
+  "name": "Agente personal",
+  "desc": "Teléfono, agenda y acceso a la red de mercado.",
+  "weight": 0.2,
+  "category": "equipo",
+  "price": 60
+ },
+ {
+  "id": "ropa-impermeable",
+  "name": "Gabardina impermeable",
+  "desc": "Mejor sueño en la calle cuando llueve (+0,05).",
+  "weight": 1.5,
+  "category": "ropa",
+  "price": 70
+ },
+ {
+  "id": "pulsera-interfaz",
+  "name": "Pulsera de interfaz",
+  "desc": "Conector provisional para terminales (Netrunner).",
+  "weight": 0.2,
+  "category": "equipo",
+  "price": 90
+ },
+ {
+  "id": "kit-herramientas",
+  "name": "Kit de herramientas",
+  "desc": "Llaves, soldador y multímetro.",
+  "weight": 3,
+  "category": "herramienta",
+  "price": 110
+ },
+ {
+  "id": "ganzua-electronica",
+  "name": "Ganzúa electrónica",
+  "desc": "+2 al robar.",
+  "weight": 0.3,
+  "category": "herramienta",
+  "price": 180
+ },
+ {
+  "id": "credencial-falsa",
+  "name": "Credencial falsa",
+  "desc": "Pase corporativo falsificado (contrabando ficticio).",
+  "weight": 0.1,
+  "category": "contrabando",
+  "price": 400
+ },
+ {
+  "id": "neblina",
+  "name": "«Neblina» (sustancia ficticia)",
+  "desc": "Lote de una sustancia ficticia del juego. Ilegal: se vende al perista.",
+  "weight": 0.2,
+  "category": "contrabando",
+  "price": 90
+ },
+ {
+  "id": "chatarra",
+  "name": "Chatarra",
+  "desc": "Metal y piezas aprovechables. Tomás y el perista la compran.",
+  "weight": 1,
+  "category": "chatarra",
+  "price": 12
+ },
+ {
+  "id": "fideos-krill",
+  "name": "Fideos de krill",
+  "desc": "Hambre −35.",
+  "weight": 0.5,
+  "category": "comida",
+  "price": 15,
+  "consumable": {
+   "hunger": -35,
+   "thirst": 5
+  }
+ },
+ {
+  "id": "ramen-kanal",
+  "name": "Ramen de Kanal",
+  "desc": "Hambre −45, sed −10.",
+  "weight": 0.6,
+  "category": "comida",
+  "price": 22,
+  "consumable": {
+   "hunger": -45,
+   "thirst": -10
+  }
+ },
+ {
+  "id": "barrita-proteica",
+  "name": "Barrita proteica",
+  "desc": "Hambre −20.",
+  "weight": 0.1,
+  "category": "comida",
+  "price": 8,
+  "consumable": {
+   "hunger": -20,
+   "thirst": 5
+  }
+ },
+ {
+  "id": "sandwich-algas",
+  "name": "Sándwich de algas",
+  "desc": "Hambre −30.",
+  "weight": 0.3,
+  "category": "comida",
+  "price": 12,
+  "consumable": {
+   "hunger": -30
+  }
+ },
+ {
+  "id": "racion-sintetica",
+  "name": "Ración sintética Okami",
+  "desc": "Hambre −50.",
+  "weight": 0.5,
+  "category": "comida",
+  "price": 20,
+  "consumable": {
+   "hunger": -50,
+   "thirst": 5
+  }
+ },
+ {
+  "id": "nutribrick",
+  "name": "Nutribrick",
+  "desc": "Hambre −40. Sabe a cartón.",
+  "weight": 0.4,
+  "category": "comida",
+  "price": 10,
+  "consumable": {
+   "hunger": -40,
+   "thirst": 8
+  }
+ },
+ {
+  "id": "sushi-real",
+  "name": "Sushi de pescado real",
+  "desc": "Hambre −60, aguante +20. Lujo.",
+  "weight": 0.4,
+  "category": "comida",
+  "price": 95,
+  "consumable": {
+   "hunger": -60,
+   "restore": "stamina",
+   "amount": 20
+  }
+ },
+ {
+  "id": "sobras",
+  "name": "Sobras",
+  "desc": "Hambre −15. Encontradas en la basura.",
+  "weight": 0.3,
+  "category": "comida",
+  "price": 1,
+  "consumable": {
+   "hunger": -15,
+   "thirst": 5
+  }
+ },
+ {
+  "id": "agua-filtrada",
+  "name": "Agua filtrada",
+  "desc": "Sed −45.",
+  "weight": 0.5,
+  "category": "bebida",
+  "price": 6,
+  "consumable": {
+   "thirst": -45
+  }
+ },
+ {
+  "id": "refresco-neon",
+  "name": "Refresco Neón",
+  "desc": "Sed −30, sueño −5.",
+  "weight": 0.4,
+  "category": "bebida",
+  "price": 7,
+  "consumable": {
+   "thirst": -30,
+   "fatigue": -5
+  }
+ },
+ {
+  "id": "cafe-sintetico",
+  "name": "Café sintético",
+  "desc": "Sed −15, sueño −15.",
+  "weight": 0.3,
+  "category": "bebida",
+  "price": 8,
+  "consumable": {
+   "thirst": -15,
+   "fatigue": -15
+  }
+ },
+ {
+  "id": "bebida-isotonica",
+  "name": "Bebida isotónica",
+  "desc": "Sed −55, aguante +10.",
+  "weight": 0.5,
+  "category": "bebida",
+  "price": 12,
+  "consumable": {
+   "thirst": -55,
+   "restore": "stamina",
+   "amount": 10
+  }
+ },
+ {
+  "id": "cerveza-kanal",
+  "name": "Cerveza Kanal",
+  "desc": "Sed −25, sueño +5.",
+  "weight": 0.5,
+  "category": "bebida",
+  "price": 9,
+  "consumable": {
+   "thirst": -25,
+   "fatigue": 5
+  }
+ },
+ {
+  "id": "estim",
+  "name": "Estimulante médico",
+  "desc": "Salud +20. Sirve para estabilizar a un derribado.",
+  "weight": 0.1,
+  "category": "medicina",
+  "price": 40,
+  "consumable": {
+   "restore": "hp",
+   "amount": 20
+  }
+ },
+ {
+  "id": "analgesicos",
+  "name": "Analgésicos",
+  "desc": "Salud +8, sueño +5.",
+  "weight": 0.1,
+  "category": "medicina",
+  "price": 15,
+  "consumable": {
+   "restore": "hp",
+   "amount": 8,
+   "fatigue": 5
+  }
+ },
+ {
+  "id": "estabilizador",
+  "name": "Estabilizador neural",
+  "desc": "Salud +10 y alivia la presión neural (hito 2).",
+  "weight": 0.1,
+  "category": "medicina",
+  "price": 70,
+  "consumable": {
+   "restore": "hp",
+   "amount": 10
+  }
+ },
+ {
+  "id": "acoplamiento",
+  "name": "Acoplamiento de potencia",
+  "desc": "Pieza para el generador del Mercado Lumen.",
+  "weight": 4,
+  "category": "mision"
+ },
+ {
+  "id": "chaqueta",
+  "name": "Chaqueta reforzada",
+  "desc": "Ropa de calle con forro balístico ligero (blindaje 1).",
+  "weight": 2,
+  "category": "ropa",
+  "price": 80,
+  "armor": 1
+ },
+ {
+  "id": "chaleco-balistico",
+  "name": "Chaleco balístico",
+  "desc": "Blindaje 3 contra cortes y balas.",
+  "weight": 4,
+  "category": "ropa",
+  "price": 260,
+  "armor": 3
+ },
+ {
+  "id": "gabardina-blindada",
+  "name": "Gabardina blindada",
+  "desc": "Elegante y con placas cerámicas (blindaje 4).",
+  "weight": 5,
+  "category": "ropa",
+  "price": 520,
+  "armor": 4
+ },
+ {
+  "id": "navaja",
+  "name": "Navaja",
+  "desc": "Cuerpo a cuerpo · rápida y discreta.",
+  "weight": 0.3,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Cuchillo",
+   "damage": [
+    6,
+    12
+   ],
+   "range": 1.6,
+   "cooldown": 1.0,
+   "accuracy": 1,
+   "nonlethal": "opcional",
+   "noise": 0.05,
+   "tech": "clasica"
+  },
+  "price": 30
+ },
+ {
+  "id": "bate",
+  "name": "Bate de aluminio",
+  "desc": "Cuerpo a cuerpo · contundente: ideal para dejar KO.",
+  "weight": 1.2,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Contundente",
+   "damage": [
+    8,
+    15
+   ],
+   "range": 1.7,
+   "cooldown": 1.4,
+   "accuracy": 0,
+   "nonlethal": "opcional",
+   "noise": 0.2,
+   "tech": "clasica"
+  },
+  "price": 45
+ },
+ {
+  "id": "machete",
+  "name": "Machete",
+  "desc": "Cuerpo a cuerpo · hoja pesada.",
+  "weight": 1.5,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Hoja",
+   "damage": [
+    10,
+    18
+   ],
+   "range": 1.7,
+   "cooldown": 1.3,
+   "accuracy": 0,
+   "nonlethal": "opcional",
+   "noise": 0.1,
+   "tech": "clasica"
+  },
+  "price": 90
+ },
+ {
+  "id": "porra-electrica",
+  "name": "Porra eléctrica",
+  "desc": "Cuerpo a cuerpo · aturde; puede ser no letal.",
+  "weight": 1,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Contundente",
+   "damage": [
+    7,
+    13
+   ],
+   "range": 1.6,
+   "cooldown": 1.1,
+   "accuracy": 1,
+   "nonlethal": "opcional",
+   "noise": 0.2,
+   "tech": "tecnica"
+  },
+  "price": 120
+ },
+ {
+  "id": "punos-choque",
+  "name": "Guanteletes de choque",
+  "desc": "Cuerpo a cuerpo · descargas no letales.",
+  "weight": 1.4,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Puños",
+   "damage": [
+    9,
+    16
+   ],
+   "range": 1.5,
+   "cooldown": 0.9,
+   "accuracy": 1,
+   "nonlethal": "solo",
+   "noise": 0.2,
+   "tech": "tecnica"
+  },
+  "price": 240
+ },
+ {
+  "id": "katana-termica",
+  "name": "Katana térmica",
+  "desc": "Cuerpo a cuerpo · hoja calentada al rojo; muy letal.",
+  "weight": 2,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Hoja",
+   "damage": [
+    14,
+    24
+   ],
+   "range": 1.8,
+   "cooldown": 1.2,
+   "accuracy": 2,
+   "nonlethal": "opcional",
+   "noise": 0.1,
+   "tech": "potencia"
+  },
+  "price": 1400
+ },
+ {
+  "id": "pistola-ligera",
+  "name": "Pistola ligera",
+  "desc": "Distancia 12 m · cargador de 12.",
+  "weight": 1.2,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Pistola",
+   "damage": [
+    10,
+    16
+   ],
+   "range": 12,
+   "cooldown": 1.0,
+   "accuracy": 1,
+   "nonlethal": "no",
+   "noise": 0.8,
+   "tech": "clasica",
+   "ammo": "bala-pistola",
+   "mag": 12
+  },
+  "price": 300
+ },
+ {
+  "id": "revolver-pesado",
+  "name": "Revólver pesado",
+  "desc": "Distancia 14 m · 6 balas que pegan muy fuerte.",
+  "weight": 1.6,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Pistola",
+   "damage": [
+    16,
+    26
+   ],
+   "range": 14,
+   "cooldown": 1.6,
+   "accuracy": 0,
+   "nonlethal": "no",
+   "noise": 0.95,
+   "tech": "potencia",
+   "ammo": "bala-pistola",
+   "mag": 6
+  },
+  "price": 520
+ },
+ {
+  "id": "pistola-inteligente",
+  "name": "Pistola inteligente",
+  "desc": "Distancia 16 m · balas guiadas: mucha precisión.",
+  "weight": 1.3,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Pistola",
+   "damage": [
+    9,
+    15
+   ],
+   "range": 16,
+   "cooldown": 0.9,
+   "accuracy": 4,
+   "nonlethal": "no",
+   "noise": 0.7,
+   "tech": "inteligente",
+   "ammo": "bala-pistola",
+   "mag": 15
+  },
+  "price": 900
+ },
+ {
+  "id": "subfusil",
+  "name": "Subfusil",
+  "desc": "Distancia 11 m · ráfagas rápidas, poca precisión.",
+  "weight": 2.5,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Subfusil",
+   "damage": [
+    8,
+    13
+   ],
+   "range": 11,
+   "cooldown": 0.5,
+   "accuracy": -1,
+   "nonlethal": "no",
+   "noise": 0.9,
+   "tech": "clasica",
+   "ammo": "bala-pistola",
+   "mag": 30
+  },
+  "price": 700
+ },
+ {
+  "id": "escopeta-corta",
+  "name": "Escopeta corta",
+  "desc": "Distancia 6 m · devastadora de cerca.",
+  "weight": 3.5,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Escopeta",
+   "damage": [
+    18,
+    30
+   ],
+   "range": 6,
+   "cooldown": 1.8,
+   "accuracy": 1,
+   "nonlethal": "no",
+   "noise": 1,
+   "tech": "clasica",
+   "ammo": "cartucho",
+   "mag": 2
+  },
+  "price": 620
+ },
+ {
+  "id": "rifle-asalto",
+  "name": "Rifle de asalto",
+  "desc": "Distancia 18 m · equilibrado y fiable.",
+  "weight": 3.8,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Rifle",
+   "damage": [
+    14,
+    22
+   ],
+   "range": 18,
+   "cooldown": 0.8,
+   "accuracy": 1,
+   "nonlethal": "no",
+   "noise": 0.95,
+   "tech": "clasica",
+   "ammo": "bala-rifle",
+   "mag": 30
+  },
+  "price": 1200
+ },
+ {
+  "id": "rifle-precision",
+  "name": "Rifle de precisión",
+  "desc": "Distancia 28 m · lento y letal.",
+  "weight": 5,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Rifle",
+   "damage": [
+    28,
+    42
+   ],
+   "range": 28,
+   "cooldown": 2.5,
+   "accuracy": 3,
+   "nonlethal": "no",
+   "noise": 1,
+   "tech": "clasica",
+   "ammo": "bala-rifle",
+   "mag": 5
+  },
+  "price": 1900
+ },
+ {
+  "id": "rifle-riel",
+  "name": "Rifle de riel",
+  "desc": "Distancia 24 m · proyectiles magnéticos que atraviesan blindaje.",
+  "weight": 6,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Rifle",
+   "damage": [
+    30,
+    48
+   ],
+   "range": 24,
+   "cooldown": 3.0,
+   "accuracy": 2,
+   "nonlethal": "no",
+   "noise": 0.6,
+   "tech": "tecnica",
+   "ammo": "celula-energia",
+   "mag": 4
+  },
+  "price": 3600
+ },
+ {
+  "id": "taser",
+  "name": "Táser de largo alcance",
+  "desc": "Distancia 7 m · solo no letal.",
+  "weight": 1,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Táser",
+   "damage": [
+    6,
+    10
+   ],
+   "range": 7,
+   "cooldown": 1.5,
+   "accuracy": 2,
+   "nonlethal": "solo",
+   "noise": 0.2,
+   "tech": "tecnica",
+   "ammo": "carga-taser",
+   "mag": 3
+  },
+  "price": 260
+ },
+ {
+  "id": "cuchillas-antebrazo-arma",
+  "name": "Cuchillas de antebrazo",
+  "desc": "Implante · hojas retráctiles.",
+  "weight": 0,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Implante",
+   "damage": [
+    14,
+    22
+   ],
+   "range": 1.7,
+   "cooldown": 1.0,
+   "accuracy": 2,
+   "nonlethal": "opcional",
+   "noise": 0.05,
+   "tech": "potencia"
+  }
+ },
+ {
+  "id": "puno-hidraulico-arma",
+  "name": "Puño hidráulico",
+  "desc": "Implante · golpes que derriban puertas.",
+  "weight": 0,
+  "category": "arma",
+  "weapon": {
+   "kind": "melee",
+   "family": "Implante",
+   "damage": [
+    12,
+    20
+   ],
+   "range": 1.5,
+   "cooldown": 1.2,
+   "accuracy": 1,
+   "nonlethal": "opcional",
+   "noise": 0.3,
+   "tech": "potencia"
+  }
+ },
+ {
+  "id": "canon-antebrazo-arma",
+  "name": "Cañón de antebrazo",
+  "desc": "Implante · escopeta oculta en el brazo.",
+  "weight": 0,
+  "category": "arma",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Implante",
+   "damage": [
+    18,
+    28
+   ],
+   "range": 8,
+   "cooldown": 1.8,
+   "accuracy": 1,
+   "nonlethal": "no",
+   "noise": 1,
+   "tech": "clasica",
+   "ammo": "cartucho",
+   "mag": 2
+  }
+ },
+ {
+  "id": "bala-pistola",
+  "name": "Balas de pistola",
+  "desc": "Munición para pistolas y subfusiles.",
+  "weight": 0.01,
+  "category": "municion",
+  "price": 2
+ },
+ {
+  "id": "cartucho",
+  "name": "Cartuchos",
+  "desc": "Munición para escopetas.",
+  "weight": 0.03,
+  "category": "municion",
+  "price": 3
+ },
+ {
+  "id": "bala-rifle",
+  "name": "Balas de rifle",
+  "desc": "Munición para rifles.",
+  "weight": 0.015,
+  "category": "municion",
+  "price": 3
+ },
+ {
+  "id": "celula-energia",
+  "name": "Células de energía",
+  "desc": "Munición para armas técnicas.",
+  "weight": 0.05,
+  "category": "municion",
+  "price": 12
+ },
+ {
+  "id": "carga-taser",
+  "name": "Cargas de táser",
+  "desc": "Cargas no letales.",
+  "weight": 0.02,
+  "category": "municion",
+  "price": 5
+ }
 ]

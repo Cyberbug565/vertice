@@ -1202,6 +1202,22 @@
     ]
    },
    "danger": "public"
+  },
+  {
+   "id": "hacia-arrabal",
+   "name": "Avenida hacia El Arrabal",
+   "at": [
+    31,
+    63
+   ],
+   "to": {
+    "zone": "arrabal",
+    "at": [
+     47,
+     1
+    ]
+   },
+   "danger": "public"
   }
  ],
  "objects": [
@@ -1355,6 +1371,24 @@
     7
    ],
    "kind": "trash"
+  },
+  {
+   "id": "ferro-cajero-1",
+   "name": "Cajero automático",
+   "at": [
+    33,
+    36
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "ferro-cajero-2",
+   "name": "Cajero automático",
+   "at": [
+    71,
+    36
+   ],
+   "kind": "atm"
   }
  ],
  "sectors": [
@@ -1622,5 +1656,35 @@
   }
  ],
  "ambient": 24,
- "sleepQuality": 0.35
+ "sleepQuality": 0.35,
+ "police": 2,
+ "gangs": [
+  {
+   "faction": "hojas-rojas",
+   "count": 3,
+   "area": [
+    80,
+    40,
+    10
+   ]
+  },
+  {
+   "faction": "chatarreros",
+   "count": 3,
+   "area": [
+    40,
+    56,
+    6
+   ]
+  },
+  {
+   "faction": "furias",
+   "count": 2,
+   "area": [
+    86,
+    52,
+    8
+   ]
+  }
+ ]
 }

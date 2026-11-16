@@ -1,0 +1,74 @@
+{
+ "id": "armeria-callejon-int",
+ "name": "Armería del Callejón",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#2a1a1a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-armeria-callejon-int",
+   "name": "Salida a la calle (Neón Rojo)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "neon-rojo",
+    "at": [
+     60,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-callejon",
+   "name": "Mostrador del callejón",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "armeria-callejon"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ]
+}

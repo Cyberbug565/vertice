@@ -141,11 +141,12 @@ describe('v0.2 · vivir en la ciudad', () => {
     E('caco').x = E('victima').x + 1; E('caco').y = E('victima').y;
     app.world.survival.rng = () => 0.95; // siempre saca 10
     const pv = P('victima'), pa = P('caco');
+    pv.stance = 'defend'; pv.nextAttackAt = Date.now() + 1e9; // ni huye ni contraataca durante la prueba
     const m0 = pv.money;
     const rob = await a.cmd({ t: 'hostile', target: E('victima').id, action: 'rob', opId: op() });
     expect(rob.ok).toBe(true);
     expect(pv.money).toBeLessThan(m0);
-    for (let i = 0; i < 3; i++) { await sleep(2600); E('caco').x = E('victima').x + 1; E('caco').y = E('victima').y; await a.cmd({ t: 'hostile', target: E('victima').id, action: 'beat', opId: op() }); if (pv.status !== 'alive') break; }
+    for (let i = 0; i < 4; i++) { await sleep(1300); E('caco').x = E('victima').x + 1; E('caco').y = E('victima').y; E('victima').path = []; await a.cmd({ t: 'hostile', target: E('victima').id, action: 'beat', opId: op() }); if (pv.status !== 'alive') break; }
     app.world.survival.rng = Math.random;
     expect(pa.wanted).toBeGreaterThanOrEqual(2);
     expect(app.world.survival.bounties.onPlayer(pa.charId).some((x) => x.poster === 'pcv')).toBe(true);
@@ -252,13 +253,15 @@ describe('v0.2 · vivir en la ciudad', () => {
     await target.waitFor((m) => m.t === 'label' && (m as any).bounty === 100, 3000, 'marca de recompensa').catch(() => {});
     await hunter.enterDoor('Salida'); await target.enterDoor('Salida');
     const ph = P('cazadora'), pt = P('objetivo');
+    pt.stance = 'defend'; pt.nextAttackAt = Date.now() + 1e9;
     const mh = ph.money;
     app.world.survival.rng = () => 0.95;
-    for (let i = 0; i < 6 && pt.status === 'alive'; i++) {
+    for (let i = 0; i < 10 && pt.status === 'alive'; i++) {
       E('cazadora').x = E('objetivo').x + 1; E('cazadora').y = E('objetivo').y;
+      E('objetivo').path = [];
       const a = await hunter.cmd({ t: 'hostile', target: E('objetivo').id, action: 'claim', opId: op() });
       expect(a.ok).toBe(true);
-      await sleep(2600);
+      await sleep(1200);
     }
     app.world.survival.rng = Math.random;
     expect(pt.status).toBe('downed');
@@ -269,16 +272,17 @@ describe('v0.2 · vivir en la ciudad', () => {
   });
 
   it('fugitivos: se capturan y se cobra la recompensa institucional', async () => {
-    const { b } = await join('rastreadora', 'solo');
+    const { b } = await join('rastreadora', 'solo', { REF: 8, LUCK: 3 });
     const p = P('rastreadora');
+    await b.cmd({ t: 'equip', item: 'navaja' }); // para capturar vivo hace falta un arma que permita dejar KO
     const fug = [...app.world.entities.values()].find((e) => e.fugitive?.id === 'chispas-lund')!;
     await b.enterDoor('Salida');
     const m0 = p.money;
     app.world.survival.rng = () => 0.95;
-    for (let i = 0; i < 8 && app.world.entities.has(fug.id); i++) {
-      E('rastreadora').x = fug.x + 1; E('rastreadora').y = fug.y; fug.path = [];
+    for (let i = 0; i < 10 && app.world.entities.has(fug.id); i++) {
+      E('rastreadora').x = fug.x + 1; E('rastreadora').y = fug.y; fug.path = []; fug.aggro = undefined; fug.nextAttackAt = Date.now() + 1e9;
       await b.cmd({ t: 'hostile', target: fug.id, action: 'claim', opId: op() });
-      await sleep(2600);
+      await sleep(1200);
     }
     app.world.survival.rng = Math.random;
     expect(app.world.entities.has(fug.id)).toBe(false);

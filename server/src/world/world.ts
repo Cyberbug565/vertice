@@ -11,11 +11,12 @@ import type { Metrics } from '../metrics.js';
 import { Zone } from './zone.js';
 import { spawnOf, type Entity } from './entity.js';
 import { ambientBrain, scheduledBrain, thinkNpc } from './npc.js';
-import { activeCharacterId, buildJournal, buildSheet, loadPlayer, savePlayerVitals, type PlayerState } from '../game/player.js';
+import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, savePlayerVitals, type PlayerState } from '../game/player.js';
 import { FactService, InstanceService } from '../game/services.js';
 import { EffectEngine, GameError, type EffectOutcome } from '../game/effects.js';
 import { allOk, buildView, checkNumbers, entryNode } from '../game/dialog.js';
 import { Survival } from './survival.js';
+import { Combat } from './combat.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
@@ -49,12 +50,15 @@ export class World {
   readonly effects: EffectEngine;
   private saving = false;
   readonly survival: Survival;
+  readonly combat: Combat;
+  private spawnAmbientFn: (z: Zone) => void = () => {};
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
     this.facts = new FactService(db);
     this.inst = new InstanceService(db, c);
     this.effects = new EffectEngine(db, c, this.facts, this.inst);
     this.survival = new Survival(this);
+    this.combat = new Combat(this, this.survival);
   }
 
   // ---------------------------------------------------------------- arranque
@@ -74,6 +78,7 @@ export class World {
       const entry = n.schedule.find((s) => (s.from <= s.to ? h >= s.from && h < s.to : h >= s.from || h < s.to))!;
       const e = this.addEntity(this.zones.get(entry.zone)!, { kind: 'npc', name: n.name, title: n.title, x: entry.at[0] + 0.5, y: entry.at[1] + 0.5, interactive: true, dialog: n.dialog, appearance: n.appearance, label: entry.label, speed: 2.2, npcShop: n.shop });
       e.npc = scheduledBrain(n, this.cfg.seed + e.id);
+      e.npcType = n.essential === false ? 'civil' : 'essential'; e.faction = n.faction;
     }
     const rng = seededRng(this.cfg.seed);
     const pick = <T,>(a: T[]) => a[Math.floor(rng() * a.length)];
@@ -83,6 +88,13 @@ export class World {
       const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES), title: 'Transeúnte', x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.6 + rng() * 0.8,
         appearance: { skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
       e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
+      // Transeúntes: civiles con algo de cromo visible y salud propia.
+      e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil' } };
+      const chromeRoll = rng();
+      e.chrome = chromeRoll < 0.15 ? ['ojos'] : chromeRoll < 0.25 ? [rng() < 0.5 ? 'brazo_izq' : 'brazo_der'] : chromeRoll < 0.3 ? ['cabeza', 'ojos'] : chromeRoll < 0.34 ? ['pierna_izq', 'pierna_der'] : [];
+      (e.appearance as any).build = pick(['delgado', 'medio', 'robusto']); (e.appearance as any).hairStyle = pick(['corto', 'largo', 'coleta', 'rapado', 'afro', 'moño', 'cresta', 'rastas', 'calvo', 'asimetrico']);
+      (e.appearance as any).top = pick(['chaqueta', 'gabardina', 'sudadera', 'top', 'traje', 'chaleco', 'mono']); (e.appearance as any).accessory = pick(['ninguno', 'ninguno', 'gafas', 'gorra', 'capucha', 'auriculares', 'visor']);
+      (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
       e.npc.nextThink = Math.floor(rng() * 20);
     };
     for (const zone of exteriors) {
@@ -95,7 +107,9 @@ export class World {
       const p = nearestWalkable(crowdZone.grid, this.cfg.crowdAt[0] + (rng() * 2 - 1) * 8, this.cfg.crowdAt[1] + (rng() * 2 - 1) * 8, 4) ?? { x: this.cfg.crowdAt[0] + 0.5, y: this.cfg.crowdAt[1] + 0.5 };
       mkAmbient(crowdZone, p.x, p.y, this.cfg.crowdAt, 9);
     }
+    this.spawnAmbientFn = (zone: Zone) => { const wp = pick(zone.def.waypoints); if (wp) mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); };
     await this.survival.init();
+    this.combat.spawnPopulation();
   }
 
   /** Crea un PNJ (lo usa la supervivencia para los fugitivos). */
@@ -103,6 +117,14 @@ export class World {
     return this.addEntity(z, { kind: 'npc', interactive: true, ...o });
   }
   removeEntity(e: Entity) { e.zone.remove(e); this.entities.delete(e.id); }
+  spawnAmbient(z: Zone) { this.spawnAmbientFn(z); }
+  /** Mueve una entidad a otra zona sin puerta (cuerpos cargados). */
+  moveEntityTo(e: Entity, to: Zone, x: number, y: number) { e.zone.remove(e); e.x = x; e.y = y; to.add(e); e.lastMoveTick = this.tick; }
+  /** Traslada a un jugador a un punto concreto (detenciones). */
+  async teleport(c: PlayerConn, zoneId: string, at: [number, number]) {
+    const fake = { doorTo: { zone: zoneId, at }, kind: 'door', name: 'traslado' } as unknown as Entity;
+    await this.transferPlayer(c, fake);
+  }
   playerOf(e: Entity): PlayerState | undefined {
     if (e.kind !== 'player') return undefined;
     if (e.conn?.p) return e.conn.p;
@@ -158,8 +180,12 @@ export class World {
     this.pathBudget = 40;
     const dt = 1 / RULES.tickRate;
     for (const z of this.zones.values()) {
+      // Nivel de detalle: sin jugadores en la zona, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
+      const idle = z.players.size === 0;
       for (const e of z.entities) {
+        if (idle && e.npc && e.npcType !== 'essential' && e.aggro === undefined) continue;
         if (e.path.length) this.moveEntity(e, dt);
+        if (e.pendingAction && e.conn) this.combat.checkPending(e.conn);
         if (e.channel && this.tick >= e.channel.endTick) { const ch = e.channel; e.channel = undefined; ch.apply(); }
         if (e.task) this.processTask(e);
         if (e.npc && e.npc.nextThink <= this.tick) {
@@ -172,7 +198,8 @@ export class World {
     }
     // Instantáneas escalonadas: cada cliente recibe una cada `snapshotEveryTicks` ticks, repartidos entre ticks consecutivos.
     { const every = RULES.snapshotEveryTicks, phase = this.tick % every; let i = 0; for (const c of this.conns.values()) { if ((i++ % every) === phase) this.snapshot(c); } }
-    if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } }
+    this.combat.everyTick();
+    if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
     this.metrics.tick.push(performance.now() - t0);
@@ -364,6 +391,8 @@ export class World {
       if (!isWalkable(zone.grid, p.x, p.y)) { p.x = zone.def.safePoint[0] + 0.5; p.y = zone.def.safePoint[1] + 0.5; }
       conn.p = p;
       conn.e = this.addEntity(zone, { kind: 'player', name: p.name, title: this.c.roles.find((r) => r.id === p.role)?.name, x: p.x, y: p.y, interactive: true, appearance: p.appearance, role: p.role, label: '', speed: walkSpeed(p.attributes) });
+      conn.e.chrome = chromeParts(this.c, p);
+      await this.combat.loadAmbar(p);
     }
     const e = conn.e!;
     e.conn = conn;
@@ -435,7 +464,7 @@ export class World {
     this.metrics.inc('msgsIn');
     const p = c.p, sv = this.survival;
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
-    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy'];
+    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar'];
     if (p.status === 'downed' && !passive.includes(m.t)) { if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás derribado: espera a que alguien te estabilice.' }); return; }
     // Cualquier orden activa despierta al personaje.
     if (p.sleeping && ['move', 'interact', 'retreat', 'stop', 'jobStart', 'useItem'].includes(m.t)) sv.wake(c, 'Te despiertas.');
@@ -469,7 +498,14 @@ export class World {
       case 'clinicDo': return guarded(m.seq, () => sv.clinicDo(c, m));
       case 'bounties': this.send(c, { t: 'bounties', view: sv.bountyView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'bountyPlace': return guarded(m.seq, () => sv.placeBounty(c, m));
-      case 'hostile': this.enqueue(c, async () => { try { await sv.hostile(c, m); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: err.message }); else throw err; } }); return;
+      case 'menu': { const t = this.entities.get(m.target); if (t && t.zone === e.zone) this.send(c, { t: 'targetMenu', view: this.combat.menu(c, t) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return; }
+      case 'hack': return guarded(m.seq, () => this.combat.hack(c, m));
+      case 'equip': return guarded(m.seq, async () => sv.equip(c, m.item));
+      case 'drop': return guarded(m.seq, async () => this.combat.drop(c));
+      case 'factions': this.send(c, { t: 'factions', view: this.combat.factionsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'ambar': return guarded(m.seq, async () => { if (m.plan && m.opId) await this.combat.buyAmbar(c, m.plan, m.opId); this.send(c, { t: 'ambar', view: this.combat.ambarView(p) }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); });
+      case 'bribe': return guarded(m.seq, () => this.combat.bribe(c, m.opId));
+      case 'hostile': this.enqueue(c, async () => { try { await this.combat.action(c, m); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: err.message }); else throw err; } }); return;
       case 'rescue': this.enqueue(c, async () => { try { await sv.rescue(c, m.seq, m.target, m.opId); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: err.message }); else throw err; } }); return;
       case 'hello': return;
     }
@@ -519,7 +555,7 @@ export class World {
     if (e.transit) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Cruzando una puerta…' });
     const target = this.entities.get(targetId);
     if (!target || target.zone !== e.zone || !target.interactive || target === e) return this.send(c, { t: 'ack', seq, ok: false, reason: 'No puedes interactuar con eso.' });
-    if (target.kind === 'player' || target.fugitive) {
+    if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil')) {
       // Menú de acciones sobre personas: se calcula en el servidor con probabilidades y bloqueos.
       if (Math.hypot(target.x - e.x, target.y - e.y) > 2.6) {
         const r = this.playerPath(e, target.x, target.y);
@@ -527,7 +563,7 @@ export class World {
         e.path = e.path.slice(0, -1);
         if (e.path.length === 0) e.path = [[target.x, target.y]];
       }
-      this.send(c, { t: 'targetMenu', view: this.survival.targetMenu(c, target) });
+      this.send(c, { t: 'targetMenu', view: this.combat.menu(c, target) });
       return this.send(c, { t: 'ack', seq, ok: true, path: e.path.length ? e.path : undefined });
     }
     this.cancelActivity(e);
@@ -636,6 +672,8 @@ export class World {
     e.x = nx; e.y = ny; p.zone = to.id; p.x = nx; p.y = ny;
     to.add(e);
     e.transit = false;
+    e.pendingAction = undefined;
+    if (p.carrying) { const body = this.entities.get(p.carrying); if (body) this.moveEntityTo(body, to, nx + 0.3, ny + 0.3); }
     this.metrics.inc('zoneTransfers');
     const conn = e.conn;
     if (conn) {
@@ -668,6 +706,9 @@ export class World {
       case 'jobboard': return run(async () => this.send(c, { t: 'jobs', view: await sv.jobsView(c) }));
       case 'bountyboard': return this.send(c, { t: 'bounties', view: sv.bountyView(c.p!) });
       case 'marketterm': return this.handle(c, { t: 'market', seq: 0 });
+      case 'atm': return this.send(c, { t: 'targetMenu', view: this.combat.menu(c, o) });
+      case 'ambar': return this.send(c, { t: 'ambar', view: this.combat.ambarView(c.p!) });
+      case 'bribe': return run(async () => { if ((c.p!.wanted ?? 0) < 0.5) throw new GameError('La ventanilla está cerrada para quien no tiene expediente.'); await this.combat.bribe(c, `bribe-${randomUUID()}`); });
       case 'workplace': {
         const p = c.p!;
         const job = p.activeJob ? this.c.jobs.find((j) => j.id === p.activeJob) : undefined;

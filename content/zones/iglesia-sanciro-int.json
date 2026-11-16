@@ -1,0 +1,81 @@
+{
+ "id": "iglesia-sanciro-int",
+ "name": "Iglesia de San Ciro",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#5a4a3a",
+ "blocks": [],
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    4,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    4,
+    7
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    4
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    7
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-iglesia-sanciro-int",
+   "name": "Salida a la calle (El Arrabal)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "arrabal",
+    "at": [
+     14,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "comedor-sanciro",
+   "name": "Comedor social de San Ciro",
+   "at": [
+    12,
+    2
+   ],
+   "kind": "shop",
+   "shop": "sanciro-comedor"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

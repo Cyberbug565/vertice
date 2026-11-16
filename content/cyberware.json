@@ -1,20 +1,447 @@
 [
- { "id": "optica-inspeccion", "name": "Óptica de inspección", "family": "Óptica y audición", "slot": "ojos", "grade": 1, "capacity": 3, "humanity": 1, "price": 450, "maker": "teselia", "desc": "Reconoce pistas a corta distancia.", "effects": { "skills": { "percepcion": 2, "investigacion": 1 } } },
- { "id": "audifono-coclear", "name": "Audífono coclear", "family": "Óptica y audición", "slot": "oidos", "grade": 1, "capacity": 1, "humanity": 0, "price": 220, "maker": "teselia", "desc": "Prótesis auditiva básica.", "effects": { "skills": { "percepcion": 1 } }, "prosthetic": true },
- { "id": "filtro-neural", "name": "Filtro neural básico", "family": "Seguridad neural", "slot": "seguridad", "grade": 1, "capacity": 3, "humanity": 1, "price": 500, "maker": "teselia", "desc": "Bloquea escaneos hostiles (hito 2). Hoy: +1 Voluntad efectiva.", "effects": { "attrs": { "WILL": 1 } } },
- { "id": "brazo-protesico", "name": "Brazo protésico básico", "family": "Brazos y manos", "slot": "brazos", "grade": 1, "capacity": 2, "humanity": 0, "price": 380, "maker": "teselia", "desc": "Sustituye un brazo con funcionalidad normal.", "effects": { "skills": { "atletismo": 1 } }, "prosthetic": true },
- { "id": "brazos-asistencia", "name": "Brazos de asistencia", "family": "Brazos y manos", "slot": "brazos", "grade": 2, "capacity": 5, "humanity": 2, "price": 1100, "maker": "halcon", "desc": "Agarre reforzado: +2 en enfrentamientos y cargar a derribados.", "effects": { "attrs": { "BODY": 1 }, "confront": 2 } },
- { "id": "pierna-protesica", "name": "Pierna protésica", "family": "Piernas y locomoción", "slot": "piernas", "grade": 1, "capacity": 2, "humanity": 0, "price": 400, "maker": "teselia", "desc": "Prótesis de pierna fiable.", "effects": { "attrs": { "MOVE": 1 } }, "prosthetic": true },
- { "id": "piernas-salto", "name": "Piernas de refuerzo", "family": "Piernas y locomoción", "slot": "piernas", "grade": 3, "capacity": 6, "humanity": 3, "price": 2400, "maker": "halcon", "desc": "+2 MOVE efectivo, evasión breve.", "effects": { "attrs": { "MOVE": 2 }, "skills": { "atletismo": 2 } } },
- { "id": "subdermico", "name": "Refuerzo subdérmico", "family": "Esqueleto y tegumento", "slot": "tegumento", "grade": 2, "capacity": 4, "humanity": 2, "price": 1300, "maker": "halcon", "desc": "Protección bajo la piel: +15 salud máxima.", "effects": { "hpMax": 15 } },
- { "id": "estomago-sintetico", "name": "Estómago sintético", "family": "Circulatorio y torácico", "slot": "digestivo", "grade": 2, "capacity": 3, "humanity": 1, "price": 900, "maker": "teselia", "desc": "El hambre crece un 40 % más despacio.", "effects": { "needs": { "hunger": 0.6, "thirst": 1, "fatigue": 1 } } },
- { "id": "rinon-filtrante", "name": "Riñón filtrante", "family": "Circulatorio y torácico", "slot": "renal", "grade": 1, "capacity": 2, "humanity": 1, "price": 600, "maker": "teselia", "desc": "La sed crece un 35 % más despacio.", "effects": { "needs": { "hunger": 1, "thirst": 0.65, "fatigue": 1 } } },
- { "id": "regulador-sueno", "name": "Regulador de sueño", "family": "Cortex, memoria e interfaz neural", "slot": "cortex", "grade": 2, "capacity": 4, "humanity": 2, "price": 1500, "maker": "teselia", "desc": "El cansancio crece un 40 % más despacio.", "effects": { "needs": { "hunger": 1, "thirst": 1, "fatigue": 0.6 } } },
- { "id": "coprocesador", "name": "Coprocesador táctico", "family": "Cortex, memoria e interfaz neural", "slot": "cortex", "grade": 3, "capacity": 6, "humanity": 3, "price": 2600, "maker": "teselia", "desc": "+1 INT y +1 REF efectivos.", "effects": { "attrs": { "INT": 1, "REF": 1 } } },
- { "id": "cyberdeck-operaciones", "name": "Cyberdeck de operaciones", "family": "Sistema operativo", "slot": "so", "grade": 3, "capacity": 9, "humanity": 4, "price": 3200, "maker": "teselia", "desc": "12 RAM (hito 2). Hoy: +2 Interfaz.", "effects": { "skills": { "interfaz": 2 } } },
- { "id": "acelerador-neural", "name": "Acelerador neural de prueba", "family": "Sistema operativo", "slot": "so", "grade": 3, "capacity": 10, "humanity": 6, "price": 3800, "maker": "halcon", "desc": "Ráfaga de velocidad (hito 2). Hoy: +3 en enfrentamientos.", "effects": { "confront": 3 } },
- { "id": "sistema-apoyo", "name": "Sistema de apoyo básico", "family": "Sistema operativo", "slot": "so", "grade": 1, "capacity": 3, "humanity": 1, "price": 700, "maker": "teselia", "desc": "Ahorra capacidad: +1 COOL y +1 EMP efectivos.", "effects": { "attrs": { "COOL": 1, "EMP": 1 } } },
- { "id": "ice-aislamiento", "name": "ICE neural de aislamiento", "family": "Seguridad neural", "slot": "seguridad", "grade": 4, "capacity": 7, "humanity": 4, "price": 4200, "maker": "teselia", "desc": "Aísla efectos neurales (hito 2). Hoy: +2 WILL.", "effects": { "attrs": { "WILL": 2 } } },
- { "id": "camuflaje-optico", "name": "Camuflaje óptico", "family": "Esqueleto y tegumento", "slot": "piel", "grade": 4, "capacity": 8, "humanity": 5, "price": 5200, "maker": "halcon", "desc": "+4 al robar y en sigilo.", "effects": { "skills": { "sigilo": 3 }, "steal": 4 } },
- { "id": "biomonitor-experimental", "name": "Biomonitor experimental", "family": "Circulatorio y torácico", "slot": "circulatorio", "grade": 5, "capacity": 9, "humanity": 6, "price": 7800, "maker": "okami", "desc": "Mejora la supervivencia en cirugías (+8 %) y +10 salud.", "effects": { "hpMax": 10, "surgery": 0.08 } }
+ {
+  "id": "optica-inspeccion",
+  "name": "Óptica de inspección",
+  "family": "Óptica y audición",
+  "slot": "ojos",
+  "grade": 1,
+  "capacity": 3,
+  "humanity": 1,
+  "price": 450,
+  "maker": "teselia",
+  "desc": "Reconoce pistas a corta distancia.",
+  "effects": {
+   "skills": {
+    "percepcion": 2,
+    "investigacion": 1
+   }
+  },
+  "visible": "ojos"
+ },
+ {
+  "id": "audifono-coclear",
+  "name": "Audífono coclear",
+  "family": "Óptica y audición",
+  "slot": "oidos",
+  "grade": 1,
+  "capacity": 1,
+  "humanity": 0,
+  "price": 220,
+  "maker": "teselia",
+  "desc": "Prótesis auditiva básica.",
+  "effects": {
+   "skills": {
+    "percepcion": 1
+   }
+  },
+  "prosthetic": true,
+  "visible": "cabeza"
+ },
+ {
+  "id": "filtro-neural",
+  "name": "Filtro neural básico",
+  "family": "Seguridad neural",
+  "slot": "seguridad",
+  "grade": 1,
+  "capacity": 3,
+  "humanity": 1,
+  "price": 500,
+  "maker": "teselia",
+  "desc": "Bloquea escaneos hostiles (hito 2). Hoy: +1 Voluntad efectiva.",
+  "effects": {
+   "attrs": {
+    "WILL": 1
+   }
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "brazo-protesico",
+  "name": "Brazo protésico básico",
+  "family": "Brazos y manos",
+  "slot": "brazo",
+  "grade": 1,
+  "capacity": 2,
+  "humanity": 0,
+  "price": 380,
+  "maker": "teselia",
+  "desc": "Sustituye un brazo con funcionalidad normal.",
+  "effects": {
+   "skills": {
+    "atletismo": 1
+   }
+  },
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "brazos-asistencia",
+  "name": "Brazo de asistencia",
+  "family": "Brazos y manos",
+  "slot": "brazo",
+  "grade": 2,
+  "capacity": 5,
+  "humanity": 2,
+  "price": 1100,
+  "maker": "halcon",
+  "desc": "Agarre reforzado: +2 en enfrentamientos y +15 kg de carga.",
+  "effects": {
+   "attrs": {
+    "BODY": 1
+   },
+   "confront": 2,
+   "carry": 15
+  },
+  "visible": "brazo"
+ },
+ {
+  "id": "pierna-protesica",
+  "name": "Pierna protésica",
+  "family": "Piernas y locomoción",
+  "slot": "pierna",
+  "grade": 1,
+  "capacity": 2,
+  "humanity": 0,
+  "price": 400,
+  "maker": "teselia",
+  "desc": "Prótesis de pierna fiable.",
+  "effects": {
+   "attrs": {
+    "MOVE": 1
+   }
+  },
+  "prosthetic": true,
+  "visible": "pierna"
+ },
+ {
+  "id": "piernas-salto",
+  "name": "Piernas de refuerzo",
+  "family": "Piernas y locomoción",
+  "slot": "piernas",
+  "grade": 3,
+  "capacity": 6,
+  "humanity": 3,
+  "price": 2400,
+  "maker": "halcon",
+  "desc": "+2 MOVE efectivo, evasión breve.",
+  "effects": {
+   "attrs": {
+    "MOVE": 2
+   },
+   "skills": {
+    "atletismo": 2
+   }
+  },
+  "visible": "piernas"
+ },
+ {
+  "id": "subdermico",
+  "name": "Refuerzo subdérmico",
+  "family": "Esqueleto y tegumento",
+  "slot": "tegumento",
+  "grade": 2,
+  "capacity": 4,
+  "humanity": 2,
+  "price": 1300,
+  "maker": "halcon",
+  "desc": "Protección bajo la piel: +15 salud máxima y blindaje 2.",
+  "effects": {
+   "hpMax": 15,
+   "armor": 2
+  },
+  "visible": "torso"
+ },
+ {
+  "id": "estomago-sintetico",
+  "name": "Estómago sintético",
+  "family": "Circulatorio y torácico",
+  "slot": "digestivo",
+  "grade": 2,
+  "capacity": 3,
+  "humanity": 1,
+  "price": 900,
+  "maker": "teselia",
+  "desc": "El hambre crece un 40 % más despacio.",
+  "effects": {
+   "needs": {
+    "hunger": 0.6,
+    "thirst": 1,
+    "fatigue": 1
+   }
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "rinon-filtrante",
+  "name": "Riñón filtrante",
+  "family": "Circulatorio y torácico",
+  "slot": "renal",
+  "grade": 1,
+  "capacity": 2,
+  "humanity": 1,
+  "price": 600,
+  "maker": "teselia",
+  "desc": "La sed crece un 35 % más despacio.",
+  "effects": {
+   "needs": {
+    "hunger": 1,
+    "thirst": 0.65,
+    "fatigue": 1
+   }
+  },
+  "visible": "ninguna"
+ },
+ {
+  "id": "regulador-sueno",
+  "name": "Regulador de sueño",
+  "family": "Cortex, memoria e interfaz neural",
+  "slot": "cortex",
+  "grade": 2,
+  "capacity": 4,
+  "humanity": 2,
+  "price": 1500,
+  "maker": "teselia",
+  "desc": "El cansancio crece un 40 % más despacio.",
+  "effects": {
+   "needs": {
+    "hunger": 1,
+    "thirst": 1,
+    "fatigue": 0.6
+   }
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "coprocesador",
+  "name": "Coprocesador táctico",
+  "family": "Cortex, memoria e interfaz neural",
+  "slot": "cortex",
+  "grade": 3,
+  "capacity": 6,
+  "humanity": 3,
+  "price": 2600,
+  "maker": "teselia",
+  "desc": "+1 INT y +1 REF efectivos.",
+  "effects": {
+   "attrs": {
+    "INT": 1,
+    "REF": 1
+   }
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "cyberdeck-operaciones",
+  "name": "Cyberdeck de operaciones",
+  "family": "Sistema operativo",
+  "slot": "so",
+  "grade": 3,
+  "capacity": 9,
+  "humanity": 4,
+  "price": 3200,
+  "maker": "teselia",
+  "desc": "12 RAM y +2 Interfaz: hackeos rápidos más potentes.",
+  "effects": {
+   "skills": {
+    "interfaz": 2
+   },
+   "ram": 12
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "acelerador-neural",
+  "name": "Acelerador neural de prueba",
+  "family": "Sistema operativo",
+  "slot": "so",
+  "grade": 3,
+  "capacity": 10,
+  "humanity": 6,
+  "price": 3800,
+  "maker": "halcon",
+  "desc": "Reflejos acelerados: +3 al atacar y defender.",
+  "effects": {
+   "confront": 3
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "sistema-apoyo",
+  "name": "Sistema de apoyo básico",
+  "family": "Sistema operativo",
+  "slot": "so",
+  "grade": 1,
+  "capacity": 3,
+  "humanity": 1,
+  "price": 700,
+  "maker": "teselia",
+  "desc": "Ahorra capacidad: +1 COOL y +1 EMP efectivos.",
+  "effects": {
+   "attrs": {
+    "COOL": 1,
+    "EMP": 1
+   }
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "ice-aislamiento",
+  "name": "ICE neural de aislamiento",
+  "family": "Seguridad neural",
+  "slot": "seguridad",
+  "grade": 4,
+  "capacity": 7,
+  "humanity": 4,
+  "price": 4200,
+  "maker": "teselia",
+  "desc": "Aísla efectos neurales (hito 2). Hoy: +2 WILL.",
+  "effects": {
+   "attrs": {
+    "WILL": 2
+   }
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "camuflaje-optico",
+  "name": "Camuflaje óptico",
+  "family": "Esqueleto y tegumento",
+  "slot": "piel",
+  "grade": 4,
+  "capacity": 8,
+  "humanity": 5,
+  "price": 5200,
+  "maker": "halcon",
+  "desc": "+4 al robar y en sigilo.",
+  "effects": {
+   "skills": {
+    "sigilo": 3
+   },
+   "steal": 4
+  },
+  "visible": "torso"
+ },
+ {
+  "id": "biomonitor-experimental",
+  "name": "Biomonitor experimental",
+  "family": "Circulatorio y torácico",
+  "slot": "circulatorio",
+  "grade": 5,
+  "capacity": 9,
+  "humanity": 6,
+  "price": 7800,
+  "maker": "okami",
+  "desc": "Mejora la supervivencia en cirugías (+8 %) y +10 salud.",
+  "effects": {
+   "hpMax": 10,
+   "surgery": 0.08
+  },
+  "visible": "torso"
+ },
+ {
+  "id": "cuchillas-antebrazo",
+  "name": "Cuchillas de antebrazo",
+  "family": "Brazos y manos",
+  "slot": "brazo",
+  "grade": 3,
+  "capacity": 6,
+  "humanity": 4,
+  "price": 3400,
+  "maker": "halcon",
+  "desc": "Hojas retráctiles en el antebrazo: arma cuerpo a cuerpo integrada.",
+  "effects": {
+   "weapon": "cuchillas-antebrazo-arma"
+  },
+  "visible": "brazo"
+ },
+ {
+  "id": "puno-hidraulico",
+  "name": "Puño hidráulico",
+  "family": "Brazos y manos",
+  "slot": "brazo",
+  "grade": 3,
+  "capacity": 6,
+  "humanity": 3,
+  "price": 2800,
+  "maker": "halcon",
+  "desc": "Brazo hidráulico: golpes brutales y +25 kg de carga.",
+  "effects": {
+   "weapon": "puno-hidraulico-arma",
+   "carry": 25,
+   "attrs": {
+    "BODY": 1
+   }
+  },
+  "visible": "brazo"
+ },
+ {
+  "id": "canon-antebrazo",
+  "name": "Cañón de antebrazo",
+  "family": "Brazos y manos",
+  "slot": "brazo",
+  "grade": 4,
+  "capacity": 8,
+  "humanity": 5,
+  "price": 5200,
+  "maker": "halcon",
+  "desc": "Escopeta oculta en el brazo (usa cartuchos).",
+  "effects": {
+   "weapon": "canon-antebrazo-arma"
+  },
+  "visible": "brazo"
+ },
+ {
+  "id": "ojos-tacticos",
+  "name": "Ojos tácticos",
+  "family": "Óptica y audición",
+  "slot": "ojos",
+  "grade": 2,
+  "capacity": 4,
+  "humanity": 2,
+  "price": 1400,
+  "maker": "halcon",
+  "desc": "Marcado de objetivos: +2 Armas y +1 Percepción.",
+  "effects": {
+   "skills": {
+    "armas": 2,
+    "percepcion": 1
+   }
+  },
+  "visible": "ojos"
+ },
+ {
+  "id": "cyberdeck-basico",
+  "name": "Cyberdeck básico",
+  "family": "Sistema operativo",
+  "slot": "so",
+  "grade": 1,
+  "capacity": 4,
+  "humanity": 1,
+  "price": 900,
+  "maker": "teselia",
+  "desc": "6 RAM: permite hackear aunque no seas Netrunner.",
+  "effects": {
+   "ram": 6
+  },
+  "visible": "cabeza"
+ },
+ {
+  "id": "cyberdeck-militar",
+  "name": "Cyberdeck militar",
+  "family": "Sistema operativo",
+  "slot": "so",
+  "grade": 5,
+  "capacity": 11,
+  "humanity": 6,
+  "price": 9800,
+  "maker": "halcon",
+  "desc": "20 RAM y +3 Interfaz: el deck de los profesionales.",
+  "effects": {
+   "ram": 20,
+   "skills": {
+    "interfaz": 3
+   }
+  },
+  "visible": "cabeza"
+ }
 ]

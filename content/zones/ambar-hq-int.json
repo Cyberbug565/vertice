@@ -1,0 +1,78 @@
+{
+ "id": "ambar-hq-int",
+ "name": "Sede de Rescate Ámbar",
+ "kind": "interior",
+ "width": 16,
+ "height": 11,
+ "danger": "protected",
+ "base": "tile",
+ "wallColor": "#3a3020",
+ "blocks": [],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    8
+   ],
+   "color": "#ffbf00"
+  },
+  {
+   "type": "screen",
+   "at": [
+    5,
+    1
+   ],
+   "blocking": false,
+   "color": "#ffbf00"
+  },
+  {
+   "type": "screen",
+   "at": [
+    9,
+    1
+   ],
+   "blocking": false,
+   "color": "#ffbf00"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-ambar-hq-int",
+   "name": "Salida a la calle (Colinas Doradas)",
+   "at": [
+    15,
+    5
+   ],
+   "to": {
+    "zone": "colinas",
+    "at": [
+     55,
+     11
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "ambar-mostrador",
+   "name": "Mostrador de suscripciones Ámbar",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "ambar"
+  }
+ ],
+ "waypoints": [
+  [
+   13,
+   5
+  ]
+ ],
+ "safePoint": [
+  13,
+  5
+ ]
+}

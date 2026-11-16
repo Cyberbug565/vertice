@@ -1,7 +1,7 @@
 // Estado en memoria de una vida de personaje y su persistencia básica.
 import { randomUUID } from 'node:crypto';
 import {
-  ATTRIBUTE_IDS, RULES, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
+  ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
@@ -26,9 +26,28 @@ export interface PlayerState {
   sleeping: { quality: number; where: string; since: number } | null;
   cyber: CyberInstance[];
   humanityMax: number;
+  // ---- v0.3
+  equipped: string | null; netXp: number; netRank: number; ram: number; downedLethal: boolean;
+  carrying: number | null; blindUntil: number; nextAttackAt: number;
+  ambar: { id: string; plan: string; usesLeft: number; expiresAt: number } | null;
 }
 
-export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean }
+export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean; part?: string | null }
+
+export const NET_RANKS = [0, 3, 8, 15, 25, 38, 55, 75, 100, 130, 170];
+/** Partes visibles del cuerpo con cromo. */
+export function chromeParts(c: Content, p: { cyber: CyberInstance[] }): string[] {
+  const out = new Set<string>();
+  for (const ci of p.cyber) {
+    if (ci.location !== 'installed') continue;
+    const d = c.cyberware.find((x) => x.id === ci.def);
+    if (!d || d.visible === 'ninguna') continue;
+    if (d.visible === 'brazo' || d.visible === 'pierna') out.add(ci.part ?? `${d.visible}_der`);
+    else if (d.visible === 'piernas') { out.add('pierna_izq'); out.add('pierna_der'); }
+    else out.add(d.visible);
+  }
+  return [...out];
+}
 
 /** Atributos, habilidades y modificadores efectivos (base + ciberware + oficio). */
 export function effective(c: Content, p: PlayerState) {
@@ -52,9 +71,25 @@ export function effective(c: Content, p: PlayerState) {
   confront += mods.confront ?? 0; steal += mods.steal ?? 0;
   if (p.profession === 'tecnico' || p.profession === 'investigador') surgery += 0.01;
   for (const [it, q] of p.inventory) { if (q <= 0) continue; if (it === 'ganzua-electronica') steal += 2; }
-  const weapon = Math.max(0, ...[...p.inventory].filter(([, q]) => q > 0).map(([it]) => c.items.find((i) => i.id === it)?.category === 'arma' ? c.items.find((i) => i.id === it)?.confront ?? 0 : 0));
-  const armor = (p.inventory.get('chaleco-balistico') ?? 0) > 0 ? 2 : 0;
-  return { attrs, skills, hpMax, confront: confront + weapon, defense: armor + Math.floor(confront / 2), steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs), humanityLoad: load, needs, mods };
+  // Blindaje: la mejor prenda que lleves más el cromo subdérmico.
+  let armor = 0, carryBonus = 0, ram = 0;
+  for (const [it, q] of p.inventory) { if (q > 0) armor = Math.max(armor, c.items.find((i) => i.id === it)?.armor ?? 0); }
+  const integrated: string[] = [];
+  for (const ci of p.cyber) {
+    if (ci.location !== 'installed') continue;
+    const d = c.cyberware.find((x) => x.id === ci.def);
+    if (!d) continue;
+    armor += d.effects.armor ?? 0; carryBonus += d.effects.carry ?? 0; ram = Math.max(ram, d.effects.ram ?? 0);
+    if (d.effects.weapon) integrated.push(d.effects.weapon);
+  }
+  if (!ram && p.role === 'netrunner' && (p.inventory.get('pulsera-interfaz') ?? 0) > 0) ram = 4;
+  if (!ram && p.role === 'netrunner') ram = 3;
+  // Arma equipada: debe estar en la mochila o ser un implante instalado; si no, puños.
+  const eq = p.equipped && ((p.inventory.get(p.equipped) ?? 0) > 0 || integrated.includes(p.equipped)) ? c.items.find((i) => i.id === p.equipped) : undefined;
+  const weapon = eq?.weapon ? eq : undefined;
+  const weight = [...p.inventory].reduce((acc, [d, q]) => acc + (c.items.find((i) => i.id === d)?.weight ?? 0) * q, 0);
+  const carryMax = carryCapacity(attrs) + carryBonus;
+  return { attrs, skills, hpMax, confront, defense: Math.floor(confront / 2), armor, steal, surgery, chromeUsed, chromeCapacity: chromeCapacity(attrs), humanityLoad: load, needs, mods, weapon, integrated, ram, weight, carryMax };
 }
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
@@ -70,8 +105,8 @@ export function validateCreate(c: Content, input: any): string | null {
   if (input.profession !== undefined && !c.professions.some((r) => r.id === input.profession)) return 'Oficio desconocido';
   const a = validateAttributes(input.attributes ?? {});
   if (a) return a;
-  const ap = input.appearance;
-  if (!ap || !['skin', 'hair', 'jacket', 'accent'].every((k) => typeof ap[k] === 'string' && HEX.test(ap[k]))) return 'Aspecto inválido';
+  const ap = normalizeAppearance(input.appearance);
+  if (!ap.ok) return ap.error;
   return null;
 }
 
@@ -89,15 +124,19 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
   if (role.id === 'netrunner') items.push(['pulsera-interfaz', 1]);
   if (role.id === 'tech' || role.id === 'nomad') items.push(['kit-herramientas', 1]);
   if (role.id === 'medtech') items.push(['estim', 2]);
+  if (role.id === 'solo') items.push(['pistola-ligera', 1], ['bala-pistola', 24]);
+  if (role.id === 'lawman') items.push(['taser', 1], ['carga-taser', 6]);
+  if (role.id === 'nomad') items.push(['bate', 1]);
+  const equipped = role.id === 'solo' ? 'pistola-ligera' : role.id === 'lawman' ? 'taser' : role.id === 'nomad' ? 'bate' : 'navaja';
   try {
     await db.tx(async (q) => {
       await q.query(
         `INSERT INTO characters (id, account_id, name, origin, role, attributes, skills, appearance, money, hp, stamina, luck, humanity, zone_id, pos_x, pos_y, rules_version, content_version, profession, humanity_max)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$13)`,
-        [id, accountId, input.name.trim(), origin.id, role.id, JSON.stringify(attrs), JSON.stringify(skills), JSON.stringify(input.appearance), 0,
+        [id, accountId, input.name.trim(), origin.id, role.id, JSON.stringify(attrs), JSON.stringify(skills), JSON.stringify((normalizeAppearance(input.appearance) as any).value), 0,
           maxHp(attrs), maxStamina(attrs), attrs.LUCK, humanityBase(attrs.EMP), c.manifest.startZone, c.manifest.startAt[0] + 0.5, c.manifest.startAt[1] + 0.5, RULES.version, contentVersion, input.profession ?? 'vagabundo']);
       await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$3,$4)', [`start-${id}`, id, origin.startMoney, `Fondos iniciales (${origin.name})`]);
-      await q.query('UPDATE characters SET money = $2 WHERE id = $1', [id, origin.startMoney]);
+      await q.query('UPDATE characters SET money = $2, equipped = $3 WHERE id = $1', [id, origin.startMoney, equipped]);
       for (const [def, qty] of items) await q.query('INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4)', [randomUUID(), id, def, qty]);
     });
   } catch (e: any) {
@@ -123,7 +162,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     db.query<any>('SELECT key, value, expires_at FROM character_flags WHERE character_id = $1', [charId]),
     db.query<any>(`SELECT p.*, i.objectives AS shared_obj FROM contract_progress p JOIN contract_instances i ON i.id = p.instance_id WHERE p.character_id = $1 ORDER BY p.updated_at ASC`, [charId]),
     db.query<any>('SELECT check_key, success, roll, total FROM skill_checks WHERE character_id = $1', [charId]),
-    db.query<any>("SELECT id, def_id, location, stolen FROM cyberware_instances WHERE character_id = $1 AND location IN ('inventory','installed') ORDER BY created_at", [charId]),
+    db.query<any>("SELECT id, def_id, location, stolen, part FROM cyberware_instances WHERE character_id = $1 AND location IN ('inventory','installed') ORDER BY created_at", [charId]),
   ]);
   const p: PlayerState = {
     charId, accountId: row.account_id, name: row.name, role: row.role, origin: row.origin,
@@ -139,8 +178,10 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     profession: row.profession, professionRank: row.profession_rank, professionXp: row.profession_xp, autoNeeds: row.auto_needs, activeJob: row.active_job,
     status: row.status === 'downed' ? 'downed' : 'alive', downedUntil: row.status === 'downed' ? Date.now() + (row.downed_left_ms ?? 30000) : 0, downedCause: 'heridas',
     sleeping: null,
-    cyber: cyber.rows.map((x: any) => ({ id: x.id, def: x.def_id, location: x.location, stolen: x.stolen })),
+    cyber: cyber.rows.map((x: any) => ({ id: x.id, def: x.def_id, location: x.location, stolen: x.stolen, part: x.part })),
     humanityMax: row.humanity_max ?? humanityBase(row.attributes.EMP),
+    equipped: row.equipped ?? null, netXp: row.net_xp ?? 0, netRank: row.net_rank ?? 0, ram: 99, downedLethal: row.downed_lethal ?? true,
+    carrying: null, blindUntil: 0, nextAttackAt: 0, ambar: null,
   };
   for (const x of prog.rows) {
     p.contracts.set(x.contract_id, { instanceId: x.instance_id, contractId: x.contract_id, version: x.version, state: x.state, objectives: { ...x.shared_obj, ...x.objectives }, outcome: x.outcome });
@@ -158,13 +199,12 @@ export function flagValue(p: PlayerState, key: string): unknown {
 export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
   const ef = effective(c, p);
   const a = ef.attrs;
-  const weight = [...p.inventory].reduce((s, [d, q]) => s + (c.items.find((i) => i.id === d)?.weight ?? 0) * q, 0);
   return {
     id: p.charId, name: p.name, role: p.role, origin: p.origin, level: p.level, xp: p.xp, xpNext: xpForLevel(Math.min(RULES.levelMax, p.level + 1)), roleRank: p.roleRank,
     attributes: { ...a }, baseAttributes: { ...p.attributes }, skills: { ...ef.skills },
     hp: p.hp, hpMax: ef.hpMax, stamina: p.stamina, staminaMax: maxStamina(a), luck: p.luck, luckMax: p.attributes.LUCK,
     humanity: p.humanity, humanityMax: p.humanityMax, chromeCapacity: ef.chromeCapacity, chromeUsed: ef.chromeUsed,
-    carry: Math.round(weight * 10) / 10, carryMax: carryCapacity(a),
+    carry: Math.round(ef.weight * 10) / 10, carryMax: ef.carryMax,
     money: p.money, streetRep: p.rep.get('calle') ?? 0, reputation: Object.fromEntries([...p.rep].filter(([k]) => k !== 'calle')),
     inventory: [...p.inventory].filter(([, q]) => q > 0).map(([d, q]) => ({ def: d, name: c.items.find((i) => i.id === d)?.name ?? d, qty: q })),
     appearance: p.appearance, stance: p.stance,
@@ -176,6 +216,14 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     activeJob: p.activeJob,
     cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen }; }),
     bonuses: { confront: ef.confront, defense: ef.defense, steal: ef.steal, surgery: Math.round(ef.surgery * 100) },
+    weapon: ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, kind: ef.weapon.weapon.kind, family: ef.weapon.weapon.family, damage: ef.weapon.weapon.damage, range: ef.weapon.weapon.range, cooldown: ef.weapon.weapon.cooldown, accuracy: ef.weapon.weapon.accuracy,
+      ammo: ef.weapon.weapon.ammo, ammoName: ef.weapon.weapon.ammo ? c.items.find((i) => i.id === ef.weapon!.weapon!.ammo)?.name : undefined, ammoCount: ef.weapon.weapon.ammo ? p.inventory.get(ef.weapon.weapon.ammo) ?? 0 : undefined, nonlethal: ef.weapon.weapon.nonlethal, tech: ef.weapon.weapon.tech } : null,
+    weapons: [...[...p.inventory].filter(([it, q]) => q > 0 && c.items.find((i) => i.id === it)?.weapon).map(([it]) => ({ id: it, name: c.items.find((i) => i.id === it)!.name, integrated: false })),
+      ...ef.integrated.map((it) => ({ id: it, name: c.items.find((i) => i.id === it)!.name, integrated: true }))],
+    armor: ef.armor, encumbrance: ef.weight > ef.carryMax * 1.5 ? 'sobrecargado' : ef.weight > ef.carryMax ? 'cargado' : 'normal', carrying: null,
+    net: { rank: p.netRank, xp: p.netXp, xpNext: NET_RANKS[Math.min(NET_RANKS.length - 1, p.netRank + 1)], ram: Math.floor(Math.min(p.ram, ef.ram)), ramMax: ef.ram, canHack: ef.ram > 0 },
+    ambar: p.ambar && p.ambar.expiresAt > Date.now() ? { plan: p.ambar.plan, name: c.ambar.find((x) => x.id === p.ambar!.plan)?.name ?? p.ambar.plan, usesLeft: p.ambar.usesLeft, expiresInMin: Math.round((p.ambar.expiresAt - Date.now()) / 60000) } : null,
+    chrome: chromeParts(c, p),
   };
 }
 
@@ -195,9 +243,9 @@ export function buildJournal(c: Content, p: PlayerState, participants: (instance
 
 export async function savePlayerVitals(db: Queryable, p: PlayerState) {
   await db.query(`UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4, hp=$5, stamina=$6, luck=$7, stance=$8, hunger=$9, thirst=$10, fatigue=$11, wanted=$12,
-     auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16 WHERE id=$1 AND status <> 'dead'`,
+     auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16, equipped=$17, net_xp=$18, net_rank=$19, downed_lethal=$20 WHERE id=$1 AND status <> 'dead'`,
     [p.charId, p.zone, p.x, p.y, Math.round(p.hp), Math.round(p.stamina), p.luck, p.stance, p.hunger, p.thirst, p.fatigue, p.wanted, p.autoNeeds, p.activeJob,
-      p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null]);
+      p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null, p.equipped, p.netXp, p.netRank, p.downedLethal]);
 }
 
 export function recomputeLevel(p: PlayerState) {

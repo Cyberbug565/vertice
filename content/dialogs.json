@@ -1356,5 +1356,35 @@
     ]
    }
   }
+ },
+ "matasanos-yuki": {
+  "speaker": "yuki",
+  "entries": [
+   {
+    "if": [],
+    "node": "root"
+   }
+  ],
+  "nodes": {
+   "root": {
+    "text": "doc.yuki.root",
+    "options": [
+     {
+      "id": "clinic",
+      "text": "doc.opt.clinic",
+      "effects": [
+       {
+        "open": "clinic",
+        "id": "yuki"
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "text": "opt.leave"
+     }
+    ]
+   }
+  }
  }
 }

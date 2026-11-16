@@ -1,0 +1,97 @@
+{
+ "name": "Ciudad Vértice",
+ "districts": [
+  {
+   "zone": "colinas",
+   "gx": 1,
+   "gy": 0,
+   "color": "#7dd3a0",
+   "desc": "Urbanizaciones privadas, villas y la sede de Rescate Ámbar. Muy vigilado.",
+   "police": "Alta",
+   "factions": [
+    "kaiten",
+    "okami",
+    "ambar",
+    "pcv"
+   ]
+  },
+  {
+   "zone": "neon-rojo",
+   "gx": 2,
+   "gy": 0,
+   "color": "#b46cff",
+   "desc": "Clubs, casinos y neón sin fin. Territorio del Clan Kitsune y de Las Furias.",
+   "police": "Baja",
+   "factions": [
+    "kitsune",
+    "furias"
+   ]
+  },
+  {
+   "zone": "ferro",
+   "gx": 0,
+   "gy": 1,
+   "color": "#ffd23f",
+   "desc": "Puerto, Mercado Lumen y Kanal. Fixers, chatarreros y clubs de barrio.",
+   "police": "Media",
+   "factions": [
+    "red-bisagra",
+    "asociacion-lumen",
+    "chatarreros",
+    "hojas-rojas",
+    "furias"
+   ]
+  },
+  {
+   "zone": "cenit",
+   "gx": 1,
+   "gy": 1,
+   "color": "#43f3ff",
+   "desc": "Distrito corporativo: torres de Okami, Halcón, Teselia y Aurora.",
+   "police": "Muy alta",
+   "factions": [
+    "halcon",
+    "okami",
+    "teselia",
+    "aurora",
+    "pcv"
+   ]
+  },
+  {
+   "zone": "forja",
+   "gx": 2,
+   "gy": 1,
+   "color": "#ff3040",
+   "desc": "Fábricas, humo y Los Engranajes. La PCV no entra.",
+   "police": "Ninguna",
+   "factions": [
+    "engranajes",
+    "aurora"
+   ]
+  },
+  {
+   "zone": "yermo",
+   "gx": 3,
+   "gy": 1,
+   "color": "#d9a066",
+   "desc": "El desierto fuera de la ciudad: autopista, moteles, nómadas y saqueadores.",
+   "police": "Ninguna",
+   "factions": [
+    "nomadas-polvo",
+    "saqueadores"
+   ]
+  },
+  {
+   "zone": "arrabal",
+   "gx": 0,
+   "gy": 2,
+   "color": "#ffb347",
+   "desc": "Megabloques abarrotados, mercadillos y la Hermandad del Sol. Las Voces del Vacío acechan en la red.",
+   "police": "Ninguna",
+   "factions": [
+    "hermandad-sol",
+    "voces-vacio"
+   ]
+  }
+ ]
+}

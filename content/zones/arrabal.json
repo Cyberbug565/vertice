@@ -1,0 +1,1110 @@
+{
+ "id": "arrabal",
+ "name": "El Arrabal",
+ "kind": "exterior",
+ "width": 96,
+ "height": 64,
+ "chunkSize": 32,
+ "danger": "public",
+ "base": "dirt",
+ "ambient": 26,
+ "police": 0,
+ "gangs": [
+  {
+   "faction": "hermandad-sol",
+   "count": 7,
+   "area": [
+    48,
+    32,
+    40
+   ]
+  },
+  {
+   "faction": "voces-vacio",
+   "count": 4,
+   "area": [
+    48,
+    32,
+    40
+   ]
+  }
+ ],
+ "sleepQuality": 0.3,
+ "ground": [
+  {
+   "type": "sidewalk",
+   "rect": [
+    0,
+    0,
+    96,
+    64
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    30,
+    96,
+    4
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    46,
+    0,
+    4,
+    64
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    12,
+    96,
+    2
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    50,
+    96,
+    2
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    20,
+    0,
+    2,
+    64
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    72,
+    0,
+    2,
+    64
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    44,
+    30,
+    2,
+    4
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    50,
+    30,
+    2,
+    4
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    46,
+    28,
+    4,
+    2
+   ]
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    46,
+    34,
+    4,
+    2
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    75,
+    15,
+    20,
+    14
+   ]
+  }
+ ],
+ "blocks": [],
+ "buildings": [
+  {
+   "id": "arrabal-b0",
+   "rect": [
+    1,
+    1,
+    8,
+    9
+   ],
+   "height": 14,
+   "style": "mega",
+   "color": "#5a4a4a"
+  },
+  {
+   "id": "arrabal-b1",
+   "rect": [
+    11,
+    1,
+    7,
+    9
+   ],
+   "height": 15,
+   "style": "block",
+   "color": "#3a3a4a",
+   "sign": "SAN CIRO",
+   "signColor": "#43f3ff",
+   "name": "Iglesia de San Ciro"
+  },
+  {
+   "id": "arrabal-b2",
+   "rect": [
+    23,
+    1,
+    10,
+    9
+   ],
+   "height": 21,
+   "style": "block",
+   "color": "#5a4a4a"
+  },
+  {
+   "id": "arrabal-b3",
+   "rect": [
+    35,
+    1,
+    9,
+    9
+   ],
+   "height": 17,
+   "style": "mega",
+   "color": "#4a3a3a",
+   "sign": "MERCADILLO",
+   "signColor": "#ffd23f",
+   "name": "Mercadillo del Bloque 22"
+  },
+  {
+   "id": "arrabal-b4",
+   "rect": [
+    51,
+    1,
+    19,
+    9
+   ],
+   "height": 13,
+   "style": "block",
+   "color": "#4a3a3a",
+   "sign": "NODO",
+   "signColor": "#ffd23f",
+   "name": "Nodo del Vacío"
+  },
+  {
+   "id": "arrabal-b5",
+   "rect": [
+    75,
+    1,
+    9,
+    9
+   ],
+   "height": 22,
+   "style": "mega",
+   "color": "#3a3a4a"
+  },
+  {
+   "id": "arrabal-b6",
+   "rect": [
+    86,
+    1,
+    8,
+    9
+   ],
+   "height": 17,
+   "style": "arcology",
+   "color": "#3a3a4a"
+  },
+  {
+   "id": "arrabal-b7",
+   "rect": [
+    1,
+    15,
+    8,
+    13
+   ],
+   "height": 30,
+   "style": "arcology",
+   "color": "#4a4a3a"
+  },
+  {
+   "id": "arrabal-b8",
+   "rect": [
+    11,
+    15,
+    7,
+    13
+   ],
+   "height": 13,
+   "style": "mega",
+   "color": "#5a4a4a"
+  },
+  {
+   "id": "arrabal-b9",
+   "rect": [
+    23,
+    15,
+    10,
+    13
+   ],
+   "height": 17,
+   "style": "arcology",
+   "color": "#3a3a4a"
+  },
+  {
+   "id": "arrabal-b10",
+   "rect": [
+    35,
+    15,
+    9,
+    13
+   ],
+   "height": 20,
+   "style": "block",
+   "color": "#5a4a3a",
+   "sign": "SAN CIRO",
+   "signColor": "#43f3ff"
+  },
+  {
+   "id": "arrabal-b11",
+   "rect": [
+    51,
+    15,
+    9,
+    13
+   ],
+   "height": 31,
+   "style": "mega",
+   "color": "#5a4a3a"
+  },
+  {
+   "id": "arrabal-b12",
+   "rect": [
+    62,
+    15,
+    8,
+    13
+   ],
+   "height": 23,
+   "style": "mega",
+   "color": "#5a4a3a"
+  },
+  {
+   "id": "arrabal-b13",
+   "rect": [
+    1,
+    35,
+    8,
+    13
+   ],
+   "height": 17,
+   "style": "block",
+   "color": "#3a3a4a",
+   "sign": "TACOS 24H",
+   "signColor": "#ffd23f"
+  },
+  {
+   "id": "arrabal-b14",
+   "rect": [
+    11,
+    35,
+    7,
+    13
+   ],
+   "height": 21,
+   "style": "block",
+   "color": "#5a4a3a",
+   "sign": "BLOQUE 41",
+   "signColor": "#ffb347"
+  },
+  {
+   "id": "arrabal-b15",
+   "rect": [
+    23,
+    35,
+    10,
+    13
+   ],
+   "height": 12,
+   "style": "mega",
+   "color": "#5a4a4a"
+  },
+  {
+   "id": "arrabal-b16",
+   "rect": [
+    35,
+    35,
+    9,
+    13
+   ],
+   "height": 16,
+   "style": "mega",
+   "color": "#4a4a3a",
+   "sign": "SAN CIRO",
+   "signColor": "#ffb347"
+  },
+  {
+   "id": "arrabal-b17",
+   "rect": [
+    51,
+    35,
+    9,
+    13
+   ],
+   "height": 14,
+   "style": "arcology",
+   "color": "#4a4a3a",
+   "sign": "LA ESPERANZA",
+   "signColor": "#43f3ff"
+  },
+  {
+   "id": "arrabal-b18",
+   "rect": [
+    62,
+    35,
+    8,
+    13
+   ],
+   "height": 24,
+   "style": "arcology",
+   "color": "#4a3a3a"
+  },
+  {
+   "id": "arrabal-b19",
+   "rect": [
+    75,
+    35,
+    9,
+    13
+   ],
+   "height": 13,
+   "style": "mega",
+   "color": "#5a4a3a"
+  },
+  {
+   "id": "arrabal-b20",
+   "rect": [
+    86,
+    35,
+    8,
+    13
+   ],
+   "height": 18,
+   "style": "arcology",
+   "color": "#4a3a3a",
+   "sign": "LA ESPERANZA",
+   "signColor": "#43f3ff"
+  },
+  {
+   "id": "arrabal-b21",
+   "rect": [
+    1,
+    53,
+    17,
+    9
+   ],
+   "height": 14,
+   "style": "mega",
+   "color": "#5a4a4a",
+   "sign": "LA ESPERANZA",
+   "signColor": "#ffb347"
+  },
+  {
+   "id": "arrabal-b22",
+   "rect": [
+    23,
+    53,
+    21,
+    9
+   ],
+   "height": 21,
+   "style": "block",
+   "color": "#4a3a3a"
+  },
+  {
+   "id": "arrabal-b23",
+   "rect": [
+    51,
+    53,
+    19,
+    9
+   ],
+   "height": 14,
+   "style": "mega",
+   "color": "#3a3a4a"
+  },
+  {
+   "id": "arrabal-b24",
+   "rect": [
+    75,
+    53,
+    19,
+    9
+   ],
+   "height": 12,
+   "style": "arcology",
+   "color": "#3a3a4a"
+  }
+ ],
+ "props": [
+  {
+   "type": "trash",
+   "at": [
+    77,
+    17
+   ]
+  },
+  {
+   "type": "stall",
+   "at": [
+    80,
+    22
+   ]
+  },
+  {
+   "type": "crate",
+   "at": [
+    83,
+    17
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    86,
+    22
+   ]
+  },
+  {
+   "type": "trash",
+   "at": [
+    89,
+    17
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    4,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    8,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    13,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    17,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    22,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    26,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    31,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    35,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    40,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    44,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    58,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    62,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    67,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    71,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    76,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    80,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    85,
+    29
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    89,
+    34
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    4
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    50,
+    4
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    13
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    50,
+    13
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    22
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    50,
+    22
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    40
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    50,
+    40
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    49
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    50,
+    49
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    45,
+    58
+   ]
+  },
+  {
+   "type": "lamp",
+   "at": [
+    50,
+    58
+   ]
+  },
+  {
+   "type": "antenna",
+   "at": [
+    5,
+    5
+   ],
+   "blocking": false,
+   "z": 20
+  },
+  {
+   "type": "antenna",
+   "at": [
+    21,
+    5
+   ],
+   "blocking": false,
+   "z": 22
+  },
+  {
+   "type": "antenna",
+   "at": [
+    37,
+    5
+   ],
+   "blocking": false,
+   "z": 24
+  },
+  {
+   "type": "antenna",
+   "at": [
+    53,
+    5
+   ],
+   "blocking": false,
+   "z": 26
+  },
+  {
+   "type": "antenna",
+   "at": [
+    69,
+    5
+   ],
+   "blocking": false,
+   "z": 28
+  },
+  {
+   "type": "antenna",
+   "at": [
+    85,
+    5
+   ],
+   "blocking": false,
+   "z": 30
+  },
+  {
+   "type": "car",
+   "at": [
+    8,
+    30
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "car",
+   "at": [
+    38,
+    33
+   ],
+   "color": "#43f3ff"
+  },
+  {
+   "type": "car",
+   "at": [
+    58,
+    30
+   ],
+   "color": "#ffd23f"
+  },
+  {
+   "type": "car",
+   "at": [
+    86,
+    33
+   ],
+   "color": "#e8e8f0"
+  }
+ ],
+ "doors": [
+  {
+   "id": "puerta-iglesia-sanciro-int",
+   "name": "Iglesia de San Ciro",
+   "at": [
+    14,
+    10
+   ],
+   "to": {
+    "zone": "iglesia-sanciro-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "protected"
+  },
+  {
+   "id": "puerta-mercadillo-int",
+   "name": "Mercadillo del Bloque 22",
+   "at": [
+    39,
+    10
+   ],
+   "to": {
+    "zone": "mercadillo-int",
+    "at": [
+     13,
+     5
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "puerta-nodo-vacio-int",
+   "name": "Nodo del Vacío",
+   "at": [
+    60,
+    10
+   ],
+   "to": {
+    "zone": "nodo-vacio-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "arrabal-norte",
+   "name": "Avenida hacia Ferro",
+   "at": [
+    47,
+    0
+   ],
+   "to": {
+    "zone": "ferro",
+    "at": [
+     31,
+     62
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "arrabal-cajero-1",
+   "name": "Cajero automático",
+   "at": [
+    18,
+    29
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "arrabal-cajero-2",
+   "name": "Cajero automático",
+   "at": [
+    70,
+    34
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "arrabal-cajero-3",
+   "name": "Cajero automático",
+   "at": [
+    44,
+    14
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "arrabal-cajero-4",
+   "name": "Cajero automático",
+   "at": [
+    51,
+    48
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "arrabal-vending-1",
+   "name": "Máquina Aurora",
+   "at": [
+    24,
+    29
+   ],
+   "kind": "vending",
+   "shop": "aurora-vending"
+  },
+  {
+   "id": "arrabal-vending-2",
+   "name": "Máquina Aurora",
+   "at": [
+    62,
+    34
+   ],
+   "kind": "vending",
+   "shop": "aurora-vending"
+  },
+  {
+   "id": "arrabal-basura-1",
+   "name": "Contenedor de basura",
+   "at": [
+    30,
+    34
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "arrabal-basura-2",
+   "name": "Contenedor de basura",
+   "at": [
+    66,
+    29
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "arrabal-basura-3",
+   "name": "Contenedor de basura",
+   "at": [
+    19,
+    52
+   ],
+   "kind": "trash"
+  },
+  {
+   "id": "arrabal-basura-4",
+   "name": "Contenedor de basura",
+   "at": [
+    74,
+    11
+   ],
+   "kind": "trash"
+  }
+ ],
+ "sectors": [
+  {
+   "chunk": [
+    0,
+    0
+   ],
+   "name": "El Arrabal · Norte oeste"
+  },
+  {
+   "chunk": [
+    1,
+    0
+   ],
+   "name": "El Arrabal · Norte centro"
+  },
+  {
+   "chunk": [
+    2,
+    0
+   ],
+   "name": "El Arrabal · Norte este"
+  },
+  {
+   "chunk": [
+    0,
+    1
+   ],
+   "name": "El Arrabal · Sur oeste"
+  },
+  {
+   "chunk": [
+    1,
+    1
+   ],
+   "name": "El Arrabal · Sur centro"
+  },
+  {
+   "chunk": [
+    2,
+    1
+   ],
+   "name": "El Arrabal · Sur este"
+  }
+ ],
+ "dangerAreas": [],
+ "waypoints": [
+  [
+   5,
+   31
+  ],
+  [
+   15,
+   32
+  ],
+  [
+   30,
+   31
+  ],
+  [
+   40,
+   32
+  ],
+  [
+   56,
+   31
+  ],
+  [
+   66,
+   32
+  ],
+  [
+   80,
+   31
+  ],
+  [
+   92,
+   32
+  ],
+  [
+   47,
+   6
+  ],
+  [
+   48,
+   20
+  ],
+  [
+   47,
+   44
+  ],
+  [
+   48,
+   58
+  ],
+  [
+   21,
+   6
+  ],
+  [
+   21,
+   22
+  ],
+  [
+   21,
+   44
+  ],
+  [
+   21,
+   58
+  ],
+  [
+   73,
+   6
+  ],
+  [
+   73,
+   22
+  ],
+  [
+   73,
+   44
+  ],
+  [
+   73,
+   58
+  ],
+  [
+   10,
+   12
+  ],
+  [
+   60,
+   13
+  ],
+  [
+   85,
+   50
+  ],
+  [
+   30,
+   51
+  ]
+ ],
+ "safePoint": [
+  47,
+  31
+ ],
+ "skybridges": []
+}

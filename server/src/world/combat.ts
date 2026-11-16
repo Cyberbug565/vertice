@@ -1,0 +1,835 @@
+// Combate automático por armas, red (quickhacks), facciones, policía, Rescate Ámbar y transporte de cuerpos.
+import { randomUUID } from 'node:crypto';
+import { checkChance, dangerAt, findPath, lineWalkable, nearestWalkable, isWalkable, type ClientMsg, type FactionsView, type AmbarView, type ItemDef, type TargetMenuView, type WeaponDef } from '@vertice/shared';
+import type { World, PlayerConn } from './world.js';
+import type { Entity } from './entity.js';
+import type { Survival } from './survival.js';
+import { ambientBrain } from './npc.js';
+import { GameError } from '../game/effects.js';
+import { NET_RANKS, chromeParts, effective, type PlayerState } from '../game/player.js';
+import type { Bounty } from '../game/bounty.js';
+import type { Zone } from './zone.js';
+
+const FISTS: { id: string; name: string; w: WeaponDef } = { id: 'punos', name: 'Puños', w: { kind: 'melee', family: 'Puños', damage: [3, 7], range: 1.6, cooldown: 1.0, accuracy: 0, nonlethal: 'opcional', noise: 0.1, tech: 'clasica' } };
+const CIVIL_LINES = ['¿Qué miras?', 'Hoy no tengo nada para ti.', 'Cuidado por aquí de noche.', 'Dicen que la PCV ni se asoma a Forja.', 'Si te operas, que sea con alguien de fiar.', 'Las torres de Cénit no duermen nunca.'];
+type Src = { name: string; charId?: string; npc?: Entity; police?: boolean };
+
+export class Combat {
+  /** Comparte el generador de la supervivencia (las pruebas lo fijan para ser deterministas). */
+  rng: () => number = () => this.sv.rng();
+  private atmCooldown = new Map<string, number>();
+  private respawnQueue: { at: number; zone: string; template: Record<string, unknown> }[] = [];
+  private rescues = new Map<string, { at: number; team: number[]; plan: string }>();
+
+  constructor(private w: World, private sv: Survival) {}
+  private get c() { return this.w.c; }
+  private roll() { return 1 + Math.floor(this.rng() * 10); }
+  private notice(conn: PlayerConn | undefined, kind: 'info' | 'good' | 'warn' | 'bad', text: string) { if (conn) this.w.send(conn, { t: 'notice', kind, text }); }
+  private fx(e: Entity, kind: 'shot' | 'hit' | 'hack' | 'ko', from: number, to: number) { for (const o of e.zone.query(e.x, e.y, 24)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind, from, to }); }
+  private bump(e: Entity) { e.labelVer++; }
+
+  // ================================================================ población: bandas, policía y servicios
+  spawnPopulation() {
+    for (const z of this.w.zones.values()) {
+      for (const g of z.def.gangs) for (let i = 0; i < g.count; i++) this.spawnFactionNpc(z, g.faction, 'gang', g.area);
+      for (let i = 0; i < z.def.police; i++) this.spawnFactionNpc(z, 'pcv', 'police');
+    }
+  }
+  spawnFactionNpc(z: Zone, faction: string, type: Entity['npcType'], area?: [number, number, number], at?: { x: number; y: number }): Entity | null {
+    const f = this.c.factions.find((x) => x.id === faction)!;
+    let pos = at ?? null;
+    for (let tries = 0; !pos && tries < 12; tries++) {
+      const wp = area ? [area[0] + (this.rng() * 2 - 1) * area[2], area[1] + (this.rng() * 2 - 1) * area[2]] : z.def.waypoints[Math.floor(this.rng() * z.def.waypoints.length)];
+      pos = nearestWalkable(z.grid, wp[0] + 0.5, wp[1] + 0.5, 3);
+    }
+    if (!pos) return null;
+    const titles: Record<string, string> = { police: 'Agente de la PCV', hierro: 'Unidad Hierro', ambar: 'Equipo Ámbar', gang: f.name };
+    const names = ['Rex', 'Nova', 'Iker', 'Mara', 'Kenji', 'Lola', 'Toro', 'Sombra', 'Zafiro', 'Vic', 'Dana', 'Oso', 'Yara', 'Kai', 'Tano', 'Rui'];
+    const dark = (h: string) => '#' + h.slice(1).match(/../g)!.map((x) => Math.round(parseInt(x, 16) * 0.55).toString(16).padStart(2, '0')).join('');
+    const e = this.w.spawnNpc(z, {
+      name: type === 'police' ? `Agente ${names[Math.floor(this.rng() * names.length)]}` : type === 'hierro' ? `Hierro-${Math.floor(this.rng() * 90 + 10)}` : type === 'ambar' ? `Paramédico Ámbar` : `${names[Math.floor(this.rng() * names.length)]}`,
+      title: titles[type!] ?? f.name, x: pos.x, y: pos.y, label: type === 'police' ? 'Patrullando' : type === 'gang' ? `Territorio de ${f.name}` : '',
+      appearance: { skin: ['#f0c8a8', '#c89070', '#8a5a3c', '#e0b48c'][Math.floor(this.rng() * 4)], hair: ['#1a1a1a', '#5a3a2a', '#d9d9e3'][Math.floor(this.rng() * 3)], jacket: dark(f.color), accent: f.color,
+        build: this.rng() < 0.5 ? 'robusto' : 'medio', hairStyle: ['rapado', 'cresta', 'corto', 'coleta', 'calvo'][Math.floor(this.rng() * 5)], top: type === 'police' || type === 'hierro' ? 'chaleco' : ['chaqueta', 'chaleco', 'sudadera', 'top'][Math.floor(this.rng() * 4)], accessory: type === 'hierro' ? 'mascara' : type === 'police' ? 'gorra' : 'ninguno' } as any,
+      speed: type === 'hierro' ? 3.2 : 2.4,
+    });
+    e.npcType = type; e.faction = faction; e.npcMax = f.hp; e.npcHp = f.hp; e.defense = f.defense; e.weaponId = f.weapon; e.chrome = [...f.chrome];
+    e.dialog = undefined;
+    e.npc = ambientBrain(this.w.cfg.seed + e.id * 7, area ? [area[0], area[1]] : undefined, area?.[2]);
+    e.respawn = { zone: z.id, template: { faction, type, area } };
+    return e;
+  }
+
+  // ================================================================ armas y estadísticas
+  weaponOf(p: PlayerState) {
+    const ef = effective(this.c, p);
+    return ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, w: ef.weapon.weapon } : FISTS;
+  }
+  /** Arma usada para un ataque: con un arma de fuego sin modo no letal, dejar KO es un culatazo cuerpo a cuerpo. */
+  weaponFor(p: PlayerState, lethal: boolean) {
+    const wp = this.weaponOf(p);
+    if (!lethal && wp.w.kind === 'ranged' && wp.w.nonlethal === 'no') return { id: 'culatazo', name: `Culatazo (${wp.name})`, w: { ...FISTS.w, family: 'Culatazo', damage: [5, 10] as [number, number], cooldown: 1.2 } };
+    return wp;
+  }
+  private npcWeapon(e: Entity) {
+    const it = e.weaponId ? this.c.items.find((i) => i.id === e.weaponId) : undefined;
+    return it?.weapon ? { id: it.id, name: it.name, w: it.weapon } : FISTS;
+  }
+  private encPenalty(p: PlayerState) {
+    const ef = effective(this.c, p);
+    const load = ef.weight + (p.carrying ? 70 : 0);
+    return load > ef.carryMax * 1.5 ? 4 : load > ef.carryMax ? 2 : 0;
+  }
+  attackScore(p: PlayerState) {
+    const ef = effective(this.c, p), wp = this.weaponOf(p);
+    const skill = wp.w.kind === 'melee' ? ef.skills.cuerpo ?? 0 : ef.skills.armas ?? 0;
+    return ef.attrs.REF + skill + wp.w.accuracy + ef.confront - this.encPenalty(p) - (p.fatigue >= 80 ? 1 : 0);
+  }
+  defenseScore(p: PlayerState) {
+    const ef = effective(this.c, p);
+    return ef.attrs.DEX + (ef.skills.atletismo ?? 0) + ef.defense + (p.stance === 'avoid' ? 1 : 0) - (p.sleeping ? 6 : 0) - (p.blindUntil > Date.now() ? 4 : 0) - this.encPenalty(p);
+  }
+  private npcAttackScore(e: Entity) { return (e.defense ?? 10) + this.npcWeapon(e).w.accuracy - (e.blindUntil && e.blindUntil > Date.now() ? 4 : 0); }
+  private npcDefenseScore(e: Entity) { return (e.defense ?? 10) - (e.blindUntil && e.blindUntil > Date.now() ? 4 : 0); }
+  private armorOf(p: PlayerState) { return effective(this.c, p).armor; }
+  private rollDamage(w: WeaponDef, margin: number) { const [a, b] = w.damage; return Math.round(a + this.rng() * (b - a) + Math.max(0, margin) / 2); }
+
+  // ================================================================ menú contextual
+  menu(c: PlayerConn, target: Entity): TargetMenuView {
+    const p = c.p!, e = c.e!;
+    const prot = dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected';
+    const block = prot ? 'Zona protegida: aquí no se permiten agresiones.' : undefined;
+    const opts: TargetMenuView['options'] = [];
+    const tp = this.w.playerOf(target);
+    const downed = tp ? tp.status === 'downed' : target.state === 'downed';
+    const wp = this.weaponOf(p);
+    const atk = this.attackScore(p);
+    const def = tp ? this.defenseScore(tp) : this.npcDefenseScore(target);
+    const chance = opposed(atk, def);
+    const fac = target.faction ? this.c.factions.find((f) => f.id === target.faction) : undefined;
+    const bounties = this.claimable(target, p);
+    const bountyTxt = bounties.length ? ` · recompensa ${bounties.reduce((s, b) => s + b.amount, 0)} €$${bounties.some((b) => b.aliveOnly) ? ' (LO QUIEREN VIVO)' : ' (vivo o muerto)'}` : '';
+    let subtitle = tp ? `Jugador · ${this.c.roles.find((r) => r.id === tp.role)?.name ?? ''}` : target.npcType === 'essential' ? target.title ?? '' : fac ? `${fac.name} · tu relación ${p.rep.get(fac.id) ?? 0}` : target.fugitive ? `Fugitivo · ${target.fugitive.crime}` : 'Transeúnte';
+    subtitle += bountyTxt;
+    if (target.kind === 'object') {
+      if (target.objKind === 'shop' || target.objKind === 'vending') opts.push({ id: 'trade', kind: 'interact', group: 'social', label: 'Comprar y vender' });
+      if (target.objKind === 'atm' || target.objKind === 'shop') this.hackOptions(p, e, target, opts);
+      return { target: target.id, name: target.name, subtitle: target.objKind === 'atm' ? 'Cajero automático' : 'Comercio', options: opts };
+    }
+    if (target.npcType === 'essential' || (target.kind === 'npc' && !target.npcType && target.dialog && !target.fugitive && !target.npcMax)) {
+      opts.push({ id: 'talk', kind: 'interact', group: 'social', label: 'Hablar' });
+      if (target.npcShop) opts.push({ id: 'trade', kind: 'interact', group: 'social', label: 'Comerciar' });
+      this.hackOptions(p, e, target, opts, true);
+      return { target: target.id, name: target.name, subtitle: `${subtitle} · persona clave (no se puede atacar)`, color: fac?.color, options: opts };
+    }
+    if (target.carriedBy === e.id) { opts.push({ id: 'drop', kind: 'action', group: 'ayuda', label: 'Soltar el cuerpo' }); return { target: target.id, name: target.name, subtitle, options: opts }; }
+    if (downed) {
+      if (tp) {
+        const medic = p.profession === 'medico' || p.role === 'medtech';
+        opts.push({ id: 'rescue', kind: 'action', group: 'ayuda', label: 'Estabilizar', detail: medic ? 'Como médico/Medtech no necesitas material.' : 'Gasta un estimulante médico.', disabled: !medic && (p.inventory.get('estim') ?? 0) < 1 ? 'Necesitas un estimulante médico' : undefined });
+      }
+      opts.push({ id: 'carry', kind: 'action', group: 'ayuda', label: 'Cargar el cuerpo', detail: 'Suma unos 70 kg a tu carga: irás más lento y torpe.', disabled: p.carrying ? 'Ya llevas a alguien' : undefined });
+      opts.push({ id: 'finish', kind: 'action', group: 'combate', label: 'Rematar', danger: true, detail: tp ? 'Muerte definitiva del personaje. Es un delito grave.' : 'Lo mata.', disabled: block });
+      return { target: target.id, name: target.name, subtitle: `${subtitle} · ${tp ? (tp.downedLethal ? 'desangrándose' : 'inconsciente') : target.npcLethalDown ? 'desangrándose' : 'inconsciente'}`, color: fac?.color, options: opts };
+    }
+    opts.push({ id: 'talk', kind: 'interact', group: 'social', label: 'Hablar' });
+    if (target.npcType === 'police' && p.wanted >= 1) opts.push({ id: 'bribe', kind: 'action', group: 'social', label: `Sobornar (${this.bribeCost(p)} €$)`, detail: 'Una «tasa de agilización» y tu expediente desaparece.', disabled: p.money < this.bribeCost(p) ? 'No te llega el dinero' : undefined });
+    const robDv = tp ? 8 + (effective(this.c, tp).skills.percepcion ?? 0) + Math.floor(effective(this.c, tp).attrs.INT / 2) - (tp.sleeping ? 6 : 0) : 8 + Math.floor((target.defense ?? 10) / 2);
+    const robChance = checkChance(effective(this.c, p).attrs.DEX, (effective(this.c, p).skills.sigilo ?? 0) + effective(this.c, p).steal + ((tp ? tp.blindUntil : target.blindUntil ?? 0) > Date.now() ? 4 : 0), robDv);
+    if (!target.fugitive) opts.push({ id: 'rob', kind: 'action', group: 'social', label: 'Robar (carterista)', chance: robChance, detail: 'Le quitas dinero sin que se dé cuenta. Si fallas, reacciona.', disabled: block });
+    const range = `${wp.name}, alcance ${wp.w.range} m`;
+    const ko = this.weaponFor(p, false);
+    opts.push({ id: 'knockout', kind: 'action', group: 'combate', label: target.fugitive ? 'Capturar vivo (dejar KO)' : 'Dejar KO', chance, detail: `${ko.name}, alcance ${ko.w.range} m. Golpes no letales: queda inconsciente.`, disabled: block });
+    opts.push({ id: 'attack', kind: 'action', group: 'combate', label: target.fugitive ? 'Abatir' : 'Atacar a matar', chance, danger: true, detail: `${range}. ${tp ? 'Si cae, se desangra en 30 s salvo que le estabilicen o le rescate Ámbar.' : 'Puede morir.'}`, disabled: block ?? (wp.w.nonlethal === 'solo' ? `${wp.name} solo hace daño no letal` : undefined) });
+    this.hackOptions(p, e, target, opts);
+    return { target: target.id, name: target.name, subtitle, color: fac?.color ?? (target.fugitive ? '#ff3040' : undefined), options: opts };
+  }
+
+  private hackOptions(p: PlayerState, e: Entity, target: Entity, opts: TargetMenuView['options'], scanOnly = false) {
+    const ef = effective(this.c, p);
+    if (ef.ram <= 0) return;
+    const kind = target.kind === 'object' ? (target.objKind === 'atm' ? 'atm' : 'shop') : 'person';
+    for (const q of this.c.quickhacks) {
+      if (q.target !== kind || (scanOnly && q.effect !== 'scan')) continue;
+      const cost = this.ramCost(p, q.ram);
+      const dist = Math.hypot(target.x - e.x, target.y - e.y);
+      const chance = this.hackChance(p, target, q);
+      let disabled: string | undefined;
+      if (p.netRank < q.minRank) disabled = `Requiere rango de red ${q.minRank} (tienes ${p.netRank})`;
+      else if (p.ram < cost) disabled = `RAM insuficiente (${Math.floor(p.ram)}/${cost})`;
+      else if (dist > q.range) disabled = `Fuera de alcance (${dist.toFixed(0)}/${q.range} m)`;
+      else if (q.effect !== 'scan' && q.effect !== 'blind' && dangerAt(e.zone.grid, e.x, e.y) === 'protected' && kind === 'person') disabled = 'Zona protegida';
+      opts.push({ id: `hack:${q.id}`, kind: 'hack', group: 'red', label: `${q.name} · ${cost} RAM · ${this.uploadTime(p, q.upload).toFixed(1)} s`, chance, detail: q.desc + (q.trace ? ` Riesgo de rastreo ${Math.round(q.trace * (1 - p.netRank * 0.05) * 100)} %.` : ''), disabled, danger: q.effect === 'kill' });
+    }
+  }
+  private ramCost(p: PlayerState, ram: number) { return Math.max(1, ram - Math.floor(p.netRank / 3)); }
+  private uploadTime(p: PlayerState, base: number) { return Math.max(0.5, base * (1 - 0.06 * p.netRank) * (p.role === 'netrunner' ? 0.85 : 1)); }
+  private hackScore(p: PlayerState) { const ef = effective(this.c, p); return ef.attrs.INT + (ef.skills.interfaz ?? 0) + Math.floor(p.netRank / 2) + (p.role === 'netrunner' ? 2 : 0); }
+  private hackDefense(target: Entity): number {
+    const tp = this.w.playerOf(target);
+    if (tp) {
+      let d = effective(this.c, tp).attrs.WILL - 5;
+      for (const ci of tp.cyber) if (ci.location === 'installed') { if (ci.def === 'filtro-neural') d += 3; if (ci.def === 'ice-aislamiento') d += 6; }
+      return d;
+    }
+    if (target.kind === 'object') { const sh = target.shop ? this.c.shops.find((s) => s.id === target.shop) : undefined; return sh ? Math.floor((sh.security - 12) / 2) : 1; }
+    return target.npcType === 'hierro' ? 6 : target.npcType === 'police' ? 2 : target.faction === 'voces-vacio' ? 4 : target.npcType === 'gang' ? 1 : 0;
+  }
+  private hackChance(p: PlayerState, target: Entity, q: { dv: number }) { const s = this.hackScore(p), dv = q.dv + this.hackDefense(target); return checkChance(s, 0, dv); }
+
+  // ================================================================ acciones
+  bribeCost(p: PlayerState) { return 250 * Math.max(1, Math.ceil(p.wanted)); }
+  async bribe(c: PlayerConn, opId: string) {
+    const p = c.p!;
+    if (p.wanted < 0.5) throw new GameError('No tienes ningún expediente abierto.');
+    const cost = this.bribeCost(p);
+    if (p.money < cost) throw new GameError(`La «tasa de agilización» son ${cost} €$.`);
+    await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) throw new GameError('Operación ya procesada');
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:bribe`, p.charId, -cost, p.money - cost, 'Tasa de agilización a la PCV (soborno)']);
+      await q.query('UPDATE characters SET money = money - $2, wanted = 0 WHERE id = $1', [p.charId, cost]);
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'bribe', JSON.stringify({ cost })]);
+    });
+    p.money -= cost; p.wanted = 0;
+    const pcv = this.sv.bounties.onPlayer(p.charId).filter((b) => b.poster === 'pcv');
+    if (pcv.length) await this.sv.bounties.cancel(pcv.map((b) => b.id));
+    this.sv.updateMarker(c.e!);
+    for (const o of c.e!.zone.entities) if ((o.npcType === 'police' || o.npcType === 'hierro') && o.aggro === c.e!.id) { o.aggro = undefined; }
+    this.notice(c, 'good', `El agente cobra ${cost} €$ y tu expediente «se pierde».`);
+  }
+
+  claimable(target: Entity, me: PlayerState): Bounty[] {
+    const tp = this.w.playerOf(target);
+    const list = tp ? this.sv.bounties.onPlayer(tp.charId) : target.fugitive ? this.sv.bounties.onNpc(target.fugitive.id) : [];
+    return list.filter((b) => b.placedBy !== me.charId);
+  }
+
+  /** Acción hostil o de ayuda desde el menú. Si el objetivo está fuera de alcance, el personaje se acerca y la ejecuta al llegar. */
+  async action(c: PlayerConn, m: Extract<ClientMsg, { t: 'hostile' }>) {
+    const p = c.p!, e = c.e!;
+    const fail = (reason: string) => this.w.send(c, { t: 'ack', seq: m.seq, ok: false, reason });
+    if (p.status !== 'alive') return fail('No puedes hacer eso ahora.');
+    if (p.sleeping) this.sv.wake(c);
+    const target = this.w.entities.get(m.target);
+    if (!target || target.zone !== e.zone || target === e) return fail('Objetivo no válido.');
+    let action: string = m.action;
+    if (action === 'beat') action = 'knockout';
+    if (action === 'claim') action = this.claimable(target, p).some((b) => b.aliveOnly) || (target.fugitive?.alive ?? false) ? 'knockout' : 'attack';
+    if (action === 'talk') { this.talk(c, target); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true }); }
+    if (target.npcType === 'essential' || (target.kind === 'npc' && !target.npcMax && !target.fugitive)) return fail('Esta persona no se puede atacar.');
+    const hostile = ['rob', 'knockout', 'attack', 'finish'].includes(action);
+    if (hostile && (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected')) return fail('Zona protegida: aquí no se permiten agresiones.');
+    const wp = this.weaponFor(p, action !== 'knockout');
+    const range = action === 'knockout' || action === 'attack' ? wp.w.range : action === 'rob' || action === 'carry' || action === 'finish' ? 1.8 : 2.6;
+    const dist = Math.hypot(target.x - e.x, target.y - e.y);
+    const los = wp.w.kind === 'melee' || lineWalkable(e.zone.grid, e.x, e.y, target.x, target.y);
+    if (dist > range || !los) {
+      const dest = nearestWalkable(e.zone.grid, target.x, target.y, 2);
+      const r = dest ? findPath(e.zone.grid, e.x, e.y, dest.x, dest.y, 20000) : null;
+      if (!r?.ok) return fail('No puedes llegar hasta ahí.');
+      e.path = r.path; e.moving = true;
+      e.pendingAction = { target: target.id, action, opId: m.opId };
+      return this.w.send(c, { t: 'ack', seq: m.seq, ok: true, path: e.path, info: `Acercándote a ${target.name}` });
+    }
+    e.path = []; e.moving = false;
+    await this.execute(c, target, action, m.opId);
+    this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
+  }
+
+  /** Comprueba en cada paso si una acción pendiente ya está a tiro (para no esperar a llegar al destino exacto). */
+  checkPending(c: PlayerConn) {
+    const e = c.e!, pa = e.pendingAction;
+    if (!pa) return;
+    const target = this.w.entities.get(pa.target);
+    if (!target || target.zone !== e.zone) { e.pendingAction = undefined; return; }
+    const wp = this.weaponFor(c.p!, pa.action !== 'knockout');
+    const range = pa.action === 'knockout' || pa.action === 'attack' ? wp.w.range : 1.8;
+    const dist = Math.hypot(target.x - e.x, target.y - e.y);
+    if (dist <= range && (wp.w.kind === 'melee' || pa.action === 'rob' || lineWalkable(e.zone.grid, e.x, e.y, target.x, target.y))) {
+      e.pendingAction = undefined; e.path = []; e.moving = false;
+      this.w.enqueue(c, () => this.execute(c, target, pa.action, pa.opId).catch((err) => { if (err instanceof GameError) this.notice(c, 'warn', err.message); else throw err; }));
+    } else if (!e.path.length) {
+      // El objetivo se movió: perseguirlo un poco más.
+      const dest = nearestWalkable(e.zone.grid, target.x, target.y, 2);
+      const r = dest ? findPath(e.zone.grid, e.x, e.y, dest.x, dest.y, 8000) : null;
+      if (r?.ok && dist < 30) { e.path = r.path; e.moving = true; } else e.pendingAction = undefined;
+    }
+  }
+
+  private async execute(c: PlayerConn, target: Entity, action: string, opId: string) {
+    const p = c.p!;
+    if (p.status !== 'alive') return;
+    if (action === 'rob') return this.rob(c, target, opId);
+    if (action === 'carry') return this.carry(c, target);
+    if (action === 'rescue') return this.sv.rescue(c, 0, target.id, opId);
+    if (action === 'finish') return this.finish(c, target, opId);
+    if (action === 'knockout' || action === 'attack') return this.attack(c, target, action === 'attack', opId);
+  }
+
+  async attack(c: PlayerConn, target: Entity, lethal: boolean, opId: string) {
+    const p = c.p!, e = c.e!;
+    const now = Date.now();
+    if (now < p.nextAttackAt) { e.pendingAction = { target: target.id, action: lethal ? 'attack' : 'knockout', opId: `${opId}r` }; return; }
+    if (lethal && this.weaponOf(p).w.nonlethal === 'solo') lethal = false;
+    const wp = this.weaponFor(p, lethal);
+    const legit = this.claimable(target, p).length > 0;
+    if (wp.w.ammo) {
+      if ((p.inventory.get(wp.w.ammo) ?? 0) < 1) throw new GameError(`Sin munición: necesitas ${this.c.items.find((i) => i.id === wp.w.ammo)?.name}.`);
+      p.inventory.set(wp.w.ammo, (p.inventory.get(wp.w.ammo) ?? 0) - 1);
+      void this.w.db.query('UPDATE inventory_items SET qty = GREATEST(0, qty - 1) WHERE character_id=$1 AND def_id=$2', [p.charId, wp.w.ammo]).catch(() => {});
+    }
+    p.nextAttackAt = now + wp.w.cooldown * 1000;
+    const tp = this.w.playerOf(target);
+    if (tp && tp.status !== 'alive') return;
+    if (!tp && target.state === 'downed') return;
+    const dist = Math.hypot(target.x - e.x, target.y - e.y);
+    const rangePenalty = wp.w.kind === 'ranged' && dist > wp.w.range / 2 ? Math.round((dist - wp.w.range / 2) / (wp.w.range / 4)) : 0;
+    const a = this.attackScore(p) - rangePenalty + this.roll();
+    const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + this.roll();
+    this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, target.id);
+    if (tp?.sleeping && target.conn) this.sv.wake(target.conn);
+    if (a < d) {
+      this.notice(c, 'warn', `Fallas (${a} contra ${d}).`);
+      if (tp) this.counter(target, e); else this.provokeNpc(target, e, lethal);
+      this.crime(c, target, lethal, 'attempt', legit);
+      return;
+    }
+    let dmg = this.rollDamage(wp.w, a - d);
+    if (tp) dmg = Math.max(1, dmg - this.armorOf(tp) - (wp.w.tech === 'tecnica' ? -this.armorOf(tp) : 0));
+    this.notice(c, 'good', `${lethal ? 'Impactas' : 'Golpeas'} a ${target.name} con ${wp.name}: −${dmg}.`);
+    if (tp) {
+      this.damagePlayer(tp, target, dmg, lethal, { name: p.name, charId: p.charId });
+      if (tp.status === 'downed') await this.onNeutralized(c, target, tp.downedLethal, opId);
+      else this.counter(target, e);
+    } else {
+      this.damageNpc(target, dmg, lethal, c);
+      if (target.state === 'downed') await this.onNeutralized(c, target, !!target.npcLethalDown, opId);
+    }
+    this.crime(c, target, lethal, target.state === 'downed' || tp?.status === 'downed' ? 'down' : 'hit', legit);
+  }
+
+  /** Respuesta del jugador atacado según su postura: Defender/Agresiva devuelve el golpe; Evitar se retira. */
+  private counter(victim: Entity, attacker: Entity) {
+    const vc = victim.conn, vp = vc?.p;
+    if (!vc || !vp || vp.status !== 'alive') return;
+    if (vp.stance === 'avoid') { if (!victim.path.length) this.w.handle(vc, { t: 'retreat', seq: 0 } as any); return; }
+    if (!victim.pendingAction && !victim.task) victim.pendingAction = { target: attacker.id, action: vp.stance === 'aggressive' ? 'attack' : 'knockout', opId: `counter-${randomUUID()}` };
+  }
+
+  damagePlayer(tp: PlayerState, te: Entity, dmg: number, lethal: boolean, src: Src) {
+    tp.hp -= dmg;
+    this.notice(te.conn, 'bad', `${src.name} te ${lethal ? 'hiere' : 'golpea'}: −${dmg} de salud.`);
+    if (te.conn) this.w.send(te.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) });
+    if (tp.hp <= 0) {
+      if (src.police && !lethal && te.conn) { void this.arrest(te.conn); return; }
+      this.sv.downed(te.conn, `${lethal ? 'disparos o heridas' : 'golpes'} de ${src.name}`, tp, te, lethal);
+    }
+  }
+
+  damageNpc(target: Entity, dmg: number, lethal: boolean, by?: PlayerConn) {
+    target.npcHp = (target.npcHp ?? target.npcMax ?? 40) - dmg;
+    target.lastAttacker = by?.e?.id;
+    this.bump(target);
+    if (by?.e) this.provokeNpc(target, by.e, lethal);
+    if ((target.npcHp ?? 0) <= 0) this.npcDowned(target, lethal);
+  }
+
+  private provokeNpc(target: Entity, attacker: Entity, lethal: boolean) {
+    if (target.state === 'downed') return;
+    if (target.npcType === 'civil' || !target.npcType) { target.fleeUntil = Date.now() + 15000; target.path = []; return; }
+    target.aggro = attacker.id; target.aggroLethal = target.npcType !== 'police' || lethal;
+    // Los suyos acuden.
+    for (const o of target.zone.query(target.x, target.y, 12)) if (o !== target && o.faction === target.faction && o.npcType === target.npcType && o.state !== 'downed' && !o.aggro) { o.aggro = attacker.id; o.aggroLethal = target.aggroLethal; }
+  }
+
+  private npcDowned(target: Entity, lethal: boolean) {
+    target.state = 'downed'; target.npcLethalDown = lethal; target.path = []; target.moving = false; target.aggro = undefined;
+    target.downedUntil = Date.now() + (lethal ? 20000 : 60000);
+    target.label = lethal ? 'Desangrándose' : 'Inconsciente';
+    this.bump(target);
+  }
+
+  private async onNeutralized(c: PlayerConn, target: Entity, lethal: boolean, opId: string) {
+    const p = c.p!;
+    const all = this.claimable(target, p);
+    const pay = all.filter((b) => !lethal || !b.aliveOnly);
+    if (pay.length) {
+      const mods = this.c.professions.find((x) => x.id === p.profession)?.mods;
+      const paid = await this.sv.bounties.claim(p, pay, mods?.bounty ?? 0, opId);
+      if (paid) this.w.send(c, { t: 'reward', title: `Recompensa cobrada: ${target.name}`, lines: [`+${paid} €$`, ...pay.map((b) => `${b.poster === 'particular' ? 'Particular' : b.poster.toUpperCase()}: ${b.reason}`)] });
+      this.sv.updateMarker(target);
+      if (target.fugitive) {
+        try { const out = await this.w.effects.apply(p, [{ rep: 'pcv', delta: 3 }, { rep: 'calle', delta: 2 }, { xp: 40 }], { opId: `${opId}:rep`, kind: 'capture' }); this.w.handleOutcome(c, out); } catch {}
+        if (!lethal) { this.w.removeEntity(target); this.sv.scheduleFugitive(target.fugitive.id); this.notice(c, 'good', `La PCV se lleva a ${target.name} esposado.`); }
+      }
+    }
+    if (lethal && all.some((b) => b.aliveOnly)) this.notice(c, 'warn', `Ojo: a ${target.name} lo quieren VIVO. Si muere, no cobrarás esa recompensa.`);
+    // Reputación con su facción y sus aliados.
+    if (target.faction && target.npcType !== 'civil') await this.repChange(c, target.faction, lethal ? -12 : -6, `${opId}:fac`);
+  }
+
+  async finish(c: PlayerConn, target: Entity, opId: string) {
+    const p = c.p!;
+    const tp = this.w.playerOf(target);
+    if (tp) {
+      if (tp.status !== 'downed') throw new GameError('No está derribado.');
+      const all = this.claimable(target, p);
+      const pay = all.filter((b) => !b.aliveOnly);
+      if (pay.length) { const paid = await this.sv.bounties.claim(p, pay, 0, opId); if (paid) this.w.send(c, { t: 'reward', title: `Recompensa cobrada: ${tp.name}`, lines: [`+${paid} €$`] }); }
+      await this.sv.addWanted(c, all.length ? (all.some((b) => b.aliveOnly) ? 1.5 : 0) : 3, 'asesinato');
+      await this.sv.die(tp, target, 'rematado', p);
+      return;
+    }
+    if (target.state !== 'downed') throw new GameError('No está derribado.');
+    target.npcLethalDown = true; target.downedUntil = 0;
+    this.npcDeath(target, c);
+    if (target.faction && target.npcType !== 'civil') await this.repChange(c, target.faction, -15, `${opId}:fac`);
+    this.crime(c, target, true, 'kill');
+  }
+
+  private npcDeath(target: Entity, by?: PlayerConn) {
+    for (const o of target.zone.query(target.x, target.y, 20)) if (o.kind === 'player' && o.conn) this.notice(o.conn, 'bad', `${target.name} ha muerto.`);
+    if (target.fugitive) {
+      const p = by?.p;
+      const alive = this.sv.bounties.onNpc(target.fugitive.id).filter((b) => b.aliveOnly);
+      if (alive.length) { void this.sv.bounties.cancel(alive.map((b) => b.id)); if (by && p) void this.sv.addWanted(by, 1, 'matar a un fugitivo que querían vivo'); }
+      this.sv.scheduleFugitive(target.fugitive.id);
+    } else if (target.respawn) this.respawnQueue.push({ at: Date.now() + 120000, zone: target.respawn.zone, template: target.respawn.template });
+    if (target.carriedBy) { const carrier = this.w.entities.get(target.carriedBy); if (carrier?.conn?.p) carrier.conn.p.carrying = null; }
+    this.w.removeEntity(target);
+  }
+
+  /** Consecuencias legales: solo cuenta donde la PCV patrulla. Cobrar recompensas no es delito. */
+  private crime(c: PlayerConn, target: Entity, lethal: boolean, kind: 'attempt' | 'hit' | 'down' | 'kill', legit?: boolean) {
+    const p = c.p!;
+    if ((legit ?? this.claimable(target, p).length > 0) && kind !== 'kill') return;
+    const police = c.e!.zone.def.police || (c.e!.zone.def.kind === 'interior' ? 1 : 0);
+    if (!police) return;
+    const base = kind === 'kill' ? 2.5 : kind === 'down' ? (lethal ? 1.5 : 1) : kind === 'hit' ? 0.6 : 0.3;
+    const cop = target.npcType === 'police' || target.npcType === 'hierro' ? 1.5 : 1;
+    void this.sv.addWanted(c, base * cop, target.npcType === 'police' ? 'agresión a la PCV' : lethal ? 'agresión armada' : 'agresión');
+    // Los agentes cercanos responden.
+    for (const o of c.e!.zone.query(c.e!.x, c.e!.y, 18)) if ((o.npcType === 'police' || o.npcType === 'hierro') && o.state !== 'downed' && !o.aggro && p.wanted >= 1.5) { o.aggro = c.e!.id; o.aggroLethal = o.npcType === 'hierro'; }
+  }
+
+  private async rob(c: PlayerConn, target: Entity, opId: string) {
+    const p = c.p!;
+    const tp = this.w.playerOf(target);
+    const ef = effective(this.c, p);
+    const blind = ((tp ? tp.blindUntil : target.blindUntil ?? 0) > Date.now()) ? 4 : 0;
+    const total = ef.attrs.DEX + (ef.skills.sigilo ?? 0) + ef.steal + blind + this.roll();
+    if (tp) {
+      const dv = 8 + (effective(this.c, tp).skills.percepcion ?? 0) + Math.floor(effective(this.c, tp).attrs.INT / 2) - (tp.sleeping ? 6 : 0);
+      if (total >= dv) {
+        const amount = Math.max(tp.money > 0 ? 1 : 0, Math.floor(tp.money * (0.1 + this.rng() * 0.2)));
+        await this.transfer(tp, p, amount, opId, `Robo de ${p.name}`, `Robo a ${tp.name}`);
+        this.notice(c, 'good', `Robas ${amount} €$ a ${tp.name} sin que se dé cuenta.`);
+        this.notice(target.conn, 'bad', tp.sleeping ? `Al despertar notarás que te faltan ${amount} €$.` : `Notas que te falta dinero: −${amount} €$.`);
+        await this.sv.addWanted(c, 0.5, 'robo');
+      } else {
+        if (tp.sleeping && target.conn) this.sv.wake(target.conn);
+        this.notice(target.conn, 'warn', `${p.name} ha intentado robarte.`);
+        this.notice(c, 'bad', `${tp.name} te pilla con la mano en su bolsillo.`);
+        await this.sv.addWanted(c, 1, 'intento de robo');
+      }
+      return;
+    }
+    const dv = 8 + Math.floor((target.defense ?? 10) / 2);
+    if (total >= dv) {
+      const amount = Math.floor((target.npcType === 'gang' ? 30 : 8) + this.rng() * (target.npcType === 'gang' ? 120 : 60));
+      await this.credit(p, amount, opId, `Carterista: ${target.name}`);
+      this.notice(c, 'good', `Le quitas ${amount} €$ a ${target.name}.`);
+      if (target.faction && target.npcType !== 'civil') await this.repChange(c, target.faction, -2, `${opId}:fac`);
+    } else {
+      this.notice(c, 'bad', `${target.name} te pilla.`);
+      this.provokeNpc(target, c.e!, false);
+      if (target.npcType === 'civil') await this.sv.addWanted(c, c.e!.zone.def.police ? 0.8 : 0, 'intento de robo');
+    }
+  }
+
+  private async transfer(from: PlayerState, to: PlayerState, amount: number, opId: string, rFrom: string, rTo: string) {
+    if (amount <= 0) return;
+    await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) throw new GameError('Operación ya procesada');
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:v`, from.charId, -amount, from.money - amount, rFrom]);
+      await q.query('UPDATE characters SET money = money - $2 WHERE id = $1', [from.charId, amount]);
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:a`, to.charId, amount, to.money + amount, rTo]);
+      await q.query('UPDATE characters SET money = money + $2 WHERE id = $1', [to.charId, amount]);
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, to.charId, 'transfer', JSON.stringify({ amount })]);
+    });
+    from.money -= amount; to.money += amount;
+  }
+  private async credit(p: PlayerState, amount: number, opId: string, reason: string) {
+    await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) throw new GameError('Operación ya procesada');
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:c`, p.charId, amount, p.money + amount, reason]);
+      await q.query('UPDATE characters SET money = money + $2 WHERE id = $1', [p.charId, amount]);
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'credit', JSON.stringify({ amount })]);
+    });
+    p.money += amount;
+  }
+
+  private talk(c: PlayerConn, target: Entity) {
+    if (target.kind === 'npc' && (target.npcType === 'essential' || (!target.npcType && target.dialog))) { this.w.handle(c, { t: 'interact', seq: 0, target: target.id } as any); return; }
+    const p = c.p!;
+    let line = CIVIL_LINES[Math.floor(this.rng() * CIVIL_LINES.length)];
+    const f = target.faction ? this.c.factions.find((x) => x.id === target.faction) : undefined;
+    if (target.npcType === 'police') line = p.wanted >= 1 ? '¡Alto ahí! Tu cara me suena… aunque con una «tasa» se me olvida.' : 'Circule. Y no se meta en líos.';
+    else if (target.npcType === 'hierro') line = 'Unidad Hierro. Apártese.';
+    else if (f && target.npcType === 'gang') { const r = p.rep.get(f.id) ?? 0; line = r >= 30 ? `Eres de los nuestros. ${f.name} cuida de los suyos.` : r <= f.hostileBelow ? `Te tenemos fichado. Lárgate de nuestro territorio.` : `Esto es territorio de ${f.name}. Pórtate bien y no habrá problemas.`; }
+    else if (target.fugitive) line = 'No me has visto. ¿Entendido?';
+    else if (target.npcType === 'ambar') line = 'Rescate Ámbar. Solo atendemos a suscriptores.';
+    for (const o of target.zone.query(target.x, target.y, 20)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'speech', id: target.id, text: line });
+  }
+
+  // ================================================================ cargar cuerpos y peso
+  async carry(c: PlayerConn, target: Entity) {
+    const p = c.p!, e = c.e!;
+    const tp = this.w.playerOf(target);
+    const down = tp ? tp.status === 'downed' : target.state === 'downed';
+    if (!down) throw new GameError('Solo puedes cargar a alguien inconsciente o herido.');
+    if (p.carrying) throw new GameError('Ya llevas a alguien.');
+    if (target.carriedBy) throw new GameError('Otra persona ya lo lleva.');
+    p.carrying = target.id; target.carriedBy = e.id; this.bump(target);
+    const ef = effective(this.c, p);
+    const load = ef.weight + 70;
+    this.notice(c, load > ef.carryMax ? 'warn' : 'info', `Cargas a ${target.name} (+70 kg). Carga total ${Math.round(load)}/${ef.carryMax} kg${load > ef.carryMax * 1.5 ? ': sobrecargado, irás muy lento y torpe' : load > ef.carryMax ? ': cargado, irás más lento' : ''}.`);
+  }
+  drop(c: PlayerConn) {
+    const p = c.p!;
+    if (!p.carrying) throw new GameError('No llevas a nadie.');
+    const t = this.w.entities.get(p.carrying);
+    if (t) { t.carriedBy = undefined; this.bump(t); }
+    p.carrying = null;
+    this.notice(c, 'info', 'Sueltas el cuerpo.');
+  }
+  /** Cada tick: los cuerpos cargados siguen a su portador. */
+  everyTick() {
+    for (const conn of this.w.conns.values()) {
+      const p = conn.p, e = conn.e;
+      if (!p?.carrying || !e) continue;
+      const t = this.w.entities.get(p.carrying);
+      if (!t || (this.w.playerOf(t)?.status ?? (t.state === 'downed' ? 'downed' : 'alive')) !== 'downed') { if (t) { t.carriedBy = undefined; this.bump(t); } p.carrying = null; continue; }
+      if (t.zone !== e.zone) this.w.moveEntityTo(t, e.zone, e.x, e.y);
+      t.x = e.x + 0.3; t.y = e.y + 0.3; t.lastMoveTick = this.w.tick; t.zone.moved(t);
+      const tp = this.w.playerOf(t); if (tp) { tp.x = t.x; tp.y = t.y; tp.zone = t.zone.id; }
+    }
+  }
+  /** Factor de velocidad por carga (inventario + cuerpo). */
+  speedFactor(p: PlayerState) {
+    const ef = effective(this.c, p);
+    const load = ef.weight + (p.carrying ? 70 : 0);
+    return load > ef.carryMax * 1.5 ? 0.5 : load > ef.carryMax ? 0.75 : 1;
+  }
+
+  // ================================================================ red: quickhacks
+  async hack(c: PlayerConn, m: Extract<ClientMsg, { t: 'hack' }>) {
+    const p = c.p!, e = c.e!;
+    const q = this.c.quickhacks.find((x) => x.id === m.hack);
+    const target = this.w.entities.get(m.target);
+    if (!q || !target || target.zone !== e.zone) throw new GameError('Objetivo no válido.');
+    const ef = effective(this.c, p);
+    if (ef.ram <= 0) throw new GameError('Necesitas un cyberdeck (o ser Netrunner con interfaz) para hackear.');
+    if (p.netRank < q.minRank) throw new GameError(`Requiere rango de red ${q.minRank}.`);
+    const cost = this.ramCost(p, q.ram);
+    if (p.ram < cost) throw new GameError('RAM insuficiente: espera a que se recargue.');
+    if (Math.hypot(target.x - e.x, target.y - e.y) > q.range) throw new GameError('Fuera de alcance de tu deck.');
+    if (target.npcType === 'essential' && q.effect !== 'scan') throw new GameError('Esta persona no se puede atacar.');
+    if (['damage', 'knockout', 'kill', 'drain'].includes(q.effect) && dangerAt(e.zone.grid, e.x, e.y) === 'protected') throw new GameError('Zona protegida.');
+    if (q.effect === 'cash' && target.objKind === 'atm' && (this.atmCooldown.get(target.name + target.id) ?? 0) > Date.now()) throw new GameError('Este cajero está vacío: se recarga en unas horas.');
+    if (p.sleeping) this.sv.wake(c);
+    p.ram -= cost;
+    const secs = this.uploadTime(p, q.upload);
+    this.w.cancelActivity(e);
+    const tc = target.conn;
+    if (tc && q.effect !== 'scan') this.notice(tc, 'bad', `¡Intrusión en tu cromo! Alguien está subiendo «${q.name}». Aléjate o rómpele la línea de visión.`);
+    this.fx(e, 'hack', e.id, target.id);
+    e.channel = { startTick: this.w.tick, endTick: this.w.tick + Math.round(secs * 20), label: `Subiendo ${q.name}`, targetId: target.id, apply: () => this.w.enqueue(c, async () => {
+      try { await this.resolveHack(c, target, q.id, m.opId); } catch (err) { if (err instanceof GameError) this.notice(c, 'warn', err.message); else throw err; }
+      this.w.send(c, { t: 'action', text: '' });
+    }) };
+    this.w.send(c, { t: 'action', text: `Subiendo ${q.name} a ${target.name}`, duration: secs });
+  }
+
+  private async resolveHack(c: PlayerConn, target: Entity, hackId: string, opId: string) {
+    const p = c.p!, e = c.e!;
+    const q = this.c.quickhacks.find((x) => x.id === hackId)!;
+    if (!this.w.entities.has(target.id) || target.zone !== e.zone || Math.hypot(target.x - e.x, target.y - e.y) > q.range + 2) throw new GameError('Se ha perdido la conexión con el objetivo.');
+    const score = this.hackScore(p) + this.roll();
+    const dv = q.dv + this.hackDefense(target);
+    const ok = score >= dv;
+    const tp = this.w.playerOf(target);
+    if (!ok) {
+      this.notice(c, 'bad', `✘ ${q.name} rechazado (${score} contra ${dv}).`);
+      if (tc(target)) this.notice(target.conn, 'good', `Tu cromo bloquea «${q.name}».`);
+      if (!tp && target.kind === 'npc') this.provokeNpc(target, e, false);
+    } else {
+      this.notice(c, 'good', `✔ ${q.name} (${score} contra ${dv}).`);
+      const [a, b] = q.amount;
+      switch (q.effect) {
+        case 'scan': {
+          const info = tp ? `${tp.name}: salud ${Math.round(tp.hp)}/${effective(this.c, tp).hpMax}, ${this.c.roles.find((r) => r.id === tp.role)?.name}, ~${Math.round(tp.money / 50) * 50} €$, cromo: ${chromeParts(this.c, tp).join(', ') || 'ninguno'}`
+            : target.kind === 'object' ? `${target.name}: seguridad ${this.hackDefense(target) + 12}` : `${target.name}: salud ${Math.max(0, Math.round(target.npcHp ?? 0))}/${target.npcMax ?? '?'} · ${target.faction ? this.c.factions.find((f) => f.id === target.faction)?.name : 'civil'} · arma ${this.npcWeapon(target).name}`;
+          const bounty = this.claimable(target, p);
+          this.notice(c, 'info', `Escaneo · ${info}${bounty.length ? ` · recompensa ${bounty.reduce((s, x) => s + x.amount, 0)} €$${bounty.some((x) => x.aliveOnly) ? ' (vivo)' : ''}` : ''}`);
+          break;
+        }
+        case 'blind': if (tp) tp.blindUntil = Date.now() + a * 1000; else target.blindUntil = Date.now() + a * 1000; this.notice(target.conn, 'bad', 'Tu óptica se reinicia: no ves nada.'); break;
+        case 'damage': case 'knockout': case 'kill': {
+          const lethal = q.effect !== 'knockout';
+          const legit = this.claimable(target, p).length > 0;
+          const dmg = Math.round(a + this.rng() * (b - a));
+          if (tp) { this.damagePlayer(tp, target, dmg, lethal, { name: 'un hackeo' }); if (tp.status === 'downed') await this.onNeutralized(c, target, tp.downedLethal, opId); }
+          else { this.damageNpc(target, dmg, lethal, c); if (target.state === 'downed') await this.onNeutralized(c, target, lethal, opId); }
+          this.notice(c, 'good', `${target.name} sufre ${dmg} de daño ${lethal ? 'neural' : 'no letal'}.`);
+          this.crime(c, target, lethal, target.state === 'downed' || tp?.status === 'downed' ? 'down' : 'hit', legit);
+          break;
+        }
+        case 'drain': {
+          if (tp) { const amount = Math.floor(tp.money * (a + this.rng() * (b - a))); await this.transfer(tp, p, amount, opId, `Transferencia no autorizada (hackeo de ${p.name})`, `Hackeo: cuenta de ${tp.name}`); this.notice(c, 'good', `+${amount} €$ desde la cuenta de ${tp.name}.`); this.notice(target.conn, 'bad', `Te han vaciado la cuenta: −${amount} €$.`); }
+          else { const amount = Math.floor(20 + this.rng() * 100); await this.credit(p, amount, opId, `Hackeo: cuenta de ${target.name}`); this.notice(c, 'good', `+${amount} €$ desde la cuenta de ${target.name}.`); }
+          break;
+        }
+        case 'cash': {
+          const amount = Math.round(a + this.rng() * (b - a));
+          await this.credit(p, amount, opId, target.objKind === 'atm' ? `Hackeo de cajero (${target.name})` : `Hackeo de caja (${target.name})`);
+          if (target.objKind === 'atm') this.atmCooldown.set(target.name + target.id, Date.now() + 3 * this.c.manifest.cityHourMs);
+          const owner = target.shop ? this.c.shops.find((s) => s.id === target.shop)?.owner : undefined;
+          if (owner && this.c.factions.some((f) => f.id === owner)) await this.repChange(c, owner, -4, `${opId}:fac`);
+          this.notice(c, 'good', `+${amount} €$ desviados.`);
+          break;
+        }
+      }
+      // Experiencia de red y rango.
+      p.netXp += 1 + Math.floor(q.ram / 2);
+      while (p.netRank + 1 < NET_RANKS.length && p.netXp >= NET_RANKS[p.netRank + 1]) { p.netRank++; this.notice(c, 'good', `¡Rango de red ${p.netRank}! Hackeos más rápidos, baratos y fiables.`); }
+    }
+    // Rastreo de la Red Centinela.
+    if (this.rng() < q.trace * Math.max(0.2, 1 - p.netRank * 0.05)) { this.notice(c, 'bad', 'Red Centinela ha rastreado tu firma.'); await this.sv.addWanted(c, 1, 'intrusión en la red'); }
+    this.w.send(c, { t: 'sheet', sheet: (this.sv as any).sheetOf(p) });
+    function tc(t: Entity) { return !!t.conn; }
+  }
+
+  // ================================================================ facciones
+  /** Cambia la reputación con una facción y, a la mitad, con sus aliados y enemigos (según sus relaciones). */
+  async repChange(c: PlayerConn, faction: string, delta: number, opId: string) {
+    const p = c.p!;
+    const f = this.c.factions.find((x) => x.id === faction);
+    if (!f || !delta) return;
+    const effects: any[] = [{ rep: faction, delta }];
+    for (const [other, rel] of Object.entries(f.relations)) {
+      if (Math.abs(rel) < 30) continue;
+      const d = Math.round(delta * (rel / 100) * 0.5);
+      if (d) effects.push({ rep: other, delta: d });
+    }
+    try { const out = await this.w.effects.apply(p, effects, { opId, kind: 'faction' }); this.w.handleOutcome(c, out); } catch {}
+  }
+
+  factionsView(p: PlayerState): FactionsView {
+    const name = (id: string) => this.c.factions.find((f) => f.id === id)?.name ?? id;
+    const zname = (id: string) => this.w.zones.get(id)?.def.name ?? id;
+    return { factions: this.c.factions.filter((f) => f.id !== 'calle' && f.id !== 'independiente').map((f) => {
+      const rep = p.rep.get(f.id) ?? 0;
+      const standing = rep >= 50 ? 'Aliado' : rep >= 20 ? 'Amistoso' : rep > f.hostileBelow ? 'Neutral' : rep > -60 ? 'Hostil' : 'Enemigo jurado';
+      return { id: f.id, name: f.name, kind: f.kind, color: f.color, archetype: f.archetype, desc: f.desc, territory: f.territory.map(zname), rep, standing,
+        allies: Object.entries(f.relations).filter(([, v]) => v >= 30).map(([k]) => name(k)), enemies: Object.entries(f.relations).filter(([, v]) => v <= -30).map(([k]) => name(k)) };
+    }) };
+  }
+
+  // ================================================================ Rescate Ámbar
+  ambarView(p: PlayerState): AmbarView {
+    const zname = (id: string) => this.w.zones.get(id)?.def.name ?? id;
+    return {
+      active: p.ambar && p.ambar.expiresAt > Date.now() ? { plan: p.ambar.plan, name: this.c.ambar.find((x) => x.id === p.ambar!.plan)?.name ?? p.ambar.plan, usesLeft: p.ambar.usesLeft, expiresInMin: Math.round((p.ambar.expiresAt - Date.now()) / 60000) } : null,
+      plans: this.c.ambar.map((x) => ({ ...x, zones: x.zones.map(zname) })), money: p.money,
+    };
+  }
+  async loadAmbar(p: PlayerState) {
+    const r = await this.w.db.query<any>('SELECT id, plan, uses_left, expires_at FROM ambar_subscriptions WHERE character_id=$1 AND expires_at > now() ORDER BY expires_at DESC LIMIT 1', [p.charId]);
+    if (r.rows[0]) p.ambar = { id: r.rows[0].id, plan: r.rows[0].plan, usesLeft: r.rows[0].uses_left, expiresAt: new Date(r.rows[0].expires_at).getTime() };
+  }
+  async buyAmbar(c: PlayerConn, planId: string, opId: string) {
+    const p = c.p!;
+    const plan = this.c.ambar.find((x) => x.id === planId);
+    if (!plan) throw new GameError('Plan desconocido.');
+    if (p.ambar && p.ambar.expiresAt > Date.now() && p.ambar.plan === planId && p.ambar.usesLeft > 0) throw new GameError('Ya tienes ese plan activo.');
+    if (p.money < plan.price) throw new GameError(`${plan.name} cuesta ${plan.price} €$.`);
+    const id = randomUUID();
+    const expires = new Date(Date.now() + plan.days * 24 * this.c.manifest.cityHourMs);
+    await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) throw new GameError('Operación ya procesada');
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:ambar`, p.charId, -plan.price, p.money - plan.price, `Suscripción ${plan.name}`]);
+      await q.query('UPDATE characters SET money = money - $2 WHERE id = $1', [p.charId, plan.price]);
+      await q.query('UPDATE ambar_subscriptions SET expires_at = now() WHERE character_id=$1 AND expires_at > now()', [p.charId]);
+      await q.query('INSERT INTO ambar_subscriptions (id, character_id, plan, uses_left, expires_at) VALUES ($1,$2,$3,$4,$5)', [id, p.charId, plan.id, plan.uses, expires]);
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'ambar', JSON.stringify({ plan: plan.id })]);
+    });
+    p.money -= plan.price;
+    p.ambar = { id, plan: plan.id, usesLeft: plan.uses, expiresAt: expires.getTime() };
+    this.notice(c, 'good', `Suscripción ${plan.name} activa durante ${plan.days} días de juego.`);
+  }
+  private districtOf(z: Zone): string {
+    if (z.def.kind === 'exterior') return z.id;
+    return z.def.doors[0]?.to.zone ?? z.id;
+  }
+  /** Al caer herido de muerte: si hay suscripción y cobertura, Ámbar acude. */
+  onPlayerDowned(c: PlayerConn | undefined, p: PlayerState, e: Entity) {
+    if (!p.downedLethal) return;
+    const sub = p.ambar;
+    if (!sub || sub.expiresAt < Date.now() || sub.usesLeft <= 0) { this.notice(c, 'warn', 'No tienes suscripción a Rescate Ámbar: nadie vendrá a por ti salvo un jugador con un estimulante.'); return; }
+    const plan = this.c.ambar.find((x) => x.id === sub.plan)!;
+    if (!plan.zones.includes(this.districtOf(e.zone))) { this.notice(c, 'warn', `${plan.name} no cubre ${e.zone.def.name}.`); return; }
+    const at = Date.now() + plan.arrival * 1000;
+    p.downedUntil = Math.max(p.downedUntil, at + 4000);
+    this.rescues.set(p.charId, { at, team: [], plan: plan.id });
+    this.notice(c, 'good', `Rescate Ámbar en camino: llegada estimada en ${plan.arrival} s.`);
+  }
+  private async rescueTick() {
+    const now = Date.now();
+    for (const [charId, r] of this.rescues) {
+      const conn = this.sv.connOf(charId);
+      const p = conn?.p, e = conn?.e;
+      if (!p || !e || p.status !== 'downed') { if (now > r.at + 8000) { for (const id of r.team) { const t = this.w.entities.get(id); if (t) this.w.removeEntity(t); } this.rescues.delete(charId); } continue; }
+      if (!r.team.length && now >= r.at - 3000) {
+        for (let i = 0; i < 2; i++) {
+          const pos = nearestWalkable(e.zone.grid, e.x + (i ? 1.5 : -1.5), e.y + 1, 3) ?? { x: e.x, y: e.y };
+          const t = this.spawnFactionNpc(e.zone, 'ambar', 'ambar', undefined, pos);
+          if (t) { t.npc = undefined; t.respawn = undefined; t.label = 'Rescate en curso'; r.team.push(t.id); }
+        }
+      }
+      if (now >= r.at) {
+        const plan = this.c.ambar.find((x) => x.id === r.plan)!;
+        p.status = 'alive'; p.hp = Math.round(effective(this.c, p).hpMax * plan.revive); p.downedUntil = 0;
+        e.label = ''; e.state = 'alive'; this.bump(e);
+        if (p.ambar) { p.ambar.usesLeft--; await this.w.db.query('UPDATE ambar_subscriptions SET uses_left = uses_left - 1 WHERE id=$1', [p.ambar.id]).catch(() => {}); }
+        this.notice(conn, 'good', `Rescate Ámbar: te estabilizan y te devuelven al ${Math.round(plan.revive * 100)} % de salud. Rescates restantes: ${p.ambar?.usesLeft ?? 0}.`);
+        this.rescues.delete(charId);
+        const team = [...r.team];
+        setTimeout(() => { for (const id of team) { const t = this.w.entities.get(id); if (t) this.w.removeEntity(t); } }, 5000);
+      }
+    }
+  }
+
+  // ================================================================ policía: detención y Unidad Hierro
+  async arrest(c: PlayerConn) {
+    const p = c.p!, e = c.e!;
+    const fine = Math.min(p.money, Math.max(50, Math.floor(p.money * 0.25)));
+    if (fine > 0) {
+      await this.w.db.tx(async (q) => {
+        await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`arrest-${randomUUID()}`, p.charId, -fine, p.money - fine, 'Multa de la PCV por detención']);
+        await q.query('UPDATE characters SET money = money - $2 WHERE id = $1', [p.charId, fine]);
+      });
+      p.money -= fine;
+    }
+    p.wanted = 0; p.hp = 15; p.status = 'alive'; p.downedUntil = 0;
+    const pcv = this.sv.bounties.onPlayer(p.charId).filter((b) => b.poster === 'pcv');
+    if (pcv.length) await this.sv.bounties.cancel(pcv.map((b) => b.id));
+    for (const o of e.zone.entities) if (o.aggro === e.id) o.aggro = undefined;
+    e.label = ''; e.state = 'alive'; this.bump(e);
+    this.sv.updateMarker(e);
+    this.w.send(c, { t: 'reward', title: 'Detenido por la PCV', lines: [`Multa: −${fine} €$`, 'Te sueltan en la comisaría de Cénit con el expediente limpio… por ahora.'] });
+    await this.w.teleport(c, 'comisaria-int', [11, 5]);
+  }
+
+  private hierroTick() {
+    for (const conn of this.w.conns.values()) {
+      const p = conn.p, e = conn.e;
+      if (!p || !e || p.status !== 'alive' || p.wanted < 4 || e.zone.def.kind !== 'exterior' || e.zone.id === 'yermo') continue;
+      const active = [...e.zone.entities].filter((o) => o.npcType === 'hierro' && o.hunting === p.charId);
+      if (active.length) continue;
+      for (let i = 0; i < 2; i++) {
+        const ang = this.rng() * Math.PI * 2;
+        const pos = nearestWalkable(e.zone.grid, e.x + Math.cos(ang) * 12, e.y + Math.sin(ang) * 12, 5);
+        const t = pos && this.spawnFactionNpc(e.zone, 'unidad-hierro', 'hierro', undefined, pos);
+        if (t) { t.aggro = e.id; t.aggroLethal = true; t.hunting = p.charId; t.respawn = undefined; t.expiresAt = Date.now() + 180000; t.label = 'Neutralizando objetivo'; }
+      }
+      this.notice(conn, 'bad', '¡La Unidad Hierro ha llegado a por ti! Huye o sobornad… no, con estos no se negocia.');
+    }
+    for (const z of this.w.zones.values()) for (const o of [...z.entities]) if (o.npcType === 'hierro' && o.expiresAt && (o.expiresAt < Date.now() || !this.sv.connOf(o.hunting ?? '') || (this.sv.connOf(o.hunting!)?.p?.wanted ?? 0) < 2)) this.w.removeEntity(o);
+  }
+
+  // ================================================================ IA de combate de PNJ
+  /** Devuelve true si el PNJ está ocupado combatiendo, huyendo o fuera de combate. */
+  npcThink(e: Entity): boolean {
+    if (e.state === 'downed' || e.carriedBy) return true;
+    const now = Date.now();
+    if (e.fleeUntil && e.fleeUntil > now) {
+      if (!e.path.length) { const wp = e.zone.def.waypoints[Math.floor(this.rng() * e.zone.def.waypoints.length)]; if (wp) { const r = findPath(e.zone.grid, e.x, e.y, wp[0] + 0.5, wp[1] + 0.5, 4000); if (r.ok) { e.path = r.path; e.moving = true; } } }
+      if (e.label !== 'Huyendo') { e.label = 'Huyendo'; this.bump(e); }
+      return true;
+    }
+    if (e.aggro !== undefined) {
+      const t = this.w.entities.get(e.aggro);
+      const tp = t ? this.w.playerOf(t) : undefined;
+      if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || (e.npcType === 'police' && tp.wanted < 1)) { e.aggro = undefined; if (e.label !== 'Patrullando') { e.label = e.npcType === 'police' ? 'Patrullando' : ''; this.bump(e); } return false; }
+      const wp = this.npcWeapon(e);
+      const dist = Math.hypot(t.x - e.x, t.y - e.y);
+      const inRange = dist <= wp.w.range - 0.2 && (wp.w.kind === 'melee' || lineWalkable(e.zone.grid, e.x, e.y, t.x, t.y));
+      if (e.label !== 'En combate') { e.label = 'En combate'; this.bump(e); }
+      if (!inRange) {
+        if (!e.path.length || (e.nextPathAt ?? 0) < now) {
+          e.nextPathAt = now + 1500;
+          const r = findPath(e.zone.grid, e.x, e.y, t.x, t.y, 4000);
+          if (r.ok) { e.path = r.path.slice(0, -1).length ? r.path.slice(0, -1) : r.path; e.moving = true; }
+        }
+        return true;
+      }
+      e.path = []; e.moving = false;
+      if ((e.nextAttackAt ?? 0) <= now) {
+        e.nextAttackAt = now + wp.w.cooldown * 1000 * 1.3;
+        const a = this.npcAttackScore(e) + this.roll(), d = this.defenseScore(tp) + this.roll();
+        this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id);
+        if (a >= d) {
+          const dmg = Math.max(1, this.rollDamage(wp.w, a - d) - this.armorOf(tp));
+          const police = e.npcType === 'police';
+          this.damagePlayer(tp, t, dmg, police ? false : e.aggroLethal !== false, { name: e.name, police });
+          if (tp.status === 'alive') this.counter(t, e);
+        } else this.counter(t, e);
+      }
+      return true;
+    }
+    // Vigilancia: policía busca a los buscados; bandas, a quien tienen fichado en su territorio.
+    if (e.npcType === 'police' || e.npcType === 'gang') {
+      const f = this.c.factions.find((x) => x.id === e.faction);
+      for (const o of e.zone.query(e.x, e.y, e.npcType === 'police' ? 12 : 7)) {
+        const op = o.kind === 'player' ? this.w.playerOf(o) : undefined;
+        if (!op || op.status !== 'alive' || dangerAt(o.zone.grid, o.x, o.y) === 'protected') continue;
+        if (e.npcType === 'police' && op.wanted >= 2) { e.aggro = o.id; e.aggroLethal = false; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
+        if (e.npcType === 'gang' && f && f.territory.includes(e.zone.id) && (op.rep.get(f.id) ?? 0) <= f.hostileBelow) { e.aggro = o.id; e.aggroLethal = true; this.notice(o.conn, 'bad', `${f.name} te reconocen en su territorio: ¡te atacan!`); return true; }
+      }
+    }
+    return false;
+  }
+
+  /** Cada segundo: PNJ derribados, reapariciones, rescates y Unidad Hierro. */
+  async everySecond() {
+    const now = Date.now();
+    for (const z of this.w.zones.values()) for (const e of [...z.entities]) {
+      if (e.kind !== 'npc' || e.state !== 'downed' || !e.downedUntil || e.carriedBy) continue;
+      if (now < e.downedUntil) continue;
+      if (e.npcLethalDown) this.npcDeath(e);
+      else { e.state = 'alive'; e.npcHp = Math.round((e.npcMax ?? 40) * 0.5); e.label = 'Aturdido'; e.fleeUntil = now + 10000; this.bump(e); }
+    }
+    for (const r of [...this.respawnQueue]) {
+      if (now < r.at) continue;
+      this.respawnQueue.splice(this.respawnQueue.indexOf(r), 1);
+      const z = this.w.zones.get(r.zone);
+      const t = r.template as any;
+      if (z) { if (t.type === 'civil') this.w.spawnAmbient(z); else this.spawnFactionNpc(z, t.faction, t.type, t.area); }
+    }
+    await this.rescueTick();
+    this.hierroTick();
+  }
+}
+
+export function opposed(a: number, b: number): number {
+  let ok = 0;
+  for (let x = 1; x <= 10; x++) for (let y = 1; y <= 10; y++) if (a + x >= b + y) ok++;
+  return ok / 100;
+}
+void isWalkable;
+export type { ItemDef };

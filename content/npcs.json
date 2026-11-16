@@ -149,6 +149,32 @@
   ]
  },
  {
+  "id": "yuki",
+  "name": "Doc Yuki",
+  "title": "Matasanos de Neón Rojo",
+  "dialog": "matasanos-yuki",
+  "appearance": {
+   "skin": "#f0d8c0",
+   "hair": "#ff4fa0",
+   "jacket": "#2a1a40",
+   "accent": "#b46cff"
+  },
+  "generated": true,
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "yuki-int",
+    "at": [
+     4,
+     4
+    ],
+    "state": "work",
+    "label": "Atiende la consulta"
+   }
+  ]
+ },
+ {
   "id": "brann",
   "name": "Brann «El Carnicero»",
   "title": "Matasanos sin escrúpulos",

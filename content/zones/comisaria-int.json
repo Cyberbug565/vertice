@@ -76,6 +76,15 @@
    "kind": "bountyboard"
   },
   {
+   "id": "ventanilla-tasas",
+   "name": "Ventanilla de «tasas de agilización»",
+   "at": [
+    2,
+    4
+   ],
+   "kind": "bribe"
+  },
+  {
    "id": "obj-wp-comisaria",
    "name": "Puesto: Mostrador de denuncias",
    "at": [

@@ -840,6 +840,38 @@
     ]
    },
    "danger": "public"
+  },
+  {
+   "id": "hacia-colinas",
+   "name": "Avenida hacia Colinas Doradas",
+   "at": [
+    47,
+    0
+   ],
+   "to": {
+    "zone": "colinas",
+    "at": [
+     47,
+     62
+    ]
+   },
+   "danger": "public"
+  },
+  {
+   "id": "hacia-forja",
+   "name": "Avenida hacia Forja",
+   "at": [
+    95,
+    31
+   ],
+   "to": {
+    "zone": "forja",
+    "at": [
+     1,
+     31
+    ]
+   },
+   "danger": "public"
   }
  ],
  "objects": [
@@ -907,6 +939,33 @@
     52
    ],
    "kind": "trash"
+  },
+  {
+   "id": "cenit-cajero-1",
+   "name": "Cajero Okami Bank",
+   "at": [
+    45,
+    28
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "cenit-cajero-2",
+   "name": "Cajero Okami Bank",
+   "at": [
+    74,
+    20
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "cenit-cajero-3",
+   "name": "Cajero Okami Bank",
+   "at": [
+    19,
+    47
+   ],
+   "kind": "atm"
   }
  ],
  "dangerAreas": [
@@ -1081,5 +1140,7 @@
  "safePoint": [
   84,
   22
- ]
+ ],
+ "police": 4,
+ "gangs": []
 }

@@ -3,72 +3,487 @@
   "id": "calle",
   "name": "Reputación callejera",
   "kind": "neighborhood",
-  "desc": "Reconocimiento general en la calle"
+  "desc": "Reconocimiento general en la calle",
+  "color": "#e8e8f6",
+  "archetype": "",
+  "territory": [],
+  "relations": {},
+  "hp": 45,
+  "defense": 12,
+  "chrome": []
  },
  {
   "id": "red-bisagra",
   "name": "Red de Nadia «Bisagra»",
   "kind": "contact",
-  "desc": "Contactos y encargos de la fixer de El Relé"
+  "desc": "Contactos y encargos de la fixer de El Relé",
+  "color": "#ff3fa4",
+  "archetype": "Red de fixer",
+  "territory": [
+   "ferro"
+  ],
+  "relations": {
+   "asociacion-lumen": 20,
+   "hojas-rojas": -10
+  },
+  "hp": 45,
+  "defense": 12,
+  "chrome": []
  },
  {
   "id": "asociacion-lumen",
   "name": "Asociación del Mercado Lumen",
   "kind": "neighborhood",
-  "desc": "Comerciantes y vecinos del mercado"
+  "desc": "Comerciantes y vecinos del mercado",
+  "color": "#ffd23f",
+  "archetype": "Vecinos organizados",
+  "territory": [
+   "ferro"
+  ],
+  "relations": {
+   "red-bisagra": 20,
+   "hermandad-sol": 20
+  },
+  "hp": 35,
+  "defense": 9,
+  "chrome": []
  },
  {
   "id": "chatarreros",
   "name": "Los Chatarreros",
   "kind": "gang",
-  "desc": "Banda de desguaces y piezas robadas del sur de Ferro"
+  "desc": "Banda de desguaces y piezas robadas del sur de Ferro",
+  "color": "#ff8a3d",
+  "archetype": "Banda de chatarra y contrabando de piezas",
+  "territory": [
+   "ferro"
+  ],
+  "relations": {
+   "hojas-rojas": -20,
+   "engranajes": 30,
+   "red-bisagra": 10,
+   "nomadas-polvo": 30
+  },
+  "hp": 50,
+  "defense": 12,
+  "chrome": [
+   "brazo_izq"
+  ],
+  "weapon": "bate"
  },
  {
   "id": "hojas-rojas",
   "name": "Hojas Rojas",
   "kind": "gang",
-  "desc": "Banda de Kanal que controla clubs y apuestas"
+  "desc": "Banda de Kanal: clubs, apuestas y el Pachinko",
+  "color": "#ff5a5a",
+  "archetype": "Banda de clubs y apuestas",
+  "territory": [
+   "ferro"
+  ],
+  "relations": {
+   "chatarreros": -20,
+   "kitsune": -20,
+   "furias": -30,
+   "red-bisagra": -10
+  },
+  "hp": 50,
+  "defense": 12,
+  "chrome": [
+   "ojos"
+  ],
+  "weapon": "pistola-ligera"
+ },
+ {
+  "id": "engranajes",
+  "name": "Los Engranajes",
+  "kind": "gang",
+  "desc": "Fanáticos del cromo que viven en las fábricas de Forja. Más metal que carne; desprecian a los «carnosos».",
+  "color": "#ff3040",
+  "archetype": "Banda obsesionada con el ciberware extremo",
+  "territory": [
+   "forja"
+  ],
+  "relations": {
+   "kitsune": -40,
+   "hermandad-sol": -30,
+   "pcv": -80,
+   "saqueadores": 20,
+   "voces-vacio": -20,
+   "halcon": -50,
+   "chatarreros": 30,
+   "unidad-hierro": -90
+  },
+  "hp": 70,
+  "defense": 14,
+  "chrome": [
+   "ojos",
+   "cabeza",
+   "brazo_izq",
+   "brazo_der",
+   "torso"
+  ],
+  "weapon": "escopeta-corta"
+ },
+ {
+  "id": "kitsune",
+  "name": "Clan Kitsune",
+  "kind": "gang",
+  "desc": "Clan de tradición japonesa que controla los clubs, los salones de juego y la protección de Neón Rojo. Katanas térmicas y motos de neón.",
+  "color": "#b46cff",
+  "archetype": "Clan de honor, apuestas y protección",
+  "territory": [
+   "neon-rojo"
+  ],
+  "relations": {
+   "furias": -70,
+   "engranajes": -40,
+   "hermandad-sol": -30,
+   "okami": 20,
+   "pcv": -40,
+   "hojas-rojas": -20
+  },
+  "hp": 55,
+  "defense": 14,
+  "chrome": [
+   "ojos",
+   "brazo_der"
+  ],
+  "weapon": "katana-termica"
+ },
+ {
+  "id": "hermandad-sol",
+  "name": "Hermandad del Sol",
+  "kind": "gang",
+  "desc": "Familia de barrio con código propio en el Arrabal: protegen a los suyos, odian a quien trae drogas a su calle.",
+  "color": "#ffb347",
+  "archetype": "Familia de barrio con código de honor",
+  "territory": [
+   "arrabal"
+  ],
+  "relations": {
+   "kitsune": -30,
+   "engranajes": -30,
+   "voces-vacio": -20,
+   "pcv": -50,
+   "calle": 30,
+   "asociacion-lumen": 20
+  },
+  "hp": 55,
+  "defense": 13,
+  "chrome": [
+   "brazo_izq"
+  ],
+  "weapon": "revolver-pesado"
+ },
+ {
+  "id": "furias",
+  "name": "Las Furias",
+  "kind": "gang",
+  "desc": "Protectoras de las trabajadoras del distrito rojo. Si alguien hace daño a una de las suyas, lo pagan.",
+  "color": "#ff4fa0",
+  "archetype": "Protectoras del distrito rojo",
+  "territory": [
+   "neon-rojo",
+   "ferro"
+  ],
+  "relations": {
+   "kitsune": -70,
+   "pcv": -20,
+   "calle": 30,
+   "hojas-rojas": -30
+  },
+  "hp": 50,
+  "defense": 13,
+  "chrome": [
+   "ojos"
+  ],
+  "weapon": "bate"
+ },
+ {
+  "id": "voces-vacio",
+  "name": "Voces del Vacío",
+  "kind": "gang",
+  "desc": "Netrunners místicos del Arrabal que buscan algo al otro lado de la Red Vieja. Hostiles a Centinela.",
+  "color": "#43f3ff",
+  "archetype": "Netrunners místicos",
+  "territory": [
+   "arrabal"
+  ],
+  "relations": {
+   "centinela": -90,
+   "teselia": -60,
+   "hermandad-sol": -20,
+   "engranajes": -20
+  },
+  "hp": 40,
+  "defense": 11,
+  "chrome": [
+   "cabeza",
+   "ojos"
+  ],
+  "weapon": "pistola-inteligente"
+ },
+ {
+  "id": "nomadas-polvo",
+  "name": "Nómadas del Polvo",
+  "kind": "gang",
+  "desc": "Clanes nómadas del Yermo: familia, convoyes y talleres. Leales a quien les ayuda.",
+  "color": "#d9a066",
+  "archetype": "Clan nómada",
+  "territory": [
+   "yermo"
+  ],
+  "relations": {
+   "saqueadores": -90,
+   "aurora": 20,
+   "halcon": -20,
+   "chatarreros": 30
+  },
+  "hp": 60,
+  "defense": 13,
+  "chrome": [
+   "brazo_der"
+  ],
+  "weapon": "rifle-asalto"
+ },
+ {
+  "id": "saqueadores",
+  "name": "Saqueadores del Yermo",
+  "kind": "gang",
+  "desc": "Bandas de asalto de caminos que atacan convoyes en el Yermo.",
+  "color": "#8a6a3a",
+  "archetype": "Asaltantes de caminos",
+  "territory": [
+   "yermo"
+  ],
+  "relations": {
+   "nomadas-polvo": -90,
+   "engranajes": 20,
+   "pcv": -60
+  },
+  "hp": 55,
+  "defense": 12,
+  "chrome": [
+   "pierna_izq",
+   "brazo_izq"
+  ],
+  "weapon": "escopeta-corta"
  },
  {
   "id": "pcv",
   "name": "Policía de Ciudad Vértice",
   "kind": "authority",
-  "desc": "Fuerza policial municipal"
+  "desc": "Policía municipal infradotada: responde según el distrito y el nivel de búsqueda, y acepta «tasas de agilización» para olvidar expedientes.",
+  "color": "#60a5fa",
+  "archetype": "Policía corrupta e infradotada",
+  "territory": [
+   "cenit",
+   "colinas",
+   "ferro"
+  ],
+  "relations": {
+   "unidad-hierro": 80,
+   "ambar": 30,
+   "halcon": 40,
+   "centinela": 40,
+   "engranajes": -80,
+   "saqueadores": -60,
+   "hermandad-sol": -50,
+   "kitsune": -40
+  },
+  "hp": 60,
+  "defense": 14,
+  "chrome": [
+   "ojos"
+  ],
+  "weapon": "pistola-ligera"
+ },
+ {
+  "id": "unidad-hierro",
+  "name": "Unidad Hierro",
+  "kind": "authority",
+  "desc": "Unidad de élite de la PCV para amenazas extremas y portadores de cromo descontrolado. Llegan, neutralizan y se van.",
+  "color": "#1e3a8a",
+  "archetype": "Unidad táctica de élite",
+  "territory": [
+   "cenit"
+  ],
+  "relations": {
+   "pcv": 80,
+   "engranajes": -90
+  },
+  "hp": 120,
+  "defense": 18,
+  "chrome": [
+   "ojos",
+   "cabeza",
+   "brazo_izq",
+   "brazo_der",
+   "torso",
+   "pierna_izq",
+   "pierna_der"
+  ],
+  "weapon": "rifle-asalto"
  },
  {
   "id": "ambar",
   "name": "Rescate Ámbar",
   "kind": "service",
-  "desc": "Servicio privado de extracción médica"
+  "desc": "Servicio privado de extracción médica. Solo atiende a suscriptores: llegan armados, te sacan y cobran.",
+  "color": "#ffbf00",
+  "archetype": "Servicio médico de élite por suscripción",
+  "territory": [
+   "colinas",
+   "cenit"
+  ],
+  "relations": {
+   "okami": 40,
+   "pcv": 30,
+   "kaiten": 30
+  },
+  "hp": 90,
+  "defense": 16,
+  "chrome": [
+   "ojos",
+   "torso"
+  ],
+  "weapon": "rifle-asalto"
+ },
+ {
+  "id": "centinela",
+  "name": "Red Centinela",
+  "kind": "authority",
+  "desc": "Vigilancia de la red: persigue a los netrunners que cruzan líneas rojas.",
+  "color": "#22d3ee",
+  "archetype": "Policía de la red",
+  "territory": [
+   "cenit"
+  ],
+  "relations": {
+   "voces-vacio": -90,
+   "teselia": 50,
+   "pcv": 40
+  },
+  "hp": 50,
+  "defense": 13,
+  "chrome": [
+   "cabeza"
+  ]
  },
  {
   "id": "halcon",
   "name": "Halcón Dynamics",
   "kind": "corp",
-  "desc": "Seguridad, armas y ciberware militar"
+  "desc": "Seguridad, armas y ciberware militar",
+  "color": "#43f3ff",
+  "archetype": "Corporación militar",
+  "territory": [
+   "cenit"
+  ],
+  "relations": {
+   "okami": -30,
+   "teselia": 10,
+   "pcv": 40,
+   "engranajes": -50,
+   "nomadas-polvo": -20
+  },
+  "hp": 70,
+  "defense": 15,
+  "chrome": [
+   "ojos"
+  ],
+  "weapon": "rifle-asalto"
  },
  {
   "id": "okami",
   "name": "Grupo Okami",
   "kind": "corp",
-  "desc": "Alimentación sintética, medicina y biotecnología"
+  "desc": "Alimentación sintética, medicina y biotecnología",
+  "color": "#ff3fa4",
+  "archetype": "Corporación biotecnológica",
+  "territory": [
+   "cenit",
+   "colinas"
+  ],
+  "relations": {
+   "halcon": -30,
+   "kaiten": -40,
+   "teselia": 20,
+   "ambar": 40,
+   "kitsune": 20
+  },
+  "hp": 45,
+  "defense": 12,
+  "chrome": []
  },
  {
   "id": "teselia",
   "name": "Teselia Neural",
   "kind": "corp",
-  "desc": "Ciberware civil, redes y licencias neurales"
+  "desc": "Ciberware civil, redes y licencias neurales",
+  "color": "#b46cff",
+  "archetype": "Corporación de redes y cromo civil",
+  "territory": [
+   "cenit"
+  ],
+  "relations": {
+   "voces-vacio": -60,
+   "centinela": 50,
+   "okami": 20,
+   "halcon": 10
+  },
+  "hp": 45,
+  "defense": 12,
+  "chrome": []
  },
  {
   "id": "aurora",
   "name": "Aurora Logística",
   "kind": "corp",
-  "desc": "Bebidas, consumo, reparto y logística"
+  "desc": "Bebidas, consumo, reparto y logística",
+  "color": "#7dff7a",
+  "archetype": "Corporación logística",
+  "territory": [
+   "cenit",
+   "forja"
+  ],
+  "relations": {
+   "nomadas-polvo": 20
+  },
+  "hp": 45,
+  "defense": 12,
+  "chrome": []
+ },
+ {
+  "id": "kaiten",
+  "name": "Kaiten Inmobiliaria",
+  "kind": "corp",
+  "desc": "Arcologías, urbanizaciones privadas y seguridad residencial en Colinas",
+  "color": "#ff8a3d",
+  "archetype": "Corporación inmobiliaria",
+  "territory": [
+   "colinas"
+  ],
+  "relations": {
+   "okami": -40,
+   "ambar": 30
+  },
+  "hp": 45,
+  "defense": 12,
+  "chrome": []
  },
  {
   "id": "independiente",
   "name": "Comercio independiente",
   "kind": "neighborhood",
-  "desc": "Locales sin corporación detrás"
+  "desc": "Locales sin corporación detrás",
+  "color": "#9a9ac0",
+  "archetype": "",
+  "territory": [],
+  "relations": {},
+  "hp": 40,
+  "defense": 10,
+  "chrome": []
  }
 ]
