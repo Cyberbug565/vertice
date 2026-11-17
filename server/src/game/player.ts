@@ -109,8 +109,22 @@ export function wornAppearance(c: Content, p: PlayerState): Appearance {
     else if (slot === 'pies') { a.shoes = w.color; a.shoeStyle = SHOE_STYLE[w.style] ?? w.style; }
     else if (slot === 'cabeza') { a.headwear = w.style; a.headColor = w.color; }
     else if (slot === 'cara') { a.eyewear = w.style; a.accessory = 'ninguno'; }
+    else if (slot === 'manos') { a.gloves = w.style; a.gloveColor = w.color; } // v0.16 · guantes
     if (it.rarity === 'legendario' || it.rarity === 'epico') a.rarityGlow = it.rarity === 'legendario' ? '#ffd23f' : '#b46cff';
   }
+  // v0.16 · Gama del cromo visible de cada parte (según el grado y la rareza del implante): chatarra barata hasta lujo.
+  const tiers: Record<string, string> = {};
+  const rank = (t: string) => ['chatarra', 'estandar', 'militar', 'lujo'].indexOf(t);
+  for (const ci of p.cyber) {
+    if (ci.location !== 'installed') continue;
+    const d = c.cyberware.find((x) => x.id === ci.def);
+    if (!d || d.visible === 'ninguna') continue;
+    const r = d.rarity ?? '';
+    const t = r === 'mitico' || r === 'legendario' || d.grade >= 5 ? 'lujo' : d.grade >= 4 || r === 'epico' ? 'militar' : d.grade >= 2 ? 'estandar' : 'chatarra';
+    const parts = d.visible === 'brazo' || d.visible === 'pierna' ? [ci.part ?? `${d.visible}_der`] : d.visible === 'piernas' ? ['pierna_izq', 'pierna_der'] : [d.visible];
+    for (const pt of parts) if (!tiers[pt] || rank(t) > rank(tiers[pt])) tiers[pt] = t;
+  }
+  if (Object.keys(tiers).length) a.chromeTier = tiers;
   return a;
 }
 

@@ -2813,13 +2813,13 @@
  },
  {
   "id": "exo-tormenta",
-  "name": "Exoarmadura «Tormenta»",
-  "desc": "Placas de aleación pizarra con grietas de plasma azul que laten como un rayo atrapado. Pesada, pero para una bala como una pared.",
-  "weight": 3.5,
-  "price": 18500,
+  "name": "Superarmadura «Tormenta»",
+  "desc": "Prototipo experimental del Gobierno: dos veces más alta y ancha que quien la pilota, con núcleo de fusión y placas de aleación partidas por descargas azules. Solo existe una.",
+  "weight": 0,
+  "price": 2500000,
   "category": "ropa",
-  "rarity": "epico",
-  "armor": 9,
+  "rarity": "mitico",
+  "armor": 40,
   "wear": {
    "slot": "torso_ext",
    "style": "exo-tormenta",
@@ -2829,11 +2829,123 @@
    "accent": "#39a8ff",
    "mods": {
     "skills": {},
-    "carry": 4,
-    "speed": -0.05,
+    "carry": 60,
+    "speed": -0.08,
     "needs": 0,
     "dodge": 0,
-    "hpMax": 10,
+    "hpMax": 220,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "guantes-cuero",
+  "name": "Guantes de cuero",
+  "desc": "Cuero sintético negro, ajustados.",
+  "weight": 0.2,
+  "price": 180,
+  "category": "ropa",
+  "rarity": "comun",
+  "armor": 0,
+  "wear": {
+   "slot": "manos",
+   "style": "cuero",
+   "color": "#141418",
+   "pattern": "liso",
+   "detail": "ninguno",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "guantes-sin-dedos",
+  "name": "Guantes sin dedos",
+  "desc": "Dedos al aire para teclear y disparar.",
+  "weight": 0.2,
+  "price": 140,
+  "category": "ropa",
+  "rarity": "comun",
+  "armor": 0,
+  "wear": {
+   "slot": "manos",
+   "style": "sin-dedos",
+   "color": "#202024",
+   "pattern": "liso",
+   "detail": "ninguno",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0.02,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "guantes-tacticos",
+  "name": "Guantes tácticos",
+  "desc": "Nudillos reforzados y palma antideslizante.",
+  "weight": 0.2,
+  "price": 420,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "manos",
+   "style": "tacticos",
+   "color": "#2a2e24",
+   "pattern": "liso",
+   "detail": "ninguno",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0.03,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "guantes-led",
+  "name": "Guantes LED",
+  "desc": "Costuras luminosas que siguen el pulso de la ciudad.",
+  "weight": 0.2,
+  "price": 650,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 0,
+  "wear": {
+   "slot": "manos",
+   "style": "led",
+   "color": "#101018",
+   "pattern": "liso",
+   "detail": "ninguno",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
     "aim": 0,
     "ramPlus": 0,
     "ramSave": 0

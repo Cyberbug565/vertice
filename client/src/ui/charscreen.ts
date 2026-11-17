@@ -16,8 +16,8 @@ const RARITY: Record<string, { name: string; color: string }> = {
   comun: { name: 'Común', color: '#9a9ac0' }, 'poco-comun': { name: 'Poco común', color: '#5affc8' }, raro: { name: 'Raro', color: '#43a8ff' },
   epico: { name: 'De lujo', color: '#b46cff' }, legendario: { name: 'Legendario', color: '#ffbf00' }, mitico: { name: 'Mítico', color: '#ff2040' },
 };
-const SLOT_NAMES: Record<string, string> = { cabeza: 'Cabeza', cara: 'Cara', torso_ext: 'Chaqueta', torso_int: 'Camiseta', piernas: 'Piernas', pies: 'Calzado' };
-const SLOT_ICON: Record<string, string> = { cabeza: '🧢', cara: '🕶', torso_ext: '🧥', torso_int: '👕', piernas: '👖', pies: '👟' };
+const SLOT_NAMES: Record<string, string> = { cabeza: 'Cabeza', cara: 'Cara', torso_ext: 'Chaqueta', torso_int: 'Camiseta', piernas: 'Piernas', pies: 'Calzado', manos: 'Guantes' };
+const SLOT_ICON: Record<string, string> = { cabeza: '🧢', cara: '🕶', torso_ext: '🧥', torso_int: '👕', piernas: '👖', pies: '👟', manos: '🧤' };
 const CAT_ICON: Record<string, string> = { comida: '🍜', bebida: '🥤', medicina: '💉', municion: '▮', herramienta: '🔧', chatarra: '⚙', ciberware: '🦾', equipo: '📟', contrabando: '📦', mision: '★', ropa: '🧥', arma: '🔫' };
 const FILTERS: [string, string][] = [['todo', 'Todo'], ['arma', 'Armas'], ['ropa', 'Ropa'], ['consumible', 'Consumibles'], ['municion', 'Munición'], ['otros', 'Otros']];
 const REGIONS: { id: string; name: string; slots: number; side: 'l' | 'r'; y: number }[] = [

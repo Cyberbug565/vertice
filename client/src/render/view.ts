@@ -85,7 +85,7 @@ export class GameView {
   psyche = 0;
   private marketLights = new Graphics();
   private powered = false;
-  zoom = 0.85;
+  zoom = 1.7; // v0.16 · cámara más cercana
   cam = { x: 0, y: 0 };
   hovered: CEnt | null = null;
   onGroundClick: (x: number, y: number) => void = () => {};
@@ -168,7 +168,7 @@ export class GameView {
     this.rebuild();
   }
 
-  setZoom(z: number) { this.zoom = Math.max(0.4, Math.min(2.6, z)); } // v0.12 · más zoom para ver el detalle de los modelos
+  setZoom(z: number) { this.zoom = Math.max(1.05, Math.min(4.6, z)); } // v0.16 · cámara más cercana: más zoom y sin vista lejana
 
   // ------------------------------------------------------------------ zona
   setZone(zoneId: string, x: number, y: number) {

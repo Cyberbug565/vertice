@@ -7,7 +7,11 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { hashString, seededRng, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
 import { content } from '../content';
-import { fabricCanvas, skinCanvas } from './textures';
+import { fabricCanvas, skinCanvas, tattooCanvas } from './textures';
+import { dress, LEGS, TOP } from './clothes3d';
+import { faceDecal, faceParams } from './face3d';
+import { roboticParts } from './cyber3d';
+import { buildMech, poseMech, type Mech } from './mech3d';
 import { dancePose } from './dance';
 import { City3D, tickNeon } from './city3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
@@ -33,9 +37,8 @@ const SLEEVELESS = new Set(['top', 'chaleco', 'tirantes', 'arnes']);
 const SHORT = new Set(['camiseta', 'camisa']);
 const COAT = new Set(['gabardina', 'abrigo', 'chubasquero', 'haori']);
 /** v0.15 · Peinados que salen del kit (el resto se modela aparte sobre la cabeza). '' = sin pelo. */
-const KIT_HAIR: Record<string, string> = { calvo: '', rapado: 'Hair_Buzzed', corto: 'Hair_SimpleParted', flequillo: 'Hair_SimpleParted', asimetrico: 'Hair_SimpleParted', undercut: 'Hair_SimpleParted',
-  lobo: 'Hair_SimpleParted', pompadour: 'Hair_SimpleParted', pixie: 'Hair_SimpleParted', puntas: 'Hair_SimpleParted', erizo: 'Hair_SimpleParted', largo: 'Hair_Long', melena: 'Hair_Long', 'media-melena': 'Hair_Long',
-  bob: 'Hair_Long', ondas: 'Hair_Long', mullet: 'Hair_Long', 'moño': 'Hair_Buns', 'dos-moños': 'Hair_Buns', samurai: 'Hair_Buns' };
+/** v0.16 · Peinados que salen del kit (hechos para este cuerpo); el resto se generan con la propia cabeza en clothes3d.ts. */
+const KIT_HAIR: Record<string, string> = { rapado: 'Hair_Buzzed', corto: 'Hair_SimpleParted', largo: 'Hair_Long', melena: 'Hair_Long', ondas: 'Hair_Long', 'moño': 'Hair_Buns' };
 const FACE_COVER = new Set(['mascara', 'mascara-gas', 'bandana-cara', 'mascara-demonio']);
 
 // Geometrías compartidas (se escalan por pieza).
@@ -165,6 +168,8 @@ interface Rig {
   lastX: number; lastY: number; speed: number;
   /** v0.15 · cuerpo del kit (esqueleto), marcador del guardamanos y si apunta ahora mismo. */
   human?: Human; grip2?: THREE.Object3D; aimNow?: boolean;
+  /** v0.16 · Superarmadura «Tormenta» (el piloto va dentro, oculto). */
+  mech?: Mech;
 }
 
 export class Chars3D {
@@ -238,7 +243,7 @@ export class Chars3D {
     const m = this.bOccl[i]; if (m) m.visible = !faded;
   }
 
-  private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) m.dispose(); for (const m of r.ghostMats ?? []) m.dispose(); }
+  private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) { for (const t of (m.userData.owned ?? []) as THREE.Texture[]) t.dispose(); m.dispose(); } for (const m of r.ghostMats ?? []) m.dispose(); }
   /** Convierte un modelo en fantasma: cada material pasa a translúcido, sin escribir profundidad y con brillo propio. */
   private ghostify(r: Rig, color: number) {
     const tint = new THREE.Color(color);
@@ -275,46 +280,61 @@ export class Chars3D {
     const seed = hashString(`${s.name ?? ''}#${s.kind === 'player' ? '' : s.id}`) || 1;
     const r = seededRng(seed * 13 + 5);
     const kind = a.body === 'masculino' || a.body === 'femenino' ? a.body : ['barba', 'barba-larga', 'candado', 'perilla', 'bigote'].includes(a.facial) ? 'masculino' : seed % 2 ? 'masculino' : 'femenino';
-    const lw = a.legwear || 'pantalon';
-    const bareLeg = lw === 'shorts' || lw === 'falda' || lw === 'bermudas';
-    const sleeveless = SLEEVELESS.has(a.top), short = SHORT.has(a.top), exposed = a.top === 'arnes';
+    // v0.16 · La ropa de verdad la pone clothes3d.ts; debajo, la piel se tiñe del color de la prenda solo donde la prenda
+    // la tapa entera (así no asoma la piel en los pliegues), y queda al aire donde la prenda no llega.
+    const top = a.top === 'exo-tormenta' ? 'mono' : a.top;
+    const cut = TOP[top] ?? TOP.chaqueta, lw = a.legwear || 'pantalon', lc = LEGS[lw];
     const cover = new Array(16).fill(0);
-    cover[REG.torso] = exposed ? 0 : 1; cover[REG.pelvis] = 2;
-    for (const k of [REG.uaP, REG.uaM]) cover[k] = sleeveless ? 0 : 1;
-    for (const k of [REG.faP, REG.faM]) cover[k] = sleeveless || short ? 0 : 1;
-    for (const k of [REG.thP, REG.thM]) cover[k] = 2;
-    for (const k of [REG.caP, REG.caM]) cover[k] = a.shoeStyle === 'botas-altas' ? 3 : bareLeg ? 0 : 2;
+    if (top !== 'arnes' && top !== 'top') { cover[REG.torso] = 1; }
+    cover[REG.pelvis] = 2;
+    for (const k of [REG.uaP, REG.uaM]) cover[k] = cut.sleeve >= 0.55 ? 1 : 0;
+    for (const k of [REG.faP, REG.faM]) cover[k] = cut.sleeve >= 0.95 ? 1 : 0;
+    for (const k of [REG.thP, REG.thM]) cover[k] = lc && lc.len >= 0.5 ? 2 : 0;
+    for (const k of [REG.caP, REG.caM]) cover[k] = lc && lc.len >= 0.95 ? 2 : 0;
     for (const k of [REG.ftP, REG.ftM]) cover[k] = 3;
-    // Cromo: el miembro entero pasa a metal (con líneas de luz del color de acento).
-    if (chrome.has('brazo_der')) for (const k of [REG.uaP, REG.faP, REG.handP]) cover[k] = 4;
-    if (chrome.has('brazo_izq')) for (const k of [REG.uaM, REG.faM, REG.handM]) cover[k] = 4;
-    if (chrome.has('pierna_der')) for (const k of [REG.thP, REG.caP, REG.ftP]) cover[k] = 4;
-    if (chrome.has('pierna_izq')) for (const k of [REG.thM, REG.caM, REG.ftM]) cover[k] = 4;
     if (chrome.has('mano_der') || chrome.has('dedos_der')) cover[REG.handP] = 4;
     if (chrome.has('mano_izq') || chrome.has('dedos_izq')) cover[REG.handM] = 4;
-    // Cara propia: rasgos al azar (siempre los mismos para esa persona) más lo elegido en el creador.
-    const fsh = a.faceShape, nz = a.nose;
-    const face: [number, number, number, number, number, number, number] = [
-      (r() - 0.5) * 0.07 + (fsh === 'ancha' || fsh === 'redonda' ? 0.035 : fsh === 'alargada' || fsh === 'afilada' ? -0.03 : 0),
-      (r() - 0.5) * 0.22 + (fsh === 'cuadrada' ? 0.14 : fsh === 'triangular' || fsh === 'corazon' || fsh === 'afilada' ? -0.14 : fsh === 'ancha' ? 0.08 : 0),
-      (r() - 0.5) * 1.2 + (nz === 'aguilena' ? 0.9 : nz === 'chata' ? -0.8 : nz === 'respingona' || nz === 'pequena' ? -0.5 : 0),
-      (r() - 0.5) * 1.2 + (fsh === 'alargada' || fsh === 'afilada' ? 0.7 : fsh === 'redonda' ? -0.4 : 0),
-      (r() - 0.5) * 1.4 + (a.brows === 'gruesas' ? 0.5 : 0),
-      (r() - 0.5) * 1.2 + (fsh === 'diamante' || fsh === 'angulosa' ? 1.0 : 0),
-      (r() - 0.5) * 0.4 + (nz === 'ancha' ? 0.3 : nz === 'chata' ? 0.18 : nz === 'pequena' ? -0.18 : 0),
-    ];
-    const topTex = tex(fabricCanvas(a.top === 'top' || a.top === 'tirantes' ? (a.topPattern || 'liso') : a.topPattern || 'liso', a.top === 'exo-tormenta' ? '#20262c' : a.jacket, a.accent, 8, 10));
-    const pantsTex = tex(fabricCanvas(a.pantsPattern || 'liso', a.pants, a.accent, 4, 9));
-    for (const t of [topTex, pantsTex]) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.needsUpdate = true; }
-    const hairName = KIT_HAIR[a.hairStyle];
-    const H = makeHuman({ kind, look: { skin: a.skin, top: topTex, pants: pantsTex, shoe: a.shoes || '#101018', accent: a.accent, cover, face }, hair: a.headwear === 'casco' || a.headwear === 'casco-moto' ? '' : hairName ?? '',
-      hairColor: a.hair, beard: ['barba', 'barba-larga', 'candado', 'perilla'].includes(a.facial), eyes: a.eyes || '#3a2a1a', lost });
-    if (H && a.top === 'exo-tormenta') exoArmor(H); // v0.15 · placas sobre el cuerpo
+    // (Brazos, piernas, ojos, mandíbula y pecho de cromo: piezas robóticas de cyber3d.ts, más abajo.)
+    // Tatuaje corporal por zonas (solo se ve en la piel al aire).
+    const tst = a.bodyTattoo && a.bodyTattoo !== 'ninguno' ? a.bodyTattoo : '';
+    const tz = a.tattooZone || 'brazos';
+    const zones = new Array(16).fill(0);
+    if (tst) {
+      const on = (ks: number[]) => { for (const k of ks) zones[k] = 1; };
+      if (tz === 'brazos' || tz === 'todo') on([REG.uaP, REG.faP, REG.uaM, REG.faM]);
+      if (tz === 'brazo') on([REG.uaP, REG.faP]);
+      if (tz === 'piernas' || tz === 'todo') on([REG.thP, REG.caP, REG.thM, REG.caM]);
+      if (tz === 'cuello' || tz === 'todo') on([REG.neck]);
+      if (tz === 'pecho' || tz === 'todo') on([REG.torso, REG.pelvis]);
+    }
+    const face = faceParams(a, r, kind === 'femenino');
+    const kitHairName = KIT_HAIR[a.hairStyle];
+    const helmet = a.headwear === 'casco' || a.headwear === 'casco-moto';
+    const kitBeard = kind === 'masculino' && (a.facial === 'barba' || a.facial === 'barba-larga');
+    // Debajo de la ropa, la piel se tiñe del color de la prenda (por si asoma en algún pliegue).
+    const topTex = tex(fabricCanvas('liso', a.jacket || '#333344', a.accent, 2, 2)), pantsTex = tex(fabricCanvas('liso', a.pants || '#1a1a24', a.accent, 2, 2));
+    const H = makeHuman({ kind, look: { skin: a.skin, top: topTex, pants: pantsTex, shoe: a.shoes || '#101018', accent: a.accent, cover, face,
+      tattoo: tst ? tattooCanvas(tst, a.tattooInk || '#14141e', a.accent) : null, tattooZones: zones, decal: faceDecal(a, seed) },
+      hair: helmet ? '' : kitHairName ?? '', hairColor: a.hair, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost });
+    if (!H) return null;
+    { const bm = H.bodyMesh.material as THREE.Material; bm.userData.owned = [...(bm.userData.owned ?? []), topTex, pantsTex]; }
+    if (a.top === 'exo-tormenta') { H.root.visible = false; return H; } // el piloto va dentro de la superarmadura
+    if (chrome.size) H.mats.push(...roboticParts(H, chrome, a.chromeTier ?? {}, a.accent, seed, cover));
+    if (a.top !== 'exo-tormenta') {
+      H.mats.push(...dress(H, {
+        top, topColor: a.jacket, topPattern: a.topPattern && a.topPattern !== 'liso' ? fabricCanvas(a.topPattern, a.jacket, a.accent, 8, 8) : null, detail: a.topDetail || '',
+        shirtColor: a.shirt || '#2a2a3a', inner: 'camiseta', legs: lw, legColor: a.pants, legPattern: a.pantsPattern && a.pantsPattern !== 'liso' ? fabricCanvas(a.pantsPattern, a.pants, a.accent, 8, 8) : null,
+        shoes: a.shoeStyle || 'botas', shoeColor: a.shoes || '#101018', gloves: (a as any).gloves || '', gloveColor: (a as any).gloveColor || '#141418',
+        head: a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: a.eyewear || '', hair: a.hairStyle, hairColor: a.hair,
+        facial: a.facial, accent: a.accent, accent2: a.accent2, kitHair: kitHairName !== undefined && !helmet, kitBeard, accessory: a.accessory,
+      }));
+    }
     return H;
   }
   /** v0.15 · Pasa la pose del juego a los huesos del cuerpo del kit y lleva la mano libre al arma. */
   private applyHuman(r: Rig) {
-    if (!r.human) return;
+    if (r.mech) poseMech(r.mech, { hips: r.hips, spine: r.spine, neck: r.neck, shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, thP: r.thighR, knP: r.kneeR, thM: r.thighL, knM: r.kneeL }, performance.now() / 1000);
+    if (!r.human || r.mech) return;
     const two = r.ranged && (r.big || !!r.aimNow) && r.lie < 0.3;
     const W = poseHuman(r.human, { hips: r.hips, spine: r.spine, chest: r.chest, neck: r.neck, thighP: r.thighR, kneeP: r.kneeR, thighM: r.thighL, kneeM: r.kneeL,
       shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, gripP: r.handR.children.length ? 1 : 0.3, gripM: two ? 0.9 : 0.3 });
@@ -402,8 +422,8 @@ export class Chars3D {
     const L = H ? { thigh: proxy(), knee: proxy() } : legFor(-1), R = H ? { thigh: proxy(), knee: proxy() } : legFor(1);
     // Faldas y abrigos largos.
     const coat: THREE.Object3D[] = [];
-    if (lw === 'falda' || lw === 'falda-larga') { const sk = part(hips, G.cone, pantsM, 0.42, lw === 'falda' ? 0.32 : 0.7, 0.36, 0, lw === 'falda' ? -0.12 : -0.3); (sk.material as THREE.Material).side = THREE.DoubleSide; }
-    if (COAT.has(a.top)) for (const [x, z, rz] of [[-0.11, 0.07, 1], [0.11, 0.07, 1], [0, -0.1, 0]] as [number, number, number][]) {
+    if (!H && (lw === 'falda' || lw === 'falda-larga')) { const sk = part(hips, G.cone, pantsM, 0.42, lw === 'falda' ? 0.32 : 0.7, 0.36, 0, lw === 'falda' ? -0.12 : -0.3); (sk.material as THREE.Material).side = THREE.DoubleSide; }
+    if (!H && COAT.has(a.top)) for (const [x, z, rz] of [[-0.11, 0.07, 1], [0.11, 0.07, 1], [0, -0.1, 0]] as [number, number, number][]) {
       const pv = group(hips, x, 0.02, z);
       part(pv, G.box, jacketM, rz ? 0.2 : 0.36, a.top === 'abrigo' || a.top === 'haori' ? 0.62 : 0.5, 0.04, 0, a.top === 'abrigo' || a.top === 'haori' ? -0.3 : -0.24);
       coat.push(pv);
@@ -417,6 +437,8 @@ export class Chars3D {
     if (!H) part(chest, G.chest, chestMat, 0.5 * shoulders / wf, 0.34, 0.28, 0, 0.15).rotation.y = Math.PI / 8;
     if (!H && a.top === 'tirantes') part(chest, G.chest, jacketM, 0.4, 0.26, 0.245, 0, 0.12).rotation.y = Math.PI / 8;
     if (!H && a.top === 'top') part(chest, G.chest, cloth(a.shirt || a.accent, a.topPattern), 0.42, 0.18, 0.245, 0, 0.2).rotation.y = Math.PI / 8;
+    // (Con el cuerpo del kit, la ropa y sus detalles los pone clothes3d.ts.)
+    if (!H) {
     if (a.top === 'arnes') { part(chest, G.box, beltM, 0.04, 0.4, 0.26, 0, 0.13).rotation.z = 0.7; part(chest, G.box, beltM, 0.04, 0.4, 0.26, 0, 0.13).rotation.z = -0.7; }
     if (['chaqueta', 'gabardina', 'abrigo', 'bomber', 'biker', 'blazer'].includes(a.top)) { part(chest, G.box, shirtM, 0.1, 0.18, 0.02, 0, 0.2, 0.125); part(chest, G.box, mk(lam({ color: hex(a.accent2 || a.jacket).multiplyScalar(0.7) })), 0.05, 0.16, 0.02, -0.07, 0.22, 0.126).rotation.z = 0.35; part(chest, G.box, mk(lam({ color: hex(a.jacket).multiplyScalar(0.7) })), 0.05, 0.16, 0.02, 0.07, 0.22, 0.126).rotation.z = -0.35; }
     if (a.top === 'armadura' || (!H && a.top === 'exo-tormenta') || a.topDetail === 'placas') { part(chest, G.box, metalDarkM, 0.36, 0.22, 0.06, 0, 0.16, 0.12); part(chest, G.box, glowM, 0.2, 0.012, 0.01, 0, 0.12, 0.155); }
@@ -430,6 +452,7 @@ export class Chars3D {
     if (a.topDetail === 'parches') part(chest, G.box, mk(lam({ color: hex(a.accent2 || a.accent) })), 0.07, 0.06, 0.01, -0.1, 0.22, 0.123);
     if (a.topDetail === 'cinturon' || !bare) { part(hips, G.box, beltM, 0.35, 0.035, 0.21, 0, 0.12); part(hips, G.box, goldM, 0.04, 0.03, 0.01, 0, 0.12, 0.106); }
     if (chrome.has('torso')) { part(chest, G.box, metalM, 0.3, 0.2, 0.03, 0, 0.14, 0.12); part(chest, G.cyl, glowM, 0.06, 0.02, 0.06, 0, 0.15, 0.14).rotation.x = Math.PI / 2; }
+    }
     // ---- brazos
     const sleeveless = SLEEVELESS.has(a.top), short = SHORT.has(a.top);
     const armFor = (side: -1 | 1) => {
@@ -477,6 +500,7 @@ export class Chars3D {
       for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.025, 0.065, 0.045, sx * (fw / 2 + 0.005), 0, -0.01); // orejas
       part(head, G.sphere, plainSkin, a.nose === 'ancha' || a.nose === 'chata' ? 0.05 : a.nose === 'pequena' || a.nose === 'respingona' ? 0.03 : 0.036, a.nose === 'aguilena' ? 0.065 : 0.055, a.nose === 'chata' ? 0.03 : a.nose === 'aguilena' ? 0.055 : 0.045, a.nose === 'rota' ? 0.008 : 0, a.nose === 'respingona' ? -0.012 : -0.02, 0.122).rotation.z = a.nose === 'rota' ? 0.25 : 0; // nariz
     }
+    if (!H) {
     // Cromo en la cabeza: tres estilos según la persona (placa lateral, placa de mandíbula o conectores en la sien y la frente).
     if (chrome.has('cabeza')) {
       if (chromeStyle === 0) { part(head, G.box, metalM, 0.02, 0.1, 0.1, -fw / 2 - 0.012, 0.02, -0.02); part(head, G.sphere, glowM, 0.025, 0.025, 0.025, -fw / 2 - 0.02, 0.02, 0.02); }
@@ -513,7 +537,7 @@ export class Chars3D {
       if (hs === 'pixie') { part(head, G.box, hairM, fw * 0.8, 0.05, 0.05, 0.03, fh / 2 - 0.02, 0.1).rotation.z = -0.25; }
       if (hs === 'rizos') for (let i = 0; i < 6; i++) part(head, G.sphere, hairM, 0.07, 0.07, 0.07, -0.08 + (i % 3) * 0.08, fh / 2 + 0.01, -0.05 + Math.floor(i / 3) * 0.08);
     }
-    if (a.facial === 'barba-larga' && !(H && H.kind === 'masculino')) part(head, G.box, hairM, fw * 0.8, 0.12, 0.06, 0, -fh / 2 - 0.05, 0.08);
+    if (a.facial === 'barba-larga') part(head, G.box, hairM, fw * 0.8, 0.12, 0.06, 0, -fh / 2 - 0.05, 0.08);
     // Prendas de cabeza y cara.
     const hc = hex(a.headColor || a.accent).multiplyScalar(a.headColor ? 1 : 0.6);
     const hcM = mk(lam({ color: hc }));
@@ -538,6 +562,7 @@ export class Chars3D {
       if (ew === 'mascara-demonio') for (const sx of [-1, 1]) part(head, G.cone, mk(lam({ color: 0xe8e0d0 })), 0.04, 0.09, 0.04, sx * 0.07, fh / 2 + 0.03, 0.06);
     }
     if (a.accessory === 'auriculares' && !hw) for (const sx of [-1, 1]) part(head, G.cyl, mk(lam({ color: 0x202028 })), 0.06, 0.03, 0.06, sx * (fw / 2 + 0.02), 0.01, 0).rotation.z = Math.PI / 2;
+    }
     // ---- armas: en la mano y las que lleva encima
     const handR = H ? group(AR.hand, 0, -0.075, 0.012) : group(AR.hand, 0, -0.05, 0.02);
     const wi = s.weapon ? content.items.find((i) => i.id === s.weapon) : undefined;
@@ -565,7 +590,10 @@ export class Chars3D {
     if (s.kind === 'player') { const ring = new THREE.Mesh(new THREE.RingGeometry(0.28, 0.32, 24), mk(new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.8, depthWrite: false }))); ring.rotation.x = -Math.PI / 2; ring.position.y = 0.012; root.add(ring); }
     this.world.add(root);
     const rigHips = H ? proxy() : hips;
-    return { human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
+    // v0.16 · Superarmadura «Tormenta»: dos veces más alta y ancha que la persona (que va dentro).
+    let mech: Mech | undefined;
+    if (H && a.top === 'exo-tormenta') { mech = buildMech(); body.add(mech.root); mats.push(...mech.mats); shadow.scale.multiplyScalar(2.2); }
+    return { mech, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
       shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, mats, lastX: e.x, lastY: e.y, speed: 0 };
   }
 
@@ -757,7 +785,7 @@ export class Chars3D {
       seen.add(s.id);
       const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion()]);
       let r = this.rigs.get(s.id);
-      if (!r || r.key !== key) { if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); }
+      if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
       this.animate(r, e, opts);
       this.applyHuman(r);
       if (e.ghost && r.ghostMats) {
@@ -907,6 +935,8 @@ export class Chars3D {
 export class Preview3D {
   el: HTMLDivElement; private canvas: HTMLCanvasElement; private c3d: any; private cam: THREE.PerspectiveCamera;
   private ent: Ent3D; private raf = 0; private angle = 0.55; private drag: { x: number; a: number } | null = null; private last = performance.now(); private idleSpin = true;
+  /** v0.16 · Acercamiento de la cámara: 0 = cuerpo entero, 1 = primer plano de la cara. */
+  private zoomK = 0; private zoomGoal = 0;
   constructor(private w = 260, private h = 340, cls = 'preview preview3d') {
     this.el = document.createElement('div'); this.el.className = cls;
     this.canvas = document.createElement('canvas');
@@ -923,8 +953,21 @@ export class Preview3D {
     this.canvas.addEventListener('pointerdown', (e) => { this.drag = { x: e.clientX, a: this.angle }; this.idleSpin = false; this.canvas.setPointerCapture(e.pointerId); this.canvas.style.cursor = 'grabbing'; });
     this.canvas.addEventListener('pointermove', (e) => { if (this.drag) this.angle = this.drag.a + (e.clientX - this.drag.x) * 0.012; });
     this.canvas.addEventListener('pointerup', () => { this.drag = null; this.canvas.style.cursor = 'grab'; });
+    // v0.16 · Rueda o botones para acercarse a la cara (y doble clic para alternar).
+    this.canvas.addEventListener('wheel', (e) => { e.preventDefault(); this.zoomGoal = Math.max(0, Math.min(1, this.zoomGoal + (e.deltaY < 0 ? 0.2 : -0.2))); }, { passive: false });
+    this.canvas.addEventListener('dblclick', () => { this.zoomGoal = this.zoomGoal > 0.5 ? 0 : 1; });
+    this.canvas.title = 'Arrastra para girar · rueda o doble clic para acercar';
+    this.el.style.position = 'relative';
+    const bar = document.createElement('div'); bar.className = 'preview-zoom';
+    bar.style.cssText = 'position:absolute;right:6px;bottom:6px;display:flex;gap:4px';
+    for (const [label, k, id] of [['Cuerpo', 0, 'zoom-cuerpo'], ['Torso', 0.55, 'zoom-torso'], ['Cara', 1, 'zoom-cara']] as const) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'segbtn'; b.id = id; b.textContent = label; b.style.cssText = 'padding:2px 8px;font-size:11px';
+      b.addEventListener('click', (e) => { e.preventDefault(); this.zoomGoal = k; }); bar.append(b);
+    }
+    this.el.append(bar);
     const loop = () => { this.raf = requestAnimationFrame(loop); this.frame(); };
     this.raf = requestAnimationFrame(loop);
+    (window as any).__vtPreview = this; // (para las capturas automáticas)
   }
   /** Cambia el aspecto (se reconstruye el modelo al momento). */
   async show(ap: any, chrome: string[], weapon?: string) { this.ent.s = { ...this.ent.s, appearance: { ...ap }, chrome: [...chrome], weapon } as any; }
@@ -934,7 +977,7 @@ export class Preview3D {
     if (!this.el.isConnected || now - this.last < 30) return;
     const dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
     // Se balancea de tres cuartos a tres cuartos (enseña la cara y los costados) hasta que lo giras tú.
-    if (this.idleSpin && !this.drag) this.angle = 0.25 + Math.sin(now / 2600) * 0.85;
+    if (this.idleSpin && !this.drag) this.angle = 0.25 * (1 - this.zoomK) + Math.sin(now / 2600) * 0.85 * (1 - 0.65 * this.zoomK);
     const c = this.c3d;
     const s = this.ent.s;
     const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion()]);
@@ -946,9 +989,12 @@ export class Preview3D {
     c.animate(r, this.ent, { meId: 1, guarding: false, now, dt, serverNow: Date.now() });
     c.applyHuman(r);
     r.root.rotation.y = this.angle;
-    const d = 3.1, ty = 0.46;
-    this.cam.position.set(0, ty + 0.3, d);
-    this.cam.lookAt(0, ty, 0);
+    this.zoomK += (this.zoomGoal - this.zoomK) * Math.min(1, dt * 8);
+    const zk = this.zoomK * this.zoomK * (3 - 2 * this.zoomK);
+    const d = 3.1 + (0.62 - 3.1) * zk, ty = 0.46 + (0.865 - 0.46) * zk;
+    const big = r.mech ? 1.85 : 1; // la superarmadura mide el doble
+    this.cam.position.set(0, (ty + 0.3 * (1 - zk) + 0.02 * zk) * big, d * big);
+    this.cam.lookAt(0, ty * big, 0);
     const R = c.renderer as THREE.WebGLRenderer;
     R.setViewport(0, 0, this.canvas.width, this.canvas.height);
     R.clear(true, true, true);

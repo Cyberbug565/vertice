@@ -28,18 +28,17 @@ describe('v0.15', () => {
     expect(normalizeAppearance({ ...look, top: 'exo-tormenta' }).ok).toBe(false);
   });
 
-  it('la exoarmadura se vende en la Armería Halcón, se viste y blinda', async () => {
+  it('la superarmadura se viste y blinda', async () => {
     const content = (app.world as any).c;
     const it = content.items.find((i: any) => i.id === 'exo-tormenta');
     expect(it?.wear?.style).toBe('exo-tormenta');
-    expect(content.shops.find((s: any) => s.id === 'armeria-halcon').stock['exo-tormenta']).toBeGreaterThan(0);
     const token = await BotClient.registerAndCreate(base, 'tormenta1', 'solo', 'callejero');
     const b = new BotClient(base, 'tormenta1'); clients.push(b);
     await b.connect(token, app.contentHash);
     const c = [...app.world.conns.values()].find((x) => x.p?.name === 'tormenta1')!;
     await (app.world as any).admin.give(c.p, 'exo-tormenta');
     (app.world as any).survival.wear(c, 'torso_ext', 'exo-tormenta');
-    expect(wornAppearance(content, c.p).top).toBe('exo-tormenta');
-    expect(effective(content, c.p).armor).toBeGreaterThanOrEqual(9); // (sustituye a la chaqueta del principio)
+    expect(wornAppearance(content, c.p!).top).toBe('exo-tormenta');
+    expect(effective(content, c.p!).armor).toBeGreaterThanOrEqual(9); // (sustituye a la chaqueta del principio)
   });
 });

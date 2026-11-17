@@ -679,7 +679,7 @@ export class Survival {
   /** Ponerse o quitarse una prenda: cambia el aspecto, el blindaje y las mejoras. */
   wear(c: PlayerConn, slot: string, item: string | null) {
     const p = c.p!, e = c.e!;
-    if (!['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies'].includes(slot)) throw new GameError('Hueco de ropa desconocido.');
+    if (!['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies', 'manos'].includes(slot)) throw new GameError('Hueco de ropa desconocido.');
     if (item === null) { delete p.wear[slot]; }
     else {
       const def = this.w.c.items.find((i) => i.id === item);

@@ -300,3 +300,7 @@ export function skinCanvas(skin: string, style: string, inkCol: string, accent: 
     if (style && style !== 'ninguno') drawTattoo(ctx, w, h, r, style, inkCol || '#14141e', accent);
   });
 }
+/** v0.16 · Solo el tatuaje, sobre fondo transparente (el cuerpo del kit lo proyecta sobre su piel). */
+export function tattooCanvas(style: string, inkCol: string, accent: string) {
+  return makeCanvas(`t|${style}|${inkCol}|${accent}|3d`, 16, 16, (ctx, w, h, r) => { ctx.clearRect(0, 0, w, h); drawTattoo(ctx, w, h, r, style, inkCol || '#14141e', accent); });
+}

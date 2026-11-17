@@ -30,13 +30,15 @@ async function join(name: string) {
 const conn = (name: string) => [...app.world.conns.values()].find((c) => c.p?.name === name)!;
 const P = (name: string) => conn(name).p!;
 /** Deja a la persona en el último encargo de una leyenda, aceptado, y lo completa matando a su jefe. */
-async function finishFinal(name: string, legend: string) {
+/** Completa el paso del mítico que se indica (por defecto el último; v0.16: el Kairós «Cometa» de Teo es el penúltimo). */
+async function finishFinal(name: string, legend: string, mythic?: string) {
   const L = LEGENDS.find((l) => l.id === legend)!;
-  const last = L.steps.length - 1;
-  P(name).legends[legend] = { trust: 90, step: last, active: true, count: 0 };
-  const g = L.steps[last].goal as any;
+  const idx = mythic ? L.steps.findIndex((st) => st.item === mythic || st.cyber === mythic) : L.steps.length - 1;
+  P(name).legends[legend] = { trust: 90, step: idx, active: true, count: 0 };
+  const g = L.steps[idx].goal as any;
   await app.world.legends.event(conn(name), { type: 'boss', boss: g.boss });
-  expect(P(name).legends[legend].done).toBe(true);
+  if (idx === L.steps.length - 1) expect(P(name).legends[legend].done).toBe(true);
+  else expect(P(name).legends[legend].step).toBe(idx + 1);
 }
 const owner = async (item: string) => (await app.db.query<any>('SELECT character_id FROM mythic_owners WHERE item_id=$1', [item])).rows[0]?.character_id;
 
@@ -89,16 +91,16 @@ describe('v0.8.1 · administración y míticos únicos', () => {
 
   it('si el portador muere sin asesino, el mítico se pierde y la leyenda vuelve a ofrecerlo (Kairós «Cometa»)', async () => {
     await join('cometa'); await join('heredera');
-    await finishFinal('cometa', 'teo');
+    await finishFinal('cometa', 'teo', 'kairos-6');
     expect(P('cometa').cyber.some((c) => c.def === 'kairos-6')).toBe(true);
-    await finishFinal('heredera', 'teo');
+    await finishFinal('heredera', 'teo', 'kairos-6');
     expect(P('heredera').cyber.some((c) => c.def === 'kairos-6')).toBe(false);
     expect(P('heredera').cyber.some((c) => c.def === 'kairos-5')).toBe(true);
     const e = conn('cometa').e!; e.lastHitBy = undefined; e.lastAttacker = undefined;
     await app.world.survival.die(P('cometa'), e, 'un ciberpsicópata');
     expect(await owner('kairos-6')).toBeUndefined();
     await join('tercera');
-    await finishFinal('tercera', 'teo');
+    await finishFinal('tercera', 'teo', 'kairos-6');
     expect(P('tercera').cyber.some((c) => c.def === 'kairos-6')).toBe(true);
     expect(await owner('kairos-6')).toBe(P('tercera').charId);
   });

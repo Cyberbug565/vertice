@@ -22,6 +22,8 @@ export const BOSSES: Record<string, BossDef> = {
   convoy: { name: 'Brutus, jefe del convoy', zone: 'vertice', district: 'forja', hp: 480, def: 16, weapon: 'ametralladora-rotativa', faction: 'marea', minions: 3, level: 19 },
   goliat: { name: 'GOLIAT', zone: 'torre-okami-p5', at: [15, 7], hp: 3200, def: 21, weapon: 'ametralladora-rotativa', faction: 'okami', minions: 3, minionHp: 260, level: 25 },
   campeon: { name: 'Hiena, campeona del Yermo', zone: 'vertice', district: 'descampado-norte', hp: 520, def: 17, weapon: 'escopeta-tecnologica', faction: 'nomadas-polvo', minions: 3, level: 20 },
+  // v0.16 · El convoy blindado del Proyecto TORMENTA (Gobierno): custodia la superarmadura experimental.
+  tormenta: { name: 'Coronel Varga, Proyecto TORMENTA', zone: 'vertice', district: 'cenit', hp: 4200, def: 23, weapon: 'canon-sonico', faction: 'unidad-hierro', minions: 5, minionHp: 300, kairos: 4, level: 28 },
   titan: { name: 'TITÁN', zone: 'torre-halcon-p7', at: [15, 7], hp: 3400, def: 21, weapon: 'katana-termica', faction: 'halcon', minions: 0, elite: 3, kairos: 5, level: 25 },
 };
 
@@ -45,14 +47,15 @@ export const LEGENDS: LegendDef[] = [
       { title: 'El convoy', desc: 'Brutus mueve un convoy de la Marea por Forja. Acaba con él y su escolta.', goal: { type: 'boss', boss: 'convoy' }, money: 6000, item: 'ampliacion-zocalo', trust: 30 },
       { title: 'El último trabajo', desc: 'GOLIAT, el verdugo cibernético de Okami, mató al mejor amigo de Sable. Está en la planta ejecutiva de la Torre Okami. Mátalo.', goal: { type: 'boss', boss: 'goliat' }, item: 'matriz-eco', trust: 0 },
     ] },
-  { id: 'teo', npc: 'leyenda-teo', name: 'Teo «Cometa» Marlín', role: 'Líder de los Saqueadores', color: '#ff6a20', final: 'Kairós Experimental «Cometa» (mítico)',
+  { id: 'teo', npc: 'leyenda-teo', name: 'Teo «Cometa» Marlín', role: 'Líder de los Saqueadores', color: '#ff6a20', final: 'Kairós Experimental «Cometa» y la superarmadura «Tormenta» (míticos)',
     env: { faction: 'saqueadores', rep: 20, altRep: ['calle', 40] }, hint: 'El jefe de los Saqueadores tiene su garaje dentro de la base, en el Descampado Norte. Sin el permiso de su gente, ni te acerques.',
     gate: 'Dos Saqueadores te cortan el paso: «El Cometa no recibe a cualquiera. Gánate a la banda (reputación 20) o hazte famoso en la calle (40).»',
     steps: [
       { title: 'Hojas fuera', desc: 'Las Hojas Rojas le roban. Neutraliza a 5 de ellos.', goal: { type: 'kill', n: 5, faction: 'hojas-rojas' }, money: 1200, trust: 20 },
       { title: 'Chatarra', desc: 'Los Chatarreros le deben dinero. Cóbraselo a golpes: neutraliza a 5.', goal: { type: 'kill', n: 5, faction: 'chatarreros' }, money: 2000, trust: 20 },
       { title: 'La campeona', desc: 'Hiena, campeona del Yermo, lo ha retado. Gánale en el Descampado Norte.', goal: { type: 'boss', boss: 'campeon' }, money: 5000, cyber: 'kairos-3', trust: 30 },
-      { title: 'Lo más alto', desc: 'Sube a la azotea de la Torre Halcón, la más alta de la ciudad. Arriba esperan su élite y TITÁN, un cíborg con un Kairós militar.', goal: { type: 'boss', boss: 'titan' }, cyber: 'kairos-6', trust: 0 },
+      { title: 'Lo más alto', desc: 'Sube a la azotea de la Torre Halcón, la más alta de la ciudad. Arriba esperan su élite y TITÁN, un cíborg con un Kairós militar.', goal: { type: 'boss', boss: 'titan' }, cyber: 'kairos-6', trust: 10 },
+      { title: 'Proyecto TORMENTA', desc: 'Teo sabe dónde mueve el Gobierno su prototipo: una superarmadura con núcleo de fusión, la única que existe. La escolta la Unidad Hierro por Cénit al mando del coronel Varga. Quítasela.', goal: { type: 'boss', boss: 'tormenta' }, item: 'exo-tormenta', trust: 0 },
     ] },
 ];
 
@@ -61,6 +64,7 @@ export const MYTHIC_ALT: Record<string, { money: number; items?: string[]; cyber
   'matriz-carmin': { money: 40000, items: ['matriz-centinela', 'ampliacion-zocalo'], line: 'Iris te paga con lo que rescató del Velo.' },
   'matriz-eco': { money: 35000, items: ['matriz-berserker'], line: 'Sable te da lo que guardaba para su amigo.' },
   'kairos-6': { money: 35000, cyber: 'kairos-5', line: 'Teo te deja su Kairós de reserva, el militar.' },
+  'exo-tormenta': { money: 60000, items: ['armadura-centurion'], line: 'La armadura ya tiene piloto. Teo te paga con lo que había en el convoy.' },
 };
 
 export class Legends {

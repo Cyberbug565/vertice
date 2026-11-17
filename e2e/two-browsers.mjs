@@ -98,8 +98,13 @@ try {
     await createCharacter(B, `bruno${tag}`, nameB, 'netrunner');
   });
   await step('Ambos coinciden en el vestíbulo del Bloque 9 y se ven', async () => {
-    await A.waitForFunction((n) => window.__vt.entities().some((e) => e.kind === 'player' && e.name === n), nameB, { timeout: 8000 });
-    await B.waitForFunction((n) => window.__vt.entities().some((e) => e.kind === 'player' && e.name === n), nameA, { timeout: 8000 });
+    try {
+      await A.waitForFunction((n) => window.__vt.entities().some((e) => e.kind === 'player' && e.name === n), nameB, { timeout: 20000 });
+      await B.waitForFunction((n) => window.__vt.entities().some((e) => e.kind === 'player' && e.name === n), nameA, { timeout: 20000 });
+    } catch (err) {
+      for (const [who, p] of [['A', A], ['B', B]]) console.log(who, JSON.stringify(await p.evaluate(() => ({ me: window.__vt.me(), ents: window.__vt.entities().filter((e) => e.kind === 'player') }))).slice(0, 600));
+      throw err;
+    }
     await A.waitForTimeout(500);
     await A.screenshot({ path: `${OUT}01-vestibulo-dos-jugadores.png` });
   });

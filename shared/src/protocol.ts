@@ -99,6 +99,10 @@ export interface Appearance {
   headwear?: string; headColor?: string; eyewear?: string; legwear?: string; outer?: string; rarityGlow?: string;
   /** v0.15 · Cuerpo base (masculino o femenino); vacío = según la persona. */
   body?: string;
+  /** v0.16 · Guantes (estilo y color). */
+  gloves?: string; gloveColor?: string;
+  /** v0.16 · Gama del cromo visible por parte (chatarra, estandar, militar, lujo). */
+  chromeTier?: Record<string, string>;
 }
 export interface EntitySpawn {
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;

@@ -184,7 +184,7 @@ export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'he
 
 export const WEAPON_TRAITS = ['perforante', 'inteligente', 'quemadura', 'sangrado', 'electrica', 'emp', 'area', 'silenciosa', 'aturdidora'] as const;
 export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario', 'mitico'] as const;
-export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies'] as const;
+export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies', 'manos'] as const;
 export type WearSlot = (typeof WEAR_SLOTS)[number];
 /** v0.9 · Cuántos implantes caben en cada ranura: dos ojos, dos oídos, dos brazos, dos manos, cuatro dedos (dos por mano), dos piernas… */
 export const CYBER_SLOT_CAPACITY: Record<string, number> = { ojos: 2, oidos: 2, brazo: 2, manos: 2, dedos: 4, pierna: 2, cortex: 3, esqueleto: 2, circulatorio: 2, nervioso: 2, tegumento: 2, glandula: 2, bateria: 2, hombros: 2, columna: 1 };

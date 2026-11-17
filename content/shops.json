@@ -222,7 +222,7 @@
    "carabina": 3,
    "escopeta-bombeo": 3,
    "cuchillo-combate": 8,
-   "exo-tormenta": 1
+   "guantes-tacticos": 3
   },
   "buys": [
    "arma"
@@ -569,7 +569,10 @@
    "camisa-lentejuelas": 3,
    "leggins-holo": 3,
    "pantalon-cuero": 3,
-   "botas-altas-cordones": 6
+   "botas-altas-cordones": 6,
+   "guantes-cuero": 3,
+   "guantes-sin-dedos": 3,
+   "guantes-led": 3
   },
   "buys": [
    "ropa"
@@ -618,7 +621,10 @@
    "zapatillas-cohete": 3,
    "botas-altas-vinilo": 3,
    "tacones-aguja-cromo": 3,
-   "plataformas-punk": 6
+   "plataformas-punk": 6,
+   "guantes-cuero": 3,
+   "guantes-sin-dedos": 3,
+   "guantes-led": 3
   },
   "buys": [
    "ropa"
@@ -655,7 +661,10 @@
    "camisa-blanca-oficina": 6,
    "cargo-tactico-urbano": 6,
    "leggins-carrera": 6,
-   "mocasines-ejecutivos": 6
+   "mocasines-ejecutivos": 6,
+   "guantes-cuero": 3,
+   "guantes-sin-dedos": 3,
+   "guantes-led": 3
   },
   "buys": [
    "ropa"
