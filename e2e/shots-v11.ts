@@ -35,10 +35,10 @@ if (process.env.KAIROS) { try { (app.world as any).relics.toggleKairos(c, Number
 if (process.env.WEAPON) { try { await (app.world as any).admin.give(c.p, process.env.WEAPON); await (app.world as any).survival.equip(c, process.env.WEAPON); } catch (err) { console.log('arma', (err as Error).message); } }
 const zoom = Number(process.argv[2] ?? 2.2);
 await page.evaluate((z) => (window as any).__vt.view.setZoom(z), zoom);
-if (process.env.MOVESHOT) { await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove())); await page.keyboard.down('d'); await sleep(2500); await page.screenshot({ path: `${OUT}${process.argv[5] ?? 'v11'}.png` }); await page.keyboard.up('d'); console.log('📸 en movimiento'); await browser.close(); await app.close(); process.exit(0); }
+if (process.env.MOVESHOT) { await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove())); await page.keyboard.down('d'); await sleep(2500); await page.screenshot({ path: `${OUT}${process.argv[5] ?? 'v11'}.png`, timeout: 180000 }); await page.keyboard.up('d'); console.log('📸 en movimiento'); await browser.close(); await app.close(); process.exit(0); }
 await page.keyboard.down('d'); await sleep(900); await page.keyboard.up('d');
 await sleep(2500);
 await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove()));
 await sleep(800);
-await page.screenshot({ path: `${OUT}${process.argv[5] ?? 'v11'}.png` }); console.log('📸', process.argv[5] ?? 'v11');
+await page.screenshot({ path: `${OUT}${process.argv[5] ?? 'v11'}.png`, timeout: 180000 }); console.log('📸', process.argv[5] ?? 'v11');
 await browser.close(); await app.close(); process.exit(0);

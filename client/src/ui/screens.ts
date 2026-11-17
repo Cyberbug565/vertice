@@ -64,7 +64,8 @@ function memorialPanel(list: any[]) {
   $ui().append(ov);
 }
 
-const SKIN = ['#f0c8a8', '#e0b48c', '#c89070', '#b07a5a', '#8a5a3c', '#6a4028'];
+// v0.14 · Más tonos de piel (de muy clara a muy oscura) y pieles sintéticas de los modificados (cromo pálido, gris azulado, lila, menta).
+const SKIN = ['#f6dcc8', '#f0c8a8', '#e8bc96', '#e0b48c', '#d0a078', '#c89070', '#b88060', '#b07a5a', '#9a6848', '#8a5a3c', '#744a30', '#6a4028', '#5a3420', '#46281a', '#c8ccd8', '#8a9ab0', '#c8a8d8', '#9ad8c8'];
 const HAIR = ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#ffd23f'];
 const JACKET = ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a', '#8a2a2a'];
 // Color del cromo (luces, implantes y estela del Kairós).

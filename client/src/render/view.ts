@@ -53,6 +53,9 @@ export class GameView {
   /** Destello de luz temporal (fogonazo, explosión, chispa). */
   flash(x: number, y: number, r: number, k: number, ms: number) { const now = performance.now(); this.flashes.push({ x, y, r, k, t0: now, until: now + ms }); if (this.flashes.length > 60) this.flashes.shift(); }
   lightsLayer = new Container();
+  /** v0.14 · Rótulos de los edificios 3D (encima del volumen) y su edificio para copiar la atenuación. */
+  private signsLayer = new Container();
+  private signPairs: [Container, SortObj][] = [];
   labels = new Container();
   rain = new Graphics();
   sky = new Container();
@@ -116,10 +119,12 @@ export class GameView {
     // v0.11 · Tres pasadas por fotograma en el mismo contexto WebGL: el mundo (Pixi), los personajes 3D (Three.js) y,
     // encima, la noche, las luces y los textos (Pixi). Así la oscuridad y las farolas también afectan a los personajes.
     this.app.stage.addChild(this.world);
-    this.overStage.addChild(this.nightOverlay, this.darkness, this.lightsLayer, this.rain, this.labels);
+    this.overStage.addChild(this.signsLayer, this.nightOverlay, this.darkness, this.lightsLayer, this.rain, this.labels);
     const r = this.app.renderer as WebGLRenderer;
     if (settings.chars3d && (r as any).gl) {
       try { this.chars3d = new Chars3D(this.app.canvas, (r as any).gl); } catch (err) { console.warn('[3d] sin personajes 3D:', err); this.chars3d = undefined; }
+      // Cuando terminan de cargar los edificios 3D, se reconstruye la zona para quitar las fachadas 2D.
+      if (this.chars3d) { this.chars3d.quality = settings.quality === 'low' ? 'low' : 'high'; this.chars3d.onCityReady = () => { if (this.zone) this.rebuild(); }; }
     }
     this.app.ticker.add(() => {
       if (this.chars3d && this.pending3d) { try { this.chars3d.render(...this.pending3d); } catch (err) { console.warn('[3d]', err); } (r as any).resetState?.(); }
@@ -217,8 +222,9 @@ export class GameView {
   rebuild() {
     if (!this.zone) return;
     this.buildLights();
-    this.chars3d?.setZone(this.zone);
+    const city3d = this.chars3d?.setZone(this.zone) ?? false;
     this.buildingObjs = [];
+    this.signsLayer.removeChildren().forEach((c) => c.destroy({ children: true })); this.signPairs = [];
     for (const c of this.chunks.values()) c.destroy({ children: true });
     for (const c of this.chunkLights.values()) c.destroy({ children: true });
     this.chunks.clear(); this.chunkLights.clear();
@@ -270,7 +276,12 @@ export class GameView {
       (obj as any).lights = lights;
       this.buildingObjs.push(obj);
       const sign = makeSign(b, q);
-      if (sign) obj.view.addChild(sign);
+      if (city3d) {
+        // v0.14 · El edificio se ve en 3D: la fachada 2D solo sirve para calcular la atenuación (no se pinta) y el
+        // rótulo va en una capa por encima para que el volumen 3D no lo tape.
+        (obj.view.children[0] as Graphics).renderable = false; lights.visible = false;
+        if (sign) { this.signsLayer.addChild(sign); this.signPairs.push([sign, obj]); }
+      } else if (sign) obj.view.addChild(sign);
       this.lightsLayer.addChild(lights);
     }
     for (const bl of z.blocks) {
@@ -1160,6 +1171,8 @@ export class GameView {
     const sh = performance.now() < this.shakeUntil ? this.shakeAmp : (this.shakeAmp = 0);
     this.world.position.set(Math.round(W / 2 - c.x * this.zoom + (sh ? (Math.random() - 0.5) * sh * 2 : 0)), Math.round(H / 2 - c.y * this.zoom + (sh ? (Math.random() - 0.5) * sh * 2 : 0)));
     this.lightsLayer.position.copyFrom(this.world.position); this.lightsLayer.scale.copyFrom(this.world.scale);
+    this.signsLayer.position.copyFrom(this.world.position); this.signsLayer.scale.copyFrom(this.world.scale);
+    for (const [sg, o] of this.signPairs) { sg.alpha = o.view.alpha; sg.visible = o.view.visible; }
     this.visibleRect = { x0: (-this.world.x) / this.zoom - 80, y0: (-this.world.y) / this.zoom - 120, x1: (W - this.world.x) / this.zoom + 80, y1: (H - this.world.y) / this.zoom + 400 };
     if ((this.sortCounter++ & 15) === 0) this.ensureChunks();
     for (const c of this.chunks.values()) c.visible = true;
@@ -1180,7 +1193,7 @@ export class GameView {
     if (!this.chars3d) return;
     const res = this.app.renderer.resolution, key = `${W}x${H}@${res}`;
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
-    this.buildingObjs.forEach((o, i) => this.chars3d!.setBuildingFaded(i, o.view.alpha < 0.6 || !o.view.visible));
+    this.buildingObjs.forEach((o, i) => this.chars3d!.setBuildingFaded(i, o.view.alpha < 0.6 || !o.view.visible, o.view.visible ? o.view.alpha : 0));
     // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).
     this.pending3d = [[...this.ents.values(), ...this.companions.filter((c) => c.ent3d).map((c) => c.ent3d)] as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
       hidden: (e: any) => !!e.s.vehicle || !!e.s.carried || !!e.vehX }];

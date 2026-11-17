@@ -48,7 +48,7 @@ const DOOR_RANGE = 1.3;
 /** Presupuesto de búsqueda de caminos según la distancia (en la ciudad única hay trayectos de cientos de losetas). */
 const pathBudgetFor = (ax: number, ay: number, bx: number, by: number) => { const d = Math.hypot(bx - ax, by - ay); return Math.min(160000, 9000 + Math.round(d * d * 2.5)); };
 const AMBIENT_NAMES = ['Repartidor', 'Vecina del Bloque 9', 'Estibador', 'Turista perdido', 'Estudiante', 'Mensajera', 'Jubilado', 'Guardia de turno', 'Camarera', 'Mecánico'];
-const PALETTE = { skin: ['#f0c8a8', '#e0b48c', '#c89070', '#b07a5a', '#8a5a3c', '#6a4028'], hair: ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#c0c0c0'], jacket: ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a'], accent: ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'] };
+const PALETTE = { skin: ['#f6dcc8', '#f0c8a8', '#e8bc96', '#e0b48c', '#d0a078', '#c89070', '#b88060', '#b07a5a', '#9a6848', '#8a5a3c', '#744a30', '#6a4028', '#5a3420', '#46281a', '#c8ccd8'], hair: ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#c0c0c0'], jacket: ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a'], accent: ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'] };
 
 export class World {
   readonly zones = new Map<string, Zone>();

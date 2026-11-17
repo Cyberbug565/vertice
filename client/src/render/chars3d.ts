@@ -5,10 +5,12 @@
 // del juego, y los edificios (y el mobiliario grande) se añaden como volúmenes invisibles que tapan a quien está detrás.
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import type { Appearance, EntitySpawn, ZoneDef } from '@vertice/shared';
+import { hashString, seededRng, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
 import { content } from '../content';
 import { fabricCanvas, skinCanvas } from './textures';
 import { dancePose } from './dance';
+import { City3D } from './city3d';
+import { gunModel, gunsVersion, loadGuns } from './guns3d';
 
 /** Altura del juego: 32 px por unidad (la proyección real daría 39,2): comprimimos el eje vertical igual. */
 const Y_SQUASH = 32 / (45.2548 * Math.cos(Math.PI / 6));
@@ -59,10 +61,18 @@ function tex(cv: HTMLCanvasElement) {
 const lam = (o: THREE.MeshLambertMaterialParameters) => new THREE.MeshStandardMaterial({ roughness: 0.78, metalness: 0, ...(o as any) });
 
 /** Cara pintada a mano en un lienzo: ojos con pupila y brillo, cejas, nariz, boca, vello facial, maquillaje, cicatrices y tatuajes. */
-function faceCanvas(a: Required<Appearance>, chromeEyes: boolean) {
-  const W = 96, H = 112;
-  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+function faceCanvas(a: Required<Appearance>, chromeEyes: boolean, seed = 1) {
+  const W = 96, H = 112, RES = 2;
+  const cv = document.createElement('canvas'); cv.width = W * RES; cv.height = H * RES;
   const c = cv.getContext('2d')!;
+  c.scale(RES, RES); // v0.14 · el doble de resolución
+  // v0.14 · Un solo cuerpo base y caras únicas: cada persona tiene sus proporciones (sale de su nombre, siempre igual).
+  const r = seededRng(seed);
+  const eg = 20 + (r() - 0.5) * 7, eyY = H * (0.5 + (r() - 0.5) * 0.05), ew = 10 * (0.82 + r() * 0.34), eh = 6 * (0.78 + r() * 0.44), tilt = (r() - 0.5) * 0.28, iris = 5 * (0.85 + r() * 0.3);
+  const browDy = (r() - 0.5) * 6, browTilt = (r() - 0.5) * 0.3, browLen = 24 * (0.82 + r() * 0.34);
+  const noseTop = 0.52 + (r() - 0.5) * 0.04, noseBot = 0.68 + (r() - 0.5) * 0.06, nwk = 0.82 + r() * 0.4;
+  const mw = 13 * (0.8 + r() * 0.42), mdy = (r() - 0.5) * 0.04 * H;
+  const freckles = r() < 0.16, mole = r() < 0.28 ? [W * (0.25 + r() * 0.5), H * (0.55 + r() * 0.3)] : null, lines = r() < 0.22, lashes = r() < 0.45;
   const skin = a.skin, hair = a.hair, accent = a.accent;
   c.fillStyle = skin; c.fillRect(0, 0, W, H);
   // Volumen: mejillas y sombra bajo la frente.
@@ -72,16 +82,17 @@ function faceCanvas(a: Required<Appearance>, chromeEyes: boolean) {
   // Cejas.
   const bw = a.brows === 'finas' ? 2 : a.brows === 'gruesas' ? 6 : 4;
   c.fillStyle = shadeCss(hair, 0.9);
-  for (const sx of [-1, 1]) { c.save(); c.translate(W / 2 + sx * 20, H * 0.40); if (a.brows === 'arqueadas') c.rotate(sx * -0.18); c.fillRect(-12, -bw / 2, 24, bw); c.restore(); }
+  for (const sx of [-1, 1]) { c.save(); c.translate(W / 2 + sx * eg, H * 0.40 + browDy); c.rotate(sx * (browTilt + (a.brows === 'arqueadas' ? -0.18 : 0))); c.fillRect(-browLen / 2, -bw / 2, browLen, bw); c.restore(); }
   // Ojos.
   const eye = chromeEyes ? accent : a.eyes || '#3a2a1a';
   for (const sx of [-1, 1]) {
-    const ex = W / 2 + sx * 20, ey = H * 0.5;
-    c.fillStyle = '#f2f2f2'; c.beginPath(); c.ellipse(ex, ey, 10, 6, 0, 0, 7); c.fill();
-    c.fillStyle = eye; c.beginPath(); c.arc(ex + 1, ey, 5, 0, 7); c.fill();
-    c.fillStyle = '#060608'; c.beginPath(); c.arc(ex + 1, ey, 2.4, 0, 7); c.fill();
+    const ex = W / 2 + sx * eg, ey = eyY;
+    c.fillStyle = '#f2f2f2'; c.beginPath(); c.ellipse(ex, ey, ew, eh, sx * tilt, 0, 7); c.fill();
+    c.fillStyle = eye; c.beginPath(); c.arc(ex + 1, ey, iris, 0, 7); c.fill();
+    c.fillStyle = '#060608'; c.beginPath(); c.arc(ex + 1, ey, iris * 0.48, 0, 7); c.fill();
+    if (lashes) { c.strokeStyle = '#0a0a0a'; c.lineWidth = 1; for (let k = -2; k <= 2; k++) { c.beginPath(); c.moveTo(ex + k * ew * 0.35, ey - eh * 0.9); c.lineTo(ex + k * ew * 0.42, ey - eh * 1.3); c.stroke(); } }
     c.fillStyle = '#ffffff'; c.fillRect(ex + 2, ey - 3, 2, 2);
-    c.strokeStyle = shadeCss(skin, 0.45); c.lineWidth = 2; c.beginPath(); c.ellipse(ex, ey, 10, 6, 0, Math.PI, 0); c.stroke();
+    c.strokeStyle = shadeCss(skin, 0.45); c.lineWidth = 2; c.beginPath(); c.ellipse(ex, ey, ew, eh, sx * tilt, Math.PI, 0); c.stroke();
     if (chromeEyes) { c.fillStyle = hexA(accent, 0.35); c.fillRect(ex - 13, ey - 8, 26, 16); }
     if (a.makeup === 'delineado') { c.strokeStyle = '#101010'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(ex - 11, ey - 2); c.lineTo(ex + 13, ey - 4); c.stroke(); }
     if (a.makeup === 'neon') { c.fillStyle = a.makeupColor || '#ff3fa4'; c.fillRect(ex - 10, ey + 8, 20, 3); }
@@ -89,18 +100,23 @@ function faceCanvas(a: Required<Appearance>, chromeEyes: boolean) {
   if (a.makeup === 'pintura') { c.fillStyle = hexA(a.makeupColor || '#ff3fa4', 0.7); c.fillRect(0, H * 0.46, W, 8); }
   // Nariz.
   c.fillStyle = shadeCss(skin, 0.72);
-  const nw = a.nose === 'ancha' ? 14 : a.nose === 'pequena' ? 6 : a.nose === 'chata' ? 12 : 9;
-  c.beginPath(); c.moveTo(W / 2, H * 0.52); c.lineTo(W / 2 + nw / 2, H * 0.68); c.lineTo(W / 2 - nw / 2, H * 0.68); c.closePath(); c.fill();
-  c.fillStyle = shadeCss(skin, 0.5); c.fillRect(W / 2 - nw / 2, H * 0.68, nw, 2);
+  const nw = (a.nose === 'ancha' ? 14 : a.nose === 'pequena' ? 6 : a.nose === 'chata' ? 12 : 9) * nwk;
+  c.beginPath(); c.moveTo(W / 2, H * noseTop); c.lineTo(W / 2 + nw / 2, H * noseBot); c.lineTo(W / 2 - nw / 2, H * noseBot); c.closePath(); c.fill();
+  c.fillStyle = shadeCss(skin, 0.5); c.fillRect(W / 2 - nw / 2, H * noseBot, nw, 2);
   // Boca.
   const lip = a.makeup === 'labios' ? (a.makeupColor || '#c01040') : shadeCss(skin, 0.52);
   c.strokeStyle = lip; c.fillStyle = lip; c.lineWidth = a.mouth === 'labios-gruesos' ? 5 : a.mouth === 'fina' ? 2 : 3;
   c.beginPath();
-  if (a.mouth === 'sonrisa') { c.moveTo(W / 2 - 14, H * 0.78); c.quadraticCurveTo(W / 2, H * 0.86, W / 2 + 14, H * 0.78); }
-  else if (a.mouth === 'seria') { c.moveTo(W / 2 - 13, H * 0.81); c.quadraticCurveTo(W / 2, H * 0.77, W / 2 + 13, H * 0.81); }
-  else if (a.mouth === 'mueca') { c.moveTo(W / 2 - 13, H * 0.8); c.lineTo(W / 2 + 2, H * 0.8); c.quadraticCurveTo(W / 2 + 10, H * 0.79, W / 2 + 14, H * 0.75); }
-  else { c.moveTo(W / 2 - 13, H * 0.8); c.lineTo(W / 2 + 13, H * 0.8); }
-  c.stroke();
+  c.save(); c.translate(0, mdy);
+  if (a.mouth === 'sonrisa') { c.moveTo(W / 2 - mw - 1, H * 0.78); c.quadraticCurveTo(W / 2, H * 0.86, W / 2 + mw + 1, H * 0.78); }
+  else if (a.mouth === 'seria') { c.moveTo(W / 2 - mw, H * 0.81); c.quadraticCurveTo(W / 2, H * 0.77, W / 2 + mw, H * 0.81); }
+  else if (a.mouth === 'mueca') { c.moveTo(W / 2 - mw, H * 0.8); c.lineTo(W / 2 + 2, H * 0.8); c.quadraticCurveTo(W / 2 + 10, H * 0.79, W / 2 + mw + 1, H * 0.75); }
+  else { c.moveTo(W / 2 - mw, H * 0.8); c.lineTo(W / 2 + mw, H * 0.8); }
+  c.stroke(); c.restore();
+  // Rasgos propios: pecas, un lunar, arrugas de expresión.
+  if (freckles) { c.fillStyle = shadeCss(skin, 0.7); for (let k = 0; k < 14; k++) { c.beginPath(); c.arc(W / 2 + (k % 2 ? 1 : -1) * (14 + r() * 16), H * (0.56 + r() * 0.1), 0.9, 0, 7); c.fill(); } }
+  if (mole) { c.fillStyle = shadeCss(skin, 0.35); c.beginPath(); c.arc(mole[0], mole[1], 1.4, 0, 7); c.fill(); }
+  if (lines) { c.strokeStyle = shadeCss(skin, 0.7); c.lineWidth = 1; c.beginPath(); c.moveTo(W * 0.32, H * 0.2); c.lineTo(W * 0.68, H * 0.2); c.moveTo(W * 0.35, H * 0.25); c.lineTo(W * 0.65, H * 0.25); c.moveTo(W / 2 - mw - 2, H * 0.66); c.quadraticCurveTo(W / 2 - mw - 6, H * 0.74, W / 2 - mw - 3, H * 0.8); c.moveTo(W / 2 + mw + 2, H * 0.66); c.quadraticCurveTo(W / 2 + mw + 6, H * 0.74, W / 2 + mw + 3, H * 0.8); c.stroke(); }
   // Vello facial.
   c.fillStyle = hair;
   const f = a.facial;
@@ -157,6 +173,11 @@ export class Chars3D {
   private hemi = new THREE.HemisphereLight(0xe4ecff, 0x6a5e70, 2.9);
   private rim = new THREE.DirectionalLight(0x9ab8ff, 1.6);
   ok = true;
+  /** v0.14 · Edificios 3D (kit CC0 de Kenney). Se crea al entrar en la primera zona. */
+  city: City3D | null = null;
+  quality: 'low' | 'high' = 'high';
+  /** Se llama cuando los edificios 3D terminan de cargar (la vista reconstruye la zona). */
+  onCityReady: (() => void) | null = null;
 
   /** Comparte el lienzo y el contexto WebGL de Pixi (patrón oficial para mezclar Pixi y Three: sin copias entre contextos). */
   constructor(canvas: HTMLCanvasElement, gl: WebGL2RenderingContext | WebGLRenderingContext) {
@@ -169,6 +190,7 @@ export class Chars3D {
     this.sun.position.set(2, 8, 5); // luz principal desde arriba y de cara a la cámara
     this.rim.position.set(-6, 4, -6); // contraluz frío: separa la silueta del fondo
     this.world.add(this.occl);
+    loadGuns(() => {}); // v0.14 · modelos de armas de fuego (los personajes se rehacen solos al cambiar la versión)
   }
 
   /** Sin tocar el tamaño del lienzo (lo gestiona Pixi): solo la zona de dibujo. */
@@ -177,19 +199,35 @@ export class Chars3D {
   setSize(w: number, h: number, res: number) { this.vpW = Math.round(w * res); this.vpH = Math.round(h * res); }
 
   /** Volúmenes invisibles que tapan: edificios, muros y mobiliario grande. */
-  setZone(z: ZoneDef) {
+  setZone(z: ZoneDef): boolean {
     for (const r of this.rigs.values()) this.disposeRig(r);
     this.rigs.clear();
     this.occl.clear(); this.bOccl = [];
-    const box = (x: number, y: number, w: number, d: number, h: number) => { const m = new THREE.Mesh(G.box, this.occMat); m.scale.set(w, h, d); m.position.set(x + w / 2, h / 2, y + d / 2); m.renderOrder = -1; this.occl.add(m); return m; };
-    for (const b of z.buildings) this.bOccl.push(box(b.rect[0], b.rect[1], b.rect[2], b.rect[3], b.height * BUILDING_H));
+    if (!this.city) { this.city = new City3D(); this.city.onReady = () => this.onCityReady?.(); this.world.add(this.city.group); }
+    const city = this.city.build(z, this.quality);
+    const box = (x: number, y: number, w: number, d: number, h: number, y0 = 0) => { const m = new THREE.Mesh(G.box, this.occMat); m.scale.set(w, h, d); m.position.set(x + w / 2, y0 + h / 2, y + d / 2); m.renderOrder = -1; this.occl.add(m); return m; };
+    // Con los edificios en 3D, ellos mismos tapan; si no, cajas invisibles con su volumen.
+    for (const b of z.buildings) this.bOccl.push(city ? null : box(b.rect[0], b.rect[1], b.rect[2], b.rect[3], b.height * BUILDING_H));
+    if (city) {
+      // Lo que se dibuja en 2D delante de una fachada (farolas, marquesinas, cajeros, máquinas, pasarelas…) necesita su
+      // volumen invisible para que el edificio 3D no se pinte por encima.
+      const tall: Record<string, [number, number]> = { lamp: [0.18, 4.3], busstop: [0.9, 1.6], billboard: [0.9, 3.2], palm: [0.4, 3], plant: [0.5, 1], stall: [0.9, 1.6], tent: [0.9, 1.4], bench: [0.8, 0.6], hydrant: [0.3, 0.6], vending: [0.7, 1.6], antenna: [0.2, 3], crane: [0.6, 6], column: [0.5, 2.5], screen: [0.6, 2], planter: [0.8, 0.7], trash: [0.5, 0.7] };
+      for (const p of z.props) { const t = tall[p.type]; if (t) box(p.at[0] + 0.5 - t[0] / 2 + (p.type === 'lamp' ? 0.0 : 0), p.at[1] + 0.5 - t[0] / 2, t[0], t[0], t[1]); }
+      for (const o of z.objects) box(o.at[0] + 0.2, o.at[1] + 0.2, 0.6, 0.6, o.kind === 'camera' ? 3 : 1.6);
+      for (const d of z.doors) box(d.at[0] + 0.1, d.at[1] + 0.1, 0.8, 0.8, 1.4);
+      for (const sb of z.skybridges ?? []) { const [ax, ay] = sb.from, [bx, by] = sb.to; const hz = ay === by; box(Math.min(ax, bx), Math.min(ay, by), hz ? Math.abs(bx - ax) : 1, hz ? 1 : Math.abs(by - ay), 0.8, sb.z * BUILDING_H); }
+    }
     for (const bl of z.blocks) box(bl.rect[0], bl.rect[1], bl.rect[2], bl.rect[3], bl.type === 'fence' ? 1.1 : bl.height);
     // Solo lo macizo tapa (una marquesina de cristal o un puesto abierto no).
     const H: Record<string, number> = { car: 0.75, wreck: 0.65, dumpster: 0.8, kiosk: 1.4, crate: 0.5, barrel: 0.7, jersey: 0.65, shelf: 1.5, locker: 1.6, fridge: 1.5, arcade: 1.4, smokestack: 3, monolith: 4.5, codewall: 2.4 };
     for (const p of z.props) if (H[p.type] && p.blocking !== false) box(p.at[0] + 0.15, p.at[1] + 0.15, 0.7, 0.7, H[p.type]);
+    return city;
   }
   /** Los edificios atenuados (los que tapan al jugador) dejan de tapar a los personajes. */
-  setBuildingFaded(i: number, faded: boolean) { const m = this.bOccl[i]; if (m) m.visible = !faded; }
+  setBuildingFaded(i: number, faded: boolean, alpha = 1) {
+    if (this.city?.active) { this.city.setFaded(i, !faded ? 0 : alpha < 0.12 ? 2 : 1); return; }
+    const m = this.bOccl[i]; if (m) m.visible = !faded;
+  }
 
   private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) m.dispose(); for (const m of r.ghostMats ?? []) m.dispose(); }
   /** Convierte un modelo en fantasma: cada material pasa a translúcido, sin escribir profundidad y con brillo propio. */
@@ -357,8 +395,11 @@ export class Chars3D {
     const neck = group(chest, 0, 0.32);
     part(neck, G.cyl, tatOn('neck') ? skinM('neck', 2, 2) : plainSkin, 0.12, 0.1, 0.12, 0, 0.04);
     const head = group(neck, 0, 0.21);
-    const [fw, fh] = a.faceShape === 'ancha' || a.faceShape === 'redonda' ? [0.24, 0.26] : a.faceShape === 'alargada' || a.faceShape === 'afilada' || a.faceShape === 'diamante' ? [0.205, 0.29] : a.faceShape === 'cuadrada' ? [0.235, 0.265] : a.faceShape === 'triangular' || a.faceShape === 'corazon' ? [0.225, 0.275] : [0.22, 0.27];
-    const face = mk(lam({ map: tex(faceCanvas(a, chrome.has('ojos'))) }));
+    const [fw0, fh0] = a.faceShape === 'ancha' || a.faceShape === 'redonda' ? [0.24, 0.26] : a.faceShape === 'alargada' || a.faceShape === 'afilada' || a.faceShape === 'diamante' ? [0.205, 0.29] : a.faceShape === 'cuadrada' ? [0.235, 0.265] : a.faceShape === 'triangular' || a.faceShape === 'corazon' ? [0.225, 0.275] : [0.22, 0.27];
+    const faceSeed = hashString(`${s.name ?? ''}#${s.kind === 'player' ? '' : s.id}`) || 1;
+    // v0.14 · Misma base para todos; la cabeza varía un poco con cada persona.
+    const hv = seededRng(faceSeed * 7 + 3); const fw = fw0 * (0.95 + hv() * 0.1), fh = fh0 * (0.96 + hv() * 0.08); const chromeStyle = Math.floor(hv() * 3);
+    const face = mk(lam({ map: tex(faceCanvas(a, chrome.has('ojos'), faceSeed)) }));
     const skinHead = plainSkin;
     const hairCover = !['calvo', 'rapado'].includes(a.hairStyle);
     const headMats = [skinHead, skinHead, hairCover ? hairM : skinHead, skinHead, face, hairCover ? hairM : skinHead];
@@ -367,7 +408,12 @@ export class Chars3D {
     if (a.faceShape === 'diamante' || a.faceShape === 'angulosa') for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.05, 0.05, 0.08, sx * (fw / 2 - 0.01), -0.01, 0.07); // pómulos
     for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.025, 0.065, 0.045, sx * (fw / 2 + 0.005), 0, -0.01); // orejas
     part(head, G.sphere, plainSkin, a.nose === 'ancha' || a.nose === 'chata' ? 0.05 : a.nose === 'pequena' || a.nose === 'respingona' ? 0.03 : 0.036, a.nose === 'aguilena' ? 0.065 : 0.055, a.nose === 'chata' ? 0.03 : a.nose === 'aguilena' ? 0.055 : 0.045, a.nose === 'rota' ? 0.008 : 0, a.nose === 'respingona' ? -0.012 : -0.02, 0.122).rotation.z = a.nose === 'rota' ? 0.25 : 0; // nariz
-    if (chrome.has('cabeza')) { part(head, G.box, metalM, 0.02, 0.1, 0.1, -fw / 2 - 0.012, 0.02, -0.02); part(head, G.sphere, glowM, 0.025, 0.025, 0.025, -fw / 2 - 0.02, 0.02, 0.02); }
+    // Cromo en la cabeza: tres estilos según la persona (placa lateral, placa de mandíbula o conectores en la sien y la frente).
+    if (chrome.has('cabeza')) {
+      if (chromeStyle === 0) { part(head, G.box, metalM, 0.02, 0.1, 0.1, -fw / 2 - 0.012, 0.02, -0.02); part(head, G.sphere, glowM, 0.025, 0.025, 0.025, -fw / 2 - 0.02, 0.02, 0.02); }
+      else if (chromeStyle === 1) { part(head, G.box, metalM, fw * 0.55, 0.05, 0.05, fw * 0.15, -fh / 2 + 0.02, 0.1).rotation.z = -0.15; part(head, G.box, glowM, fw * 0.4, 0.008, 0.008, fw * 0.15, -fh / 2 + 0.03, 0.127); }
+      else { for (const sx of [-1, 1]) { part(head, G.cyl, metalDarkM, 0.03, 0.02, 0.03, sx * (fw / 2 + 0.005), 0.05, 0.03).rotation.z = Math.PI / 2; part(head, G.sphere, glowM, 0.012, 0.012, 0.012, sx * (fw / 2 + 0.016), 0.05, 0.03); } for (let k = -1; k <= 1; k++) part(head, G.sphere, glowM, 0.01, 0.01, 0.01, k * 0.03, fh / 2 - 0.04, 0.122); }
+    }
     if (chrome.has('ojos')) part(head, G.box, mk(new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.6 })), fw * 0.9, 0.03, 0.01, 0, 0.0, 0.123);
     // Pelo.
     const hs = a.hairStyle, covered = a.headwear === 'casco' || a.headwear === 'casco-moto';
@@ -480,6 +526,18 @@ export class Chars3D {
     const scope = (y: number, z: number, len: number, r: number) => { C(dark, r, len, 0, y, z); C(dark, r * 1.25, 0.04, 0, y + len / 2, z); C(dark, r * 1.15, 0.035, 0, y - len / 2, z); B(lens, r * 1.6, 0.003, r * 1.6, 0, y + len / 2 + 0.021, z); B(dark, 0.02, 0.02, 0.03, 0, y - len * 0.25, z - r - 0.01); B(dark, 0.02, 0.02, 0.03, 0, y + len * 0.25, z - r - 0.01); };
     const mag = (m: THREE.Material, y: number, len: number, curve = 0) => { const o = B(m, 0.026, 0.045, len, 0, y, -len / 2 - 0.02); o.rotation.x = curve; return o; };
     const stock = (m: THREE.Material, len: number, drop = 0.02) => { B(m, 0.035, len, 0.06, 0, -len / 2 - 0.05, -drop); B(m, 0.03, 0.02, 0.1, 0, -len - 0.05, -drop - 0.015); };
+    // v0.14 · Si hay modelo del pack de armas, ese (con el brillo de su tecnología encima); si no, el procedural.
+    const fb = kind === 'ranged' ? gunModel(id) : null;
+    if (fb) {
+      const bb = new THREE.Box3().setFromObject(fb), L = bb.max.y - bb.min.y; // (antes de colgarlo: medidas en su propio sistema)
+      g.add(fb);
+      if (techCol >= 0) {
+        B(tglow, 0.006, L * 0.55, 0.005, 0, bb.min.y + L * 0.55, bb.max.z + 0.003);
+        if (/plasma|pulsos|riel/.test(id)) for (let i = 0; i < 3; i++) B(tglow, (bb.max.x - bb.min.x) + 0.004, 0.006, 0.006, 0, bb.min.y + L * (0.45 + i * 0.12), (bb.max.z + bb.min.z) / 2);
+      }
+      void fam;
+      return outer;
+    }
     if (kind === 'ranged') switch (id) {
       case 'pistola-ligera': case 'pistola-compacta': case 'pistola-silenciada': case 'pistola-inteligente': case 'pistola-agujas': case 'pistola-plasma': {
         const L = id === 'pistola-compacta' ? 0.15 : 0.19;
@@ -622,7 +680,7 @@ export class Chars3D {
       const s = e.s;
       if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) continue;
       seen.add(s.id);
-      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color]);
+      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0]);
       let r = this.rigs.get(s.id);
       if (!r || r.key !== key) { if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); }
       this.animate(r, e, opts);
@@ -791,7 +849,7 @@ export class Preview3D {
     if (this.idleSpin && !this.drag) this.angle = 0.25 + Math.sin(now / 2600) * 0.85;
     const c = this.c3d;
     const s = this.ent.s;
-    const key = JSON.stringify([s.appearance, s.chrome, s.weapon]);
+    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion()]);
     let r = c.rigs.get(1);
     if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
     // Un gesto cada pocos segundos para que se vea vivo.
