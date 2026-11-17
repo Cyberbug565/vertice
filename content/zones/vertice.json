@@ -7774,7 +7774,7 @@
    "height": 25,
    "style": "mega",
    "color": "#3e3550",
-   "sign": "NIDO · CÁPSULAS",
+   "sign": "BANCO CENTRAL",
    "signColor": "#ffd23f"
   },
   {
@@ -8290,6 +8290,8 @@
    "height": 6,
    "style": "block",
    "color": "#3a3a3a",
+   "sign": "PENAL DE HIERRO",
+   "signColor": "#c8ccd8",
    "name": "La Trastienda Carmesí"
   },
   {
@@ -36953,6 +36955,44 @@
    "sign": "▲ NIVEL 2 · PASARELAS",
    "signColor": "#43f3ff",
    "signIcon": "flecha"
+  },
+  {
+   "id": "puerta-banco-central",
+   "name": "Banco Central de Vértice",
+   "at": [
+    170,
+    163
+   ],
+   "to": {
+    "zone": "banco-central",
+    "at": [
+     10,
+     12
+    ]
+   },
+   "danger": "public",
+   "sign": "BANCO",
+   "signColor": "#ffd23f",
+   "signIcon": "escudo"
+  },
+  {
+   "id": "puerta-penal-hierro",
+   "name": "Penal de Hierro · visitas",
+   "at": [
+    176,
+    284
+   ],
+   "to": {
+    "zone": "penal-hierro",
+    "at": [
+     12,
+     14
+    ]
+   },
+   "danger": "public",
+   "sign": "PENAL",
+   "signColor": "#c8ccd8",
+   "signIcon": "escudo"
   },
   {
    "id": "puerta-bar-ultima-luz",

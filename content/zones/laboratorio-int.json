@@ -171,5 +171,8 @@
   13,
   5
  ],
- "furnished": true
+ "furnished": true,
+ "restricted": "laboratorio",
+ "detector": true,
+ "police": 2
 }

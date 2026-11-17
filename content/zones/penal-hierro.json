@@ -1,0 +1,223 @@
+{
+ "id": "penal-hierro",
+ "name": "Penal de Hierro · sala de visitas",
+ "kind": "interior",
+ "width": 25,
+ "height": 16,
+ "danger": "public",
+ "base": "metal",
+ "wallColor": "#22262e",
+ "furnished": true,
+ "restricted": "carcel",
+ "detector": true,
+ "police": 4,
+ "blocks": [
+  {
+   "type": "barrier",
+   "rect": [
+    1,
+    6,
+    23,
+    1
+   ],
+   "height": 2,
+   "color": "#3a3e48"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    2,
+    1,
+    1,
+    4
+   ],
+   "height": 3,
+   "color": "#2a2e38"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    6,
+    1,
+    1,
+    4
+   ],
+   "height": 3,
+   "color": "#2a2e38"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    10,
+    1,
+    1,
+    4
+   ],
+   "height": 3,
+   "color": "#2a2e38"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    14,
+    1,
+    1,
+    4
+   ],
+   "height": 3,
+   "color": "#2a2e38"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    18,
+    1,
+    1,
+    4
+   ],
+   "height": 3,
+   "color": "#2a2e38"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    22,
+    1,
+    1,
+    4
+   ],
+   "height": 3,
+   "color": "#2a2e38"
+  }
+ ],
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    2
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    7,
+    2
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    11,
+    2
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    15,
+    2
+   ]
+  },
+  {
+   "type": "bed",
+   "at": [
+    19,
+    2
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    10
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    10,
+    10
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    15,
+    10
+   ]
+  },
+  {
+   "type": "table",
+   "at": [
+    20,
+    10
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-penal",
+   "name": "Salida a la calle",
+   "at": [
+    12,
+    15
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     176,
+     285
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "penal-cam-1",
+   "name": "Cámara de seguridad",
+   "at": [
+    1,
+    8
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "penal-cam-2",
+   "name": "Cámara de seguridad",
+   "at": [
+    23,
+    8
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "penal-terminal",
+   "name": "Terminal de celdas",
+   "at": [
+    12,
+    8
+   ],
+   "kind": "computer"
+  }
+ ],
+ "waypoints": [
+  [
+   12,
+   11
+  ],
+  [
+   6,
+   12
+  ],
+  [
+   18,
+   12
+  ]
+ ],
+ "safePoint": [
+  12,
+  13
+ ]
+}

@@ -138,5 +138,8 @@
   13,
   5
  ],
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo",
+ "detector": true,
+ "police": 2
 }

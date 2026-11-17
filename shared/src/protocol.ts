@@ -105,6 +105,8 @@ export interface EntitySpawn {
   sign?: { text: string; color?: string; icon?: string };
   /** v0.6: miembros perdidos, si sangra, arma en la mano y si es un cadáver. */
   lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EmoteState;
+  /** v0.10 · Armas que lleva encima a la vista (las grandes a la espalda, las pequeñas en la cadera). */
+  carry?: string[];
 }
 export interface SearchResult { key: string; name: string; kind: 'player' | 'npc'; level: number; title: string; faction?: string; bounty: number; record: string[]; online: boolean; location: { zone: string; place: string; x?: number; y?: number; precise: boolean } | null }
 export interface TrunkView { car: string; name: string; capacity: number; used: number; items: { def: string; name: string; qty: number }[]; inventory: { def: string; name: string; qty: number }[] }
@@ -156,6 +158,12 @@ export interface BountyView {
   money: number;
   active: { id: string; targetName: string; kind: 'player' | 'npc'; amount: number; poster: string; reason: string; zone?: string; online?: boolean; mine: boolean; onMe: boolean; aliveOnly: boolean }[];
   targets: { kind: 'player' | 'npc'; id: string; name: string }[];
+}
+/** v0.10 · Sigilo: estado, sospecha, quién te mira, quién te busca, disfraz y armas a la vista. */
+export interface StealthView {
+  state: 'oculto' | 'visto' | 'sospecha' | 'descubierto' | 'buscado' | 'combate'; suspicion: number; observers: number[];
+  hunters: { id: string; name: string; icon: string; color: string }[];
+  disguise?: string; faceCovered: boolean; described: boolean; armed: 'ninguna' | 'a la vista' | 'empuñada'; restricted?: string;
 }
 export interface TargetMenuView {
   target: number; name: string; subtitle?: string; color?: string; hackMode?: boolean;
@@ -255,7 +263,7 @@ export type ServerMsg =
   | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
   | { t: 'spawn'; e: EntitySpawn[] }
   | { t: 'despawn'; ids: number[] }
-  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EmoteState | null }
+  | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EmoteState | null; carry?: string[] }
   | { t: 'skillxp'; skill: string; name: string; gain: number; level: number; xp: number; from: number; to: number; up: boolean }
   | { t: 'building'; view: BuildingView }
   | { t: 'realty'; view: RealtyView }
@@ -278,7 +286,9 @@ export type ServerMsg =
   | { t: 'underworld'; view: UnderworldView }
   | { t: 'ambar'; view: AmbarView }
   | { t: 'speech'; id: number; text: string }
-  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean }
+  | { t: 'stealth'; view: StealthView }
+  | { t: 'noise'; x: number; y: number; r: number }
+  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave' | 'alarm'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean }
   | { t: 'searchResults'; device: 'phone' | 'computer'; results: SearchResult[] }
   | { t: 'gotoTarget'; target: { label: string; zone: string; x: number; y: number } | null }
   | { t: 'trunk'; view: TrunkView }

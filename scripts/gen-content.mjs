@@ -460,6 +460,16 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log(`v0.9: farolas recolocadas ${r.moved} (quitadas ${r.removed}), ${r.signs} rótulos y ${r.stairs} escaleras al Nivel 2.`);
 }
 
+// ---------------------------------------------------------------- v0.10: sigilo (lugares restringidos, detectores, disfraces, dedo pistola)
+{
+  const v10 = await import('./v10.mjs');
+  write('items.json', v10.itemsV10(read('items.json')));
+  write('cyberware.json', v10.cyberwareV10(read('cyberware.json')));
+  write('shops.json', v10.shopsV10(read('shops.json')));
+  const r = v10.zonesV10(C);
+  console.log(`v0.10: ${r.marked} lugares restringidos y nuevos: ${r.made.join(', ')}.`);
+}
+
 // ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
 {
   const { applyOverlays } = await import('./overlay.mjs');

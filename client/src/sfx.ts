@@ -174,3 +174,9 @@ export function siren(dist = 20, pan = 0) {
   s.connect(lp).connect(g).connect(out); s.start(t); s.stop(t + 3.7);
 }
 export function step(dist = 0, pan = 0) { if (!throttle('step', 140)) return; const o = spatial(dist, pan, 0); if (!o) return; burst(o.ctx, o.out, o.t, 0.05, 'lowpass', 500, 1, 0.12); }
+
+/** v0.10 · Arco detector / alarma: pitidos agudos alternos. */
+export function alarm() {
+  const o = spatial(0, 0, 0.2); if (!o) return;
+  for (let i = 0; i < 8; i++) tone(o.ctx, o.out, o.t + i * 0.22, 'square', i % 2 ? 1320 : 990, i % 2 ? 1320 : 990, 0.16, 0.12, 0.005);
+}

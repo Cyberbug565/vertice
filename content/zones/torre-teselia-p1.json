@@ -222,5 +222,6 @@
   "access": "publico",
   "corp": "teselia"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

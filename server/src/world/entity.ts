@@ -11,7 +11,7 @@ export interface Entity {
   zone: Zone; x: number; y: number; cellKey: number; sectorId: string;
   path: [number, number][]; speed: number; facing: number; moving: boolean; lastMoveTick: number;
   /** v0.7: dirección de WASD (con marca de tiempo para cortar si el cliente deja de avisar) y guardia con clic derecho. */
-  steer?: { dx: number; dy: number; at: number }; guard?: boolean; guardSince?: number; dodgeUntil?: number; dodgeReadyAt?: number; sign?: { text: string; color?: string; icon?: string }; lastDir?: { dx: number; dy: number }; markedUntil?: number;
+  steer?: { dx: number; dy: number; at: number }; guard?: boolean; guardSince?: number; dodgeUntil?: number; dodgeReadyAt?: number; sign?: { text: string; color?: string; icon?: string }; carry?: string[]; lastDir?: { dx: number; dy: number }; markedUntil?: number;
   appearance?: Appearance; role?: string; label: string; labelVer: number;
   interactive: boolean; objKind?: string; dialog?: string; danger?: string;
   doorTo?: { zone: string; at: [number, number] };
@@ -47,5 +47,5 @@ export function spawnOf(e: Entity): EntitySpawn {
     bounty: e.bounty || undefined, state: e.state && e.state !== 'alive' ? e.state : undefined, fugitive: e.fugitive ? true : undefined,
     chrome: e.chrome?.length ? e.chrome : undefined, faction: e.faction, npcType: e.npcType, carried: e.carriedBy ? true : undefined,
     hpPct: e.npcMax ? Math.max(0, Math.round(((e.npcHp ?? e.npcMax) / e.npcMax) * 100)) : undefined,
-    level: e.level, emote: e.emote, sign: e.sign, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, dead: e.dead || undefined, buffs: e.buffs || e.guard || e.kairosTier ? [...Object.entries(e.buffs ?? {}).filter(([, u]) => u > Date.now()).map(([k]) => k), ...(e.guard ? ['guardia'] : []), ...(e.kairosTier ? [`kairos${e.kairosTier}`] : [])] : undefined };
+    level: e.level, emote: e.emote, sign: e.sign, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, carry: e.carry?.length ? e.carry : undefined, dead: e.dead || undefined, buffs: e.buffs || e.guard || e.kairosTier ? [...Object.entries(e.buffs ?? {}).filter(([, u]) => u > Date.now()).map(([k]) => k), ...(e.guard ? ['guardia'] : []), ...(e.kairosTier ? [`kairos${e.kairosTier}`] : [])] : undefined };
 }

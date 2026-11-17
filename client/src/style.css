@@ -608,3 +608,24 @@ body.psy3 #ui::after { content: ''; position: fixed; inset: 0; pointer-events: n
 @keyframes hackpulse { 50% { box-shadow: 0 0 28px rgba(180, 108, 255, 0.8); } }
 body.hack-mode canvas { cursor: crosshair !important; filter: hue-rotate(-12deg) saturate(1.15); }
 .cy-side { font-size: 0.7em; opacity: 0.55; letter-spacing: 0.03em; }
+
+/* v0.10 · Sigilo: barra bajo el minimapa y ruleta de armas. */
+.stealth-bar { margin-top: 6px; padding: 6px 8px; border: 1px solid color-mix(in srgb, var(--sc) 60%, transparent); background: rgba(8, 8, 16, 0.82);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); font-size: 0.82em; }
+.stealth-bar.alert { animation: sbalert 0.6s ease-in-out infinite; }
+@keyframes sbalert { 50% { background: rgba(80, 0, 16, 0.85); } }
+.sb-head { display: flex; align-items: center; gap: 6px; color: var(--sc); letter-spacing: 0.06em; }
+.sb-ico { font-size: 1.2em; } .sb-pct { margin-left: auto; opacity: 0.8; }
+.sb-meter { height: 4px; background: rgba(255, 255, 255, 0.08); margin: 4px 0; } .sb-meter i { display: block; height: 100%; background: var(--sc); transition: width 0.4s; }
+.sb-chips { display: flex; flex-wrap: wrap; gap: 3px; } .sb-chips .chip { font-size: 0.82em; padding: 1px 5px; }
+.sb-chips .chip.good { color: var(--green); } .sb-chips .chip.bad { color: var(--red); } .sb-chips .chip.warn { color: var(--yellow); }
+.sb-hunters { margin-top: 5px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 4px; } .sb-hl { font-size: 0.75em; letter-spacing: 0.12em; color: var(--red); }
+.sb-hunter { font-size: 0.86em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.weapon-wheel { position: fixed; inset: 0; z-index: 60; background: radial-gradient(circle at 50% 50%, rgba(10, 6, 20, 0.55), rgba(0, 0, 0, 0.25) 60%); }
+.ww-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; border-radius: 50%; border: 2px solid #43f3ff;
+  background: rgba(8, 10, 20, 0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 0 30px rgba(67, 243, 255, 0.35); padding: 10px; }
+.ww-item { position: absolute; transform: translate(-50%, -50%); width: 118px; min-height: 70px; padding: 6px; border: 1px solid #3a3a5a; background: rgba(10, 10, 22, 0.94); color: #e8e8f0;
+  display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+.ww-item.hover, .ww-item:hover { border-color: #43f3ff; box-shadow: 0 0 18px rgba(67, 243, 255, 0.5); background: rgba(20, 40, 60, 0.95); }
+.ww-item.on { border-color: #ffd23f; } .ww-item.chrome .ww-note { color: #5affc8; }
+.ww-ico { font-size: 1.5em; } .ww-name { font-size: 0.78em; text-align: center; } .ww-note { font-size: 0.66em; opacity: 0.7; text-align: center; }

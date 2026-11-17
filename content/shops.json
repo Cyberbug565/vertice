@@ -128,7 +128,9 @@
    "matriz-centinela": 1,
    "matriz-berserker": 1,
    "matriz-delta": 1,
-   "matriz-cauce": 1
+   "matriz-cauce": 1,
+   "uniforme-seguridad": 1,
+   "bata-laboratorio": 2
   },
   "buys": [
    "chatarra",
@@ -672,7 +674,8 @@
    "sudadera-punto-gruesa": 6,
    "cargo-urbano": 6,
    "shorts-vaquero": 6,
-   "zapatillas-blancas": 6
+   "zapatillas-blancas": 6,
+   "bata-laboratorio": 2
   },
   "buys": [
    "ropa"

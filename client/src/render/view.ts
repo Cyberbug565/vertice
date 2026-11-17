@@ -374,6 +374,27 @@ export class GameView {
         const wg = makeWeapon(wi.id, wi.weapon.family, wi.weapon.kind, s.appearance?.accent);
         if (wg) { ch.hand.addChild(wg); ent.weaponKind = wi.weapon.kind; ent.weaponBig = ['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil'].includes(wi.weapon.family) || ['bate', 'katana-termica', 'lanza-electrica', 'hacha-plasma', 'espada-monofilamento', 'martillo-neumatico', 'machete'].includes(wi.id); }
       }
+      // v0.10 · Armas que lleva encima: las grandes cruzadas a la espalda (detrás del torso) y las pequeñas en la cadera.
+      let big = 0, small = 0;
+      for (const id of s.carry ?? []) {
+        const ci = content.items.find((i) => i.id === id);
+        if (!ci?.weapon) continue;
+        const isBig = ['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil'].includes(ci.weapon.family) || ['bate', 'katana-termica', 'lanza-electrica', 'hacha-plasma', 'espada-monofilamento', 'martillo-neumatico', 'machete'].includes(ci.id);
+        const wg = makeWeapon(ci.id, ci.weapon.family, ci.weapon.kind, s.appearance?.accent);
+        if (!wg) continue;
+        // A la espalda, en diagonal: asoma por encima del hombro (culata abajo, cañón o filo hacia arriba).
+        // Fusiles: cruzados en diagonal (culata en la cadera derecha, cañón asomando por el hombro izquierdo).
+        // Armas blancas largas: la empuñadura asoma por encima del hombro derecho y la hoja baja por la espalda.
+        if (isBig) {
+          if (ci.weapon.kind === 'ranged') { wg.position.set(6.5 - big * 2, -23 - big * 1.5); wg.rotation = -2.3 + big * 0.25; wg.scale.set(1.1); }
+          else { wg.position.set(6 - big * 3, -40); wg.rotation = -2.6 + big * 0.2; wg.scale.set(1); }
+          ch.body.addChildAt(wg, 0); big++;
+        }
+        else { wg.position.set(small % 2 ? -7 : 7, -22); wg.rotation = ci.weapon.kind === 'ranged' ? 1.5 : 2.7; wg.scale.set(0.8 * (small % 2 ? -1 : 1), 0.8); ch.body.addChild(wg); small++; }
+      }
+      // Correa cruzada (armas a la espalda) y funda en la cadera: se ve de un vistazo que vas armado.
+      if (big) { const strap = new Graphics().moveTo(-6.5, -36.5).lineTo(6.5, -20).stroke({ width: 2.2, color: 0x3a2a1c }).moveTo(-6.5, -36.5).lineTo(6.5, -20).stroke({ width: 0.6, color: 0xc8a070, alpha: 0.8 }); strap.circle(0, -28.5, 1).fill(0xc8ccd8); ch.body.addChild(strap); }
+      if (small) { const hol = new Graphics().roundRect(5.2, -22.5, 3.6, 5.5, 1).fill(0x3a2a1c).stroke({ width: 0.4, color: 0xc8a070, alpha: 0.7 }); ch.body.addChildAt(hol, ch.body.children.length - 1); }
       // Al volante: el coche sustituye a la figura (en moto, la figura va montada encima).
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
       if (car) {
@@ -478,7 +499,7 @@ export class GameView {
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
   private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); if (this.hovered === e) this.hovered = null; }
-  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EntitySpawn['emote'] | null }) {
+  setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EntitySpawn['emote'] | null; carry?: string[] }) {
     const e = this.ents.get(id);
     if (!e) return;
     if (extra) {
@@ -490,11 +511,11 @@ export class GameView {
       if (extra.dead && !e.s.dead) this.onDied(e);
       e.s.dead = extra.dead || undefined;
       const lostChanged = (extra.lost ?? []).join() !== (e.s.lost ?? []).join();
-      const wChanged = (extra.weapon ?? undefined) !== (e.s.weapon ?? undefined);
+      const wChanged = (extra.weapon ?? undefined) !== (e.s.weapon ?? undefined) || (extra.carry ?? []).join() !== (e.s.carry ?? []).join();
       if (lostChanged || wChanged) {
         // Miembro arrancado: cae al suelo junto al cuerpo.
         for (const part of extra.lost ?? []) if (!(e.s.lost ?? []).includes(part) && !part.startsWith('mano')) this.severed(e, part);
-        this.upsert({ ...e.s, x: e.x, y: e.y, lost: extra.lost, weapon: extra.weapon, label, chrome: chrome ?? e.s.chrome, appearance: extra.appearance ?? e.s.appearance, vehicle: extra.vehicle ?? e.s.vehicle, state: state === 'alive' ? undefined : state ?? e.s.state });
+        this.upsert({ ...e.s, x: e.x, y: e.y, lost: extra.lost, weapon: extra.weapon, carry: extra.carry, label, chrome: chrome ?? e.s.chrome, appearance: extra.appearance ?? e.s.appearance, vehicle: extra.vehicle ?? e.s.vehicle, state: state === 'alive' ? undefined : state ?? e.s.state });
         return;
       }
       if (extra.buffs !== undefined) e.s.buffs = extra.buffs;
@@ -597,6 +618,33 @@ export class GameView {
         t.position.set(c.x + Math.cos(a) * rx * rr, c.y + Math.sin(a) * ry * rr - 10 * k);
         t.alpha = fade; t.scale.set(1 + k * 0.6);
       }
+    }
+  }
+  /** v0.10 · Sigilo: ojo sobre quien te está mirando (blanco → amarillo → rojo según la sospecha), anillos de ruido y alarma. */
+  private observers = new Set<number>(); private suspicion = 0;
+  private eyeG = new Graphics();
+  private rings: { x: number; y: number; r: number; t0: number }[] = [];
+  private alarmUntil = 0;
+  setObservers(ids: number[], suspicion: number) { this.observers = new Set(ids); this.suspicion = suspicion; }
+  noiseRing(x: number, y: number, r: number) { this.rings.push({ x, y, r, t0: performance.now() }); if (this.rings.length > 12) this.rings.shift(); }
+  alarm(ms = 4000) { this.alarmUntil = performance.now() + ms; this.shake(2, 300); }
+  private drawStealth(now: number) {
+    const g = this.eyeG;
+    if (!g.parent) this.lightsLayer.addChild(g);
+    g.clear();
+    const col = this.suspicion >= 75 ? 0xff3040 : this.suspicion >= 25 ? 0xffd23f : 0xe8f0ff;
+    for (const id of this.observers) {
+      const e = this.ents.get(id); if (!e) continue;
+      const p = worldToScreen(e.x, e.y, 0); const y = p.y - 72;
+      g.ellipse(p.x, y, 9, 5).fill({ color: 0x07070d, alpha: 0.85 }).stroke({ width: 1.5, color: col });
+      g.circle(p.x, y, 2.6).fill(col);
+      // Arco que se llena con la sospecha.
+      g.arc(p.x, y, 12, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * this.suspicion) / 100).stroke({ width: 2, color: col, alpha: 0.9 });
+    }
+    this.rings = this.rings.filter((r) => now - r.t0 < 1100);
+    for (const r of this.rings) {
+      const k = (now - r.t0) / 1100, p = worldToScreen(r.x, r.y, 0), rr = r.r * k;
+      g.ellipse(p.x, p.y, rr * 32, rr * 16).stroke({ width: 1.5, color: 0xffffff, alpha: 0.35 * (1 - k) });
     }
   }
   /** v0.9 · Visión térmica / objetivos marcados: chevrones rojos sobre los hostiles cercanos, también tras las paredes. */
@@ -1072,6 +1120,7 @@ export class GameView {
     this.stepParts(now, dt);
     this.animateWaves(now);
     this.drawThermal(now);
+    this.drawStealth(now);
     for (const f of [...this.fxList]) if (now > f.until) { f.g.destroy(); this.fxList.splice(this.fxList.indexOf(f), 1); }
     this.animateTraffic(dt);
     const g = this.beaconG; g.clear();
@@ -1384,6 +1433,8 @@ export class GameView {
     const W = this.app.screen.width, H = this.app.screen.height;
     // v0.9 · El tinte de color es suave; la oscuridad de verdad la pone la capa de iluminación dinámica (más oscuro donde no hay farolas).
     this.nightOverlay.clear().rect(0, 0, W, H).fill({ color: interior ? 0x080a2a : color, alpha: interior ? 0.12 : alpha * 0.35 });
+    // v0.10 · Alarma: destello rojo que late.
+    if (performance.now() < this.alarmUntil) this.nightOverlay.rect(0, 0, W, H).fill({ color: 0xff0020, alpha: 0.12 + 0.12 * Math.abs(Math.sin(performance.now() / 160)) });
     this.drawLighting(interior ? 0 : alpha * 0.95, interior);
     // Farolas, neones y ventanas brillan más cuanto más oscuro está.
     const dark = h >= 21 || h < 5 ? 1 : h < 8 ? lerp(1, 0, (h - 5) / 3) : h < 17 ? 0 : lerp(0, 1, (h - 17) / 4);

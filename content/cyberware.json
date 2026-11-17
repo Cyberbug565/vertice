@@ -2243,7 +2243,7 @@
   "humanity": 2,
   "price": 3800,
   "maker": "saqueadores",
-  "desc": "Una bala de 5 mm escondida en el meñique: +1 a disparar.",
+  "desc": "Una bala de 5 mm escondida en el meñique: arma integrada silenciosa que los arcos detectores no ven.",
   "effects": {
    "attrs": {},
    "skills": {
@@ -2259,7 +2259,8 @@
    "meleeDmg": 0,
    "speed": 0,
    "carSpeed": 0,
-   "dodge": 0
+   "dodge": 0,
+   "weapon": "dedo-pistola-arma"
   },
   "region": "manos",
   "rarity": "raro",

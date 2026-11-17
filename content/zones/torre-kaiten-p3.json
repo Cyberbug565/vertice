@@ -269,5 +269,6 @@
   "access": "restringido",
   "corp": "kaiten"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

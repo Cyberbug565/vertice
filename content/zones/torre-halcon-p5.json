@@ -221,5 +221,6 @@
   "access": "restringido",
   "corp": "halcon"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

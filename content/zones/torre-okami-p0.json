@@ -223,5 +223,8 @@
   "access": "publico",
   "corp": "okami"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo",
+ "detector": true,
+ "police": 2
 }

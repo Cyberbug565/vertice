@@ -179,5 +179,8 @@
   13,
   5
  ],
- "furnished": true
+ "furnished": true,
+ "restricted": "policia",
+ "detector": true,
+ "police": 3
 }

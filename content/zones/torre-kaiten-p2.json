@@ -222,5 +222,6 @@
   "access": "empleados",
   "corp": "kaiten"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

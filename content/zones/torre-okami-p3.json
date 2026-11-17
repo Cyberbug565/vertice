@@ -202,5 +202,6 @@
   "access": "empleados",
   "corp": "okami"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

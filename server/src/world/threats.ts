@@ -138,10 +138,11 @@ export class Threats {
   }
   private say(e: Entity, text: string) { for (const o of e.zone.query(e.x, e.y, 20)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'speech', id: e.id, text }); }
   /** Violencia en la calle: si una cámara lo ve, avisa a la PCV; los testigos también pueden llamar. */
-  violence(attacker: Entity, victim: Entity) {
+  violence(attacker: Entity, victim: Entity, witnesses?: Entity[]) {
     if (dangerAt(attacker.zone.grid, attacker.x, attacker.y) === 'lawless') return;
     if (this.w.combat.cameraSees(attacker)) { this.report(attacker, 'camara'); return; }
-    for (const o of attacker.zone.query(attacker.x, attacker.y, 10)) {
+    // v0.10 · Solo llaman a la policía los civiles que lo han visto u oído.
+    for (const o of witnesses ?? attacker.zone.query(attacker.x, attacker.y, 10)) {
       if (o === victim || o === attacker || o.npcType !== 'civil' || o.state === 'downed' || o.callingUntil) continue;
       if (this.rng() < 0.25) { o.callingUntil = Date.now() + 5000; o.path = []; o.label = 'Llamando a la policía'; o.labelVer++; this.say(o, '¿PCV? ¡Hay un tiroteo aquí!'); setTimeout(() => { o.callingUntil = undefined; if (!o.dead) this.report(attacker, 'llamada'); }, 5000); return; }
     }

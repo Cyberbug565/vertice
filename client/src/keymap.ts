@@ -8,12 +8,13 @@ export const KEY_ACTIONS: KeyAction[] = [
   { id: 'right', label: 'Andar a la derecha', group: 'Movimiento', def: 'd' },
   { id: 'run', label: 'Correr / andar', group: 'Movimiento', def: 'shift' },
   { id: 'interact', label: 'Interactuar con lo señalado', group: 'Acción', def: 'e' },
-  { id: 'kick', label: 'Patada (empuja y desequilibra)', group: 'Acción', def: 'q' },
+  { id: 'wheel', label: 'Ruleta de armas (elige qué empuñas)', group: 'Acción', def: 'r' },
+  { id: 'kick', label: 'Patada (empuja y desequilibra)', group: 'Acción', def: 'f' },
   { id: 'cancel', label: 'Cancelar la acción', group: 'Acción', def: 'backspace' },
-  { id: 'hack', label: 'Modo hackeo (luego clic en el objetivo)', group: 'Acción', def: 'r' },
+  { id: 'hack', label: 'Modo hackeo (luego clic en el objetivo)', group: 'Acción', def: 'q' },
   { id: 'dodge', label: 'Esquivar (rodar hacia donde andas)', group: 'Acción', def: ' ' },
   { id: 'retreat', label: 'Retirada al refugio', group: 'Acción', def: ',' },
-  { id: 'body', label: 'Panel del cuerpo (heridas)', group: 'Acción', def: 'f' },
+  { id: 'body', label: 'Panel del cuerpo (heridas)', group: 'Acción', def: 'h' },
   { id: 'target', label: 'Señalar lo siguiente cercano', group: 'Acción', def: 'tab' },
   { id: 'dance', label: 'Bailar', group: 'Acción', def: 'b' },
   { id: 'sleep', label: 'Dormir / despertar', group: 'Acción', def: 'z' },
@@ -33,7 +34,7 @@ export const KEY_ACTIONS: KeyAction[] = [
   { id: 'props', label: 'Propiedades', group: 'Menos usadas', def: 'p' },
   { id: 'market', label: 'Mercado en tiempo real', group: 'Menos usadas', def: 'n' },
   { id: 'bounties', label: 'Recompensas', group: 'Menos usadas', def: 'u' },
-  { id: 'factions', label: 'Facciones', group: 'Menos usadas', def: 'h' },
+  { id: 'factions', label: 'Facciones', group: 'Menos usadas', def: 'ñ' },
   { id: 'ambar', label: 'Rescate Ámbar', group: 'Menos usadas', def: '.' },
   { id: 'zoomIn', label: 'Acercar', group: 'Cámara', def: '+' },
   { id: 'zoomOut', label: 'Alejar', group: 'Cámara', def: '-' },
@@ -47,6 +48,8 @@ function load(): Record<string, string> {
   for (const a of KEY_ACTIONS) if (out[a.id] === undefined) out[a.id] = a.def;
   if (out.retreat === 'r' && out.hack === 'r') out.retreat = ',';
   if (out.cancel === 'q' && out.kick === 'q') out.cancel = 'backspace';
+  // v0.10 · Hackeo en Q, ruleta de armas en R, patada en F, cuerpo en H y facciones en Ñ (solo si seguían las de antes).
+  if (out.hack === 'r' && (out.kick === 'q' || out.kick === 'f')) { out.hack = 'q'; out.wheel = 'r'; out.kick = 'f'; if (out.body === 'f') out.body = 'h'; if (out.factions === 'h') out.factions = 'ñ'; }
   return out;
 }
 export const keymap: Record<string, string> = load();

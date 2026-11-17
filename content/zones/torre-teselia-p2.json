@@ -222,5 +222,6 @@
   "access": "empleados",
   "corp": "teselia"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

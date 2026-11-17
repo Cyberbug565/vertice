@@ -6,6 +6,7 @@ import { GameView, type CEnt } from './render/view';
 import { settings, onSettings } from './settings';
 import { audioScene, blip, initAudio, setAmbientActive } from './audio';
 import * as sfx from './sfx';
+import { stealthBar, weaponWheel } from './ui/stealth';
 import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
 import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
 import { $ui, clearUi, fmtMoney, h } from './ui/dom';
@@ -93,7 +94,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   // Destino marcado: chip con el nombre y botón para desmarcarlo.
   const goalEl = h('div', { class: 'goalchip', style: { display: 'none' } });
   const streetGoal = h('div', { id: 'underworld-goal' });
-  const tr = h('div', { class: 'hud hud-tr' }, mm, goalEl, streetGoal, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
+  const sbar = stealthBar();
+  const tr = h('div', { class: 'hud hud-tr' }, mm, sbar.el, goalEl, streetGoal, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
   const actionEl = h('div', { class: 'actionline', 'aria-live': 'polite', id: 'action' });
   const progress = h('div', { class: 'progress', style: { display: 'none' } }, h('i'));
   const stanceSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Postura' });
@@ -192,7 +194,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const setAction = (text: string, duration?: number) => {
     st.action = text;
-    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · clic: interactuar a distancia · clic der. + clic: atacar (Ctrl: fuerte) · ${keyOf('hack')}: hackear · ${keyOf('dodge')}: esquivar · ${keyOf('kick')}: patada`;
+    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · clic: interactuar a distancia · clic der. + clic: atacar (Ctrl: fuerte) · ${keyOf('wheel')}: armas · ${keyOf('hack')}: hackear · ${keyOf('dodge')}: esquivar · ${keyOf('kick')}: patada`;
     const bar = progress.firstChild as HTMLElement;
     if (duration) {
       progress.style.display = 'block';
@@ -400,6 +402,11 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const cop = [...view.ents.values()].find((e) => (e.s.npcType === 'police' || e.s.npcType === 'hierro') && !e.s.dead && Math.hypot(e.x - view.me.x, e.y - view.me.y) < 30);
     if (cop && (st.sheet?.wanted ?? 0) >= 1) sfx.siren(Math.hypot(cop.x - view.me.x, cop.y - view.me.y), ((cop.x - view.me.x) - (cop.y - view.me.y)) / 12);
   }, 1000));
+  let wheelRef: { pickHovered: () => void; close: () => void } | null = null;
+  // Ruleta: al soltar la tecla se elige el arma señalada (si la mantienes pulsada); Esc la cierra.
+  window.addEventListener('keyup', (ev) => { if (wheelRef && actionFor(ev.key.toLowerCase()) === 'wheel' && document.getElementById('weapon-wheel') && (ev.timeStamp - wheelOpenedAt) > 250) { wheelRef.pickHovered(); wheelRef = null; } }, { signal: eventScope.signal });
+  let wheelOpenedAt = 0;
+  window.addEventListener('keydown', (ev) => { if (actionFor(ev.key.toLowerCase()) === 'wheel' && !ev.repeat) wheelOpenedAt = ev.timeStamp; }, { signal: eventScope.signal, capture: true });
   let ctrlHeld = false;
   window.addEventListener('keydown', (ev) => { if (ev.key === 'Control') ctrlHeld = true; }, { signal: eventScope.signal });
   window.addEventListener('keyup', (ev) => { if (ev.key === 'Control') ctrlHeld = false; }, { signal: eventScope.signal });
@@ -519,7 +526,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   $ui().addEventListener('pointerover', (ev) => { if (ev.target !== $ui()) tooltip.style.display = 'none'; });
   view.onHover = (e, sx, sy) => {
     if (!e) { tooltip.style.display = 'none'; return; }
-    const hint = hackMode ? (e.s.id === view.meId ? 'Modo hackeo: elige a otro' : 'Clic: ver hackeos posibles') : e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? 'Clic: examinar' : view.guarding ? 'Clic: ¡atacar! · Ctrl+clic: golpe fuerte o ráfaga · Q: patada · Espacio: esquivar' : 'Clic: menú (a distancia) · clic derecho mantenido + clic: atacar · R + clic: hackear';
+    const hint = hackMode ? (e.s.id === view.meId ? 'Modo hackeo: elige a otro' : 'Clic: ver hackeos posibles') : e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? 'Clic: examinar' : view.guarding ? `Clic: ¡atacar! · Ctrl+clic: golpe fuerte o ráfaga · ${keyOf('kick')}: patada · ${keyOf('dodge')}: esquivar` : `Clic: menú (a distancia) · clic derecho mantenido + clic: atacar · ${keyOf('hack')} + clic: hackear`;
     tooltip.replaceChildren(h('b', {}, e.s.name), e.s.title ? ` · ${e.s.title}` : '', e.s.label ? h('div', { class: 'muted' }, e.s.label) : '', h('div', { class: 'cy' }, hint));
     tooltip.style.display = 'block'; tooltip.style.left = `${sx + 14}px`; tooltip.style.top = `${sy + 14}px`;
   };
@@ -560,6 +567,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const k = e.key.toLowerCase();
     if (document.getElementById('dance-wheel')) return;
     if (k === 'escape') {
+      if (document.getElementById('weapon-wheel')) { document.getElementById('weapon-wheel')!.remove(); wheelRef = null; return; }
       if (hackMode) { setHackMode(false); return; }
       if (closeDanceMenus()) return;
       if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove();
@@ -576,6 +584,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     switch (a) {
       case 'run': toggleRun(); break;
       case 'hack': if (onWorld()) setHackMode(!hackMode); break;
+      case 'wheel': if (onWorld() && st.sheet) { e.preventDefault(); if (document.getElementById('weapon-wheel')) { wheelRef?.pickHovered(); wheelRef = null; } else wheelRef = weaponWheel(st.sheet, (item) => { net.send({ t: 'equip', item } as any); blip('ui'); toast(item ? `Empuñas: ${content.items.find((i) => i.id === item)?.name ?? item}.` : 'Guardas el arma: manos vacías.', 'info'); }); } break;
       case 'dodge': if (onWorld()) { e.preventDefault(); dodge(); } break;
       case 'kick': if (onWorld()) kick(); break;
       case 'interact': if (onWorld() && view.hovered && !st.dialog) { e.preventDefault(); view.onEntityClick(view.hovered); } break;
@@ -682,12 +691,15 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'despawn': for (const id of m.ids) view.remove(id); break;
       case 'label':
         if (m.id === view.meId && m.emote !== undefined) localDance = m.emote && m.emote.move !== 'nausea' ? m.emote.move : null;
-        view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs, lost: m.lost, bleeding: m.bleeding, weapon: m.weapon, dead: m.dead, emote: m.emote }); break;
+        view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs, lost: m.lost, bleeding: m.bleeding, weapon: m.weapon, dead: m.dead, emote: m.emote, carry: m.carry }); break;
       case 'factions': factionsPanel(life, m.view); break;
       case 'underworld': underworldPanel(net, m.view); break;
       case 'ambar': ambarPanel(life, m.view); break;
       case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
+      case 'stealth': sbar.render(m.view); view.setObservers(m.view.observers, m.view.suspicion); break;
+      case 'noise': view.noiseRing(m.x, m.y, m.r); break;
       case 'fx': {
+        if (m.kind === 'alarm') { view.alarm(); sfx.alarm(); break; }
         // v0.9 · Sonido espacial de cada acción de combate.
         const at = (id: number) => { const e = view.ents.get(id); if (!e) return { d: 0, p: 0, e }; return { d: Math.hypot(e.x - view.me.x, e.y - view.me.y), p: ((e.x - view.me.x) - (e.y - view.me.y)) / 12, e }; };
         const src = at(m.from), dst = at(m.to);

@@ -45,7 +45,7 @@ describe('v0.3 · combate, red y ciudad', () => {
     const dist = (e: any) => app.world.districtOf(e.zone, e.x, e.y);
     expect(npcs.some((e) => e.npcType === 'gang' && e.faction === 'engranajes' && dist(e) === 'forja')).toBe(true);
     expect(npcs.some((e) => e.npcType === 'police' && dist(e) === 'cenit')).toBe(true);
-    expect(npcs.some((e) => e.npcType === 'police' && dist(e) === 'forja')).toBe(false); // la PCV no entra en Forja
+    expect(npcs.some((e) => e.npcType === 'police' && e.zone.id === 'vertice' && dist(e) === 'forja')).toBe(false); // la PCV no patrulla Forja (los guardias de sus edificios no cuentan)
   });
 
   it('arma de fuego: gasta munición, tiene alcance y deja un cuerpo que se puede cargar (y pesa)', async () => {

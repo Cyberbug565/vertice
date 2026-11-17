@@ -834,5 +834,125 @@
   "category": "matriz",
   "rarity": "legendario",
   "price": 48000
+ },
+ {
+  "id": "uniforme-pcv",
+  "name": "Uniforme de la PCV",
+  "desc": "Disfraz: en comisarías, el penal y el banco nadie sospecha de ti y puedes pasar el arco detector armado. Los agentes que se te acerquen mucho pueden notar que no eres de los suyos.",
+  "weight": 1.5,
+  "price": 2500,
+  "category": "ropa",
+  "rarity": "raro",
+  "armor": 1,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "chaleco",
+   "color": "#22305a",
+   "pattern": "tactico",
+   "detail": "reflectante",
+   "accent": "#43a8ff",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "disfraz-pcv"
+  }
+ },
+ {
+  "id": "uniforme-seguridad",
+  "name": "Uniforme de seguridad privada",
+  "desc": "Disfraz: en bancos, torres corporativas y laboratorios eres «del personal»; en el banco pasas el detector armado.",
+  "weight": 1.2,
+  "price": 1800,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "blazer",
+   "color": "#16161e",
+   "pattern": "liso",
+   "detail": "cinturon",
+   "accent": "#ffd23f",
+   "mods": {
+    "skills": {
+     "intimidacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "disfraz-seguridad"
+  }
+ },
+ {
+  "id": "bata-laboratorio",
+  "name": "Bata de laboratorio",
+  "desc": "Disfraz: en torres corporativas y laboratorios, nadie mira dos veces a alguien con bata y tarjeta.",
+  "weight": 0.8,
+  "price": 900,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "abrigo",
+   "color": "#e8eaf0",
+   "pattern": "liso",
+   "detail": "parches",
+   "accent": "#43f3ff",
+   "mods": {
+    "skills": {
+     "medicina": 1,
+     "investigacion": 1
+    },
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "perk": "disfraz-corpo"
+  }
+ },
+ {
+  "id": "dedo-pistola-arma",
+  "name": "Dedo pistola",
+  "desc": "Una pistola de 5 mm escondida en el meñique. Silenciosa y casi invisible: los arcos detectores no ven el cromo.",
+  "weight": 0,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "ranged",
+   "family": "Implante",
+   "damage": [
+    7,
+    12
+   ],
+   "range": 10,
+   "cooldown": 1.2,
+   "accuracy": 1,
+   "nonlethal": "no",
+   "noise": 0.15,
+   "tech": "clasica",
+   "traits": [
+    "silenciosa"
+   ]
+  }
  }
 ]

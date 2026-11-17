@@ -25,6 +25,7 @@ import { Threats } from './threats.js';
 import { Relics } from './relics.js';
 import { Legends } from './legends.js';
 import { Mythics } from './mythics.js';
+import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
 import { Nightlife } from './nightlife.js';
 import { Underworld } from './underworld.js';
@@ -75,6 +76,7 @@ export class World {
   readonly relics: Relics;
   readonly legends: Legends;
   readonly mythics: Mythics;
+  readonly stealth: Stealth;
   readonly admin: Admin;
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
@@ -95,6 +97,7 @@ export class World {
     this.relics = new Relics(this);
     this.legends = new Legends(this);
     this.mythics = new Mythics(this);
+    this.stealth = new Stealth(this);
     this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
@@ -312,6 +315,7 @@ export class World {
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.underworld.everySecond();
+    if (this.tick % 20 === 10) { try { this.stealth.tick(); } catch (err) { console.error('[sigilo]', err); } }
     if (this.tick % 20 === 12) this.legends.tick().catch((err) => console.error('[leyendas]', err));
     if (this.tick % 20 === 15) { try { this.relics.everySecond(); } catch (err) { console.error('[matrices]', err); } }
     if (this.tick % 20 === 5) this.threats.tick().catch((err) => console.error('[amenazas]', err));
@@ -481,7 +485,7 @@ export class World {
     try {
       if (gone.length) this.send(c, { t: 'despawn', ids: gone });
       if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
-      for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs, lost: sp.lost ?? [], bleeding: sp.bleeding ?? false, weapon: sp.weapon, dead: sp.dead ?? false, emote: sp.emote ?? null }); }
+      for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs, lost: sp.lost ?? [], bleeding: sp.bleeding ?? false, weapon: sp.weapon, dead: sp.dead ?? false, emote: sp.emote ?? null, carry: sp.carry ?? [] }); }
       if (np) {
         POS_DV.setUint8(0, BIN_POSITIONS); POS_DV.setUint32(1, this.tick >>> 0); POS_DV.setUint16(5, np);
         const buf = Buffer.from(POS_BUF.subarray(0, 7 + np * 9)); // copia: el búfer compartido se reutiliza
@@ -946,6 +950,8 @@ export class World {
       conn.lastDanger = dangerAt(to.grid, nx, ny);
       this.send(conn, { t: 'zone', zone: to.id, x: nx, y: ny, sector: s.name, danger: conn.lastDanger });
       void this.legends.event(conn, { type: 'visit', zone: to.id }).catch(() => {});
+      // v0.10 · Arco detector de armas en la entrada de los lugares restringidos.
+      this.stealth.detector(conn, to.id);
     }
   }
 

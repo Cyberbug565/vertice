@@ -205,5 +205,6 @@
   "access": "empleados",
   "corp": "halcon"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

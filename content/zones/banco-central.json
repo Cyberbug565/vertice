@@ -1,0 +1,230 @@
+{
+ "id": "banco-central",
+ "name": "Banco Central de Vértice",
+ "kind": "interior",
+ "width": 21,
+ "height": 14,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#3a3220",
+ "furnished": true,
+ "restricted": "banco",
+ "detector": true,
+ "police": 3,
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    4,
+    5,
+    13,
+    1
+   ],
+   "height": 1,
+   "color": "#5a4a2a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    1,
+    2,
+    19,
+    1
+   ],
+   "height": 3,
+   "color": "#2a2418"
+  }
+ ],
+ "props": [
+  {
+   "type": "column",
+   "at": [
+    3,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    5,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    7,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    11,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    13,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    15,
+    3
+   ]
+  },
+  {
+   "type": "column",
+   "at": [
+    17,
+    3
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    4,
+    11
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    8,
+    11
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    12,
+    11
+   ]
+  },
+  {
+   "type": "plant",
+   "at": [
+    16,
+    11
+   ]
+  },
+  {
+   "type": "screen",
+   "at": [
+    10,
+    1
+   ],
+   "color": "#ffd23f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    3,
+    9
+   ]
+  },
+  {
+   "type": "sofa",
+   "at": [
+    17,
+    9
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-banco",
+   "name": "Salida a la calle",
+   "at": [
+    10,
+    13
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     170,
+     164
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "banco-cajero-1",
+   "name": "Cajero del banco",
+   "at": [
+    2,
+    7
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "banco-cajero-2",
+   "name": "Cajero del banco",
+   "at": [
+    18,
+    7
+   ],
+   "kind": "atm"
+  },
+  {
+   "id": "banco-cam-1",
+   "name": "Cámara de seguridad",
+   "at": [
+    1,
+    4
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "banco-cam-2",
+   "name": "Cámara de seguridad",
+   "at": [
+    19,
+    4
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "banco-terminal",
+   "name": "Terminal de la cámara acorazada",
+   "at": [
+    10,
+    4
+   ],
+   "kind": "computer"
+  }
+ ],
+ "waypoints": [
+  [
+   10,
+   8
+  ],
+  [
+   5,
+   9
+  ],
+  [
+   15,
+   9
+  ]
+ ],
+ "safePoint": [
+  10,
+  11
+ ]
+}

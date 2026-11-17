@@ -44,7 +44,8 @@ export class Combat {
         for (const g of d.gangs) for (let i = 0; i < g.count; i++) this.spawnFactionNpc(z, g.faction, 'gang', g.area);
         for (let i = 0; i < d.police; i++) { const wp = d.waypoints[Math.floor(this.rng() * d.waypoints.length)]; this.spawnFactionNpc(z, 'pcv', 'police', wp ? [wp[0], wp[1], 6] : undefined); }
       }
-      if (!z.def.districts.length) for (let i = 0; i < z.def.police; i++) this.spawnFactionNpc(z, 'pcv', 'police');
+      // v0.10 · En los lugares restringidos privados, los guardias son de seguridad privada.
+      if (!z.def.districts.length) for (let i = 0; i < z.def.police; i++) { const g = this.spawnFactionNpc(z, 'pcv', 'police'); const r = (z.def as any).restricted; if (g && (r === 'corporativo' || r === 'banco' || r === 'laboratorio')) { g.title = 'Seguridad privada'; g.name = g.name.replace('Agente', 'Guardia'); } }
     }
   }
   spawnFactionNpc(z: Zone, faction: string, type: Entity['npcType'], area?: [number, number, number], at?: { x: number; y: number }): Entity | null {
@@ -423,6 +424,7 @@ export class Combat {
     if ((tp && tp.status !== 'alive') || (!tp && target.state === 'downed')) return;
     p.stamina -= 8; p.lastCombatAt = now;
     p.nextAttackAt = now + 900 / (e.timeScale ?? 1);
+    (c as any).lastNoise = 2; this.w.stealth.noise(e, 2);
     const ef = effective(this.c, p);
     const a = this.attackScore(p) + 1 + this.roll();
     const d = (tp ? this.defenseScore(tp) : this.npcDefenseScore(target)) + this.roll();
@@ -496,6 +498,11 @@ export class Combat {
       await this.w.db.query(`INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4) ON CONFLICT (character_id, def_id) DO UPDATE SET qty = inventory_items.qty + EXCLUDED.qty`, [uuid(), p.charId, item, qty]);
       found.push(`${qty > 1 ? `${qty}× ` : ''}${this.c.items.find((i) => i.id === item)!.name}`);
     };
+    // v0.10 · Disfraces: a un agente o guardia caído le puedes quitar el uniforme.
+    if (target.npcType === 'police' || target.npcType === 'hierro') {
+      const r = (target.zone.def as any).restricted as string | undefined;
+      await give(r === 'corporativo' || r === 'banco' ? 'uniforme-seguridad' : r === 'laboratorio' ? 'bata-laboratorio' : 'uniforme-pcv', 1);
+    }
     const wpItem = target.weaponId ? this.c.items.find((i) => i.id === target.weaponId) : undefined;
     if (wpItem?.weapon && this.rng() < 0.25 * mult) await give(wpItem.id, 1);
     if (wpItem?.weapon?.ammo && this.rng() < 0.5) await give(wpItem.weapon.ammo, Math.round((4 + this.rng() * 8) * mult));
@@ -561,6 +568,10 @@ export class Combat {
     if (!tp && target.state === 'downed') return;
     const traits = new Set(wp.w.traits ?? []);
     const skill = wp.w.kind === 'melee' ? 'cuerpo' : 'armas';
+    // v0.10 · Ruido: cada arma se oye a una distancia (las silenciosas y el cromo integrado, muy poco). Solo lo oye quien está dentro.
+    const noiseR = wp.w.kind === 'ranged' ? (8 + (wp.w.noise ?? 0.5) * 32) * (traits.has('silenciosa') ? 0.3 : 1) * (heavy ? 1.2 : 1) : heavy ? 4 : 2.5;
+    (c as any).lastNoise = noiseR;
+    this.w.stealth.noise(e, noiseR);
     const dist = Math.hypot(target.x - e.x, target.y - e.y);
     const smart = traits.has('inteligente') || ef.flags.has('ojo-de-dios');
     const rangePenalty = wp.w.kind === 'ranged' && !smart && dist > wp.w.range / 2 ? Math.round((dist - wp.w.range / 2) / (wp.w.range / 4)) : 0;
@@ -802,11 +813,16 @@ export class Combat {
     const p = c.p!;
     if (target.npcType === 'psycho' || (target.predator && target.aggro !== undefined)) return;
     if ((legit ?? this.claimable(target, p).length > 0) && kind !== 'kill') return;
-    if (kind !== 'attempt' || lethal) this.w.threats.violence(c.e!, target);
+    // v0.10 · Solo cuenta si alguien lo VE o lo OYE (o lo graba una cámara). En sigilo, nadie se entera.
+    const wit = this.w.stealth.witnesses(c.e!, (c as any).lastNoise ?? 2.5, kind === 'kill' || kind === 'down' || target.state === 'downed' || target.dead ? target : undefined);
+    const camera = this.cameraSees(c.e!);
+    if (kind !== 'attempt' || lethal) this.w.threats.violence(c.e!, target, wit.civs);
+    if (wit.seen.length) this.w.stealth.remember(c, wit.seen, kind === 'kill' ? 'asesinato' : 'agresión');
     // v0.6: zona negra, sin ley; zona roja, solo si hay agentes cerca; zona amarilla, vigilada (cámaras y patrullas).
     const lvl = dangerAt(c.e!.zone.grid, c.e!.x, c.e!.y);
     if (lvl === 'lawless') return;
-    const cops = [...c.e!.zone.query(c.e!.x, c.e!.y, effective(this.c, c.p!).flags.has('pasos-silenciosos') ? 11 : 18)].some((o) => (o.npcType === 'police' || o.npcType === 'hierro') && o.state !== 'downed');
+    const cops = wit.cops.length > 0;
+    if (!wit.any && !camera) { if (kind === 'kill' || kind === 'down') this.notice(c, 'good', '🤫 Nadie te ha visto ni oído.'); return; }
     if (lvl === 'disputed' && !cops) return;
     const police = lvl === 'public' ? 1 : this.policeAt(c.e!);
     if (!police) return;
@@ -818,7 +834,7 @@ export class Combat {
     const cop = target.npcType === 'police' || target.npcType === 'hierro' ? 1.5 : 1;
     void this.sv.addWanted(c, base * cop * factor, target.npcType === 'police' ? 'agresión a la PCV' : lethal ? 'agresión armada' : 'agresión');
     // Los agentes cercanos responden.
-    for (const o of c.e!.zone.query(c.e!.x, c.e!.y, 18)) if ((o.npcType === 'police' || o.npcType === 'hierro') && o.state !== 'downed' && !o.aggro && p.wanted >= 1.5) { o.aggro = c.e!.id; o.aggroLethal = o.npcType === 'hierro'; }
+    for (const o of wit.cops) if (o.state !== 'downed' && !o.aggro && p.wanted >= 1.5) { o.aggro = c.e!.id; o.aggroLethal = o.npcType === 'hierro'; }
   }
 
   /** ¿Te ve alguna cámara (encendida y con línea de visión) en un radio de 11 m? */
@@ -1267,8 +1283,10 @@ export class Combat {
         const op = o.kind === 'player' ? this.w.playerOf(o) : undefined;
         if (!op || op.status !== 'alive' || dangerAt(o.zone.grid, o.x, o.y) === 'protected') continue;
         if ((op.buffs.invisible ?? 0) > now || (op.buffs.senuelo ?? 0) > now) continue;
+        // v0.10 · Solo detectan lo que VEN (cono de visión, línea de visión, oscuridad y callejones).
+        if (!o.conn || !this.w.stealth.sees(e, o)) continue;
         const of = perkMods(this.c, op).flags;
-        if (e.npcType === 'police' && op.wanted >= 2 && !of.has('sombra')) { e.aggro = o.id; e.aggroLethal = op.identified?.crime === 'asesinato'; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
+        if (e.npcType === 'police' && op.wanted >= 2 && !of.has('sombra') && this.w.stealth.recognizes(e, o.conn)) { e.aggro = o.id; e.aggroLethal = op.identified?.crime === 'asesinato'; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
         // En la base de una banda (o en una planta restringida de una torre), quien no sea de los suyos es un intruso.
         const allied = f && this.w.underworld.isAlly(op, f.id);
         const intruder = (f && e.zone.def.gangBase?.faction === f.id && !allied && (op.rep.get(f.id) ?? 0) < 20)

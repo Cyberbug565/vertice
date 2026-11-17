@@ -285,5 +285,6 @@
   "access": "empleados",
   "corp": "aurora"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }

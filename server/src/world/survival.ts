@@ -138,6 +138,9 @@ export class Survival {
     e.body = p.body;
     const shown = p.equipped && !p.driving ? p.equipped : undefined;
     if (e.weaponId !== shown) { e.weaponId = shown; e.labelVer++; }
+    // v0.10 · Las demás armas que llevas encima se ven: las grandes a la espalda y las pequeñas en la cadera.
+    const carry = this.w.stealth.detectable(p).filter((id) => id !== shown);
+    if ((e.carry ?? []).join() !== carry.join()) { e.carry = carry; e.labelVer++; }
     // Velocidad: atributos efectivos, oficio y cansancio.
     const car = this.w.property.carOf(p);
     if (car && e.zone.def.kind === 'exterior') e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * car.speed * (1 + ef.carSpeed);

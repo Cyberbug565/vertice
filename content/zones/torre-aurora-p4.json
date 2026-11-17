@@ -205,5 +205,6 @@
   "access": "restringido",
   "corp": "aurora"
  },
- "furnished": true
+ "furnished": true,
+ "restricted": "corporativo"
 }
