@@ -50,10 +50,31 @@ function load(): Record<string, string> {
   if (out.cancel === 'q' && out.kick === 'q') out.cancel = 'backspace';
   // v0.10 · Hackeo en Q, ruleta de armas en R, patada en F, cuerpo en H y facciones en Ñ (solo si seguían las de antes).
   if (out.hack === 'r' && (out.kick === 'q' || out.kick === 'f')) { out.hack = 'q'; out.wheel = 'r'; out.kick = 'f'; if (out.body === 'f') out.body = 'h'; if (out.factions === 'h') out.factions = 'ñ'; }
+  // v0.12 · E siempre interactúa (puertas, PNJ, objetos) y ninguna tecla puede tener dos acciones: si una configuración
+  // antigua repetía tecla, se queda con ella la acción cuya tecla por defecto es esa y las demás vuelven a la suya (si está libre).
+  let migrated = false;
+  try { migrated = localStorage.getItem(KEY + '.v12') === '1'; } catch {}
+  if (!migrated) {
+    if (out.interact !== 'e') { for (const [a, k] of Object.entries(out)) if (k === 'e' && a !== 'interact') out[a] = ''; out.interact = 'e'; }
+    try { localStorage.setItem(KEY + '.v12', '1'); } catch {}
+  }
+  const defOf = Object.fromEntries(KEY_ACTIONS.map((a) => [a.id, a.def]));
+  const taken = new Map<string, string>();
+  for (const a of KEY_ACTIONS) { const k = out[a.id]; if (k && k === a.def) taken.set(k, a.id); }
+  for (const a of KEY_ACTIONS) {
+    const k = out[a.id]; if (!k || taken.get(k) === a.id) continue;
+    if (!taken.has(k)) { taken.set(k, a.id); continue; }
+    out[a.id] = !taken.has(defOf[a.id]) ? defOf[a.id] : '';
+    if (out[a.id]) taken.set(out[a.id], a.id);
+  }
+  for (const k of Object.keys(out)) if (!(k in defOf)) delete out[k];
   return out;
 }
+/** Teclas fijas que no se pueden asignar (habilidades 1–4, Esc y Control para el golpe fuerte). */
+export const RESERVED_KEYS = new Set(['1', '2', '3', '4', 'escape', 'control']);
 export const keymap: Record<string, string> = load();
 export function setKey(action: string, key: string) {
+  if (RESERVED_KEYS.has(key)) return;
   // Una tecla solo puede tener una acción: la que la tenía se queda sin asignar.
   for (const [a, k] of Object.entries(keymap)) if (k === key && a !== action) keymap[a] = '';
   keymap[action] = key;

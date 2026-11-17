@@ -64,7 +64,7 @@ export class GameView {
   grid?: ZoneGrid;
   ents = new Map<number, CEnt>();
   meId = -1;
-  me = { x: 0, y: 0, path: [] as [number, number][], speed: 2.6, serverX: 0, serverY: 0, serverMoving: false, lastServer: 0 };
+  me = { x: 0, y: 0, path: [] as [number, number][], speed: 2.6, serverX: 0, serverY: 0, serverMoving: false, lastServer: 0, holdUntil: 0 };
   private statics: SortObj[] = [];
   private chunks = new Map<string, Container>();
   private chunkLights = new Map<string, Container>();
@@ -74,7 +74,8 @@ export class GameView {
   private kairosG = new Graphics();
   private trailLayer = new Container();
   private trails = new Map<number, { tex: any; tint: number; pts: { x: number; y: number; t: number; sp?: any }[]; last: number; tier: number }>();
-  private companions: { id: string; root: Container; x: number; y: number; nextLine: number; bubble?: Container; bubbleUntil?: number }[] = [];
+  private companions: { id: string; root: Container; x: number; y: number; nextLine: number; bubble?: Container; bubbleUntil?: number;
+    ap?: any; chrome?: string[]; vis: number; shown: boolean; nextSwitch: number; ox: number; oy: number; ent3d?: any }[] = [];
   private halluc: { c: Container; until: number; x: number; y: number }[] = [];
   ghostMode = false;
   psyche = 0;
@@ -123,6 +124,8 @@ export class GameView {
     this.app.ticker.add(() => {
       if (this.chars3d && this.pending3d) { try { this.chars3d.render(...this.pending3d); } catch (err) { console.warn('[3d]', err); } (r as any).resetState?.(); }
       r.render({ container: this.overStage, clear: false });
+      // Pixi manda los clics a lo último que dibujó: hay que devolverle el mundo o las puertas y PNJ dejan de responder.
+      (r as any)._lastObjectRendered = this.app.stage;
     }, undefined, UPDATE_PRIORITY.UTILITY);
     this.floor.addChild(...this.floorTiles);
     this.world.addChild(this.ground, this.floor, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
@@ -156,7 +159,7 @@ export class GameView {
     this.rebuild();
   }
 
-  setZoom(z: number) { this.zoom = Math.max(0.4, Math.min(1.7, z)); }
+  setZoom(z: number) { this.zoom = Math.max(0.4, Math.min(2.6, z)); } // v0.12 · más zoom para ver el detalle de los modelos
 
   // ------------------------------------------------------------------ zona
   setZone(zoneId: string, x: number, y: number) {
@@ -708,7 +711,21 @@ export class GameView {
     dx /= len; dy /= len;
     let x = me.x, y = me.y;
     for (let i = 1; i <= 13; i++) { const nx = me.x + dx * 0.2 * i, ny = me.y + dy * 0.2 * i; if (!isWalkable(g, nx, ny)) break; x = nx; y = ny; }
-    me.x = x; me.y = y;
+    // v0.12 · La posición confirmada se desplaza igual (el servidor hará lo mismo): así el corrector no tira de ti hacia
+    // atrás mientras llega la confirmación, que era lo que te «teletransportaba» al rodar varias veces seguidas.
+    me.serverX += x - me.x; me.serverY += y - me.y; me.holdUntil = performance.now() + 450;
+    this.lastDash = { dx: x - me.x, dy: y - me.y, sx: me.serverX, sy: me.serverY };
+    // El desplazamiento se reparte en ~0,26 s (acompaña a la voltereta) en lugar de saltar de golpe.
+    this.dashAnim = { fx: me.x, fy: me.y, tx: x, ty: y, t0: performance.now(), dur: 260 };
+  }
+  private dashAnim: { fx: number; fy: number; tx: number; ty: number; t0: number; dur: number } | null = null;
+  /** Vuelve a la última posición confirmada (si el servidor rechaza una acción que ya se había predicho). */
+  private lastDash: { dx: number; dy: number; sx: number; sy: number } | null = null;
+  /** El servidor rechazó la voltereta: se deshace el desplazamiento supuesto de la posición confirmada (si no ha llegado otra). */
+  resyncMe() {
+    const d = this.lastDash, me = this.me;
+    if (d && me.serverX === d.sx && me.serverY === d.sy) { me.serverX -= d.dx; me.serverY -= d.dy; }
+    this.lastDash = null; me.holdUntil = 0; this.dashAnim = null;
   }
 
   fx(kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean } = {}) {
@@ -718,7 +735,7 @@ export class GameView {
     const now0 = performance.now();
     if (kind === 'dodge') {
       // Rodar: estela de siluetas desde donde estaba.
-      a.rollAt = now0;
+      if (!a.rollAt || now0 - a.rollAt > 450) a.rollAt = now0; // una voltereta no se reinicia a medias
       const fx0 = extra.x ?? a.x, fy0 = extra.y ?? a.y;
       const g = new Graphics();
       for (let i = 0; i < 5; i++) { const k = i / 5; const p = worldToScreen(fx0 + (a.x - fx0) * k, fy0 + (a.y - fy0) * k, 0.6); g.ellipse(p.x, p.y, 7, 13).fill({ color: 0x43f3ff, alpha: 0.08 + k * 0.12 }); }
@@ -961,6 +978,18 @@ export class GameView {
     }
     return best;
   }
+  /** v0.12 · Lo más cercano con lo que se puede interactuar (tecla E): puertas y objetos primero, luego personas tranquilas. */
+  nearestInteractable(maxDist = 2.6): CEnt | null {
+    let best: CEnt | null = null, bestScore = Infinity;
+    for (const e of this.ents.values()) {
+      if (!e.s.interactive || e.s.id === this.meId || e.s.dead) continue;
+      const d = Math.hypot(e.x + (e.s.kind === 'door' || e.s.kind === 'object' ? 0.5 : 0) - this.me.x, e.y + (e.s.kind === 'door' || e.s.kind === 'object' ? 0.5 : 0) - this.me.y);
+      if (d > (e.s.kind === 'door' ? Math.max(maxDist, 3) : maxDist)) continue;
+      const score = d + (e.s.kind === 'door' ? 0 : e.s.kind === 'object' ? 0.2 : e.s.kind === 'npc' && (!e.s.npcType || e.s.npcType === 'essential') ? 0.4 : 1.2);
+      if (score < bestScore) { best = e; bestScore = score; }
+    }
+    return best;
+  }
   private onTap(ev: FederatedPointerEvent) {
     if (ev.button !== 0) return;
     const e = this.pick(ev.global.x, ev.global.y);
@@ -995,22 +1024,36 @@ export class GameView {
   }
 
   private frameInner(dt: number, now: number) {
+    // v0.12 · Tu propio movimiento usa el tiempo real (hasta medio segundo, en subpasos): con pocos FPS el cliente ya no se
+    // queda atrás respecto al servidor (antes se recortaba a 0,1 s por fotograma y luego «saltabas» hacia delante o atrás).
+    const moveDt = Math.min(dt, 0.5);
     dt = Math.min(dt, 0.1);
     // Personaje propio: avanza por la ruta predicha y se reconcilia con el último estado confirmado.
     const me = this.me;
+    if (this.dashAnim) {
+      const d = this.dashAnim, k = Math.min(1, (now - d.t0) / d.dur), ease = 1 - (1 - k) * (1 - k);
+      me.x = d.fx + (d.tx - d.fx) * ease; me.y = d.fy + (d.ty - d.fy) * ease;
+      if (k >= 1) this.dashAnim = null;
+    }
     // WASD: el cliente avanza al instante con las mismas reglas que el servidor (se desliza por las paredes).
-    if ((this.steer.dx || this.steer.dy) && this.grid) {
+    if (this.dashAnim) { /* rodando: la voltereta manda */ }
+    else if ((this.steer.dx || this.steer.dy) && this.grid) {
       me.path = []; this.pathG.clear();
-      const step = me.speed * dt * (this.guarding ? 0.5 : 1), g = this.grid;
-      const free = (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - me.x) * 0.22, y + Math.sign(y - me.y) * 0.22);
-      let nx = me.x + this.steer.dx * step, ny = me.y + this.steer.dy * step;
-      if (!free(nx, ny)) { if (free(nx, me.y)) ny = me.y; else if (free(me.x, ny)) nx = me.x; else { nx = me.x; ny = me.y; } }
-      me.x = nx; me.y = ny;
+      const g = this.grid;
+      for (let left = moveDt; left > 1e-6; left -= 0.05) {
+        const step = me.speed * Math.min(0.05, left) * (this.guarding ? 0.5 : 1);
+        const free = (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - me.x) * 0.22, y + Math.sign(y - me.y) * 0.22);
+        let nx = me.x + this.steer.dx * step, ny = me.y + this.steer.dy * step;
+        if (!free(nx, ny)) { if (free(nx, me.y)) ny = me.y; else if (free(me.x, ny)) nx = me.x; else { nx = me.x; ny = me.y; } }
+        me.x = nx; me.y = ny;
+      }
+      // v0.12 · Corrección suave y proporcional (sin saltos): solo se recoloca de golpe si el desfase es enorme.
       const errS = Math.hypot(me.serverX - me.x, me.serverY - me.y);
-      if (errS > 3) { me.x = me.serverX; me.y = me.serverY; }
-      else if (errS > 0.6) { const k = Math.min(1, dt * 3); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
+      if (now < me.holdUntil) { /* esperando la confirmación de un rodar */ }
+      else if (errS > 6) { me.x = me.serverX; me.y = me.serverY; }
+      else if (errS > 0.35) { const k = Math.min(1, moveDt * (errS > 2 ? 4 : 1.6)); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
     } else if (me.path.length) {
-      let budget = me.speed * dt;
+      let budget = me.speed * moveDt;
       while (budget > 0 && me.path.length) {
         const [tx, ty] = me.path[0]; const dx = tx - me.x, dy = ty - me.y, d = Math.hypot(dx, dy);
         if (d <= budget) { me.x = tx; me.y = ty; me.path.shift(); budget -= d; } else { me.x += (dx / d) * budget; me.y += (dy / d) * budget; budget = 0; }
@@ -1019,7 +1062,8 @@ export class GameView {
     }
     const err = Math.hypot(me.serverX - me.x, me.serverY - me.y);
     if (this.steer.dx || this.steer.dy) { /* corregido arriba */ }
-    else if (err > 3) { me.x = me.serverX; me.y = me.serverY; }
+    else if (now < me.holdUntil) { /* rodando */ }
+    else if (err > 6) { me.x = me.serverX; me.y = me.serverY; }
     else if (!me.path.length && !me.serverMoving) { const k = Math.min(1, dt * 8); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
     else if (err > 1.2) { const k = Math.min(1, dt * 2); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
 
@@ -1087,7 +1131,7 @@ export class GameView {
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
     this.buildingObjs.forEach((o, i) => this.chars3d!.setBuildingFaded(i, o.view.alpha < 0.6 || !o.view.visible));
     // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).
-    this.pending3d = [this.ents.values() as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
+    this.pending3d = [[...this.ents.values(), ...this.companions.filter((c) => c.ent3d).map((c) => c.ent3d)] as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
       hidden: (e: any) => !!e.s.vehicle || !!e.s.carried || !!e.vehX }];
   }
 
@@ -1350,7 +1394,7 @@ export class GameView {
     for (const e of this.ents.values()) {
       const t = this.kairosTier(e);
       const tr = this.trails.get(e.s.id);
-      if (!t || !e.charRoot) { if (tr) { for (const p of tr.pts) p.sp?.destroy(); this.trails.delete(e.s.id); } continue; }
+      if (!t || (!e.charRoot && !this.chars3d)) { if (tr) { for (const p of tr.pts) p.sp?.destroy(); this.trails.delete(e.s.id); } continue; }
       const k = kairosOf(t);
       const tint = HEX(e.s.appearance?.accent ?? '#43f3ff');
       if (k.radius) {
@@ -1365,11 +1409,15 @@ export class GameView {
       let trail = tr;
       if (!trail) {
         let tex: any = null;
-        try { tex = this.app.renderer.generateTexture({ target: e.charRoot, resolution: 1 } as any); } catch {}
+        if (!this.chars3d && e.charRoot) try { tex = this.app.renderer.generateTexture({ target: e.charRoot, resolution: 1 } as any); } catch {}
         trail = { tex, tint, pts: [], last: 0, tier: t };
         this.trails.set(e.s.id, trail);
       }
-      if (trail.tex && now - trail.last > 45 && (e.moving || (e.s.id === this.meId && (this.steer.dx || this.steer.dy)))) {
+      const movingNow = e.moving || (e.s.id === this.meId && (this.steer.dx || this.steer.dy));
+      if (this.chars3d && now - trail.last > 55 && movingNow) {
+        // v0.12 · Con personajes 3D la imagen residual es una copia del modelo en su pose, del color del cromo.
+        trail.last = now; this.chars3d.afterimage(e.s.id, tint, 90 * k.trail);
+      } else if (!this.chars3d && e.charRoot && trail.tex && now - trail.last > 45 && movingNow) {
         trail.last = now;
         const b = e.charRoot.getLocalBounds();
         const sp = new Sprite(trail.tex);
@@ -1394,22 +1442,45 @@ export class GameView {
       if (this.companions.some((c) => c.id === id)) continue;
       const ap = id === 'matriz-carmin' ? { skin: '#f4d8d8', hair: '#ff2040', jacket: '#1a7a3a', accent: '#ff2040', eyes: '#5aff8a', build: 'alto', hairStyle: 'melena', top: 'gabardina', faceShape: 'afilada', mouth: 'sonrisa' }
         : { skin: '#e0c0a0', hair: '#1a1a1a', jacket: '#1a1a1a', accent: '#ffb020', build: 'delgado', hairStyle: 'largo', top: 'chaqueta', facial: 'perilla', accessory: 'gafas', mouth: 'seria' };
-      const ch = makeCharacter(ap as any, 'npc', id === 'matriz-carmin' ? [] : ['brazo_izq']);
-      ch.root.scale.set(CHAR_SCALE); ch.root.alpha = 0.82;
+      const chromeC = id === 'matriz-carmin' ? [] : ['brazo_izq'];
       const glow = new Graphics().ellipse(0, 0, 14, 7).stroke({ width: 1.5, color: HEX(MATRICES[id].companion!.color), alpha: 0.8 });
-      const root = new Container(); root.addChild(glow, ch.root);
+      const root = new Container(); root.addChild(glow);
+      if (!this.chars3d) { const ch = makeCharacter(ap as any, 'npc', chromeC); ch.root.scale.set(CHAR_SCALE); ch.root.alpha = 0.82; root.addChild(ch.root); }
       this.objects.addChild(root);
-      this.companions.push({ id, root, x: this.me.x - 1, y: this.me.y + 1, nextLine: performance.now() + 4000 + Math.random() * 8000 });
+      const now0 = performance.now();
+      this.companions.push({ id, root, x: this.me.x - 1, y: this.me.y + 1, nextLine: now0 + 4000 + Math.random() * 8000, ap, chrome: chromeC,
+        vis: 0, shown: true, nextSwitch: now0 + 15000 + Math.random() * 30000, ox: -1.1, oy: 0.9 });
     }
+  }
+  private placeCompanion(c: (typeof this.companions)[number], i: number, jump: boolean) {
+    const a = Math.random() * Math.PI * 2, d = 1.2 + Math.random() * 1.8;
+    c.ox = Math.cos(a) * d; c.oy = Math.sin(a) * d;
+    if (jump) { c.x = this.me.x + c.ox; c.y = this.me.y + c.oy; c.vis = Math.min(c.vis, 0.05); }
+    void i;
   }
   private updateCompanions(now: number, dt: number) {
     this.companions.forEach((c, i) => {
-      const tx = this.me.x - 1.1 + i * 0.4, ty = this.me.y + 0.9 - i * 1.6;
-      const k = Math.min(1, dt * 2.5);
+      // v0.12 · Fantasmas: aparecen y desaparecen cuando les da la gana. Se quedan un rato, se desvanecen y vuelven a
+      // aparecer en otro sitio a tu alrededor (a veces solo «saltan» de lado sin irse).
+      if (now > c.nextSwitch) {
+        if (c.shown && Math.random() < 0.3) { c.nextSwitch = now + 8000 + Math.random() * 20000; this.placeCompanion(c, i, true); }
+        else { c.shown = !c.shown; c.nextSwitch = now + (c.shown ? 15000 + Math.random() * 40000 : 4000 + Math.random() * 22000); if (c.shown) this.placeCompanion(c, i, true); }
+      }
+      c.vis += ((c.shown ? 1 : 0) - c.vis) * Math.min(1, dt * (c.shown ? 1.6 : 2.4));
+      if (c.shown && Math.random() < dt * 0.05) this.placeCompanion(c, i, false); // cambia de lado sin irse
+      const tx = this.me.x + c.ox, ty = this.me.y + c.oy;
+      const k = Math.min(1, dt * 1.4);
+      const px = c.x, py = c.y;
       c.x += (tx - c.x) * k; c.y += (ty - c.y) * k;
       const p = worldToScreen(c.x, c.y); c.root.position.set(p.x, p.y); c.root.zIndex = p.y;
-      c.root.alpha = 0.75 + 0.15 * Math.sin(now / 300 + i);
-      if (now > c.nextLine) {
+      c.root.alpha = c.vis * (0.75 + 0.15 * Math.sin(now / 300 + i));
+      if (this.chars3d) {
+        const e3 = c.ent3d ?? (c.ent3d = { s: { id: -900 - i, kind: 'npc', name: MATRICES[c.id].companion!.name, appearance: c.ap, chrome: c.chrome, lost: [], interactive: false } as any, samples: [], x: c.x, y: c.y, moving: false });
+        e3.x = c.x; e3.y = c.y; e3.moving = Math.hypot(c.x - px, c.y - py) > dt * 0.4;
+        e3.ghost = { color: HEX(MATRICES[c.id].companion!.color), alpha: c.vis, float: 0.16 + 0.07 * Math.sin(now / 520 + i * 2) };
+        e3.lookAt = { x: this.me.x, y: this.me.y, until: now + 100 };
+      }
+      if (now > c.nextLine && c.vis > 0.8) {
         c.nextLine = now + 14000 + Math.random() * 20000;
         const lines = MATRICES[c.id].companion!.lines;
         c.bubble?.destroy({ children: true });

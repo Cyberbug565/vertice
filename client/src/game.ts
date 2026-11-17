@@ -194,7 +194,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const setAction = (text: string, duration?: number) => {
     st.action = text;
-    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · clic: interactuar a distancia · clic der. + clic: atacar (Ctrl: fuerte) · ${keyOf('wheel')}: armas · ${keyOf('hack')}: hackear · ${keyOf('dodge')}: esquivar · ${keyOf('kick')}: patada`;
+    actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · ${keyOf('interact')} o clic: interactuar · clic der. + clic: atacar (Ctrl: fuerte) · ${keyOf('wheel')}: armas · ${keyOf('hack')}: hackear · ${keyOf('dodge')}: esquivar · ${keyOf('kick')}: patada`;
     const bar = progress.firstChild as HTMLElement;
     if (duration) {
       progress.style.display = 'block';
@@ -413,10 +413,17 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   window.addEventListener('blur', () => { ctrlHeld = false; }, { signal: eventScope.signal });
   /** v0.9 · Esquivar (Espacio) y patada (Q) al objetivo señalado o al enemigo más cercano. */
   let lastSteerDir = { dx: 1, dy: 0 };
+  // v0.12 · Mismas reglas que el servidor antes de predecir: recuperación de 0,9 s y aguante suficiente. Si el servidor
+  // la rechaza igualmente, el personaje vuelve suavemente a su posición confirmada.
+  let dodgeReadyAt = 0;
   const dodge = () => {
+    const now = performance.now();
+    if (now < dodgeReadyAt) return;
+    if (st.sheet?.sleeping || (st.sheet && st.sheet.stamina < 5)) { toast('Sin aguante para esquivar.', 'warn'); return; }
     const d = view.steer.dx || view.steer.dy ? view.steer : lastSteerDir;
+    dodgeReadyAt = now + 950;
     const seq = net.send({ t: 'dodge', dx: d.dx, dy: d.dy } as any);
-    st.pending.set(seq, (a) => { if (!a.ok) toast(a.reason ?? 'No puedes esquivar', 'warn'); });
+    st.pending.set(seq, (a) => { if (!a.ok) { toast(a.reason ?? 'No puedes esquivar', 'warn'); view.resyncMe(); } });
     view.dash(d.dx, d.dy);
   };
   const kick = () => {
@@ -429,7 +436,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   // v0.9 · Modo hackeo: R y luego clic sobre una persona, cámara, cajero o terminal → panel de hackeo.
   let hackMode = false;
-  const hackBadge = h('div', { class: 'hack-badge', style: { display: 'none' } }, h('b', {}, '⌁ MODO HACKEO'), h('span', {}, ' · clic en un objetivo · R o Esc para salir'));
+  const hackBadge = h('div', { class: 'hack-badge', style: { display: 'none' } }, h('b', {}, '⌁ MODO HACKEO'), h('span', {}, ` · clic en un objetivo · ${keyOf('hack')} o Esc para salir`));
   $ui().append(hackBadge);
   const setHackMode = (on: boolean) => {
     hackMode = on;
@@ -526,7 +533,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   $ui().addEventListener('pointerover', (ev) => { if (ev.target !== $ui()) tooltip.style.display = 'none'; });
   view.onHover = (e, sx, sy) => {
     if (!e) { tooltip.style.display = 'none'; return; }
-    const hint = hackMode ? (e.s.id === view.meId ? 'Modo hackeo: elige a otro' : 'Clic: ver hackeos posibles') : e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? 'Clic: examinar' : view.guarding ? `Clic: ¡atacar! · Ctrl+clic: golpe fuerte o ráfaga · ${keyOf('kick')}: patada · ${keyOf('dodge')}: esquivar` : `Clic: menú (a distancia) · clic derecho mantenido + clic: atacar · ${keyOf('hack')} + clic: hackear`;
+    const hint = hackMode ? (e.s.id === view.meId ? 'Modo hackeo: elige a otro' : 'Clic: ver hackeos posibles') : e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic o ${keyOf('interact')}: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? `Clic o ${keyOf('interact')}: usar` : view.guarding ? `Clic: ¡atacar! · Ctrl+clic: golpe fuerte o ráfaga · ${keyOf('kick')}: patada · ${keyOf('dodge')}: esquivar` : `Clic: menú (a distancia) · clic derecho mantenido + clic: atacar · ${keyOf('hack')} + clic: hackear`;
     tooltip.replaceChildren(h('b', {}, e.s.name), e.s.title ? ` · ${e.s.title}` : '', e.s.label ? h('div', { class: 'muted' }, e.s.label) : '', h('div', { class: 'cy' }, hint));
     tooltip.style.display = 'block'; tooltip.style.left = `${sx + 14}px`; tooltip.style.top = `${sy + 14}px`;
   };
@@ -554,6 +561,18 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     }
   };
   timers.push(window.setInterval(() => { if (view.steer.dx || view.steer.dy) pushSteer(); }, 200));
+  // v0.12 · Aviso «E · Entrar…» sobre lo más cercano con lo que puedes interactuar.
+  const ePrompt = h('div', { class: 'e-prompt', style: { display: 'none', pointerEvents: 'none' } });
+  $ui().append(ePrompt);
+  timers.push(window.setInterval(() => {
+    const t = onWorld() && !st.dialog ? view.nearestInteractable() : null;
+    if (!t) { ePrompt.style.display = 'none'; return; }
+    const verb = t.s.kind === 'door' ? 'Entrar · ' : t.s.kind === 'object' ? 'Usar · ' : 'Hablar con ';
+    const sp = view.world.toGlobal(worldToScreen(t.x + (t.s.kind === 'npc' || t.s.kind === 'player' ? 0 : 0.5), t.y + (t.s.kind === 'npc' || t.s.kind === 'player' ? 0 : 0.5)));
+    ePrompt.textContent = '';
+    ePrompt.append(h('span', { class: 'kbd' }, keyOf('interact')), ` ${verb}${t.s.name ?? ''}`);
+    ePrompt.style.display = ''; ePrompt.style.left = `${Math.round(sp.x)}px`; ePrompt.style.top = `${Math.round(sp.y - 70 * view.zoom)}px`;
+  }, 150));
   window.addEventListener('blur', () => { held.clear(); pushSteer(true); }, { signal: eventScope.signal });
   window.addEventListener('keyup', (e) => {
     const a = ARROWS[e.key.toLowerCase()] ?? actionFor(e.key.toLowerCase());
@@ -587,7 +606,11 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'wheel': if (onWorld() && st.sheet) { e.preventDefault(); if (document.getElementById('weapon-wheel')) { wheelRef?.pickHovered(); wheelRef = null; } else wheelRef = weaponWheel(st.sheet, (item) => { net.send({ t: 'equip', item } as any); blip('ui'); toast(item ? `Empuñas: ${content.items.find((i) => i.id === item)?.name ?? item}.` : 'Guardas el arma: manos vacías.', 'info'); }); } break;
       case 'dodge': if (onWorld()) { e.preventDefault(); dodge(); } break;
       case 'kick': if (onWorld()) kick(); break;
-      case 'interact': if (onWorld() && view.hovered && !st.dialog) { e.preventDefault(); view.onEntityClick(view.hovered); } break;
+      case 'interact': if (onWorld() && !st.dialog) {
+        // v0.12 · E: lo señalado con el ratón o, si no hay nada, lo más cercano (puerta, objeto o persona).
+        const tgt = view.hovered && view.hovered.s.id !== view.meId ? view.hovered : view.nearestInteractable();
+        if (tgt) { e.preventDefault(); const g = view.guarding; view.guarding = false; view.onEntityClick(tgt); view.guarding = g; }
+      } break;
       case 'cancel': stop(); break;
       case 'retreat': retreat(); break;
       case 'body': bodyPanel.toggle(); break;

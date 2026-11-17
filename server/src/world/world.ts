@@ -273,12 +273,18 @@ export class World {
       // Recuperación acotada si el proceso se retrasa: como mucho 3 ticks de golpe.
       let n = 0;
       while (now >= this.nextTickAt && n < 3) { this.step(); this.nextTickAt += dtMs; n++; }
-      if (now - this.nextTickAt > dtMs * 5) { this.metrics.inc('lateTicks'); this.nextTickAt = now; }
+      if (now - this.nextTickAt > dtMs * 5) {
+        // v0.12 · El tiempo que se salta no se pierde para quien anda con WASD: si no, el cliente (que sí lo vive) se adelanta
+        // y al rato el servidor «te devuelve» unos pasos atrás.
+        this.metrics.inc('lateTicks'); this.catchUpDt = Math.min(0.5, this.catchUpDt + (now - this.nextTickAt) / 1000); this.nextTickAt = now;
+      }
       this.timer = setTimeout(loop, Math.max(0, this.nextTickAt - performance.now()));
     };
     loop();
   }
   stop() { if (this.timer) clearTimeout(this.timer); }
+  /** Segundos de simulación que el bucle tuvo que saltarse por ir con retraso (se devuelven a los jugadores en el siguiente tick). */
+  catchUpDt = 0;
 
   // ---------------------------------------------------------------- tick
   step() {
@@ -286,6 +292,7 @@ export class World {
     this.tick++;
     this.pathBudget = 40;
     const dt = 1 / RULES.tickRate;
+    const catchUp = this.catchUpDt; this.catchUpDt = 0;
     if (this.tick % 10 === 1) for (const z of this.zones.values()) if (z.def.districts.length) z.refreshActive();
     this.relics.dilation();
     for (const z of this.zones.values()) {
@@ -293,8 +300,9 @@ export class World {
       const anyone = z.players.size > 0;
       for (const e of z.entities) {
         if (e.npc && e.npcType !== 'essential' && e.aggro === undefined && (!anyone || !z.isActive(e))) continue;
-        if (e.path.length) this.moveEntity(e, dt);
-        else if (e.steer) this.steerEntity(e, dt);
+        const edt = e.conn ? dt + catchUp : dt;
+        if (e.path.length) this.moveEntity(e, edt);
+        else if (e.steer) { for (let left = edt; left > 1e-6 && e.steer; left -= dt) this.steerEntity(e, Math.min(dt, left)); }
         if (e.pendingAction && e.conn) this.combat.checkPending(e.conn);
         if (e.channel && this.tick >= e.channel.endTick) { const ch = e.channel; e.channel = undefined; ch.apply(); }
         if (e.task) this.processTask(e);

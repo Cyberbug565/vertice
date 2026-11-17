@@ -29,8 +29,13 @@ await app.world.teleport(c, where[0] as string, where[1] as [number, number]);
 await sleep(2500);
 const zz = app.world.zones.get(where[0] as string)!;
 for (let i = 0; i < 6; i++) app.world.spawnAmbient(zz, { x: c.e!.x + 1.5 + (i % 3) * 1.2, y: c.e!.y + 1 + Math.floor(i / 3) * 1.4 });
+// v0.12 · GHOSTS=1: CARMÍN y Rafa «Brasas» a la vista; KAIROS=n: Kairós encendido (estela de imágenes residuales).
+if (process.env.GHOSTS) { try { await (app.world as any).relics.matrix(c, 'equip', 'matriz-carmin'); } catch (err) { console.log('matriz', (err as Error).message); } }
+if (process.env.KAIROS) { try { (app.world as any).relics.toggleKairos(c, Number(process.env.KAIROS)); } catch (err) { console.log('kairos', (err as Error).message); } }
+if (process.env.WEAPON) { try { await (app.world as any).admin.give(c.p, process.env.WEAPON); await (app.world as any).survival.equip(c, process.env.WEAPON); } catch (err) { console.log('arma', (err as Error).message); } }
 const zoom = Number(process.argv[2] ?? 2.2);
 await page.evaluate((z) => (window as any).__vt.view.setZoom(z), zoom);
+if (process.env.MOVESHOT) { await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove())); await page.keyboard.down('d'); await sleep(2500); await page.screenshot({ path: `${OUT}${process.argv[5] ?? 'v11'}.png` }); await page.keyboard.up('d'); console.log('📸 en movimiento'); await browser.close(); await app.close(); process.exit(0); }
 await page.keyboard.down('d'); await sleep(900); await page.keyboard.up('d');
 await sleep(2500);
 await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove()));

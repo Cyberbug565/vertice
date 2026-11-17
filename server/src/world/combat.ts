@@ -1190,14 +1190,21 @@ export class Combat {
   // ================================================================ policía: detención y Unidad Hierro
   async arrest(c: PlayerConn) {
     const p = c.p!, e = c.e!;
-    const fine = Math.min(p.money, Math.max(50, Math.floor(p.money * 0.25)));
-    if (fine > 0) {
-      await this.w.db.tx(async (q) => {
-        await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`arrest-${randomUUID()}`, p.charId, -fine, p.money - fine, 'Multa de la PCV por detención']);
-        await q.query('UPDATE characters SET money = money - $2 WHERE id = $1', [p.charId, fine]);
+    // v0.12 · La multa se calcula con el saldo real dentro de la transacción (antes, si el dinero cambiaba entre medias, el
+    // saldo quedaba negativo, la base de datos lo rechazaba y el error tumbaba el servidor). Un fallo aquí ya no detiene nada.
+    let fine = 0;
+    try {
+      const paid = await this.w.db.tx(async (q) => {
+        const cur = await q.query<{ money: number }>('SELECT money FROM characters WHERE id = $1 FOR UPDATE', [p.charId]);
+        const money = Number(cur.rows[0]?.money ?? 0);
+        const f = Math.min(money, Math.max(50, Math.floor(money * 0.25)));
+        if (f <= 0) return 0;
+        await q.query('UPDATE characters SET money = money - $2 WHERE id = $1', [p.charId, f]);
+        await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`arrest-${randomUUID()}`, p.charId, -f, money - f, 'Multa de la PCV por detención']);
+        return f;
       });
-      p.money -= fine;
-    }
+      fine = paid; if (paid) p.money = Math.max(0, p.money - paid);
+    } catch (err) { console.error('[detención] multa no cobrada', (err as Error).message); }
     p.wanted = 0; p.hp = 15; p.status = 'alive'; p.downedUntil = 0;
     const pcv = this.sv.bounties.onPlayer(p.charId).filter((b) => b.poster === 'pcv');
     if (pcv.length) await this.sv.bounties.cancel(pcv.map((b) => b.id));

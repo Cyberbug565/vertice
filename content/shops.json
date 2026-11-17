@@ -102,7 +102,10 @@
    "ganzua-electronica": 3,
    "porra-electrica": 3,
    "bate": 6,
-   "machete": 4
+   "machete": 4,
+   "tuberia": 10,
+   "hacha-bomberos": 3,
+   "mazo": 2
   },
   "buys": [
    "chatarra",
@@ -130,7 +133,9 @@
    "matriz-delta": 1,
    "matriz-cauce": 1,
    "uniforme-seguridad": 1,
-   "bata-laboratorio": 2
+   "bata-laboratorio": 2,
+   "subfusil-compacto": 2,
+   "pistola-compacta": 3
   },
   "buys": [
    "chatarra",
@@ -212,7 +217,11 @@
    "pantalon-exo-sprinter": 1,
    "botas-tacticas-delta": 3,
    "botas-tacticas-magneticas": 2,
-   "botas-sigilo-pluma": 1
+   "botas-sigilo-pluma": 1,
+   "pistola-compacta": 6,
+   "carabina": 3,
+   "escopeta-bombeo": 3,
+   "cuchillo-combate": 8
   },
   "buys": [
    "arma"
@@ -297,7 +306,11 @@
    "espada-monofilamento": 1,
    "ballesta-carbono": 3,
    "virote": 120,
-   "pistola-silenciada": 3
+   "pistola-silenciada": 3,
+   "subfusil-compacto": 3,
+   "katana": 2,
+   "cuchillo-combate": 6,
+   "escopeta-bombeo": 2
   },
   "buys": [
    "arma",
@@ -378,7 +391,10 @@
    "vaquero-negro-pitillo": 6,
    "pana-marron": 6,
    "bermudas-cargo": 6,
-   "botas-faena": 6
+   "botas-faena": 6,
+   "tuberia": 6,
+   "cuchillo-combate": 3,
+   "pistola-compacta": 2
   },
   "buys": [
    "chatarra",
@@ -729,7 +745,9 @@
    "celula-energia": 120,
    "chaleco-balistico": 4,
    "pantalon-tactico": 3,
-   "casco-balistico": 3
+   "casco-balistico": 3,
+   "ametralladora-ligera": 1,
+   "mazo": 2
   },
   "buys": [
    "arma",

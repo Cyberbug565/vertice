@@ -4,6 +4,7 @@
 // bailar, caer). Se dibujan en un lienzo WebGL propio con una cámara ortográfica que reproduce exactamente la proyección 2:1
 // del juego, y los edificios (y el mobiliario grande) se añaden como volúmenes invisibles que tapan a quien está detrás.
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import type { Appearance, EntitySpawn, ZoneDef } from '@vertice/shared';
 import { content } from '../content';
 import { fabricCanvas, skinCanvas } from './textures';
@@ -19,6 +20,8 @@ export const BUILDING_H = 1.35;
 export interface Ent3D {
   x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; rollAt?: number; kickAt?: number;
   samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number };
+  /** v0.12 · Fantasma (compañeros de las matrices): translúcido, flota y se tiñe del color de su matriz. */
+  ghost?: { color: number; alpha: number; float: number };
 }
 
 const hex = (s?: string, d = '#888888') => new THREE.Color(s && /^#[0-9a-f]{6}$/i.test(s) ? s : d);
@@ -28,14 +31,23 @@ const COAT = new Set(['gabardina', 'abrigo', 'chubasquero', 'haori']);
 const FACE_COVER = new Set(['mascara', 'mascara-gas', 'bandana-cara', 'mascara-demonio']);
 
 // Geometrías compartidas (se escalan por pieza).
+/** Perfil de torno (radio a lo largo de la altura, de abajo arriba) para músculos con forma: muslo, gemelo, brazo. */
+const lathe = (prof: [number, number][], seg = 20) => { const g = new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), seg); g.computeVertexNormals(); return g; };
+// v0.12 · Geometrías con más polígonos: cajas redondeadas, músculos con perfil anatómico y esferas más finas.
 const G = {
   box: new THREE.BoxGeometry(1, 1, 1),
-  cyl: new THREE.CylinderGeometry(0.5, 0.5, 1, 10, 1),
-  taper: new THREE.CylinderGeometry(0.42, 0.5, 1, 10, 1), // más estrecho arriba
-  chest: new THREE.CylinderGeometry(0.5, 0.4, 1, 8, 1),   // más ancho arriba (pecho)
-  sphere: new THREE.SphereGeometry(0.5, 12, 10),
-  cone: new THREE.ConeGeometry(0.5, 1, 10, 1, true),
-  disc: new THREE.CircleGeometry(0.5, 16),
+  rbox: new RoundedBoxGeometry(1, 1, 1, 3, 0.16),
+  cyl: new THREE.CylinderGeometry(0.5, 0.5, 1, 20, 1),
+  taper: new THREE.CylinderGeometry(0.42, 0.5, 1, 20, 1), // más estrecho arriba
+  chest: new THREE.CylinderGeometry(0.5, 0.4, 1, 16, 1),  // más ancho arriba (pecho)
+  sphere: new THREE.SphereGeometry(0.5, 24, 16),
+  cone: new THREE.ConeGeometry(0.5, 1, 18, 1, true),
+  disc: new THREE.CircleGeometry(0.5, 24),
+  // Muslo y brazo: anchos arriba y estrechos en la rodilla/codo. Gemelo y antebrazo: abultados en el tercio superior.
+  thigh: lathe([[0.001, -0.5], [0.34, -0.49], [0.4, -0.38], [0.47, -0.1], [0.5, 0.18], [0.49, 0.4], [0.42, 0.5], [0.001, 0.5]]),
+  calf: lathe([[0.001, -0.5], [0.3, -0.49], [0.33, -0.3], [0.45, 0.05], [0.5, 0.22], [0.44, 0.45], [0.38, 0.5], [0.001, 0.5]]),
+  torsoL: lathe([[0.001, -0.5], [0.42, -0.5], [0.46, -0.3], [0.44, -0.05], [0.48, 0.2], [0.5, 0.38], [0.44, 0.5], [0.001, 0.5]], 24),
+  finger: new THREE.CapsuleGeometry(0.5, 1, 3, 8),
 };
 const texCache = new Map<HTMLCanvasElement, THREE.CanvasTexture>();
 function tex(cv: HTMLCanvasElement) {
@@ -43,7 +55,8 @@ function tex(cv: HTMLCanvasElement) {
   if (!t) { t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; texCache.set(cv, t); }
   return t;
 }
-const lam = (o: THREE.MeshLambertMaterialParameters) => new THREE.MeshLambertMaterial(o);
+// v0.12 · Material con sombreado físico (luz especular suave en tela y piel) en vez de Lambert plano.
+const lam = (o: THREE.MeshLambertMaterialParameters) => new THREE.MeshStandardMaterial({ roughness: 0.78, metalness: 0, ...(o as any) });
 
 /** Cara pintada a mano en un lienzo: ojos con pupila y brillo, cejas, nariz, boca, vello facial, maquillaje, cicatrices y tatuajes. */
 function faceCanvas(a: Required<Appearance>, chromeEyes: boolean) {
@@ -125,7 +138,7 @@ function hexA(hexStr: string, a: number) { const n = parseInt((hexStr || '#88888
 interface Rig {
   root: THREE.Group; body: THREE.Group; hips: THREE.Group; spine: THREE.Group; chest: THREE.Group; neck: THREE.Group;
   thighL: THREE.Group; thighR: THREE.Group; kneeL: THREE.Group; kneeR: THREE.Group; shoulderL: THREE.Group; shoulderR: THREE.Group; elbowL: THREE.Group; elbowR: THREE.Group;
-  handR: THREE.Group; coat: THREE.Object3D[]; shadow: THREE.Mesh; key: string; heading: number; phase: number; lie: number; big: boolean; ranged: boolean; mats: THREE.Material[];
+  handR: THREE.Group; coat: THREE.Object3D[]; shadow: THREE.Mesh; key: string; heading: number; phase: number; lie: number; big: boolean; ranged: boolean; mats: THREE.Material[]; ghostMats?: THREE.Material[];
   lastX: number; lastY: number; speed: number;
 }
 
@@ -139,9 +152,9 @@ export class Chars3D {
   private occl = new THREE.Group();
   private bOccl: (THREE.Mesh | null)[] = [];
   private occMat = new THREE.MeshBasicMaterial({ colorWrite: false });
-  private sun = new THREE.DirectionalLight(0xfff4e8, 2.6);
-  private hemi = new THREE.HemisphereLight(0xdde6ff, 0x5a4e60, 2.4);
-  private rim = new THREE.DirectionalLight(0x9ab8ff, 1.0);
+  private sun = new THREE.DirectionalLight(0xfff4e8, 3.1);
+  private hemi = new THREE.HemisphereLight(0xe4ecff, 0x6a5e70, 2.9);
+  private rim = new THREE.DirectionalLight(0x9ab8ff, 1.6);
   ok = true;
 
   /** Comparte el lienzo y el contexto WebGL de Pixi (patrón oficial para mezclar Pixi y Three: sin copias entre contextos). */
@@ -177,7 +190,33 @@ export class Chars3D {
   /** Los edificios atenuados (los que tapan al jugador) dejan de tapar a los personajes. */
   setBuildingFaded(i: number, faded: boolean) { const m = this.bOccl[i]; if (m) m.visible = !faded; }
 
-  private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) m.dispose(); }
+  private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) m.dispose(); for (const m of r.ghostMats ?? []) m.dispose(); }
+  /** Convierte un modelo en fantasma: cada material pasa a translúcido, sin escribir profundidad y con brillo propio. */
+  private ghostify(r: Rig, color: number) {
+    const tint = new THREE.Color(color);
+    const out: THREE.Material[] = [];
+    const conv = (m: THREE.Material) => {
+      const c = (m as any).clone() as THREE.Material & { color?: THREE.Color; emissive?: THREE.Color };
+      c.transparent = true; c.depthWrite = false; (c as any).opacity = 0.6;
+      if (c.color) c.color.lerp(tint, 0.35);
+      if (c.emissive) c.emissive = tint.clone().multiplyScalar(0.55);
+      out.push(c); return c;
+    };
+    r.root.traverse((o) => { const m = o as THREE.Mesh; if (!m.isMesh) return; m.material = Array.isArray(m.material) ? m.material.map(conv) : conv(m.material); });
+    r.shadow.visible = false;
+    r.ghostMats = out;
+  }
+  private after: { g: THREE.Object3D; t0: number; life: number; mat: THREE.MeshBasicMaterial }[] = [];
+  /** v0.12 · Imagen residual de Kairós: copia la pose actual del modelo, teñida del color del cromo, y se desvanece. */
+  afterimage(id: number, color: number, life: number) {
+    const r = this.rigs.get(id);
+    if (!r || this.after.length > 40) return;
+    const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending });
+    const g = r.root.clone(true);
+    g.traverse((o) => { const m = o as THREE.Mesh; if (!m.isMesh) return; if (m.geometry === G.disc || m.geometry.type === 'RingGeometry') m.visible = false; else m.material = mat; });
+    this.world.add(g);
+    this.after.push({ g, t0: performance.now(), life, mat });
+  }
 
   // ================================================================ construcción del modelo
   private build(e: Ent3D): Rig {
@@ -213,7 +252,9 @@ export class Chars3D {
     const beltM = mk(lam({ color: 0x15151a }));
     const goldM = mk(new THREE.MeshStandardMaterial({ color: 0xc8ccd8, metalness: 0.9, roughness: 0.25 }));
     const part = (parent: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material | THREE.Material[], sx: number, sy: number, sz: number, x = 0, y = 0, z = 0) => {
-      const m = new THREE.Mesh(geo, mat); m.scale.set(sx, sy, sz); m.position.set(x, y, z); parent.add(m); return m;
+      // Las cajas con volumen se redondean (las tiras finas de luz, cremalleras y similares se quedan como cajas).
+      const g2 = geo === G.box && Math.min(sx, sy, sz) >= 0.035 ? G.rbox : geo;
+      const m = new THREE.Mesh(g2, mat); m.scale.set(sx, sy, sz); m.position.set(x, y, z); parent.add(m); return m;
     };
     const group = (parent: THREE.Object3D, x: number, y: number, z = 0) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); return g; };
 
@@ -233,10 +274,10 @@ export class Chars3D {
       if (lost.has(key)) { part(thigh, G.cyl, mk(lam({ color: 0x8a0a12 })), 0.12, 0.04, 0.12, 0, -0.02); return { thigh, knee: group(thigh, 0, -0.42) }; }
       const isChrome = chrome.has(key);
       const thighMat = isChrome ? metalM : lw === 'shorts' || lw === 'bermudas' ? pantsM : bare ? skinM('leg', 3, 6) : pantsM;
-      part(thigh, G.taper, thighMat, 0.2, 0.44, 0.21, 0, -0.21);
+      part(thigh, G.thigh, thighMat, 0.21, 0.46, 0.22, 0, -0.21);
       const knee = group(thigh, 0, -0.42);
       const shinMat = isChrome ? metalM : bare || lw === 'bermudas' ? skinM('leg', 3, 6) : pantsM;
-      part(knee, G.taper, shinMat, 0.15, 0.44, 0.16, 0, -0.22);
+      part(knee, G.sphere, shinMat, 0.15, 0.13, 0.15, 0, -0.01); part(knee, G.calf, shinMat, 0.16, 0.44, 0.17, 0, -0.22);
       if (isChrome) { part(knee, G.sphere, metalDarkM, 0.13, 0.13, 0.13); part(knee, G.box, glowM, 0.02, 0.3, 0.02, 0.05, -0.22, 0.04); }
       if (lw === 'tactico') part(knee, G.box, beltM, 0.13, 0.1, 0.06, 0, -0.03, 0.06);
       // Pie y calzado.
@@ -289,17 +330,21 @@ export class Chars3D {
       const isChrome = chrome.has(key);
       const upper = isChrome ? metalM : sleeveless ? skinM(side > 0 ? 'armR' : 'armL', 2.5, 6) : sleeveM;
       part(sh, G.sphere, isChrome ? metalDarkM : upper, 0.14, 0.14, 0.14, 0, -0.01);
-      part(sh, G.taper, upper, 0.125, 0.3, 0.13, 0, -0.15);
+      part(sh, G.thigh, upper, 0.13, 0.31, 0.135, 0, -0.15);
       if (a.top === 'armadura') part(sh, G.box, metalDarkM, 0.13, 0.08, 0.13, 0, 0.0);
       const el = group(sh, 0, -0.3);
       const fore = isChrome ? metalM : sleeveless || short ? skinM(side > 0 ? 'armR' : 'armL', 2.5, 6) : sleeveM;
-      part(el, G.taper, fore, 0.105, 0.27, 0.11, 0, -0.135);
+      part(el, G.sphere, fore, 0.1, 0.09, 0.1, 0, -0.005); part(el, G.calf, fore, 0.11, 0.28, 0.115, 0, -0.135);
       if (isChrome) { part(el, G.sphere, metalDarkM, 0.09, 0.09, 0.09); part(el, G.box, glowM, 0.015, 0.22, 0.015, 0.035, -0.13, 0.03); }
       if (!sleeveless && !short && !isChrome) part(el, G.cyl, mk(lam({ color: hex(a.jacket).multiplyScalar(0.6) })), 0.085, 0.03, 0.085, 0, -0.25);
       const hand = group(el, 0, -0.29);
       if (!lost.has(side < 0 ? 'mano_izq' : 'mano_der')) {
-        part(hand, G.box, isChrome ? metalM : plainSkin, 0.085, 0.1, 0.05, 0, -0.035);
-        part(hand, G.box, isChrome ? metalM : plainSkin, 0.025, 0.05, 0.03, side * -0.04, -0.02, 0.02);
+        const hm = isChrome ? metalM : plainSkin;
+        part(hand, G.box, hm, 0.08, 0.075, 0.045, 0, -0.03); // palma
+        // Cuatro dedos algo flexionados y el pulgar (el cromo lleva articulaciones oscuras).
+        for (let f = 0; f < 4; f++) { const fg = part(hand, G.finger, hm, 0.017, 0.028, 0.017, -0.027 + f * 0.018, -0.085 + Math.abs(f - 1.5) * 0.004, 0.006); fg.rotation.x = 0.35; }
+        part(hand, G.finger, hm, 0.019, 0.026, 0.019, side * -0.045, -0.04, 0.02).rotation.z = side * -0.6;
+        if (isChrome) part(hand, G.box, metalDarkM, 0.082, 0.012, 0.047, 0, -0.065);
       }
       return { sh, el, hand };
     };
@@ -315,8 +360,8 @@ export class Chars3D {
     const headMats = [skinHead, skinHead, hairCover ? hairM : skinHead, skinHead, face, hairCover ? hairM : skinHead];
     part(head, G.box, headMats, fw, fh, 0.24, 0, 0);
     part(head, G.box, plainSkin, fw * 0.8, 0.05, 0.16, 0, -fh / 2 - 0.01, 0.01); // mandíbula
-    for (const sx of [-1, 1]) part(head, G.box, plainSkin, 0.02, 0.06, 0.04, sx * (fw / 2 + 0.01), 0, -0.01); // orejas
-    part(head, G.box, plainSkin, 0.035, 0.05, 0.04, 0, -0.02, 0.13); // nariz
+    for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.025, 0.065, 0.045, sx * (fw / 2 + 0.005), 0, -0.01); // orejas
+    part(head, G.sphere, plainSkin, 0.036, 0.055, 0.045, 0, -0.02, 0.122); // nariz
     if (chrome.has('cabeza')) { part(head, G.box, metalM, 0.02, 0.1, 0.1, -fw / 2 - 0.012, 0.02, -0.02); part(head, G.sphere, glowM, 0.025, 0.025, 0.025, -fw / 2 - 0.02, 0.02, 0.02); }
     if (chrome.has('ojos')) part(head, G.box, mk(new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.6 })), fw * 0.9, 0.03, 0.01, 0, 0.0, 0.123);
     // Pelo.
@@ -368,7 +413,7 @@ export class Chars3D {
     // ---- armas: en la mano y las que lleva encima
     const handR = group(AR.hand, 0, -0.05, 0.02);
     const wi = s.weapon ? content.items.find((i) => i.id === s.weapon) : undefined;
-    const bigFam = (f: string, id: string) => ['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil'].includes(f) || ['bate', 'katana-termica', 'lanza-electrica', 'hacha-plasma', 'espada-monofilamento', 'martillo-neumatico', 'machete'].includes(id);
+    const bigFam = (f: string, id: string) => ['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil'].includes(f) || ['bate', 'katana-termica', 'katana', 'lanza-electrica', 'hacha-plasma', 'hacha-bomberos', 'espada-monofilamento', 'martillo-neumatico', 'mazo', 'machete', 'tuberia'].includes(id);
     let big = false, ranged = false;
     if (wi?.weapon && wi.weapon.family !== 'Implante') {
       const w = this.weaponMesh(wi.id, wi.weapon.family, wi.weapon.kind, mk, glowM);
@@ -395,27 +440,165 @@ export class Chars3D {
       shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, mats, lastX: e.x, lastY: e.y, speed: 0 };
   }
 
-  /** Armas sencillas con volumen: pistolas, fusiles, escopetas, hojas y contundentes. Mira hacia +Y (se rota en la mano). */
+  /**
+   * v0.12 · Modelos de armas a escala real (en metros × 0,75), uno por arma. Se modelan con el cañón/hoja hacia +Y,
+   * la parte de arriba (miras) hacia +Z y la empuñadura en el origen; el envoltorio las orienta para la mano.
+   */
   private weaponMesh(id: string, fam: string, kind: string, mk: <T extends THREE.Material>(m: T) => T, glow: THREE.Material) {
-    const g = new THREE.Group();
-    const gun = mk(new THREE.MeshStandardMaterial({ color: 0x1c1e26, metalness: 0.6, roughness: 0.45 }));
-    const gun2 = mk(new THREE.MeshStandardMaterial({ color: 0x3a3e4a, metalness: 0.5, roughness: 0.5 }));
-    const wood = mk(new THREE.MeshLambertMaterial({ color: 0x6a4a30 }));
-    const steel = mk(new THREE.MeshStandardMaterial({ color: 0xd8dce8, metalness: 0.9, roughness: 0.2 }));
-    const hot = /termica|plasma/.test(id) ? mk(new THREE.MeshBasicMaterial({ color: 0xff6a20 })) : /electrica|monofilamento|taser/.test(id) ? mk(new THREE.MeshBasicMaterial({ color: 0x43c8ff })) : null;
-    const b = (mat: THREE.Material, sx: number, sy: number, sz: number, x: number, y: number, z: number) => { const m = new THREE.Mesh(G.box, mat); m.scale.set(sx, sy, sz); m.position.set(x, y, z); g.add(m); };
-    if (kind === 'ranged') {
-      if (/Pistola|Revólver|Táser/.test(fam)) { b(gun2, 0.03, 0.08, 0.035, 0, 0.0, -0.02); b(gun, 0.032, 0.14, 0.045, 0, 0.06, 0.01); b(glow, 0.01, 0.05, 0.01, 0, 0.07, 0.035); }
-      else if (fam === 'Subfusil') { b(gun2, 0.03, 0.08, 0.035, 0, 0, -0.02); b(gun, 0.04, 0.26, 0.06, 0, 0.1, 0.01); b(gun2, 0.03, 0.08, 0.03, 0, 0.06, -0.06); b(glow, 0.01, 0.1, 0.01, 0, 0.1, 0.045); }
-      else if (fam === 'Escopeta') { b(wood, 0.04, 0.16, 0.05, 0, -0.1, 0); b(gun, 0.045, 0.5, 0.05, 0, 0.18, 0.01); b(wood, 0.04, 0.12, 0.04, 0, 0.16, -0.03); }
-      else if (fam === 'Arco') { b(gun, 0.02, 0.6, 0.02, 0, 0.1, 0.05); b(steel, 0.01, 0.4, 0.01, 0, 0.1, 0.0); }
-      else { b(gun2, 0.04, 0.16, 0.06, 0, -0.1, 0); b(gun, 0.045, 0.56, 0.06, 0, 0.2, 0.01); b(gun2, 0.035, 0.1, 0.035, 0, 0.08, -0.06); b(glow, 0.012, 0.18, 0.012, 0, 0.18, 0.045); if (/precision|francotirador/.test(id)) b(gun2, 0.03, 0.14, 0.03, 0, 0.18, 0.06); }
-    } else {
-      if (/katana|espada|machete|hoja|cuchillo|navaja/.test(id) || fam === 'Hoja' || fam === 'Cuchillo') { const long = !/cuchillo|navaja/.test(id) && fam !== 'Cuchillo'; b(gun, 0.03, 0.12, 0.03, 0, 0.0, 0); b(steel, 0.08, 0.02, 0.03, 0, 0.07, 0); b(hot ?? steel, 0.015, long ? 0.62 : 0.2, 0.04, 0, long ? 0.39 : 0.18, 0); }
-      else if (/bate|martillo|hacha|tuberia|porra|nunchaku/.test(id)) { b(wood, 0.04, 0.55, 0.04, 0, 0.25, 0); if (/martillo|hacha/.test(id)) b(hot ?? steel, 0.1, 0.08, 0.04, 0.04, 0.5, 0); }
-      else b(hot ?? steel, 0.03, 0.3, 0.03, 0, 0.12, 0);
+    const outer = new THREE.Group();
+    const g = new THREE.Group(); g.scale.setScalar(0.75);
+    // Las de fuego se giran media vuelta en Y: así, tras el giro de la mano, las miras quedan arriba.
+    if (kind === 'ranged') g.rotation.y = Math.PI;
+    outer.add(g);
+    const std = (color: number, metal: number, rough: number, emissive = 0) => mk(new THREE.MeshStandardMaterial({ color, metalness: metal, roughness: rough, emissive }));
+    const gm = std(0x1a1c22, 0.7, 0.38), poly = std(0x2a2c32, 0.1, 0.8), steel = std(0xd0d6e2, 0.95, 0.18), dark = std(0x0e0f12, 0.6, 0.5);
+    const wood = std(0x6a4428, 0, 0.7), wood2 = std(0x4a2e1a, 0, 0.75), red = std(0xb01818, 0.2, 0.5), yellow = std(0xd8b020, 0.1, 0.6), wrap = std(0x1a1420, 0, 0.9);
+    const techCol = /plasma|termica/.test(id) ? 0xff6a20 : /riel/.test(id) ? 0x43a8ff : /inteligente|smg-int/.test(id) ? 0x5aff8a : /pulsos|electrica|aturdidora|taser|monofil|agujas|sonico|emp/.test(id) ? 0x43f3ff : -1;
+    const tglow = techCol >= 0 ? mk(new THREE.MeshBasicMaterial({ color: techCol })) : glow;
+    const lens = mk(new THREE.MeshBasicMaterial({ color: 0x66e0ff, transparent: true, opacity: 0.85 }));
+    const B = (m: THREE.Material, w: number, l: number, h: number, x: number, y: number, z: number, rx = 0) => { const o = new THREE.Mesh(Math.min(w, l, h) > 0.02 ? G.rbox : G.box, m); o.scale.set(w, l, h); o.position.set(x, y, z); o.rotation.x = rx; g.add(o); return o; };
+    const C = (m: THREE.Material, r: number, l: number, x: number, y: number, z: number, r2 = r) => { const o = new THREE.Mesh(new THREE.CylinderGeometry(r2, r, l, 14), m); o.position.set(x, y, z); g.add(o); return o; }; // a lo largo de Y
+    const CZ = (m: THREE.Material, r: number, l: number, x: number, y: number, z: number) => { const o = C(m, r, l, x, y, z); o.rotation.x = Math.PI / 2; return o; }; // vertical (Z)
+    const CX = (m: THREE.Material, r: number, l: number, x: number, y: number, z: number) => { const o = C(m, r, l, x, y, z); o.rotation.z = Math.PI / 2; return o; }; // transversal (X)
+    // Piezas comunes de las armas de fuego.
+    const grip = (m: THREE.Material, len = 0.11, ang = 0.32) => B(m, 0.03, 0.045, len, 0, -0.012, -len / 2 + 0.01, -ang);
+    const trigger = () => { B(dark, 0.006, 0.05, 0.004, 0, 0.03, -0.028); B(dark, 0.004, 0.006, 0.02, 0, 0.03, -0.02); };
+    const redDot = (y: number, z: number) => { B(dark, 0.024, 0.05, 0.03, 0, y, z); B(lens, 0.016, 0.004, 0.018, 0, y + 0.026, z + 0.002); };
+    const scope = (y: number, z: number, len: number, r: number) => { C(dark, r, len, 0, y, z); C(dark, r * 1.25, 0.04, 0, y + len / 2, z); C(dark, r * 1.15, 0.035, 0, y - len / 2, z); B(lens, r * 1.6, 0.003, r * 1.6, 0, y + len / 2 + 0.021, z); B(dark, 0.02, 0.02, 0.03, 0, y - len * 0.25, z - r - 0.01); B(dark, 0.02, 0.02, 0.03, 0, y + len * 0.25, z - r - 0.01); };
+    const mag = (m: THREE.Material, y: number, len: number, curve = 0) => { const o = B(m, 0.026, 0.045, len, 0, y, -len / 2 - 0.02); o.rotation.x = curve; return o; };
+    const stock = (m: THREE.Material, len: number, drop = 0.02) => { B(m, 0.035, len, 0.06, 0, -len / 2 - 0.05, -drop); B(m, 0.03, 0.02, 0.1, 0, -len - 0.05, -drop - 0.015); };
+    if (kind === 'ranged') switch (id) {
+      case 'pistola-ligera': case 'pistola-compacta': case 'pistola-silenciada': case 'pistola-inteligente': case 'pistola-agujas': case 'pistola-plasma': {
+        const L = id === 'pistola-compacta' ? 0.15 : 0.19;
+        B(id === 'pistola-plasma' ? poly : gm, 0.028, L, 0.034, 0, L / 2 - 0.035, 0.022); // corredera
+        B(poly, 0.026, L * 0.85, 0.022, 0, L * 0.42 - 0.035, -0.004); // armazón
+        grip(poly); trigger(); B(dark, 0.006, 0.006, 0.008, 0, L - 0.04, 0.043); // mira
+        for (let i = 0; i < 4; i++) B(dark, 0.029, 0.004, 0.02, 0, -0.02 + i * 0.008, 0.026); // estrías
+        if (id === 'pistola-silenciada') C(dark, 0.017, 0.16, 0, L - 0.035 + 0.08, 0.02);
+        if (id === 'pistola-inteligente') { B(tglow, 0.03, L * 0.7, 0.004, 0, L * 0.4 - 0.035, 0.04); redDot(0.04, 0.055); }
+        if (id === 'pistola-agujas') { C(steel, 0.006, 0.12, 0, L + 0.02, 0.02); C(tglow, 0.012, 0.06, 0, 0.03, 0.05); }
+        if (id === 'pistola-plasma') { for (let i = 0; i < 3; i++) C(tglow, 0.022, 0.008, 0, 0.03 + i * 0.04, 0.022); C(gm, 0.02, 0.06, 0, L - 0.01, 0.022); }
+        break;
+      }
+      case 'revolver-pesado': case 'revolver-riel': {
+        C(gm, 0.012, 0.17, 0, 0.13, 0.025); B(gm, 0.02, 0.17, 0.012, 0, 0.13, 0.04); // cañón y costilla
+        C(steel, 0.024, 0.05, 0, 0.025, 0.018); for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; C(dark, 0.005, 0.052, Math.cos(a) * 0.014, 0.025, 0.018 + Math.sin(a) * 0.014); }
+        B(gm, 0.024, 0.06, 0.04, 0, -0.01, 0.01); grip(wood, 0.1, 0.45); trigger(); B(gm, 0.008, 0.014, 0.012, 0, -0.035, 0.035); // martillo
+        if (id === 'revolver-riel') { B(tglow, 0.004, 0.16, 0.006, 0.014, 0.13, 0.03); B(tglow, 0.004, 0.16, 0.006, -0.014, 0.13, 0.03); }
+        break;
+      }
+      case 'taser': { B(yellow, 0.03, 0.13, 0.04, 0, 0.04, 0.018); B(dark, 0.03, 0.03, 0.035, 0, 0.11, 0.02); B(tglow, 0.006, 0.006, 0.006, 0.008, 0.127, 0.03); B(tglow, 0.006, 0.006, 0.006, -0.008, 0.127, 0.03); grip(poly, 0.09); trigger(); break; }
+      case 'subfusil': case 'smg-inteligente': case 'subfusil-compacto': {
+        const L = id === 'subfusil-compacto' ? 0.24 : 0.3;
+        B(gm, 0.036, L, 0.05, 0, L / 2 - 0.05, 0.02); C(dark, 0.009, 0.08, 0, L - 0.01, 0.025); grip(poly, 0.1); trigger();
+        mag(gm, 0.07, 0.15); B(poly, 0.03, 0.05, 0.04, 0, L - 0.09, -0.012); // empuñadura delantera
+        if (id === 'subfusil-compacto') { B(steel, 0.008, 0.16, 0.008, 0.014, -0.12, 0.02); B(steel, 0.008, 0.16, 0.008, -0.014, -0.12, 0.02); B(gm, 0.034, 0.012, 0.06, 0, -0.2, 0.0); }
+        else stock(poly, 0.16);
+        if (id === 'smg-inteligente') { B(tglow, 0.038, L * 0.6, 0.005, 0, L * 0.35, 0.047); redDot(0.06, 0.07); } else redDot(0.04, 0.065);
+        break;
+      }
+      case 'rifle-asalto': case 'carabina': case 'rifle-pulsos': {
+        const woodish = id === 'carabina';
+        B(woodish ? wood : gm, 0.04, 0.3, 0.06, 0, 0.1, 0.02); // cajón
+        C(dark, 0.011, 0.36, 0, 0.42, 0.03); B(woodish ? wood : poly, 0.042, 0.22, 0.05, 0, 0.33, 0.022); // cañón y guardamanos
+        B(dark, 0.006, 0.01, 0.03, 0, 0.58, 0.05); // punto de mira
+        grip(woodish ? wood2 : poly); trigger();
+        if (!woodish) { mag(gm, 0.16, 0.17, 0.25); B(dark, 0.02, 0.26, 0.012, 0, 0.12, 0.056); redDot(0.1, 0.075); }
+        else { mag(gm, 0.14, 0.09); B(steel, 0.008, 0.03, 0.03, 0.022, 0.07, 0.035); }
+        stock(woodish ? wood : poly, 0.24, woodish ? 0.03 : 0.01);
+        if (id === 'rifle-pulsos') { for (let i = 0; i < 4; i++) C(tglow, 0.03, 0.01, 0, 0.27 + i * 0.05, 0.022); B(tglow, 0.008, 0.06, 0.06, 0.024, 0.06, 0.02); }
+        break;
+      }
+      case 'rifle-precision': case 'francotirador-inteligente': case 'rifle-dardos': {
+        B(id === 'rifle-precision' ? wood : poly, 0.042, 0.42, 0.06, 0, 0.1, 0.012); // culata y caja de una pieza
+        C(dark, 0.012, 0.52, 0, 0.56, 0.03); C(dark, 0.016, 0.06, 0, 0.84, 0.03); // cañón largo y freno
+        grip(id === 'rifle-precision' ? wood2 : poly, 0.1); trigger(); stock(id === 'rifle-precision' ? wood : poly, 0.26, 0.02);
+        B(steel, 0.008, 0.012, 0.012, 0.03, -0.0, 0.04); C(steel, 0.008, 0.02, 0.04, 0.0, 0.04); // cerrojo
+        scope(0.12, 0.085, 0.3, 0.02);
+        if (id !== 'rifle-dardos') { const l1 = B(dark, 0.006, 0.006, 0.16, 0.02, 0.45, -0.07); l1.rotation.y = 0.3; const l2 = B(dark, 0.006, 0.006, 0.16, -0.02, 0.45, -0.07); l2.rotation.y = -0.3; } // bípode
+        if (id === 'rifle-dardos') C(steel, 0.016, 0.12, 0, 0.3, -0.01);
+        if (id === 'francotirador-inteligente') B(tglow, 0.044, 0.3, 0.005, 0, 0.1, 0.044);
+        break;
+      }
+      case 'rifle-riel': {
+        B(gm, 0.05, 0.36, 0.07, 0, 0.12, 0.02); B(tglow, 0.008, 0.6, 0.012, 0.018, 0.5, 0.035); B(tglow, 0.008, 0.6, 0.012, -0.018, 0.5, 0.035);
+        B(gm, 0.012, 0.6, 0.012, 0.018, 0.5, 0.05); B(gm, 0.012, 0.6, 0.012, -0.018, 0.5, 0.05); B(dark, 0.06, 0.08, 0.05, 0, 0.0, 0.04);
+        grip(poly); trigger(); stock(gm, 0.22); scope(0.14, 0.09, 0.22, 0.018);
+        break;
+      }
+      case 'escopeta-corta': {
+        C(gm, 0.014, 0.32, 0.013, 0.2, 0.03); C(gm, 0.014, 0.32, -0.013, 0.2, 0.03); B(wood, 0.04, 0.14, 0.03, 0, 0.14, 0.012);
+        B(steel, 0.036, 0.07, 0.05, 0, 0.0, 0.025); grip(wood2, 0.11, 0.6); trigger(); break;
+      }
+      case 'escopeta-bombeo': case 'escopeta-tecnologica': {
+        C(gm, 0.014, 0.5, 0, 0.36, 0.035); C(dark, 0.012, 0.42, 0, 0.32, 0.008); // cañón y depósito tubular
+        B(id === 'escopeta-bombeo' ? wood : poly, 0.04, 0.12, 0.04, 0, 0.3, 0.008); // corredera
+        B(gm, 0.04, 0.2, 0.06, 0, 0.04, 0.025); grip(id === 'escopeta-bombeo' ? wood2 : poly); trigger(); stock(id === 'escopeta-bombeo' ? wood : poly, 0.26, 0.03);
+        if (id === 'escopeta-tecnologica') { CX(gm, 0.05, 0.05, 0, 0.1, -0.04); B(tglow, 0.044, 0.18, 0.005, 0, 0.06, 0.057); }
+        break;
+      }
+      case 'ballesta-carbono': {
+        B(dark, 0.035, 0.5, 0.05, 0, 0.1, 0.01); stock(dark, 0.18); grip(poly); trigger(); scope(0.06, 0.06, 0.16, 0.014);
+        const limb = (sx: number) => { const o = B(gm, 0.26, 0.016, 0.02, sx * 0.13, 0.33, 0.02); o.rotation.z = sx * 0.2; };
+        limb(1); limb(-1); B(steel, 0.5, 0.003, 0.003, 0, 0.27, 0.025); B(steel, 0.006, 0.34, 0.006, 0, 0.2, 0.04); // cuerda y virote
+        break;
+      }
+      case 'ametralladora-rotativa': {
+        for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; C(dark, 0.009, 0.45, Math.cos(a) * 0.028, 0.42, 0.03 + Math.sin(a) * 0.028); }
+        C(gm, 0.045, 0.06, 0, 0.22, 0.03); C(gm, 0.04, 0.03, 0, 0.6, 0.03); B(gm, 0.08, 0.24, 0.1, 0, 0.06, 0.02);
+        B(std(0x3a4a2a, 0.2, 0.7), 0.1, 0.12, 0.1, 0.07, 0.04, -0.06); B(gm, 0.02, 0.1, 0.02, 0, 0.12, 0.09); grip(poly); trigger();
+        break;
+      }
+      case 'ametralladora-ligera': {
+        B(gm, 0.05, 0.36, 0.07, 0, 0.1, 0.02); C(dark, 0.013, 0.42, 0, 0.48, 0.03); B(poly, 0.05, 0.16, 0.05, 0, 0.36, 0.02);
+        B(std(0x3a4a2a, 0.2, 0.7), 0.08, 0.1, 0.09, 0.0, 0.06, -0.06); B(gm, 0.012, 0.12, 0.05, 0, 0.12, 0.08); // caja y asa
+        grip(poly); trigger(); stock(poly, 0.22);
+        const l1 = B(dark, 0.008, 0.008, 0.2, 0.03, 0.56, -0.08); l1.rotation.y = 0.35; const l2 = B(dark, 0.008, 0.008, 0.2, -0.03, 0.56, -0.08); l2.rotation.y = -0.35;
+        break;
+      }
+      case 'canon-sonico': { B(gm, 0.07, 0.24, 0.08, 0, 0.06, 0.02); const bell = C(poly, 0.03, 0.16, 0, 0.27, 0.03, 0.08); void bell; C(tglow, 0.07, 0.01, 0, 0.35, 0.03); for (let i = 0; i < 3; i++) C(tglow, 0.042, 0.008, 0, 0.0 + i * 0.05, 0.03); grip(poly); trigger(); break; }
+      case 'lanzagranadas-emp': { C(gm, 0.045, 0.5, 0, 0.25, 0.04); CX(poly, 0.06, 0.07, 0, 0.06, -0.01); C(tglow, 0.05, 0.01, 0, 0.48, 0.04); B(dark, 0.03, 0.06, 0.05, 0, 0.3, -0.03); grip(poly); trigger(); stock(poly, 0.18); break; }
+      default: { B(gm, 0.04, 0.4, 0.06, 0, 0.15, 0.02); C(dark, 0.011, 0.25, 0, 0.45, 0.03); grip(poly); trigger(); }
+    } else switch (id) {
+      case 'navaja': case 'cuchillo-combate': {
+        const L = id === 'navaja' ? 0.09 : 0.17;
+        C(id === 'navaja' ? steel : wrap, 0.012, 0.11, 0, 0, 0); if (id !== 'navaja') B(steel, 0.05, 0.008, 0.016, 0, 0.06, 0);
+        B(steel, 0.004, L, 0.026, 0, 0.065 + L / 2, 0.002); B(steel, 0.003, 0.03, 0.012, 0, 0.065 + L, 0.006).rotation.x = 0.5;
+        if (id !== 'navaja') for (let i = 0; i < 5; i++) B(steel, 0.005, 0.008, 0.006, 0, 0.08 + i * 0.016, 0.016);
+        break;
+      }
+      case 'machete': { C(wrap, 0.014, 0.14, 0, 0, 0); B(steel, 0.004, 0.45, 0.05, 0, 0.3, 0.006); B(steel, 0.004, 0.06, 0.06, 0, 0.5, 0.012); break; }
+      case 'katana': case 'katana-termica': {
+        C(wrap, 0.014, 0.26, 0, 0, 0); for (let i = 0; i < 6; i++) B(std(0xd8d0c0, 0, 0.8), 0.03, 0.006, 0.03, 0, -0.1 + i * 0.04, 0); // tsuka
+        CZ(gm, 0.04, 0.008, 0, 0.135, 0); // tsuba
+        // Hoja ligeramente curva en tres tramos con filo (térmica: filo incandescente).
+        const edge = id === 'katana-termica' ? tglow : steel;
+        for (let i = 0; i < 3; i++) { const seg = B(steel, 0.004, 0.24, 0.03, 0, 0.26 + i * 0.235, 0.004 + i * i * 0.006); seg.rotation.x = -0.035 * i; B(edge, 0.002, 0.24, 0.006, 0, 0.26 + i * 0.235, -0.012 + i * i * 0.006).rotation.x = -0.035 * i; }
+        break;
+      }
+      case 'espada-monofilamento': { C(gm, 0.016, 0.22, 0, 0, 0); CZ(dark, 0.03, 0.01, 0, 0.12, 0); B(tglow, 0.003, 0.75, 0.004, 0, 0.5, 0); break; }
+      case 'lanza-electrica': { C(gm, 0.014, 1.5, 0, 0.45, 0); C(steel, 0.0, 0.16, 0, 1.28, 0, 0.022); C(tglow, 0.02, 0.03, 0, 1.18, 0); C(wrap, 0.017, 0.2, 0, 0, 0); break; }
+      case 'hacha-plasma': case 'hacha-bomberos': {
+        C(id === 'hacha-bomberos' ? wood : gm, 0.016, 0.75, 0, 0.3, 0);
+        const head = id === 'hacha-bomberos' ? red : gm; B(head, 0.03, 0.06, 0.14, 0, 0.63, 0.05); B(steel, 0.02, 0.07, 0.04, 0, 0.63, 0.13);
+        if (id === 'hacha-bomberos') { const pk = C(head, 0.012, 0.12, 0, 0.63, -0.06, 0.002); pk.rotation.x = Math.PI / 2; } else B(tglow, 0.022, 0.07, 0.008, 0, 0.63, 0.15);
+        break;
+      }
+      case 'bate': { C(steel, 0.016, 0.8, 0, 0.3, 0, 0.034); CZ(steel, 0.022, 0.012, 0, -0.1, 0).rotation.x = 0; C(wrap, 0.018, 0.16, 0, -0.02, 0); break; }
+      case 'tuberia': { C(std(0x6a6a72, 0.6, 0.6), 0.02, 0.62, 0, 0.24, 0); C(std(0x5a5a62, 0.6, 0.6), 0.026, 0.06, 0, 0.55, 0); const el = C(std(0x5a5a62, 0.6, 0.6), 0.02, 0.1, 0, 0.6, 0.04); el.rotation.x = Math.PI / 2; break; }
+      case 'porra-electrica': { C(dark, 0.016, 0.5, 0, 0.2, 0); C(tglow, 0.018, 0.04, 0, 0.45, 0); C(wrap, 0.018, 0.14, 0, 0, 0); break; }
+      case 'tonfa-aturdidora': { C(dark, 0.017, 0.55, 0, 0.22, 0); const hd = C(wrap, 0.016, 0.12, 0, 0.0, 0.06); hd.rotation.x = Math.PI / 2; C(tglow, 0.019, 0.03, 0, 0.47, 0); break; }
+      case 'nunchakus': { C(wood, 0.016, 0.3, 0, 0.12, 0); const o = C(wood, 0.016, 0.3, 0, 0.42, 0.08); o.rotation.x = -0.6; for (let i = 0; i < 4; i++) B(steel, 0.01, 0.014, 0.01, 0, 0.29 + i * 0.012, 0.02 + i * 0.014); break; }
+      case 'martillo-neumatico': case 'mazo': {
+        C(id === 'mazo' ? wood : gm, 0.02, 0.85, 0, 0.32, 0); B(gm, 0.1, 0.12, 0.2, 0, 0.75, 0.0);
+        if (id === 'martillo-neumatico') { CZ(steel, 0.02, 0.06, 0.06, 0.75, 0.04); CZ(steel, 0.02, 0.06, -0.06, 0.75, 0.04); B(tglow, 0.102, 0.02, 0.02, 0, 0.75, 0.1); }
+        break;
+      }
+      case 'punos-choque': { B(steel, 0.09, 0.025, 0.03, 0, -0.06, 0.03); for (let i = 0; i < 4; i++) B(tglow, 0.008, 0.008, 0.008, -0.03 + i * 0.02, -0.06, 0.05); break; }
+      default: { C(wrap, 0.015, 0.14, 0, 0, 0); B(steel, 0.006, 0.4, 0.035, 0, 0.27, 0); }
     }
-    return g;
+    void fam;
+    return outer;
   }
 
   // ================================================================ animación y dibujo
@@ -426,10 +609,23 @@ export class Chars3D {
       const s = e.s;
       if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) continue;
       seen.add(s.id);
-      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind]);
+      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color]);
       let r = this.rigs.get(s.id);
-      if (!r || r.key !== key) { if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); }
+      if (!r || r.key !== key) { if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); }
       this.animate(r, e, opts);
+      if (e.ghost && r.ghostMats) {
+        // Flota a un palmo del suelo, se mece y parpadea un poco (más cuanto menos visible está).
+        r.root.position.y = e.ghost.float;
+        const flick = e.ghost.alpha < 1 ? (Math.random() < 0.25 ? 0.4 : 1) : 1;
+        for (const m of r.ghostMats) (m as any).opacity = 0.62 * e.ghost.alpha * flick;
+        r.root.visible = e.ghost.alpha > 0.02;
+      }
+    }
+    // Imágenes residuales de Kairós: se desvanecen y desaparecen.
+    const tnow = performance.now();
+    for (let i = this.after.length - 1; i >= 0; i--) {
+      const a = this.after[i], k = (tnow - a.t0) / a.life;
+      if (k >= 1) { this.world.remove(a.g); a.mat.dispose(); this.after.splice(i, 1); } else a.mat.opacity = 0.5 * (1 - k);
     }
     for (const [id, r] of this.rigs) if (!seen.has(id)) { this.disposeRig(r); this.rigs.delete(id); }
     // Cámara: el centro de la pantalla corresponde al mismo punto del suelo que en la vista 2D.
@@ -497,13 +693,34 @@ export class Chars3D {
     const lying = s.state === 'downed' || s.state === 'sleeping' || !!s.dead;
     r.lie += ((lying ? 1 : 0) - r.lie) * Math.min(1, dt * 5);
     const roll = e.rollAt ? now - e.rollAt : 1e9;
-    r.body.rotation.x = roll < 380 ? (roll / 380) * Math.PI * 2 : -r.lie * Math.PI / 2;
-    r.body.position.y = (roll < 380 ? Math.sin((roll / 380) * Math.PI) * 0.12 : 0) + r.lie * 0.06 + bob * M;
-    if (lying) { thL = 0.1; thR = -0.05; knL = 0.2; knR = 0.1; shL = -0.3; shR = 0.4; elL = -0.2; elR = -0.3; spineX = 0; neckX = 0.2; }
-    r.thighL.rotation.x = -thL; r.thighR.rotation.x = -thR; r.kneeL.rotation.x = knL; r.kneeR.rotation.x = knR;
-    r.shoulderL.rotation.set(shL, 0, shLz); r.shoulderR.rotation.set(shR, 0, shRz);
-    r.elbowL.rotation.x = elL; r.elbowR.rotation.x = elR;
-    r.spine.rotation.set(spineX, spineY, 0); r.neck.rotation.x = neckX;
+    const ROLL = 420;
+    if (roll < ROLL) {
+      // v0.12 · Voltereta agachada hacia delante que gira sobre el centro del cuerpo (antes giraba sobre los pies y
+      // parecía que se tumbaba): piernas y brazos recogidos y cuerpo bajo durante todo el giro.
+      const k = roll / ROLL, th = k * Math.PI * 2, hc = 0.34 / Y_SQUASH;
+      const tuck = Math.sin(k * Math.PI);
+      r.body.rotation.x = th;
+      r.body.position.y = hc * (1 - Math.cos(th)) - tuck * 0.18 + 0.02;
+      r.body.position.z = -hc * Math.sin(th);
+      thL = thR = 1.5 * tuck + 0.2; knL = knR = 2.0 * tuck; shL = shR = -1.2 * tuck; elL = elR = -1.6 * tuck; spineX = 0.5 * tuck; neckX = 0.5 * tuck;
+    } else {
+      r.body.rotation.x = -r.lie * Math.PI / 2;
+      r.body.position.y = r.lie * 0.06 + bob * M; r.body.position.z = 0;
+    }
+    if (lying && roll >= ROLL) { thL = 0.1; thR = -0.05; knL = 0.2; knR = 0.1; shL = -0.3; shR = 0.4; elL = -0.2; elR = -0.3; spineX = 0; neckX = 0.2; }
+    // v0.12 · Mezcla suave entre posturas (andar → apuntar → golpear…): cada articulación se acerca a su objetivo en vez
+    // de saltar. Los golpes, patadas y volteretas van más rápido para que sigan teniendo pegada.
+    const snappy = since < 340 || kickT < 320 || roll < ROLL;
+    const kk = Math.min(1, dt * (snappy ? 30 : 14));
+    const to = (o3: THREE.Euler, ax: 'x' | 'y' | 'z', v: number) => { o3[ax] += (v - o3[ax]) * kk; };
+    to(r.thighL.rotation, 'x', -thL); to(r.thighR.rotation, 'x', -thR); to(r.kneeL.rotation, 'x', knL); to(r.kneeR.rotation, 'x', knR);
+    to(r.shoulderL.rotation, 'x', shL); to(r.shoulderL.rotation, 'z', shLz); to(r.shoulderR.rotation, 'x', shR); to(r.shoulderR.rotation, 'z', shRz);
+    to(r.elbowL.rotation, 'x', elL); to(r.elbowR.rotation, 'x', elR);
+    to(r.spine.rotation, 'x', spineX); to(r.spine.rotation, 'y', spineY); to(r.neck.rotation, 'x', neckX);
+    // Cadera que acompaña la zancada, peso que cambia de pierna en reposo y cabeza que compensa el giro del tronco.
+    to(r.hips.rotation, 'y', moving ? -sw * (run ? 0.18 : 0.12) : Math.sin(r.phase * 0.35) * 0.04);
+    to(r.hips.rotation, 'z', moving ? Math.cos(r.phase) * 0.035 : Math.sin(r.phase * 0.35) * 0.025);
+    to(r.neck.rotation, 'y', -spineY * 0.6);
     for (const [i, c] of r.coat.entries()) c.rotation.x = i === 2 ? Math.max(0, Math.abs(sw) * 0.25) : -Math.max(0, (i ? thR : thL)) * 0.6;
     // Invisible (camuflaje): casi transparente para los demás.
     const invis = !!s.buffs?.includes('invisible');

@@ -477,6 +477,14 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log(`v0.11: ${r.alleys} callejones con giros y ${r.passages} pasajes comerciales iluminados.`);
 }
 
+// ---------------------------------------------------------------- v0.12: diez armas nuevas con modelo 3D propio
+{
+  const v12 = await import('./v12.mjs');
+  write('items/armas.json', v12.armsV12(read('items/armas.json')));
+  write('shops.json', v12.shopsV12(read('shops.json')));
+  console.log(`v0.12: ${v12.NEW_WEAPONS.length} armas nuevas en las tiendas.`);
+}
+
 // ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
 {
   const { applyOverlays } = await import('./overlay.mjs');
