@@ -20,6 +20,10 @@ function fillRect(arr: { [i: number]: number }, w: number, h: number, r: readonl
     for (let x = Math.max(0, x0); x < Math.min(w, x0 + rw); x++) arr[y * w + x] = v;
 }
 
+/** v0.11 · Solo bloquean el paso los objetos sólidos. Los postes finos (farolas, bocas de incendio, antenas, cámaras), los
+ *  portales de viviendas y los puntos de trato son interactivos pero no ocupan la casilla (antes daban «colisiones invisibles»). */
+export const THIN_PROPS: ReadonlySet<string> = new Set(['lamp', 'hydrant', 'antenna', 'neonstrip', 'billboard', 'screen', 'holo', 'palm', 'plant', 'citylights', 'datastream', 'glitch', 'window', 'neon']);
+export const SOLID_OBJECTS: ReadonlySet<string> = new Set(['vending', 'atm', 'crates', 'generator', 'terminal', 'computer', 'bed', 'trash', 'loot', 'stash', 'neuralchair', 'shop', 'marketterm', 'jobboard', 'bountyboard', 'board']);
 export function buildZoneGrid(def: ZoneDef): ZoneGrid {
   const w = def.width, h = def.height, n = w * h;
   const ground = new Uint8Array(n).fill(GROUND_TYPES.indexOf(def.base));
@@ -29,8 +33,8 @@ export function buildZoneGrid(def: ZoneDef): ZoneGrid {
   const buildingAt = new Int16Array(n).fill(-1);
   def.buildings.forEach((b, bi) => { fillRect(walk, w, h, b.rect, 0); fillRect(buildingAt, w, h, b.rect, bi); });
   for (const b of def.blocks) fillRect(walk, w, h, b.rect, 0);
-  for (const p of def.props) if (p.blocking) walk[p.at[1] * w + p.at[0]] = 0;
-  for (const o of def.objects) walk[o.at[1] * w + o.at[0]] = 0;
+  for (const p of def.props) if (p.blocking && !THIN_PROPS.has(p.type)) walk[p.at[1] * w + p.at[0]] = 0;
+  for (const o of def.objects) if (SOLID_OBJECTS.has(o.kind)) walk[o.at[1] * w + o.at[0]] = 0;
   if (def.kind === 'interior') {
     // Muros perimetrales: fila y=0 y columna x=0 son pared; el resto del borde también bloquea salvo puertas.
     for (let x = 0; x < w; x++) { walk[x] = 0; walk[(h - 1) * w + x] = 0; }

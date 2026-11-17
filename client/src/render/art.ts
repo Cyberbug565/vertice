@@ -9,8 +9,8 @@ export function shade(c: number, f: number) {
 }
 
 const GROUND: Record<GroundType, number> = {
-  void: 0x05050a, asphalt: 0x24242f, sidewalk: 0x3a3a4c, plaza: 0x46405c, market: 0x4b3a46, dirt: 0x4a3f32, water: 0x0b2440,
-  bridge: 0x4c4c5c, wood: 0x5c4232, tile: 0x585a72, metal: 0x46525c, crosswalk: 0x24242f, deck: 0x3e3a36, gravel: 0x4b4640, grass: 0x2f5a3a, sand: 0x8a7458, alley: 0x15131c, data: 0x07142a, grid: 0x1a0610,
+  void: 0x05050a, asphalt: 0x1d1d27, sidewalk: 0x4a4a60, plaza: 0x46405c, market: 0x4b3a46, dirt: 0x4a3f32, water: 0x0b2440,
+  bridge: 0x4c4c5c, wood: 0x5c4232, tile: 0x585a72, metal: 0x46525c, crosswalk: 0x1d1d27, deck: 0x3e3a36, gravel: 0x4b4640, grass: 0x2f5a3a, sand: 0x8a7458, alley: 0x2a2228, data: 0x07142a, grid: 0x1a0610,
 };
 
 function diamond(x: number, y: number) {
@@ -29,7 +29,10 @@ export function drawGroundChunk(g: Graphics, zone: ZoneDef, ground: Uint8Array, 
     if ((type === 'tile' || type === 'market') && (x + y) % 2 === 0) col = shade(col, 1.08);
     g.poly(diamond(x, y)).fill(col);
     if (type === 'crosswalk') {
-      for (let i = 0; i < 3; i++) { const t = 0.15 + i * 0.3; const p = [...diamondStrip(x, y, t, t + 0.14)]; g.poly(p).fill({ color: 0xd8d8e8, alpha: 0.75 }); }
+      // Las franjas van paralelas a la calzada: si la calzada sigue en x, las franjas cortan en y.
+      const along = (xx: number, yy: number) => { const t = xx < 0 || yy < 0 || xx >= w || yy >= zone.height ? '' : types[ground[yy * w + xx]]; return t === 'crosswalk' || t === 'asphalt'; };
+      const roadInX = along(x - 1, y) || along(x + 1, y);
+      for (let i = 0; i < 3; i++) { const t = 0.12 + i * 0.3; const p = roadInX ? diamondStripY(x, y, t, t + 0.16) : diamondStrip(x, y, t, t + 0.16); g.poly(p).fill({ color: 0xf0f0ff, alpha: 0.9 }); }
     } else if (type === 'water' && h % 7 === 0) {
       const a = worldToScreen(x + 0.3, y + 0.5), b = worldToScreen(x + 0.7, y + 0.5);
       g.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width: 1, color: 0x43f3ff, alpha: 0.25 });
@@ -46,12 +49,40 @@ export function drawGroundChunk(g: Graphics, zone: ZoneDef, ground: Uint8Array, 
       const a = worldToScreen(x + 0.4, y + 0.4);
       g.circle(a.x, a.y + 4, 2).fill({ color: 0x000000, alpha: 0.3 });
     }
-    // Bordillo: oscurece el lado de la acera junto a la calzada.
-    if (type === 'sidewalk' && x + 1 < w && types[ground[y * w + x + 1]] === 'asphalt') {
-      const a = worldToScreen(x + 1, y), b = worldToScreen(x + 1, y + 1);
-      g.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width: 2, color: 0x6a6a84, alpha: 0.6 });
+    const at = (xx: number, yy: number) => (xx < 0 || yy < 0 || xx >= w || yy >= zone.height ? 'void' : types[ground[yy * w + xx]]);
+    const isRoad = (t: string) => t === 'asphalt' || t === 'crosswalk';
+    if (type === 'sidewalk' || type === 'plaza' || type === 'tile') {
+      // Losas de acera: juntas finas para que se lea como suelo peatonal.
+      if (type === 'sidewalk') {
+        const a = worldToScreen(x + 0.5, y), b = worldToScreen(x + 0.5, y + 1), c = worldToScreen(x, y + 0.5), d = worldToScreen(x + 1, y + 0.5);
+        g.moveTo(a.x, a.y).lineTo(b.x, b.y).moveTo(c.x, c.y).lineTo(d.x, d.y).stroke({ width: 1, color: 0x000000, alpha: 0.16 });
+      }
+      // Bordillo en los cuatro lados que dan a la calzada: arista clara elevada y sombra sobre el asfalto.
+      const sides: [number, number, number, number, number, number][] = [[1, 0, x + 1, y, x + 1, y + 1], [-1, 0, x, y, x, y + 1], [0, 1, x, y + 1, x + 1, y + 1], [0, -1, x, y, x + 1, y]];
+      for (const [dx, dy, ax, ay, bx, by] of sides) if (isRoad(at(x + dx, y + dy))) {
+        const a = worldToScreen(ax, ay), b = worldToScreen(bx, by);
+        g.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width: 3, color: 0x9a9ab8, alpha: 0.85 });
+        g.moveTo(a.x, a.y + 2).lineTo(b.x, b.y + 2).stroke({ width: 2, color: 0x000000, alpha: 0.35 });
+      }
+    } else if (type === 'asphalt') {
+      // Línea de borde blanca a un palmo del bordillo.
+      const sides: [number, number, number, number, number, number][] = [[1, 0, x + 0.88, y, x + 0.88, y + 1], [-1, 0, x + 0.12, y, x + 0.12, y + 1], [0, 1, x, y + 0.88, x + 1, y + 0.88], [0, -1, x, y + 0.12, x + 1, y + 0.12]];
+      for (const [dx, dy, ax, ay, bx, by] of sides) { const n = at(x + dx, y + dy); if (n === 'sidewalk' || n === 'plaza' || n === 'tile') {
+        const a = worldToScreen(ax, ay), b = worldToScreen(bx, by);
+        g.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width: 1.2, color: 0xe8e8f0, alpha: 0.45 });
+      } }
+      if (h % 97 === 0) { const m = worldToScreen(x + 0.5, y + 0.5); g.ellipse(m.x, m.y, 9, 4.5).fill({ color: 0x3a3a46 }).stroke({ width: 1, color: 0x5a5a6c, alpha: 0.8 }); }
+    } else if (type === 'alley') {
+      // Callejón: adoquín sucio, charcos y basura.
+      if (h % 5 === 0) { const m = worldToScreen(x + 0.3 + (h % 4) * 0.1, y + 0.5); g.ellipse(m.x, m.y, 10 + (h % 6), 4).fill({ color: 0x3a4a6a, alpha: 0.35 }); }
+      const a = worldToScreen(x, y + 0.33), b = worldToScreen(x + 1, y + 0.33), c = worldToScreen(x, y + 0.66), d = worldToScreen(x + 1, y + 0.66);
+      g.moveTo(a.x, a.y).lineTo(b.x, b.y).moveTo(c.x, c.y).lineTo(d.x, d.y).stroke({ width: 1, color: 0x000000, alpha: 0.22 });
     }
   }
+}
+function diamondStripY(x: number, y: number, t0: number, t1: number) {
+  const a = worldToScreen(x, y + t0), b = worldToScreen(x + 1, y + t0), c = worldToScreen(x + 1, y + t1), d = worldToScreen(x, y + t1);
+  return [a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y];
 }
 function diamondStrip(x: number, y: number, t0: number, t1: number) {
   const a = worldToScreen(x + t0, y), b = worldToScreen(x + t1, y), c = worldToScreen(x + t1, y + 1), d = worldToScreen(x + t0, y + 1);
@@ -89,7 +120,10 @@ export function drawBuilding(b: ZoneDef['buildings'][number], body: Graphics, li
   const beacons: { x: number; y: number }[] = [];
   const style = b.style;
   // Volumen principal y remates: arcologías escalonadas, agujas que se estrechan, cristal con franjas de luz.
-  const mainH = style === 'arcology' ? Math.round(H * 0.5) : style === 'spire' ? Math.round(H * 0.7) : H;
+  // v0.11 · Variantes por edificio (deterministas): torres y megabloques con retranqueo, bloques de ladrillo con escalera de incendios…
+  const vh = hashString(b.id + ':v');
+  const setback = (style === 'tower' || style === 'mega' || style === 'block') && w >= 5 && h >= 5 && H >= 8 && vh % 3 === 0;
+  const mainH = style === 'arcology' ? Math.round(H * 0.5) : style === 'spire' ? Math.round(H * 0.7) : setback ? Math.round(H * 0.62) : H;
   const glass = style === 'glass' || style === 'spire';
   drawBox(body, x0, y0, w, h, 0, mainH, glass ? shade(col, 0.9) : col);
   const rng = seededRng(hashString(b.id));
@@ -157,6 +191,79 @@ export function drawBuilding(b: ZoneDef['buildings'][number], body: Graphics, li
     const tg = occl(c.x, c.y) ? body : lights;
     tg.rect(c.x - 8, c.y - 3, 16, 6).fill({ color: 0x5affc8, alpha: 0.9 });
     tg.rect(c.x - 3, c.y - 8, 6, 16).fill({ color: 0x5affc8, alpha: 0.9 });
+  }
+  if (setback) {
+    // Cuerpo superior retranqueado con su cornisa y ventanas.
+    const ins = w >= 8 && h >= 8 ? 2 : 1;
+    drawBox(body, x0 + ins, y0 + ins, w - ins * 2, h - ins * 2, mainH, H - mainH, shade(col, 1.06));
+    quadOnFaceY(body, y1, x0, x1, mainH - 0.12, mainH, shade(col, 1.4), 0.9); quadOnFaceX(body, x1, y0, y1, mainH - 0.12, mainH, shade(col, 1.4), 0.9);
+    for (let z = mainH + 0.4; z + 0.5 < H; z += 1) {
+      for (let x = x0 + ins + 0.2; x + 0.6 <= x1 - ins; x += 1) { const lit = rng() < litRate; quadOnFaceY(body, y1 - ins, x, x + 0.55, z, z + 0.45, lit ? WINDOW_COLORS[Math.floor(rng() * WINDOW_COLORS.length)] : 0x0e0e1c, lit ? 0.7 : 0.55); }
+      for (let y = y0 + ins + 0.2; y + 0.6 <= y1 - ins; y += 1) { const lit = rng() < litRate; quadOnFaceX(body, x1 - ins, y, y + 0.55, z, z + 0.45, lit ? WINDOW_COLORS[Math.floor(rng() * WINDOW_COLORS.length)] : 0x0e0e1c, lit ? 0.7 : 0.55); }
+    }
+  }
+  if (style === 'block' && vh % 2 === 0) {
+    // Ladrillo: hiladas horizontales en las dos fachadas visibles.
+    for (let z = 0.25; z < mainH; z += 0.25) { quadOnFaceY(body, y1, x0, x1, z, z + 0.03, 0x000000, 0.12); quadOnFaceX(body, x1, y0, y1, z, z + 0.03, 0x000000, 0.12); }
+  }
+  if ((style === 'block' || style === 'industrial') && h >= 4 && mainH >= 3 && vh % 5 < 3) {
+    // Escalera de incendios en zigzag en la fachada +x, con descansillos en cada planta.
+    const yA = y0 + Math.max(0.6, h * 0.3), yB = Math.min(y1 - 0.4, yA + 2.2), metal = 0x3a3a46;
+    for (let z = 1; z < mainH - 0.5; z += 1) {
+      const a = worldToScreen(x1 + 0.02, yA, z), b2 = worldToScreen(x1 + 0.02, yB, z), a2 = worldToScreen(x1 + 0.45, yA, z), b3 = worldToScreen(x1 + 0.45, yB, z);
+      body.poly([a.x, a.y, b2.x, b2.y, b3.x, b3.y, a2.x, a2.y]).fill({ color: metal, alpha: 0.95 });
+      const r1 = worldToScreen(x1 + 0.45, yA, z + 0.3), r2 = worldToScreen(x1 + 0.45, yB, z + 0.3);
+      body.moveTo(r1.x, r1.y).lineTo(r2.x, r2.y).stroke({ width: 1, color: 0x6a6a7a });
+      const up = (Math.round(z) % 2 === 0), s0 = worldToScreen(x1 + 0.25, up ? yA : yB, z), s1 = worldToScreen(x1 + 0.25, up ? yB : yA, z + 1);
+      if (z + 1 < mainH - 0.5) body.moveTo(s0.x, s0.y).lineTo(s1.x, s1.y).stroke({ width: 2, color: 0x2a2a34 });
+    }
+  }
+  if ((style === 'block' || style === 'mega') && vh % 4 === 1) {
+    // Balcones con barandilla en la fachada +y.
+    for (let z = 1; z < mainH - 0.5; z += 1) for (let x = x0 + 0.6; x + 1 <= x1 - 0.3; x += 2) {
+      const a = worldToScreen(x, y1, z), b2 = worldToScreen(x + 0.9, y1, z), c2 = worldToScreen(x + 0.9, y1 + 0.35, z), d = worldToScreen(x, y1 + 0.35, z);
+      body.poly([a.x, a.y, b2.x, b2.y, c2.x, c2.y, d.x, d.y]).fill({ color: shade(col, 0.7) });
+      const r1 = worldToScreen(x, y1 + 0.35, z + 0.3), r2 = worldToScreen(x + 0.9, y1 + 0.35, z + 0.3);
+      body.moveTo(d.x, d.y).lineTo(r1.x, r1.y).lineTo(r2.x, r2.y).lineTo(c2.x, c2.y).stroke({ width: 1, color: 0x8a8a9a, alpha: 0.8 });
+    }
+  }
+  if (style === 'shop' || (style === 'block' && vh % 3 === 1)) {
+    // Toldo de lona sobre los bajos.
+    const aw = [0xb03040, 0x2a6a5a, 0x7a4ab0, 0xc08a30][vh % 4];
+    const a = worldToScreen(x0 + 0.3, y1, 1.15), b2 = worldToScreen(x1 - 0.3, y1, 1.15), c2 = worldToScreen(x1 - 0.3, y1 + 0.6, 0.85), d = worldToScreen(x0 + 0.3, y1 + 0.6, 0.85);
+    body.poly([a.x, a.y, b2.x, b2.y, c2.x, c2.y, d.x, d.y]).fill(aw);
+    for (let x = x0 + 0.3; x < x1 - 0.3; x += 0.5) { const p1 = worldToScreen(x, y1 + 0.6, 0.85), p2 = worldToScreen(Math.min(x1 - 0.3, x + 0.25), y1 + 0.6, 0.85); body.moveTo(p1.x, p1.y).lineTo(p2.x, p2.y).stroke({ width: 2, color: 0xf0e8d8, alpha: 0.6 }); }
+  }
+  // Azotea: pretil y equipamiento (depósito de agua, máquinas de aire, jardín, helipuerto o valla publicitaria).
+  if (style !== 'arcology' && style !== 'spire') {
+    const ins = setback ? (w >= 8 && h >= 8 ? 2 : 1) : 0;
+    const rx0 = x0 + ins, ry0 = y0 + ins, rw = w - ins * 2, rh = h - ins * 2, top = H;
+    const p0 = worldToScreen(rx0, ry0 + rh, top + 0.25), p1 = worldToScreen(rx0 + rw, ry0 + rh, top + 0.25), p2 = worldToScreen(rx0 + rw, ry0, top + 0.25);
+    body.moveTo(p0.x, p0.y).lineTo(p1.x, p1.y).lineTo(p2.x, p2.y).stroke({ width: 2, color: shade(col, 0.8), alpha: 0.9 });
+    const kind = vh % 7;
+    if (kind === 0 && rw >= 3 && rh >= 3) { // depósito de agua sobre patas
+      const cx = rx0 + 1, cy = ry0 + 1;
+      for (const [dx, dy] of [[0.1, 0.1], [0.9, 0.1], [0.1, 0.9], [0.9, 0.9]]) { const a = worldToScreen(cx + dx, cy + dy, top), t2 = worldToScreen(cx + dx, cy + dy, top + 0.7); body.moveTo(a.x, a.y).lineTo(t2.x, t2.y).stroke({ width: 1.5, color: 0x3a3030 }); }
+      const c0 = worldToScreen(cx + 0.5, cy + 0.5, top + 0.7), c1 = worldToScreen(cx + 0.5, cy + 0.5, top + 1.6);
+      body.rect(c0.x - 18, c1.y, 36, c0.y - c1.y).fill(0x6a4a34); body.ellipse(c1.x, c1.y, 18, 9).fill(0x7a5a40); body.ellipse(c0.x, c0.y, 18, 9).fill(0x5a3a28);
+      body.poly([c1.x - 18, c1.y, c1.x, c1.y - 16, c1.x + 18, c1.y]).fill(0x4a3428);
+    } else if (kind === 1 || kind === 2) { // máquinas de aire acondicionado
+      for (let i = 0; i < Math.min(4, Math.floor(rw * rh / 6) + 1); i++) { const ax = rx0 + 0.3 + rng() * Math.max(0.1, rw - 1.3), ay = ry0 + 0.3 + rng() * Math.max(0.1, rh - 1.3); drawBox(body, ax, ay, 0.8, 0.6, top, 0.45, 0x8a8e98); const f = worldToScreen(ax + 0.4, ay + 0.3, top + 0.46); body.circle(f.x, f.y, 4).stroke({ width: 1, color: 0x3a3a44 }); }
+    } else if (kind === 3 && rw >= 3 && rh >= 3) { // jardín en la azotea
+      drawBox(body, rx0 + 0.4, ry0 + 0.4, rw - 0.8, rh - 0.8, top, 0.15, 0x2f5a3a);
+      for (let i = 0; i < 3; i++) { const t = worldToScreen(rx0 + 0.8 + rng() * (rw - 1.6), ry0 + 0.8 + rng() * (rh - 1.6), top + 0.15); body.circle(t.x, t.y - 8, 9).fill(0x3a7a4a); body.circle(t.x + 4, t.y - 12, 6).fill(0x4a9a5a); }
+    } else if (kind === 4 && rw >= 4 && rh >= 4 && H >= 10) { // helipuerto
+      const m = worldToScreen(rx0 + rw / 2, ry0 + rh / 2, top + 0.02);
+      body.ellipse(m.x, m.y, rw * 13, rw * 6.5).fill(0x2a2a34).stroke({ width: 2, color: 0xffd23f, alpha: 0.9 });
+      body.rect(m.x - 7, m.y - 6, 3, 12).fill(0xffd23f); body.rect(m.x + 4, m.y - 6, 3, 12).fill(0xffd23f); body.rect(m.x - 4, m.y - 1.5, 8, 3).fill(0xffd23f);
+      for (const [dx, dy] of [[0, 0], [rw, 0], [0, rh], [rw, rh]]) { const l = worldToScreen(rx0 + dx, ry0 + dy, top + 0.1); lights.circle(l.x, l.y, 3).fill({ color: 0xff3040, alpha: 0.9 }); }
+    } else if (kind === 5 && rw >= 3) { // valla publicitaria en la azotea
+      const a = worldToScreen(rx0 + 0.5, ry0 + rh - 0.5, top + 0.6), b2 = worldToScreen(rx0 + Math.min(rw - 0.5, 3.5), ry0 + rh - 0.5, top + 0.6), c2 = worldToScreen(rx0 + Math.min(rw - 0.5, 3.5), ry0 + rh - 0.5, top + 2), d = worldToScreen(rx0 + 0.5, ry0 + rh - 0.5, top + 2);
+      const pl = worldToScreen(rx0 + 1, ry0 + rh - 0.5, top), pr = worldToScreen(rx0 + Math.min(rw - 1, 3), ry0 + rh - 0.5, top);
+      body.moveTo(pl.x, pl.y).lineTo(pl.x, pl.y - 20).moveTo(pr.x, pr.y).lineTo(pr.x, pr.y - 20).stroke({ width: 2, color: 0x2a2a34 });
+      body.poly([a.x, a.y, b2.x, b2.y, c2.x, c2.y, d.x, d.y]).fill(0x14141e);
+      lights.poly([a.x, a.y, b2.x, b2.y, c2.x, c2.y, d.x, d.y]).fill({ color: sc, alpha: 0.3 });
+    }
   }
   if (H >= 14 && style !== 'arcology' && style !== 'spire') beacons.push(worldToScreen(x1 - 0.5, y1 - 0.5, H + 0.2));
   return beacons;
@@ -228,7 +335,8 @@ export function drawProp(g: Graphics, lightsIn: Graphics, p: ZoneDef['props'][nu
       g.roundRect(arm.x - 6, arm.y - 2, 12, 5, 2).fill(lc);
       lights.circle(arm.x, arm.y, 14).fill({ color: lc, alpha: 0.4 });
       const fl = worldToScreen(x + 1.1, y + 0.5, 0);
-      lights.ellipse(fl.x, fl.y, 70, 35).fill({ color: pool, alpha: 0.16 });
+      lights.ellipse(fl.x, fl.y, 105, 52).fill({ color: pool, alpha: 0.13 });
+      lights.ellipse(fl.x, fl.y, 70, 35).fill({ color: pool, alpha: 0.12 });
       lights.ellipse(fl.x, fl.y, 36, 18).fill({ color: lc, alpha: 0.14 });
       break;
     }

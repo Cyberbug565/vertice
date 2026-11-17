@@ -28,14 +28,23 @@ function rng(seed: string) {
   for (let i = 0; i < seed.length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619); }
   return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000; };
 }
+/** v0.11 · Lienzos cacheados (los usan también los personajes 3D como texturas de Three.js). */
+const canvases = new Map<string, HTMLCanvasElement>();
+function makeCanvas(key: string, wu: number, hu: number, draw: (ctx: CanvasRenderingContext2D, w: number, h: number, r: () => number) => void) {
+  const hit = canvases.get(key);
+  if (hit) return hit;
+  const w = Math.max(8, Math.round(wu * PX)), h = Math.max(8, Math.round(hu * PX));
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  draw(cv.getContext('2d')!, w, h, rng(key));
+  if (canvases.size > MAX) canvases.delete(canvases.keys().next().value!);
+  canvases.set(key, cv);
+  return cv;
+}
 function make(key: string, wu: number, hu: number, draw: (ctx: CanvasRenderingContext2D, w: number, h: number, r: () => number) => void) {
   const hit = cache.get(key);
   if (hit) return hit;
   if (typeof document === 'undefined') return Texture.WHITE;
-  const w = Math.max(8, Math.round(wu * PX)), h = Math.max(8, Math.round(hu * PX));
-  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
-  const ctx = cv.getContext('2d')!;
-  draw(ctx, w, h, rng(key));
+  const cv = makeCanvas(key, wu, hu, draw);
   const t = Texture.from(cv);
   t.source.scaleMode = 'linear';
   if (cache.size > MAX) { const first = cache.keys().next().value!; cache.get(first)?.destroy(true); cache.delete(first); }
@@ -277,5 +286,17 @@ export function skinTexture(skin: string, style: string, inkCol: string, accent:
     for (let i = 0; i < w * h / 90; i++) { ctx.fillStyle = css(skin, 0.9 + r() * 0.2, 0.25); ctx.fillRect(r() * w, r() * h, 1, 1); }
     if (style && style !== 'ninguno') drawTattoo(ctx, w, h, r, style, inkCol || '#14141e', accent);
     volume(ctx, w, h, 0.3, 0.1);
+  });
+}
+
+/** v0.11 · Versiones en lienzo (para los modelos 3D). */
+export function fabricCanvas(pattern: string, base: string, accent: string, wu: number, hu: number) {
+  return makeCanvas(`f|${pattern}|${base}|${accent}|${wu.toFixed(1)}x${hu.toFixed(1)}`, wu, hu, (ctx, w, h, r) => { drawFabric(ctx, w, h, r, pattern || 'liso', base, accent); volume(ctx, w, h, 0.18, 0.06); });
+}
+export function skinCanvas(skin: string, style: string, inkCol: string, accent: string, wu: number, hu: number, part: string) {
+  return makeCanvas(`s|${skin}|${style}|${inkCol}|${accent}|${wu.toFixed(1)}x${hu.toFixed(1)}|${part}|3d`, wu, hu, (ctx, w, h, r) => {
+    ctx.fillStyle = css(skin); ctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < w * h / 90; i++) { ctx.fillStyle = css(skin, 0.92 + r() * 0.16, 0.2); ctx.fillRect(r() * w, r() * h, 1, 1); }
+    if (style && style !== 'ninguno') drawTattoo(ctx, w, h, r, style, inkCol || '#14141e', accent);
   });
 }

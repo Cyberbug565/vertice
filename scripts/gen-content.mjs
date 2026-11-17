@@ -470,6 +470,13 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log(`v0.10: ${r.marked} lugares restringidos y nuevos: ${r.made.join(', ')}.`);
 }
 
+// ---------------------------------------------------------------- v0.11: callejones con giros (L y Z) y pasajes comerciales
+{
+  const v11 = await import('./v11.mjs');
+  const r = v11.zonesV11(C);
+  console.log(`v0.11: ${r.alleys} callejones con giros y ${r.passages} pasajes comerciales iluminados.`);
+}
+
 // ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
 {
   const { applyOverlays } = await import('./overlay.mjs');

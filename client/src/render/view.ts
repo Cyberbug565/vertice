@@ -1,6 +1,7 @@
 // Vista isométrica: bloques de suelo bajo demanda, orden por profundidad topológica, atenuación de edificios,
 // interpolación de entidades remotas y predicción del personaje propio.
-import { AlphaFilter, Application, Container, Graphics, Sprite, Text, type FederatedPointerEvent } from 'pixi.js';
+import { AlphaFilter, Application, Container, Graphics, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
+import { BUILDING_H, Chars3D } from './chars3d';
 import {
   GROUND_TYPES, buildZoneGrid, findPath, isWalkable, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
@@ -39,6 +40,10 @@ export class GameView {
   markers = new Container();
   objects = new Container();
   nightOverlay = new Graphics();
+  /** v0.11 · Personajes 3D (si el navegador lo permite) y edificios por índice (para atenuarlos y que dejen de tapar). */
+  private chars3d?: Chars3D; private c3dSize = ''; private overStage = new Container();
+  private pending3d?: Parameters<Chars3D['render']>;
+  private buildingObjs: SortObj[] = [];
   /** v0.9 · Iluminación dinámica: una capa de oscuridad a la que cada luz (farolas, neones, puertas, fogonazos, explosiones y tú) le abre un hueco. */
   private darkness = new Container();
   private darkRect = new Graphics();
@@ -104,10 +109,21 @@ export class GameView {
 
   async init(parent: HTMLElement, cityHour: () => number) {
     this.cityHourFn = cityHour;
-    await this.app.init({ resizeTo: window, background: 0x07070f, antialias: false, preference: 'webgl', resolution: (window.devicePixelRatio || 1) * settings.resScale, autoDensity: true, powerPreference: 'high-performance' });
+    await this.app.init({ resizeTo: window, background: 0x07070f, antialias: settings.quality === 'high', preference: 'webgl', resolution: (window.devicePixelRatio || 1) * settings.resScale, autoDensity: true, powerPreference: 'high-performance' });
     parent.appendChild(this.app.canvas);
     this.darkness.addChild(this.darkRect); this.darkness.filters = [new AlphaFilter({ alpha: 1 })];
-    this.app.stage.addChild(this.world, this.nightOverlay, this.darkness, this.lightsLayer, this.rain, this.labels);
+    // v0.11 · Tres pasadas por fotograma en el mismo contexto WebGL: el mundo (Pixi), los personajes 3D (Three.js) y,
+    // encima, la noche, las luces y los textos (Pixi). Así la oscuridad y las farolas también afectan a los personajes.
+    this.app.stage.addChild(this.world);
+    this.overStage.addChild(this.nightOverlay, this.darkness, this.lightsLayer, this.rain, this.labels);
+    const r = this.app.renderer as WebGLRenderer;
+    if (settings.chars3d && (r as any).gl) {
+      try { this.chars3d = new Chars3D(this.app.canvas, (r as any).gl); } catch (err) { console.warn('[3d] sin personajes 3D:', err); this.chars3d = undefined; }
+    }
+    this.app.ticker.add(() => {
+      if (this.chars3d && this.pending3d) { try { this.chars3d.render(...this.pending3d); } catch (err) { console.warn('[3d]', err); } (r as any).resetState?.(); }
+      r.render({ container: this.overStage, clear: false });
+    }, undefined, UPDATE_PRIORITY.UTILITY);
     this.floor.addChild(...this.floorTiles);
     this.world.addChild(this.ground, this.floor, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
     this.markers.addChild(this.kairosG, this.trailLayer, this.pathG, this.hoverG);
@@ -160,7 +176,7 @@ export class GameView {
     const add = (x: number, y: number, r: number, k: number) => { const p = worldToScreen(x, y, 0); out.push({ sx: p.x, sy: p.y, r, k }); };
     for (const p of z.props) {
       const [x, y] = p.at;
-      if (p.type === 'lamp') add(x + 1.1, y + 0.5, 5.5, 1);
+      if (p.type === 'lamp') add(x + 1.1, y + 0.5, 7, 1);
       else if (p.type === 'neonstrip') add(x + 0.5, y + 0.5, 3.2, 0.7);
       else if (p.type === 'holo' || p.type === 'billboard') add(x + 0.5, y + 0.5, 4.5, 0.8);
       else if (p.type === 'kiosk' || p.type === 'busstop' || p.type === 'stall') add(x + 0.5, y + 0.5, 2.6, 0.55);
@@ -186,7 +202,7 @@ export class GameView {
       this.flashes = this.flashes.filter((f) => f.until > now);
       for (const f of this.flashes) { const p = worldToScreen(f.x, f.y, 0); put(p.x, p.y, f.r, f.k * (1 - (now - f.t0) / (f.until - f.t0))); }
       // Un poco de luz alrededor de ti para que nunca te pierdas en un callejón (y la de las linternas/visores ajenos).
-      const me = worldToScreen(this.me.x, this.me.y, 0); put(me.x, me.y, 2.4, 0.5);
+      const me = worldToScreen(this.me.x, this.me.y, 0); put(me.x, me.y, 3.4, 0.6);
       for (const e of this.ents.values()) if (e.s.vehicle) { const p = worldToScreen(e.x, e.y, 0); put(p.x, p.y, 4, 0.8); }
     } else this.darkRect.clear();
     for (let i = used; i < this.lightPool.length; i++) this.lightPool[i].visible = false;
@@ -195,6 +211,8 @@ export class GameView {
   rebuild() {
     if (!this.zone) return;
     this.buildLights();
+    this.chars3d?.setZone(this.zone);
+    this.buildingObjs = [];
     for (const c of this.chunks.values()) c.destroy({ children: true });
     for (const c of this.chunkLights.values()) c.destroy({ children: true });
     this.chunks.clear(); this.chunkLights.clear();
@@ -222,7 +240,7 @@ export class GameView {
     }
     // Siluetas de edificios en pantalla para resolver la oclusión estática de las luces.
     const sil = z.buildings.map((b) => {
-      const [x0, y0, w, h] = b.rect, x1 = x0 + w, y1 = y0 + h, H = b.height;
+      const [x0, y0, w, h] = b.rect, x1 = x0 + w, y1 = y0 + h, H = b.height * BUILDING_H;
       const pts = [worldToScreen(x0, y1), worldToScreen(x1, y1), worldToScreen(x1, y0), worldToScreen(x1, y0, H), worldToScreen(x0, y0, H), worldToScreen(x0, y1, H)];
       return { x0, y0, x1, y1, pts };
     });
@@ -236,11 +254,15 @@ export class GameView {
     };
     this.occluder = (bx0: number, by0: number, bx1: number, by1: number): Occl => (sx, sy) =>
       sil.some((s) => !(s.x0 === bx0 && s.y0 === by0 && s.x1 === bx1 && s.y1 === by1) && (bx1 <= s.x0 || by1 <= s.y0) && inPoly(sx, sy, s.pts));
-    for (const b of z.buildings) {
+    for (const b0 of z.buildings) {
+      // v0.11 · Edificios más altos (los personajes se ven más pequeños a su lado).
+      const b = { ...b0, height: b0.height * BUILDING_H };
       const [x0, y0, w, h] = b.rect;
       const lights = new Graphics();
       const occl = this.occluder(x0, y0, x0 + w, y0 + h);
       const obj = this.addStatic(x0, y0, w, h, (g) => { this.beacons.push(...drawBuilding(b, g, lights, q, occl)); }, true);
+      (obj as any).lights = lights;
+      this.buildingObjs.push(obj);
       const sign = makeSign(b, q);
       if (sign) obj.view.addChild(sign);
       this.lightsLayer.addChild(lights);
@@ -256,7 +278,7 @@ export class GameView {
     const propLights = new Graphics();
     // Pasarelas aéreas, hologramas y antenas: elementos elevados que se dibujan por encima de la calle.
     const skyG = new Graphics(), skyL = new Graphics();
-    for (const sb of z.skybridges) drawSkybridge(skyG, skyL, sb);
+    for (const sb of z.skybridges) drawSkybridge(skyG, skyL, { ...sb, z: sb.z * BUILDING_H });
     this.sky.addChild(skyG);
     this.lightsLayer.addChild(skyL);
     for (const p of z.props) {
@@ -365,6 +387,7 @@ export class GameView {
       ch.root.scale.set(CHAR_SCALE * ch.root.scale.x);
       view.addChild(ch.root);
       ent.legs = ch.legs; ent.body = ch.body; ent.visor = ch.visor; ent.charRoot = ch.root;
+      if (this.chars3d) ch.root.visible = false; // v0.11: la figura la dibuja la capa 3D
       // Ciberpsicópata: aura roja que late bajo los pies.
       if (s.npcType === 'psycho') { const aura = new Graphics().ellipse(0, 0, 22, 11).fill({ color: 0xff2020, alpha: 0.25 }).ellipse(0, 0, 22, 11).stroke({ width: 2, color: 0xff2020, alpha: 0.9 }); view.addChildAt(aura, 0); ch.root.scale.set(CHAR_SCALE * 1.15); }
       ent.legL = ch.legL; ent.legR = ch.legR; ent.armB = ch.armB; ent.armF = ch.armF; ent.hand = ch.hand; ent.bodyY = ch.bodyY;
@@ -491,6 +514,16 @@ export class GameView {
     } else if (s.objKind === 'mycar') {
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
       if (car) { const v = makeVehicle(car.class, car.color, '#43f3ff'); ent.view.addChild(v); return; }
+    } else if (s.objKind === 'atm') {
+      // v0.11 · Objetos que antes no se dibujaban (y parecían colisiones invisibles).
+      rel((g) => { drawBox(g, fx + 0.2, fy + 0.25, 0.6, 0.5, 0, 1.25, 0x2a3a4a); const t = worldToScreen(fx + 0.5, fy + 0.75, 1.0); g.rect(t.x - 6, t.y - 9, 12, 7).fill(0x43f3ff); g.rect(t.x - 4, t.y, 8, 2).fill(0x101018); });
+    } else if (s.objKind === 'housing') {
+      rel((g) => { const m = worldToScreen(fx + 0.5, fy + 0.5, 0.9); g.roundRect(m.x - 5, m.y - 8, 10, 13, 2).fill(0x24242e).stroke({ width: 1, color: 0x6a6a7a }); for (let i = 0; i < 3; i++) g.circle(m.x - 2 + (i % 2) * 4, m.y - 4 + i * 3, 0.9).fill(0xffd23f); });
+    } else if (s.objKind === 'ambar' || s.objKind === 'realty' || s.objKind === 'hiring' || s.objKind === 'bribe' || s.objKind === 'dealer') {
+      const col = s.objKind === 'ambar' ? 0xffb020 : s.objKind === 'realty' ? 0x7dd3a0 : s.objKind === 'hiring' ? 0x43f3ff : s.objKind === 'bribe' ? 0xd8b040 : 0xff3fa4;
+      rel((g) => { drawBox(g, fx + 0.3, fy + 0.3, 0.4, 0.4, 0, 1.0, 0x2a2a36); const t = worldToScreen(fx + 0.5, fy + 0.5, 1.15); g.roundRect(t.x - 7, t.y - 9, 14, 9, 2).fill({ color: col, alpha: 0.9 }); });
+    } else if (s.objKind === 'stash' || s.objKind === 'loot') {
+      rel((g) => { drawBox(g, fx + 0.1, fy + 0.15, 0.8, 0.7, 0, 0.55, 0x4a3a2a); drawBox(g, fx + 0.12, fy + 0.17, 0.76, 0.66, 0.55, 0.08, 0x6a5a3a); });
     } else if (s.objKind === 'board') {
       rel((g) => { drawBox(g, fx + 0.45, fy + 0.45, 0.1, 0.1, 0, 1.2, 0x333340); drawBox(g, fx + 0.1, fy + 0.4, 0.8, 0.2, 1.0, 0.8, 0xd8c8a0); });
     }
@@ -693,6 +726,7 @@ export class GameView {
       return;
     }
     if (a !== b && a.body) a.body.scale.x = (b.x - a.x) - (b.y - a.y) >= 0 ? 1 : -1;
+    if (a !== b) (a as any).lookAt = { x: b.x, y: b.y, until: now0 + 900 };
     if (kind === 'kick') {
       a.kickAt = now0;
       const pb = worldToScreen(b.x, b.y, 0.8);
@@ -1045,6 +1079,16 @@ export class GameView {
     this.drawNight();
     this.drawRain(dt);
     this.animateSky(now, dt);
+    this.render3d(now, dt, W, H);
+  }
+  private render3d(now: number, dt: number, W: number, H: number) {
+    if (!this.chars3d) return;
+    const res = this.app.renderer.resolution, key = `${W}x${H}@${res}`;
+    if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
+    this.buildingObjs.forEach((o, i) => this.chars3d!.setBuildingFaded(i, o.view.alpha < 0.6 || !o.view.visible));
+    // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).
+    this.pending3d = [this.ents.values() as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
+      hidden: (e: any) => !!e.s.vehicle || !!e.s.carried || !!e.vehX }];
   }
 
   /** Tráfico rodado: coches que circulan por las calzadas anchas del distrito. */
@@ -1071,13 +1115,13 @@ export class GameView {
         const bx = r.horiz ? ax + seg : ax, by = r.horiz ? ay : ay + seg;
         if (crossing(r, ax, ay) || crossing(r, bx, by)) continue;
         const a = worldToScreen(ax, ay), b = worldToScreen(bx, by);
-        mk.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width, color, alpha: 0.75 });
+        mk.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width, color, alpha: 0.95 });
       }
     };
     for (const r of roads) {
       const mid = r.width / 2;
-      line(r, mid - 0.06, false, 0xffd23f, 1.2); line(r, mid + 0.06, false, 0xffd23f, 1.2);
-      if (r.perDir === 2) { line(r, mid / 2, true, 0xe8e8f0, 1); line(r, mid + mid / 2, true, 0xe8e8f0, 1); }
+      line(r, mid - 0.07, false, 0xffd23f, 1.8); line(r, mid + 0.07, false, 0xffd23f, 1.8);
+      if (r.perDir === 2) { line(r, mid / 2, true, 0xf0f0ff, 1.6); line(r, mid + mid / 2, true, 0xf0f0ff, 1.6); }
     }
     this.markers.addChildAt(mk, 0);
     this.trafficMarks = mk;
@@ -1269,9 +1313,17 @@ export class GameView {
     for (const o of list) {
       if (o.view.zIndex !== o.depth) o.view.zIndex = o.depth;
       if (o.building) {
+        // v0.11 · Los edificios de delante (los que tapan una zona alrededor del personaje) se vuelven translúcidos;
+        // con la cámara cerca desaparecen casi del todo. Los de detrás se ven nítidos.
         let a = 1;
-        if (me) { const m = me.obj; const overlaps = !(o.sx1 < m.sx0 || m.sx1 < o.sx0 || o.sy1 < m.sy0 || m.sy1 < o.sy0); if (overlaps && o.depth > m.depth) a = 0.28; }
-        o.view.alpha += (a - o.view.alpha) * 0.25;
+        if (me) {
+          const m = me.obj, X = 70, Y = 90;
+          const overlaps = !(o.sx1 < m.sx0 - X || m.sx1 + X < o.sx0 || o.sy1 < m.sy0 - Y || m.sy1 + Y * 0.4 < o.sy0);
+          const inFront = o.depth > m.depth || o.x0 + o.y0 > me.x + me.y;
+          if (overlaps && inFront) a = this.zoom >= 1.7 ? 0.05 : this.zoom >= 1.25 ? 0.18 : 0.34;
+        }
+        o.view.alpha += (a - o.view.alpha) * 0.2;
+        const lg = (o as any).lights as Graphics | undefined; if (lg) lg.alpha = o.view.alpha;
       }
     }
   }
@@ -1435,7 +1487,8 @@ export class GameView {
     this.nightOverlay.clear().rect(0, 0, W, H).fill({ color: interior ? 0x080a2a : color, alpha: interior ? 0.12 : alpha * 0.35 });
     // v0.10 · Alarma: destello rojo que late.
     if (performance.now() < this.alarmUntil) this.nightOverlay.rect(0, 0, W, H).fill({ color: 0xff0020, alpha: 0.12 + 0.12 * Math.abs(Math.sin(performance.now() / 160)) });
-    this.drawLighting(interior ? 0 : alpha * 0.95, interior);
+    // v0.11 · Algo menos de oscuridad total para que calzada, acera y pasos de cebra se distingan de noche.
+    this.drawLighting(interior ? 0 : alpha * 0.7, interior);
     // Farolas, neones y ventanas brillan más cuanto más oscuro está.
     const dark = h >= 21 || h < 5 ? 1 : h < 8 ? lerp(1, 0, (h - 5) / 3) : h < 17 ? 0 : lerp(0, 1, (h - 17) / 4);
     this.lightsLayer.alpha = interior ? 0.75 : 0.25 + dark * 0.95;
