@@ -97,6 +97,8 @@ export interface Appearance {
   tattooZone?: string; tattooInk?: string; faceTattoo?: string; topPattern?: string; pantsPattern?: string; shoeStyle?: string; topDetail?: string; accent2?: string;
   /** Prendas puestas (las calcula el servidor a partir de la ropa equipada). */
   headwear?: string; headColor?: string; eyewear?: string; legwear?: string; outer?: string; rarityGlow?: string;
+  /** v0.15 · Cuerpo base (masculino o femenino); vacío = según la persona. */
+  body?: string;
 }
 export interface EntitySpawn {
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;

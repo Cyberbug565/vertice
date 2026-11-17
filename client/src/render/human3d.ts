@@ -1,0 +1,388 @@
+// v0.15 · Cuerpos humanos de Quaternius («Universal Base Characters», CC0 1.0): dos cuerpos base (masculino y femenino)
+// con esqueleto de 65 huesos. Un solo cuerpo para todos (se comparte la geometría; se copia solo el esqueleto) y lo que
+// cambia es la persona:
+//  · la ropa se pinta encima del cuerpo por zonas (torso, mangas, pantalón, calzado), deducidas de qué hueso mueve cada
+//    vértice, con los mismos tejidos del creador;
+//  · el cromo convierte brazos, piernas o manos en metal con líneas de luz del color de acento;
+//  · la cara se deforma un poco para cada persona (anchura de cabeza, mandíbula, nariz, barbilla, cejas, pómulos);
+//  · la piel toma cualquier tono conservando el detalle de la textura.
+// La animación es la del juego: los ángulos de cada articulación se pasan a los huesos, y la mano libre agarra el arma.
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
+
+export type BodyKind = 'masculino' | 'femenino';
+interface RestBone { q: THREE.Quaternion; p: THREE.Vector3; m: THREE.Matrix4 }
+interface Kit {
+  scene: THREE.Group; bodyMat: THREE.MeshStandardMaterial; rest: Map<string, RestBone>; order: string[]; parent: Map<string, string | null>;
+  headBase: number; headTop: number; eyeY: number; faceZ: number;
+}
+interface HairKit { obj: THREE.Object3D; mat: THREE.MeshStandardMaterial; forBody: BodyKind }
+let kits: { masculino: Kit; femenino: Kit; hair: Map<string, HairKit> } | null = null;
+let started = false;
+let version = 0;
+/** Cambia cuando terminan de cargar los cuerpos (los personajes se rehacen para estrenarlos). */
+export const humansVersion = () => version;
+export const humansReady = () => !!kits;
+
+/** Zona del cuerpo de cada hueso (para la ropa y el cromo). El lado +X del modelo son los huesos «_l». */
+export const REG = { head: 0, neck: 1, torso: 2, pelvis: 3, uaP: 4, faP: 5, handP: 6, uaM: 7, faM: 8, handM: 9, thP: 10, caP: 11, ftP: 12, thM: 13, caM: 14, ftM: 15 } as const;
+function regionOf(name: string): number {
+  if (name === 'Head') return REG.head;
+  if (name === 'neck_01') return REG.neck;
+  if (name === 'pelvis' || name === 'root') return REG.pelvis;
+  if (name.startsWith('spine') || name.startsWith('clavicle')) return REG.torso;
+  const p = name.endsWith('_l');
+  if (name.startsWith('upperarm')) return p ? REG.uaP : REG.uaM;
+  if (name.startsWith('lowerarm')) return p ? REG.faP : REG.faM;
+  if (name.startsWith('thigh')) return p ? REG.thP : REG.thM;
+  if (name.startsWith('calf')) return p ? REG.caP : REG.caM;
+  if (name.startsWith('foot') || name.startsWith('ball')) return p ? REG.ftP : REG.ftM;
+  return p ? REG.handP : REG.handM; // mano y dedos
+}
+
+/** Carga (una vez) los dos cuerpos y los peinados del kit. */
+export function loadHumans(onLoaded: () => void) {
+  if (started) return; started = true;
+  const L = new GLTFLoader();
+  const base = '/models/humanos/';
+  const body = async (file: string, kind: BodyKind): Promise<Kit> => {
+    const g = await L.loadAsync(base + file);
+    const scene = g.scene as THREE.Group;
+    scene.updateMatrixWorld(true);
+    let bodyMesh: THREE.SkinnedMesh | null = null;
+    scene.traverse((o) => { const m = o as THREE.SkinnedMesh; if (m.isSkinnedMesh && (m.material as THREE.Material).name.includes('Superhero')) bodyMesh = m; });
+    if (!bodyMesh) throw new Error('sin cuerpo en ' + file);
+    const bm = bodyMesh as THREE.SkinnedMesh;
+    // Zona de cada vértice según el hueso que más lo mueve.
+    const geo = bm.geometry, si = geo.getAttribute('skinIndex'), sw = geo.getAttribute('skinWeight');
+    const reg = new Float32Array(si.count);
+    const names = bm.skeleton.bones.map((b) => b.name);
+    for (let v = 0; v < si.count; v++) {
+      let best = 0, bw = -1;
+      for (let k = 0; k < 4; k++) { const w = sw.getComponent(v, k); if (w > bw) { bw = w; best = si.getComponent(v, k); } }
+      reg[v] = regionOf(names[best] ?? 'spine_01');
+    }
+    geo.setAttribute('aRegion', new THREE.BufferAttribute(reg, 1));
+    const rest = new Map<string, RestBone>(), order: string[] = [], parent = new Map<string, string | null>();
+    for (const b of bm.skeleton.bones) {
+      b.updateWorldMatrix(true, false);
+      rest.set(b.name, { q: b.getWorldQuaternion(new THREE.Quaternion()), p: b.getWorldPosition(new THREE.Vector3()), m: b.matrixWorld.clone() });
+      order.push(b.name); parent.set(b.name, (b.parent as THREE.Bone)?.isBone ? b.parent!.name : null);
+    }
+    const bodyMat = bm.material as THREE.MeshStandardMaterial;
+    const head = rest.get('Head')!.p;
+    const bb = new THREE.Box3().setFromBufferAttribute(geo.getAttribute('position') as THREE.BufferAttribute);
+    return { scene, bodyMat, rest, order, parent, headBase: head.y, headTop: bb.max.y, eyeY: kind === 'masculino' ? 1.7 : 1.656, faceZ: kind === 'masculino' ? 0.1 : 0.095 };
+  };
+  const hair = async (name: string, forBody: BodyKind): Promise<[string, HairKit]> => {
+    const g = await L.loadAsync(base + name + '.gltf');
+    const obj = g.scene;
+    // Dos peinados vienen en centímetros y con el eje Z hacia arriba: se ponen como los demás.
+    obj.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(obj);
+    if (box.max.y < 1) { obj.rotation.x = -Math.PI / 2; obj.updateMatrixWorld(true); }
+    let mat: THREE.MeshStandardMaterial | null = null;
+    obj.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) mat = m.material as THREE.MeshStandardMaterial; });
+    return [name, { obj, mat: mat!, forBody }];
+  };
+  Promise.all([body('Superhero_Male_FullBody.gltf', 'masculino'), body('Superhero_Female_FullBody.gltf', 'femenino'),
+    Promise.all([hair('Hair_Long', 'femenino'), hair('Hair_Buns', 'femenino'), hair('Hair_BuzzedFemale', 'femenino'), hair('Hair_Buzzed', 'masculino'), hair('Hair_SimpleParted', 'masculino'), hair('Hair_Beard', 'masculino')])])
+    .then(([m, f, hs]) => { kits = { masculino: m, femenino: f, hair: new Map(hs) }; version++; onLoaded(); })
+    .catch((err) => console.warn('[cuerpos 3D]', err));
+}
+
+// ------------------------------------------------------------------------------------------------ material
+const BASE_SKIN = new THREE.Color().setRGB(0.39, 0.18, 0.083); // color medio (lineal) de la piel de las texturas
+export interface Look {
+  skin: string; top: THREE.Texture | null; pants: THREE.Texture | null; shoe: string; accent: string; cover: number[];
+  face: [number, number, number, number, number, number, number]; // anchura, mandíbula, nariz (largo), barbilla, cejas, pómulos, nariz (ancho)
+}
+/** Material del cuerpo para una persona: piel teñida, ropa por zonas, cromo con líneas de luz y cara propia. */
+function bodyMaterial(kit: Kit, look: Look): THREE.MeshStandardMaterial {
+  const m = kit.bodyMat.clone();
+  const skin = new THREE.Color(look.skin);
+  const tint = new THREE.Vector3(Math.min(8, skin.r / BASE_SKIN.r), Math.min(8, skin.g / BASE_SKIN.g), Math.min(8, skin.b / BASE_SKIN.b));
+  const uniforms = {
+    uSkin: { value: tint }, uTop: { value: look.top }, uPants: { value: look.pants }, uShoe: { value: new THREE.Color(look.shoe) },
+    uMetal: { value: new THREE.Color(0xb8c0cc) }, uAccent: { value: new THREE.Color(look.accent) }, uCover: { value: look.cover },
+    uFace: { value: new THREE.Vector4(look.face[0], look.face[1], look.face[2], look.face[3]) }, uFace2: { value: new THREE.Vector4(look.face[4], look.face[5], look.face[6], 0) },
+    uHead: { value: new THREE.Vector4(kit.headBase, kit.headTop, kit.faceZ, kit.eyeY) },
+  };
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, uniforms);
+    sh.vertexShader = 'attribute float aRegion;\nvarying float vRegion;\nuniform vec4 uFace;\nuniform vec4 uFace2;\nuniform vec4 uHead;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+      vRegion = aRegion;
+      if (aRegion < 0.5) {
+        vec3 p = transformed;
+        float hb = uHead.x, ht = uHead.y, fz = uHead.z, ey = uHead.w, mouthY = uHead.w - 0.07;
+        float t = clamp((p.y - hb) / (ht - hb), 0.0, 1.0);
+        transformed.x *= 1.0 + uFace.x * t;
+        transformed.x *= 1.0 + uFace.y * clamp((mouthY + 0.02 - p.y) / 0.08, 0.0, 1.0);
+        float front = smoothstep(fz - 0.06, fz - 0.005, p.z);
+        float nose = exp(-p.x * p.x / 0.0006) * front * clamp(1.0 - abs(p.y - (ey - 0.035)) / 0.035, 0.0, 1.0);
+        transformed.z += uFace.z * 0.014 * nose;
+        transformed.x *= 1.0 + uFace2.z * nose;
+        transformed.y -= uFace.w * 0.014 * clamp((mouthY - 0.02 - p.y) / 0.05, 0.0, 1.0) * front;
+        transformed.z += uFace2.x * 0.006 * front * clamp(1.0 - abs(p.y - (ey + 0.022)) / 0.012, 0.0, 1.0);
+        transformed.x += sign(p.x) * uFace2.y * 0.006 * front * clamp(1.0 - abs(p.y - (ey - 0.025)) / 0.02, 0.0, 1.0) * smoothstep(0.03, 0.055, abs(p.x));
+      }`);
+    sh.fragmentShader = 'varying float vRegion;\nuniform vec3 uSkin;\nuniform sampler2D uTop;\nuniform sampler2D uPants;\nuniform vec3 uShoe;\nuniform vec3 uMetal;\nuniform vec3 uAccent;\nuniform float uCover[16];\n' + sh.fragmentShader
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        int rg = int(vRegion + 0.5);
+        float cov = 0.0;
+        for (int i = 0; i < 16; i++) { if (i == rg) cov = uCover[i]; }
+        // 0 piel · 1 tela de arriba · 2 pantalón · 3 calzado · 4 cromo
+        if (cov < 0.5) diffuseColor.rgb *= uSkin;
+        else if (cov < 1.5) diffuseColor.rgb = texture2D(uTop, vMapUv * 6.0).rgb * (0.75 + 0.25 * diffuseColor.r / 0.4);
+        else if (cov < 2.5) diffuseColor.rgb = texture2D(uPants, vMapUv * 6.0).rgb * (0.75 + 0.25 * diffuseColor.r / 0.4);
+        else if (cov < 3.5) diffuseColor.rgb = uShoe;
+        else diffuseColor.rgb = uMetal * (0.7 + 0.3 * diffuseColor.r / 0.4);`)
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n if (cov > 3.5) roughnessFactor = 0.28; else if (cov > 0.5) roughnessFactor = 0.82;')
+      .replace('#include <metalnessmap_fragment>', '#include <metalnessmap_fragment>\n metalnessFactor = cov > 3.5 ? 0.85 : 0.0;')
+      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n if (cov > 3.5) totalEmissiveRadiance += uAccent * step(0.93, fract(vMapUv.y * 22.0)) * 0.9;');
+  };
+  m.customProgramCacheKey = () => 'vt-humano-1';
+  return m;
+}
+
+// ------------------------------------------------------------------------------------------------ persona
+export interface Human {
+  root: THREE.Object3D; mats: THREE.Material[]; kind: BodyKind;
+  /** Contenedores con ejes del mundo (en reposo) para colgar cosas: cabeza, pecho, cadera y manos. */
+  head: THREE.Group; headBind: THREE.Group; chest: THREE.Group; hips: THREE.Group; handP: THREE.Group; handM: THREE.Group;
+  bones: Map<string, THREE.Bone>; kit: Kit;
+  /** Cuelga un contenedor (ejes del mundo en reposo) de un hueso, con origen en P (espacio del cuerpo en reposo). */
+  attach: (boneName: string, P: THREE.Vector3, extraQ?: THREE.Quaternion) => THREE.Group;
+}
+export interface HumanOpts { kind: BodyKind; look: Look; hair: string; hairColor: string; beard: boolean; eyes: string; lost: Set<string> }
+const qDownP = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.08, -1, 0).normalize());
+const qDownM = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(-1, 0, 0), new THREE.Vector3(-0.08, -1, 0).normalize());
+
+export function makeHuman(o: HumanOpts): Human | null {
+  if (!kits) return null;
+  const kit = kits[o.kind];
+  const root = cloneSkinned(kit.scene) as THREE.Object3D;
+  const mats: THREE.Material[] = [];
+  const bones = new Map<string, THREE.Bone>();
+  root.traverse((x) => {
+    if ((x as THREE.Bone).isBone) bones.set(x.name, x as THREE.Bone);
+    const m = x as THREE.SkinnedMesh;
+    if (!m.isMesh) return;
+    m.frustumCulled = false; // (los huesos se mueven: la caja de reposo no sirve para recortar)
+    const name = (m.material as THREE.Material).name;
+    if (name.includes('Superhero')) { const bm = bodyMaterial(kit, o.look); m.material = bm; mats.push(bm); }
+    else if (name.includes('Eyes')) { const em = (m.material as THREE.MeshStandardMaterial).clone(); em.color = new THREE.Color(1, 1, 1).lerp(new THREE.Color(o.eyes), 0.55).multiplyScalar(1.15); m.material = em; mats.push(em); }
+    else { const hm = (m.material as THREE.MeshStandardMaterial).clone(); hm.color = new THREE.Color(o.hairColor).multiplyScalar(1.6); m.material = hm; mats.push(hm); } // cejas
+  });
+  // Miembros perdidos: el hueso se encoge (desaparece el brazo o la pierna entera).
+  for (const [part, bone] of [['brazo_der', 'upperarm_l'], ['brazo_izq', 'upperarm_r'], ['pierna_der', 'thigh_l'], ['pierna_izq', 'thigh_r'], ['mano_der', 'hand_l'], ['mano_izq', 'hand_r']] as const) {
+    if (o.lost.has(part)) bones.get(bone)?.scale.setScalar(0.0001);
+  }
+  // Contenedor con ejes del mundo en reposo, colgado de un hueso, con su origen en el punto P (en el espacio del cuerpo).
+  const attach = (boneName: string, P: THREE.Vector3, extraQ?: THREE.Quaternion) => {
+    const b = bones.get(boneName)!, r = kit.rest.get(boneName)!;
+    const g = new THREE.Group();
+    const inv = r.m.clone().invert();
+    g.position.copy(P.clone().applyMatrix4(inv));
+    const wq = extraQ ? extraQ.clone().multiply(r.q) : r.q.clone();
+    g.quaternion.copy(wq.invert());
+    b.add(g);
+    return g;
+  };
+  const hp = kit.rest.get('Head')!.p;
+  const head = attach('Head', new THREE.Vector3(0, (kit.headBase + kit.headTop) / 2 + 0.005, hp.z - 0.005));
+  head.scale.setScalar(0.8); // los accesorios del juego se hicieron para una cabeza algo mayor
+  const headBind = new THREE.Group();
+  { const r = kit.rest.get('Head')!; const inv = r.m.clone().invert(); inv.decompose(headBind.position, headBind.quaternion, headBind.scale); bones.get('Head')!.add(headBind); }
+  const chest = attach('spine_03', kit.rest.get('spine_03')!.p.clone().add(new THREE.Vector3(0, -0.07, 0)));
+  const hips = attach('pelvis', kit.rest.get('pelvis')!.p.clone().add(new THREE.Vector3(0, -0.03, 0)));
+  const handP = attach('hand_l', kit.rest.get('hand_l')!.p, qDownP);
+  const handM = attach('hand_r', kit.rest.get('hand_r')!.p, qDownM);
+  // Peinado del kit (si toca) y barba.
+  const addHair = (name: string) => {
+    const h = kits!.hair.get(name); if (!h) return;
+    const c = h.obj.clone(true);
+    const hm = h.mat.clone(); hm.color = new THREE.Color(o.hairColor).multiplyScalar(1.7); mats.push(hm);
+    c.traverse((x) => { const m = x as THREE.Mesh; if (m.isMesh) { m.material = hm; m.frustumCulled = false; } });
+    // Si el peinado es del otro cuerpo, se sube o baja a la altura de esta cabeza.
+    if (h.forBody !== o.kind) c.position.y += o.kind === 'masculino' ? 0.043 : -0.043;
+    headBind.add(c);
+  };
+  if (o.hair) addHair(o.kind === 'femenino' && o.hair === 'Hair_Buzzed' ? 'Hair_BuzzedFemale' : o.hair);
+  if (o.beard && o.kind === 'masculino') addHair('Hair_Beard');
+  return { root, mats, kind: o.kind, head, headBind, chest, hips, handP, handM, bones, kit, attach };
+}
+
+// ------------------------------------------------------------------------------------------------ pose
+const tmpQ = new THREE.Quaternion(), tmpQ2 = new THREE.Quaternion(), qx = new THREE.Quaternion();
+const eul = (o: THREE.Object3D) => new THREE.Quaternion().setFromEuler(o.rotation);
+const rx = (a: number) => qx.clone().setFromAxisAngle(new THREE.Vector3(1, 0, 0), a);
+const rz = (a: number) => qx.clone().setFromAxisAngle(new THREE.Vector3(0, 0, 1), a);
+export interface PoseIn {
+  hips: THREE.Object3D; spine: THREE.Object3D; chest: THREE.Object3D; neck: THREE.Object3D;
+  thighP: THREE.Object3D; kneeP: THREE.Object3D; thighM: THREE.Object3D; kneeM: THREE.Object3D;
+  shP: THREE.Object3D; elP: THREE.Object3D; shM: THREE.Object3D; elM: THREE.Object3D;
+  gripP: number; gripM: number;
+}
+/** Pasa la pose del juego (ángulos por articulación, con los ejes del mundo) a los huesos del esqueleto. */
+export function poseHuman(h: Human, p: PoseIn) {
+  const k = h.kit, D = new Map<string, THREE.Quaternion>(), W = new Map<string, THREE.Quaternion>();
+  const Dp = eul(p.hips), Ds = Dp.clone().multiply(eul(p.spine)), Dn = Ds.clone().multiply(eul(p.neck));
+  const armP = Ds.clone().multiply(eul(p.shP)), armM = Ds.clone().multiply(eul(p.shM));
+  const foreP = armP.clone().multiply(rx(p.elP.rotation.x)), foreM = armM.clone().multiply(rx(p.elM.rotation.x));
+  const legP = Dp.clone().multiply(rx(p.thighP.rotation.x)), legM = Dp.clone().multiply(rx(p.thighM.rotation.x));
+  const curlP = rz(-1.1 * p.gripP), curlM = rz(1.1 * p.gripM);
+  for (const name of k.order) {
+    const par = k.parent.get(name) ?? null;
+    let d: THREE.Quaternion;
+    switch (name) {
+      case 'pelvis': d = Dp; break;
+      case 'spine_01': case 'spine_02': case 'spine_03': d = Ds; break;
+      case 'neck_01': case 'Head': d = Dn; break;
+      case 'upperarm_l': d = armP.clone().multiply(qDownP); break;
+      case 'lowerarm_l': case 'hand_l': d = foreP.clone().multiply(qDownP); break;
+      case 'upperarm_r': d = armM.clone().multiply(qDownM); break;
+      case 'lowerarm_r': case 'hand_r': d = foreM.clone().multiply(qDownM); break;
+      case 'thigh_l': d = legP; break;
+      case 'calf_l': case 'foot_l': case 'ball_l': case 'ball_leaf_l': d = legP.clone().multiply(rx(p.kneeP.rotation.x)); break;
+      case 'thigh_r': d = legM; break;
+      case 'calf_r': case 'foot_r': case 'ball_r': case 'ball_leaf_r': d = legM.clone().multiply(rx(p.kneeM.rotation.x)); break;
+      default: {
+        // Dedos: se cierran sobre la palma (agarre del arma) en el marco del brazo colgando.
+        const m = /^(index|middle|ring|pinky|thumb)_0([123])_([lr])$/.exec(name);
+        if (m) {
+          const side = m[3] === 'l', seg = Number(m[2]), thumb = m[1] === 'thumb';
+          const fore = side ? foreP : foreM, down = side ? qDownP : qDownM, c = side ? curlP : curlM;
+          let acc = new THREE.Quaternion();
+          for (let i = 0; i < seg; i++) acc = acc.multiply(thumb ? new THREE.Quaternion().slerp(c, 0.5) : c);
+          d = fore.clone().multiply(acc).multiply(down);
+        } else d = par ? D.get(par)! : new THREE.Quaternion();
+      }
+    }
+    D.set(name, d);
+    const r = k.rest.get(name)!;
+    const w = d.clone().multiply(r.q); W.set(name, w);
+    const pw = par ? W.get(par)! : new THREE.Quaternion();
+    h.bones.get(name)!.quaternion.copy(tmpQ.copy(pw).invert().multiply(w));
+  }
+  const sp = h.bones.get('spine_03'); if (sp) sp.scale.setScalar(p.chest.scale.x);
+  return W;
+}
+
+/** La mano libre (lado −X) va al guardamanos del arma: cinemática inversa de dos huesos (brazo y antebrazo). */
+export function supportHand(h: Human, W: Map<string, THREE.Quaternion>, marker: THREE.Object3D) {
+  const k = h.kit;
+  h.root.updateMatrixWorld(true);
+  const T = h.root.worldToLocal(marker.getWorldPosition(new THREE.Vector3()));
+  const rU = k.rest.get('upperarm_r')!, rL = k.rest.get('lowerarm_r')!, rH = k.rest.get('hand_r')!;
+  const S = h.bones.get('upperarm_r')!.getWorldPosition(new THREE.Vector3()); h.root.worldToLocal(S);
+  const a = rU.p.distanceTo(rL.p), b = rL.p.distanceTo(rH.p);
+  // La muñeca se queda un palmo antes del punto: así es la palma la que cierra sobre el guardamanos.
+  const toT = T.clone().sub(S); let d = toT.length() - 0.06;
+  if (d < 1e-4) return;
+  d = Math.min(d, a + b - 0.002); toT.setLength(d);
+  const cosA = THREE.MathUtils.clamp((a * a + d * d - b * b) / (2 * a * d), -1, 1), sinA = Math.sqrt(1 - cosA * cosA);
+  const dir = toT.clone().normalize();
+  const pole = new THREE.Vector3(-0.5, -1, -0.4);
+  const n = new THREE.Vector3().crossVectors(dir, pole).normalize();
+  const bend = new THREE.Vector3().crossVectors(n, dir).normalize();
+  const E = S.clone().addScaledVector(dir, a * cosA).addScaledVector(bend, a * sinA);
+  const Tn = S.clone().add(toT);
+  const restU = rL.p.clone().sub(rU.p).normalize(), restL = rH.p.clone().sub(rL.p).normalize();
+  const qU = new THREE.Quaternion().setFromUnitVectors(restU, E.clone().sub(S).normalize());
+  const qL = new THREE.Quaternion().setFromUnitVectors(restL, Tn.clone().sub(E).normalize());
+  const wU = qU.clone().multiply(rU.q), wL = qL.clone().multiply(rL.q), wH = qL.clone().multiply(rH.q);
+  const wClav = W.get('clavicle_r') ?? new THREE.Quaternion();
+  h.bones.get('upperarm_r')!.quaternion.copy(tmpQ.copy(wClav).invert().multiply(wU));
+  h.bones.get('lowerarm_r')!.quaternion.copy(tmpQ2.copy(wU).invert().multiply(wL));
+  h.bones.get('hand_r')!.quaternion.copy(tmpQ.copy(wL).invert().multiply(wH));
+}
+
+// ------------------------------------------------------------------------------------------------ exoarmadura
+// v0.15 · Exoarmadura «Tormenta»: placas facetadas de pizarra oscura con grietas de luz azul (como roca partida por un
+// rayo, pero de aleación moderna), colgadas de los huesos del cuerpo para que se muevan con él. Diseño original.
+let crackTex: THREE.CanvasTexture | null = null, crackGlow: THREE.CanvasTexture | null = null;
+const armorMats: THREE.MeshStandardMaterial[] = [];
+function crackTextures() {
+  if (crackTex && crackGlow) return [crackTex, crackGlow] as const;
+  const N = 256, base = document.createElement('canvas'), glow = document.createElement('canvas');
+  base.width = base.height = glow.width = glow.height = N;
+  const b = base.getContext('2d')!, g = glow.getContext('2d')!;
+  let seed = 25;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  // Pizarra: manchas de gris azulado y paneles con juntas.
+  b.fillStyle = '#2a3038'; b.fillRect(0, 0, N, N);
+  for (let i = 0; i < 260; i++) { const v = 34 + Math.floor(rnd() * 26); b.fillStyle = `rgba(${v},${v + 6},${v + 14},0.35)`; b.fillRect(rnd() * N, rnd() * N, 6 + rnd() * 30, 4 + rnd() * 18); }
+  b.strokeStyle = 'rgba(10,12,16,0.8)'; b.lineWidth = 2;
+  for (let y = 0; y < N; y += 64) { b.beginPath(); b.moveTo(0, y); b.lineTo(N, y); b.stroke(); }
+  for (let x = 32; x < N; x += 96) { b.beginPath(); b.moveTo(x, 0); b.lineTo(x, N); b.stroke(); }
+  g.fillStyle = '#000'; g.fillRect(0, 0, N, N);
+  // Grietas: rayos que se ramifican.
+  const bolt = (x: number, y: number, ang: number, len: number, w: number, depth: number) => {
+    for (let i = 0; i < len; i++) {
+      const nx = x + Math.cos(ang) * 9, ny = y + Math.sin(ang) * 9;
+      for (const [ctx, col, lw] of [[b, '#5fd0ff', w], [g, '#ffffff', w + 1.2]] as const) { ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke(); }
+      x = nx; y = ny; ang += (rnd() - 0.5) * 1.1;
+      if (depth < 2 && rnd() < 0.18) bolt(x, y, ang + (rnd() < 0.5 ? -0.9 : 0.9), Math.floor(len * 0.5), w * 0.6, depth + 1);
+    }
+  };
+  for (let i = 0; i < 7; i++) bolt(rnd() * N, rnd() * N, rnd() * Math.PI * 2, 10 + Math.floor(rnd() * 12), 1.6, 0);
+  g.filter = 'blur(2px)'; g.globalCompositeOperation = 'lighter'; g.drawImage(glow, 0, 0);
+  crackTex = new THREE.CanvasTexture(base); crackTex.colorSpace = THREE.SRGBColorSpace;
+  crackGlow = new THREE.CanvasTexture(glow);
+  for (const t of [crackTex, crackGlow]) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 4; }
+  return [crackTex, crackGlow] as const;
+}
+function armorMat() {
+  if (armorMats.length) return armorMats[0];
+  const [map, glow] = crackTextures();
+  const m = new THREE.MeshStandardMaterial({ map, emissiveMap: glow, emissive: new THREE.Color(0x39a8ff), emissiveIntensity: 1.4, metalness: 0.55, roughness: 0.42, flatShading: true });
+  m.name = 'exo-tormenta';
+  armorMats.push(m);
+  return m;
+}
+// Geometrías de la armadura compartidas entre todas las personas (no se liberan al cambiar de modelo).
+const armorGeo = new Map<string, THREE.BufferGeometry>();
+const ag = (kind: string, make: () => THREE.BufferGeometry, ...args: number[]) => { const k = kind + args.map((x) => x.toFixed(4)).join(','); let g = armorGeo.get(k); if (!g) armorGeo.set(k, (g = make())); return g; };
+/** Hace latir las grietas (una vez por fotograma). */
+export function tickArmor(t: number) {
+  for (const m of armorMats) m.emissiveIntensity = 1.15 + 0.45 * Math.sin(t * 2.1) + (Math.sin(t * 13.7) > 0.97 ? 0.9 : 0); // (con algún chispazo)
+}
+/** Pone la exoarmadura sobre un cuerpo del kit. */
+export function exoArmor(h: Human) {
+  const k = h.kit, mat = armorMat(), P = (n: string) => k.rest.get(n)!.p.clone(), Y = new THREE.Vector3(0, 1, 0);
+  const fem = h.kind === 'femenino' ? 0.92 : 1;
+  const add = (g: THREE.Object3D, geo: THREE.BufferGeometry, pos: THREE.Vector3, scale: THREE.Vector3, q?: THREE.Quaternion) => {
+    const m = new THREE.Mesh(geo, mat); m.position.copy(pos); m.scale.copy(scale); if (q) m.quaternion.copy(q); m.frustumCulled = false; g.add(m); return m;
+  };
+  // Placa a lo largo de un hueso (de `a` a `b`), algo adelantada para cubrir el frente del miembro.
+  const limb = (bone: string, a: string, b: string, rad: number, from: number, to: number, fwd = 0.012) => {
+    const A = P(a), B = P(b), dir = B.clone().sub(A), L = dir.length();
+    const mid = A.clone().addScaledVector(dir, (from + to) / 2);
+    const g = h.attach(bone, mid);
+    const geo = ag('CylinderGeometry', () => new THREE.CylinderGeometry(rad * 1.08, rad * 0.92, 1, 7, 1), rad * 1.08, rad * 0.92, 1, 7, 1);
+    add(g, geo, new THREE.Vector3(0, 0, fwd), new THREE.Vector3(1, L * (to - from), 0.86), new THREE.Quaternion().setFromUnitVectors(Y, dir.normalize()));
+  };
+  const hasBone = (n: string) => h.bones.has(n) && k.rest.has(n);
+  // Pecho y espalda: coraza facetada.
+  const c3 = P('spine_03'), c2 = P('spine_02');
+  { const g = h.attach('spine_03', c3); add(g, ag('CylinderGeometry', () => new THREE.CylinderGeometry(0.175 * fem, 0.145 * fem, 1, 8, 1), 0.175 * fem, 0.145 * fem, 1, 8, 1), new THREE.Vector3(0, -0.02, 0.012), new THREE.Vector3(1, 0.27, 0.7)); 
+    add(g, ag('CylinderGeometry', () => new THREE.CylinderGeometry(0.075, 0.11, 1, 8, 1), 0.075, 0.11, 1, 8, 1), new THREE.Vector3(0, 0.15, -0.005), new THREE.Vector3(1, 0.07, 0.85)); } // gorguera
+  { const g = h.attach('spine_02', c2); add(g, ag('CylinderGeometry', () => new THREE.CylinderGeometry(0.145 * fem, 0.15 * fem, 1, 8, 1), 0.145 * fem, 0.15 * fem, 1, 8, 1), new THREE.Vector3(0, -0.05, 0.008), new THREE.Vector3(1, 0.13, 0.72)); }
+  { const g = h.attach('pelvis', P('pelvis')); add(g, ag('CylinderGeometry', () => new THREE.CylinderGeometry(0.16 * fem, 0.17 * fem, 1, 8, 1), 0.16 * fem, 0.17 * fem, 1, 8, 1), new THREE.Vector3(0, -0.02, 0.005), new THREE.Vector3(1, 0.1, 0.72)); }
+  // Hombreras (media esfera facetada) a cada lado.
+  for (const [ua, sx] of [['upperarm_l', 1], ['upperarm_r', -1]] as const) {
+    if (!hasBone(ua)) continue;
+    const S = P(ua); const g = h.attach(ua, S);
+    add(g, ag('SphereGeometry', () => new THREE.SphereGeometry(1, 7, 4, 0, Math.PI * 2, 0, Math.PI * 0.55), 1, 7, 4, 0, Math.PI * 2, 0, Math.PI * 0.55), new THREE.Vector3(sx * 0.03, 0.025, 0), new THREE.Vector3(0.1, 0.085, 0.1), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), -sx * 0.35));
+  }
+  for (const s of ['l', 'r']) {
+    if (hasBone(`lowerarm_${s}`)) limb(`upperarm_${s}`, `upperarm_${s}`, `lowerarm_${s}`, 0.052, 0.35, 0.85, 0.004);
+    if (hasBone(`hand_${s}`)) limb(`lowerarm_${s}`, `lowerarm_${s}`, `hand_${s}`, 0.047, 0.15, 0.9, 0.004);
+    if (hasBone(`calf_${s}`)) limb(`thigh_${s}`, `thigh_${s}`, `calf_${s}`, 0.078 * fem, 0.12, 0.85);
+    if (hasBone(`foot_${s}`)) limb(`calf_${s}`, `calf_${s}`, `foot_${s}`, 0.06 * fem, 0.08, 0.88, 0.014);
+    // Rodillera.
+    if (hasBone(`calf_${s}`)) { const g = h.attach(`calf_${s}`, P(`calf_${s}`)); add(g, ag('IcosahedronGeometry', () => new THREE.IcosahedronGeometry(1, 0), 1, 0), new THREE.Vector3(0, 0.0, 0.05), new THREE.Vector3(0.05, 0.055, 0.035)); }
+  }
+}

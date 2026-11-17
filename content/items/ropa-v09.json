@@ -2810,5 +2810,34 @@
    },
    "perk": "pasos-silenciosos"
   }
+ },
+ {
+  "id": "exo-tormenta",
+  "name": "Exoarmadura «Tormenta»",
+  "desc": "Placas de aleación pizarra con grietas de plasma azul que laten como un rayo atrapado. Pesada, pero para una bala como una pared.",
+  "weight": 3.5,
+  "price": 18500,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 9,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "exo-tormenta",
+   "color": "#20262c",
+   "pattern": "liso",
+   "detail": "ninguno",
+   "accent": "#39a8ff",
+   "mods": {
+    "skills": {},
+    "carry": 4,
+    "speed": -0.05,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 10,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
  }
 ]

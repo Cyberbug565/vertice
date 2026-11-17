@@ -1,7 +1,9 @@
 // Opciones de personalización del personaje (validadas en el servidor y usadas por el creador del cliente).
+/** v0.15 · Cuerpo base (modelos CC0 de Quaternius): la cara y la complexión cambian sobre él. Vacío = según la persona. */
+export const BODIES = ['masculino', 'femenino'] as const;
 export const BUILDS = ['delgado', 'medio', 'robusto', 'atletico', 'corpulento', 'bajo', 'alto', 'musculoso', 'curvilineo', 'esbelto', 'fornido'] as const;
 export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños', 'afro-corto', 'pompadour', 'bob', 'media-melena', 'trenza-larga', 'erizo', 'mullet', 'trenzas-pegadas', 'coleta-baja', 'ondas', 'samurai', 'pixie'] as const;
-export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono', 'camiseta', 'tirantes', 'camisa', 'bomber', 'biker', 'abrigo', 'blazer', 'haori', 'poncho', 'armadura', 'arnes', 'cortavientos', 'chubasquero'] as const;
+export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono', 'camiseta', 'tirantes', 'camisa', 'bomber', 'biker', 'abrigo', 'blazer', 'haori', 'poncho', 'armadura', 'arnes', 'cortavientos', 'chubasquero', 'exo-tormenta'] as const;
 export const FACIALS = ['ninguno', 'barba', 'bigote', 'perilla', 'barba-larga', 'patillas', 'candado'] as const;
 export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada', 'cuadrada', 'corazon', 'ancha', 'afilada', 'diamante', 'triangular'] as const;
 export const NOSES = ['recta', 'chata', 'aguilena', 'pequena', 'ancha', 'respingona', 'rota'] as const;
@@ -22,6 +24,7 @@ export const TOP_DETAILS = ['ninguno', 'cremallera', 'tachuelas', 'parches', 'le
 export const ACCESSORIES = ['ninguno', 'gafas', 'visor', 'mascara', 'gorra', 'capucha', 'auriculares'] as const;
 export const EYE_COLORS = ['#3a2a1a', '#2a6aa8', '#3a8a4a', '#8a8a8a', '#43f3ff', '#ff3fa4', '#ffd23f', '#ff3040'] as const;
 export const LABELS: Record<string, string> = {
+  masculino: 'Masculino', femenino: 'Femenino', 'exo-tormenta': 'Exoarmadura «Tormenta»',
   musculoso: 'Musculoso/a', curvilineo: 'Curvilíneo/a', esbelto: 'Esbelto/a', fornido: 'Fornido/a', mullet: 'Mullet', 'trenzas-pegadas': 'Trenzas pegadas', 'coleta-baja': 'Coleta baja', ondas: 'Ondas', samurai: 'Moño samurái', pixie: 'Pixie',
   diamante: 'Diamante', triangular: 'Triangular', respingona: 'Respingona', rota: 'Rota (de boxeador)', mueca: 'Media sonrisa',
   delgado: 'Delgado', medio: 'Medio', robusto: 'Robusto', atletico: 'Atlético', corpulento: 'Corpulento', bajo: 'Bajo/a', alto: 'Alto/a',
@@ -55,13 +58,14 @@ export function normalizeAppearance(a: any): { ok: true; value: Record<string, s
     eyes: a.eyes ?? '#3a2a1a', pants: a.pants ?? '#1a1a24', build: a.build ?? 'medio', hairStyle: a.hairStyle ?? 'corto', top: a.top ?? 'chaqueta', facial: a.facial ?? 'ninguno', accessory: a.accessory ?? 'ninguno', tattoo: a.tattoo ?? '',
     faceShape: a.faceShape ?? 'ovalada', brows: a.brows ?? 'normales', makeup: a.makeup ?? 'ninguno', makeupColor: a.makeupColor ?? '#ff3fa4', piercing: a.piercing ?? 'ninguno', scar: a.scar ?? 'ninguna', bodyTattoo: a.bodyTattoo ?? 'ninguno',
     shirt: a.shirt ?? '#2a2a3a', shoes: a.shoes ?? '#1a1a1a', nose: a.nose ?? 'recta', mouth: a.mouth ?? 'neutra',
-    tattooZone: a.tattooZone ?? 'brazos', tattooInk: a.tattooInk ?? '#14141e', faceTattoo: a.faceTattoo ?? 'ninguno', topPattern: a.topPattern ?? 'liso', pantsPattern: a.pantsPattern ?? 'liso', shoeStyle: a.shoeStyle ?? 'botas', topDetail: a.topDetail ?? 'ninguno' };
+    tattooZone: a.tattooZone ?? 'brazos', tattooInk: a.tattooInk ?? '#14141e', faceTattoo: a.faceTattoo ?? 'ninguno', topPattern: a.topPattern ?? 'liso', pantsPattern: a.pantsPattern ?? 'liso', shoeStyle: a.shoeStyle ?? 'botas', topDetail: a.topDetail ?? 'ninguno', body: a.body ?? '' };
   if (![v.eyes, v.pants, v.makeupColor, v.shirt, v.shoes, v.tattooInk].every((x) => HEX.test(x))) return { ok: false, error: 'Color inválido' };
+  if (v.top === 'exo-tormenta') return { ok: false, error: 'La exoarmadura no se elige al crear: se compra' }; // v0.15
   if (v.tattoo && !HEX.test(v.tattoo)) return { ok: false, error: 'Tatuaje inválido' };
   const enumOk = (val: string, list: readonly string[], n: string) => (list.includes(val) ? null : `Opción inválida: ${n}`);
   const e = enumOk(v.build, BUILDS, 'complexión') ?? enumOk(v.hairStyle, HAIR_STYLES, 'peinado') ?? enumOk(v.top, TOPS, 'ropa') ?? enumOk(v.facial, FACIALS, 'vello facial') ?? enumOk(v.accessory, ACCESSORIES, 'accesorio')
     ?? enumOk(v.faceShape, FACE_SHAPES, 'cara') ?? enumOk(v.nose, NOSES, 'nariz') ?? enumOk(v.mouth, MOUTHS, 'boca') ?? enumOk(v.brows, BROWS, 'cejas') ?? enumOk(v.makeup, MAKEUPS, 'maquillaje') ?? enumOk(v.piercing, PIERCINGS, 'piercing') ?? enumOk(v.scar, SCARS, 'cicatriz') ?? enumOk(v.bodyTattoo, BODY_TATTOOS, 'tatuaje corporal')
-    ?? enumOk(v.tattooZone, TATTOO_ZONES, 'zona del tatuaje') ?? enumOk(v.faceTattoo, FACE_TATTOOS, 'tatuaje facial') ?? enumOk(v.topPattern, FABRICS, 'tejido') ?? enumOk(v.pantsPattern, FABRICS, 'tejido') ?? enumOk(v.shoeStyle, SHOE_STYLES, 'calzado') ?? enumOk(v.topDetail, TOP_DETAILS, 'detalle');
+    ?? enumOk(v.tattooZone, TATTOO_ZONES, 'zona del tatuaje') ?? enumOk(v.faceTattoo, FACE_TATTOOS, 'tatuaje facial') ?? enumOk(v.topPattern, FABRICS, 'tejido') ?? enumOk(v.pantsPattern, FABRICS, 'tejido') ?? enumOk(v.shoeStyle, SHOE_STYLES, 'calzado') ?? enumOk(v.topDetail, TOP_DETAILS, 'detalle') ?? (v.body ? enumOk(v.body, BODIES, 'cuerpo') : null);
   return e ? { ok: false, error: e } : { ok: true, value: v };
 }
 

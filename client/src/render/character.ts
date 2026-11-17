@@ -157,7 +157,7 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
       g.rect(x - 0.2, -22.4, 4.4, 1.2).fill(shade(jacket, 0.6)); // puño
       g.moveTo(x + 2.6, -35).lineTo(x + 2.6, -23).stroke({ width: 0.3, color: shade(jacket, 0.55), alpha: 0.7 }); // costura
       g.moveTo(x + 0.4, -28.6).quadraticCurveTo(x + 2, -27.6, x + 3.6, -28.8).stroke({ width: 0.35, color: shade(jacket, 0.6), alpha: 0.6 }); // codo
-      if (top === 'armadura') { g.roundRect(x - 0.8, -36.8, 5.6, 4.6, 1.8).fill(shade(jacket, 1.25)).stroke(edge); g.rect(x - 0.6, -33.4, 5.2, 0.5).fill(accent); }
+      if (top === 'armadura' || top === 'exo-tormenta') { g.roundRect(x - 0.8, -36.8, 5.6, 4.6, 1.8).fill(shade(jacket, 1.25)).stroke(edge); g.rect(x - 0.6, -33.4, 5.2, 0.5).fill(accent); }
       if (top === 'cortavientos') g.rect(x, -31, 4, 2).fill(acc2);
       if (a.topDetail === 'led') g.rect(x + 3.3, -35, 0.5, 12).fill({ color: accent, alpha: 0.95 });
       if (a.topDetail === 'reflectante') g.rect(x - 0.1, -26, 4.2, 1).fill({ color: 0xe8f0ff, alpha: 0.9 });
@@ -202,7 +202,7 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   if (top === 'camisa') { torso.poly([-3, -37, 0, -34, 3, -37, 2.6, -38, -2.6, -38]).fill(shade(jacket, 1.15)); for (let yy = -33; yy < -19; yy += 2.6) torso.circle(0.4, yy, 0.4).fill(shade(jacket, 0.5)); torso.moveTo(0, -34).lineTo(0, -18).stroke({ width: 0.3, color: shade(jacket, 0.6) }); }
   if (top === 'camiseta') { torso.ellipse(0, -36.4, 3.4, 1.4).fill(tex(skinTex('cuello', 6.8, 2.8))); torso.ellipse(0, -36.4, 3.6, 1.6).stroke({ width: 0.5, color: shade(jacket, 0.6) }); torso.roundRect(-3, -32, 6, 5, 1).fill({ color: accent, alpha: 0.75 }); torso.rect(-2, -30.6, 4, 0.6).fill(shade(accent, 0.4)); }
   if (top === 'haori') { torso.poly([-1, -37, 1, -37, -3, -18, -5, -18]).fill(acc2); torso.rect(tx - 1, -25, tw + 2, 2).fill(shade(acc2, 0.7)); }
-  if (top === 'armadura') { torso.roundRect(tx + 1.5, -35, tw - 3, 8, 2).fill(shade(jacket, 1.25)).stroke(edge); torso.roundRect(tx + 2, -26, tw - 4, 6, 2).fill(shade(jacket, 1.1)).stroke(edge); torso.rect(-2.5, -31.5, 5, 0.6).fill(accent); }
+  if (top === 'armadura' || top === 'exo-tormenta') { torso.roundRect(tx + 1.5, -35, tw - 3, 8, 2).fill(shade(jacket, 1.25)).stroke(edge); torso.roundRect(tx + 2, -26, tw - 4, 6, 2).fill(shade(jacket, 1.1)).stroke(edge); torso.rect(-2.5, -31.5, 5, 0.6).fill(accent); }
   if (top === 'cortavientos') { torso.rect(tx, -31, tw, 3).fill(acc2); torso.moveTo(0, -37).lineTo(0, -18).stroke({ width: 0.5, color: 0xc8ccd8 }); }
   if (top === 'chubasquero') { torso.rect(tx + 1, -36, 1.2, 16).fill({ color: 0xffffff, alpha: 0.25 }); torso.moveTo(0, -37).lineTo(0, -10).stroke({ width: 0.5, color: shade(jacket, 0.5) }); }
   if (top === 'chaleco') { torso.rect(-1, -37, 2, 19).fill(shade(jacket, 0.6)); torso.rect(tx + 2, -28, 4, 3).fill(shade(jacket, 0.7)); torso.rect(tx + tw - 6, -28, 4, 3).fill(shade(jacket, 0.7)); torso.poly([-2.5, -37, 2.5, -37, 0, -33]).fill(shirt); }

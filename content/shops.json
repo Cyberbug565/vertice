@@ -221,7 +221,8 @@
    "pistola-compacta": 6,
    "carabina": 3,
    "escopeta-bombeo": 3,
-   "cuchillo-combate": 8
+   "cuchillo-combate": 8,
+   "exo-tormenta": 1
   },
   "buys": [
    "arma"

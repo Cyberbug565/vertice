@@ -9,8 +9,10 @@ import { hashString, seededRng, type Appearance, type EntitySpawn, type ZoneDef 
 import { content } from '../content';
 import { fabricCanvas, skinCanvas } from './textures';
 import { dancePose } from './dance';
-import { City3D } from './city3d';
+import { City3D, tickNeon } from './city3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
+import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
+import { exoArmor, humansReady, humansVersion, loadHumans, makeHuman, poseHuman, supportHand, tickArmor, REG, type Human } from './human3d';
 
 /** Altura del juego: 32 px por unidad (la proyección real daría 39,2): comprimimos el eje vertical igual. */
 const Y_SQUASH = 32 / (45.2548 * Math.cos(Math.PI / 6));
@@ -30,6 +32,10 @@ const hex = (s?: string, d = '#888888') => new THREE.Color(s && /^#[0-9a-f]{6}$/
 const SLEEVELESS = new Set(['top', 'chaleco', 'tirantes', 'arnes']);
 const SHORT = new Set(['camiseta', 'camisa']);
 const COAT = new Set(['gabardina', 'abrigo', 'chubasquero', 'haori']);
+/** v0.15 · Peinados que salen del kit (el resto se modela aparte sobre la cabeza). '' = sin pelo. */
+const KIT_HAIR: Record<string, string> = { calvo: '', rapado: 'Hair_Buzzed', corto: 'Hair_SimpleParted', flequillo: 'Hair_SimpleParted', asimetrico: 'Hair_SimpleParted', undercut: 'Hair_SimpleParted',
+  lobo: 'Hair_SimpleParted', pompadour: 'Hair_SimpleParted', pixie: 'Hair_SimpleParted', puntas: 'Hair_SimpleParted', erizo: 'Hair_SimpleParted', largo: 'Hair_Long', melena: 'Hair_Long', 'media-melena': 'Hair_Long',
+  bob: 'Hair_Long', ondas: 'Hair_Long', mullet: 'Hair_Long', 'moño': 'Hair_Buns', 'dos-moños': 'Hair_Buns', samurai: 'Hair_Buns' };
 const FACE_COVER = new Set(['mascara', 'mascara-gas', 'bandana-cara', 'mascara-demonio']);
 
 // Geometrías compartidas (se escalan por pieza).
@@ -157,6 +163,8 @@ interface Rig {
   thighL: THREE.Group; thighR: THREE.Group; kneeL: THREE.Group; kneeR: THREE.Group; shoulderL: THREE.Group; shoulderR: THREE.Group; elbowL: THREE.Group; elbowR: THREE.Group;
   handR: THREE.Group; coat: THREE.Object3D[]; shadow: THREE.Mesh; key: string; heading: number; phase: number; lie: number; big: boolean; ranged: boolean; mats: THREE.Material[]; ghostMats?: THREE.Material[];
   lastX: number; lastY: number; speed: number;
+  /** v0.15 · cuerpo del kit (esqueleto), marcador del guardamanos y si apunta ahora mismo. */
+  human?: Human; grip2?: THREE.Object3D; aimNow?: boolean;
 }
 
 export class Chars3D {
@@ -190,6 +198,7 @@ export class Chars3D {
     this.sun.position.set(2, 8, 5); // luz principal desde arriba y de cara a la cámara
     this.rim.position.set(-6, 4, -6); // contraluz frío: separa la silueta del fondo
     this.world.add(this.occl);
+    loadHumans(() => {}); // v0.15 · cuerpos del kit (los personajes se rehacen al cargarlos)
     loadGuns(() => {}); // v0.14 · modelos de armas de fuego (los personajes se rehacen solos al cambiar la versión)
   }
 
@@ -234,12 +243,15 @@ export class Chars3D {
   private ghostify(r: Rig, color: number) {
     const tint = new THREE.Color(color);
     const out: THREE.Material[] = [];
+    const own = new Set(r.mats);
     const conv = (m: THREE.Material) => {
-      const c = (m as any).clone() as THREE.Material & { color?: THREE.Color; emissive?: THREE.Color };
+      // Los materiales propios de la persona se cambian sin copiar (los del cuerpo del kit llevan un sombreador propio
+      // que una copia perdería); los compartidos (armas) se copian.
+      const c = (own.has(m) ? m : (m as any).clone()) as THREE.Material & { color?: THREE.Color; emissive?: THREE.Color };
       c.transparent = true; c.depthWrite = false; (c as any).opacity = 0.6;
       if (c.color) c.color.lerp(tint, 0.35);
       if (c.emissive) c.emissive = tint.clone().multiplyScalar(0.55);
-      out.push(c); return c;
+      if (!own.has(m)) out.push(c); return c;
     };
     r.root.traverse((o) => { const m = o as THREE.Mesh; if (!m.isMesh) return; m.material = Array.isArray(m.material) ? m.material.map(conv) : conv(m.material); });
     r.shadow.visible = false;
@@ -251,13 +263,64 @@ export class Chars3D {
     const r = this.rigs.get(id);
     if (!r || this.after.length > 40) return;
     const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending });
-    const g = r.root.clone(true);
+    const g = r.human ? cloneSkinned(r.root) : r.root.clone(true); // (con esqueleto: copia la pose de ese instante)
     g.traverse((o) => { const m = o as THREE.Mesh; if (!m.isMesh) return; if (m.geometry === G.disc || m.geometry.type === 'RingGeometry') m.visible = false; else m.material = mat; });
     this.world.add(g);
     this.after.push({ g, t0: performance.now(), life, mat });
   }
 
   // ================================================================ construcción del modelo
+  /** v0.15 · Persona con el cuerpo del kit: cuerpo base, piel, ropa por zonas, cromo, cara propia, ojos, pelo y barba. */
+  private kitHuman(s: EntitySpawn, a: Required<Appearance>, chrome: Set<string>, lost: Set<string>): Human | null {
+    const seed = hashString(`${s.name ?? ''}#${s.kind === 'player' ? '' : s.id}`) || 1;
+    const r = seededRng(seed * 13 + 5);
+    const kind = a.body === 'masculino' || a.body === 'femenino' ? a.body : ['barba', 'barba-larga', 'candado', 'perilla', 'bigote'].includes(a.facial) ? 'masculino' : seed % 2 ? 'masculino' : 'femenino';
+    const lw = a.legwear || 'pantalon';
+    const bareLeg = lw === 'shorts' || lw === 'falda' || lw === 'bermudas';
+    const sleeveless = SLEEVELESS.has(a.top), short = SHORT.has(a.top), exposed = a.top === 'arnes';
+    const cover = new Array(16).fill(0);
+    cover[REG.torso] = exposed ? 0 : 1; cover[REG.pelvis] = 2;
+    for (const k of [REG.uaP, REG.uaM]) cover[k] = sleeveless ? 0 : 1;
+    for (const k of [REG.faP, REG.faM]) cover[k] = sleeveless || short ? 0 : 1;
+    for (const k of [REG.thP, REG.thM]) cover[k] = 2;
+    for (const k of [REG.caP, REG.caM]) cover[k] = a.shoeStyle === 'botas-altas' ? 3 : bareLeg ? 0 : 2;
+    for (const k of [REG.ftP, REG.ftM]) cover[k] = 3;
+    // Cromo: el miembro entero pasa a metal (con líneas de luz del color de acento).
+    if (chrome.has('brazo_der')) for (const k of [REG.uaP, REG.faP, REG.handP]) cover[k] = 4;
+    if (chrome.has('brazo_izq')) for (const k of [REG.uaM, REG.faM, REG.handM]) cover[k] = 4;
+    if (chrome.has('pierna_der')) for (const k of [REG.thP, REG.caP, REG.ftP]) cover[k] = 4;
+    if (chrome.has('pierna_izq')) for (const k of [REG.thM, REG.caM, REG.ftM]) cover[k] = 4;
+    if (chrome.has('mano_der') || chrome.has('dedos_der')) cover[REG.handP] = 4;
+    if (chrome.has('mano_izq') || chrome.has('dedos_izq')) cover[REG.handM] = 4;
+    // Cara propia: rasgos al azar (siempre los mismos para esa persona) más lo elegido en el creador.
+    const fsh = a.faceShape, nz = a.nose;
+    const face: [number, number, number, number, number, number, number] = [
+      (r() - 0.5) * 0.07 + (fsh === 'ancha' || fsh === 'redonda' ? 0.035 : fsh === 'alargada' || fsh === 'afilada' ? -0.03 : 0),
+      (r() - 0.5) * 0.22 + (fsh === 'cuadrada' ? 0.14 : fsh === 'triangular' || fsh === 'corazon' || fsh === 'afilada' ? -0.14 : fsh === 'ancha' ? 0.08 : 0),
+      (r() - 0.5) * 1.2 + (nz === 'aguilena' ? 0.9 : nz === 'chata' ? -0.8 : nz === 'respingona' || nz === 'pequena' ? -0.5 : 0),
+      (r() - 0.5) * 1.2 + (fsh === 'alargada' || fsh === 'afilada' ? 0.7 : fsh === 'redonda' ? -0.4 : 0),
+      (r() - 0.5) * 1.4 + (a.brows === 'gruesas' ? 0.5 : 0),
+      (r() - 0.5) * 1.2 + (fsh === 'diamante' || fsh === 'angulosa' ? 1.0 : 0),
+      (r() - 0.5) * 0.4 + (nz === 'ancha' ? 0.3 : nz === 'chata' ? 0.18 : nz === 'pequena' ? -0.18 : 0),
+    ];
+    const topTex = tex(fabricCanvas(a.top === 'top' || a.top === 'tirantes' ? (a.topPattern || 'liso') : a.topPattern || 'liso', a.top === 'exo-tormenta' ? '#20262c' : a.jacket, a.accent, 8, 10));
+    const pantsTex = tex(fabricCanvas(a.pantsPattern || 'liso', a.pants, a.accent, 4, 9));
+    for (const t of [topTex, pantsTex]) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.needsUpdate = true; }
+    const hairName = KIT_HAIR[a.hairStyle];
+    const H = makeHuman({ kind, look: { skin: a.skin, top: topTex, pants: pantsTex, shoe: a.shoes || '#101018', accent: a.accent, cover, face }, hair: a.headwear === 'casco' || a.headwear === 'casco-moto' ? '' : hairName ?? '',
+      hairColor: a.hair, beard: ['barba', 'barba-larga', 'candado', 'perilla'].includes(a.facial), eyes: a.eyes || '#3a2a1a', lost });
+    if (H && a.top === 'exo-tormenta') exoArmor(H); // v0.15 · placas sobre el cuerpo
+    return H;
+  }
+  /** v0.15 · Pasa la pose del juego a los huesos del cuerpo del kit y lleva la mano libre al arma. */
+  private applyHuman(r: Rig) {
+    if (!r.human) return;
+    const two = r.ranged && (r.big || !!r.aimNow) && r.lie < 0.3;
+    const W = poseHuman(r.human, { hips: r.hips, spine: r.spine, chest: r.chest, neck: r.neck, thighP: r.thighR, kneeP: r.kneeR, thighM: r.thighL, kneeM: r.kneeL,
+      shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, gripP: r.handR.children.length ? 1 : 0.3, gripM: two ? 0.9 : 0.3 });
+    if (two && r.grip2) supportHand(r.human, W, r.grip2);
+  }
+
   private build(e: Ent3D): Rig {
     const s = e.s;
     const a = { skin: '#c89070', hair: '#222222', jacket: '#40506a', accent: '#43f3ff', eyes: '#3a2a1a', pants: '#1a1a24', build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
@@ -303,11 +366,15 @@ export class Chars3D {
     const root = new THREE.Group();
     const body = group(root, 0, 0, 0);
     body.scale.set(M * wf, M * hf / Y_SQUASH, M * wf);
+    // v0.15 · Con los cuerpos del kit cargados, el cuerpo es el del kit (con esqueleto, piel y ropa pintada por zonas);
+    // lo demás (pelo especial, sombreros, gafas, cromo, armas, abrigos) se cuelga de sus huesos. Si no, el procedural.
+    const H = humansReady() ? this.kitHuman(s, a, chrome, lost) : null;
+    if (H) { body.add(H.root); mats.push(...H.mats); }
+    const proxy = () => new THREE.Group();
     // ---- piernas
     const hipY = 0.92;
-    const hips = group(body, 0, hipY);
-    const pelvis = part(hips, G.box, pantsM, 0.38 * hipW, 0.2, 0.24 * (hipW > 1 ? 1.08 : 1), 0, 0.04);
-    void pelvis;
+    const hips = H ? H.hips : group(body, 0, hipY);
+    if (!H) part(hips, G.box, pantsM, 0.38 * hipW, 0.2, 0.24 * (hipW > 1 ? 1.08 : 1), 0, 0.04);
     const lw = a.legwear || 'pantalon';
     const bare = lw === 'shorts' || lw === 'falda' || lw === 'bermudas' || lw === 'falda-larga';
     const legFor = (side: -1 | 1) => {
@@ -332,7 +399,7 @@ export class Chars3D {
       if (st === 'zapatillas') part(foot, G.box, glowM, 0.116, 0.015, 0.12, 0, 0.0, 0.05);
       return { thigh, knee };
     };
-    const L = legFor(-1), R = legFor(1);
+    const L = H ? { thigh: proxy(), knee: proxy() } : legFor(-1), R = H ? { thigh: proxy(), knee: proxy() } : legFor(1);
     // Faldas y abrigos largos.
     const coat: THREE.Object3D[] = [];
     if (lw === 'falda' || lw === 'falda-larga') { const sk = part(hips, G.cone, pantsM, 0.42, lw === 'falda' ? 0.32 : 0.7, 0.36, 0, lw === 'falda' ? -0.12 : -0.3); (sk.material as THREE.Material).side = THREE.DoubleSide; }
@@ -342,17 +409,17 @@ export class Chars3D {
       coat.push(pv);
     }
     // ---- tronco
-    const spine = group(hips, 0, 0.12);
+    const spine = H ? proxy() : group(hips, 0, 0.12);
     const exposed = a.top === 'top' || a.top === 'arnes';
-    part(spine, G.box, exposed ? skinM('chest', 5, 4) : jacketM, 0.35 * (B === 'corpulento' ? 1.12 : 1), 0.24, 0.23 * (B === 'corpulento' ? 1.25 : 1), 0, 0.1);
-    const chest = group(spine, 0, 0.2);
+    if (!H) part(spine, G.box, exposed ? skinM('chest', 5, 4) : jacketM, 0.35 * (B === 'corpulento' ? 1.12 : 1), 0.24, 0.23 * (B === 'corpulento' ? 1.25 : 1), 0, 0.1);
+    const chest = H ? H.chest : group(spine, 0, 0.2);
     const chestMat = exposed || a.top === 'tirantes' ? skinM('chest', 5, 5) : jacketM;
-    part(chest, G.chest, chestMat, 0.5 * shoulders / wf, 0.34, 0.28, 0, 0.15).rotation.y = Math.PI / 8;
-    if (a.top === 'tirantes') part(chest, G.chest, jacketM, 0.4, 0.26, 0.245, 0, 0.12).rotation.y = Math.PI / 8;
-    if (a.top === 'top') part(chest, G.chest, cloth(a.shirt || a.accent, a.topPattern), 0.42, 0.18, 0.245, 0, 0.2).rotation.y = Math.PI / 8;
+    if (!H) part(chest, G.chest, chestMat, 0.5 * shoulders / wf, 0.34, 0.28, 0, 0.15).rotation.y = Math.PI / 8;
+    if (!H && a.top === 'tirantes') part(chest, G.chest, jacketM, 0.4, 0.26, 0.245, 0, 0.12).rotation.y = Math.PI / 8;
+    if (!H && a.top === 'top') part(chest, G.chest, cloth(a.shirt || a.accent, a.topPattern), 0.42, 0.18, 0.245, 0, 0.2).rotation.y = Math.PI / 8;
     if (a.top === 'arnes') { part(chest, G.box, beltM, 0.04, 0.4, 0.26, 0, 0.13).rotation.z = 0.7; part(chest, G.box, beltM, 0.04, 0.4, 0.26, 0, 0.13).rotation.z = -0.7; }
     if (['chaqueta', 'gabardina', 'abrigo', 'bomber', 'biker', 'blazer'].includes(a.top)) { part(chest, G.box, shirtM, 0.1, 0.18, 0.02, 0, 0.2, 0.125); part(chest, G.box, mk(lam({ color: hex(a.accent2 || a.jacket).multiplyScalar(0.7) })), 0.05, 0.16, 0.02, -0.07, 0.22, 0.126).rotation.z = 0.35; part(chest, G.box, mk(lam({ color: hex(a.jacket).multiplyScalar(0.7) })), 0.05, 0.16, 0.02, 0.07, 0.22, 0.126).rotation.z = -0.35; }
-    if (a.top === 'armadura' || a.topDetail === 'placas') { part(chest, G.box, metalDarkM, 0.36, 0.22, 0.06, 0, 0.16, 0.12); part(chest, G.box, glowM, 0.2, 0.012, 0.01, 0, 0.12, 0.155); }
+    if (a.top === 'armadura' || (!H && a.top === 'exo-tormenta') || a.topDetail === 'placas') { part(chest, G.box, metalDarkM, 0.36, 0.22, 0.06, 0, 0.16, 0.12); part(chest, G.box, glowM, 0.2, 0.012, 0.01, 0, 0.12, 0.155); }
     if (a.top === 'poncho') part(chest, G.cone, cloth(a.jacket, a.topPattern), 0.7, 0.42, 0.5, 0, 0.12);
     if (a.top === 'sudadera' || a.top === 'chubasquero' || a.headwear === 'capucha') part(chest, G.box, a.headwear === 'capucha' ? mk(lam({ color: hex(a.headColor || a.jacket) })) : jacketM, 0.26, 0.12, 0.08, 0, 0.32, -0.12);
     if (a.topDetail === 'cremallera') part(chest, G.box, goldM, 0.012, 0.32, 0.01, 0.01, 0.14, 0.123);
@@ -373,7 +440,7 @@ export class Chars3D {
       const upper = isChrome ? metalM : sleeveless ? skinM(side > 0 ? 'armR' : 'armL', 2.5, 6) : sleeveM;
       part(sh, G.sphere, isChrome ? metalDarkM : upper, 0.14, 0.14, 0.14, 0, -0.01);
       part(sh, G.thigh, upper, 0.13 * limb, 0.31, 0.135 * limb, 0, -0.15);
-      if (a.top === 'armadura') part(sh, G.box, metalDarkM, 0.13, 0.08, 0.13, 0, 0.0);
+      if (a.top === 'armadura' || (!H && a.top === 'exo-tormenta')) part(sh, G.box, metalDarkM, 0.13, 0.08, 0.13, 0, 0.0);
       const el = group(sh, 0, -0.3);
       const fore = isChrome ? metalM : sleeveless || short ? skinM(side > 0 ? 'armR' : 'armL', 2.5, 6) : sleeveM;
       part(el, G.sphere, fore, 0.1, 0.09, 0.1, 0, -0.005); part(el, G.calf, fore, 0.11 * limb, 0.28, 0.115 * limb, 0, -0.135);
@@ -390,24 +457,26 @@ export class Chars3D {
       }
       return { sh, el, hand };
     };
-    const AL = armFor(-1), AR = armFor(1);
+    const AL = H ? { sh: proxy(), el: proxy(), hand: H.handM } : armFor(-1), AR = H ? { sh: proxy(), el: proxy(), hand: H.handP } : armFor(1);
     // ---- cabeza
-    const neck = group(chest, 0, 0.32);
-    part(neck, G.cyl, tatOn('neck') ? skinM('neck', 2, 2) : plainSkin, 0.12, 0.1, 0.12, 0, 0.04);
-    const head = group(neck, 0, 0.21);
+    const neck = H ? proxy() : group(chest, 0, 0.32);
+    if (!H) part(neck, G.cyl, tatOn('neck') ? skinM('neck', 2, 2) : plainSkin, 0.12, 0.1, 0.12, 0, 0.04);
+    const head = H ? H.head : group(neck, 0, 0.21);
     const [fw0, fh0] = a.faceShape === 'ancha' || a.faceShape === 'redonda' ? [0.24, 0.26] : a.faceShape === 'alargada' || a.faceShape === 'afilada' || a.faceShape === 'diamante' ? [0.205, 0.29] : a.faceShape === 'cuadrada' ? [0.235, 0.265] : a.faceShape === 'triangular' || a.faceShape === 'corazon' ? [0.225, 0.275] : [0.22, 0.27];
     const faceSeed = hashString(`${s.name ?? ''}#${s.kind === 'player' ? '' : s.id}`) || 1;
     // v0.14 · Misma base para todos; la cabeza varía un poco con cada persona.
     const hv = seededRng(faceSeed * 7 + 3); const fw = fw0 * (0.95 + hv() * 0.1), fh = fh0 * (0.96 + hv() * 0.08); const chromeStyle = Math.floor(hv() * 3);
-    const face = mk(lam({ map: tex(faceCanvas(a, chrome.has('ojos'), faceSeed)) }));
+    const face = H ? plainSkin : mk(lam({ map: tex(faceCanvas(a, chrome.has('ojos'), faceSeed)) }));
     const skinHead = plainSkin;
     const hairCover = !['calvo', 'rapado'].includes(a.hairStyle);
     const headMats = [skinHead, skinHead, hairCover ? hairM : skinHead, skinHead, face, hairCover ? hairM : skinHead];
-    part(head, G.box, headMats, fw, fh, 0.24, 0, 0);
-    part(head, G.box, plainSkin, fw * (a.faceShape === 'cuadrada' || a.faceShape === 'triangular' ? 0.95 : a.faceShape === 'corazon' || a.faceShape === 'diamante' || a.faceShape === 'afilada' ? 0.6 : 0.8), 0.05, 0.16, 0, -fh / 2 - 0.01, 0.01); // mandíbula
-    if (a.faceShape === 'diamante' || a.faceShape === 'angulosa') for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.05, 0.05, 0.08, sx * (fw / 2 - 0.01), -0.01, 0.07); // pómulos
-    for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.025, 0.065, 0.045, sx * (fw / 2 + 0.005), 0, -0.01); // orejas
-    part(head, G.sphere, plainSkin, a.nose === 'ancha' || a.nose === 'chata' ? 0.05 : a.nose === 'pequena' || a.nose === 'respingona' ? 0.03 : 0.036, a.nose === 'aguilena' ? 0.065 : 0.055, a.nose === 'chata' ? 0.03 : a.nose === 'aguilena' ? 0.055 : 0.045, a.nose === 'rota' ? 0.008 : 0, a.nose === 'respingona' ? -0.012 : -0.02, 0.122).rotation.z = a.nose === 'rota' ? 0.25 : 0; // nariz
+    if (!H) {
+      part(head, G.box, headMats, fw, fh, 0.24, 0, 0);
+      part(head, G.box, plainSkin, fw * (a.faceShape === 'cuadrada' || a.faceShape === 'triangular' ? 0.95 : a.faceShape === 'corazon' || a.faceShape === 'diamante' || a.faceShape === 'afilada' ? 0.6 : 0.8), 0.05, 0.16, 0, -fh / 2 - 0.01, 0.01); // mandíbula
+      if (a.faceShape === 'diamante' || a.faceShape === 'angulosa') for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.05, 0.05, 0.08, sx * (fw / 2 - 0.01), -0.01, 0.07); // pómulos
+      for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.025, 0.065, 0.045, sx * (fw / 2 + 0.005), 0, -0.01); // orejas
+      part(head, G.sphere, plainSkin, a.nose === 'ancha' || a.nose === 'chata' ? 0.05 : a.nose === 'pequena' || a.nose === 'respingona' ? 0.03 : 0.036, a.nose === 'aguilena' ? 0.065 : 0.055, a.nose === 'chata' ? 0.03 : a.nose === 'aguilena' ? 0.055 : 0.045, a.nose === 'rota' ? 0.008 : 0, a.nose === 'respingona' ? -0.012 : -0.02, 0.122).rotation.z = a.nose === 'rota' ? 0.25 : 0; // nariz
+    }
     // Cromo en la cabeza: tres estilos según la persona (placa lateral, placa de mandíbula o conectores en la sien y la frente).
     if (chrome.has('cabeza')) {
       if (chromeStyle === 0) { part(head, G.box, metalM, 0.02, 0.1, 0.1, -fw / 2 - 0.012, 0.02, -0.02); part(head, G.sphere, glowM, 0.025, 0.025, 0.025, -fw / 2 - 0.02, 0.02, 0.02); }
@@ -417,7 +486,7 @@ export class Chars3D {
     if (chrome.has('ojos')) part(head, G.box, mk(new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.6 })), fw * 0.9, 0.03, 0.01, 0, 0.0, 0.123);
     // Pelo.
     const hs = a.hairStyle, covered = a.headwear === 'casco' || a.headwear === 'casco-moto';
-    if (!covered) {
+    if (!covered && !(H && KIT_HAIR[hs] !== undefined)) {
       const cap = () => part(head, G.box, hairM, fw + 0.02, 0.06, 0.26, 0, fh / 2, -0.005);
       if (!['calvo', 'rapado', 'mohicano', 'samurai', 'trenzas-pegadas'].includes(hs)) cap();
       if (hs === 'samurai' || hs === 'trenzas-pegadas') part(head, G.box, mk(lam({ color: hex(a.hair), transparent: true, opacity: 0.5 })), fw + 0.004, 0.02, 0.215, 0, fh / 2);
@@ -444,7 +513,7 @@ export class Chars3D {
       if (hs === 'pixie') { part(head, G.box, hairM, fw * 0.8, 0.05, 0.05, 0.03, fh / 2 - 0.02, 0.1).rotation.z = -0.25; }
       if (hs === 'rizos') for (let i = 0; i < 6; i++) part(head, G.sphere, hairM, 0.07, 0.07, 0.07, -0.08 + (i % 3) * 0.08, fh / 2 + 0.01, -0.05 + Math.floor(i / 3) * 0.08);
     }
-    if (a.facial === 'barba-larga') part(head, G.box, hairM, fw * 0.8, 0.12, 0.06, 0, -fh / 2 - 0.05, 0.08);
+    if (a.facial === 'barba-larga' && !(H && H.kind === 'masculino')) part(head, G.box, hairM, fw * 0.8, 0.12, 0.06, 0, -fh / 2 - 0.05, 0.08);
     // Prendas de cabeza y cara.
     const hc = hex(a.headColor || a.accent).multiplyScalar(a.headColor ? 1 : 0.6);
     const hcM = mk(lam({ color: hc }));
@@ -470,12 +539,12 @@ export class Chars3D {
     }
     if (a.accessory === 'auriculares' && !hw) for (const sx of [-1, 1]) part(head, G.cyl, mk(lam({ color: 0x202028 })), 0.06, 0.03, 0.06, sx * (fw / 2 + 0.02), 0.01, 0).rotation.z = Math.PI / 2;
     // ---- armas: en la mano y las que lleva encima
-    const handR = group(AR.hand, 0, -0.05, 0.02);
+    const handR = H ? group(AR.hand, 0, -0.075, 0.012) : group(AR.hand, 0, -0.05, 0.02);
     const wi = s.weapon ? content.items.find((i) => i.id === s.weapon) : undefined;
     const bigFam = (f: string, id: string) => ['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil'].includes(f) || ['bate', 'katana-termica', 'katana', 'lanza-electrica', 'hacha-plasma', 'hacha-bomberos', 'espada-monofilamento', 'martillo-neumatico', 'mazo', 'machete', 'tuberia'].includes(id);
     let big = false, ranged = false;
     if (wi?.weapon && wi.weapon.family !== 'Implante') {
-      const w = this.weaponMesh(wi.id, wi.weapon.family, wi.weapon.kind, mk, glowM);
+      const w = this.weaponMesh(wi.id, wi.weapon.family, wi.weapon.kind, mk, glowM, !!H);
       // En la mano: las de fuego apuntan hacia delante; las de cuerpo a cuerpo, hacia arriba.
       if (wi.weapon.kind === 'ranged') { w.rotation.x = Math.PI; w.position.set(0, -0.02, 0.02); } else { w.rotation.x = 1.2; w.position.set(0, 0, 0.0); }
       handR.add(w);
@@ -485,7 +554,7 @@ export class Chars3D {
     for (const id of s.carry ?? []) {
       const ci = content.items.find((i) => i.id === id);
       if (!ci?.weapon) continue;
-      const w = this.weaponMesh(ci.id, ci.weapon.family, ci.weapon.kind, mk, glowM);
+      const w = this.weaponMesh(ci.id, ci.weapon.family, ci.weapon.kind, mk, glowM, !!H);
       if (bigFam(ci.weapon.family, ci.id)) { if (ci.weapon.kind === 'ranged') { w.position.set(0.04 - back * 0.08, 0.14, -0.15); w.rotation.set(0, 0, 2.4); } else { w.position.set(0.12 - back * 0.06, 0.4, -0.15); w.rotation.set(Math.PI, 0, -0.45); } chest.add(w); back++; }
       else { w.position.set(hip % 2 ? -0.2 : 0.2, 0.0, 0.02); w.rotation.set(Math.PI, 0, 0); w.scale.multiplyScalar(0.85); hips.add(w); part(hips, G.box, mk(lam({ color: 0x3a2a1c })), 0.05, 0.12, 0.06, hip % 2 ? -0.2 : 0.2, -0.04, 0.02); hip++; }
     }
@@ -495,7 +564,8 @@ export class Chars3D {
     shadow.rotation.x = -Math.PI / 2; shadow.scale.set(0.5, 0.36, 1); shadow.position.y = 0.01; root.add(shadow);
     if (s.kind === 'player') { const ring = new THREE.Mesh(new THREE.RingGeometry(0.28, 0.32, 24), mk(new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.8, depthWrite: false }))); ring.rotation.x = -Math.PI / 2; ring.position.y = 0.012; root.add(ring); }
     this.world.add(root);
-    return { root, body, hips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
+    const rigHips = H ? proxy() : hips;
+    return { human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
       shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, mats, lastX: e.x, lastY: e.y, speed: 0 };
   }
 
@@ -503,9 +573,12 @@ export class Chars3D {
    * v0.12 · Modelos de armas a escala real (en metros × 0,75), uno por arma. Se modelan con el cañón/hoja hacia +Y,
    * la parte de arriba (miras) hacia +Z y la empuñadura en el origen; el envoltorio las orienta para la mano.
    */
-  private weaponMesh(id: string, fam: string, kind: string, mk: <T extends THREE.Material>(m: T) => T, glow: THREE.Material) {
+  private weaponMesh(id: string, fam: string, kind: string, mk: <T extends THREE.Material>(m: T) => T, glow: THREE.Material, real = false) {
     const outer = new THREE.Group();
-    const g = new THREE.Group(); g.scale.setScalar(0.75);
+    const g = new THREE.Group(); g.scale.setScalar(real ? 1 : 0.75); // (con el cuerpo del kit, a tamaño real)
+    // Punto donde agarra la mano libre (guardamanos en las largas; bajo la empuñadura en las cortas).
+    const grip2 = new THREE.Object3D(); grip2.name = 'grip2'; g.add(grip2);
+    grip2.position.set(0, /Pistola|Revólver|Táser|Implante/.test(fam) ? -0.005 : 0.3, /Pistola|Revólver|Táser|Implante/.test(fam) ? -0.06 : -0.015);
     // Las de fuego se giran media vuelta en Y: así, tras el giro de la mano, las miras quedan arriba.
     if (kind === 'ranged') g.rotation.y = Math.PI;
     outer.add(g);
@@ -531,6 +604,7 @@ export class Chars3D {
     if (fb) {
       const bb = new THREE.Box3().setFromObject(fb), L = bb.max.y - bb.min.y; // (antes de colgarlo: medidas en su propio sistema)
       g.add(fb);
+      if (L > 0.35) grip2.position.set(0, bb.min.y + L * 0.62, bb.min.z + (bb.max.z - bb.min.z) * 0.25);
       if (techCol >= 0) {
         B(tglow, 0.006, L * 0.55, 0.005, 0, bb.min.y + L * 0.55, bb.max.z + 0.003);
         if (/plasma|pulsos|riel/.test(id)) for (let i = 0; i < 3; i++) B(tglow, (bb.max.x - bb.min.x) + 0.004, 0.006, 0.006, 0, bb.min.y + L * (0.45 + i * 0.12), (bb.max.z + bb.min.z) / 2);
@@ -675,15 +749,17 @@ export class Chars3D {
   // ================================================================ animación y dibujo
   /** Sincroniza los modelos con las entidades visibles y dibuja el fotograma. */
   render(ents: Iterable<Ent3D>, opts: { W: number; H: number; zoom: number; worldX: number; worldY: number; meId: number; guarding: boolean; now: number; dt: number; serverNow: number; hidden: (e: Ent3D) => boolean }) {
+    tickArmor(opts.now / 1000); tickNeon(opts.now / 1000);
     const seen = new Set<number>();
     for (const e of ents) {
       const s = e.s;
       if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) continue;
       seen.add(s.id);
-      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0]);
+      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion()]);
       let r = this.rigs.get(s.id);
       if (!r || r.key !== key) { if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); }
       this.animate(r, e, opts);
+      this.applyHuman(r);
       if (e.ghost && r.ghostMats) {
         // Flota a un palmo del suelo, se mece y parpadea un poco (más cuanto menos visible está).
         r.root.position.y = e.ghost.float;
@@ -748,10 +824,22 @@ export class Chars3D {
     // Armas: postura de combate o de apuntar.
     const guard = s.id === o.meId ? o.guarding : !!s.buffs?.includes('guardia');
     const since = e.attackAt ? now - e.attackAt : 1e9;
+    r.aimNow = guard || (since < 300 && e.attackKind === 'shot');
     if (r.ranged) { shR = -1.25 + sw * 0.05; elR = -0.2; if (r.big) { shL = -1.1; shLz = 0.45; elL = -0.6; } }
     if (guard) { if (r.ranged) { shR = -1.55; elR = 0; if (r.big) { shL = -1.45; shLz = 0.5; elL = -0.3; } } else { shR = -1.3; elR = -1.4; shL = -1.2; elL = -1.5; } }
     if (since < 340 && (e.attackKind === 'hit' || e.attackKind === 'heavy')) { const k = since / (e.attackKind === 'heavy' ? 440 : 340); shR = k < 0.35 ? -2.6 : -2.6 + (k - 0.35) * 4.2; elR = -0.4; spineY = (k < 0.35 ? -0.4 : 0.35); if (r.big) { shL = shR + 0.2; } }
     else if (since < 300 && e.attackKind === 'shot') { shR = -1.6; elR = 0; spineX -= 0.06; }
+    // v0.15 · Con el cuerpo del kit las armas son de tamaño real: el fusil va a la altura del hombro (culata al hombro,
+    // codo doblado) y la pistola a dos manos con el brazo algo recogido para que la otra mano llegue.
+    if (r.human && r.ranged && !(since < 340 && (e.attackKind === 'hit' || e.attackKind === 'heavy'))) {
+      const aim = r.aimNow;
+      if (r.big) {
+        if (aim) { shR = -0.7; elR = -0.87; shRz = 0.32; spineY = 0.22; neckX = 0.08; }
+        else { shR = -0.32 + sw * 0.04; elR = -0.82; shRz = 0.22; spineY = 0.12 + spineY * 0.5; }
+        if (since < 120 && e.attackKind === 'shot') spineX -= 0.04 * (1 - since / 120); // retroceso
+      } else if (aim) { shR = -1.35; elR = -0.28; shRz = -0.28; spineY = 0.12; }
+      else { shR = -0.55 + sw * 0.05; elR = -0.6; }
+    }
     const kickT = e.kickAt ? now - e.kickAt : 1e9;
     if (kickT < 320) { const k = Math.sin((kickT / 320) * Math.PI); thR = -1.5 * k; knR = 0.2; spineX = -0.2 * k; }
     // v0.13 · Gestos de la vida en la calle: sentado, manos arriba, al teléfono, fumando y gesticulando al hablar.
@@ -849,13 +937,14 @@ export class Preview3D {
     if (this.idleSpin && !this.drag) this.angle = 0.25 + Math.sin(now / 2600) * 0.85;
     const c = this.c3d;
     const s = this.ent.s;
-    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion()]);
+    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion()]);
     let r = c.rigs.get(1);
     if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
     // Un gesto cada pocos segundos para que se vea vivo.
     const t = (now / 1000) % 14;
     s.emote = t > 9 && t < 12.5 ? { move: 'gesto', at: Date.now() - (t - 9) * 1000 } : undefined;
     c.animate(r, this.ent, { meId: 1, guarding: false, now, dt, serverNow: Date.now() });
+    c.applyHuman(r);
     r.root.rotation.y = this.angle;
     const d = 3.1, ty = 0.46;
     this.cam.position.set(0, ty + 0.3, d);

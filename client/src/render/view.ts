@@ -2,6 +2,7 @@
 // interpolación de entidades remotas y predicción del personaje propio.
 import { AlphaFilter, Application, Container, Graphics, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
 import { BUILDING_H, Chars3D } from './chars3d';
+import { megaHeight, setCityNight } from './city3d';
 import {
   GROUND_TYPES, buildZoneGrid, findPath, isWalkable, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
@@ -268,7 +269,9 @@ export class GameView {
       sil.some((s) => !(s.x0 === bx0 && s.y0 === by0 && s.x1 === bx1 && s.y1 === by1) && (bx1 <= s.x0 || by1 <= s.y0) && inPoly(sx, sy, s.pts));
     for (const b0 of z.buildings) {
       // v0.11 · Edificios más altos (los personajes se ven más pequeños a su lado).
-      const b = { ...b0, height: b0.height * BUILDING_H };
+      // v0.15 · Las megatorres del centro son más altas en 3D: la fachada invisible que decide la atenuación también.
+      const mh = city3d ? megaHeight(z, b0) : 0;
+      const b = { ...b0, height: mh || b0.height * BUILDING_H };
       const [x0, y0, w, h] = b.rect;
       const lights = new Graphics();
       const occl = this.occluder(x0, y0, x0 + w, y0 + h);
@@ -1627,6 +1630,7 @@ export class GameView {
     // Farolas, neones y ventanas brillan más cuanto más oscuro está.
     const dark = h >= 21 || h < 5 ? 1 : h < 8 ? lerp(1, 0, (h - 5) / 3) : h < 17 ? 0 : lerp(0, 1, (h - 17) / 4);
     this.lightsLayer.alpha = interior ? 0.75 : 0.25 + dark * 0.95;
+    setCityNight(interior ? 0 : dark); // v0.15 · ventanas encendidas en los edificios 3D
   }
 
   private drawRain(dt: number) {
