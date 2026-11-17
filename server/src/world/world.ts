@@ -25,6 +25,8 @@ import { Threats } from './threats.js';
 import { Relics } from './relics.js';
 import { Legends } from './legends.js';
 import { Mythics } from './mythics.js';
+import { Corpses } from './corpses.js';
+import { Street } from './street.js';
 import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
 import { Nightlife } from './nightlife.js';
@@ -77,10 +79,12 @@ export class World {
   readonly legends: Legends;
   readonly mythics: Mythics;
   readonly stealth: Stealth;
+  readonly corpses: Corpses;
+  readonly street: Street;
   readonly admin: Admin;
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
-  private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => void = () => {};
+  private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
     this.facts = new FactService(db);
@@ -98,6 +102,8 @@ export class World {
     this.legends = new Legends(this);
     this.mythics = new Mythics(this);
     this.stealth = new Stealth(this);
+    this.corpses = new Corpses(this);
+    this.street = new Street(this);
     this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
@@ -140,6 +146,7 @@ export class World {
       diversifyAppearance(e.appearance as any, rng, 'civil'); // v0.9: más ropa, tejidos, tatuajes y calzado
       (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
       e.npc.nextThink = Math.floor(rng() * 20);
+      return e;
     };
     for (const zone of exteriors) {
       if (zone.def.districts.length) {
@@ -157,7 +164,7 @@ export class World {
     this.spawnAmbientFn = (zone: Zone, near?: { x: number; y: number }) => {
       const d = near ? zone.districtAt(near.x, near.y) : null;
       const wp = pick(d?.waypoints.length ? d.waypoints : zone.def.waypoints);
-      if (wp) mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5);
+      return wp ? mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5) : undefined;
     };
     await this.survival.init();
     await this.property.load();
@@ -220,7 +227,7 @@ export class World {
     return this.addEntity(z, { kind: 'npc', interactive: true, ...o });
   }
   removeEntity(e: Entity) { e.zone.remove(e); this.entities.delete(e.id); }
-  spawnAmbient(z: Zone, near?: { x: number; y: number }) { this.spawnAmbientFn(z, near); }
+  spawnAmbient(z: Zone, near?: { x: number; y: number }) { return this.spawnAmbientFn(z, near); }
   /** Mueve una entidad a otra zona sin puerta (cuerpos cargados). */
   moveEntityTo(e: Entity, to: Zone, x: number, y: number) { e.zone.remove(e); e.x = x; e.y = y; to.add(e); e.lastMoveTick = this.tick; }
   /** Traslada a un jugador a un punto concreto (detenciones). */
@@ -323,6 +330,8 @@ export class World {
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.underworld.everySecond();
+    if (this.tick % 20 === 14) { try { this.street.everySecond(); } catch (err) { console.error('[calle]', err); } }
+    if (this.tick % 20 === 8) { try { this.corpses.everySecond(); } catch (err) { console.error('[cadáveres]', err); } }
     if (this.tick % 20 === 10) { try { this.stealth.tick(); } catch (err) { console.error('[sigilo]', err); } }
     if (this.tick % 20 === 12) this.legends.tick().catch((err) => console.error('[leyendas]', err));
     if (this.tick % 20 === 15) { try { this.relics.everySecond(); } catch (err) { console.error('[matrices]', err); } }
@@ -569,6 +578,7 @@ export class World {
       t: 'welcome', you: e.id, sheet: buildSheet(this.c, conn.p!), zone: e.zone.id, x: e.x, y: e.y, tick: this.tick,
       cityHourMs: this.c.manifest.cityHourMs, cityEpoch: this.cfg.cityHourOffset, journal: this.journal(conn.p!), facts: this.facts.all(), sector: s.name, danger: conn.lastDanger,
     });
+    this.corpses.sendBlood(conn);
     if (e.path.length) this.send(conn, { t: 'ack', seq: 0, ok: true, path: e.path });
     return conn;
   }
@@ -655,6 +665,7 @@ export class World {
         const len = Math.hypot(m.dx, m.dy) || 1;
         if (moving && !e.steer) { this.cancelActivity(e); this.closeDialog(c); this.intel.cancel(c); if (p.auto.on) this.autopilot.takeOver(c); }
         if (moving && e.path.length) { e.path = []; e.pendingInteract = undefined; }
+        if (moving && e.hiddenIn) this.corpses.leaveHiding(c, true);
         e.steer = moving ? { dx: m.dx / len, dy: m.dy / len, at: Date.now() } : undefined;
         if (moving) e.lastDir = { dx: m.dx / len, dy: m.dy / len };
         if (!moving) { e.moving = false; e.lastMoveTick = this.tick; }
@@ -736,6 +747,9 @@ export class World {
         }
       });
       case 'drop': return guarded(m.seq, async () => this.combat.drop(c));
+      // v0.13 · Saqueo de cuerpos y contenedores (meter un cadáver, rebuscar, esconderse).
+      case 'loot': return guarded(m.seq, async () => { const t = this.entities.get(m.target); if (!t) throw new GameError('Ya no está.'); if (m.kind === 'view') this.corpses.view(c, t); else await this.corpses.take(c, t, m.kind, m.id); });
+      case 'container': return guarded(m.seq, async () => this.corpses.container(c, m.action));
       case 'matrix': return guarded(m.seq, async () => this.relics.matrix(c, m.action, m.item));
       case 'legend': return guarded(m.seq, async () => this.legends.handle(c, m.legend, m.action));
       case 'cheat': return guarded(m.seq, async () => this.admin.cheat(c, m.cmd, m.arg, m.n));
@@ -957,6 +971,8 @@ export class World {
       e.sectorId = s.id;
       conn.lastDanger = dangerAt(to.grid, nx, ny);
       this.send(conn, { t: 'zone', zone: to.id, x: nx, y: ny, sector: s.name, danger: conn.lastDanger });
+      if (e.hiddenIn) { e.hiddenIn = undefined; delete conn.p!.buffs.escondido; }
+      this.corpses.sendBlood(conn);
       void this.legends.event(conn, { type: 'visit', zone: to.id }).catch(() => {});
       // v0.10 · Arco detector de armas en la entrada de los lugares restringidos.
       this.stealth.detector(conn, to.id);

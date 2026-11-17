@@ -1,6 +1,6 @@
 // v0.7 · Menú de pausa (Esc): continuar, ajustes, teclas y cerrar sesión; y editor de teclas.
 import { KEY_ACTIONS, keyLabel, keymap, resetKeys, setKey } from '../keymap';
-import { $ui, h } from './dom';
+import { $ui, h, ask } from './dom';
 
 export function pauseMenu(opts: { onSettings: () => void; onLogout: () => void; onKeysChanged: () => void }) {
   document.getElementById('pause-menu')?.remove();
@@ -11,7 +11,7 @@ export function pauseMenu(opts: { onSettings: () => void; onLogout: () => void; 
       h('button', { class: 'pbtn', autofocus: true, onclick: close }, '▶ Continuar'),
       h('button', { class: 'pbtn', onclick: () => { close(); opts.onSettings(); } }, '⚙ Ajustes'),
       h('button', { class: 'pbtn', onclick: () => { close(); keysPanel(opts.onKeysChanged); } }, '⌨ Teclas'),
-      h('button', { class: 'pbtn danger', onclick: () => { if (confirm('¿Cerrar sesión? Tu personaje se queda donde está (si estás en la calle, unos segundos).')) { close(); opts.onLogout(); } } }, '⏻ Cerrar sesión')));
+      h('button', { class: 'pbtn danger', onclick: () => { ask('¿Cerrar sesión? Tu personaje se queda donde está (si estás en la calle, unos segundos).', () => { close(); opts.onLogout(); }, { danger: true }); } }, '⏻ Cerrar sesión')));
   ov.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } });
   ov.addEventListener('pointerdown', (e) => { if (e.target === ov) close(); });
   $ui().append(ov);

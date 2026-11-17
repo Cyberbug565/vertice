@@ -634,3 +634,29 @@ body.hack-mode canvas { cursor: crosshair !important; filter: hue-rotate(-12deg)
 .e-prompt { position: fixed; transform: translate(-50%, -100%); pointer-events: none !important; z-index: 30; background: rgba(8, 8, 18, 0.82); border: 1px solid rgba(67, 243, 255, 0.55);
   color: #e8f6ff; font-size: 13px; padding: 3px 9px 3px 4px; border-radius: 6px; white-space: nowrap; box-shadow: 0 0 10px rgba(67, 243, 255, 0.25); }
 .e-prompt .kbd { display: inline-block; min-width: 18px; text-align: center; background: #43f3ff; color: #07070f; font-weight: 800; border-radius: 4px; padding: 0 4px; margin-right: 4px; }
+
+/* v0.13 · Confirmación dentro del juego */
+.ask-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; background: rgba(4, 4, 12, 0.55); backdrop-filter: blur(2px); }
+.ask-box { width: min(440px, calc(100% - 32px)); background: var(--panel-solid, #0d0d18); border: 1px solid rgba(67, 243, 255, 0.55); border-radius: 8px; padding: 14px 16px 12px;
+  box-shadow: 0 0 24px rgba(67, 243, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.03); animation: askin 0.14s ease-out; }
+.ask-box.danger { border-color: rgba(255, 58, 90, 0.7); box-shadow: 0 0 24px rgba(255, 58, 90, 0.2); }
+.ask-title { font-size: 0.78em; letter-spacing: 3px; color: #43f3ff; margin-bottom: 6px; font-weight: 800; }
+.ask-box.danger .ask-title { color: #ff5a6a; }
+.ask-text { margin: 0 0 8px; line-height: 1.4; }
+.ask-sub { margin: 0 0 8px; opacity: 0.75; font-size: 0.9em; line-height: 1.35; }
+.ask-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+@keyframes askin { from { transform: scale(0.96); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* v0.13 · Panel de saqueo (inventario del cuerpo en pequeño) */
+.loot-mini { --cs-red: #ff3a5a; --cs-line: rgba(255, 58, 90, 0.35); position: fixed; right: 270px; top: 90px; width: min(420px, calc(100% - 32px)); max-height: calc(100vh - 300px); overflow: auto; z-index: 35;
+  background: linear-gradient(170deg, rgba(40, 8, 20, 0.96), rgba(8, 6, 14, 0.97)); border: 1px solid var(--cs-line); border-radius: 6px; padding: 10px 12px 12px; box-shadow: 0 0 24px rgba(255, 58, 90, 0.15); }
+.loot-mini h3 { margin: 10px 0 6px; font-size: 0.72em; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cs-red); border-bottom: 1px solid var(--cs-line); padding-bottom: 3px; }
+.loot-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.loot-state { opacity: 0.7; font-size: 0.85em; }
+.loot-money { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding: 6px 8px; border: 1px solid rgba(255, 210, 63, 0.4); color: #ffd23f; }
+.loot-tile { cursor: pointer; color: inherit; font: inherit; }
+.loot-tile.blocked { opacity: 0.45; cursor: not-allowed; }
+.loot-sub { font-size: 0.6em; opacity: 0.7; }
+.loot-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 8px; font-size: 0.85em; }
+.loot-empty { margin: 10px 0 0; }
+@media (max-width: 900px) { .loot-mini { right: 16px; top: 70px; } }

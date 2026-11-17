@@ -19,7 +19,7 @@ export const BUILDING_H = 1.35;
 
 export interface Ent3D {
   x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; rollAt?: number; kickAt?: number;
-  samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number };
+  samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number }; flags?: number;
   /** v0.12 · Fantasma (compañeros de las matrices): translúcido, flota y se tiñe del color de su matriz. */
   ghost?: { color: number; alpha: number; float: number };
 }
@@ -32,22 +32,22 @@ const FACE_COVER = new Set(['mascara', 'mascara-gas', 'bandana-cara', 'mascara-d
 
 // Geometrías compartidas (se escalan por pieza).
 /** Perfil de torno (radio a lo largo de la altura, de abajo arriba) para músculos con forma: muslo, gemelo, brazo. */
-const lathe = (prof: [number, number][], seg = 20) => { const g = new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), seg); g.computeVertexNormals(); return g; };
+const lathe = (prof: [number, number][], seg = 32) => { const g = new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), seg); g.computeVertexNormals(); return g; };
 // v0.12 · Geometrías con más polígonos: cajas redondeadas, músculos con perfil anatómico y esferas más finas.
 const G = {
   box: new THREE.BoxGeometry(1, 1, 1),
-  rbox: new RoundedBoxGeometry(1, 1, 1, 3, 0.16),
-  cyl: new THREE.CylinderGeometry(0.5, 0.5, 1, 20, 1),
-  taper: new THREE.CylinderGeometry(0.42, 0.5, 1, 20, 1), // más estrecho arriba
-  chest: new THREE.CylinderGeometry(0.5, 0.4, 1, 16, 1),  // más ancho arriba (pecho)
-  sphere: new THREE.SphereGeometry(0.5, 24, 16),
-  cone: new THREE.ConeGeometry(0.5, 1, 18, 1, true),
+  rbox: new RoundedBoxGeometry(1, 1, 1, 5, 0.18),
+  cyl: new THREE.CylinderGeometry(0.5, 0.5, 1, 28, 2),
+  taper: new THREE.CylinderGeometry(0.42, 0.5, 1, 28, 2), // más estrecho arriba
+  chest: new THREE.CylinderGeometry(0.5, 0.4, 1, 32, 3),  // más ancho arriba (pecho)
+  sphere: new THREE.SphereGeometry(0.5, 32, 24),
+  cone: new THREE.ConeGeometry(0.5, 1, 24, 2, true),
   disc: new THREE.CircleGeometry(0.5, 24),
   // Muslo y brazo: anchos arriba y estrechos en la rodilla/codo. Gemelo y antebrazo: abultados en el tercio superior.
   thigh: lathe([[0.001, -0.5], [0.34, -0.49], [0.4, -0.38], [0.47, -0.1], [0.5, 0.18], [0.49, 0.4], [0.42, 0.5], [0.001, 0.5]]),
   calf: lathe([[0.001, -0.5], [0.3, -0.49], [0.33, -0.3], [0.45, 0.05], [0.5, 0.22], [0.44, 0.45], [0.38, 0.5], [0.001, 0.5]]),
-  torsoL: lathe([[0.001, -0.5], [0.42, -0.5], [0.46, -0.3], [0.44, -0.05], [0.48, 0.2], [0.5, 0.38], [0.44, 0.5], [0.001, 0.5]], 24),
-  finger: new THREE.CapsuleGeometry(0.5, 1, 3, 8),
+  torsoL: lathe([[0.001, -0.5], [0.42, -0.5], [0.46, -0.3], [0.44, -0.05], [0.48, 0.2], [0.5, 0.38], [0.44, 0.5], [0.001, 0.5]], 36),
+  finger: new THREE.CapsuleGeometry(0.5, 1, 4, 10),
 };
 const texCache = new Map<HTMLCanvasElement, THREE.CanvasTexture>();
 function tex(cv: HTMLCanvasElement) {
@@ -98,6 +98,7 @@ function faceCanvas(a: Required<Appearance>, chromeEyes: boolean) {
   c.beginPath();
   if (a.mouth === 'sonrisa') { c.moveTo(W / 2 - 14, H * 0.78); c.quadraticCurveTo(W / 2, H * 0.86, W / 2 + 14, H * 0.78); }
   else if (a.mouth === 'seria') { c.moveTo(W / 2 - 13, H * 0.81); c.quadraticCurveTo(W / 2, H * 0.77, W / 2 + 13, H * 0.81); }
+  else if (a.mouth === 'mueca') { c.moveTo(W / 2 - 13, H * 0.8); c.lineTo(W / 2 + 2, H * 0.8); c.quadraticCurveTo(W / 2 + 10, H * 0.79, W / 2 + 14, H * 0.75); }
   else { c.moveTo(W / 2 - 13, H * 0.8); c.lineTo(W / 2 + 13, H * 0.8); }
   c.stroke();
   // Vello facial.
@@ -229,9 +230,12 @@ export class Chars3D {
     const mats: THREE.Material[] = [];
     const mk = <T extends THREE.Material>(m: T) => { mats.push(m); return m; };
     const B = a.build;
-    const wf = B === 'delgado' ? 0.86 : B === 'robusto' ? 1.18 : B === 'corpulento' ? 1.32 : B === 'atletico' ? 1.06 : 1;
-    const hf = B === 'bajo' ? 0.9 : B === 'alto' ? 1.08 : 1;
-    const shoulders = B === 'atletico' ? 1.14 : wf;
+    const wf = B === 'delgado' ? 0.86 : B === 'robusto' ? 1.18 : B === 'corpulento' ? 1.32 : B === 'atletico' ? 1.06 : B === 'musculoso' ? 1.14 : B === 'esbelto' ? 0.9 : B === 'fornido' ? 1.2 : B === 'curvilineo' ? 1.02 : 1;
+    const hf = B === 'bajo' ? 0.9 : B === 'alto' ? 1.08 : B === 'esbelto' ? 1.06 : B === 'fornido' ? 0.93 : 1;
+    const shoulders = B === 'atletico' ? 1.14 : B === 'musculoso' ? 1.3 : B === 'curvilineo' ? 0.92 : wf;
+    // v0.13 · Grosor de brazos y piernas y anchura de cadera según el cuerpo.
+    const limb = B === 'musculoso' ? 1.2 : B === 'fornido' ? 1.12 : B === 'esbelto' ? 0.9 : 1;
+    const hipW = B === 'curvilineo' ? 1.2 : B === 'musculoso' ? 0.95 : 1;
     // Materiales.
     const tz = a.tattooZone || 'brazos', tst = a.bodyTattoo && a.bodyTattoo !== 'ninguno' ? a.bodyTattoo : '';
     const tatOn = (part: string) => !!tst && (tz === 'todo' || (part === 'armR' && (tz === 'brazos' || tz === 'brazo')) || (part === 'armL' && tz === 'brazos') || (part === 'leg' && tz === 'piernas') || (part === 'neck' && tz === 'cuello') || (part === 'chest' && tz === 'pecho'));
@@ -264,20 +268,20 @@ export class Chars3D {
     // ---- piernas
     const hipY = 0.92;
     const hips = group(body, 0, hipY);
-    const pelvis = part(hips, G.box, pantsM, 0.38, 0.2, 0.24, 0, 0.04);
+    const pelvis = part(hips, G.box, pantsM, 0.38 * hipW, 0.2, 0.24 * (hipW > 1 ? 1.08 : 1), 0, 0.04);
     void pelvis;
     const lw = a.legwear || 'pantalon';
     const bare = lw === 'shorts' || lw === 'falda' || lw === 'bermudas' || lw === 'falda-larga';
     const legFor = (side: -1 | 1) => {
       const key = side < 0 ? 'pierna_izq' : 'pierna_der';
-      const thigh = group(hips, side * 0.1, 0);
+      const thigh = group(hips, side * 0.1 * hipW, 0);
       if (lost.has(key)) { part(thigh, G.cyl, mk(lam({ color: 0x8a0a12 })), 0.12, 0.04, 0.12, 0, -0.02); return { thigh, knee: group(thigh, 0, -0.42) }; }
       const isChrome = chrome.has(key);
       const thighMat = isChrome ? metalM : lw === 'shorts' || lw === 'bermudas' ? pantsM : bare ? skinM('leg', 3, 6) : pantsM;
-      part(thigh, G.thigh, thighMat, 0.21, 0.46, 0.22, 0, -0.21);
+      part(thigh, G.thigh, thighMat, 0.21 * limb * (hipW > 1 ? 1.1 : 1), 0.46, 0.22 * limb, 0, -0.21);
       const knee = group(thigh, 0, -0.42);
       const shinMat = isChrome ? metalM : bare || lw === 'bermudas' ? skinM('leg', 3, 6) : pantsM;
-      part(knee, G.sphere, shinMat, 0.15, 0.13, 0.15, 0, -0.01); part(knee, G.calf, shinMat, 0.16, 0.44, 0.17, 0, -0.22);
+      part(knee, G.sphere, shinMat, 0.15, 0.13, 0.15, 0, -0.01); part(knee, G.calf, shinMat, 0.16 * limb, 0.44, 0.17 * limb, 0, -0.22);
       if (isChrome) { part(knee, G.sphere, metalDarkM, 0.13, 0.13, 0.13); part(knee, G.box, glowM, 0.02, 0.3, 0.02, 0.05, -0.22, 0.04); }
       if (lw === 'tactico') part(knee, G.box, beltM, 0.13, 0.1, 0.06, 0, -0.03, 0.06);
       // Pie y calzado.
@@ -330,11 +334,11 @@ export class Chars3D {
       const isChrome = chrome.has(key);
       const upper = isChrome ? metalM : sleeveless ? skinM(side > 0 ? 'armR' : 'armL', 2.5, 6) : sleeveM;
       part(sh, G.sphere, isChrome ? metalDarkM : upper, 0.14, 0.14, 0.14, 0, -0.01);
-      part(sh, G.thigh, upper, 0.13, 0.31, 0.135, 0, -0.15);
+      part(sh, G.thigh, upper, 0.13 * limb, 0.31, 0.135 * limb, 0, -0.15);
       if (a.top === 'armadura') part(sh, G.box, metalDarkM, 0.13, 0.08, 0.13, 0, 0.0);
       const el = group(sh, 0, -0.3);
       const fore = isChrome ? metalM : sleeveless || short ? skinM(side > 0 ? 'armR' : 'armL', 2.5, 6) : sleeveM;
-      part(el, G.sphere, fore, 0.1, 0.09, 0.1, 0, -0.005); part(el, G.calf, fore, 0.11, 0.28, 0.115, 0, -0.135);
+      part(el, G.sphere, fore, 0.1, 0.09, 0.1, 0, -0.005); part(el, G.calf, fore, 0.11 * limb, 0.28, 0.115 * limb, 0, -0.135);
       if (isChrome) { part(el, G.sphere, metalDarkM, 0.09, 0.09, 0.09); part(el, G.box, glowM, 0.015, 0.22, 0.015, 0.035, -0.13, 0.03); }
       if (!sleeveless && !short && !isChrome) part(el, G.cyl, mk(lam({ color: hex(a.jacket).multiplyScalar(0.6) })), 0.085, 0.03, 0.085, 0, -0.25);
       const hand = group(el, 0, -0.29);
@@ -353,22 +357,24 @@ export class Chars3D {
     const neck = group(chest, 0, 0.32);
     part(neck, G.cyl, tatOn('neck') ? skinM('neck', 2, 2) : plainSkin, 0.12, 0.1, 0.12, 0, 0.04);
     const head = group(neck, 0, 0.21);
-    const [fw, fh] = a.faceShape === 'ancha' || a.faceShape === 'redonda' ? [0.24, 0.26] : a.faceShape === 'alargada' || a.faceShape === 'afilada' ? [0.205, 0.29] : [0.22, 0.27];
+    const [fw, fh] = a.faceShape === 'ancha' || a.faceShape === 'redonda' ? [0.24, 0.26] : a.faceShape === 'alargada' || a.faceShape === 'afilada' || a.faceShape === 'diamante' ? [0.205, 0.29] : a.faceShape === 'cuadrada' ? [0.235, 0.265] : a.faceShape === 'triangular' || a.faceShape === 'corazon' ? [0.225, 0.275] : [0.22, 0.27];
     const face = mk(lam({ map: tex(faceCanvas(a, chrome.has('ojos'))) }));
     const skinHead = plainSkin;
     const hairCover = !['calvo', 'rapado'].includes(a.hairStyle);
     const headMats = [skinHead, skinHead, hairCover ? hairM : skinHead, skinHead, face, hairCover ? hairM : skinHead];
     part(head, G.box, headMats, fw, fh, 0.24, 0, 0);
-    part(head, G.box, plainSkin, fw * 0.8, 0.05, 0.16, 0, -fh / 2 - 0.01, 0.01); // mandíbula
+    part(head, G.box, plainSkin, fw * (a.faceShape === 'cuadrada' || a.faceShape === 'triangular' ? 0.95 : a.faceShape === 'corazon' || a.faceShape === 'diamante' || a.faceShape === 'afilada' ? 0.6 : 0.8), 0.05, 0.16, 0, -fh / 2 - 0.01, 0.01); // mandíbula
+    if (a.faceShape === 'diamante' || a.faceShape === 'angulosa') for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.05, 0.05, 0.08, sx * (fw / 2 - 0.01), -0.01, 0.07); // pómulos
     for (const sx of [-1, 1]) part(head, G.sphere, plainSkin, 0.025, 0.065, 0.045, sx * (fw / 2 + 0.005), 0, -0.01); // orejas
-    part(head, G.sphere, plainSkin, 0.036, 0.055, 0.045, 0, -0.02, 0.122); // nariz
+    part(head, G.sphere, plainSkin, a.nose === 'ancha' || a.nose === 'chata' ? 0.05 : a.nose === 'pequena' || a.nose === 'respingona' ? 0.03 : 0.036, a.nose === 'aguilena' ? 0.065 : 0.055, a.nose === 'chata' ? 0.03 : a.nose === 'aguilena' ? 0.055 : 0.045, a.nose === 'rota' ? 0.008 : 0, a.nose === 'respingona' ? -0.012 : -0.02, 0.122).rotation.z = a.nose === 'rota' ? 0.25 : 0; // nariz
     if (chrome.has('cabeza')) { part(head, G.box, metalM, 0.02, 0.1, 0.1, -fw / 2 - 0.012, 0.02, -0.02); part(head, G.sphere, glowM, 0.025, 0.025, 0.025, -fw / 2 - 0.02, 0.02, 0.02); }
     if (chrome.has('ojos')) part(head, G.box, mk(new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.6 })), fw * 0.9, 0.03, 0.01, 0, 0.0, 0.123);
     // Pelo.
     const hs = a.hairStyle, covered = a.headwear === 'casco' || a.headwear === 'casco-moto';
     if (!covered) {
       const cap = () => part(head, G.box, hairM, fw + 0.02, 0.06, 0.26, 0, fh / 2, -0.005);
-      if (!['calvo', 'rapado', 'mohicano'].includes(hs)) cap();
+      if (!['calvo', 'rapado', 'mohicano', 'samurai', 'trenzas-pegadas'].includes(hs)) cap();
+      if (hs === 'samurai' || hs === 'trenzas-pegadas') part(head, G.box, mk(lam({ color: hex(a.hair), transparent: true, opacity: 0.5 })), fw + 0.004, 0.02, 0.215, 0, fh / 2);
       if (['corto', 'flequillo', 'asimetrico', 'undercut', 'puntas', 'erizo', 'lobo', 'pompadour', 'cresta', 'bob', 'media-melena', 'largo', 'melena', 'coleta', 'coleta-alta', 'trenzas', 'trenza-larga', 'moño', 'dos-moños', 'rizos', 'rastas'].includes(hs)) part(head, G.box, hairM, fw + 0.02, fh * 0.75, 0.04, 0, fh * 0.1, -0.13);
       if (hs === 'rapado') part(head, G.box, mk(lam({ color: hex(a.hair), transparent: true, opacity: 0.55 })), fw + 0.004, 0.02, 0.215, 0, fh / 2);
       if (hs === 'mohicano' || hs === 'cresta') part(head, G.box, hairM, 0.04, hs === 'mohicano' ? 0.14 : 0.09, 0.2, 0, fh / 2 + 0.05);
@@ -383,6 +389,13 @@ export class Chars3D {
       if (hs === 'dos-moños') for (const sx of [-1, 1]) part(head, G.sphere, hairM, 0.08, 0.08, 0.08, sx * 0.07, fh / 2 + 0.04, -0.02);
       if (hs === 'trenzas' || hs === 'trenza-larga') for (const sx of hs === 'trenzas' ? [-1, 1] : [0]) part(head, G.cyl, hairM, 0.045, 0.34, 0.045, sx * 0.09, -0.15, -0.1);
       if (hs === 'rastas') for (let i = 0; i < 6; i++) part(head, G.cyl, hairM, 0.03, 0.3, 0.03, -0.09 + i * 0.036, -0.12, -0.11 + (i % 2) * 0.02);
+      // v0.13 · Peinados nuevos.
+      if (hs === 'mullet') { part(head, G.box, hairM, fw + 0.02, 0.07, 0.26, 0, fh / 2 - 0.005, -0.005); part(head, G.box, hairM, fw * 0.9, 0.3, 0.06, 0, -0.12, -0.13); }
+      if (hs === 'trenzas-pegadas') for (let i = 0; i < 5; i++) part(head, G.cyl, hairM, 0.03, 0.27, 0.03, -0.08 + i * 0.04, fh / 2 + 0.012, -0.01).rotation.x = Math.PI / 2;
+      if (hs === 'coleta-baja') part(head, G.cyl, hairM, 0.055, 0.3, 0.055, 0, -0.17, -0.15).rotation.x = 0.15;
+      if (hs === 'ondas') { part(head, G.box, hairM, fw + 0.05, 0.36, 0.06, 0, -0.07, -0.11); for (let i = 0; i < 6; i++) part(head, G.sphere, hairM, 0.06, 0.1, 0.12, (i % 2 ? 1 : -1) * (fw / 2 - 0.005), -0.03 - Math.floor(i / 2) * 0.09, -0.06); }
+      if (hs === 'samurai') { part(head, G.sphere, hairM, 0.09, 0.08, 0.09, 0, fh / 2 + 0.05, -0.04); part(head, G.cyl, hairM, 0.03, 0.1, 0.03, 0, fh / 2 + 0.03, -0.11).rotation.x = 1.1; }
+      if (hs === 'pixie') { part(head, G.box, hairM, fw * 0.8, 0.05, 0.05, 0.03, fh / 2 - 0.02, 0.1).rotation.z = -0.25; }
       if (hs === 'rizos') for (let i = 0; i < 6; i++) part(head, G.sphere, hairM, 0.07, 0.07, 0.07, -0.08 + (i % 3) * 0.08, fh / 2 + 0.01, -0.05 + Math.floor(i / 3) * 0.08);
     }
     if (a.facial === 'barba-larga') part(head, G.box, hairM, fw * 0.8, 0.12, 0.06, 0, -fh / 2 - 0.05, 0.08);
@@ -660,6 +673,7 @@ export class Chars3D {
     let want = r.heading;
     if (e.lookAt && now < e.lookAt.until) want = Math.atan2(e.lookAt.x - e.x, e.lookAt.y - e.y);
     else if (Math.hypot(dx, dy) > 0.0015) want = Math.atan2(dx, dy);
+    else if (e.flags !== undefined && s.id !== o.meId) { const a = ((e.flags >> 1) & 7) * Math.PI / 4; want = Math.atan2(Math.cos(a), Math.sin(a)); } // quieto: hacia donde dice el servidor
     let diff = want - r.heading; while (diff > Math.PI) diff -= Math.PI * 2; while (diff < -Math.PI) diff += Math.PI * 2;
     r.heading += diff * Math.min(1, dt * 12);
     r.root.rotation.y = r.heading;
@@ -682,8 +696,17 @@ export class Chars3D {
     else if (since < 300 && e.attackKind === 'shot') { shR = -1.6; elR = 0; spineX -= 0.06; }
     const kickT = e.kickAt ? now - e.kickAt : 1e9;
     if (kickT < 320) { const k = Math.sin((kickT / 320) * Math.PI); thR = -1.5 * k; knR = 0.2; spineX = -0.2 * k; }
+    // v0.13 · Gestos de la vida en la calle: sentado, manos arriba, al teléfono, fumando y gesticulando al hablar.
+    let sitDrop = 0;
+    const g = s.emote && !moving && !s.vehicle ? s.emote.move : '';
+    const gt = s.emote ? Math.max(0, o.serverNow - s.emote.at) / 1000 : 0;
+    if (g === 'sentado') { thL = thR = -1.45; knL = knR = 1.45; shL = shR = -0.45; elL = elR = -0.7; spineX = 0.12; sitDrop = 0.44; }
+    else if (g === 'manos-arriba') { shL = shR = -2.85; shLz = -0.25; shRz = 0.25; elL = elR = -0.35; spineX = -0.05; neckX = 0.1; }
+    else if (g === 'telefono') { shR = -0.35; shRz = 0.35; elR = -2.35; neckX = 0.12; }
+    else if (g === 'fumar') { const k = (gt % 7) < 1.6 ? Math.sin(((gt % 7) / 1.6) * Math.PI) : 0; shR = -0.35 - 0.35 * k; shRz = 0.3; elR = -1.2 - 1.0 * k; shL = 0.05; shLz = -0.2; elL = -1.6; }
+    else if (g === 'gesto') { const a = Math.sin(gt * 2.4), b2 = Math.sin(gt * 1.7 + 1); shL = -0.45 + a * 0.3; elL = -1.0 + b2 * 0.4; shR = -0.4 - b2 * 0.3; elR = -1.1 + a * 0.35; spineY = a * 0.08; neckX = b2 * 0.06; }
     // Baile.
-    if (s.emote && !moving && !s.vehicle) {
+    if (s.emote && !moving && !s.vehicle && !['sentado', 'manos-arriba', 'telefono', 'fumar', 'gesto'].includes(s.emote.move)) {
       const age = Math.max(0, o.serverNow - s.emote.at) / 1000;
       const pose = dancePose(s.emote.move, age);
       thL = pose.left * 0.8; thR = pose.right * 0.8; shL = -pose.back; shR = -pose.front; spineY = pose.lean; r.body.position.x = pose.sway * 0.01;
@@ -705,7 +728,7 @@ export class Chars3D {
       thL = thR = 1.5 * tuck + 0.2; knL = knR = 2.0 * tuck; shL = shR = -1.2 * tuck; elL = elR = -1.6 * tuck; spineX = 0.5 * tuck; neckX = 0.5 * tuck;
     } else {
       r.body.rotation.x = -r.lie * Math.PI / 2;
-      r.body.position.y = r.lie * 0.06 + bob * M; r.body.position.z = 0;
+      r.body.position.y = r.lie * 0.06 + bob * M - sitDrop * M / Y_SQUASH; r.body.position.z = 0;
     }
     if (lying && roll >= ROLL) { thL = 0.1; thR = -0.05; knL = 0.2; knR = 0.1; shL = -0.3; shR = 0.4; elL = -0.2; elR = -0.3; spineX = 0; neckX = 0.2; }
     // v0.12 · Mezcla suave entre posturas (andar → apuntar → golpear…): cada articulación se acerca a su objetivo en vez
@@ -723,10 +746,66 @@ export class Chars3D {
     to(r.neck.rotation, 'y', -spineY * 0.6);
     for (const [i, c] of r.coat.entries()) c.rotation.x = i === 2 ? Math.max(0, Math.abs(sw) * 0.25) : -Math.max(0, (i ? thR : thL)) * 0.6;
     // Invisible (camuflaje): casi transparente para los demás.
-    const invis = !!s.buffs?.includes('invisible');
-    r.root.visible = !invis || s.id === o.meId;
+    const invis = !!s.buffs?.includes('invisible') || !!s.buffs?.includes('escondido');
+    r.root.visible = !invis || (s.id === o.meId && !s.buffs?.includes('escondido'));
     r.shadow.visible = !lying;
   }
 
   dispose() { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); }
+}
+
+/**
+ * v0.13 · Vista previa 3D para el creador de personaje y la ficha: el mismo modelo que en la calle, en su propio lienzo,
+ * con cámara en perspectiva que gira despacio (o arrastrando con el ratón), respirando y con gestos de vez en cuando.
+ */
+export class Preview3D {
+  el: HTMLDivElement; private canvas: HTMLCanvasElement; private c3d: any; private cam: THREE.PerspectiveCamera;
+  private ent: Ent3D; private raf = 0; private angle = 0.55; private drag: { x: number; a: number } | null = null; private last = performance.now(); private idleSpin = true;
+  constructor(private w = 260, private h = 340, cls = 'preview preview3d') {
+    this.el = document.createElement('div'); this.el.className = cls;
+    this.canvas = document.createElement('canvas');
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    this.canvas.width = Math.round(w * dpr); this.canvas.height = Math.round(h * dpr);
+    this.canvas.style.width = `${w}px`; this.canvas.style.height = `${h}px`; this.canvas.style.cursor = 'grab'; this.canvas.title = 'Arrastra para girar';
+    this.el.append(this.canvas);
+    const gl = (this.canvas.getContext('webgl2', { antialias: true, alpha: true, premultipliedAlpha: true }) ?? this.canvas.getContext('webgl', { antialias: true, alpha: true })) as WebGL2RenderingContext;
+    if (!gl) throw new Error('sin WebGL');
+    this.c3d = new Chars3D(this.canvas, gl);
+    this.c3d.renderer.setClearColor(0x000000, 0);
+    this.cam = new THREE.PerspectiveCamera(26, w / h, 0.05, 40);
+    this.ent = { x: 0, y: 0, moving: false, samples: [], s: { id: 1, kind: 'player', name: '', appearance: {}, chrome: [], interactive: false } as any };
+    this.canvas.addEventListener('pointerdown', (e) => { this.drag = { x: e.clientX, a: this.angle }; this.idleSpin = false; this.canvas.setPointerCapture(e.pointerId); this.canvas.style.cursor = 'grabbing'; });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.drag) this.angle = this.drag.a + (e.clientX - this.drag.x) * 0.012; });
+    this.canvas.addEventListener('pointerup', () => { this.drag = null; this.canvas.style.cursor = 'grab'; });
+    const loop = () => { this.raf = requestAnimationFrame(loop); this.frame(); };
+    this.raf = requestAnimationFrame(loop);
+  }
+  /** Cambia el aspecto (se reconstruye el modelo al momento). */
+  async show(ap: any, chrome: string[], weapon?: string) { this.ent.s = { ...this.ent.s, appearance: { ...ap }, chrome: [...chrome], weapon } as any; }
+  private frame() {
+    // Solo dibuja mientras está en pantalla (y a unos 30 fps): fuera del paso del aspecto no gasta nada.
+    const now = performance.now();
+    if (!this.el.isConnected || now - this.last < 30) return;
+    const dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
+    // Se balancea de tres cuartos a tres cuartos (enseña la cara y los costados) hasta que lo giras tú.
+    if (this.idleSpin && !this.drag) this.angle = 0.25 + Math.sin(now / 2600) * 0.85;
+    const c = this.c3d;
+    const s = this.ent.s;
+    const key = JSON.stringify([s.appearance, s.chrome, s.weapon]);
+    let r = c.rigs.get(1);
+    if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
+    // Un gesto cada pocos segundos para que se vea vivo.
+    const t = (now / 1000) % 14;
+    s.emote = t > 9 && t < 12.5 ? { move: 'gesto', at: Date.now() - (t - 9) * 1000 } : undefined;
+    c.animate(r, this.ent, { meId: 1, guarding: false, now, dt, serverNow: Date.now() });
+    r.root.rotation.y = this.angle;
+    const d = 3.1, ty = 0.46;
+    this.cam.position.set(0, ty + 0.3, d);
+    this.cam.lookAt(0, ty, 0);
+    const R = c.renderer as THREE.WebGLRenderer;
+    R.setViewport(0, 0, this.canvas.width, this.canvas.height);
+    R.clear(true, true, true);
+    R.render(c.scene, this.cam);
+  }
+  destroy() { cancelAnimationFrame(this.raf); try { this.c3d.dispose(); (this.c3d.renderer as THREE.WebGLRenderer).dispose(); (this.c3d.renderer as THREE.WebGLRenderer).forceContextLoss(); } catch { /* nada */ } }
 }

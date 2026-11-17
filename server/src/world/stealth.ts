@@ -44,6 +44,7 @@ export class Stealth {
     if (o === e || o.state === 'downed' || o.dead || o.zone !== e.zone) return false;
     const tp = this.w.playerOf(e);
     if (tp && (tp.buffs.invisible ?? 0) > Date.now()) return false;
+    if (e.hiddenIn) return false; // v0.13 · escondido dentro de un contenedor o una taquilla
     const d = Math.hypot(e.x - o.x, e.y - o.y);
     if (d <= 2.2) return true;
     const h = this.w.cityHour(); const night = h >= 21 || h < 6;

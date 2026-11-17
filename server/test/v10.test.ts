@@ -180,7 +180,8 @@ describe('v0.10 · sigilo', () => {
     await b.until(() => E('saqueadora').zone.id === 'vertice', 5000, 'calle');
     const cop = npc(E('saqueadora').x + 1, E('saqueadora').y, 'police', 0);
     cop.state = 'downed'; cop.searched = false;
-    await app.world.combat.searchBody(conn('saqueadora'), cop);
+    app.world.corpses.view(conn('saqueadora'), cop);
+    await app.world.corpses.take(conn('saqueadora'), cop, 'all');
     expect(P('saqueadora').inventory.get('uniforme-pcv')).toBe(1);
     void op;
   });

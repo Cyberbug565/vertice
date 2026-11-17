@@ -1,11 +1,11 @@
 // Opciones de personalización del personaje (validadas en el servidor y usadas por el creador del cliente).
-export const BUILDS = ['delgado', 'medio', 'robusto', 'atletico', 'corpulento', 'bajo', 'alto'] as const;
-export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños', 'afro-corto', 'pompadour', 'bob', 'media-melena', 'trenza-larga', 'erizo'] as const;
+export const BUILDS = ['delgado', 'medio', 'robusto', 'atletico', 'corpulento', 'bajo', 'alto', 'musculoso', 'curvilineo', 'esbelto', 'fornido'] as const;
+export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños', 'afro-corto', 'pompadour', 'bob', 'media-melena', 'trenza-larga', 'erizo', 'mullet', 'trenzas-pegadas', 'coleta-baja', 'ondas', 'samurai', 'pixie'] as const;
 export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono', 'camiseta', 'tirantes', 'camisa', 'bomber', 'biker', 'abrigo', 'blazer', 'haori', 'poncho', 'armadura', 'arnes', 'cortavientos', 'chubasquero'] as const;
 export const FACIALS = ['ninguno', 'barba', 'bigote', 'perilla', 'barba-larga', 'patillas', 'candado'] as const;
-export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada', 'cuadrada', 'corazon', 'ancha', 'afilada'] as const;
-export const NOSES = ['recta', 'chata', 'aguilena', 'pequena', 'ancha'] as const;
-export const MOUTHS = ['neutra', 'sonrisa', 'seria', 'labios-gruesos', 'fina'] as const;
+export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada', 'cuadrada', 'corazon', 'ancha', 'afilada', 'diamante', 'triangular'] as const;
+export const NOSES = ['recta', 'chata', 'aguilena', 'pequena', 'ancha', 'respingona', 'rota'] as const;
+export const MOUTHS = ['neutra', 'sonrisa', 'seria', 'labios-gruesos', 'fina', 'mueca'] as const;
 export const BROWS = ['normales', 'finas', 'gruesas', 'arqueadas', 'cortadas'] as const;
 export const MAKEUPS = ['ninguno', 'delineado', 'labios', 'neon', 'pintura'] as const;
 export const PIERCINGS = ['ninguno', 'nariz', 'ceja', 'labio', 'orejas', 'septum'] as const;
@@ -22,6 +22,8 @@ export const TOP_DETAILS = ['ninguno', 'cremallera', 'tachuelas', 'parches', 'le
 export const ACCESSORIES = ['ninguno', 'gafas', 'visor', 'mascara', 'gorra', 'capucha', 'auriculares'] as const;
 export const EYE_COLORS = ['#3a2a1a', '#2a6aa8', '#3a8a4a', '#8a8a8a', '#43f3ff', '#ff3fa4', '#ffd23f', '#ff3040'] as const;
 export const LABELS: Record<string, string> = {
+  musculoso: 'Musculoso/a', curvilineo: 'Curvilíneo/a', esbelto: 'Esbelto/a', fornido: 'Fornido/a', mullet: 'Mullet', 'trenzas-pegadas': 'Trenzas pegadas', 'coleta-baja': 'Coleta baja', ondas: 'Ondas', samurai: 'Moño samurái', pixie: 'Pixie',
+  diamante: 'Diamante', triangular: 'Triangular', respingona: 'Respingona', rota: 'Rota (de boxeador)', mueca: 'Media sonrisa',
   delgado: 'Delgado', medio: 'Medio', robusto: 'Robusto', atletico: 'Atlético', corpulento: 'Corpulento', bajo: 'Bajo/a', alto: 'Alto/a',
   'afro-corto': 'Afro corto', pompadour: 'Tupé', bob: 'Bob', 'media-melena': 'Media melena', 'trenza-larga': 'Trenza larga', erizo: 'Erizo', rapado: 'Rapado', corto: 'Corto', cresta: 'Cresta', largo: 'Largo', coleta: 'Coleta', afro: 'Afro', 'moño': 'Moño', rastas: 'Rastas', calvo: 'Calvo', asimetrico: 'Asimétrico',
   chaqueta: 'Chaqueta', gabardina: 'Gabardina', chaleco: 'Chaleco', sudadera: 'Sudadera', traje: 'Traje', top: 'Top', mono: 'Mono de trabajo',

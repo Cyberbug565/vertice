@@ -4,7 +4,7 @@ import { content } from '../content';
 import { renderZoneMap } from './minimap';
 import type { Net } from '../net';
 import { newOpId } from '../net';
-import { $ui, fmtMoney, h } from './dom';
+import { $ui, fmtMoney, h, ask } from './dom';
 import { blip } from '../audio';
 
 export interface LifeCtx { net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
@@ -32,7 +32,7 @@ export function shopPanel(ctx: LifeCtx, v: ShopView) {
       h('button', { class: 'btn small', disabled: it.price > v.money || it.stock < 1, onclick: () => { ctx.net.send({ t: 'buy', shop: v.shop, item: it.item, qty: 1, opId: newOpId() } as any); blip(); } }, 'Comprar'),
       v.bar && it.category === 'bebida' ? h('button', { class: 'btn small primary', disabled: !it.owned, 'data-bar-drink': it.item,
         'aria-label': `Beber ${it.name}`, onclick: () => ctx.net.send({ t: 'useItem', item: it.item, opId: newOpId() }) }, 'Beber') : null,
-      !it.item.startsWith('cyber:') && it.stock > 0 ? h('button', { class: 'btn small danger', title: `Destreza + Sigilo + 1d10 contra la seguridad (${v.security}). Si fallas: paliza y nivel de búsqueda.`, onclick: () => { if (confirm(`Intentar robar ${it.name}. Probabilidad ${pct(it.stealChance)}. Si fallas, el vigilante te hará daño y subirá tu nivel de búsqueda. ¿Seguir?`)) ctx.net.send({ t: 'steal', shop: v.shop, item: it.item, opId: newOpId() } as any); } }, `Robar ${pct(it.stealChance)}`) : null))));
+      !it.item.startsWith('cyber:') && it.stock > 0 ? h('button', { class: 'btn small danger', title: `Destreza + Sigilo + 1d10 contra la seguridad (${v.security}). Si fallas: paliza y nivel de búsqueda.`, onclick: () => { ask(`Intentar robar ${it.name}. Probabilidad ${pct(it.stealChance)}. Si fallas, el vigilante te hará daño y subirá tu nivel de búsqueda. ¿Seguir?`, () => { ctx.net.send({ t: 'steal', shop: v.shop, item: it.item, opId: newOpId() } as any); }); } }, `Robar ${pct(it.stealChance)}`) : null))));
   const sell = v.sell.length ? h('table', { class: 'sheet' }, ...v.sell.map((s) => h('tr', {}, h('td', {}, s.name), h('td', { class: 'mono' }, `×${s.qty}`), h('td', { class: 'mono' }, `${s.price} €$/u`),
     h('td', {}, h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'sell', shop: v.shop, item: s.item, qty: 1, opId: newOpId() } as any) }, 'Vender 1'))))) : h('p', { class: 'muted' }, 'Aquí no compran nada de lo que llevas.');
   showPanel('shop-panel', v.name,
@@ -65,7 +65,7 @@ export function jobsPanel(ctx: LifeCtx, v: JobsView, filter: { mine: boolean } =
       h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'jobQuit' } as any) }, 'Dejarlo')) : null,
     h('div', { class: 'row' }, h('label', { class: 'row' }, h('input', { type: 'checkbox', checked: filter.mine, onchange: (e: any) => jobsPanel(ctx, v, { mine: e.target.checked }) }), 'Solo mi oficio y trabajos libres'),
       h('span', { class: 'muted' }, ' · Cambiar de oficio (reinicia el rango, 1 vez al día): '), sel,
-      h('button', { class: 'btn small', onclick: () => { if (confirm('Cambiar de oficio reinicia tu rango a 0. ¿Seguir?')) ctx.net.send({ t: 'profession', profession: sel.value, opId: newOpId() } as any); } }, 'Cambiar')),
+      h('button', { class: 'btn small', onclick: () => { ask('Cambiar de oficio reinicia tu rango a 0. ¿Seguir?', () => { ctx.net.send({ t: 'profession', profession: sel.value, opId: newOpId() } as any); }, { danger: true }); } }, 'Cambiar')),
     h('p', { class: 'muted', style: { fontSize: '0.85em' } }, `${v.jobs.length} empleos en ${v.professions.length} oficios. Al aceptar uno, ve a su puesto y empieza el turno: tu personaje trabaja solo y cobras al terminar. Trabajar da hambre, sed y sueño al doble de ritmo.`),
     h('table', { class: 'sheet' }, h('tr', {}, h('th', {}, 'Empleo'), h('th', {}, 'Lugar'), h('th', {}, 'Paga'), h('th', {}, 'Éxito'), h('th', {}, '')),
       ...list.map((j) => h('tr', {},
@@ -197,7 +197,7 @@ export function ambarPanel(ctx: LifeCtx, v: AmbarView) {
     h('div', { class: 'cards' }, ...v.plans.map((pl) => h('div', { class: 'fcard', style: { borderTopColor: pl.color } },
       h('h3', { style: { color: pl.color, margin: '0 0 4px' } }, pl.name), h('p', { style: { fontSize: '0.88em' } }, pl.desc),
       h('ul', { style: { fontSize: '0.85em', paddingLeft: '1.1em' } }, h('li', {}, `Llegada: ~${pl.arrival} s`), h('li', {}, `Rescates: ${pl.uses >= 99 ? 'ilimitados' : pl.uses}`), h('li', {}, `Te dejan al ${Math.round(pl.revive * 100)} % de salud`), h('li', {}, `Cobertura: ${pl.zones.join(', ')}`), h('li', {}, `Duración: ${pl.days} días de juego`)),
-      h('button', { class: 'btn primary', disabled: v.money < pl.price, onclick: () => { if (confirm(`Contratar ${pl.name} por ${pl.price} €$?`)) ctx.net.send({ t: 'ambar', plan: pl.id, opId: newOpId() } as any); } }, `Contratar · ${fmtMoney(pl.price)}`)))),
+      h('button', { class: 'btn primary', disabled: v.money < pl.price, onclick: () => { ask(`Contratar ${pl.name} por ${pl.price} €$?`, () => { ctx.net.send({ t: 'ambar', plan: pl.id, opId: newOpId() } as any); }); } }, `Contratar · ${fmtMoney(pl.price)}`)))),
     h('p', { class: 'muted' }, `Tu saldo: ${fmtMoney(v.money)}`));
 }
 

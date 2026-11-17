@@ -3,8 +3,10 @@
 import { MATRICES, RARITY_COLOR, RARITY_LABEL, type CharacterSheet } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
-import { $ui, fmtMoney, h } from './dom';
+import { $ui, fmtMoney, h, ask } from './dom';
 import { Preview } from './preview';
+import { Preview3D } from '../render/chars3d';
+import { settings } from '../settings';
 import { blip } from '../audio';
 
 export interface CharCtx { net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
@@ -26,7 +28,7 @@ const REGIONS: { id: string; name: string; slots: number; side: 'l' | 'r'; y: nu
   { id: 'manos', name: 'Manos y dedos', slots: 6, side: 'r', y: 3 }, { id: 'circulatorio', name: 'Circulatorio', slots: 4, side: 'r', y: 4 }, { id: 'tegumentario', name: 'Piel', slots: 3, side: 'r', y: 5 },
 ];
 
-const st: { tab: Tab; filter: string; skill: string; preview: Preview | null; ctx: CharCtx | null; sheet: CharacterSheet | null } = { tab: 'inv', filter: 'todo', skill: 'armas', preview: null, ctx: null, sheet: null };
+const st: { tab: Tab; filter: string; skill: string; preview: { el: HTMLElement; show: (ap: any, chrome: string[], weapon?: string) => Promise<void> | void } | null; ctx: CharCtx | null; sheet: CharacterSheet | null } = { tab: 'inv', filter: 'todo', skill: 'armas', preview: null, ctx: null, sheet: null };
 
 export const charScreenOpen = () => !!document.getElementById('char-screen');
 export function closeCharScreen() { document.getElementById('char-screen')?.remove(); hideTip(); }
@@ -138,8 +140,9 @@ function invTab(s: CharacterSheet, ctx: CharCtx) {
       return box;
     })));
   // Vista previa del personaje: una sola aplicación Pixi que se reutiliza (destruirla afectaría al render del mundo).
-  st.preview ??= new Preview(300, 420, 'cs-preview');
-  void st.preview.show(s.look, s.chrome);
+  // v0.13 · En 3D (gira y respira), con el arma que empuñas; si no se puede, la 2D.
+  if (!st.preview) { try { st.preview = settings.chars3d ? new Preview3D(300, 420, 'cs-preview preview3d') : new Preview(300, 420, 'cs-preview'); } catch { st.preview = new Preview(300, 420, 'cs-preview'); } }
+  void st.preview.show(s.look, s.chrome, s.weapon?.id);
   const center = h('div', { class: 'cs-center' }, st.preview.el,
     h('div', { class: 'cs-stats' },
       stat('Blindaje', String(s.armor)), stat('Velocidad', `×${s.speedMult}`), stat('Esquiva', `${s.dodge} %`), stat('Salud', `${Math.round(s.hp)}/${s.hpMax}`)));
@@ -223,7 +226,7 @@ function matricesBlock(s: CharacterSheet) {
     h('div', { class: 'mono small', style: { color: rc } }, `${RARITY_LABEL[d.rarity].toUpperCase()} · ${d.chrome ? `${d.chrome} de cromo` : 'sin coste de cromo'}${d.locked ? ' · NO SE QUITA' : ''}`),
     h('b', {}, d.name), h('p', { class: 'small muted' }, d.desc),
     on ? (d.locked ? h('span', { class: 'small', style: { color: rc } }, 'Anclada hasta la muerte') : h('button', { class: 'btn small', onclick: () => cyberNet?.send({ t: 'matrix', action: 'remove', item: id } as any) }, 'Quitar'))
-      : h('button', { class: 'btn small primary', disabled: !m.socket || m.equipped.length >= m.slots, onclick: () => { if (!d.locked || confirm(`${d.name} no se podrá quitar nunca. ¿Insertarla?`)) cyberNet?.send({ t: 'matrix', action: 'equip', item: id } as any); } }, 'Insertar')); };
+      : h('button', { class: 'btn small primary', disabled: !m.socket || m.equipped.length >= m.slots, onclick: () => { const go = () => cyberNet?.send({ t: 'matrix', action: 'equip', item: id } as any); if (!d.locked) go(); else ask(`${d.name} no se podrá quitar nunca. ¿Insertarla?`, go, { danger: true, ok: 'Insertar' }); } }, 'Insertar')); };
   return h('div', { class: 'mx-box' },
     h('div', { class: 'cy-title' }, `ZÓCALO DE MATRICES · ${m.socket ? `${m.equipped.length}/${m.slots} ranuras` : 'no instalado'}`),
     h('div', { class: 'mx-grid' }, ...m.equipped.map((id) => card(id, true)), ...Array.from({ length: Math.max(0, m.slots - m.equipped.length) }, () => h('div', { class: 'mx-card empty' }, 'Ranura libre')), ...bag.map((i) => card(i.def, false))));
@@ -281,7 +284,7 @@ function skillsTab(s: CharacterSheet, ctx: CharCtx) {
       const ownedP = s.perks.includes(p.id);
       const cls = ownedP ? 'owned' : w === '' ? 'ready' : 'locked';
       const reqs = [...Object.entries(p.requires.skills).map(([k, v]) => `${content.skills.find((x) => x.id === k)?.name ?? k} ${v}`), p.requires.level > 1 ? `nivel ${p.requires.level}` : ''].filter(Boolean).join(' · ');
-      return h('button', { class: `pk ${cls}${t === 5 ? ' cap' : ''}`, disabled: cls === 'locked', title: w || p.desc, onclick: () => { if (cls === 'ready' && confirm(`¿Comprar «${p.name}» por ${p.cost} punto(s) de perk?\n\n${p.desc}`)) { net.send({ t: 'perkBuy', perk: p.id, opId: newOpId() } as any); blip('good'); } } },
+      return h('button', { class: `pk ${cls}${t === 5 ? ' cap' : ''}`, disabled: cls === 'locked', title: w || p.desc, onclick: () => { if (cls === 'ready') ask(`¿Comprar «${p.name}» por ${p.cost} punto(s) de perk?\n\n${p.desc}`, () => { net.send({ t: 'perkBuy', perk: p.id, opId: newOpId() } as any); blip('good'); }, { ok: 'Comprar' }); } },
         h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, p.name), h('span', { class: 'chip' }, ownedP ? '✔' : `${p.cost} pt`)),
         h('div', { class: 'small' }, p.desc), h('div', { class: 'small muted' }, reqs ? `Requiere: ${reqs}` : 'Sin requisitos'), w ? h('div', { class: 'small netbad' }, `Falta: ${w}`) : null);
     })));

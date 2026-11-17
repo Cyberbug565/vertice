@@ -7,6 +7,7 @@ import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
 import { FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
+import { Preview3D } from '../render/chars3d';
 
 export function loginScreen(onDone: () => void) {
   clearUi();
@@ -91,7 +92,9 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   const bioBonus = (k: string) => [OBJECTIVES, CHILDHOODS, EVENTS].reduce((acc, list) => acc + (((list as readonly any[]).find((o) => o.id === (list === OBJECTIVES ? st.bio.objective : list === CHILDHOODS ? st.bio.childhood : st.bio.event))?.skills ?? {})[k] ?? 0), 0);
   const bioMoney = () => [OBJECTIVES.find((o) => o.id === st.bio.objective), CHILDHOODS.find((o) => o.id === st.bio.childhood), EVENTS.find((o) => o.id === st.bio.event)].reduce((a, o) => a + ((o as any)?.money ?? 0), 0);
   const LAST = STEPS.length - 1;
-  const preview = new Preview();
+  // v0.13 · Vista previa 3D (el mismo modelo que en la calle, girando); si el navegador no puede, la 2D de siempre.
+  let preview: { el: HTMLElement; show: (ap: any, chrome: string[]) => Promise<void> | void; destroy: () => void };
+  try { preview = settings.chars3d ? new Preview3D(240, 300) : new Preview(); } catch { preview = new Preview(); }
   const leave = (fn: () => void) => () => { preview.destroy(); fn(); };
   onDone = leave(onDone); onCancel = leave(onCancel);
   const card = h('div', { class: 'card' });

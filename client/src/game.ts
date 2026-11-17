@@ -9,7 +9,7 @@ import * as sfx from './sfx';
 import { stealthBar, weaponWheel } from './ui/stealth';
 import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
 import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
-import { $ui, clearUi, fmtMoney, h } from './ui/dom';
+import { $ui, clearUi, fmtMoney, h, ask } from './ui/dom';
 import { Minimap, renderZoneMap } from './ui/minimap';
 import { settingsPanel } from './ui/screens';
 import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen } from './ui/charscreen';
@@ -20,6 +20,9 @@ import { BodyPanel } from './ui/body';
 import { keysPanel, pauseMenu } from './ui/pause';
 import { cheatPanel, legendPanel } from './ui/legends';
 import { buildingPanel, dealerPanel, marketLivePanel, propsPanel, realtyPanel, ringPrompt, scanCard, stashPanel, type PropCtx } from './ui/property';
+import { lootPanel } from './ui/loot';
+/** v0.13 · Gestos que no son bailes (sentado, manos arriba…): no cuentan como «estás bailando». */
+const isDance = (m: string) => !['nausea', 'sentado', 'manos-arriba', 'telefono', 'fumar', 'gesto'].includes(m);
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Segura (verde)', public: 'Vigilada (amarilla)', disputed: 'Peligrosa (roja)', lawless: 'Sin ley (negra)' };
@@ -469,9 +472,11 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       return;
     }
     if (person && e.s.kind === 'player' || (person && e.s.npcType && e.s.npcType !== 'essential') || (person && e.s.dead)) { net.send({ t: 'menu', target: e.s.id } as any); return; }
-    if (e.s.kind === 'door' && e.s.danger === 'disputed' && !confirm(`${e.s.name} lleva a una zona peligrosa (roja). ¿Cruzar?`)) return;
-    const seq = net.send({ t: 'interact', target: e.s.id, remote: true } as any);
-    st.pending.set(seq, (a) => { if (!a.ok) { toast(a.reason ?? 'No disponible', 'warn'); st.destination = ''; } });
+    const go = () => {
+      const seq = net.send({ t: 'interact', target: e.s.id, remote: true } as any);
+      st.pending.set(seq, (a) => { if (!a.ok) { toast(a.reason ?? 'No disponible', 'warn'); st.destination = ''; } });
+    };
+    if (e.s.kind === 'door' && e.s.danger === 'disputed') ask(`${e.s.name} lleva a una zona peligrosa (roja). ¿Cruzar?`, go, { danger: true, ok: 'Cruzar' }); else go();
   };
   /** Menú propio (clic izquierdo sobre tu personaje). */
   const selfMenu = () => {
@@ -561,17 +566,48 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     }
   };
   timers.push(window.setInterval(() => { if (view.steer.dx || view.steer.dy) pushSteer(); }, 200));
-  // v0.12 · Aviso «E · Entrar…» sobre lo más cercano con lo que puedes interactuar.
+  // v0.12/v0.13 · Qué hace la E ahora mismo: salir del escondite, meter el cadáver que llevas en un contenedor, lo señalado
+  // con el ratón, lo más cercano (puerta, objeto, persona o cuerpo) o el contenedor de al lado (rebuscar / esconderte).
+  let lootTarget = -1;
+  const sendC = (action: 'body' | 'search' | 'hide' | 'out') => { const seq = net.send({ t: 'container', action } as any); st.pending.set(seq, (a) => { if (!a.ok) toast(a.reason ?? 'No puedes', 'warn'); }); };
+  const containerMenu = (c: NonNullable<ReturnType<typeof view.nearestContainer>>) => {
+    document.getElementById('target-menu')?.remove();
+    const sp = view.world.toGlobal(worldToScreen(c.x + 0.5, c.y + 0.5));
+    const opt = (label: string, detail: string, fn: () => void) => h('button', { class: 'ctx-opt', onclick: () => { m.remove(); fn(); } }, h('span', {}, label), h('small', { class: 'muted' }, detail));
+    const m = h('div', { class: 'ctx-menu', id: 'target-menu', role: 'menu', style: { left: `${Math.min(window.innerWidth - 300, sp.x + 14)}px`, top: `${Math.max(10, sp.y - 100)}px` } },
+      h('div', { class: 'ctx-head' }, h('b', {}, c.name[0].toUpperCase() + c.name.slice(1)), h('button', { class: 'btn small', onclick: () => m.remove() }, '✕')),
+      h('div', { class: 'ctx-group' },
+        c.junk ? opt('🗑 Rebuscar', 'Chatarra, comida, a veces munición', () => sendC('search')) : null,
+        c.hide ? opt('🫥 Esconderte dentro', 'Nadie te ve mientras sigas dentro', () => sendC('hide')) : null));
+    $ui().append(m);
+    const close = (ev: MouseEvent) => { if (!m.contains(ev.target as Node)) { m.remove(); window.removeEventListener('mousedown', close, true); } };
+    setTimeout(() => window.addEventListener('mousedown', close, true), 50);
+  };
+  const eAction = (): { label: string; run: () => void } | null => {
+    if (!onWorld() || st.dialog) return null;
+    if (st.sheet?.buffs?.escondido) return { label: 'Salir del escondite', run: () => sendC('out') };
+    const box = view.nearestContainer();
+    if (st.sheet?.carrying && box) return { label: `Meter el cuerpo en ${box.name}`, run: () => sendC('body') };
+    const tgt = view.hovered && view.hovered.s.id !== view.meId ? view.hovered : view.nearestInteractable();
+    const td = tgt ? Math.hypot(tgt.x - view.me.x, tgt.y - view.me.y) : Infinity;
+    if (tgt && (!box || td <= box.d + 0.3 || tgt === view.hovered)) {
+      const verb = tgt.s.kind === 'door' ? 'Entrar · ' : tgt.s.kind === 'object' ? 'Usar · ' : tgt.s.dead ? 'Registrar a ' : tgt.s.state === 'downed' ? 'Ver a ' : 'Hablar con ';
+      return { label: `${verb}${tgt.s.name ?? ''}`, run: () => { const g = view.guarding; view.guarding = false; view.onEntityClick(tgt); view.guarding = g; } };
+    }
+    if (box && (box.junk || box.hide)) return { label: `${box.junk ? 'Rebuscar' : 'Abrir'} ${box.name}`, run: () => containerMenu(box) };
+    return null;
+  };
   const ePrompt = h('div', { class: 'e-prompt', style: { display: 'none', pointerEvents: 'none' } });
   $ui().append(ePrompt);
   timers.push(window.setInterval(() => {
-    const t = onWorld() && !st.dialog ? view.nearestInteractable() : null;
-    if (!t) { ePrompt.style.display = 'none'; return; }
-    const verb = t.s.kind === 'door' ? 'Entrar · ' : t.s.kind === 'object' ? 'Usar · ' : 'Hablar con ';
-    const sp = view.world.toGlobal(worldToScreen(t.x + (t.s.kind === 'npc' || t.s.kind === 'player' ? 0 : 0.5), t.y + (t.s.kind === 'npc' || t.s.kind === 'player' ? 0 : 0.5)));
+    // El panel de saqueo se cierra si te alejas del cuerpo.
+    if (lootTarget >= 0) { const lp = document.getElementById('loot-panel'); const t = view.ents.get(lootTarget); if (!lp) lootTarget = -1; else if (!t || Math.hypot(t.x - view.me.x, t.y - view.me.y) > 3.2) { lp.remove(); lootTarget = -1; } }
+    const act = eAction();
+    if (!act) { ePrompt.style.display = 'none'; return; }
+    const sp = view.world.toGlobal(worldToScreen(view.me.x, view.me.y));
     ePrompt.textContent = '';
-    ePrompt.append(h('span', { class: 'kbd' }, keyOf('interact')), ` ${verb}${t.s.name ?? ''}`);
-    ePrompt.style.display = ''; ePrompt.style.left = `${Math.round(sp.x)}px`; ePrompt.style.top = `${Math.round(sp.y - 70 * view.zoom)}px`;
+    ePrompt.append(h('span', { class: 'kbd' }, keyOf('interact')), ` ${act.label}`);
+    ePrompt.style.display = ''; ePrompt.style.left = `${Math.round(sp.x)}px`; ePrompt.style.top = `${Math.round(sp.y - 95 * view.zoom)}px`;
   }, 150));
   window.addEventListener('blur', () => { held.clear(); pushSteer(true); }, { signal: eventScope.signal });
   window.addEventListener('keyup', (e) => {
@@ -582,13 +618,14 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const keys = (e: KeyboardEvent) => {
     const tag = (e.target as HTMLElement)?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-    if (document.getElementById('keys-panel') || document.getElementById('pause-menu')) return;
+    if (document.getElementById('keys-panel') || document.getElementById('pause-menu') || document.getElementById('ask-modal')) return;
     const k = e.key.toLowerCase();
     if (document.getElementById('dance-wheel')) return;
     if (k === 'escape') {
       if (document.getElementById('weapon-wheel')) { document.getElementById('weapon-wheel')!.remove(); wheelRef = null; return; }
       if (hackMode) { setHackMode(false); return; }
       if (closeDanceMenus()) return;
+      if (document.getElementById('loot-panel')) { document.getElementById('loot-panel')!.remove(); return; }
       if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove();
       else if (document.getElementById('target-menu')) document.getElementById('target-menu')!.remove();
       else if (document.querySelector('.panel')) closePanels(); else if (st.dialog) net.send({ t: 'closeDialog' } as any); else openPause();
@@ -607,9 +644,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'dodge': if (onWorld()) { e.preventDefault(); dodge(); } break;
       case 'kick': if (onWorld()) kick(); break;
       case 'interact': if (onWorld() && !st.dialog) {
-        // v0.12 · E: lo señalado con el ratón o, si no hay nada, lo más cercano (puerta, objeto o persona).
-        const tgt = view.hovered && view.hovered.s.id !== view.meId ? view.hovered : view.nearestInteractable();
-        if (tgt) { e.preventDefault(); const g = view.guarding; view.guarding = false; view.onEntityClick(tgt); view.guarding = g; }
+        e.preventDefault();
+        const act = eAction();
+        if (act) act.run();
       } break;
       case 'cancel': stop(); break;
       case 'retreat': retreat(); break;
@@ -708,16 +745,24 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'spawn':
         for (const e of m.e) {
           view.upsert(e);
-          if (e.id === view.meId && e.emote && e.emote.move !== 'nausea') localDance = e.emote.move;
+          if (e.id === view.meId && e.emote && isDance(e.emote.move)) localDance = e.emote.move as any;
         }
         break;
       case 'despawn': for (const id of m.ids) view.remove(id); break;
       case 'label':
-        if (m.id === view.meId && m.emote !== undefined) localDance = m.emote && m.emote.move !== 'nausea' ? m.emote.move : null;
+        if (m.id === view.meId && m.emote !== undefined) localDance = m.emote && isDance(m.emote.move) ? m.emote.move as any : null;
         view.setLabel(m.id, m.label, m.bounty, m.state, m.chrome, m.hpPct, m.carried, { appearance: m.appearance, vehicle: m.vehicle, level: m.level, buffs: m.buffs, lost: m.lost, bleeding: m.bleeding, weapon: m.weapon, dead: m.dead, emote: m.emote, carry: m.carry }); break;
       case 'factions': factionsPanel(life, m.view); break;
       case 'underworld': underworldPanel(net, m.view); break;
       case 'ambar': ambarPanel(life, m.view); break;
+      case 'lootView': {
+        // v0.13 · Panel de saqueo del cuerpo.
+        const tgt = m.target;
+        lootPanel(m, (x) => { const seq = net.send({ t: 'loot', target: tgt, kind: x.kind, id: x.id } as any); st.pending.set(seq, (a) => { if (!a.ok) toast(a.reason ?? 'No puedes', 'warn'); else blip('ui'); }); });
+        lootTarget = tgt;
+        break;
+      }
+      case 'blood': view.setBlood(m.spots, !!m.reset); break;
       case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
       case 'stealth': sbar.render(m.view); view.setObservers(m.view.observers, m.view.suspicion); break;
       case 'noise': view.noiseRing(m.x, m.y, m.r); break;

@@ -129,11 +129,14 @@ export class GameView {
     }, undefined, UPDATE_PRIORITY.UTILITY);
     this.floor.addChild(...this.floorTiles);
     this.world.addChild(this.ground, this.floor, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
-    this.markers.addChild(this.kairosG, this.trailLayer, this.pathG, this.hoverG);
+    this.markers.addChild(this.bloodG, this.kairosG, this.trailLayer, this.pathG, this.hoverG);
     this.lightsLayer.blendMode = 'add';
     this.lightsLayer.addChild(this.marketLights);
     this.objects.sortableChildren = true;
     this.app.ticker.maxFPS = settings.fpsCap;
+    // v0.13 · Pixi recorta cada fotograma a 0,1 s: con pocos FPS el personaje avanzaba menos que en el servidor y luego
+    // «patinaba» hasta alcanzarlo. Con tiempo real (hasta 0,5 s) cliente y servidor van a la par.
+    this.app.ticker.minFPS = 2;
     // Entrada: clic izquierdo mueve o interactúa, clic derecho abre acciones.
     this.app.stage.eventMode = 'static';
     this.app.stage.hitArea = this.app.screen;
@@ -718,6 +721,7 @@ export class GameView {
     // El desplazamiento se reparte en ~0,26 s (acompaña a la voltereta) en lugar de saltar de golpe.
     this.dashAnim = { fx: me.x, fy: me.y, tx: x, ty: y, t0: performance.now(), dur: 260 };
   }
+  private idleSince = 0;
   private dashAnim: { fx: number; fy: number; tx: number; ty: number; t0: number; dur: number } | null = null;
   /** Vuelve a la última posición confirmada (si el servidor rechaza una acción que ya se había predicho). */
   private lastDash: { dx: number; dy: number; sx: number; sy: number } | null = null;
@@ -888,7 +892,8 @@ export class GameView {
     if (e.lvl) e.lvl.visible = this.showLevels && (e === this.hovered || (e.s.npcType !== 'civil' && Math.hypot(e.x - this.me.x, e.y - this.me.y) < 10));
     // Camuflaje óptico: casi invisible para los demás (y translúcido para uno mismo).
     const invis = e.s.buffs?.includes('invisible');
-    e.view.alpha = invis ? (e.s.id === this.meId ? 0.4 : 0.08) : 1;
+    const hid = e.s.buffs?.includes('escondido'); // v0.13 · dentro de un contenedor: no se ve
+    e.view.alpha = hid ? (e.s.id === this.meId ? 0.25 : 0) : invis ? (e.s.id === this.meId ? 0.4 : 0.08) : 1;
     if (!e.charRoot) return;
     const sleeping = e.s.state === 'sleeping' || (e.flags & 32) === 32;
     const downed = e.s.state === 'downed' || (e.flags & 64) === 64;
@@ -978,6 +983,48 @@ export class GameView {
     }
     return best;
   }
+  // ------------------------------------------------------------------ v0.13 · sangre y contenedores
+  private pools = new Map<number, { x: number; y: number; r: number; until: number; seed: number }>();
+  private bloodG = new Graphics();
+  private bloodDrawn = 0;
+  setBlood(spots: { id: number; zone: string; x: number; y: number; r: number; until: number }[], reset = false) {
+    if (reset) this.pools.clear();
+    const off = Date.now() - this.serverTime(); // pasa la hora del servidor a la local
+    for (const s of spots) if (!this.zone || s.zone === this.zone.id) this.pools.set(s.id, { x: s.x, y: s.y, r: s.r, until: s.until - off, seed: s.id * 9301 });
+    this.bloodDrawn = 0;
+  }
+  /** Charcos de sangre: se oscurecen al secarse y se borran al cumplir sus 50 minutos. */
+  private drawBlood() {
+    const now = Date.now();
+    if (now - this.bloodDrawn < 2000) return;
+    this.bloodDrawn = now;
+    const g = this.bloodG; g.clear();
+    for (const [id, b] of this.pools) {
+      const left = b.until - now;
+      if (left <= 0) { this.pools.delete(id); continue; }
+      const k = Math.min(1, left / (10 * 60 * 1000)); // los últimos 10 minutos se va desvaneciendo
+      const p = worldToScreen(b.x, b.y);
+      const col = left > 35 * 60 * 1000 ? 0x8a0a14 : 0x4a060c; // fresca → seca
+      const rr = b.r * 30;
+      g.ellipse(p.x, p.y, rr, rr * 0.5).fill({ color: col, alpha: 0.75 * k });
+      for (let i = 0; i < 4; i++) { const a = ((b.seed + i * 97) % 628) / 100, d = rr * (0.6 + ((b.seed >> i) % 5) / 10); g.ellipse(p.x + Math.cos(a) * d, p.y + Math.sin(a) * d * 0.5, rr * 0.28, rr * 0.14).fill({ color: col, alpha: 0.6 * k }); }
+    }
+  }
+  /** Contenedor más cercano (basura, bidones, taquillas…) para rebuscar, esconderte o meter un cuerpo. */
+  nearestContainer(max = 1.9): { type: string; x: number; y: number; d: number; name: string; hide: boolean; junk: boolean } | null {
+    if (!this.zone) return null;
+    const CT: Record<string, [string, boolean, boolean]> = { dumpster: ['el contenedor', true, true], trash: ['el cubo de basura', false, true], barrel: ['el bidón', false, true], crate: ['la caja', false, true], locker: ['la taquilla', true, false], fridge: ['la cámara frigorífica', false, false] };
+    let best: { type: string; x: number; y: number; d: number; name: string; hide: boolean; junk: boolean } | null = null;
+    const consider = (type: string, x: number, y: number) => {
+      const c = CT[type]; if (!c) return;
+      const d = Math.hypot(x + 0.5 - this.me.x, y + 0.5 - this.me.y);
+      if (d <= max && (!best || d < best.d)) best = { type, x, y, d, name: c[0], hide: c[1], junk: c[2] };
+    };
+    for (const p of this.zone.props) consider(p.type, p.at[0], p.at[1]);
+    for (const o of this.zone.objects) if (o.kind === 'trash') consider('trash', o.at[0], o.at[1]);
+    return best;
+  }
+
   /** v0.12 · Lo más cercano con lo que se puede interactuar (tecla E): puertas y objetos primero, luego personas tranquilas. */
   nearestInteractable(maxDist = 2.6): CEnt | null {
     let best: CEnt | null = null, bestScore = Infinity;
@@ -1061,10 +1108,13 @@ export class GameView {
       if (!me.path.length) this.pathG.clear();
     }
     const err = Math.hypot(me.serverX - me.x, me.serverY - me.y);
+    if (this.steer.dx || this.steer.dy) this.idleSince = now; // (desde cuándo no pulsas ninguna tecla de movimiento)
     if (this.steer.dx || this.steer.dy) { /* corregido arriba */ }
     else if (now < me.holdUntil) { /* rodando */ }
     else if (err > 6) { me.x = me.serverX; me.y = me.serverY; }
-    else if (!me.path.length && !me.serverMoving) { const k = Math.min(1, dt * 8); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
+    // Quieto: se asienta rápido en tiempo real (también con pocos FPS).
+    // (los desfases de menos de 25 cm se ignoran: es la latencia al soltar la tecla y corregirlos parecía «patinar»)
+    else if (!me.path.length && err > 0.25 && (!me.serverMoving || now - this.idleSince > 700)) { const k = Math.min(1, moveDt * 10); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
     else if (err > 1.2) { const k = Math.min(1, dt * 2); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
 
     const renderT = now - INTERP_DELAY;
@@ -1123,6 +1173,7 @@ export class GameView {
     this.drawNight();
     this.drawRain(dt);
     this.animateSky(now, dt);
+    this.drawBlood();
     this.render3d(now, dt, W, H);
   }
   private render3d(now: number, dt: number, W: number, H: number) {

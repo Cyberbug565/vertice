@@ -52,6 +52,9 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('hack'), seq, target: z.number().int().nonnegative(), hack: z.string().max(64), opId }),
   z.object({ t: z.literal('equip'), seq, item: z.string().max(64).nullable() }),
   z.object({ t: z.literal('drop'), seq }),
+  // v0.13 · panel de saqueo de un cuerpo y contenedores
+  z.object({ t: z.literal('loot'), seq, target: z.number().int().nonnegative(), kind: z.enum(['view', 'money', 'item', 'chrome', 'all']), id: z.string().max(64).optional() }),
+  z.object({ t: z.literal('container'), seq, action: z.enum(['body', 'search', 'hide', 'out']) }),
   z.object({ t: z.literal('ambar'), seq, plan: z.string().max(32).optional(), opId: opId.optional() }),
   z.object({ t: z.literal('factions'), seq }),
   z.object({ t: z.literal('bribe'), seq, opId }),
@@ -84,7 +87,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
 ]);
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
-export interface EmoteState { move: DanceId | 'nausea'; at: number }
+/** v0.13 · además de los bailes: sentado, manos arriba, al teléfono, fumando y gesticulando al hablar. */
+export interface EmoteState { move: DanceId | 'nausea' | 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto'; at: number }
 export type EntityKind = 'player' | 'npc' | 'door' | 'object';
 export interface Appearance {
   skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string; nose?: string; mouth?: string;
@@ -286,6 +290,8 @@ export type ServerMsg =
   | { t: 'underworld'; view: UnderworldView }
   | { t: 'ambar'; view: AmbarView }
   | { t: 'speech'; id: number; text: string }
+  | { t: 'lootView'; target: number; name: string; dead: boolean; money: number; items: { id: string; name: string; qty: number; kind: string; weight: number; blocked?: string }[]; chrome: { id: string; name: string; grade: number; region?: string; need: number; blocked?: string }[] }
+  | { t: 'blood'; reset?: boolean; spots: { id: number; zone: string; x: number; y: number; r: number; until: number }[] }
   | { t: 'stealth'; view: StealthView }
   | { t: 'noise'; x: number; y: number; r: number }
   | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave' | 'alarm'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean }

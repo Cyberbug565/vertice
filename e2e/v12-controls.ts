@@ -36,7 +36,8 @@ await step('Clic izquierdo en la puerta del bar (a 2,5 m) entra', async () => {
   const door = city.def.doors.find((d) => d.id === 'puerta-rele')!;
   await app.world.teleport(c(), 'vertice', [door.at[0] + 0.5, door.at[1] + 3]);
   await zoneIs('vertice');
-  await sleep(2500);
+  await page.waitForFunction(() => (window as any).__vt.entities().some((e: any) => e.kind === 'door' && /Relé/.test(e.name)), null, { timeout: 30000 }).catch(() => {});
+  await sleep(1000);
   const d = (await page.evaluate(() => (window as any).__vt.entities())).find((e: any) => e.kind === 'door' && /Relé/.test(e.name));
   if (!d) throw new Error('no se ve la puerta');
   const s = await page.evaluate(([x, y]) => (window as any).__vt.screenOf(x, y), [d.x, d.y]);

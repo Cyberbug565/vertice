@@ -38,5 +38,7 @@ export function dancePose(move: EmoteState['move'], secs: number): DancePose {
     }
     case 'nausea':
       return { sway: 2, lift: -2.7 + c * 1.2, lean: 0.52 + s * 0.1, left: -0.24, right: 0.26, front: -1.1, back: 0.4 };
+    default:
+      return { sway: 0, lift: 0, lean: 0, left: 0, right: 0, front: 0, back: 0 };
   }
 }

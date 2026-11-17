@@ -93,10 +93,14 @@ function thinkScheduled(w: World, e: Entity) {
 function thinkAmbient(w: World, e: Entity) {
   const b = e.npc!;
   if (e.path.length) return;
+  // v0.13 · Llegó a un mueble con tarea (banco, máquina, parada…): la hace durante un rato.
+  if (e.goal) { const len = w.street.arrive(e); b.pauseUntil = w.tick + len; b.state = 'rest'; return; }
   if (b.pauseUntil > w.tick) return;
   // Paradas variadas y naturales: mirar el móvil, un escaparate, charlar, fumar…; a veces solo un respiro.
   // v0.9 · Muchas más rutinas, distintas de día y de noche, algunas con frase en bocadillo o con baile.
   if (e.emote && e.emote.move !== 'nausea') { e.emote = undefined; e.labelVer++; }
+  // v0.13 · A veces usa el mobiliario de alrededor (sentarse, la máquina, la basura, la parada, fumar junto a la farola).
+  if (b.state === 'travel' && b.rng() < 0.22 && w.street.pickEnvironment(e)) return;
   if (b.state === 'travel' && b.rng() < 0.5) {
     const night = (() => { const h = w.cityHour(); return h >= 21 || h < 6; })();
     const pool = night ? NIGHT_ROUTINES : DAY_ROUTINES;
@@ -108,7 +112,8 @@ function thinkAmbient(w: World, e: Entity) {
     if (routine?.dance) { e.emote = { move: routine.dance as any, at: Date.now() }; e.labelVer++; }
     if (routine?.lines && b.rng() < 0.6) { const line = routine.lines[Math.floor(b.rng() * routine.lines.length)]; for (const o of e.zone.query(e.x, e.y, 18)) if (o.kind === 'player' && o.conn) w.send(o.conn, { t: 'speech', id: e.id, text: line }); }
     // Busca alguien cerca con quien charlar: se giran el uno hacia el otro.
-    if (label === 'Charlando') for (const o of e.zone.query(e.x, e.y, 2.5)) if (o !== e && o.kind === 'npc' && o.npc?.type === 'ambient' && !o.path.length) { e.facing = facingToIdx(o.x - e.x, o.y - e.y); o.facing = facingToIdx(e.x - o.x, e.y - o.y); e.lastMoveTick = o.lastMoveTick = w.tick; break; }
+    // v0.13 · …y charlan de verdad: frase, respuesta y réplica, con gestos.
+    if (label === 'Charlando') for (const o of e.zone.query(e.x, e.y, 2.5)) if (o !== e && o.kind === 'npc' && o.npc?.type === 'ambient' && !o.path.length && !o.goal) { if (o.npc) o.npc.pauseUntil = b.pauseUntil; w.street.converse(e, o); break; }
     setState(w, e, label === 'Charlando' ? 'talk' : 'rest', label);
     return;
   }

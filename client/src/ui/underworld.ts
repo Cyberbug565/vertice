@@ -1,6 +1,6 @@
 import type { ClientMsg, UnderworldJobView, UnderworldStatus, UnderworldView } from '@vertice/shared';
 import { newOpId, type Net } from '../net';
-import { fmtMoney, h } from './dom';
+import { fmtMoney, h, ask } from './dom';
 import { showPanel } from './life';
 
 export function updateDeliveryClock(now: number) {
@@ -84,9 +84,9 @@ export function underworldPanel(net: Net, v: UnderworldView) {
     !member ? h('button', { class: 'btn small', disabled: !crew.canJoin, onclick: () => send('join', crew.id) }, 'Pedir ingreso') : null)));
   const selection = h('select', { 'aria-label': 'Mercancía del encargo' }, ...v.goods.map((i) => h('option', { value: i.id }, i.name)));
   const manage = member ? h('div', { class: 'row underworld-controls' },
-    order ? h('button', { class: 'btn small danger', onclick: () => { if (confirm('Abandonar el encargo cuesta reputación. ¿Abandonar?')) send('abandon'); } }, 'Abandonar el encargo') : selection,
+    order ? h('button', { class: 'btn small danger', onclick: () => { ask('Abandonar el encargo cuesta reputación. ¿Abandonar?', () => { send('abandon'); }, { danger: true }); } }, 'Abandonar el encargo') : selection,
     !order ? h('button', { class: 'btn small primary', onclick: () => send('accept', selection.value) }, 'Pedir un encargo') : null,
-    !order ? h('button', { class: 'btn small', onclick: () => { if (confirm('Al salir pierdes 2 de reputación y la protección. ¿Dejar la banda?')) send('leave'); } }, 'Dejar la banda') : null) : null;
+    !order ? h('button', { class: 'btn small', onclick: () => { ask('Al salir pierdes 2 de reputación y la protección. ¿Dejar la banda?', () => { send('leave'); }, { danger: true }); } }, 'Dejar la banda') : null) : null;
   const sections = [
     { label: 'Mercancía', title: 'Mercancía del contacto', node: stock },
     { label: 'Compradores', title: 'Compradores y cotizaciones', node: markets },

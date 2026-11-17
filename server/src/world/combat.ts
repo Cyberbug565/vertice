@@ -156,10 +156,13 @@ export class Combat {
       return { target: target.id, name: target.name, subtitle: `${subtitle} · persona clave (no se puede atacar)`, color: fac?.color, options: opts };
     }
     if (target.carriedBy === e.id) { opts.push({ id: 'drop', kind: 'action', group: 'ayuda', label: 'Soltar el cuerpo' }); return { target: target.id, name: target.name, subtitle, options: opts }; }
-    if (target.dead) return { target: target.id, name: target.name, subtitle: 'Cadáver', options: [{ id: 'search', kind: 'action', group: 'ayuda', label: 'Registrar el cuerpo', detail: 'Dinero, munición y lo que lleve. Más botín en zonas rojas y negras.', disabled: target.searched ? 'Ya lo han registrado' : undefined },
-      ...(target.lootChrome ?? []).map((id) => { const d = this.c.cyberware.find((x) => x.id === id)!; const need = d.grade * 4; return { id: `extract:${id}`, kind: 'action' as const, group: 'ayuda' as const, label: `Extraer cromo: ${d.name}`, detail: `Grado ${d.grade}. Requiere Reparación ${need}. Luego puede implantártelo un matasanos.`, disabled: skillLevel(p, 'reparacion') < need ? `Requiere Reparación ${need} (tienes ${skillLevel(p, 'reparacion')})` : undefined }; })] };
+    // v0.13 · Cadáver: se registra entero en el panel de saqueo (dinero, armas, objetos y cromo) y se puede cargar para
+    // esconderlo en un contenedor antes de que alguien lo encuentre.
+    if (target.dead) return { target: target.id, name: target.name, subtitle: target.corpse?.reportedAt ? 'Cadáver · ya lo han encontrado' : 'Cadáver', options: [
+      { id: 'search', kind: 'action', group: 'ayuda', label: target.searched ? 'Registrar el cuerpo (vacío)' : 'Registrar el cuerpo', detail: 'Abre lo que lleva: dinero, armas, objetos y cromo.' },
+      { id: 'carry', kind: 'action', group: 'ayuda', label: 'Cargar el cadáver', detail: 'Para esconderlo en un contenedor de basura, una taquilla o un bidón (E junto al contenedor). Suma unos 70 kg.', disabled: p.carrying ? 'Ya llevas a alguien' : undefined }] };
     if (downed) {
-      if (!tp) opts.push({ id: 'search', kind: 'action', group: 'ayuda', label: 'Registrar el cuerpo', detail: 'Dinero, munición y lo que lleve. Más botín en zonas rojas y negras. En zona vigilada es delito.', disabled: target.searched ? 'Ya lo han registrado' : undefined });
+      if (!tp) opts.push({ id: 'search', kind: 'action', group: 'ayuda', label: 'Registrar el cuerpo', detail: 'Abre lo que lleva encima. Registrar a alguien inconsciente en zona vigilada es delito.' });
       if (tp) {
         const medic = p.profession === 'medico' || p.role === 'medtech';
         opts.push({ id: 'rescue', kind: 'action', group: 'ayuda', label: 'Estabilizar', detail: medic ? 'Como médico/Medtech no necesitas material.' : 'Gasta un estimulante médico.', disabled: !medic && (p.inventory.get('estim') ?? 0) < 1 ? 'Necesitas un estimulante médico' : undefined });
@@ -296,7 +299,7 @@ export class Combat {
       if (!(target.state === 'downed' || target.dead) || target.kind !== 'npc') return fail('Solo se puede registrar a alguien caído.');
       if (m.remote && Math.hypot(target.x - e.x, target.y - e.y) > 2.2) return fail('Acércate al cuerpo (WASD) para registrarlo.');
       if (Math.hypot(target.x - e.x, target.y - e.y) > 2.2) { const dest = nearestWalkable(e.zone.grid, target.x, target.y, 2); const r = dest ? findPath(e.zone.grid, e.x, e.y, dest.x, dest.y, 20000) : null; if (!r?.ok) return fail('No puedes llegar.'); e.path = r.path; e.moving = true; e.pendingAction = { target: target.id, action: 'search', opId: m.opId }; return this.w.send(c, { t: 'ack', seq: m.seq, ok: true, path: e.path }); }
-      await this.searchBody(c, target); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
+      this.w.corpses.view(c, target); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
     }
     if (action === 'aim') {
       const wpA = this.weaponOf(p);
@@ -365,7 +368,7 @@ export class Combat {
   private async execute(c: PlayerConn, target: Entity, action: string, opId: string, part?: AimZone) {
     const p = c.p!;
     if (p.status !== 'alive') return;
-    if (action === 'search') return this.searchBody(c, target);
+    if (action === 'search') return this.w.corpses.view(c, target);
     if (action === 'rob') return this.rob(c, target, opId);
     if (action === 'carry') return this.carry(c, target);
     if (action === 'rescue') return this.sv.rescue(c, 0, target.id, opId);
@@ -479,55 +482,6 @@ export class Combat {
     return best;
   }
 
-  /** Registrar un cuerpo: botín según el peligro de la zona (más en las rojas y mucho más en las negras). */
-  async searchBody(c: PlayerConn, target: Entity) {
-    const p = c.p!, e = c.e!;
-    if (target.searched) throw new GameError('Ya lo han registrado.');
-    if (Math.hypot(target.x - e.x, target.y - e.y) > 2.5) throw new GameError('Acércate más.');
-    target.searched = true;
-    const lvl = dangerAt(target.zone.grid, target.x, target.y);
-    const mult = lvl === 'lawless' ? 4 : lvl === 'disputed' ? 2 : 1;
-    const money = Math.round((5 + (target.level ?? 3) * 6 + this.rng() * 30) * mult * (target.npcType === 'civil' ? 0.6 : 1));
-    const opId = `registro-${uuid()}`;
-    await this.credit(p, money, opId, `Registro de ${target.name}`);
-    const found: string[] = [`${money} €$`];
-    const give = async (item: string, qty: number) => {
-      if (!this.c.items.some((i) => i.id === item)) return;
-      if (weaponFits(this.c, p, item, qty)) { found.push(`(${this.c.items.find((i) => i.id === item)!.name}: no te cabe, lo dejas)`); return; }
-      p.inventory.set(item, (p.inventory.get(item) ?? 0) + qty);
-      await this.w.db.query(`INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4) ON CONFLICT (character_id, def_id) DO UPDATE SET qty = inventory_items.qty + EXCLUDED.qty`, [uuid(), p.charId, item, qty]);
-      found.push(`${qty > 1 ? `${qty}× ` : ''}${this.c.items.find((i) => i.id === item)!.name}`);
-    };
-    // v0.10 · Disfraces: a un agente o guardia caído le puedes quitar el uniforme.
-    if (target.npcType === 'police' || target.npcType === 'hierro') {
-      const r = (target.zone.def as any).restricted as string | undefined;
-      await give(r === 'corporativo' || r === 'banco' ? 'uniforme-seguridad' : r === 'laboratorio' ? 'bata-laboratorio' : 'uniforme-pcv', 1);
-    }
-    const wpItem = target.weaponId ? this.c.items.find((i) => i.id === target.weaponId) : undefined;
-    if (wpItem?.weapon && this.rng() < 0.25 * mult) await give(wpItem.id, 1);
-    if (wpItem?.weapon?.ammo && this.rng() < 0.5) await give(wpItem.weapon.ammo, Math.round((4 + this.rng() * 8) * mult));
-    if (this.rng() < 0.3) await give('venda', 1);
-    // v0.7: objetivos con recompensa y ciberpsicópatas llevan mucho más encima.
-    if (target.lootTier) {
-      const t = target.lootTier;
-      const extra = Math.round((150 + this.rng() * 250) * t * t);
-      await this.credit(p, extra, `${opId}:botin`, `Botín de ${target.name}`); found[0] = `${money + extra} €$`;
-      if (wpItem?.weapon) await give(wpItem.id, 1);
-      if (wpItem?.weapon?.ammo) await give(wpItem.weapon.ammo, 10 * t);
-      await give('estim', t >= 3 ? 2 : 1);
-      if (t >= 3 && !target.lootChrome?.length && this.rng() < (t >= 4 ? 0.9 : 0.5)) {
-        const pool = this.c.cyberware.filter((x) => x.grade >= 2 && x.grade <= t);
-        const def = pool[Math.floor(this.rng() * pool.length)];
-        if (def) { const instId = uuid(); await this.w.db.query('INSERT INTO cyberware_instances (id, def_id, character_id, location, stolen, history) VALUES ($1,$2,$3,$4,$5,$6)', [instId, def.id, p.charId, 'inventory', true, JSON.stringify([{ at: new Date().toISOString(), event: `encontrado en el cuerpo de ${target.name}` }])]); p.cyber.push({ id: instId, def: def.id, location: 'inventory', stolen: true }); found.push(`Implante: ${def.name} (sin instalar)`); }
-      }
-    }
-    if (target.lootChrome?.length) found.push(`Cromo extraíble: ${target.lootChrome.map((id) => this.c.cyberware.find((x) => x.id === id)?.name ?? id).join(', ')} (usa «Extraer cromo»)`);
-    if (lvl === 'lawless' && this.rng() < 0.5) await give('neblina', 1 + Math.floor(this.rng() * 3));
-    if (lvl !== 'public' && this.rng() < 0.15 * mult) await give('estim', 1);
-    this.w.progress.gain(p, 'percepcion', 2);
-    this.w.send(c, { t: 'reward', title: `Registras a ${target.name}`, lines: found });
-    if (target.npcType === 'civil' || (target.faction && target.npcType !== 'gang')) this.crime(c, target, false, 'attempt');
-  }
   /** Un PNJ que se desangra cae (y morirá si nadie lo atiende). */
   bleedOut(e: Entity) { if (e.state !== 'downed') { this.npcDowned(e, true); this.bump(e); void this.creditBleed(e); } }
   /** Quien le hirió hace menos de un minuto «le ha derribado» (recompensas, reputación y delitos). */
@@ -803,8 +757,9 @@ export class Combat {
     } else if (target.respawn) this.respawnQueue.push({ at: Date.now() + 120000, zone: target.respawn.zone, template: target.respawn.template });
     // v0.6: el cadáver se queda un rato (se puede registrar) y luego se lo llevan.
     target.dead = true; target.state = 'downed'; target.npc = undefined; target.aggro = undefined; target.path = []; target.moving = false;
-    target.label = 'Cadáver'; target.downedUntil = Date.now() + 90000; target.respawn = undefined; target.fugitive = undefined; target.npcType = target.npcType === 'essential' ? 'civil' : target.npcType;
+    target.label = 'Cadáver'; target.respawn = undefined; target.fugitive = undefined; target.npcType = target.npcType === 'essential' ? 'civil' : target.npcType;
     if (target.body) target.body.bleed = 0;
+    this.w.corpses.onDeath(target, by);
     this.bump(target);
   }
 

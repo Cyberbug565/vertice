@@ -1,7 +1,7 @@
 // v0.5 · Paneles de trabajo fijo (contratación), ascensor de las torres y modo automático.
 import type { ElevatorView, HiringView } from '@vertice/shared';
 import type { Net } from '../net';
-import { fmtMoney, h } from './dom';
+import { fmtMoney, h, ask } from './dom';
 import { showPanel } from './life';
 
 const ACCESS: Record<string, [string, string]> = { publico: ['Pública', '#5affc8'], empleados: ['Solo personal', '#ffd23f'], restringido: ['Restringida', '#ff3040'] };
@@ -20,7 +20,7 @@ export function hiringPanel(net: Net, v: HiringView) {
     h('div', { class: 'small' }, `Requisito: ${p.skill} ${p.minLevel} `, h('span', { class: p.level >= p.minLevel ? 'netok' : 'netbad' }, `(tienes ${p.level})`)),
     p.holder && p.holder !== 'tú' ? h('div', { class: 'small netbad' }, `Lo ocupa ${p.holder}`) : null,
     p.canApply ? h('button', { class: 'btn small primary', onclick: () => net.send({ t: 'post', action: 'apply', post: p.id, obj: undefined } as any) }, 'Pedir el puesto')
-      : p.holder === 'tú' ? h('button', { class: 'btn small danger', onclick: () => { if (confirm('¿Dejar el puesto? Quedará libre para otra persona.')) net.send({ t: 'post', action: 'quit' } as any); } }, 'Dejar el puesto')
+      : p.holder === 'tú' ? h('button', { class: 'btn small danger', onclick: () => { ask('¿Dejar el puesto? Quedará libre para otra persona.', () => { net.send({ t: 'post', action: 'quit' } as any); }, { danger: true }); } }, 'Dejar el puesto')
         : h('div', { class: 'small muted' }, p.reason)));
   showPanel('hiring-panel', `¿Hay trabajo? · ${v.place}`,
     h('p', { class: 'muted' }, 'Puestos fijos con horario de la ciudad (un día dura 1 h 30 min reales). Cada puesto es de una sola persona: si está ocupado, toca esperar a que quede libre. Cobras cada turno que trabajes en tu horario.'),
@@ -35,7 +35,7 @@ export function elevatorPanel(net: Net, v: ElevatorView) {
       h('span', { class: 'mono floor-n' }, f.floor === 0 ? 'V' : String(f.floor)), h('span', { class: 'floor-name' }, f.name), h('span', { class: 'chip', style: { color } }, label),
       f.floor === v.current ? h('span', { class: 'small muted' }, 'estás aquí')
         : f.allowed ? h('button', { class: 'btn small primary', onclick: () => { net.send({ t: 'elevator', floor: f.floor } as any); document.getElementById('elevator-panel')?.remove(); } }, 'Subir')
-          : h('button', { class: 'btn small danger', title: 'Hackear el ascensor (Interfaz). Si falla, salta la alarma.', onclick: () => { if (confirm('¿Hackear el ascensor? Si falla saltará la alarma, y arriba la seguridad te tratará como intruso.')) { net.send({ t: 'elevator', floor: f.floor, hack: true } as any); document.getElementById('elevator-panel')?.remove(); } } }, '💻 Hackear'));
+          : h('button', { class: 'btn small danger', title: 'Hackear el ascensor (Interfaz). Si falla, salta la alarma.', onclick: () => { ask('¿Hackear el ascensor? Si falla saltará la alarma, y arriba la seguridad te tratará como intruso.', () => { net.send({ t: 'elevator', floor: f.floor, hack: true } as any); document.getElementById('elevator-panel')?.remove(); }, { danger: true }); } }, '💻 Hackear'));
   });
   showPanel('elevator-panel', `Ascensor · ${v.name}`, h('p', { class: 'muted' }, 'Plantas públicas para todos; las de personal, con un puesto en la corporación o buena relación (+10); las restringidas, con mucha confianza (+40)… o hackeando.'), h('div', { class: 'floors' }, ...rows));
 }

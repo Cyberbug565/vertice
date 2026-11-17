@@ -2,7 +2,7 @@
 import type { BuildingView, DealerView, MarketLiveView, PropsView, RealtyView, ScanView, StashView } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
-import { $ui, fmtMoney, h } from './dom';
+import { $ui, fmtMoney, h, ask } from './dom';
 import { showPanel } from './life';
 import { blip } from '../audio';
 
@@ -29,7 +29,7 @@ export function buildingPanel(ctx: PropCtx, v: BuildingView) {
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, u.name), h('span', { class: 'chip' }, SIZE[u.size])),
     h('div', { class: 'mono' }, u.owner ? (u.mine ? 'Es tuya' : `Dueño: ${u.owner}`) : fmtMoney(u.price)),
     h('div', { class: 'row' },
-      !u.owner ? h('button', { class: 'btn small primary', disabled: ctx.money() < u.price, title: ctx.money() < u.price ? 'No te llega el dinero' : '', onclick: () => { if (confirm(`¿Comprar ${u.name} por ${fmtMoney(u.price)}?`)) { ctx.net.send({ t: 'house', action: 'buy', house: u.id, opId: newOpId() } as any); setTimeout(() => ctx.net.send({ t: 'house', action: 'view', building: v.building } as any), 400); } } }, 'Comprar') : null,
+      !u.owner ? h('button', { class: 'btn small primary', disabled: ctx.money() < u.price, title: ctx.money() < u.price ? 'No te llega el dinero' : '', onclick: () => { ask(`¿Comprar ${u.name} por ${fmtMoney(u.price)}?`, () => { ctx.net.send({ t: 'house', action: 'buy', house: u.id, opId: newOpId() } as any); setTimeout(() => ctx.net.send({ t: 'house', action: 'view', building: v.building } as any), 400); }); } }, 'Comprar') : null,
       u.allowed ? h('button', { class: 'btn small', onclick: () => { ctx.net.send({ t: 'house', action: 'enter', house: u.id } as any); document.getElementById('building-panel')?.remove(); } }, 'Entrar') : null,
       u.owner && !u.allowed ? h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'house', action: 'ring', house: u.id } as any) }, '🔔 Llamar al timbre') : null)));
   showPanel('building-panel', v.name, h('p', { class: 'muted' }, `${v.zone}. Las viviendas son zona protegida: dentro nadie puede atacarte, la cama es perfecta y hay un alijo para guardar cosas. Solo entra quien autorice el dueño.`),
@@ -45,7 +45,7 @@ export function realtyPanel(ctx: PropCtx, v: RealtyView) {
       ...Object.keys(SIZE).map((sz) => h('button', { class: 'chip', style: { color: SIZE_COLOR[sz] }, onclick: () => ctx.net.send({ t: 'house', action: 'realty', filter: sz } as any) }, SIZE[sz]))),
     h('table', { class: 'sheet' }, h('tr', {}, h('th', {}, 'Vivienda'), h('th', {}, 'Distrito'), h('th', {}, 'Tipo'), h('th', {}, 'Precio'), h('th', {}, '')),
       ...v.houses.map((x) => h('tr', {}, h('td', {}, x.name), h('td', {}, x.zoneName), h('td', { style: { color: SIZE_COLOR[x.size] } }, SIZE[x.size]), h('td', { class: 'mono' }, fmtMoney(x.price)),
-        h('td', {}, h('button', { class: 'btn small primary', disabled: ctx.money() < x.price, onclick: () => { if (confirm(`¿Comprar ${x.name} por ${fmtMoney(x.price)}?`)) ctx.net.send({ t: 'house', action: 'buy', house: x.id, opId: newOpId() } as any); } }, 'Comprar'))))),
+        h('td', {}, h('button', { class: 'btn small primary', disabled: ctx.money() < x.price, onclick: () => { ask(`¿Comprar ${x.name} por ${fmtMoney(x.price)}?`, () => { ctx.net.send({ t: 'house', action: 'buy', house: x.id, opId: newOpId() } as any); }); } }, 'Comprar'))))),
     v.houses.length ? null : h('p', { class: 'muted' }, 'No queda nada en venta con ese filtro.'));
 }
 export function stashPanel(ctx: PropCtx, v: StashView) {
@@ -66,7 +66,7 @@ export function dealerPanel(ctx: PropCtx, v: DealerView) {
     h('div', { class: 'small muted' }, c.desc),
     h('div', { class: 'carstats' }, cstat('Velocidad', c.speed / 5, `×${c.speed}`), cstat('Maletero', c.trunk / 400, `${c.trunk} kg`), cstat('Blindaje', c.armor / 7, String(c.armor)), cstat('Plazas', c.seats / 8, String(c.seats))),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', { class: 'mono' }, fmtMoney(c.price)),
-      h('button', { class: 'btn small primary', disabled: ctx.money() < c.price, onclick: () => { if (confirm(`¿Comprar ${c.maker} ${c.name} por ${fmtMoney(c.price)}?`)) ctx.net.send({ t: 'car', action: 'buy', dealer: v.dealer, car: c.id, opId: newOpId() } as any); } }, 'Comprar'))));
+      h('button', { class: 'btn small primary', disabled: ctx.money() < c.price, onclick: () => { ask(`¿Comprar ${c.maker} ${c.name} por ${fmtMoney(c.price)}?`, () => { ctx.net.send({ t: 'car', action: 'buy', dealer: v.dealer, car: c.id, opId: newOpId() } as any); }); } }, 'Comprar'))));
   showPanel('dealer-panel', v.name, h('p', { class: 'muted' }, `${v.desc} Los precios siguen al índice de vehículos del mercado.`),
     v.owned.length ? h('p', {}, `Tu garaje: ${v.owned.map((o) => o.name).join(', ')}`) : null,
     h('div', { class: 'cards' }, ...cars));
@@ -80,12 +80,12 @@ export function propsPanel(ctx: PropCtx, v: PropsView) {
     h('div', { class: 'small' }, h('b', {}, 'Pueden entrar: '), x.permits.length ? x.permits.map((n) => h('span', { class: 'chip' }, n, ' ', h('button', { class: 'linkbtn', title: 'Quitar permiso', onclick: () => ctx.net.send({ t: 'house', action: 'revoke', house: x.id, name: n } as any) }, '✕'))) : h('span', { class: 'muted' }, 'solo tú')),
     h('form', { class: 'row', onsubmit: (e: Event) => { e.preventDefault(); const i = (e.target as HTMLFormElement).querySelector('input')!; if (i.value.trim()) ctx.net.send({ t: 'house', action: 'permit', house: x.id, name: i.value.trim() } as any); i.value = ''; } },
       h('input', { placeholder: 'Nombre del personaje', maxLength: 20, style: { flex: '1' } }), h('button', { class: 'btn small', type: 'submit' }, 'Dar permiso')),
-    h('button', { class: 'btn small danger', onclick: () => { if (confirm(`¿Vender ${x.name} por ${fmtMoney(x.value)} (70 % del valor)? Lo que haya en el alijo se pierde.`)) ctx.net.send({ t: 'house', action: 'sell', house: x.id, opId: newOpId() } as any); } }, `Vender (${fmtMoney(x.value)})`)));
+    h('button', { class: 'btn small danger', onclick: () => { ask(`¿Vender ${x.name} por ${fmtMoney(x.value)} (70 % del valor)? Lo que haya en el alijo se pierde.`, () => { ctx.net.send({ t: 'house', action: 'sell', house: x.id, opId: newOpId() } as any); }, { danger: true }); } }, `Vender (${fmtMoney(x.value)})`)));
   const cars = v.cars.map((c) => h('div', { class: 'fcard', style: { borderTopColor: content.cars.find((k) => k.id === c.car)?.color ?? '#43f3ff' } },
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, c.name), h('span', { class: 'chip' }, CLASS[c.class])),
     h('div', { class: 'small' }, `Velocidad ×${c.speed} · vale ${fmtMoney(c.value)}`),
     h('div', { class: 'row' }, v.driving === c.id ? h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'car', action: 'park' } as any) }, 'Aparcar') : h('button', { class: 'btn small primary', onclick: () => ctx.net.send({ t: 'car', action: 'drive', car: c.id } as any) }, 'Conducir'),
-      h('button', { class: 'btn small danger', onclick: () => { if (confirm(`¿Vender ${c.name} por ${fmtMoney(c.value)}?`)) ctx.net.send({ t: 'car', action: 'sell', car: c.id, opId: newOpId() } as any); } }, 'Vender'))));
+      h('button', { class: 'btn small danger', onclick: () => { ask(`¿Vender ${c.name} por ${fmtMoney(c.value)}?`, () => { ctx.net.send({ t: 'car', action: 'sell', car: c.id, opId: newOpId() } as any); }, { danger: true }); } }, 'Vender'))));
   showPanel('props-panel', 'Propiedades',
     h('h3', {}, `Viviendas (${v.houses.length})`), houses.length ? h('div', { class: 'cards' }, ...houses) : h('p', { class: 'muted' }, 'No tienes casa. Busca un «Portal» en cualquier edificio o visita la Inmobiliaria Kaiten (Colinas Doradas).'),
     h('h3', {}, `Vehículos (${v.cars.length})`), cars.length ? h('div', { class: 'cards' }, ...cars) : h('p', { class: 'muted' }, 'No tienes vehículo. Hay concesionarios en Ferro, Cénit, Colinas, Neón Rojo, Forja, El Arrabal y El Yermo.'));

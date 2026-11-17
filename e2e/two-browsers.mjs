@@ -78,8 +78,9 @@ const walkTo = async (p, pred, near) => {
   } finally { await set([]); }
 };
 const clickEntity = async (p, pred) => {
-  const list = await ents(p);
-  const e = list.find(pred);
+  // Tras cambiar de zona las entidades llegan en varias tandas: se espera hasta 20 s a que aparezca.
+  let e = null;
+  for (const t0 = Date.now(); !e && Date.now() - t0 < 20000; ) { e = (await ents(p)).find(pred); if (!e) await p.waitForTimeout(500); }
   if (!e) throw new Error('entidad no visible');
   if ((await walkTo(p, pred, e.kind === 'door' ? 1.6 : 5)) === 'entered') return;
   const s = await p.evaluate(([x, y]) => window.__vt.screenOf(x, y), [e.x, e.y]);

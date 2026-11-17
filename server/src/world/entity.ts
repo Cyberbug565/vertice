@@ -39,6 +39,10 @@ legendId?: string;
   buffs?: Record<string, number>; decoyUntil?: number;
   // ---- v0.6
   emote?: EmoteState; marketSite?: string;
+  /** v0.13 · Botín completo del cuerpo, datos del cadáver (hallazgo e investigación) y contenedor donde se esconde. */
+  /** v0.13 · tarea del entorno a la que va un transeúnte (banco, máquina, parada…). */
+  goal?: unknown;
+  loot?: import('./corpses.js').CorpseLoot; corpse?: import('./corpses.js').CorpseInfo; hiddenIn?: string;
   body?: import('@vertice/shared').BodyState; dead?: boolean; searched?: boolean; ownerChar?: string; carOwnedId?: string; disabledUntil?: number;
 }
 
