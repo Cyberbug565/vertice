@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
   RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
-  type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance } from '@vertice/shared';
+  type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db } from '../db/db.js';
 import type { Metrics } from '../metrics.js';
@@ -342,6 +342,7 @@ export class World {
   }
 
   private moveEntity(e: Entity, dt: number) {
+    if (this.waitsForLight(e)) { if (e.moving) { e.moving = false; e.lastMoveTick = this.tick; } return; }
     this.nightlife.stop(e);
     let budget = e.speed * dt * (e.timeScale ?? 1);
     let lastDx = 0, lastDy = 0;
@@ -366,6 +367,19 @@ export class World {
       }
     }
     if (!e.moving) this.onArrive(e);
+  }
+
+  /** v0.19 · Un transeúnte que va a pisar la calzada espera a que su semáforo de peatones esté en verde. */
+  private waitsForLight(e: Entity) {
+    if (!e.npc || e.aggro !== undefined || (e.npcType !== 'civil' && e.npcType !== 'essential') || e.zone.def.kind !== 'exterior' || !e.path.length) return false;
+    const g = e.zone.grid, rm = roadMap(g);
+    if (rm.axis[Math.floor(e.y) * g.w + Math.floor(e.x)]) return false; // ya está cruzando: que acabe
+    const [tx, ty] = e.path[0], dx = tx - e.x, dy = ty - e.y, d = Math.hypot(dx, dy);
+    if (d < 1e-6) return false;
+    const px = e.x + (dx / d) * 0.6, py = e.y + (dy / d) * 0.6;
+    const ax = crossingAxis(g, px, py, dx, dy);
+    if (!ax) return false;
+    return walkLight(Date.now(), px, py, ax) !== 'verde';
   }
 
   /** v0.7: movimiento libre con WASD. Se desliza por las paredes (prueba el eje X y el Y por separado). */
@@ -805,7 +819,9 @@ export class World {
     if (this.pathBudget <= 0) return false;
     this.pathBudget--;
     this.metrics.inc('pathRequests');
-    const r = findPath(e.zone.grid, Math.floor(e.x) + 0.5, Math.floor(e.y) + 0.5, x, y, 4000);
+    // v0.19 · Los transeúntes van por la acera y cruzan por los pasos de peatones.
+    const walker = e.npcType === 'civil' || e.npcType === 'essential';
+    const r = findPath(e.zone.grid, Math.floor(e.x) + 0.5, Math.floor(e.y) + 0.5, x, y, walker ? 9000 : 4000, { pedestrian: walker });
     this.metrics.inc('pathExpanded', r.expanded);
     if (!r.ok) { this.metrics.inc('pathFailures'); return false; }
     if (this.pathCache.size > 3000) this.pathCache.delete(this.pathCache.keys().next().value!);

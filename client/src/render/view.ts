@@ -1,5 +1,6 @@
 // Vista isométrica: bloques de suelo bajo demanda, orden por profundidad topológica, atenuación de edificios,
 // interpolación de entidades remotas y predicción del personaje propio.
+import { Traffic } from './traffic';
 import { AlphaFilter, Application, Container, Graphics, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
 import { BUILDING_H, Chars3D } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
@@ -36,6 +37,9 @@ export class GameView {
   ground = new Container();
   backdrop = new Container();
   decalLayer = new Container();
+  /** v0.19 · Contorno en el suelo de los edificios que se vuelven transparentes (para saber que ahí hay un edificio). */
+  private outlineLayer = new Container();
+  private outlines = new Map<number, Graphics>();
   private floor = new Container();
   private floorTiles = [new Graphics(), new Graphics(), new Graphics()];
   markers = new Container();
@@ -134,7 +138,7 @@ export class GameView {
       (r as any)._lastObjectRendered = this.app.stage;
     }, undefined, UPDATE_PRIORITY.UTILITY);
     this.floor.addChild(...this.floorTiles);
-    this.world.addChild(this.ground, this.floor, this.decalLayer, this.backdrop, this.markers, this.objects, this.sky);
+    this.world.addChild(this.ground, this.floor, this.decalLayer, this.outlineLayer, this.backdrop, this.markers, this.objects, this.sky);
     this.markers.addChild(this.bloodG, this.kairosG, this.trailLayer, this.pathG, this.hoverG);
     this.lightsLayer.blendMode = 'add';
     this.lightsLayer.addChild(this.marketLights);
@@ -225,6 +229,7 @@ export class GameView {
     this.buildLights();
     const city3d = this.chars3d?.setZone(this.zone) ?? false;
     this.buildingObjs = [];
+    for (const g of this.outlines.values()) g.destroy(); this.outlines.clear();
     this.signsLayer.removeChildren().forEach((c) => c.destroy({ children: true })); this.signPairs = [];
     for (const c of this.chunks.values()) c.destroy({ children: true });
     for (const c of this.chunkLights.values()) c.destroy({ children: true });
@@ -237,6 +242,7 @@ export class GameView {
     this.lightsLayer.addChild(this.marketLights, this.beaconG);
     this.sky.removeChildren().forEach((c) => c.destroy({ children: true }));
     for (const t of this.traffic) t.g.destroy(); this.trafficMarks?.destroy(); this.trafficMarks = null;
+    this.trafficSys?.destroy(); this.trafficSys = null;
     this.beacons = []; this.holos = []; this.cars = []; this.traffic = [];
     const z = this.zone, q = settings.quality;
     this.buildDanceFloor();
@@ -277,6 +283,7 @@ export class GameView {
       const occl = this.occluder(x0, y0, x0 + w, y0 + h);
       const obj = this.addStatic(x0, y0, w, h, (g) => { this.beacons.push(...drawBuilding(b, g, lights, q, occl)); }, true);
       (obj as any).lights = lights;
+      (obj as any).bIdx = this.buildingObjs.length;
       this.buildingObjs.push(obj);
       const sign = makeSign(b, q);
       if (city3d) {
@@ -321,7 +328,8 @@ export class GameView {
     }
     for (const t of this.traffic) t.g.destroy();
     this.traffic = [];
-    this.buildTraffic();
+    // v0.19 · Tráfico por la red de calles (solo cerca de la cámara, con semáforos).
+    if (z.kind === 'exterior') this.trafficSys = new Traffic(z, this.markers, settings.quality === 'high' ? 34 : settings.quality === 'low' ? 10 : 22);
     for (const p of z.props) {
       if (p.type === 'stall' || p.type === 'holo' || p.type === 'antenna') continue;
       this.addStatic(p.at[0], p.at[1], 1, 1, (g) => drawProp(g, propLights, p, true, this.occluder(p.at[0], p.at[1], p.at[0] + 1, p.at[1] + 1)));
@@ -1204,72 +1212,8 @@ export class GameView {
 
   /** Tráfico rodado: coches que circulan por las calzadas anchas del distrito. */
   private traffic: { g: Graphics; ax: number; ay: number; bx: number; by: number; t: number; v: number }[] = [];
-  /** Calzadas (asfalto largo) con su orientación y carriles por sentido. */
-  private roads() {
-    if (!this.zone || this.zone.kind !== 'exterior') return [];
-    return this.zone.ground.filter((gr) => gr.type === 'asphalt' && Math.min(gr.rect[2], gr.rect[3]) >= 3 && Math.max(gr.rect[2], gr.rect[3]) >= 16).map((gr) => {
-      const [x, y, w, h] = gr.rect; const horiz = w >= h; const width = horiz ? h : w;
-      return { x, y, w, h, horiz, width, perDir: width >= 6 ? 2 : 1 };
-    });
-  }
-  private buildTraffic() {
-    const roads = this.roads();
-    if (!roads.length) return;
-    // Marcas viales: doble línea continua en el centro y discontinua entre carriles del mismo sentido.
-    const mk = new Graphics();
-    const crossing = (r: (typeof roads)[number], px: number, py: number) => roads.some((o) => o !== r && o.horiz !== r.horiz && px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h);
-    const line = (r: (typeof roads)[number], off: number, dashed: boolean, color: number, width: number) => {
-      const len = r.horiz ? r.w : r.h;
-      for (let t = 0.3; t < len - 0.3; t += dashed ? 1.6 : 0.5) {
-        const seg = dashed ? 0.8 : 0.5;
-        const ax = r.horiz ? r.x + t : r.x + off, ay = r.horiz ? r.y + off : r.y + t;
-        const bx = r.horiz ? ax + seg : ax, by = r.horiz ? ay : ay + seg;
-        if (crossing(r, ax, ay) || crossing(r, bx, by)) continue;
-        const a = worldToScreen(ax, ay), b = worldToScreen(bx, by);
-        mk.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width, color, alpha: 0.95 });
-      }
-    };
-    for (const r of roads) {
-      const mid = r.width / 2;
-      line(r, mid - 0.07, false, 0xffd23f, 1.8); line(r, mid + 0.07, false, 0xffd23f, 1.8);
-      if (r.perDir === 2) { line(r, mid / 2, true, 0xf0f0ff, 1.6); line(r, mid + mid / 2, true, 0xf0f0ff, 1.6); }
-    }
-    this.markers.addChildAt(mk, 0);
-    this.trafficMarks = mk;
-    // Coches por carril: cada sentido circula por su mitad de la calzada.
-    const n = settings.quality === 'high' ? 2 : settings.quality === 'low' ? 0 : 1;
-    const cols = [0xffd23f, 0xff5a5a, 0x43f3ff, 0xe8e8f0, 0x2a2a3a, 0xb46cff, 0x7dff7a, 0xff8a3d];
-    let ci = 0;
-    for (const r of roads) {
-      const mid = r.width / 2;
-      for (const dir of [1, -1]) for (let lane = 0; lane < r.perDir; lane++) for (let k = 0; k < n; k++) {
-        const off = dir > 0 ? mid + (lane + 0.5) * (mid / r.perDir) : (lane + 0.5) * (mid / r.perDir);
-        const ax = r.horiz ? r.x : r.x + off, ay = r.horiz ? r.y + off : r.y;
-        const bx = r.horiz ? r.x + r.w : ax, by = r.horiz ? ay : r.y + r.h;
-        const g = new Graphics();
-        const col = cols[ci++ % cols.length];
-        const [lx, ly] = r.horiz ? [1.3, 0.6] : [0.6, 1.3];
-        drawBox(g, -lx / 2, -ly / 2, lx, ly, 0.05, 0.35, col); drawBox(g, -lx * 0.3, -ly * 0.3, lx * 0.6, ly * 0.6, 0.4, 0.25, shade(col, 0.55));
-        const head = worldToScreen(r.horiz ? 0.65 * dir : 0, r.horiz ? 0 : 0.65 * dir, 0.25);
-        g.circle(head.x, head.y, 2.5).fill(0xfff1c0);
-        const tail = worldToScreen(r.horiz ? -0.65 * dir : 0, r.horiz ? 0 : -0.65 * dir, 0.25);
-        g.circle(tail.x, tail.y, 2).fill(0xff3040);
-        this.markers.addChild(g);
-        const len = r.horiz ? r.w : r.h;
-        this.traffic.push({ g, ax: dir > 0 ? ax : bx, ay: dir > 0 ? ay : by, bx: dir > 0 ? bx : ax, by: dir > 0 ? by : ay, t: (k * 0.5 + lane * 0.27 + ci * 0.137) % 1, v: (2.5 + lane * 1.5 + (ci % 3) * 0.6) / len });
-      }
-    }
-  }
   private trafficMarks: Graphics | null = null;
-  private animateTraffic(dt: number) {
-    for (const c of this.traffic) {
-      c.t += c.v * dt * (settings.reduceMotion ? 0.4 : 1);
-      if (c.t > 1) c.t -= 1;
-      const x = c.ax + (c.bx - c.ax) * c.t, y = c.ay + (c.by - c.ay) * c.t;
-      const p = worldToScreen(x, y);
-      c.g.position.set(p.x, p.y);
-    }
-  }
+  private trafficSys: Traffic | null = null;
   private animateSky(now: number, dt: number) {
     this.animateFx(now);
     this.stepParts(now, dt);
@@ -1277,7 +1221,11 @@ export class GameView {
     this.drawThermal(now);
     this.drawStealth(now);
     for (const f of [...this.fxList]) if (now > f.until) { f.g.destroy(); this.fxList.splice(this.fxList.indexOf(f), 1); }
-    this.animateTraffic(dt);
+    if (this.trafficSys) {
+      const people: { x: number; y: number }[] = [];
+      for (const e of this.ents.values()) if ((e.s.kind === 'player' || e.s.kind === 'npc') && Math.abs(e.x - this.cam.x) < 40 && Math.abs(e.y - this.cam.y) < 40) people.push(e);
+      this.trafficSys.update(dt, this.serverTime(), this.cam.x, this.cam.y, people, settings.reduceMotion ? 0.5 : 1);
+    }
     const g = this.beaconG; g.clear();
     const on = settings.reduceFlashes ? true : Math.floor(now / 700) % 2 === 0;
     for (const b of this.beacons) g.circle(b.x, b.y, on ? 5 : 3).fill({ color: 0xff3040, alpha: on ? 0.95 : 0.4 });
@@ -1435,8 +1383,29 @@ export class GameView {
         }
         o.view.alpha += (a - o.view.alpha) * 0.2;
         const lg = (o as any).lights as Graphics | undefined; if (lg) lg.alpha = o.view.alpha;
+        this.outline(o);
       }
     }
+  }
+
+  /** v0.19 · Contorno del edificio en el suelo mientras está transparente u oculto: línea negra fina (con un filo claro
+   *  para que se lea de noche) siguiendo su planta. Aparece y se va con el mismo fundido que el edificio. */
+  private outline(o: SortObj) {
+    const idx: number = (o as any).bIdx ?? -1; if (idx < 0) return;
+    const k = Math.max(0, Math.min(1, (0.92 - o.view.alpha) / 0.6));
+    let g = this.outlines.get(idx);
+    if (k < 0.02) { if (g) g.visible = false; return; }
+    if (!g) {
+      const b = this.zone?.buildings[idx]; if (!b) return;
+      const [x0, y0, w, h] = b.rect, x1 = x0 + w, y1 = y0 + h;
+      const pts = [worldToScreen(x0, y0), worldToScreen(x1, y0), worldToScreen(x1, y1), worldToScreen(x0, y1)].flatMap((p) => [p.x, p.y]);
+      const inset = [worldToScreen(x0 + 0.06, y0 + 0.06), worldToScreen(x1 - 0.06, y0 + 0.06), worldToScreen(x1 - 0.06, y1 - 0.06), worldToScreen(x0 + 0.06, y1 - 0.06)].flatMap((p) => [p.x, p.y]);
+      g = new Graphics();
+      g.poly(pts, true).fill({ color: 0x000000, alpha: 0.12 }).stroke({ width: 2.4, color: 0x000000, alpha: 0.95, join: 'miter' });
+      g.poly(inset, true).stroke({ width: 0.8, color: 0xb8c0d8, alpha: 0.35 });
+      this.outlineLayer.addChild(g); this.outlines.set(idx, g);
+    }
+    g.visible = true; g.alpha = k;
   }
 
   /** Alcance de tu arma (rojo) y de tiro seguro apuntando (verde); lo rellena la ficha del personaje. */

@@ -485,6 +485,13 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log(`v0.12: ${v12.NEW_WEAPONS.length} armas nuevas en las tiendas.`);
 }
 
+// ---------------------------------------------------------------- v0.19: canales → paseo, aceras más anchas y pasos de peatones
+{
+  const v19 = await import('./v19.mjs');
+  const r = v19.zonesV19(C);
+  console.log(`v0.19: ${r.canals} canales convertidos en paseo, ${r.widened} avenidas con acera más ancha y ${r.crossings} pasos de peatones nuevos.`);
+}
+
 // ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
 {
   const { applyOverlays } = await import('./overlay.mjs');

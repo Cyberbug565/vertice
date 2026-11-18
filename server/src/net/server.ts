@@ -93,7 +93,11 @@ export function startServer(cfg: Config, db: Db, world: World, metrics: Metrics)
       const rel = normalize(decodeURIComponent(url.pathname)).replace(/^([/\\])+/, '');
       if (rel.includes('..')) { res.writeHead(400); return res.end(); }
       let file = join(cfg.staticDir, rel || 'index.html');
-      try { if ((await stat(file)).isDirectory()) file = join(file, 'index.html'); } catch { file = join(cfg.staticDir, 'index.html'); }
+      try { if ((await stat(file)).isDirectory()) file = join(file, 'index.html'); } catch {
+        // v0.19 · Un archivo que no existe (modelo, textura, script) da 404 en vez de la página: así el cliente sabe al momento que falta.
+        if (extname(rel)) { res.writeHead(404); return res.end(); }
+        file = join(cfg.staticDir, 'index.html');
+      }
       try {
         const immutable = rel.startsWith('assets/');
         const type = MIME[extname(file)] ?? 'application/octet-stream';

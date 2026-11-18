@@ -6,7 +6,7 @@ const { content } = loadContentFromDisk();
 const ferro = buildZoneGrid(content.zones.find((z) => z.id === 'vertice')!);
 
 describe('navegación', () => {
-  it('rodea edificios y cruza el canal por un puente', () => {
+  it('rodea edificios y cruza el paseo del antiguo canal', () => {
     const r = findPath(ferro, 37.5, 163.5, 113.5, 169.5);
     expect(r.ok).toBe(true);
     let px = 37.5, py = 163.5;
@@ -17,7 +17,8 @@ describe('navegación', () => {
   it('rechaza destinos dentro de edificios o en el agua', () => {
     expect(isWalkable(ferro, 38.5, 140.5)).toBe(false); // Torre Halcón
     expect(findPath(ferro, 37.5, 163.5, 38.5, 140.5).ok).toBe(false);
-    expect(isWalkable(ferro, 97.5, 169.5)).toBe(false); // canal
+    expect(isWalkable(ferro, 8.5, 8.5)).toBe(false); // agua del puerto
+    expect(isWalkable(ferro, 97.5, 169.5)).toBe(true); // v0.19: el antiguo canal es un paseo
   });
   it('respeta el límite de expansiones', () => {
     const r = findPath(ferro, 10.5, 134.5, 147.5, 215.5, 50);

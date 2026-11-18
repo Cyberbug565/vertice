@@ -291,7 +291,7 @@ export class City3D {
   setFaded(i: number, mode: 0 | 1 | 2) {
     if (!this.active || this.state[i] === mode) return;
     this.state[i] = mode;
-    this.neonFade?.(i, mode === 0 ? 2 : mode === 1 ? 1 : 0);
+    this.neonFade?.(i, mode === 0 ? 2 : 0); // v0.19: el neón de un edificio transparente se apaga (si no, llena la pantalla de rayas)
     for (const c of this.cells[i] ?? []) {
       c.solid.setMatrixAt(c.i, mode === 0 ? c.m : ZERO);
       c.ghost.setMatrixAt(c.i, mode === 1 ? c.m : ZERO);

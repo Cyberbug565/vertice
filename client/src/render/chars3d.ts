@@ -163,11 +163,17 @@ function shadeCss(hexStr: string, f: number) { const n = parseInt((hexStr || '#8
 function hexA(hexStr: string, a: number) { const n = parseInt((hexStr || '#888888').slice(1), 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`; }
 
 /** Un personaje: jerarquía de articulaciones (cadera, rodillas, columna, hombros, codos, cuello) y sus piezas. */
+/** v0.19 · Duración del fundido al aparecer o irse un personaje (ms). */
+const FADE_MS = 500;
 interface Rig {
   root: THREE.Group; body: THREE.Group; hips: THREE.Group; spine: THREE.Group; chest: THREE.Group; neck: THREE.Group;
   thighL: THREE.Group; thighR: THREE.Group; kneeL: THREE.Group; kneeR: THREE.Group; shoulderL: THREE.Group; shoulderR: THREE.Group; elbowL: THREE.Group; elbowR: THREE.Group;
   handR: THREE.Group; coat: THREE.Object3D[]; shadow: THREE.Mesh; key: string; heading: number; phase: number; lie: number; big: boolean; ranged: boolean; mats: THREE.Material[]; ghostMats?: THREE.Material[];
   lastX: number; lastY: number; speed: number;
+  /** v0.19 · Fundido al aparecer/irse: opacidad actual y estado original de cada material. */
+  /** Piezas de las que sale la firma del modelo (para no recalcularla si no cambian). */
+  src?: unknown[];
+  fadeK?: number; fadeOrig?: Map<THREE.Material, [boolean, number]>; fadeVis?: Map<THREE.Object3D, boolean>;
   /** v0.15 · cuerpo del kit (esqueleto), marcador del guardamanos y si apunta ahora mismo. */
   human?: Human; grip2?: THREE.Object3D; aimNow?: boolean;
   /** v0.16 · Superarmadura «Tormenta» (el piloto va dentro, oculto). */
@@ -199,6 +205,8 @@ export class Chars3D {
     this.canvas = canvas;
     this.renderer = new THREE.WebGLRenderer({ canvas, context: gl as WebGL2RenderingContext, antialias: false });
     this.renderer.autoClear = false;
+    // v0.19 · Consultar el registro de cada sombreador al compilarlo bloquea la GPU: solo en desarrollo.
+    this.renderer.debug.checkShaderErrors = !!import.meta.env.DEV;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.world.scale.y = Y_SQUASH;
     this.scene.add(this.world, this.hemi, this.sun, this.rim);
@@ -217,7 +225,7 @@ export class Chars3D {
   /** Volúmenes invisibles que tapan: edificios, muros y mobiliario grande. */
   setZone(z: ZoneDef): boolean {
     for (const r of this.rigs.values()) this.disposeRig(r);
-    this.rigs.clear();
+    this.rigs.clear(); this.born.clear(); this.leaving.clear();
     this.occl.clear(); this.bOccl = [];
     if (!this.city) { this.city = new City3D(); this.city.onReady = () => this.onCityReady?.(); this.world.add(this.city.group); }
     const city = this.city.build(z, this.quality);
@@ -245,7 +253,10 @@ export class Chars3D {
     const m = this.bOccl[i]; if (m) m.visible = !faded;
   }
 
-  private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) { for (const t of (m.userData.owned ?? []) as THREE.Texture[]) t.dispose(); m.dispose(); } for (const m of r.ghostMats ?? []) m.dispose(); }
+  /** v0.19 · Al quitar un modelo se liberan sus texturas, pero no se llama a `dispose()` de sus materiales: si no, en
+   *  cuanto se va el último PNJ que usaba un sombreador, three.js borra el programa y lo vuelve a compilar al llegar el
+   *  siguiente (era el 40 % del tiempo de CPU paseando por la ciudad). Los programas distintos son pocos (~50). */
+  private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) for (const t of (m.userData.owned ?? []) as THREE.Texture[]) t.dispose(); for (const m of r.ghostMats ?? []) m.dispose(); }
   /** Convierte un modelo en fantasma: cada material pasa a translúcido, sin escribir profundidad y con brillo propio. */
   private ghostify(r: Rig, color: number) {
     const tint = new THREE.Color(color);
@@ -596,9 +607,11 @@ export class Chars3D {
     let mech: Tormenta | undefined;
     if (H && a.top === 'exo-tormenta') {
       // v0.17 · Superarmadura «Tormenta» (modelo Ophiel): el piloto va dentro. Mientras se descarga, se ve a la persona.
+      // v0.19 · La armadura sustituye al personaje: el piloto no se ve nunca. Si el modelo de la release no está (o
+      // aún se descarga), se monta la Tormenta de placas; al llegar el modelo, se cambia sola.
+      if (!tormentaReady()) loadTormenta(() => {});
       const t = buildTormenta(a.accent2 && /^#/.test(a.accent2) ? a.accent2 : '#2fb8ff');
-      if (t) { mech = t; body.add(t.root); mats.push(...t.mats); shadow.scale.multiplyScalar(2.4); H.root.visible = false; }
-      else { loadTormenta(() => {}); H.root.visible = true; }
+      mech = t; body.add(t.root); mats.push(...t.mats); shadow.scale.multiplyScalar(2.4); H.root.visible = false;
     }
     return { mech, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
       shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, mats, lastX: e.x, lastY: e.y, speed: 0 };
@@ -790,9 +803,17 @@ export class Chars3D {
       const s = e.s;
       if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) continue;
       seen.add(s.id);
-      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0]);
+      // v0.19 · La firma del modelo (JSON de su aspecto) solo se recalcula si cambia alguna de sus piezas: antes se
+      // serializaba la apariencia entera de cada persona en cada fotograma.
       let r = this.rigs.get(s.id);
-      if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
+      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion()];
+      const same = !!r && !!r.src && r.src.length === src.length && r.src.every((v, i) => v === src[i]);
+      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0]);
+      if (r) r.src = src;
+      if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; r.src = src; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
+      this.leaving.delete(s.id);
+      let born = this.born.get(s.id); if (born === undefined) { born = opts.now; this.born.set(s.id, born); }
+      if (!e.ghost) this.fade(r, Math.min(1, (opts.now - born) / FADE_MS));
       this.animate(r, e, opts);
       this.applyHuman(r);
       if (e.ghost && r.ghostMats) {
@@ -809,7 +830,13 @@ export class Chars3D {
       const a = this.after[i], k = (tnow - a.t0) / a.life;
       if (k >= 1) { this.world.remove(a.g); a.mat.dispose(); this.after.splice(i, 1); } else a.mat.opacity = 0.5 * (1 - k);
     }
-    for (const [id, r] of this.rigs) if (!seen.has(id)) { this.disposeRig(r); this.rigs.delete(id); }
+    // v0.19 · Quien sale de la vista (o se aleja) se desvanece en vez de desaparecer de golpe.
+    for (const [id, r] of this.rigs) if (!seen.has(id)) {
+      let t = this.leaving.get(id); if (t === undefined) { t = opts.now; this.leaving.set(id, t); }
+      const k = (r.fadeK ?? 1) - (opts.now - t) / FADE_MS;
+      if (k <= 0.02 || r.ghostMats) { this.disposeRig(r); this.rigs.delete(id); this.leaving.delete(id); this.born.delete(id); }
+      else this.fade(r, k);
+    }
     // Cámara: el centro de la pantalla corresponde al mismo punto del suelo que en la vista 2D.
     const z = opts.zoom;
     const lx = (opts.W / 2 - opts.worldX) / z, ly = (opts.H / 2 - opts.worldY) / z; // píxeles del mundo sin cámara
@@ -933,6 +960,28 @@ export class Chars3D {
   }
 
   dispose() { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); }
+  private born = new Map<number, number>();
+  private leaving = new Map<number, number>();
+  /** Opacidad de un modelo entero (0–1). Solo toca sus materiales propios; las piezas con materiales compartidos
+   *  (armas) se ocultan a media transparencia. Al volver a 1 se deja todo como estaba. */
+  private fade(r: Rig, k: number) {
+    const was = r.fadeK ?? 1;
+    if (k >= 1 && was >= 1) return;
+    if (!r.fadeOrig) {
+      r.fadeOrig = new Map(); r.fadeVis = new Map();
+      for (const m of r.mats) r.fadeOrig.set(m, [m.transparent, (m as any).opacity ?? 1]);
+      r.root.traverse((o) => { const me = o as THREE.Mesh; if (me.isMesh && !r.fadeOrig!.has(me.material as THREE.Material)) r.fadeVis!.set(o, o.visible); });
+    }
+    const on = k < 0.999;
+    for (const [m, [t, op]] of r.fadeOrig) {
+      const tr = t || on;
+      if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; }
+      (m as any).opacity = on ? op * k : op;
+    }
+    for (const [o, v] of r.fadeVis!) o.visible = v && (!on || k > 0.55);
+    r.fadeK = on ? k : 1;
+    if (!on) { r.fadeOrig = undefined; r.fadeVis = undefined; }
+  }
 }
 
 /**
