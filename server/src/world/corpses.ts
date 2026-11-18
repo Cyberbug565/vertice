@@ -66,6 +66,8 @@ export class Corpses {
     if (t.npcType === 'police' || t.npcType === 'hierro') { const r = (t.zone.def as any).restricted as string | undefined; add(r === 'corporativo' || r === 'banco' ? 'uniforme-seguridad' : r === 'laboratorio' ? 'bata-laboratorio' : 'uniforme-pcv', 1); }
     if (this.rng() < 0.35) add('venda', 1 + Math.floor(this.rng() * 2));
     if (this.rng() < 0.2 * mult) add('estim', 1);
+    if (this.rng() < 0.12) add(this.rng() < 0.5 ? 'sutura' : 'antiseptico', 1);
+    if (this.rng() < 0.05) add('antibioticos', 1);
     if (this.rng() < 0.3) add(this.rng() < 0.5 ? 'refresco-neon' : 'fideos-krill', 1);
     if (lvl === 'lawless' && this.rng() < 0.5) add('neblina', 1 + Math.floor(this.rng() * 3));
     if (this.rng() < 0.12) add('ganzua-electronica', 1);

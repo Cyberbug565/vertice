@@ -231,7 +231,7 @@ export class Relics {
       if (!p || !e) continue;
       const mats = this.equipped(p);
       // CARMÍN: corta cualquier hemorragia (no cura las heridas).
-      if (mats.includes('matriz-carmin') && p.body.bleed > 0) { p.body.bleed = 0; e.labelVer++; }
+      if (mats.includes('matriz-carmin') && p.body.bleed > 0) { for (const w of p.body.list ?? []) w.bleed = 0; p.body.bleed = 0; e.labelVer++; }
       // Proyección: se acaba a los 5 min.
       const g = this.ghosts.get(c);
       if (g && now > g.until) this.endGhost(c, false);

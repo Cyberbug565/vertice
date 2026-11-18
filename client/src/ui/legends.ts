@@ -26,14 +26,21 @@ export function cheatPanel(net: Net, info: { items: { id: string; name: string; 
   const b = (label: string, fn: () => void, cls = '') => h('button', { class: `btn small ${cls}`, onclick: fn }, label);
   const filter = h('input', { type: 'search', placeholder: 'Buscar objeto o implante…', 'aria-label': 'Buscar objeto' }) as HTMLInputElement;
   const qty = h('input', { type: 'number', value: '1', min: '1', max: '999', style: { width: '5em' }, 'aria-label': 'Cantidad' }) as HTMLInputElement;
-  const list = h('div', { class: 'cheat-list' });
+  // v0.18 · Generador de cualquier objeto: buscador, filtro por categoría y lista completa (con desplazamiento).
+  const kinds = [...new Set(info.items.map((i) => i.kind))].sort();
+  const kindSel = h('select', { 'aria-label': 'Categoría' }, h('option', { value: '' }, 'Todas las categorías'), ...kinds.map((k) => h('option', { value: k }, k))) as HTMLSelectElement;
+  const list = h('div', { class: 'cheat-list', style: { maxHeight: '320px', overflowY: 'auto' } });
+  const count = h('span', { class: 'muted small' });
   const renderList = () => {
-    const q = filter.value.trim().toLowerCase();
-    list.replaceChildren(...info.items.filter((i) => !q || i.name.toLowerCase().includes(q) || i.id.includes(q)).slice(0, 60).map((i) =>
+    const q = filter.value.trim().toLowerCase(), k = kindSel.value;
+    const found = info.items.filter((i) => (!k || i.kind === k) && (!q || i.name.toLowerCase().includes(q) || i.id.includes(q)));
+    count.textContent = `${found.length} de ${info.items.length}`;
+    list.replaceChildren(...found.slice(0, 400).map((i) =>
       h('div', { class: 'cheat-row' }, h('span', {}, i.name, h('small', { class: 'muted' }, ` · ${i.kind}`)),
         i.id.startsWith('cyber:') ? h('span', {}, b('Dar', () => cmd('item', i.id)), b('Instalar', () => cmd('item', `install:${i.id.slice(6)}`))) : b('Dar', () => cmd('item', i.id, Number(qty.value) || 1)))));
   };
   filter.addEventListener('input', renderList);
+  kindSel.addEventListener('change', renderList);
   filter.addEventListener('keydown', (e) => e.stopPropagation());
   renderList();
   const npcSel = h('select', { 'aria-label': 'PNJ' }, ...info.npcs.map((n) => h('option', { value: n }, n))) as HTMLSelectElement;
@@ -47,6 +54,6 @@ export function cheatPanel(net: Net, info: { items: { id: string; name: string; 
     h('h3', {}, 'Viajar'), h('div', { class: 'row' }, placeSel, b('Ir', () => cmd('tp', placeSel.value))),
     h('h3', {}, 'Leyendas (activar el encargo final)'), h('div', { class: 'row' }, b('Iris', () => cmd('legend', 'iris')), b('Sable', () => cmd('legend', 'sable')), b('Teo', () => cmd('legend', 'teo'))),
     h('h3', {}, 'Hora y ciberpsicosis'), h('div', { class: 'row' }, num, b('Poner hora', () => cmd('hour', undefined, Number(num.value))), b('Ciberpsicosis = valor', () => cmd('psyche', undefined, Number(num.value))), b('Forzar episodio', () => cmd('episode', undefined, Math.max(45, Number(num.value))))),
-    h('h3', {}, 'Objetos e implantes'), h('div', { class: 'row' }, filter, qty), list);
+    h('h3', {}, 'Generar cualquier objeto, matriz o implante'), h('div', { class: 'row' }, filter, kindSel, qty, count), list);
   void $ui;
 }

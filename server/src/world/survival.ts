@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   checkChance, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
-  OBJECTIVES, PART_NAMES, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView, REMOTE_RANGE } from '@vertice/shared';
+  OBJECTIVES, PART_NAMES, TREATMENTS, WOUND_INFO, type TreatmentId, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView, REMOTE_RANGE } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { MythicTransfer } from './mythics.js';
 import type { Entity, RunningTask } from './entity.js';
@@ -12,6 +12,7 @@ import { ClinicService } from '../game/clinic.js';
 import { BountyService, type Bounty } from '../game/bounty.js';
 import { GameError } from '../game/effects.js';
 import { isSick, substanceEffects, takeDose } from '../game/substances.js';
+import { hasOpenWounds, woundCarePrice, woundList } from './wounds.js';
 import { buildSheet, chromeParts, effective, objectiveStatus, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
@@ -108,11 +109,12 @@ export class Survival {
     if (p.sleeping) {
       p.fatigue = Math.max(0, p.fatigue - n.sleepRecoverPerGameHour * p.sleeping.quality * dtH);
       p.stamina = Math.min(ef.hpMax + 40, p.stamina + 6 * p.sleeping.quality * dtH * 10);
-      if (p.sleeping.quality >= 0.8 && p.hunger < 100 && p.thirst < 100) p.hp = Math.min(ef.hpMax, p.hp + 4 * dtH);
+      // v0.18 · La salud solo vuelve descansando, comido, bebido y con todas las heridas curadas.
+      if (p.hunger < 90 && p.thirst < 90 && !hasOpenWounds(p.body)) p.hp = Math.min(ef.hpMax, p.hp + 6 * p.sleeping.quality * this.healBoost(ef) * dtH);
       if (p.fatigue <= 0) {
         const full = p.sleeping.quality >= 0.8;
         if (full) p.luck = p.attributes.LUCK;
-        this.wake(c, full ? 'Te despiertas como nueva persona: sueño, Suerte y algo de salud recuperados.' : 'Te despiertas. No has descansado del todo bien.');
+        this.wake(c, full ? (hasOpenWounds(p.body) ? 'Te despiertas descansada/o, pero las heridas siguen ahí: hasta que no curen no recuperas salud.' : 'Te despiertas como nueva persona: sueño, Suerte y algo de salud recuperados.') : 'Te despiertas. No has descansado del todo bien.');
       } else if (dangerAt(e.zone.grid, e.x, e.y) !== 'protected' && e.zone.def.kind !== 'interior') this.streetEvent(c, dtH);
     } else {
       p.fatigue = Math.min(100, p.fatigue + (n.perGameHour.fatigue * ef.needs.fatigue * mult * (p.profession === 'estibador' && working ? 0.7 : 1) + substances.fatigue) * dtH);
@@ -151,8 +153,6 @@ export class Survival {
       if (p.running && ef.legsLost > 0 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin una pierna no puedes correr: busca un matasanos que te implante una prótesis.'); }
       if (run && e.moving) p.stamina = Math.max(0, p.stamina - 3);
       else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1) * (ef.flags.has('corazon-reactor') ? 2 : 1));
-      // v0.9 · Nanobots sanguíneos: regeneran salud fuera de combate.
-      if (ef.regen && p.status === 'alive' && Date.now() - p.lastCombatAt > 8000 && p.hp < ef.hpMax) p.hp = Math.min(ef.hpMax, p.hp + ef.regen);
       if (p.running && p.stamina <= 3 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.'); }
       if (p.stamina > 20) x.breathless = false;
       e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > Date.now() ? 0.55 : 1);
@@ -162,13 +162,23 @@ export class Survival {
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
     if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y) * (p.running && !p.driving ? 2 : 1));
     x.lastPos = { zone: e.zone.id, x: e.x, y: e.y };
-    // Regeneración (perks de medicina) fuera de combate.
-    const regen = ef.perk.regen ?? 0;
-    if (regen && Date.now() - p.lastCombatAt > 10000 && p.hp < ef.hpMax && p.hunger < 100 && p.thirst < 100) p.hp = Math.min(ef.hpMax, p.hp + regen * (ef.flags.has('milagro') ? 3 : 1));
-    // Adrenalina (implante): curación repartida en el tiempo.
-    if ((p.buffs.curar ?? 0) > Date.now()) p.hp = Math.min(ef.hpMax, p.hp + (p.buffs.curarPerSec ?? 0));
-    // Biomonitor: autoestimulante por debajo del 25 %.
-    if (ef.flags.has('autoestim') && p.hp < ef.hpMax * 0.25 && Date.now() > p.autoStimAt) { p.autoStimAt = Date.now() + 120000; p.hp = Math.min(ef.hpMax, p.hp + 20); this.notice(c, 'good', 'Tu biomonitor inyecta un estimulante: +20 de salud.'); }
+    // v0.18 · Cada tiro cuenta: la salud ya no se regenera sola. Los nanobots y los perks de medicina aceleran la
+    // curación de las heridas y lo que recuperas durmiendo (healBoost); la adrenalina y el biomonitor dan salud temporal.
+    if ((p.buffs.curar ?? 0) > Date.now()) this.addTempHp(p, p.buffs.curarPerSec ?? 0, 240);
+    if (ef.flags.has('autoestim') && p.hp < ef.hpMax * 0.25 && Date.now() > p.autoStimAt) { p.autoStimAt = Date.now() + 120000; this.addTempHp(p, 20, 240); this.notice(c, 'good', 'Tu biomonitor inyecta un estimulante: +20 de salud temporal.'); }
+    if (p.tempHp && Date.now() >= p.tempHp.until) {
+      const lose = Math.min(p.tempHp.amount, Math.max(0, p.hp - 1));
+      p.hp -= lose; p.tempHp = undefined;
+      if (lose > 0) this.notice(c, 'warn', `Se pasa el efecto del estimulante: pierdes ${Math.round(lose)} de salud.`);
+    }
+    // Heridas: vendas que se ensucian, infección y curación con el paso del tiempo de juego.
+    if (woundList(p.body).length) {
+      const r = this.w.combat.wounds.hourly(p, dtH, !!p.sleeping, this.healBoost(ef));
+      for (const t of r.healed) this.notice(c, 'good', `Se ha curado: ${t}.`);
+      for (const t of r.infected) this.notice(c, 'bad', `Se te ha infectado: ${t}. Necesitas antibióticos.`);
+      if (r.healed.length) { e.labelVer++; if (!hasOpenWounds(p.body)) this.notice(c, 'good', 'Todas tus heridas están curadas: descansa para recuperar la salud.'); }
+      if (p.hp <= 0) { this.downed(c, 'una infección'); return; }
+    }
     // RAM del deck: se recarga más rápido con rango de red.
     if (ef.ram > 0) { if (!p.kairos) p.ram = Math.min(ef.ram, p.ram + (0.25 + p.netRank * 0.03 + substances.ram) * ef.matrix.ramRegen); } else p.ram = 0;
     // Cromo visible y salud para quien mire.
@@ -291,17 +301,26 @@ export class Survival {
     p.hunger = Math.max(0, Math.min(100, p.hunger + (cons.hunger ?? 0) * k));
     p.thirst = Math.max(0, Math.min(100, p.thirst + (cons.thirst ?? 0)));
     p.fatigue = Math.max(0, Math.min(100, p.fatigue + (cons.fatigue ?? 0)));
-    const ef = effective(this.w.c, p);
-    if (cons.restore === 'hp') p.hp = Math.min(ef.hpMax, p.hp + cons.amount);
+    // v0.18 · Los medicamentos ya no curan heridas: dan salud temporal (se va al pasar el efecto).
+    if (cons.restore === 'hp') { this.addTempHp(p, cons.amount, item === 'estim' ? 240 : 180); }
     if (cons.restore === 'stamina') p.stamina = p.stamina + cons.amount;
     const bleeding = p.body.bleed > 0.05;
-    if (item === 'venda' || item === 'estim') this.w.combat.wounds.treat(p, c.e, item === 'estim' ? 1 : 0.7);
+    let extra = '';
+    if (item === 'venda') {
+      // Usada sin elegir herida: venda la que más sangra (o la primera sin vendar).
+      const w = woundList(p.body).filter((x) => !x.bandaged && x.kind !== 'contusion').sort((a, b) => b.bleed - a.bleed)[0];
+      if (w) { w.bandaged = true; w.bandageAge = 0; extra = ` (${WOUND_INFO[w.kind].name.toLowerCase()} en ${PART_NAMES[w.part]})`; }
+      else extra = ': no tienes ninguna herida sin vendar';
+    }
+    if (item === 'estabilizador') this.w.combat.wounds.stabilize(p.body, c.e);
+    if (item === 'antibioticos') { this.w.combat.wounds.antibiotics(p); extra = ': la infección remite'; }
+    this.recalcBleed(p);
     if (item === 'inmunosupresor' && p.psyche) {
       const floor = p.psyche.episode && p.psyche.episode.until > Date.now() ? p.psyche.episode.floor : 0;
       p.psyche.level = Math.max(floor, p.psyche.level - 18);
       this.notice(c, floor ? 'warn' : 'good', floor ? 'El neuroinhibidor calma un poco las voces, pero el episodio sigue su curso.' : 'El neuroinhibidor apaga el zumbido del cromo.');
     }
-    this.notice(c, 'info', `${auto ? 'Automático: ' : ''}${item === 'venda' ? 'te vendas' : `consumes ${d.name}`}${bleeding && (item === 'venda' || item === 'estim') ? (p.body.bleed > 0.05 ? ': la hemorragia baja, pero sigue.' : ': la hemorragia se detiene.') : '.'}`);
+    this.notice(c, 'info', `${auto ? 'Automático: ' : ''}${item === 'venda' ? 'te vendas' : `consumes ${d.name}`}${extra}${bleeding && (item === 'venda' || item === 'estabilizador') ? (p.body.bleed > 0.05 ? '. La hemorragia baja, pero sigue.' : '. La hemorragia se detiene.') : '.'}${cons.restore === 'hp' ? ` +${cons.amount} de salud temporal.` : ''}`);
     this.sheet(c);
   }
 
@@ -342,39 +361,47 @@ export class Survival {
     this.sheet(c);
   }
 
-  // ================================================================ v0.7: curar una zona concreta del cuerpo
-  /** Vendas, estimulantes y analgésicos sobre una herida concreta. El cromo no se cura: se repara en un matasanos. */
-  async treatPart(c: PlayerConn, part: BodyPart, item: string, opId: string) {
+  // ================================================================ v0.18: tratar una herida concreta
+  /** Salud temporal de estimulantes, adrenalina o biomonitor: se suma ahora y se resta cuando pasa el efecto. */
+  addTempHp(p: PlayerState, amount: number, seconds: number) {
+    const max = effective(this.w.c, p).hpMax;
+    const add = Math.max(0, Math.min(amount, max - p.hp));
+    p.hp += add;
+    p.tempHp = { amount: Math.min(60, (p.tempHp?.amount ?? 0) + add), until: Math.max(p.tempHp?.until ?? 0, Date.now() + seconds * 1000) };
+  }
+  /** Nanobots y perks de medicina: aceleran la curación y lo que se recupera durmiendo. */
+  healBoost(ef: ReturnType<typeof effective>) { return 1 + (ef.regen ?? 0) * 0.5 + (ef.perk.regen ?? 0) * (ef.flags.has('milagro') ? 3 : 1); }
+  recalcBleed(p: PlayerState) { this.w.combat.wounds.tick0(p.body); }
+
+  /** Vendar, cambiar la venda, suturar, sacar la bala con pinzas o desinfectar una herida. El cromo no sangra: se repara en un matasanos. */
+  async treatWound(c: PlayerConn, woundId: number, action: TreatmentId, opId: string) {
     const p = c.p!;
-    const TREAT: Record<string, { wound: number; bleed: number; hp: number; label: string }> = {
-      venda: { wound: 10, bleed: 0.7, hp: 5, label: 'Te vendas' },
-      estim: { wound: 18, bleed: 1, hp: 20, label: 'Te inyectas un estimulante en' },
-      estabilizador: { wound: 14, bleed: 0.85, hp: 10, label: 'Aplicas el estabilizador en' },
-      analgesicos: { wound: 6, bleed: 0, hp: 8, label: 'Los analgésicos calman el dolor de' },
-    };
-    const t0 = TREAT[item];
-    if (!t0) throw new GameError('Eso no sirve para curar heridas.');
-    if (p.body.lost.includes(part)) throw new GameError('Ese miembro ya no está: solo un matasanos puede implantarte una prótesis.');
-    if (chromeParts(this.w.c, p).includes(part)) throw new GameError('Es cromo: no sangra, pero si está dañado tiene que repararlo un matasanos.');
-    if (!(p.body.wounds[part] ?? 0) && p.body.bleed <= 0.05) throw new GameError('Esa zona está sana.');
-    if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No te quedan.');
+    if (p.status !== 'alive') throw new GameError('Ahora no puedes.');
+    const wd = woundList(p.body).find((x) => x.id === woundId);
+    if (!wd) throw new GameError('Esa herida ya no está.');
+    const item = TREATMENTS[action].item;
+    if ((p.inventory.get(item) ?? 0) < 1) throw new GameError(`Necesitas ${this.w.c.items.find((i) => i.id === item)?.name.toLowerCase() ?? item}.`);
+    const consumes = item !== 'pinzas';
     const done = await this.w.db.tx(async (q) => {
       const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
       if (dup.rows.length) return false;
-      const u = await q.query('UPDATE inventory_items SET qty = qty - 1 WHERE character_id=$1 AND def_id=$2 AND qty >= 1 RETURNING qty', [p.charId, item]);
-      if (!u.rows.length) throw new GameError('No te quedan.');
-      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'treat', JSON.stringify({ item, part })]);
+      if (consumes) {
+        const u = await q.query('UPDATE inventory_items SET qty = qty - 1 WHERE character_id=$1 AND def_id=$2 AND qty >= 1 RETURNING qty', [p.charId, item]);
+        if (!u.rows.length) throw new GameError('No te quedan.');
+      }
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'treat', JSON.stringify({ action, part: wd.part, kind: wd.kind })]);
       return true;
     });
     if (!done) return;
-    p.inventory.set(item, (p.inventory.get(item) ?? 1) - 1);
-    p.body.wounds[part] = Math.max(0, (p.body.wounds[part] ?? 0) - t0.wound);
-    if (!p.body.wounds[part]) delete p.body.wounds[part];
-    p.body.bleed = Math.max(0, p.body.bleed * (1 - t0.bleed));
-    p.hp = Math.min(effective(this.w.c, p).hpMax, p.hp + t0.hp);
+    let r: { text: string; ok: boolean };
+    try { r = this.w.combat.wounds.treat(p, woundId, action); }
+    catch (err) { throw new GameError((err as Error).message); }
+    if (consumes) p.inventory.set(item, (p.inventory.get(item) ?? 1) - 1);
+    this.recalcBleed(p);
     if (c.e) c.e.labelVer++;
-    this.w.progress.gain(p, 'medicina', 2);
-    this.notice(c, 'good', `${t0.label} ${PART_NAMES[part]}.${p.body.bleed > 0.05 ? ` Sigues sangrando (−${p.body.bleed.toFixed(1)}/s).` : ''}`);
+    this.w.progress.gain(p, 'medicina', action === 'vendar' || action === 'cambiar-venda' ? 2 : 4);
+    if (p.hp <= 0) { this.downed(c, 'el dolor de la cura'); return; }
+    this.notice(c, r.ok ? 'good' : 'bad', `${r.text}${p.body.bleed > 0.05 ? ` Sigues sangrando (−${p.body.bleed.toFixed(2)}/s).` : ''}`);
     this.sheet(c);
   }
 
@@ -401,6 +428,34 @@ export class Survival {
     for (const k of parts) delete p.body.wounds[k];
     if (c.e) c.e.labelVer++;
     this.notice(c, 'good', `${doc.name} repara tu cromo (${parts.map((k) => PART_NAMES[k]).join(', ')}) por ${price} €$.`);
+    this.sheet(c);
+    this.w.send(c, { t: 'clinic', view: this.clinic.view(docId, p) });
+  }
+  /** v0.18 · Curar las heridas en la consulta: venda, sutura, saca balas, desinfecta y da antibióticos. */
+  async clinicHeal(c: PlayerConn, docId: string, opId: string) {
+    const o = this.x(c).openClinic;
+    const src = o && this.w.entities.get(o.entity);
+    if (!o || o.doc !== docId || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
+    const p = c.p!;
+    const doc = this.w.c.ripperdocs.find((d) => d.id === docId)!;
+    const list = woundList(p.body).filter((w) => w.kind !== 'amputacion' && w.kind !== 'contusion');
+    if (!list.length) throw new GameError(woundList(p.body).some((w) => w.kind === 'amputacion') ? 'Para el miembro que te falta necesitas una prótesis (brazo, mano o pierna) de su catálogo.' : 'No tienes heridas que tratar.');
+    const price = woundCarePrice(p, doc.priceMult);
+    if (p.money < price) throw new GameError(`Curarte las heridas cuesta ${price} €$.`);
+    await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) throw new GameError('Operación ya procesada');
+      const bal = p.money - price;
+      await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:heridas`, p.charId, -price, bal, `Curas: ${doc.name}`]);
+      await q.query('UPDATE characters SET money=$2 WHERE id=$1', [p.charId, bal]);
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'wound-care', JSON.stringify({ wounds: list.length, price })]);
+    });
+    p.money -= price;
+    for (const w of list) { w.bullet = false; w.bandaged = true; w.bandageAge = 0; w.disinfected = 48; w.infection = 0; if (w.kind === 'corte' || w.kind === 'corte-profundo') w.sutured = true; }
+    this.recalcBleed(p);
+    if (c.e) c.e.labelVer++;
+    const amp = woundList(p.body).some((w) => w.kind === 'amputacion');
+    this.notice(c, 'good', `${doc.name} te cura ${list.length} herida${list.length === 1 ? '' : 's'} por ${price} €$. Ahora tienen que cerrar: descansa.${amp ? ' El miembro que te falta solo vuelve con una prótesis.' : ''}`);
     this.sheet(c);
     this.w.send(c, { t: 'clinic', view: this.clinic.view(docId, p) });
   }
@@ -545,7 +600,7 @@ export class Survival {
       p.inventory.set('estim', (p.inventory.get('estim') ?? 1) - 1);
     }
     if (tp.status !== 'downed') return this.w.send(c, { t: 'ack', seq, ok: false, reason: 'Ya no está derribado.' });
-    tp.status = 'alive'; tp.hp = 15; tp.downedUntil = 0; this.w.combat.wounds.treat(tp, target, 1);
+    tp.status = 'alive'; tp.hp = 15; tp.downedUntil = 0; this.w.combat.wounds.stabilize(tp.body, target);
     target.label = ''; target.state = 'alive'; this.bump(target);
     await savePlayerVitals(this.w.db, tp).catch(() => {});
     this.notice(target.conn, 'good', `${p.name} te ha estabilizado. Vuelves en ti con 15 de salud.`);

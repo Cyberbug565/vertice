@@ -5,6 +5,7 @@ import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
 import { chromeParts, effective, type PlayerState } from './player.js';
 import { ROMAN, type MarketService } from './market.js';
+import { woundCarePrice } from '../world/wounds.js';
 
 const MORALITY: Record<string, string> = { estricta: 'Estricta: nunca instala cromo robado', flexible: 'Flexible: acepta cromo robado con recargo', sin_escrupulos: 'Sin escrúpulos: instala lo que sea' };
 
@@ -72,7 +73,8 @@ export class ClinicService {
     }
     const dangerLabel = d.danger >= 0.3 ? 'Peligroso: tiene fama de robar a sus pacientes' : d.danger > 0.05 ? 'Algo turbio' : 'De confianza';
     return { doc: d.id, name: d.name, skill: d.skill, morality: MORALITY[d.morality], dangerLabel, desc: d.desc, money: p.money, humanity: p.humanity, humanityMax: p.humanityMax, chromeUsed: ef.chromeUsed, chromeCapacity: ef.chromeCapacity, rep: this.rep(p, d), offers,
-      repair: (() => { const parts = chromeParts(this.c, p).filter((k) => (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0) > 0); const dmg = parts.reduce((acc, k) => acc + (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0), 0); return parts.length ? { parts, price: Math.max(60, Math.round(dmg * 9 * d.priceMult)) } : null; })() };
+      repair: (() => { const parts = chromeParts(this.c, p).filter((k) => (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0) > 0); const dmg = parts.reduce((acc, k) => acc + (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0), 0); return parts.length ? { parts, price: Math.max(60, Math.round(dmg * 9 * d.priceMult)) } : null; })(),
+      heal: (() => { const list = (p.body.list ?? []).filter((w) => w.kind !== 'amputacion' && w.kind !== 'contusion'); const amp = (p.body.list ?? []).filter((w) => w.kind === 'amputacion').length; return list.length || amp ? { wounds: list.length, amputations: amp, price: woundCarePrice(p, d.priceMult) } : null; })() };
   }
 
   /** Opera. La tirada, el cobro, el cambio de cromo y las consecuencias se aplican juntas e idempotentes. */

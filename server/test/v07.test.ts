@@ -96,27 +96,35 @@ describe('v0.7 · controles, cuerpo, chat y amenazas', () => {
     expect(blocked).toBeLessThan(open);
   });
 
-  it('curar por zonas: la venda cura esa herida y corta la hemorragia; el cromo no se venda', async () => {
+  it('curar heridas: la venda corta la hemorragia de esa herida; el cromo no sangra', async () => {
     const b = await join('herida');
     const p = P('herida');
-    p.body = { wounds: { pierna_izq: 22 }, lost: [], bleed: 1.5 };
+    // Partida antigua (solo daño por zonas): se convierte en contusiones.
+    p.body = { wounds: { pierna_izq: 22 }, lost: [], bleed: 0 };
+    expect(app.world.combat.wounds.bodyOf(E('herida'), p).wounds.pierna_izq).toBe(22);
+    p.body = { wounds: {}, lost: [], bleed: 0, list: [], seq: 0 };
+    app.world.combat.rng = () => 0.99;
+    app.world.combat.wounds.hit(E('herida'), p, 'pierna_izq', 14, { id: 'navaja', w: app.world.c.items.find((i) => i.id === 'navaja')!.weapon! }, true);
+    app.world.combat.rng = Math.random;
+    const w = p.body.list![0];
+    expect(w.kind).toBe('corte');
+    expect(p.body.bleed).toBeGreaterThan(0.05);
     p.inventory.set('venda', 2);
     await app.db.query("INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES (gen_random_uuid(), $1, 'venda', 2) ON CONFLICT (character_id, def_id) DO UPDATE SET qty = 2", [p.charId]);
-    expect((await b.cmd({ t: 'treat', part: 'pierna_izq', item: 'venda', opId: op() })).ok).toBe(true);
-    expect(p.body.wounds.pierna_izq).toBe(12);
-    expect(p.body.bleed).toBeLessThan(0.6);
-    // Cromo: no sangra y no se cura con vendas (se repara en un matasanos).
+    expect((await b.cmd({ t: 'treat', wound: w.id, action: 'vendar', opId: op() })).ok).toBe(true);
+    expect(w.bandaged).toBe(true);
+    expect(p.body.bleed).toBe(0);
+    expect(p.inventory.get('venda')).toBe(1);
+    // Cromo: no sangra ni abre heridas (se repara en un matasanos).
     p.cyber.push({ id: 'test-brazo', def: 'brazo-protesico', location: 'installed', stolen: false, part: 'brazo_der' });
     p.body.wounds.brazo_der = 30;
-    const r = await b.cmd({ t: 'treat', part: 'brazo_der', item: 'venda', opId: op() });
-    expect(r.ok).toBe(false); expect(r.reason).toMatch(/cromo/i);
     const sheet = (app.world.survival as any).sheetOf(p);
     expect(sheet.body.chrome).toContain('brazo_der');
     expect(sheet.body.broken).toContain('brazo_der');
-    // Golpe en el cromo: no abre hemorragia.
-    p.body.bleed = 0;
+    const before = p.body.list!.length;
     app.world.combat.wounds.hit(E('herida'), p, 'brazo_der', 20, { id: 'navaja', w: app.world.c.items.find((i) => i.id === 'navaja')!.weapon! }, true);
     expect(p.body.bleed).toBe(0);
+    expect(p.body.list!.length).toBe(before);
     p.cyber = p.cyber.filter((c) => c.id !== 'test-brazo');
   });
 

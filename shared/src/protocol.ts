@@ -19,8 +19,11 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('matrix'), seq, action: z.enum(['equip', 'remove']), item: z.string().max(64) }),
   z.object({ t: z.literal('legend'), seq, legend: z.string().max(32), action: z.enum(['view', 'accept']) }),
   z.object({ t: z.literal('cheat'), seq, cmd: z.string().max(32), arg: z.string().max(80).optional(), n: z.number().finite().optional() }),
-  z.object({ t: z.literal('treat'), seq, part: z.enum(['cabeza', 'torso', 'brazo_izq', 'brazo_der', 'mano_izq', 'mano_der', 'pierna_izq', 'pierna_der']), item: z.string().max(64), opId }),
+  // v0.18 · Tratar una herida concreta (vendar, cambiar la venda, suturar, sacar la bala, desinfectar).
+  z.object({ t: z.literal('treat'), seq, wound: z.number().int().nonnegative(), action: z.enum(['vendar', 'cambiar-venda', 'suturar', 'sacar-bala', 'desinfectar']), opId }),
   z.object({ t: z.literal('repairChrome'), seq, doc: z.string().max(64), opId }),
+  // v0.18 · El matasanos te cura las heridas (venda, sutura, saca balas, desinfecta y antibióticos). Las amputaciones, con prótesis.
+  z.object({ t: z.literal('clinicHeal'), seq, doc: z.string().max(64), opId }),
   z.object({ t: z.literal('interact'), seq, target: z.number().int().nonnegative(), remote: z.boolean().optional() }),
   z.object({ t: z.literal('choose'), seq, dialog: z.number().int(), option: z.string().max(64), luck: z.number().int().min(0).max(10).default(0), opId }),
   z.object({ t: z.literal('closeDialog'), seq }),
@@ -163,7 +166,7 @@ export interface ClinicOffer {
   source: 'stock' | 'stolen' | 'inventory' | 'installed'; ref: string; action: 'install' | 'remove'; def: string; name: string; grade: number; slot: string; family: string; desc: string; stolen: boolean;
   capacity: number; humanity: number; price: number; survival: number; clean: number; theft: number; danger: string; humanityAfter: number; capacityAfter: number; blocked?: string; replaces?: string;
  warning?: string;}
-export interface ClinicView { doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[]; repair?: { parts: string[]; price: number } | null }
+export interface ClinicView { doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[]; repair?: { parts: string[]; price: number } | null; heal?: { wounds: number; price: number; amputations: number } | null }
 export interface BountyView {
   money: number;
   active: { id: string; targetName: string; kind: 'player' | 'npc'; amount: number; poster: string; reason: string; zone?: string; online?: boolean; mine: boolean; onMe: boolean; aliveOnly: boolean }[];
@@ -239,7 +242,7 @@ export interface CharacterSheet {
   running: boolean; auto: { on: boolean; personality: string };
   post: { id: string; name: string; place: string; shift: [number, number]; pay: number; onShift: boolean; worked: boolean } | null;
   // ---- v0.6
-  body: { wounds: Record<string, number>; lost: string[]; bleed: number; chrome: string[]; broken: string[] };
+  body: { wounds: Record<string, number>; lost: string[]; bleed: number; chrome: string[]; broken: string[]; list?: import('./body.js').Wound[]; tempHp?: number; tempHpS?: number; pain?: number };
   weaponSlots: { grande: number; pequena: number; maxGrande: number; maxPequena: number };
   aim: { range: number; time: number };
   bio: { objective: string; objectiveName: string; childhood: string; event: string; done: boolean; progress: string } | null;

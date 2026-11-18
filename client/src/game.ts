@@ -115,7 +115,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     toolbarB.replaceChildren(
       ib('🧍', 'Personaje', 'character', () => charScreen('sheet'), 'btn-sheet', 'mini'), ib('🎒', 'Inventario', 'inventory', () => charScreen('inv'), 'btn-inv', 'mini'),
       ib('🦾', 'Cromo', 'cyber', () => charScreen('cyber'), undefined, 'mini'), ib('⭐', 'Habilidades', 'skills', () => charScreen('skills'), 'btn-skills', 'mini'),
-      ib('🫀', 'Cuerpo', 'body', () => bodyPanel.toggle(), 'btn-body', 'mini'), ib('🗺', 'Mapa', 'map', () => mapPanel(), undefined, 'mini'), ib('📓', 'Diario', 'journal', () => journalPanel(), 'btn-journal', 'mini'),
+      ib('🫀', 'Salud', 'body', () => bodyPanel.toggle(), 'btn-body', 'mini'), ib('🗺', 'Mapa', 'map', () => mapPanel(), undefined, 'mini'), ib('📓', 'Diario', 'journal', () => journalPanel(), 'btn-journal', 'mini'),
       ib('📱', 'Buscar', 'search', () => searchPanel({ net }, 'phone'), undefined, 'mini'), ib('🚗', 'Conducir', 'drive', () => toggleDrive(), 'btn-drive', 'mini'), ib('🧳', 'Maletero', 'trunk', () => net.send({ t: 'trunk', action: 'view' } as any), undefined, 'mini'),
       ib('💼', 'Empleos', 'jobs', () => net.send({ t: 'jobs' } as any), undefined, 'mini'), ib('🏠', 'Propiedades', 'props', () => net.send({ t: 'props' } as any), undefined, 'mini'),
       ib('📈', 'Mercado', 'market', () => marketLive(true), undefined, 'mini'), ib('🎯', 'Recompensas', 'bounties', () => net.send({ t: 'bounties' } as any), undefined, 'mini'),
@@ -125,7 +125,6 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const bottom = h('div', { class: 'hud hud-bottom' }, actionEl, progress, toolbarA, toolbarB);
   // Panel del cuerpo (siempre a mano mientras peleas).
   const bodyPanel = new BodyPanel(net, (t, k) => toast(t, k), () => keyOf('body'));
-  try { if (localStorage.getItem('vertice.bodyPanel') === '0') bodyPanel.toggle(false); } catch {}
   // Arma equipada, munición y RAM del deck.
   const weaponEl = h('div', { class: 'hud hud-weapon' });
   // Habilidades de los implantes (teclas 1–4) y avisos de experiencia de habilidad (barras azules).
@@ -487,7 +486,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const m = h('div', { class: 'ctx-menu', id: 'target-menu', role: 'menu', style: { left: `${Math.min(window.innerWidth - 300, sp.x + 14)}px`, top: `${Math.max(10, sp.y - 120)}px` } },
       h('div', { class: 'ctx-head' }, h('b', {}, st.sheet?.name ?? 'Tú'), h('button', { class: 'btn small', onclick: () => m.remove() }, '✕')),
       h('div', { class: 'ctx-group' },
-        item('💃 Bailar', 'dance', () => openDances()), item('🫀 Cuerpo y heridas', 'body', () => bodyPanel.toggle(true)), item('🎒 Inventario', 'inventory', () => charScreen('inv')),
+        item('💃 Bailar', 'dance', () => openDances()), item('🫀 Salud y heridas', 'body', () => bodyPanel.toggle(true)), item('🎒 Inventario', 'inventory', () => charScreen('inv')),
         item(st.sheet?.sleeping ? '☀ Despertar' : '💤 Dormir aquí', 'sleep', () => toggleSleep()), item('🏃 Retirada al refugio', 'retreat', () => retreat())),
       h('div', { class: 'ctx-group' }, h('div', { class: 'ctx-glabel' }, 'Al atacar con clic derecho, apunta a:'),
         h('div', { class: 'ctx-parts' }, ...['torso', 'cabeza', 'brazos', 'manos', 'piernas'].map((pp) => h('button', { class: `chip-btn${aimPart === pp ? ' on' : ''}`, onclick: (ev: Event) => { aimPart = pp; (ev.currentTarget as HTMLElement).parentElement!.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b === ev.currentTarget)); } }, pp)))));

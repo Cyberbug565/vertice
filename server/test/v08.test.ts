@@ -224,6 +224,12 @@ describe('v0.8 · implantes, matrices, leyendas y ciberespacio', () => {
     expect(pa.level).toBe(30);
     expect(pa.money).toBeGreaterThanOrEqual(1_000_000);
     expect(pa.cyber.some((c) => c.def === 'kairos-6' && c.location === 'installed')).toBe(true);
+    // v0.18 · La superarmadura «Tormenta» ya está en la mochila (se pide confirmación al ponérsela).
+    expect(pa.inventory.get('exo-tormenta')).toBeGreaterThanOrEqual(1);
+    // Generar cualquier objeto, también matrices.
+    expect((await a.cmd({ t: 'cheat', cmd: 'item', arg: 'matriz-carmin' })).ok).toBe(true);
+    expect((await a.cmd({ t: 'cheat', cmd: 'item', arg: 'sutura', n: 3 })).ok).toBe(true);
+    expect(pa.inventory.get('sutura')).toBeGreaterThanOrEqual(3);
     expect((await a.cmd({ t: 'cheat', cmd: 'spawn', arg: 'ciberpsicopata' })).ok).toBe(true);
     const normal = await join('tramposa');
     const no = await normal.cmd({ t: 'cheat', cmd: 'money', n: 1e9 });

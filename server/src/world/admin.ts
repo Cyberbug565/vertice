@@ -43,6 +43,16 @@ export class Admin {
     if (!c.admin || !c.p) return;
     (c.p as any).admin = true;
     if (!c.p.flags.has('admin-desbloqueado')) setTimeout(() => { if (!c.closed) void this.unlockAll(c).catch((err) => console.error('[admin]', err)); }, 1500);
+    // v0.18 · Las cuentas de administración llevan la superarmadura «Tormenta» en la mochila (copia de pruebas: no cuenta
+    // como la mítica única), también las que ya estaban desbloqueadas.
+    else if (!c.p.flags.has('admin-tormenta')) setTimeout(() => { if (!c.closed) void this.giveTormenta(c).catch((err) => console.error('[admin]', err)); }, 1500);
+  }
+  private async giveTormenta(c: PlayerConn) {
+    const p = c.p!;
+    if ((p.inventory.get('exo-tormenta') ?? 0) < 1) await this.give(p, 'exo-tormenta');
+    p.flags.set('admin-tormenta', { value: true, expiresAt: null });
+    this.notice(c, 'La superarmadura «Tormenta» está en tu mochila (inventario → Ropa). Al ponértela se te pedirá confirmación.');
+    this.sheet(c);
   }
 
   private async give(p: PlayerState, item: string, qty = 1) {
@@ -67,9 +77,11 @@ export class Admin {
     for (const k of ['kairos-1', 'kairos-2', 'kairos-3', 'kairos-4', 'kairos-5']) await this.giveCyber(p, k, false);
     p.relics = { matrices: ['matriz-eco'], socketExtra: 2 };
     for (const id of Object.keys(MATRICES)) if (id !== 'matriz-eco') await this.give(p, id);
-    for (const [it, q] of [['venda', 20], ['estim', 10], ['inmunosupresor', 10], ['cuna-neural', 1], ['rifle-asalto', 1], ['bala-rifle', 300], ['pistola-inteligente', 1], ['bala-ligera', 300], ['katana-termica', 1]] as [string, number][]) if (this.w.c.items.some((i) => i.id === it)) await this.give(p, it, q);
+    for (const [it, q] of [['venda', 20], ['estim', 10], ['sutura', 10], ['pinzas', 1], ['antiseptico', 10], ['antibioticos', 5], ['inmunosupresor', 10], ['cuna-neural', 1], ['rifle-asalto', 1], ['bala-rifle', 300], ['pistola-inteligente', 1], ['bala-ligera', 300], ['katana-termica', 1]] as [string, number][]) if (this.w.c.items.some((i) => i.id === it)) await this.give(p, it, q);
     p.legends ??= {};
     for (const L of LEGENDS) p.legends[L.id] = { trust: 100, step: p.legends[L.id]?.step ?? 0, active: false, count: 0 };
+    if ((p.inventory.get('exo-tormenta') ?? 0) < 1) await this.give(p, 'exo-tormenta');
+    p.flags.set('admin-tormenta', { value: true, expiresAt: null });
     p.flags.set('admin-desbloqueado', { value: true, expiresAt: null });
     p.hp = effective(this.w.c, p).hpMax; p.ram = effective(this.w.c, p).ram;
     this.notice(c, 'Todo desbloqueado: dinero, nivel máximo, habilidades 25, todos los perks, zócalo con 4 ranuras, Kairós Experimental instalado, todas las matrices, armas y las tres leyendas abiertas. Pulsa º (o F10) para el menú de trucos.');
@@ -83,7 +95,9 @@ export class Admin {
     const near = (r = 3) => { const a = Math.random() * Math.PI * 2; return nearestWalkable(z.grid, e.x + Math.cos(a) * r, e.y + Math.sin(a) * r, 4) ?? { x: e.x + 1, y: e.y }; };
     switch (cmd) {
       case 'info': {
-        const items = [...this.w.c.items.map((i) => ({ id: i.id, name: i.name, kind: i.category })), ...this.w.c.cyberware.map((d) => ({ id: `cyber:${d.id}`, name: d.name, kind: 'implante' }))];
+        // v0.18 · Todo lo que existe: objetos (de cada categoría), matrices e implantes.
+        const known = new Set(this.w.c.items.map((i) => i.id));
+        const items = [...this.w.c.items.map((i) => ({ id: i.id, name: i.name, kind: i.category })), ...Object.entries(MATRICES).filter(([id]) => !known.has(id)).map(([id, m]) => ({ id, name: (m as any).name ?? id, kind: 'matriz' })), ...this.w.c.cyberware.map((d) => ({ id: `cyber:${d.id}`, name: d.name, kind: 'implante' }))];
         const npcs = ['civil', 'policia', 'maleante', 'ciberpsicopata', ...this.w.c.factions.filter((f) => f.kind === 'gang').map((f) => `banda:${f.id}`), 'recompensa:0', 'recompensa:1', 'recompensa:2', 'recompensa:3', ...Object.keys(BOSSES).map((b) => `jefe:${b}`)];
         const places = [...(this.w.zones.get('vertice')?.def.districts ?? []).map((d) => ({ id: `distrito:${d.id}`, name: d.name })), ...['bloque9', 'ciberespacio', 'velo', 'guarida-iris', 'refugio-sable', 'garaje-cometa', 'torre-halcon-p7', 'torre-okami-p5'].map((id) => ({ id, name: this.w.c.zones.find((x) => x.id === id)?.name ?? id }))];
         this.w.send(c, { t: 'cheatInfo', items, npcs, places });
@@ -104,7 +118,7 @@ export class Admin {
         if (!arg) throw new GameError('Falta el objeto.');
         if (arg.startsWith('cyber:')) { await this.giveCyber(p, arg.slice(6), false); break; }
         if (arg.startsWith('install:')) { await this.giveCyber(p, arg.slice(8), true); break; }
-        if (!this.w.c.items.some((i) => i.id === arg)) throw new GameError('Ese objeto no existe.');
+        if (!this.w.c.items.some((i) => i.id === arg) && !MATRICES[arg]) throw new GameError('Ese objeto no existe.');
         await this.give(p, arg, Math.max(1, Math.round(n ?? 1)));
         break;
       }

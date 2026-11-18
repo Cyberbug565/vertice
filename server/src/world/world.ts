@@ -753,8 +753,9 @@ export class World {
       case 'matrix': return guarded(m.seq, async () => this.relics.matrix(c, m.action, m.item));
       case 'legend': return guarded(m.seq, async () => this.legends.handle(c, m.legend, m.action));
       case 'cheat': return guarded(m.seq, async () => this.admin.cheat(c, m.cmd, m.arg, m.n));
-      case 'treat': return guarded(m.seq, async () => sv.treatPart(c, m.part, m.item, m.opId));
+      case 'treat': return guarded(m.seq, async () => sv.treatWound(c, m.wound, m.action, m.opId));
       case 'repairChrome': return guarded(m.seq, async () => sv.repairChrome(c, m.doc, m.opId));
+      case 'clinicHeal': return guarded(m.seq, async () => sv.clinicHeal(c, m.doc, m.opId));
       case 'searchPeople': return guarded(m.seq, async () => this.intel.search(c, m.query, m.device));
       case 'goto': return guarded(m.seq, async () => this.intel.start(c, m));
       case 'trunk': return guarded(m.seq, async () => {

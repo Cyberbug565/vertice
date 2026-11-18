@@ -500,7 +500,7 @@
  {
   "id": "primeros-auxilios",
   "name": "Primeros auxilios",
-  "desc": "Recuperas 1 de salud cada 4 s fuera de combate.",
+  "desc": "Tus heridas curan un 25 % más rápido y recuperas más salud al descansar.",
   "skill": "medicina",
   "tier": 1,
   "cost": 1,
@@ -558,7 +558,7 @@
  {
   "id": "milagro",
   "name": "Milagro",
-  "desc": "Nivel 25. Te estabilizas tú solo cuando caes, una vez por hora real, y regeneras el triple.",
+  "desc": "Nivel 25. Te estabilizas tú solo cuando caes, una vez por hora real, y tus heridas curan mucho más rápido.",
   "skill": "medicina",
   "tier": 5,
   "cost": 3,

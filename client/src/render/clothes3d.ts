@@ -159,7 +159,11 @@ function tubeGeo(pts: THREE.Vector3[], r0: number, r1: number, seg = 24, radial 
 }
 
 // ------------------------------------------------------------------------------------------------ material de tela
-export interface ClothLook { color: string; pattern: HTMLCanvasElement | null; accent: string; rough?: number; metal?: number; detail?: string; trim?: number; sole?: string; soleY?: number; glass?: boolean; emissive?: number; hair?: number; tint?: string; face?: Record<string, { value: unknown }> }
+export interface ClothLook { color: string; pattern: HTMLCanvasElement | null; accent: string; rough?: number; metal?: number; detail?: string; trim?: number; sole?: string; soleY?: number; glass?: boolean; emissive?: number; hair?: number; tint?: string; face?: Record<string, { value: unknown }>;
+  /** v0.18 · Confección: [cierre (1 cremallera, 2 botones), x del cierre, alto del puño elástico, bolsillos (1 de parche, 2 canguro)] y alturas del cuerpo [pelvis, pecho, axila, cuello]. */
+  cut?: [number, number, number, number]; lm?: [number, number, number, number];
+  /** Abertura delantera recortada con precisión en el sombreado: [media anchura, profundidad del escote en V]. */
+  open?: [number, number] }
 const NO = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1); NO.needsUpdate = true;
 export function clothMat(o: ClothLook): THREE.MeshStandardMaterial {
   const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: o.rough ?? 0.82, metalness: o.metal ?? 0, side: THREE.DoubleSide, transparent: !!o.glass, opacity: o.glass ? 0.78 : 1 });
@@ -170,12 +174,13 @@ export function clothMat(o: ClothLook): THREE.MeshStandardMaterial {
     uPat: { value: tex }, uTint: { value: new THREE.Color(o.pattern ? '#ffffff' : o.color) }, uAccent: { value: new THREE.Color(o.accent) },
     uDetail: { value: detail }, uTrim: { value: o.trim ?? 0 }, uSole: { value: new THREE.Vector4(o.soleY ?? -1, ...new THREE.Color(o.sole ?? '#18181c').toArray()) },
     uEm: { value: o.emissive ?? 0 }, uHair: { value: o.hair ?? 0 },
+    uCut: { value: new THREE.Vector4(...(o.cut ?? [0, 0, 0, 0])) }, uOpen: { value: new THREE.Vector2(...(o.open ?? [0, 0])) }, uLm: { value: new THREE.Vector4(...(o.lm ?? [0, 0, 0, 0])) },
   };
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     if (o.face) Object.assign(sh.uniforms, o.face);
     sh.vertexShader = 'attribute float aHem;\nvarying float vHem;\nvarying vec3 vRP;\nvarying vec3 vRN;\n' + (o.face ? HEAD_UNIFORMS : '') + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vHem = aHem; vRP = position; vRN = normal;' + (o.face ? `\n if (position.y > uHead.x - 0.03) {\n${HEAD_MORPH}\n }` : ''));
-    sh.fragmentShader = 'varying float vHem;\nvarying vec3 vRP;\nvarying vec3 vRN;\nuniform sampler2D uPat;\nuniform vec3 uTint;\nuniform vec3 uAccent;\nuniform float uDetail;\nuniform float uTrim;\nuniform vec4 uSole;\nuniform float uEm;\nuniform float uHair;\n' + sh.fragmentShader
+    sh.fragmentShader = 'varying float vHem;\nvarying vec3 vRP;\nvarying vec3 vRN;\nuniform sampler2D uPat;\nuniform vec3 uTint;\nuniform vec3 uAccent;\nuniform float uDetail;\nuniform float uTrim;\nuniform vec4 uSole;\nuniform float uEm;\nuniform float uHair;\nuniform vec4 uCut;\nuniform vec4 uLm;\nuniform vec2 uOpen;\n' + sh.fragmentShader
       .replace('#include <map_fragment>', `
         // Tejido proyectado en tres planos sobre el cuerpo en reposo: sin costuras de textura ni estiramientos.
         vec3 bw = pow(abs(normalize(vRN)), vec3(4.0)); bw /= (bw.x + bw.y + bw.z);
@@ -195,6 +200,40 @@ export function clothMat(o: ClothLook): THREE.MeshStandardMaterial {
         float hemBand = 1.0 - smoothstep(0.003, 0.011, vHem);
         diffuseColor.rgb *= 1.0 - 0.28 * hemBand;
         if (uSole.x > 0.0 && vRP.y < uSole.x) diffuseColor.rgb = uSole.yzw;
+        // v0.18 · Abertura delantera limpia (recta y con solapas en V hacia el cuello) y su vista más oscura.
+        if (uOpen.x > 0.0 && vRP.z > 0.0 && vRP.y > uLm.x - 0.2 && vRP.y < uLm.w + 0.05) {
+          float ox = uOpen.x + max(0.0, vRP.y - (uLm.w - uOpen.y - 0.02)) * 0.55;
+          float ax = abs(vRP.x);
+          if (ax < ox) discard;
+          if (ax < ox + 0.012) diffuseColor.rgb *= 0.62;
+          else if (ax < ox + 0.015) diffuseColor.rgb *= 1.15;
+        }
+        // v0.18 · Confección: puños y bajo elásticos, cremallera o botones, bolsillos y costuras.
+        if (uCut.z > 0.0 && vHem < uCut.z) diffuseColor.rgb *= 0.72 + 0.2 * step(0.5, fract((vRP.x + vRP.z) * 320.0 + vRP.y * 40.0));
+        bool trunkFront = vRP.z > 0.0 && vRP.y > uLm.x - 0.14 && vRP.y < uLm.w + 0.02 && abs(vRP.x) < 0.2;
+        if (uCut.x > 0.5 && trunkFront) {
+          float zx = abs(vRP.x - uCut.y);
+          if (uCut.x < 1.5) { if (zx < 0.0042) diffuseColor.rgb = mix(vec3(0.16), vec3(0.74, 0.76, 0.8), step(0.45, fract(vRP.y * 260.0))); else if (zx < 0.0075) diffuseColor.rgb *= 0.55; }
+          else { float by = fract(vRP.y * 11.0); if (zx < 0.006 && by < 0.16) diffuseColor.rgb = vec3(0.08); else if (zx < 0.0025) diffuseColor.rgb *= 0.7; }
+        }
+        if (uCut.w > 0.5 && vRP.z > 0.0) {
+          float px = abs(vRP.x), py = vRP.y - uLm.x;
+          if (uCut.w < 1.5) {
+            // Bolsillos de parche a los lados (y su solapa).
+            float inx = step(0.045, px) * step(px, 0.12), iny = step(-0.02, py) * step(py, 0.075);
+            float edge = inx * iny * (1.0 - step(0.006, min(min(px - 0.045, 0.12 - px), min(py + 0.02, 0.075 - py))));
+            float flap = inx * step(abs(py - 0.06), 0.003);
+            diffuseColor.rgb *= 1.0 - 0.45 * max(edge, flap);
+          } else {
+            // Bolsillo canguro de sudadera.
+            float w = 0.1 - (py) * 0.25;
+            float inside = step(px, w) * step(-0.03, py) * step(py, 0.09);
+            float edge = inside * (1.0 - step(0.006, min(w - px, min(py + 0.03, 0.09 - py))));
+            diffuseColor.rgb *= 1.0 - 0.4 * edge;
+          }
+        }
+        // Costuras laterales y de los hombros (líneas algo más oscuras).
+        if (uLm.x != 0.0 && vRP.y > uLm.x - 0.12 && vRP.y < uLm.z + 0.02) diffuseColor.rgb *= 1.0 - 0.3 * (1.0 - smoothstep(0.0, 0.05, abs(normalize(vRN).z))) * step(0.6, abs(normalize(vRN).x));
         if (uDetail > 0.5 && uDetail < 1.5 && abs(vRP.x) < 0.005 && vRP.z > 0.0) diffuseColor.rgb = vec3(0.7, 0.72, 0.76);
         if (uDetail > 6.5 && abs(vRP.y - 0.98) < 0.022) diffuseColor.rgb = vec3(0.06);
         if (!gl_FrontFacing) diffuseColor.rgb *= 0.35;`)
@@ -204,34 +243,36 @@ export function clothMat(o: ClothLook): THREE.MeshStandardMaterial {
         if (uDetail > 1.5 && uDetail < 2.5) totalEmissiveRadiance += uAccent * (1.0 - smoothstep(0.003, 0.006, abs(abs(vRP.x) - 0.07))) * step(0.0, vRP.z) * step(vRP.y, 1.45);
         if (uDetail > 2.5 && uDetail < 3.5) { float rb = step(abs(fract(vRP.y * 6.0) - 0.5), 0.05); diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.85), rb); totalEmissiveRadiance += vec3(0.12) * rb; }`);
   };
-  m.customProgramCacheKey = () => `vt-tela-2-${o.face ? 'c' : 's'}`;
+  m.customProgramCacheKey = () => `vt-tela-3-${o.face ? 'c' : 's'}`;
   return m;
 }
 
 // ------------------------------------------------------------------------------------------------ catálogo
-interface TopCut { sleeve: number; hem: number; neck: number; vDepth: number; off: number; bell: number; puff: number; drape: number; tight?: boolean; collar?: number; hood?: boolean; turtle?: boolean }
+interface TopCut { sleeve: number; hem: number; neck: number; vDepth: number; off: number; bell: number; puff: number; drape: number; tight?: boolean; collar?: number; hood?: boolean; turtle?: boolean;
+  /** v0.18 · Abierta por delante (media anchura en m), cierre (cremallera/botones y su x), puño elástico y bolsillos. */
+  open?: number; close?: 'zip' | 'botones'; closeX?: number; rib?: number; pockets?: 'parche' | 'canguro' }
 /** Cortes de las prendas de arriba (manga en fracción del brazo: 0,45 corta, 1 hasta la muñeca; dobladillo en metros
  *  respecto a la cadera; holgura en metros). */
 const TOP: Record<string, TopCut> = {
   camiseta: { sleeve: 0.42, hem: -0.06, neck: -0.015, vDepth: 0.01, off: 0.008, bell: 0.012, puff: 0, drape: 0.006 },
-  camisa: { sleeve: 1.0, hem: -0.08, neck: -0.012, vDepth: 0.05, off: 0.009, bell: 0.004, puff: 0, drape: 0.008, collar: 0.03 },
+  camisa: { sleeve: 1.0, hem: -0.08, neck: -0.012, vDepth: 0.05, off: 0.009, bell: 0.004, puff: 0, drape: 0.008, collar: 0.03 , close: 'botones' },
   tirantes: { sleeve: -1, hem: -0.04, neck: -0.06, vDepth: 0.04, off: 0.005, bell: 0, puff: 0, drape: 0.004, tight: true },
   top: { sleeve: -1, hem: 0.2, neck: -0.12, vDepth: 0.02, off: 0.004, bell: 0, puff: 0, drape: 0, tight: true },
-  sudadera: { sleeve: 1.02, hem: -0.09, neck: 0.0, vDepth: 0, off: 0.02, bell: 0.0, puff: 0.012, drape: 0.02, hood: true },
-  chaqueta: { sleeve: 1.0, hem: -0.07, neck: -0.01, vDepth: 0.09, off: 0.016, bell: 0.006, puff: 0.004, drape: 0.012, collar: 0.035 },
-  bomber: { sleeve: 1.0, hem: -0.02, neck: 0.0, vDepth: 0.03, off: 0.028, bell: 0.0, puff: 0.022, drape: 0.01, collar: 0.02 },
-  biker: { sleeve: 1.0, hem: -0.03, neck: 0.0, vDepth: 0.07, off: 0.01, bell: 0, puff: 0, drape: 0.004, tight: true, collar: 0.03 },
-  blazer: { sleeve: 1.0, hem: -0.13, neck: -0.01, vDepth: 0.14, off: 0.013, bell: 0.003, puff: 0.004, drape: 0.01, collar: 0.04 },
-  traje: { sleeve: 1.0, hem: -0.12, neck: -0.01, vDepth: 0.12, off: 0.012, bell: 0.003, puff: 0.004, drape: 0.008, collar: 0.04 },
-  chaleco: { sleeve: -1, hem: -0.06, neck: -0.01, vDepth: 0.13, off: 0.016, bell: 0, puff: 0.008, drape: 0.01 },
-  gabardina: { sleeve: 1.0, hem: -0.1, neck: 0.0, vDepth: 0.1, off: 0.022, bell: 0.012, puff: 0.006, drape: 0.02, collar: 0.05 },
-  abrigo: { sleeve: 1.02, hem: -0.1, neck: 0.02, vDepth: 0.05, off: 0.026, bell: 0.01, puff: 0.012, drape: 0.024, collar: 0.05, turtle: true },
+  sudadera: { sleeve: 1.02, hem: -0.09, neck: 0.0, vDepth: 0, off: 0.026, bell: 0.0, puff: 0.012, drape: 0.02, hood: true , rib: 0.035, pockets: 'canguro' },
+  chaqueta: { sleeve: 1.0, hem: -0.07, neck: -0.01, vDepth: 0.09, off: 0.022, bell: 0.006, puff: 0.004, drape: 0.012, collar: 0.035 , open: 0.04, rib: 0, pockets: 'parche' },
+  bomber: { sleeve: 1.0, hem: -0.02, neck: 0.0, vDepth: 0.03, off: 0.034, bell: 0.0, puff: 0.022, drape: 0.01, collar: 0.02 , close: 'zip', rib: 0.04, pockets: 'parche' },
+  biker: { sleeve: 1.0, hem: -0.03, neck: 0.0, vDepth: 0.07, off: 0.01, bell: 0, puff: 0, drape: 0.004, tight: true, collar: 0.03 , close: 'zip', closeX: 0.035, pockets: 'parche' },
+  blazer: { sleeve: 1.0, hem: -0.13, neck: -0.01, vDepth: 0.14, off: 0.018, bell: 0.003, puff: 0.004, drape: 0.01, collar: 0.04 , open: 0.045, pockets: 'parche' },
+  traje: { sleeve: 1.0, hem: -0.12, neck: -0.01, vDepth: 0.12, off: 0.016, bell: 0.003, puff: 0.004, drape: 0.008, collar: 0.04 , open: 0.035, pockets: 'parche' },
+  chaleco: { sleeve: -1, hem: -0.06, neck: -0.01, vDepth: 0.13, off: 0.016, bell: 0, puff: 0.008, drape: 0.01 , close: 'botones', pockets: 'parche' },
+  gabardina: { sleeve: 1.0, hem: -0.1, neck: 0.0, vDepth: 0.1, off: 0.022, bell: 0.012, puff: 0.006, drape: 0.02, collar: 0.05 , open: 0.03, pockets: 'parche' },
+  abrigo: { sleeve: 1.02, hem: -0.1, neck: 0.02, vDepth: 0.05, off: 0.026, bell: 0.01, puff: 0.012, drape: 0.024, collar: 0.05, turtle: true , close: 'botones', closeX: 0.03, pockets: 'parche' },
   haori: { sleeve: 0.85, hem: -0.1, neck: -0.01, vDepth: 0.16, off: 0.02, bell: 0.07, puff: 0, drape: 0.02 },
   poncho: { sleeve: 0.55, hem: -0.03, neck: 0.0, vDepth: 0.0, off: 0.05, bell: 0.06, puff: 0.02, drape: 0.06 },
-  cortavientos: { sleeve: 1.0, hem: -0.06, neck: 0.02, vDepth: 0, off: 0.024, bell: 0.006, puff: 0.016, drape: 0.02, turtle: true },
-  chubasquero: { sleeve: 1.02, hem: -0.11, neck: 0.0, vDepth: 0, off: 0.026, bell: 0.01, puff: 0.012, drape: 0.026, hood: true },
+  cortavientos: { sleeve: 1.0, hem: -0.06, neck: 0.02, vDepth: 0, off: 0.024, bell: 0.006, puff: 0.016, drape: 0.02, turtle: true , close: 'zip', rib: 0.02 },
+  chubasquero: { sleeve: 1.02, hem: -0.11, neck: 0.0, vDepth: 0, off: 0.026, bell: 0.01, puff: 0.012, drape: 0.026, hood: true , close: 'zip', pockets: 'parche' },
   armadura: { sleeve: 0.35, hem: -0.03, neck: 0.01, vDepth: 0, off: 0.028, bell: 0, puff: 0.012, drape: 0.004, turtle: true },
-  mono: { sleeve: 1.0, hem: -9, neck: 0.0, vDepth: 0.05, off: 0.012, bell: 0.004, puff: 0.004, drape: 0.01, collar: 0.03 },
+  mono: { sleeve: 1.0, hem: -9, neck: 0.0, vDepth: 0.05, off: 0.012, bell: 0.004, puff: 0.004, drape: 0.01, collar: 0.03 , close: 'zip' },
   arnes: { sleeve: -1, hem: 0, neck: 0, vDepth: 0, off: 0, bell: 0, puff: 0, drape: 0 },
 };
 /** Faldones (de la cintura hacia abajo): largo en metros, vuelo y abierto por delante. */
@@ -262,8 +303,10 @@ function topShell(name: string, cut: TopCut, layer: number): Shell {
       if (v.reg === REG.head) return -1;
       if (ARM.has(v.reg)) { if (cut.sleeve < 0) return -1; return (cut.sleeve - v.armT) * (L.wrX - L.shX); }
       if (LEG.has(v.reg) || FEET.has(v.reg)) return cut.hem < -1 ? 0.99 - v.legT : -1;
-      const hemY = cut.hem < -1 ? -10 : L.pelvisY + Math.max(cut.hem, -0.035);
+      const hemY = cut.hem < -1 ? -10 : cut.hem > 0 ? L.pelvisY + cut.hem : L.pelvisY + 0.065 + Math.max(cut.hem, -0.08) * 0.25; // v0.18: bajo recto a la altura del cinturón (sin pico en la entrepierna)
       let c = Math.min(v.y - hemY, neckLine(cut, v, L) - v.y);
+      // Abierta por delante: se ve la prenda de dentro de arriba abajo.
+      if (cut.open && v.z > 0) c = Math.min(c, v.ax - cut.open * 0.4);
       // Sin mangas: la sisa se abre un poco por debajo del hombro.
       if (cut.sleeve < 0 && v.ax > L.shX - 0.04) c = Math.min(c, (L.armY - 0.06) - v.y + (L.shX - v.ax) * 2);
       return c;
@@ -396,6 +439,7 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   const mat = (l: ClothLook) => clothMat(l);
   const headMat = (l: ClothLook) => clothMat({ ...l, face });
   const accent = o.accent2 || o.accent;
+  const lm: [number, number, number, number] = [L.pelvisY, L.chestY, L.armY, L.neckY];
   const fabricRough = (p: string) => (/cuero|serpiente|latex/.test(p) ? 0.38 : /seda|holografico|lentejuelas|reflectante/.test(p) ? 0.3 : /kevlar|carbono|tactico/.test(p) ? 0.6 : 0.85);
   // Pantalón / falda.
   const lc = LEGS[o.legs] ?? (o.legs.startsWith('falda') ? null : LEGS.pantalon);
@@ -413,10 +457,11 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   // Prenda de dentro (si la de fuera es abierta o sin mangas) y prenda de fuera.
   const cut = TOP[o.top] ?? TOP.chaqueta;
   // Debajo solo asoma una camiseta si la prenda de fuera es abierta (chaqueta, blazer, chaleco…); no con tops y tirantes.
-  const open = (cut.vDepth > 0.06 && !cut.tight) || o.top === 'chaleco';
+  const open = (cut.vDepth > 0.06 && !cut.tight) || o.top === 'chaleco' || !!cut.open;
   if (o.top !== 'arnes' && o.top !== 'exo-tormenta') {
-    if (open && o.inner && o.inner !== o.top && TOP[o.inner]) add(shell(d, kind, topShell(o.inner, { ...TOP[o.inner], vDepth: Math.min(TOP[o.inner].vDepth, 0.02) }, 0)), mat({ color: o.shirtColor, pattern: null, accent, rough: 0.85 }));
-    const tm = mat({ color: o.topColor, pattern: o.topPattern, accent, rough: fabricRough(o.detail + o.topColor), detail: o.detail, trim: o.detail === 'led' ? 1.2 : o.top === 'cortavientos' ? 0.5 : 0, metal: o.top === 'armadura' ? 0.4 : 0 });
+    if (open && o.inner && o.inner !== o.top && TOP[o.inner]) add(shell(d, kind, topShell(o.inner, { ...TOP[o.inner], vDepth: Math.min(TOP[o.inner].vDepth, 0.02), open: 0 }, 0)), mat({ color: o.shirtColor, pattern: null, accent, rough: 0.85, lm, cut: TOP[o.inner].close === 'botones' ? [2, 0, 0, 0] : undefined }));
+    const tm = mat({ color: o.topColor, pattern: o.topPattern, accent, rough: fabricRough(o.detail + o.topColor), detail: o.detail, lm, open: cut.open ? [cut.open, cut.vDepth] : undefined,
+      cut: [cut.close === 'zip' && o.detail !== 'cremallera' ? 1 : cut.close === 'botones' ? 2 : 0, cut.closeX ?? 0, cut.rib ?? 0, cut.pockets === 'parche' ? 1 : cut.pockets === 'canguro' ? 2 : 0], trim: o.detail === 'led' ? 1.2 : o.top === 'cortavientos' ? 0.5 : 0, metal: o.top === 'armadura' ? 0.4 : 0 });
     add(shell(d, kind, topShell(o.top, cut, 1)), tm);
     const tl = TAILS[o.top];
     if (tl) add(skirt(d, tl.len, tl.flare, tl.open, L.pelvisY + 0.02, cut.off + 0.012), tm);
@@ -434,7 +479,11 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   if (!covered && !o.kitHair && isCollectionHair(o.hair)) {
     // v0.17 · Peinado de la colección (modelo de verdad), encajado en la cabeza de este cuerpo.
     const g = collectionHair(o.hair);
-    if (g && o.head !== 'capucha' && o.head !== 'gorro') add(fittedHair(d, kind, o.hair, g), hairM());
+    if (g && o.head !== 'capucha' && o.head !== 'gorro') {
+      // v0.18 · Base de pelo pegada al cráneo (del color del pelo) para que nunca asome el cuero cabelludo entre mechones.
+      const base = hairShell('rapado'); if (base) add(shell(d, kind, { ...base, key: 'h:capbase', off: () => 0.004 }), headMat({ color: o.hairColor, pattern: null, accent, rough: 0.75, hair: 1 }));
+      add(fittedHair(d, kind, o.hair, g), hairM());
+    }
     else if (!g && hairFailed(o.hair)) { const hs = hairShell('corto'); if (hs) add(shell(d, kind, hs), hairM()); }
   } else if (!covered && !o.kitHair) {
     const hs = hairShell(o.hair);
@@ -629,10 +678,10 @@ const fitCache = new Map<string, THREE.BufferGeometry>();
 function fittedHair(d: KitData, kind: string, id: string, g: THREE.BufferGeometry) {
   const key = `${kind}|${id}`;
   const hit = fitCache.get(key); if (hit) return hit;
-  const L = d.L, k = (2 * L.earX * 0.97) / REF_HEAD_W;
+  const L = d.L, k = (2 * L.earX * 1.01) / REF_HEAD_W;
   const geo = g.clone();
   geo.scale(k, k, k);
-  geo.translate(0, L.headTop + 0.012 * k, (L.faceZ + L.headBackZ) / 2);
+  geo.translate(0, L.headTop + 0.006 * k, (L.faceZ + L.headBackZ) / 2 - 0.004);
   const out = rigid(d, geo, 'Head');
   fitCache.set(key, out);
   return out;

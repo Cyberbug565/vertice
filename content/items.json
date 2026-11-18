@@ -232,32 +232,32 @@
  {
   "id": "estim",
   "name": "Estimulante médico",
-  "desc": "Salud +20. Sirve para estabilizar a un derribado.",
+  "desc": "No cura ninguna herida: da +30 de salud durante unos minutos para llegar a algún sitio. Cuando se pasa el efecto, esa salud se va.",
   "weight": 0.1,
   "category": "medicina",
   "price": 40,
   "consumable": {
    "restore": "hp",
-   "amount": 20
+   "amount": 30
   }
  },
  {
   "id": "analgesicos",
   "name": "Analgésicos",
-  "desc": "Salud +8, sueño +5.",
+  "desc": "Calman el dolor (−5 de cansancio) y dan +8 de salud temporal durante unos minutos. No curan heridas.",
   "weight": 0.1,
   "category": "medicina",
   "price": 15,
   "consumable": {
    "restore": "hp",
    "amount": 8,
-   "fatigue": 5
+   "fatigue": -5
   }
  },
  {
   "id": "estabilizador",
   "name": "Estabilizador neural",
-  "desc": "Salud +10 y alivia la presión neural (hito 2).",
+  "desc": "Estabilizador neural de urgencia: corta casi del todo la hemorragia de todas tus heridas (como vendarlas todas a la vez) y da +10 de salud temporal.",
   "weight": 0.1,
   "category": "medicina",
   "price": 70,
@@ -729,13 +729,47 @@
  {
   "id": "venda",
   "name": "Venda hemostática",
-  "desc": "Corta la mayor parte de una hemorragia (70 %) y da salud +5. El estimulante médico la corta del todo.",
+  "desc": "Corta la hemorragia de una herida y evita que se infecte mientras esté limpia (unas 18 horas de juego). Sin vendar, las heridas no curan. Úsala desde la salud (H): clic en la herida.",
   "weight": 0.1,
   "category": "medicina",
   "price": 15,
   "consumable": {
-   "restore": "hp",
-   "amount": 5
+   "amount": 0
+  }
+ },
+ {
+  "weight": 0.1,
+  "category": "medicina",
+  "id": "sutura",
+  "name": "Kit de sutura",
+  "desc": "Aguja e hilo para cerrar un corte. El corte profundo no cierra ni cura sin sutura; el corte normal cura antes.",
+  "price": 30
+ },
+ {
+  "weight": 0.1,
+  "category": "medicina",
+  "id": "pinzas",
+  "name": "Pinzas quirúrgicas",
+  "desc": "Para sacar una bala alojada. No se gastan. Con más Medicina, menos intentos (y menos dolor).",
+  "price": 45
+ },
+ {
+  "weight": 0.2,
+  "category": "medicina",
+  "id": "antiseptico",
+  "name": "Desinfectante",
+  "desc": "Desinfecta una herida: le quita la infección incipiente y la protege un día de juego.",
+  "price": 20
+ },
+ {
+  "weight": 0.1,
+  "category": "medicina",
+  "id": "antibioticos",
+  "name": "Antibióticos",
+  "desc": "Una caja de antibióticos: baja mucho la infección de todas tus heridas. Una herida infectada no cura y te va quitando salud.",
+  "price": 60,
+  "consumable": {
+   "amount": 0
   }
  },
  {

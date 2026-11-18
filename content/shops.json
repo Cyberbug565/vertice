@@ -43,7 +43,9 @@
    "bomber-orbita": 6,
    "vaquero-gastado": 6,
    "bermudas-cuadros": 6,
-   "falda-tartan": 6
+   "falda-tartan": 6,
+   "sutura": 8,
+   "antiseptico": 10
   },
   "priceMult": 1,
   "security": 16
@@ -784,7 +786,11 @@
    "agua-filtrada": 20,
    "bebida-isotonica": 12,
    "barrita-proteica": 20,
-   "inmunosupresor": 12
+   "inmunosupresor": 12,
+   "sutura": 20,
+   "pinzas": 8,
+   "antiseptico": 25,
+   "antibioticos": 12
   },
   "buys": [
    "medicina"

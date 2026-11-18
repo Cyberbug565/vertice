@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import {
   ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
-  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
+  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, woundList, effectiveBleed, painOf, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
@@ -42,6 +42,8 @@ export interface PlayerState {
   houses: string[]; cars: { id: string; car: string }[]; driving: string | null;
   lastCombatAt: number; walked: number;
   revive?: { at: number; frac: number; why: string };
+  /** v0.18 · Salud temporal de estimulantes: se va cuando pasa el efecto. */
+  tempHp?: { amount: number; until: number };
   // ---- v0.5
   running: boolean; auto: { on: boolean; personality: string; status: string };
   // ---- v0.6
@@ -397,7 +399,8 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
     speedMult: Math.round((1 + ef.speed) * 100) / 100, dodge: Math.round(ef.dodge * 100), uniques: [...ef.flags],
     running: p.running, auto: { on: p.auto.on, personality: p.auto.personality }, post: sheetHooks.post(p),
-    body: { wounds: { ...p.body.wounds } as Record<string, number>, lost: [...p.body.lost], bleed: Math.round(p.body.bleed * 10) / 10, chrome: chromeParts(c, p), broken: effective(c, p).chromeBroken },
+    body: { wounds: { ...p.body.wounds } as Record<string, number>, lost: [...p.body.lost], bleed: Math.round(p.body.bleed * 10) / 10, chrome: chromeParts(c, p), broken: effective(c, p).chromeBroken,
+      list: woundList(p.body).map((w) => ({ ...w, bleed: Math.round(effectiveBleed(w) * 1000) / 1000})), tempHp: p.tempHp ? Math.round(p.tempHp.amount) : 0, tempHpS: p.tempHp ? Math.max(0, Math.round((p.tempHp.until - Date.now()) / 1000)) : 0, pain: painOf(p.body) },
     weaponSlots: weaponSlotsOf(c, p), aim: aimOf(c, p),
     bio: p.bio ? { ...p.bio, objectiveName: OBJECTIVES.find((o) => o.id === p.bio!.objective)?.name ?? p.bio.objective, progress: sheetHooks.objective(p) } : null,
     identified: p.identified ? { crime: p.identified.crime, district: p.identified.district } : null,

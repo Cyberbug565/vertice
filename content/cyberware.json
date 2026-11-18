@@ -3073,7 +3073,7 @@
  },
  {
   "id": "so-tormenta",
-  "name": "SO «Tormenta»",
+  "name": "SO «Relámpago»",
   "family": "Sistema operativo",
   "slot": "so",
   "grade": 4,
@@ -3106,7 +3106,7 @@
    "duration": 3,
    "power": 30,
    "kind": "pulso",
-   "name": "Tormenta",
+   "name": "Relámpago",
    "cooldown": 30
   }
  },
@@ -3351,7 +3351,7 @@
   "humanity": 3,
   "price": 10000,
   "maker": "okami",
-  "desc": "Reparan los tejidos fuera de combate: +1 de salud por segundo.",
+  "desc": "Reparan los tejidos: las heridas curan un 50 % más rápido y recuperas más salud al descansar. No regeneran salud solos.",
   "effects": {
    "attrs": {},
    "skills": {},

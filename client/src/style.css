@@ -533,6 +533,34 @@ body { letter-spacing: 0.01em; }
 .bp-part.lv-perdida { stroke-dasharray: 3 2; stroke: #ff3040; }
 @keyframes bp-pulse { from { fill-opacity: 0.55; } to { fill-opacity: 1; } }
 .bp-bleed { font-family: var(--mono); font-size: 0.78em; color: var(--red); min-height: 1em; text-align: center; }
+.body-panel { cursor: pointer; }
+.body-panel.bleeding { box-shadow: 0 0 12px rgba(255, 48, 64, 0.45); }
+.bp-band, .bp-drop { pointer-events: none; }
+.bp-band { opacity: 0.92; stroke: #b9b2a0; stroke-width: 0.6; }
+.bp-drop { fill: #ff2030; animation: bp-drip 1s infinite; }
+@keyframes bp-drip { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(6px); opacity: 0.2; } }
+.bp-part.lv-infectada { animation: bp-pulse 1.4s infinite alternate; }
+.bp-part.sel { stroke: #fff; stroke-width: 2; }
+/* v0.18 · Ventana de salud */
+.health-panel { width: min(760px, calc(100% - 20px)); }
+.hp-grid { display: grid; grid-template-columns: 200px 1fr; gap: 16px; align-items: start; }
+.hp-fig { text-align: center; background: radial-gradient(circle at 50% 40%, #151530, #07070f); border: 1px solid #23234a; border-radius: 10px; padding: 10px; position: sticky; top: 0; }
+.hp-svg { width: 100%; height: auto; filter: drop-shadow(0 0 6px rgba(67, 243, 255, 0.25)); }
+.hp-side { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.hp-stat { display: flex; justify-content: space-between; font-size: 0.9em; }
+.hp-bar { position: relative; height: 16px; background: #10101f; border: 1px solid #2a2a50; border-radius: 4px; overflow: hidden; }
+.hp-fill { height: 100%; opacity: 0.75; transition: width 0.3s; }
+.hp-bar span { position: absolute; inset: 0; font: 0.72em var(--mono); line-height: 15px; padding-left: 6px; color: #fff; text-shadow: 0 0 3px #000; white-space: nowrap; overflow: hidden; }
+.hp-note { line-height: 1.35; }
+.hp-actions { flex-wrap: wrap; gap: 6px; }
+.hp-list { display: flex; flex-direction: column; gap: 6px; }
+.hp-part-head { display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; border-bottom: 1px solid #23234a; }
+.hp-wound { background: #0c0c1a; border: 1px solid #23234a; border-left: 3px solid #ffd23f; border-radius: 6px; padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; cursor: context-menu; }
+.hp-wound.bleed { border-left-color: #ff3040; }
+.hp-wound.inf { border-left-color: #9bd13a; }
+.hp-treat { flex-wrap: wrap; gap: 4px; }
+.hp-menu { width: 200px; z-index: 30; }
+@media (max-width: 620px) { .hp-grid { grid-template-columns: 1fr; } .hp-fig { position: static; max-width: 180px; margin: 0 auto; } }
 .bp-pop { position: fixed; width: 170px; background: #0a0a16; border: 1px solid var(--cyan); padding: 6px; display: flex; flex-direction: column; gap: 4px; z-index: 5; }
 /* Retícula del clic derecho */
 .reticle { position: fixed; width: 34px; height: 34px; margin: -17px 0 0 -17px; pointer-events: none !important; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.45); z-index: 20; }

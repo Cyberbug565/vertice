@@ -14,7 +14,7 @@ export const KEY_ACTIONS: KeyAction[] = [
   { id: 'hack', label: 'Modo hackeo (luego clic en el objetivo)', group: 'Acción', def: 'q' },
   { id: 'dodge', label: 'Esquivar (rodar hacia donde andas)', group: 'Acción', def: ' ' },
   { id: 'retreat', label: 'Retirada al refugio', group: 'Acción', def: ',' },
-  { id: 'body', label: 'Panel del cuerpo (heridas)', group: 'Acción', def: 'h' },
+  { id: 'body', label: 'Salud y heridas', group: 'Acción', def: 'h' },
   { id: 'target', label: 'Señalar lo siguiente cercano', group: 'Acción', def: 'tab' },
   { id: 'dance', label: 'Bailar', group: 'Acción', def: 'b' },
   { id: 'sleep', label: 'Dormir / despertar', group: 'Acción', def: 'z' },
