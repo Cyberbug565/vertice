@@ -146,6 +146,10 @@ export class World {
       diversifyAppearance(e.appearance as any, rng, 'civil'); // v0.9: más ropa, tejidos, tatuajes y calzado
       (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
       e.npc.nextThink = Math.floor(rng() * 20);
+      // v0.21 · La mitad de la gente de la calle lleva un personaje cartoon (oficios de la ciudad y alguno del pack medieval).
+      const roll = rng();
+      if (roll < 0.42) (e.appearance as any).model = pick(['base-hombre', 'base-mujer', 'ejecutivo', 'ejecutiva', 'medico', 'enfermera', 'ingeniero', 'cientifico', 'estudiante-o', 'estudiante-a', 'profesora', 'mecanico', 'basurero', 'bombero']);
+      else if (roll < 0.52) (e.appearance as any).model = pick(['med-vecino-1', 'med-vecina-2', 'med-campesino-1', 'med-campesino-2', 'med-campesino-3', 'med-campesino-4', 'med-campesino-5', 'med-campesino-6', 'med-rico-1', 'med-rico-2', 'med-rico-3', 'med-rico-4']);
       return e;
     };
     for (const zone of exteriors) {
@@ -171,6 +175,8 @@ export class World {
     await this.posts.load();
     await this.mythics.load();
     this.combat.spawnPopulation();
+    // v0.21 · Parte de la PCV con el uniforme cartoon de agente o de tráfico.
+    for (const z of this.zones.values()) for (const e of z.entities) if (e.npcType === 'police' && e.appearance && rng() < 0.55) (e.appearance as any).model = rng() < 0.7 ? 'policia' : 'agente-trafico';
     this.nightlife.populate();
     this.underworld.populate();
     if (this.cfg.threats !== false) await this.threats.init(); else this.threats.enabled = false;

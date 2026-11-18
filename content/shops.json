@@ -45,7 +45,9 @@
    "bermudas-cuadros": 6,
    "falda-tartan": 6,
    "sutura": 8,
-   "antiseptico": 10
+   "antiseptico": 10,
+   "atuendo-campesino": 4,
+   "atuendo-explorador": 3
   },
   "priceMult": 1,
   "security": 16
@@ -107,7 +109,8 @@
    "machete": 4,
    "tuberia": 10,
    "hacha-bomberos": 3,
-   "mazo": 2
+   "mazo": 2,
+   "cuchilla-serrada": 2
   },
   "buys": [
    "chatarra",
@@ -763,7 +766,8 @@
    "pantalon-tactico": 3,
    "casco-balistico": 3,
    "ametralladora-ligera": 1,
-   "mazo": 2
+   "mazo": 2,
+   "cuchilla-serrada": 2
   },
   "buys": [
    "arma",

@@ -7,7 +7,7 @@ import type { Entity } from './entity.js';
 import type { World } from './world.js';
 import type { Zone } from './zone.js';
 
-type Emote = 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto';
+type Emote = 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos';
 interface Line { at: number; id: number; text: string }
 interface Goal { kind: string; x: number; y: number; face: [number, number]; label: string; emote?: Emote; line?: string; len: [number, number] }
 interface StreetEvent { kind: 'atraco' | 'control' | 'pelea'; a: number; b: number; step: number; next: number }
@@ -37,9 +37,9 @@ const PROPS: Record<string, Omit<Goal, 'x' | 'y' | 'face'>[]> = {
   atm: [{ kind: 'atm', label: 'Sacando dinero', line: 'Saldo… insuficiente. Genial.', len: [30, 60] }],
   kiosk: [{ kind: 'kiosk', label: 'Comprando en el quiosco', line: 'Uno de algas y un refresco, por favor.', len: [40, 80] }],
   dumpster: [{ kind: 'dumpster', label: 'Tirando la basura', line: 'Puaj, qué peste.', len: [20, 40] }],
-  busstop: [{ kind: 'busstop', label: 'Esperando el bus', emote: 'telefono', len: [120, 260] }],
+  busstop: [{ kind: 'busstop', label: 'Esperando el bus', emote: 'telefono', len: [120, 260] }, { kind: 'busstop', label: 'Esperando el bus', emote: 'brazos', len: [120, 260] }],
   lamp: [{ kind: 'lamp', label: 'Fumando junto a la farola', emote: 'fumar', len: [80, 180] }],
-  billboard: [{ kind: 'billboard', label: 'Mirando un anuncio', line: '¿Implantes a plazos? Ni de broma.', len: [40, 90] }],
+  billboard: [{ kind: 'billboard', label: 'Mirando un anuncio', line: '¿Implantes a plazos? Ni de broma.', emote: 'brazos', len: [40, 90] }],
   holo: [{ kind: 'holo', label: 'Mirando el holograma', len: [40, 90] }],
   stall: [{ kind: 'stall', label: 'Regateando en un puesto', line: '¿Cuánto? ¡Eso es un robo!', len: [60, 120] }],
 };

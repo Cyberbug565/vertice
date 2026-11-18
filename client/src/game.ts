@@ -450,7 +450,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   // el cursor tanto si hay alguien como si no. El movimiento se ve al momento; el servidor decide si alcanza a alguien.
   const meleeSwing = (tx: number, ty: number) => {
     const dx = tx - view.me.x, dy = ty - view.me.y;
-    if (!view.swing(ctrlHeld)) return;
+    if (!view.swing(ctrlHeld, (st.sheet?.weapon?.cooldown ?? 1) * 1000 * (ctrlHeld ? 1.8 : 1))) return;
     const seq = net.send({ t: 'swing', dx: dx || 1, dy, heavy: ctrlHeld, opId: newOpId() } as any);
     st.pending.set(seq, (a) => { if (!a.ok && a.reason) toast(a.reason, 'warn'); });
   };
@@ -473,7 +473,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     }
     const person = e.s.kind === 'player' || e.s.kind === 'npc';
     if (e.s.id === view.meId) { selfMenu(); return; }
-    if (view.guarding && melee() && e.s.id !== view.meId) { meleeSwing(e.x, e.y); return; }
+    // (En guardia, el clic golpea aunque caiga sobre tu propio personaje: hacia donde esté el cursor.)
+    if (view.guarding && melee()) { if (e.s.id === view.meId) meleeSwing(view.cursor.x + (view.cursor.x === view.me.x ? 1 : 0), view.cursor.y); else meleeSwing(e.x, e.y); return; }
     if (person && view.guarding) {
       // v0.9 · Ctrl + clic: golpe fuerte (cuerpo a cuerpo) o ráfaga (a distancia).
       const lethal = st.sheet?.weapon?.nonlethal !== 'solo';

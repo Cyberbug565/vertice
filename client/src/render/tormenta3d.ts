@@ -37,6 +37,21 @@ const PIV: Record<string, [number, number, number]> = {
   hipR: [-0.2, -0.45, -0.05], knR: [-0.27, -1.14, -0.05], anR: [-0.3, -1.62, -0.05],
 };
 const FEET_Y = -2.15, SCALE = 1.05;
+/** v0.21 · Piernas al 55 % (muslo, espinilla y pie) y altura total de unos 2,4 m: con las piernas enteras medía casi 3,7 m
+ *  y quedaba desproporcionada. */
+const LEG_K = 0.55, HEIGHT_M = 2.4;
+/** Acorta las piernas sin deformar las articulaciones (cada pieza se encoge en su eje y las rodillas y tobillos se acercan)
+ *  y vuelve a apoyar la armadura en el suelo con la altura deseada. */
+function fitBody(t: Tormenta) {
+  for (const kn of [t.knL, t.knR]) kn.position.y *= LEG_K;
+  for (const an of [t.anL, t.anR]) if (an) an.position.y *= LEG_K;
+  for (const j of [t.hipL, t.knL, t.anL, t.hipR, t.knR, t.anR]) if (j) for (const c of j.children) if ((c as THREE.Mesh).isMesh) { c.position.y *= LEG_K; c.scale.y *= LEG_K; }
+  t.root.scale.setScalar(1); t.root.position.set(0, 0, 0); t.root.updateMatrixWorld(true);
+  const bb = new THREE.Box3();
+  t.root.traverse((o) => { const me = o as THREE.Mesh; if (me.isMesh && o.parent !== t.halo) bb.expandByObject(o); }); // (el halo flota por encima: no cuenta)
+  const s = HEIGHT_M / Math.max(0.5, bb.max.y - bb.min.y);
+  t.root.scale.setScalar(s); t.root.position.y = -bb.min.y * s;
+}
 
 /** Material de las placas: negro metálico con filo de luz azul neón (más fuerte en los bordes de cada pieza). */
 function armorMat(accent: THREE.Color, pulse: { value: number }) {
@@ -56,8 +71,9 @@ export interface Tormenta {
   pelvis: THREE.Group; spine: THREE.Group; neck: THREE.Group; halo: THREE.Object3D | null;
   shL: THREE.Group; elL: THREE.Group; shR: THREE.Group; elR: THREE.Group;
   hipL: THREE.Group; knL: THREE.Group; hipR: THREE.Group; knR: THREE.Group; wingL: THREE.Object3D | null; wingR: THREE.Object3D | null;
+  anL?: THREE.Group; anR?: THREE.Group;
 }
-/** Monta la armadura. Pies en y = 0, mirando a +Z, de unos 3,5 m. v0.19: si el modelo de la release no está (o aún
+/** Monta la armadura. Pies en y = 0, mirando a +Z, de unos 2,4 m (v0.21). v0.19: si el modelo de la release no está (o aún
  *  se descarga), se monta una Tormenta de placas con las mismas articulaciones: la armadura SIEMPRE sustituye al piloto. */
 export function buildTormenta(neon = '#2fb8ff'): Tormenta {
   if (!parts) return buildPlated(neon);
@@ -86,7 +102,9 @@ export function buildTormenta(neon = '#2fb8ff'): Tormenta {
   const hipR = joint(pelvis, 'pelvis', 'hipR'); put(hipR, 'hipR', 'thR'); const knR = joint(hipR, 'hipR', 'knR'); put(knR, 'knR', 'shR'); const anR = joint(knR, 'knR', 'anR'); put(anR, 'anR', 'ftR');
   // Halo: además de brillar, gira despacio sobre su centro (se recoloca su pivote).
   if (halo) { const bb = new THREE.Box3().setFromObject(halo); const c = bb.getCenter(new THREE.Vector3()); const hg = new THREE.Group(); hg.position.copy(c); neck.add(hg); halo.position.sub(c); hg.add(halo); }
-  return { root, mats: [plate, glow], pulse, pelvis, spine, neck, halo: halo?.parent ?? null, shL, elL, shR, elR, hipL, knL, hipR, knR, wingL, wingR };
+  const t: Tormenta = { root, mats: [plate, glow], pulse, pelvis, spine, neck, halo: halo?.parent ?? null, shL, elL, shR, elR, hipL, knL, hipR, knR, wingL, wingR, anL, anR };
+  fitBody(t);
+  return t;
 }
 
 /** Pose del juego (mismos proxies que la persona) + vida propia: halo que gira, alas que respiran, neón que late. */
@@ -154,8 +172,10 @@ function buildPlated(neon: string): Tormenta {
     piece(kn, 0.22, 0.2, 0.2, 0, 0.0, 0.14, dark); piece(kn, 0.3, 0.56, 0.34, 0, -0.26, 0, plate, true);
     const an = joint(kn, knK, anK);
     piece(an, 0.32, 0.38, 0.36, 0, -0.17, 0); piece(an, 0.36, 0.2, 0.58, 0, -0.43, 0.1); piece(an, 0.32, 0.04, 0.52, 0, -0.52, 0.1, glow);
-    return { hip, kn };
+    return { hip, kn, an };
   };
   const L = leg(1, 'hipL', 'knL', 'anL'), R = leg(-1, 'hipR', 'knR', 'anR');
-  return { root, mats: [plate, dark, glow], pulse, pelvis, spine, neck, halo: null, shL: A.sh, elL: A.el, shR: B.sh, elR: B.el, hipL: L.hip, knL: L.kn, hipR: R.hip, knR: R.kn, wingL: null, wingR: null };
+  const t: Tormenta = { root, mats: [plate, dark, glow], pulse, pelvis, spine, neck, halo: null, shL: A.sh, elL: A.el, shR: B.sh, elR: B.el, hipL: L.hip, knL: L.kn, hipR: R.hip, knR: R.kn, wingL: null, wingR: null, anL: L.an, anR: R.an };
+  fitBody(t);
+  return t;
 }

@@ -441,13 +441,15 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   const accent = o.accent2 || o.accent;
   const lm: [number, number, number, number] = [L.pelvisY, L.chestY, L.armY, L.neckY];
   const fabricRough = (p: string) => (/cuero|serpiente|latex/.test(p) ? 0.38 : /seda|holografico|lentejuelas|reflectante/.test(p) ? 0.3 : /kevlar|carbono|tactico/.test(p) ? 0.6 : 0.85);
+  // v0.21 · Con un atuendo completo (jornalero, explorador) no hay pantalón, calzado ni prenda de arriba aparte.
+  const fullOutfit = o.top === 'atuendo-campesino' || o.top === 'atuendo-explorador';
   // Pantalón / falda.
   const lc = LEGS[o.legs] ?? (o.legs.startsWith('falda') ? null : LEGS.pantalon);
-  if (lc) add(shell(d, kind, legShell(o.legs, lc)), mat({ color: o.legColor, pattern: o.legPattern, accent, rough: 0.85, detail: o.legs === 'tactico' || o.legs === 'cargo' ? 'cinturon' : '' }));
+  if (fullOutfit) { /* (lo pone outfit3d.ts) */ } else if (lc) add(shell(d, kind, legShell(o.legs, lc)), mat({ color: o.legColor, pattern: o.legPattern, accent, rough: 0.85, detail: o.legs === 'tactico' || o.legs === 'cargo' ? 'cinturon' : '' }));
   else add(skirt(d, o.legs === 'falda-larga' ? 0.62 : 0.3, 0.07, 0, L.pelvisY + 0.06), mat({ color: o.legColor, pattern: o.legPattern, accent, rough: 0.8 }));
   // Calzado.
   const sc = SHOES[o.shoes] ?? SHOES.botas;
-  if (o.shoes === 'grebas-flotantes') {
+  if (fullOutfit) { /* calzado del atuendo */ } else if (o.shoes === 'grebas-flotantes') {
     // v0.17 · Grebas con sandalias flotantes del samurái (modelo de la release).
     for (const [file, side] of [['bota-izq', 'l'], ['bota-der', 'r']] as const) {
       const p = samuraiPiece(file); if (!p) continue;
@@ -458,7 +460,7 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   const cut = TOP[o.top] ?? TOP.chaqueta;
   // Debajo solo asoma una camiseta si la prenda de fuera es abierta (chaqueta, blazer, chaleco…); no con tops y tirantes.
   const open = (cut.vDepth > 0.06 && !cut.tight) || o.top === 'chaleco' || !!cut.open;
-  if (o.top !== 'arnes' && o.top !== 'exo-tormenta') {
+  if (o.top !== 'arnes' && o.top !== 'exo-tormenta' && !fullOutfit) {
     if (open && o.inner && o.inner !== o.top && TOP[o.inner]) add(shell(d, kind, topShell(o.inner, { ...TOP[o.inner], vDepth: Math.min(TOP[o.inner].vDepth, 0.02), open: 0 }, 0)), mat({ color: o.shirtColor, pattern: null, accent, rough: 0.85, lm, cut: TOP[o.inner].close === 'botones' ? [2, 0, 0, 0] : undefined }));
     const tm = mat({ color: o.topColor, pattern: o.topPattern, accent, rough: fabricRough(o.detail + o.topColor), detail: o.detail, lm, open: cut.open ? [cut.open, cut.vDepth] : undefined,
       cut: [cut.close === 'zip' && o.detail !== 'cremallera' ? 1 : cut.close === 'botones' ? 2 : 0, cut.closeX ?? 0, cut.rib ?? 0, cut.pockets === 'parche' ? 1 : cut.pockets === 'canguro' ? 2 : 0], trim: o.detail === 'led' ? 1.2 : o.top === 'cortavientos' ? 0.5 : 0, metal: o.top === 'armadura' ? 0.4 : 0 });

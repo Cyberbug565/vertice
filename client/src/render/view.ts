@@ -1,7 +1,7 @@
 // Vista isométrica: bloques de suelo bajo demanda, orden por profundidad topológica, atenuación de edificios,
 // interpolación de entidades remotas y predicción del personaje propio.
 import { Traffic } from './traffic';
-import { AlphaFilter, Application, Container, Graphics, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
+import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
 import { BUILDING_H, Chars3D } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
 import {
@@ -154,6 +154,13 @@ export class GameView {
     this.app.stage.on('pointermove', (ev: FederatedPointerEvent) => this.onMove(ev));
     this.app.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
     this.app.canvas.addEventListener('pointerdown', (e) => { if (e.button === 2) { this.guarding = true; this.onGuard(true); } });
+    // v0.21 · Con el derecho mantenido, el navegador no manda «pointerdown» al pulsar el izquierdo (es un acorde de botones):
+    // se escucha el «mousedown», que sí llega por cada botón, y se trata como el clic de ataque.
+    this.app.canvas.addEventListener('mousedown', (e) => {
+      if (e.button !== 0 || !this.guarding) return;
+      const pt = new Point(); this.app.renderer.events.mapPositionToPoint(pt, e.clientX, e.clientY);
+      this.tapAt(pt.x, pt.y);
+    });
     window.addEventListener('pointerup', (e) => { if (e.button === 2 && this.guarding) { this.guarding = false; this.onGuard(false); } });
     window.addEventListener('blur', () => { if (this.guarding) { this.guarding = false; this.onGuard(false); } });
     this.app.canvas.addEventListener('wheel', (e) => { e.preventDefault(); this.setZoom(this.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); }, { passive: false });
@@ -756,10 +763,10 @@ export class GameView {
 
   /** v0.20 · Tu golpe cuerpo a cuerpo se anima al momento (sin esperar al servidor). Devuelve false si aún te recuperas. */
   private swingReadyAt = 0;
-  swing(heavy: boolean) {
+  swing(heavy: boolean, cooldownMs = 0) {
     const me = this.ents.get(this.meId), now = performance.now();
     if (!me || now < this.swingReadyAt) return false;
-    this.swingReadyAt = now + (heavy ? 650 : 380);
+    this.swingReadyAt = now + Math.max(heavy ? 650 : 380, cooldownMs * 0.9);
     me.attackAt = now; me.attackKind = heavy ? 'heavy' : 'hit'; (me as any).swingN = ((me as any).swingN ?? 0) + 1;
     (me as any).lookAt = { x: this.cursor.x, y: this.cursor.y, until: now + 700 };
     return true;
@@ -794,6 +801,8 @@ export class GameView {
     const mine = from === this.meId && (kind === 'hit' || kind === 'heavy') && a.attackAt !== undefined && now0 - a.attackAt < 450;
     if (!mine) { a.attackAt = now0; a.attackKind = kind === 'shot' ? 'shot' : kind === 'hit' ? 'hit' : kind === 'heavy' ? 'heavy' : undefined; (a as any).swingN = ((a as any).swingN ?? 0) + 1; }
     if (a === b && extra.x !== undefined) (a as any).lookAt = { x: extra.x, y: extra.y ?? a.y, until: now0 + 700 };
+    // v0.21 · Quien recibe el golpe o el disparo se encoge (animación de impacto).
+    if (a !== b && extra.hit !== false && (kind === 'hit' || kind === 'heavy' || kind === 'shot')) (b as any).hurtAt = now0 + (kind === 'shot' ? 120 : 160);
     if (kind === 'heavy') kind = 'hit';
     if (a !== b && a.body) a.body.scale.x = (b.x - a.x) - (b.y - a.y) >= 0 ? 1 : -1;
     const partZ = extra.part === 'cabeza' ? 1.55 : extra.part?.startsWith('pierna') ? 0.45 : 1.1;
@@ -1073,10 +1082,13 @@ export class GameView {
     return best;
   }
   private onTap(ev: FederatedPointerEvent) {
-    if (ev.button !== 0) return;
-    const e = this.pick(ev.global.x, ev.global.y);
+    if (ev.button !== 0 || this.guarding) return; // (en guardia lo atiende el «mousedown»)
+    this.tapAt(ev.global.x, ev.global.y);
+  }
+  private tapAt(gx: number, gy: number) {
+    const e = this.pick(gx, gy);
     if (e) return this.onEntityClick(e);
-    const w = this.toWorld(ev.global.x, ev.global.y);
+    const w = this.toWorld(gx, gy);
     this.onGroundClick(w.x, w.y);
   }
   private onMove(ev: FederatedPointerEvent) {

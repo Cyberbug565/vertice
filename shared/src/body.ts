@@ -113,7 +113,7 @@ export const isLimb = (p: BodyPart) => p !== 'cabeza' && p !== 'torso';
 /** Armas que caben encima: hasta 2 grandes (fusiles, escopetas, armas largas) y 3 pequeñas (pistolas, cuchillos, porras). */
 export const WEAPON_SLOTS = { grande: 2, pequena: 3 } as const;
 const BIG_FAMILIES = new Set(['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil']);
-const BIG_MELEE = new Set(['bate', 'machete', 'katana-termica', 'martillo-neumatico', 'lanza-electrica', 'hacha-plasma', 'espada-monofilamento']);
+const BIG_MELEE = new Set(['bate', 'machete', 'katana-termica', 'martillo-neumatico', 'lanza-electrica', 'hacha-plasma', 'espada-monofilamento', 'mazo', 'cuchilla-serrada']);
 export function weaponSize(item: { id: string; weapon?: { family: string; kind: string } }): 'grande' | 'pequena' | null {
   if (!item.weapon || item.weapon.family === 'Implante') return null;
   if (item.weapon.kind === 'ranged') return BIG_FAMILIES.has(item.weapon.family) ? 'grande' : 'pequena';

@@ -3007,5 +3007,55 @@
     "ramSave": 0
    }
   }
+ },
+ {
+  "weight": 2,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "id": "atuendo-campesino",
+  "name": "Atuendo de jornalero",
+  "desc": "Conjunto completo de lino y cuero (camisa, pantalón, cinturón y calzado). Hecho a medida del cuerpo: nada asoma.",
+  "price": 240,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "atuendo-campesino",
+   "color": "#8a6a4a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "weight": 2,
+  "category": "ropa",
+  "rarity": "raro",
+  "id": "atuendo-explorador",
+  "name": "Atuendo de explorador",
+  "desc": "Conjunto completo con capucha, hombrera, cinturones y botas de montaña. Hecho a medida del cuerpo.",
+  "price": 680,
+  "wear": {
+   "slot": "torso_ext",
+   "style": "atuendo-explorador",
+   "color": "#3a4a2a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 2,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
  }
 ]

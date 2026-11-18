@@ -7,6 +7,9 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { hashString, seededRng, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
 import { content } from '../content';
+import { loadAnims, sampleClip, clipDur } from './anim3d';
+import { buildCartoon, cartoonVersion, type Cartoon } from './cartoon3d';
+import { buildOutfit, isOutfit, outfitVersion } from './outfit3d';
 import { fabricCanvas, skinCanvas, tattooCanvas } from './textures';
 import { dress, LEGS, TOP } from './clothes3d';
 import { faceDecal, faceParams } from './face3d';
@@ -28,7 +31,7 @@ const M = 0.9 / 1.8;
 export const BUILDING_H = 1.35;
 
 export interface Ent3D {
-  x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; swingN?: number; rollAt?: number; kickAt?: number;
+  x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; swingN?: number; hurtAt?: number; rollAt?: number; kickAt?: number;
   samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number }; flags?: number;
   /** v0.12 · Fantasma (compañeros de las matrices): translúcido, flota y se tiñe del color de su matriz. */
   ghost?: { color: number; alpha: number; float: number };
@@ -163,6 +166,9 @@ function shadeCss(hexStr: string, f: number) { const n = parseInt((hexStr || '#8
 function hexA(hexStr: string, a: number) { const n = parseInt((hexStr || '#888888').slice(1), 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`; }
 
 /** Un personaje: jerarquía de articulaciones (cadera, rodillas, columna, hombros, codos, cuello) y sus piezas. */
+/** v0.21 · Armas cuerpo a cuerpo pesadas (a dos manos): usan el moveset pesado (barrido, doble tajo y salto con golpe). */
+export const HEAVY_MELEE = new Set(['mazo', 'martillo-neumatico', 'hacha-plasma', 'hacha-bomberos', 'tuberia', 'bate', 'cuchilla-serrada']);
+export const isHeavyMelee = (id: string) => HEAVY_MELEE.has(id);
 /** v0.19 · Duración del fundido al aparecer o irse un personaje (ms). */
 const FADE_MS = 500;
 interface Rig {
@@ -170,6 +176,10 @@ interface Rig {
   thighL: THREE.Group; thighR: THREE.Group; kneeL: THREE.Group; kneeR: THREE.Group; shoulderL: THREE.Group; shoulderR: THREE.Group; elbowL: THREE.Group; elbowR: THREE.Group;
   handR: THREE.Group; coat: THREE.Object3D[]; shadow: THREE.Mesh; key: string; heading: number; phase: number; lie: number; big: boolean; ranged: boolean; mats: THREE.Material[]; ghostMats?: THREE.Material[];
   lastX: number; lastY: number; speed: number;
+  /** v0.21 · Arma pesada (moveset de golpes pesados) y cuándo se levantó del suelo (animación de incorporarse). */
+  heavy?: boolean; upAt?: number; wasDown?: boolean; emoteAt?: number;
+  /** v0.21 · Personaje cartoon que copia la pose del cuerpo del kit (invisible). */
+  cartoon?: Cartoon;
   /** v0.19 · Fundido al aparecer/irse: opacidad actual y estado original de cada material. */
   /** Piezas de las que sale la firma del modelo (para no recalcularla si no cambian). */
   src?: unknown[];
@@ -305,6 +315,8 @@ export class Chars3D {
     for (const k of [REG.thP, REG.thM]) cover[k] = lc && lc.len >= 0.5 ? 2 : 0;
     for (const k of [REG.caP, REG.caM]) cover[k] = lc && lc.len >= 0.95 ? 2 : 0;
     for (const k of [REG.ftP, REG.ftM]) cover[k] = 3;
+    // v0.21 · Con un atuendo completo de Quaternius solo se dibuja la cabeza y el cuello del cuerpo (el atuendo trae lo demás).
+    if (isOutfit(a.top)) for (let i = 0; i < 16; i++) if (i !== REG.head && i !== REG.neck) cover[i] = 5;
     if (chrome.has('mano_der') || chrome.has('dedos_der')) cover[REG.handP] = 4;
     if (chrome.has('mano_izq') || chrome.has('dedos_izq')) cover[REG.handM] = 4;
     // (Brazos, piernas, ojos, mandíbula y pecho de cromo: piezas robóticas de cyber3d.ts, más abajo.)
@@ -328,19 +340,22 @@ export class Chars3D {
     const topTex = tex(fabricCanvas('liso', a.jacket || '#333344', a.accent, 2, 2)), pantsTex = tex(fabricCanvas('liso', a.pants || '#1a1a24', a.accent, 2, 2));
     const H = makeHuman({ kind, look: { skin: a.skin, top: topTex, pants: pantsTex, shoe: a.shoes || '#101018', accent: a.accent, cover, face,
       tattoo: tst ? tattooCanvas(tst, a.tattooInk || '#14141e', a.accent) : null, tattooZones: zones, decal: faceDecal(a, seed) },
-      hair: helmet ? '' : kitHairName ?? '', hairColor: a.hair, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost });
+      hair: helmet || a.top === 'atuendo-explorador' ? '' : kitHairName ?? '', hairColor: a.hair, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost });
     if (!H) return null;
     { const bm = H.bodyMesh.material as THREE.Material; bm.userData.owned = [...(bm.userData.owned ?? []), topTex, pantsTex]; }
     if (a.top === 'exo-tormenta') return H; // el piloto va dentro de la superarmadura (se oculta al montarla)
+    if (a.model) return H; // v0.21 · personaje cartoon: el cuerpo del kit solo mueve el esqueleto (ni ropa ni pelo)
     if (chrome.size) H.mats.push(...roboticParts(H, chrome, a.chromeTier ?? {}, a.accent, seed, cover));
     if (a.top !== 'exo-tormenta') {
       H.mats.push(...dress(H, {
         top, topColor: a.jacket, topPattern: a.topPattern && a.topPattern !== 'liso' ? fabricCanvas(a.topPattern, a.jacket, a.accent, 8, 8) : null, detail: a.topDetail || '',
         shirtColor: a.shirt || '#2a2a3a', inner: 'camiseta', legs: lw, legColor: a.pants, legPattern: a.pantsPattern && a.pantsPattern !== 'liso' ? fabricCanvas(a.pantsPattern, a.pants, a.accent, 8, 8) : null,
         shoes: a.shoeStyle || 'botas', shoeColor: a.shoes || '#101018', gloves: (a as any).gloves || '', gloveColor: (a as any).gloveColor || '#141418',
-        head: a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: a.eyewear || '', hair: a.hairStyle, hairColor: a.hair,
-        facial: a.facial, accent: a.accent, accent2: a.accent2, kitHair: kitHairName !== undefined && !helmet, kitBeard, accessory: a.accessory,
+        head: a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: a.eyewear || '', hair: a.top === 'atuendo-explorador' ? 'calvo' : a.hairStyle, hairColor: a.hair,
+        facial: a.facial, accent: a.accent, accent2: a.accent2, kitHair: kitHairName !== undefined && !helmet && a.top !== 'atuendo-explorador', kitBeard, accessory: a.accessory,
       }));
+      // v0.21 · Atuendo completo de Quaternius (se ata a los huesos de esta persona).
+      if (isOutfit(a.top)) { const ms = buildOutfit(a.top, kind, H.bodyMesh, H.bones); if (ms) H.mats.push(...ms.map((m) => m.material as THREE.Material)); }
     }
     return H;
   }
@@ -403,6 +418,12 @@ export class Chars3D {
     // lo demás (pelo especial, sombreros, gafas, cromo, armas, abrigos) se cuelga de sus huesos. Si no, el procedural.
     const H = humansReady() ? this.kitHuman(s, a, chrome, lost) : null;
     if (H) { body.add(H.root); mats.push(...H.mats); }
+    // v0.21 · Personaje cartoon: se monta sobre el esqueleto del kit (en reposo) y el cuerpo del kit no se dibuja.
+    let cartoon: Cartoon | undefined;
+    if (H && a.model && a.top !== 'exo-tormenta') {
+      const c = buildCartoon(a.model, H.root, H.bones);
+      if (c) { cartoon = c; mats.push(...c.mats); H.root.traverse((o) => { if ((o as THREE.Mesh).isMesh && !c.mats.includes((o as THREE.Mesh).material as THREE.Material)) o.visible = false; }); }
+    }
     const proxy = () => new THREE.Group();
     // ---- piernas
     const hipY = 0.92;
@@ -580,13 +601,14 @@ export class Chars3D {
     const handR = H ? group(AR.hand, 0, -0.075, 0.012) : group(AR.hand, 0, -0.05, 0.02);
     const wi = s.weapon ? content.items.find((i) => i.id === s.weapon) : undefined;
     const bigFam = (f: string, id: string) => ['Rifle', 'Escopeta', 'Ametralladora', 'Especial', 'Arco', 'Subfusil'].includes(f) || ['bate', 'katana-termica', 'katana', 'lanza-electrica', 'hacha-plasma', 'hacha-bomberos', 'espada-monofilamento', 'martillo-neumatico', 'mazo', 'machete', 'tuberia'].includes(id);
-    let big = false, ranged = false;
+    let big = false, ranged = false, heavyW = false;
     if (wi?.weapon && wi.weapon.family !== 'Implante') {
       const w = this.weaponMesh(wi.id, wi.weapon.family, wi.weapon.kind, mk, glowM, !!H);
       // En la mano: las de fuego apuntan hacia delante; las de cuerpo a cuerpo, hacia arriba.
       if (wi.weapon.kind === 'ranged') { w.rotation.x = Math.PI; w.position.set(0, -0.02, 0.02); } else { w.rotation.x = 1.2; w.position.set(0, 0, 0.0); }
       handR.add(w);
-      big = bigFam(wi.weapon.family, wi.id); ranged = wi.weapon.kind === 'ranged';
+      big = bigFam(wi.weapon.family, wi.id) || wi.id === 'cuchilla-serrada'; ranged = wi.weapon.kind === 'ranged';
+      heavyW = isHeavyMelee(wi.id);
     }
     let back = 0, hip = 0;
     for (const id of s.carry ?? []) {
@@ -611,10 +633,10 @@ export class Chars3D {
       // aún se descarga), se monta la Tormenta de placas; al llegar el modelo, se cambia sola.
       if (!tormentaReady()) loadTormenta(() => {});
       const t = buildTormenta(a.accent2 && /^#/.test(a.accent2) ? a.accent2 : '#2fb8ff');
-      mech = t; body.add(t.root); mats.push(...t.mats); shadow.scale.multiplyScalar(2.4); H.root.visible = false;
+      mech = t; body.add(t.root); mats.push(...t.mats); shadow.scale.multiplyScalar(1.8); H.root.visible = false;
     }
-    return { mech, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
-      shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, mats, lastX: e.x, lastY: e.y, speed: 0 };
+    return { mech, cartoon, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
+      shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, heavy: heavyW, mats, lastX: e.x, lastY: e.y, speed: 0 };
   }
 
   /**
@@ -760,6 +782,18 @@ export class Chars3D {
         if (id !== 'navaja') for (let i = 0; i < 5; i++) B(steel, 0.005, 0.008, 0.006, 0, 0.08 + i * 0.016, 0.016);
         break;
       }
+      case 'cuchilla-serrada': {
+        // v0.21 · Cuchilla serrada de desguace (inspirada en el arma del orco del pack de sprites): hoja ancha y larga de
+        // acero oxidado con dientes en el lomo, gancho en la punta, guarda de hierro y empuñadura larga a dos manos.
+        const rust = std(0x8a3a32, 0.75, 0.55), edge = std(0xd8c8c0, 0.9, 0.25), iron = std(0x2a2422, 0.8, 0.45);
+        C(wrap, 0.017, 0.34, 0, -0.06, 0); B(iron, 0.04, 0.04, 0.04, 0, -0.25, 0); // empuñadura y pomo
+        B(iron, 0.026, 0.035, 0.17, 0, 0.12, 0.0); // guarda
+        B(rust, 0.008, 0.95, 0.11, 0, 0.62, 0.025); // hoja
+        B(edge, 0.006, 0.95, 0.018, 0, 0.62, 0.085); // filo
+        for (let i = 0; i < 8; i++) B(rust, 0.007, 0.05, 0.035, 0, 0.22 + i * 0.1, -0.04, 0.6); // dientes del lomo
+        B(rust, 0.008, 0.09, 0.06, 0, 1.11, 0.06, -0.5); B(edge, 0.006, 0.06, 0.02, 0, 1.12, 0.095, -0.5); // gancho de la punta
+        break;
+      }
       case 'machete': { C(wrap, 0.014, 0.14, 0, 0, 0); B(steel, 0.004, 0.45, 0.05, 0, 0.3, 0.006); B(steel, 0.004, 0.06, 0.06, 0, 0.5, 0.012); break; }
       case 'katana': case 'katana-termica': {
         C(wrap, 0.014, 0.26, 0, 0, 0); for (let i = 0; i < 6; i++) B(std(0xd8d0c0, 0, 0.8), 0.03, 0.006, 0.03, 0, -0.1 + i * 0.04, 0); // tsuka
@@ -806,9 +840,9 @@ export class Chars3D {
       // v0.19 · La firma del modelo (JSON de su aspecto) solo se recalcula si cambia alguna de sus piezas: antes se
       // serializaba la apariencia entera de cada persona en cada fotograma.
       let r = this.rigs.get(s.id);
-      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion()];
+      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion()];
       const same = !!r && !!r.src && r.src.length === src.length && r.src.every((v, i) => v === src[i]);
-      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0]);
+      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, s.appearance?.model ? cartoonVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0]);
       if (r) r.src = src;
       if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; r.src = src; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
       this.leaving.delete(s.id);
@@ -816,6 +850,8 @@ export class Chars3D {
       if (!e.ghost) this.fade(r, Math.min(1, (opts.now - born) / FADE_MS));
       this.animate(r, e, opts);
       this.applyHuman(r);
+      if (r.human && !r.mech) this.playClips(r, e, opts.now, s.id === opts.meId ? opts.guarding : !!s.buffs?.includes('guardia'));
+      r.cartoon?.update();
       if (e.ghost && r.ghostMats) {
         // Flota a un palmo del suelo, se mece y parpadea un poco (más cuanto menos visible está).
         r.root.position.y = e.ghost.float;
@@ -890,7 +926,11 @@ export class Chars3D {
     if (r.ranged) { shR = -1.25 + sw * 0.05; elR = -0.2; if (r.big) { shL = -1.1; shLz = 0.45; elL = -0.6; } }
     if (guard) { if (r.ranged) { shR = -1.55; elR = 0; if (r.big) { shL = -1.45; shLz = 0.5; elL = -0.3; } } else { shR = -1.3; elR = -1.4; shL = -1.2; elL = -1.5; } }
     const swingDur = e.attackKind === 'heavy' ? 560 : 420;
-    const swinging = since < swingDur && (e.attackKind === 'hit' || e.attackKind === 'heavy');
+    // v0.21 · Armas pesadas: moveset de tres golpes (inspirado en los ataques del orco del pack de sprites).
+    const HEAVY_MS = [1100, 1200, 1300], hvN = (e.swingN ?? 0) % 3;
+    const heavySwing = !!r.heavy && (e.attackKind === 'hit' || e.attackKind === 'heavy') && since < HEAVY_MS[hvN];
+    const swinging = !heavySwing && since < swingDur && (e.attackKind === 'hit' || e.attackKind === 'heavy');
+    let spin = 0, lift = 0;
     if (swinging && !s.weapon) {
       // v0.20 · Puñetazo recto desde la guardia (alterna derecha e izquierda; el fuerte siempre con la derecha y con giro).
       const k = since / swingDur, ext = k < 0.35 ? k / 0.35 : Math.max(0, 1 - (k - 0.35) / 0.65);
@@ -906,6 +946,33 @@ export class Chars3D {
       shRz = k < wind ? 0.3 : 0.3 - 0.6 * ((k - wind) / (1 - wind));
       spineY = k < wind ? -0.45 * (k / wind) : -0.45 + 0.95 * Math.min(1, (k - wind) / 0.5); spineX += 0.06;
       if (r.big) { shL = shR + 0.2; elL = elR; }
+    }
+    else if (heavySwing) {
+      const k = since / HEAVY_MS[hvN];
+      // Interpolación suave entre fotogramas clave [instante, valor].
+      const kf = (pts: [number, number][]) => { if (k <= pts[0][0]) return pts[0][1]; for (let i = 1; i < pts.length; i++) if (k <= pts[i][0]) { const [a0, v0] = pts[i - 1], [a1, v1] = pts[i]; const u = (k - a0) / (a1 - a0); return v0 + (v1 - v0) * (u * u * (3 - 2 * u)); } return pts[pts.length - 1][1]; };
+      if (hvN === 0) {
+        // Barrido giratorio: recoge el arma atrás a la derecha y gira sobre sí mismo con los brazos extendidos.
+        shR = kf([[0, -0.4], [0.25, -1.7], [0.7, -1.55], [1, -0.4]]); shRz = kf([[0, 0], [0.25, 0.7], [0.4, 0.15], [1, 0]]); elR = kf([[0, -0.3], [0.25, -0.7], [0.4, -0.1], [1, -0.3]]);
+        shL = kf([[0, -0.3], [0.25, -1.5], [0.7, -1.45], [1, -0.3]]); shLz = kf([[0, 0], [0.25, 0.5], [0.4, -0.2], [1, 0]]); elL = kf([[0, -0.3], [0.25, -0.8], [0.4, -0.3], [1, -0.3]]);
+        spineY = kf([[0, 0], [0.25, -0.85], [0.45, 0.4], [0.75, 0.3], [1, 0]]); spineX = kf([[0, 0], [0.3, 0.15], [0.8, 0.12], [1, 0]]);
+        thL = thR = kf([[0, 0], [0.25, 0.35], [0.8, 0.3], [1, 0]]); knL = knR = kf([[0, 0], [0.25, 0.5], [0.8, 0.45], [1, 0]]);
+        spin = k < 0.3 ? 0 : k < 0.75 ? Math.PI * 2 * (1 - Math.cos(((k - 0.3) / 0.45) * Math.PI)) / 2 : 0;
+      } else if (hvN === 1) {
+        // Doble tajo: de arriba a la derecha baja en diagonal y vuelve de revés.
+        shR = kf([[0, -0.4], [0.2, -2.8], [0.38, -0.6], [0.52, -1.9], [0.7, -0.45], [1, -0.4]]); shRz = kf([[0, 0], [0.2, 0.45], [0.38, -0.55], [0.52, 0.7], [0.7, -0.35], [1, 0]]);
+        elR = kf([[0, -0.3], [0.2, -1.2], [0.38, -0.15], [0.52, -0.9], [0.7, -0.1], [1, -0.3]]);
+        shL = shR + 0.15; shLz = shRz - 0.35; elL = elR - 0.1;
+        spineY = kf([[0, 0], [0.2, -0.55], [0.38, 0.6], [0.52, -0.6], [0.7, 0.55], [1, 0]]); spineX = kf([[0, 0], [0.38, 0.3], [0.52, 0.05], [0.7, 0.32], [1, 0]]);
+        thR = kf([[0, 0], [0.38, 0.35], [0.7, 0.4], [1, 0]]); knR = thR; thL = kf([[0, 0], [0.38, -0.2], [1, 0]]);
+      } else {
+        // Salto con golpe: se agacha, salta con el arma sobre la cabeza y la clava en el suelo.
+        lift = kf([[0, 0], [0.22, -0.12], [0.45, 0.42], [0.62, -0.08], [0.85, -0.06], [1, 0]]);
+        shR = kf([[0, -0.4], [0.22, 0.4], [0.45, -3.0], [0.62, -0.45], [0.85, -0.5], [1, -0.4]]); elR = kf([[0, -0.3], [0.45, -0.8], [0.62, 0], [1, -0.3]]);
+        shL = shR + 0.1; elL = elR; shRz = 0; shLz = 0;
+        spineX = kf([[0, 0], [0.22, 0.35], [0.45, -0.3], [0.62, 0.65], [0.85, 0.6], [1, 0]]);
+        thL = thR = kf([[0, 0], [0.22, 0.9], [0.45, 0.9], [0.62, 0.75], [0.85, 0.7], [1, 0]]); knL = knR = kf([[0, 0], [0.22, 1.2], [0.45, 1.3], [0.62, 0.9], [0.85, 0.85], [1, 0]]);
+      }
     }
     else if (since < 300 && e.attackKind === 'shot') { shR = -1.6; elR = 0; spineX -= 0.06; }
     // v0.15 · Con el cuerpo del kit las armas son de tamaño real: el fusil va a la altura del hombro (culata al hombro,
@@ -953,12 +1020,13 @@ export class Chars3D {
       thL = thR = 1.5 * tuck + 0.2; knL = knR = 2.0 * tuck; shL = shR = -1.2 * tuck; elL = elR = -1.6 * tuck; spineX = 0.5 * tuck; neckX = 0.5 * tuck;
     } else {
       r.body.rotation.x = -r.lie * Math.PI / 2;
-      r.body.position.y = r.lie * 0.06 + bob * M - sitDrop * M / Y_SQUASH; r.body.position.z = 0;
+      r.body.position.y = r.lie * 0.06 + bob * M - sitDrop * M / Y_SQUASH + lift * M / Y_SQUASH; r.body.position.z = 0;
     }
     if (lying && roll >= ROLL) { thL = 0.1; thR = -0.05; knL = 0.2; knR = 0.1; shL = -0.3; shR = 0.4; elL = -0.2; elR = -0.3; spineX = 0; neckX = 0.2; }
     // v0.12 · Mezcla suave entre posturas (andar → apuntar → golpear…): cada articulación se acerca a su objetivo en vez
     // de saltar. Los golpes, patadas y volteretas van más rápido para que sigan teniendo pegada.
-    const snappy = since < 340 || kickT < 320 || roll < ROLL;
+    r.body.rotation.y = spin; // (barrido giratorio del arma pesada)
+    const snappy = since < 340 || heavySwing || kickT < 320 || roll < ROLL;
     const kk = Math.min(1, dt * (snappy ? 30 : 14));
     const to = (o3: THREE.Euler, ax: 'x' | 'y' | 'z', v: number) => { o3[ax] += (v - o3[ax]) * kk; };
     to(r.thighL.rotation, 'x', -thL); to(r.thighR.rotation, 'x', -thR); to(r.kneeL.rotation, 'x', knL); to(r.kneeR.rotation, 'x', knR);
@@ -977,6 +1045,44 @@ export class Chars3D {
   }
 
   dispose() { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); }
+  /** v0.21 · Animaciones de la librería universal encima del movimiento procedural (ver anim3d.ts). */
+  private playClips(r: Rig, e: Ent3D, now: number, guard: boolean) {
+    loadAnims();
+    const s = e.s, bones = r.human!.bones;
+    const moving = e.moving || r.speed > 0.25;
+    const lying = s.state === 'downed' || s.state === 'sleeping' || !!s.dead;
+    if (lying) { r.wasDown = true; return; }
+    if (r.wasDown) { r.wasDown = false; r.upAt = now; }
+    const fade = (t: number, dur: number, fin = 0.15, fout = 0.18) => Math.max(0, Math.min(1, t / fin, (dur - t) / fout));
+    // 1) Golpe cuerpo a cuerpo (con las manos vacías o con arma de una mano; las pesadas tienen su propio moveset).
+    const since = e.attackAt !== undefined ? (now - e.attackAt) / 1000 : 1e9;
+    if ((e.attackKind === 'hit' || e.attackKind === 'heavy') && !r.ranged && !r.heavy) {
+      const heavy = e.attackKind === 'heavy', n = e.swingN ?? 0;
+      const [a, b, sp] = !s.weapon ? ['Melee_Hook', 'Melee_Hook_Rec', heavy ? 1.1 : 1.35] : heavy ? ['Sword_Regular_C', '', 1.6] : n % 2 ? ['Sword_Regular_B', 'Sword_Regular_B_Rec', 1.2] : ['Sword_Regular_A', 'Sword_Regular_A_Rec', 1.2];
+      const da = clipDur(a), db = b ? clipDur(b) * 0.6 : 0, t = since * sp;
+      if (da && t < da + db) {
+        const w = fade(t, da + db, 0.06, 0.2);
+        if (t < da) sampleClip(bones, a, t, w, moving); else sampleClip(bones, b, t - da, w, moving);
+        return;
+      }
+    }
+    // 2) Guardia con arma cuerpo a cuerpo: postura de bloqueo (la de los puños ya la pone el movimiento procedural).
+    //    (Mientras dura el moveset de un arma pesada, el bloqueo no pisa los brazos del golpe.)
+    const heavyBusy = r.heavy && (e.attackKind === 'hit' || e.attackKind === 'heavy') && since < 1.3;
+    if (guard && s.weapon && !r.ranged && !heavyBusy) { sampleClip(bones, 'Sword_Block', 0.42, 0.9, true); return; }
+    // 3) Recibe un golpe: se encoge y retrocede un poco (solo el tronco y los brazos).
+    const hurt = e.hurtAt !== undefined ? (now - e.hurtAt) / 1000 : 1e9;
+    const dh = clipDur('Hit_Knockback');
+    if (dh && hurt < dh) { sampleClip(bones, 'Hit_Knockback', hurt * 1.2, 0.8 * fade(hurt * 1.2, dh), true); return; }
+    // 4) Se incorpora tras estar en el suelo.
+    const up = r.upAt !== undefined ? (now - r.upAt) / 1000 : 1e9, dl = clipDur('LayToIdle');
+    if (dl && up < dl && !moving) { sampleClip(bones, 'LayToIdle', up, fade(up, dl, 0.05, 0.3)); return; }
+    // 5) Gestos de la vida en la calle (quieto).
+    const g = s.emote && !moving && !s.vehicle ? s.emote.move : '';
+    const clip = g === 'telefono' ? 'Idle_TalkingPhone_Loop' : g === 'gesto' ? (s.id % 2 ? 'Idle_No_Loop' : 'Yes') : g === 'brazos' ? 'Idle_FoldArms_Loop' : '';
+    if (clip) { const t = (now - (r.emoteAt ??= now)) / 1000; sampleClip(bones, clip, t + (s.id % 7) * 0.3, Math.min(1, t / 0.3), false, true); }
+    else r.emoteAt = undefined;
+  }
   private born = new Map<number, number>();
   private leaving = new Map<number, number>();
   /** Opacidad de un modelo entero (0–1). Solo toca sus materiales propios; las piezas con materiales compartidos
@@ -1053,7 +1159,7 @@ export class Preview3D {
     if (this.idleSpin && !this.drag) this.angle = 0.25 * (1 - this.zoomK) + Math.sin(now / 2600) * 0.85 * (1 - 0.65 * this.zoomK);
     const c = this.c3d;
     const s = this.ent.s;
-    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion()]);
+    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion()]);
     let r = c.rigs.get(1);
     if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
     // Un gesto cada pocos segundos para que se vea vivo.
@@ -1061,6 +1167,7 @@ export class Preview3D {
     s.emote = t > 9 && t < 12.5 ? { move: 'gesto', at: Date.now() - (t - 9) * 1000 } : undefined;
     c.animate(r, this.ent, { meId: 1, guarding: false, now, dt, serverNow: Date.now() });
     c.applyHuman(r);
+    r.cartoon?.update(); // v0.21 · personaje cartoon
     r.root.rotation.y = this.angle;
     this.zoomK += (this.zoomGoal - this.zoomK) * Math.min(1, dt * 8);
     const zk = this.zoomK * this.zoomK * (3 - 2 * this.zoomK);

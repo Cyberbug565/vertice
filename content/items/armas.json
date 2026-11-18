@@ -865,5 +865,31 @@
     "aturdidora"
    ]
   }
+ },
+ {
+  "id": "cuchilla-serrada",
+  "name": "Cuchilla serrada de desguace",
+  "desc": "Cuerpo a cuerpo pesada a dos manos: una hoja de acero oxidado con dientes y gancho en la punta. Barrido giratorio, doble tajo y salto con golpe. Abre heridas que sangran mucho.",
+  "weight": 6,
+  "price": 3400,
+  "category": "arma",
+  "rarity": "raro",
+  "weapon": {
+   "kind": "melee",
+   "family": "Hoja",
+   "damage": [
+    18,
+    30
+   ],
+   "range": 2.1,
+   "cooldown": 1.7,
+   "accuracy": -1,
+   "nonlethal": "no",
+   "noise": 0.3,
+   "tech": "potencia",
+   "traits": [
+    "sangrado"
+   ]
+  }
  }
 ]

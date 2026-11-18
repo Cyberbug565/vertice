@@ -5,7 +5,7 @@ import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { HAIR_COLLECTION, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { CARTOON_MODELS, HAIR_COLLECTION, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 import { Preview3D } from '../render/chars3d';
 
@@ -87,7 +87,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
     appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], body: 'masculino', build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
       faceShape: 'ovalada', nose: 'recta', mouth: 'neutra', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0],
-      tattooZone: 'brazos', tattooInk: INK[0], faceTattoo: 'ninguno', topPattern: 'liso', pantsPattern: 'liso', shoeStyle: 'botas', topDetail: 'ninguno' },
+      tattooZone: 'brazos', tattooInk: INK[0], faceTattoo: 'ninguno', topPattern: 'liso', pantsPattern: 'liso', shoeStyle: 'botas', topDetail: 'ninguno', model: '' },
     attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes,
     bio: { objective: 'rico', childhood: 'calle', event: 'traicion' }, skillPoints: {} as Record<string, number> };
   const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Historia', 'Rol', 'Oficio', 'Atributos', 'Habilidades', 'Revisión'];
@@ -147,6 +147,14 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
     } else if (st.step === 1) {
       void preview.show(st.appearance, st.previewChrome ? [...CHROME_PARTS] : []);
       const controls = h('div', { class: 'col appearance-controls' },
+        // v0.21 · Modelo: el cuerpo personalizable del kit o un personaje cartoon de pocos polígonos (ropa propia).
+        h('h4', { class: 'creator-sec' }, 'Modelo'),
+        h('div', { class: 'col' }, h('span', {}, 'Personaje'),
+          h('div', { class: 'seg wrap', role: 'group', 'aria-label': 'Modelo de personaje' },
+            h('button', { class: 'segbtn', 'aria-pressed': String(!st.appearance.model), onclick: () => { st.appearance.model = ''; render(); } }, 'Personalizable'),
+            ...CARTOON_MODELS.map((m) => h('button', { class: 'segbtn', title: m.pack === 'med' ? 'Pack medieval (se descarga con los recursos extra)' : 'Estilo cartoon', 'aria-pressed': String(st.appearance.model === m.id),
+              onclick: () => { st.appearance.model = m.id; st.appearance.body = m.gender === 'f' ? 'femenino' : 'masculino'; render(); } }, `${m.name}${m.gender === 'f' && !/a$|Enfermera|Magnate/.test(m.name) ? ' (f)' : ''}`)))),
+        st.appearance.model ? h('p', { class: 'muted small' }, 'Los personajes cartoon llevan su propia ropa y pelo: lo de abajo solo cuenta para el cuerpo personalizable.') : null,
         h('h4', { class: 'creator-sec' }, 'Cuerpo y cara'),
         optRow('Cuerpo base', 'body', BODIES), optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), optRow('Forma de la cara', 'faceShape', FACE_SHAPES), optRow('Nariz', 'nose', NOSES), optRow('Boca', 'mouth', MOUTHS), swatchRow('Ojos', 'eyes', [...EYE_COLORS]), optRow('Cejas', 'brows', BROWS),
         h('h4', { class: 'creator-sec' }, 'Pelo'),

@@ -93,7 +93,7 @@ export const ClientMsg = z.discriminatedUnion('t', [
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
 /** v0.13 · además de los bailes: sentado, manos arriba, al teléfono, fumando y gesticulando al hablar. */
-export interface EmoteState { move: DanceId | 'nausea' | 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto'; at: number }
+export interface EmoteState { move: DanceId | 'nausea' | 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos'; at: number }
 export type EntityKind = 'player' | 'npc' | 'door' | 'object';
 export interface Appearance {
   skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string; nose?: string; mouth?: string;
@@ -104,6 +104,8 @@ export interface Appearance {
   headwear?: string; headColor?: string; eyewear?: string; legwear?: string; outer?: string; rarityGlow?: string;
   /** v0.15 · Cuerpo base (masculino o femenino); vacío = según la persona. */
   body?: string;
+  /** v0.21 · Personaje cartoon (id de CARTOON_MODELS) en lugar del cuerpo personalizable del kit; vacío = kit. */
+  model?: string;
   /** v0.16 · Guantes (estilo y color). */
   gloves?: string; gloveColor?: string;
   /** v0.16 · Gama del cromo visible por parte (chatarra, estandar, militar, lujo). */
