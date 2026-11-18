@@ -446,7 +446,17 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     hackBadge.style.display = on ? '' : 'none';
     if (on) { document.getElementById('target-menu')?.remove(); blip('ui'); }
   };
-  view.onGroundClick = () => {
+  // v0.20 · Cuerpo a cuerpo (o con las manos vacías): con el clic derecho mantenido, el clic izquierdo lanza el golpe hacia
+  // el cursor tanto si hay alguien como si no. El movimiento se ve al momento; el servidor decide si alcanza a alguien.
+  const meleeSwing = (tx: number, ty: number) => {
+    const dx = tx - view.me.x, dy = ty - view.me.y;
+    if (!view.swing(ctrlHeld)) return;
+    const seq = net.send({ t: 'swing', dx: dx || 1, dy, heavy: ctrlHeld, opId: newOpId() } as any);
+    st.pending.set(seq, (a) => { if (!a.ok && a.reason) toast(a.reason, 'warn'); });
+  };
+  const melee = () => st.sheet?.weapon?.kind !== 'ranged';
+  view.onGroundClick = (x?: number, y?: number) => {
+    if (view.guarding && melee() && !hackMode && x !== undefined && y !== undefined) { meleeSwing(x, y); return; }
     if (hackMode) { setHackMode(false); return; }
     closeDanceMenus();
     document.getElementById('underworld-panel')?.remove();
@@ -463,6 +473,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     }
     const person = e.s.kind === 'player' || e.s.kind === 'npc';
     if (e.s.id === view.meId) { selfMenu(); return; }
+    if (view.guarding && melee() && e.s.id !== view.meId) { meleeSwing(e.x, e.y); return; }
     if (person && view.guarding) {
       // v0.9 · Ctrl + clic: golpe fuerte (cuerpo a cuerpo) o ráfaga (a distancia).
       const lethal = st.sheet?.weapon?.nonlethal !== 'solo';

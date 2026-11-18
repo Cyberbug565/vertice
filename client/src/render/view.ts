@@ -754,6 +754,16 @@ export class GameView {
     this.lastDash = null; me.holdUntil = 0; this.dashAnim = null;
   }
 
+  /** v0.20 · Tu golpe cuerpo a cuerpo se anima al momento (sin esperar al servidor). Devuelve false si aún te recuperas. */
+  private swingReadyAt = 0;
+  swing(heavy: boolean) {
+    const me = this.ents.get(this.meId), now = performance.now();
+    if (!me || now < this.swingReadyAt) return false;
+    this.swingReadyAt = now + (heavy ? 650 : 380);
+    me.attackAt = now; me.attackKind = heavy ? 'heavy' : 'hit'; (me as any).swingN = ((me as any).swingN ?? 0) + 1;
+    (me as any).lookAt = { x: this.cursor.x, y: this.cursor.y, until: now + 700 };
+    return true;
+  }
   fx(kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean } = {}) {
     if (kind === 'wave') { this.flash(extra.x ?? this.me.x, extra.y ?? this.me.y, (extra.r ?? 11) * 1.1, 1, 800); this.wave(extra.x ?? this.me.x, extra.y ?? this.me.y, extra.r ?? 11, !!extra.ko, from === this.meId); return; }
     const a = this.ents.get(from), b = this.ents.get(to);
@@ -780,11 +790,14 @@ export class GameView {
       }
       return;
     }
-    a.attackAt = now0; a.attackKind = kind === 'shot' ? 'shot' : kind === 'hit' ? 'hit' : kind === 'heavy' ? 'heavy' : undefined;
+    // (Tu propio golpe ya se animó al hacer clic: no se repite al llegar la confirmación.)
+    const mine = from === this.meId && (kind === 'hit' || kind === 'heavy') && a.attackAt !== undefined && now0 - a.attackAt < 450;
+    if (!mine) { a.attackAt = now0; a.attackKind = kind === 'shot' ? 'shot' : kind === 'hit' ? 'hit' : kind === 'heavy' ? 'heavy' : undefined; (a as any).swingN = ((a as any).swingN ?? 0) + 1; }
+    if (a === b && extra.x !== undefined) (a as any).lookAt = { x: extra.x, y: extra.y ?? a.y, until: now0 + 700 };
     if (kind === 'heavy') kind = 'hit';
     if (a !== b && a.body) a.body.scale.x = (b.x - a.x) - (b.y - a.y) >= 0 ? 1 : -1;
     const partZ = extra.part === 'cabeza' ? 1.55 : extra.part?.startsWith('pierna') ? 0.45 : 1.1;
-    const pa = worldToScreen(a.x, a.y, 1.15), pb = worldToScreen(b.x, b.y, partZ);
+    const pa = worldToScreen(a.x, a.y, 1.15), pb = a === b && extra.x !== undefined ? worldToScreen(extra.x, extra.y ?? b.y, partZ) : worldToScreen(b.x, b.y, partZ);
     const wi = extra.weapon ? content.items.find((i) => i.id === extra.weapon) : undefined;
     const fam = wi?.weapon?.family ?? '';
     const hit = extra.hit !== false;

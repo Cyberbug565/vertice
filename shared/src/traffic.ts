@@ -36,10 +36,11 @@ export function roadMap(g: ZoneGrid): RoadMap {
   if (m) return m;
   const axis = new Uint8Array(g.w * g.h), crossing = new Uint8Array(g.w * g.h);
   const AS = GROUND_TYPES.indexOf('asphalt'), CW = GROUND_TYPES.indexOf('crosswalk');
-  for (const gr of g.def.ground) {
-    if (gr.type !== 'asphalt') continue;
-    const [x0, y0, w, h] = gr.rect, bit = w >= h ? 1 : 2;
-    for (let y = Math.max(0, y0); y < Math.min(g.h, y0 + h); y++) for (let x = Math.max(0, x0); x < Math.min(g.w, x0 + w); x++) { const i = y * g.w + x; if (g.ground[i] === AS || g.ground[i] === CW) axis[i] |= bit; }
+  // Las calles largas primero; los trozos cortos (remiendos, uniones) solo marcan casillas que no tengan ya eje.
+  const asphalt = g.def.ground.filter((gr) => gr.type === 'asphalt').sort((a, b) => Math.max(b.rect[2], b.rect[3]) - Math.max(a.rect[2], a.rect[3]));
+  for (const gr of asphalt) {
+    const [x0, y0, w, h] = gr.rect, bit = w >= h ? 1 : 2, short = Math.max(w, h) < 12;
+    for (let y = Math.max(0, y0); y < Math.min(g.h, y0 + h); y++) for (let x = Math.max(0, x0); x < Math.min(g.w, x0 + w); x++) { const i = y * g.w + x; if ((g.ground[i] === AS || g.ground[i] === CW) && !(short && axis[i])) axis[i] |= bit; }
   }
   for (const gr of g.def.ground) {
     if (gr.type !== 'crosswalk') continue;

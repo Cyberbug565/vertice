@@ -33,5 +33,16 @@ try {
   rmSync(tmp);
   console.log('[recursos] modelos extra listos en', join(dest, 'extra'));
 } catch (err) {
-  console.warn('[recursos] no se pudieron descargar los modelos extra (el juego funciona sin ellos):', err.message);
+  console.warn('[recursos] no se pudo descargar el paquete completo:', err.message);
+  // v0.20 · Plan B: el modelo de la Tormenta suelto (tormenta.glb, 3,7 MB) en la release «armaduras» o «modelos-extra-v17».
+  for (const tag of ['armaduras', 'modelos-extra-v17']) {
+    const u = `https://github.com/Cyberbug565/vertice/releases/download/${tag}/tormenta.glb`;
+    const r = await fetch(u, { redirect: 'follow' }).catch(() => null);
+    if (!r?.ok) continue;
+    mkdirSync(join(dest, 'extra'), { recursive: true });
+    writeFileSync(marker, Buffer.from(await r.arrayBuffer()));
+    console.log('[recursos] Tormenta descargada de', u);
+    break;
+  }
+  if (!existsSync(marker)) console.warn('[recursos] sin modelos extra: el juego funciona igual (la Tormenta se ve con su versión de placas).');
 }

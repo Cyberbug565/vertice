@@ -51,6 +51,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim', 'attack', 'knockout', 'finish', 'carry', 'talk', 'aim', 'search', 'extract', 'heavy', 'kick']), opId, part: z.enum(['torso', 'cabeza', 'brazos', 'manos', 'piernas']).optional(), chrome: z.string().max(64).optional(), remote: z.boolean().optional() }),
   z.object({ t: z.literal('menu'), seq, target: z.number().int().nonnegative() }),
   z.object({ t: z.literal('hackMenu'), seq, target: z.number().int().nonnegative() }),
+  // v0.20 · Golpe cuerpo a cuerpo hacia una dirección (al aire si no hay nadie a tiro).
+  z.object({ t: z.literal('swing'), seq, dx: z.number().finite(), dy: z.number().finite(), heavy: z.boolean().optional(), opId }),
   z.object({ t: z.literal('dodge'), seq, dx: z.number().min(-1).max(1), dy: z.number().min(-1).max(1) }),
   z.object({ t: z.literal('hack'), seq, target: z.number().int().nonnegative(), hack: z.string().max(64), opId }),
   z.object({ t: z.literal('equip'), seq, item: z.string().max(64).nullable() }),

@@ -142,6 +142,7 @@ describe('v0.2 · vivir en la ciudad', () => {
     app.world.survival.rng = () => 0.95; // siempre saca 10
     const pv = P('victima'), pa = P('caco');
     pv.stance = 'defend'; pv.nextAttackAt = Date.now() + 1e9; // ni huye ni contraataca durante la prueba
+    (pa as any).god = true; // v0.20: la PCV puede verlo por cámara y abatirlo; aquí solo se mide el expediente
     // La patrulla de la PCV de Ferro intervendría (v0.3) y el caco huiría: la apartamos para medir solo el expediente.
     for (const o of E('caco').zone.entities) if (o.npcType === 'police') { o.x = 2; o.y = 2; o.path = []; o.npc = undefined; }
     const m0 = pv.money;

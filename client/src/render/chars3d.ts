@@ -28,7 +28,7 @@ const M = 0.9 / 1.8;
 export const BUILDING_H = 1.35;
 
 export interface Ent3D {
-  x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; rollAt?: number; kickAt?: number;
+  x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; swingN?: number; rollAt?: number; kickAt?: number;
   samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number }; flags?: number;
   /** v0.12 · Fantasma (compañeros de las matrices): translúcido, flota y se tiñe del color de su matriz. */
   ghost?: { color: number; alpha: number; float: number };
@@ -889,11 +889,28 @@ export class Chars3D {
     r.aimNow = guard || (since < 300 && e.attackKind === 'shot');
     if (r.ranged) { shR = -1.25 + sw * 0.05; elR = -0.2; if (r.big) { shL = -1.1; shLz = 0.45; elL = -0.6; } }
     if (guard) { if (r.ranged) { shR = -1.55; elR = 0; if (r.big) { shL = -1.45; shLz = 0.5; elL = -0.3; } } else { shR = -1.3; elR = -1.4; shL = -1.2; elL = -1.5; } }
-    if (since < 340 && (e.attackKind === 'hit' || e.attackKind === 'heavy')) { const k = since / (e.attackKind === 'heavy' ? 440 : 340); shR = k < 0.35 ? -2.6 : -2.6 + (k - 0.35) * 4.2; elR = -0.4; spineY = (k < 0.35 ? -0.4 : 0.35); if (r.big) { shL = shR + 0.2; } }
+    const swingDur = e.attackKind === 'heavy' ? 560 : 420;
+    const swinging = since < swingDur && (e.attackKind === 'hit' || e.attackKind === 'heavy');
+    if (swinging && !s.weapon) {
+      // v0.20 · Puñetazo recto desde la guardia (alterna derecha e izquierda; el fuerte siempre con la derecha y con giro).
+      const k = since / swingDur, ext = k < 0.35 ? k / 0.35 : Math.max(0, 1 - (k - 0.35) / 0.65);
+      const right = e.attackKind === 'heavy' || (e.swingN ?? 0) % 2 === 0, twist = (e.attackKind === 'heavy' ? 0.6 : 0.4) * ext;
+      shR = -1.3; elR = -1.4; shL = -1.2; elL = -1.5; // guardia
+      if (right) { shR = -1.3 - 0.3 * ext; elR = -1.4 * (1 - ext); shRz = 0.06 - 0.25 * ext; spineY = twist; }
+      else { shL = -1.2 - 0.35 * ext; elL = -1.5 * (1 - ext); shLz = -0.06 + 0.25 * ext; spineY = -twist; }
+      spineX += 0.08 * ext;
+    } else if (swinging) {
+      // Tajo con arma cuerpo a cuerpo: se recoge por encima del hombro y baja en diagonal girando el tronco.
+      const k = since / swingDur, wind = 0.3;
+      shR = k < wind ? -2.2 - 0.7 * (k / wind) : -2.9 + (k - wind) / (1 - wind) * 3.1; elR = k < wind ? -1.1 : -1.1 + 0.9 * Math.min(1, (k - wind) / 0.3);
+      shRz = k < wind ? 0.3 : 0.3 - 0.6 * ((k - wind) / (1 - wind));
+      spineY = k < wind ? -0.45 * (k / wind) : -0.45 + 0.95 * Math.min(1, (k - wind) / 0.5); spineX += 0.06;
+      if (r.big) { shL = shR + 0.2; elL = elR; }
+    }
     else if (since < 300 && e.attackKind === 'shot') { shR = -1.6; elR = 0; spineX -= 0.06; }
     // v0.15 · Con el cuerpo del kit las armas son de tamaño real: el fusil va a la altura del hombro (culata al hombro,
     // codo doblado) y la pistola a dos manos con el brazo algo recogido para que la otra mano llegue.
-    if (r.human && r.ranged && !(since < 340 && (e.attackKind === 'hit' || e.attackKind === 'heavy'))) {
+    if (r.human && r.ranged && !swinging) {
       const aim = r.aimNow;
       if (r.big) {
         if (aim) { shR = -0.7; elR = -0.87; shRz = 0.32; spineY = 0.22; neckX = 0.08; }

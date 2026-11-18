@@ -28,7 +28,10 @@ export class Traffic {
 
   private build() {
     const z = this.zone;
-    this.roads = z.ground.filter((g) => g.type === 'asphalt' && Math.min(g.rect[2], g.rect[3]) >= 3 && Math.max(g.rect[2], g.rect[3]) >= 12).map((g) => {
+    // (Los tramos que repiten parte de otra calle, como las uniones de v0.20, no son calles aparte.)
+    const inside = (a: number[], b: number[]) => a !== b && a[0] >= b[0] && a[1] >= b[1] && a[0] + a[2] <= b[0] + b[2] && a[1] + a[3] <= b[1] + b[3];
+    const asphalt = z.ground.filter((g) => g.type === 'asphalt');
+    this.roads = asphalt.filter((g) => Math.min(g.rect[2], g.rect[3]) >= 3 && Math.max(g.rect[2], g.rect[3]) >= 12 && !asphalt.some((o) => inside(g.rect, o.rect))).map((g) => {
       const [x, y, w, h] = g.rect, horiz = w >= h, width = horiz ? h : w;
       return { x, y, w, h, horiz, width, perDir: width >= 6 ? 2 : 1, a0: horiz ? x : y, a1: horiz ? x + w : y + h, cross: [], stops: [] };
     });

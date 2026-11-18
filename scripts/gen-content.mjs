@@ -492,6 +492,13 @@ console.log(`v0.4: ${perks().length} perks, ${wear.length} prendas, ${arms.lengt
   console.log(`v0.19: ${r.canals} canales convertidos en paseo, ${r.widened} avenidas con acera más ancha y ${r.crossings} pasos de peatones nuevos.`);
 }
 
+// ---------------------------------------------------------------- v0.20: calles prolongadas hasta la calzada más cercana
+{
+  const v20 = await import('./v20.mjs');
+  const r = v20.zonesV20(C);
+  console.log(`v0.20: ${r.joined} calles prolongadas hasta la calzada más cercana.`);
+}
+
 // ---------------------------------------------------------------- capas de contenido editado a mano (vida nocturna, mercado negro…)
 {
   const { applyOverlays } = await import('./overlay.mjs');

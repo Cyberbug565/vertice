@@ -678,7 +678,8 @@ export class World {
         const moving = m.dx !== 0 || m.dy !== 0;
         const len = Math.hypot(m.dx, m.dy) || 1;
         if (moving && !e.steer) { this.cancelActivity(e); this.closeDialog(c); this.intel.cancel(c); if (p.auto.on) this.autopilot.takeOver(c); }
-        if (moving && e.path.length) { e.path = []; e.pendingInteract = undefined; }
+        // v0.20 · Con WASD manda el jugador: se olvida cualquier ruta o acción pendiente (ir a por alguien, retirada…).
+        if (moving && (e.path.length || e.pendingAction)) { e.path = []; e.pendingInteract = undefined; e.pendingAction = undefined; }
         if (moving && e.hiddenIn) this.corpses.leaveHiding(c, true);
         e.steer = moving ? { dx: m.dx / len, dy: m.dy / len, at: Date.now() } : undefined;
         if (moving) e.lastDir = { dx: m.dx / len, dy: m.dy / len };
@@ -686,6 +687,7 @@ export class World {
         return;
       }
       case 'dodge': return guarded(m.seq, async () => this.combat.dodge(c, m.dx, m.dy));
+      case 'swing': return guarded(m.seq, async () => this.combat.swing(c, m.dx, m.dy, !!m.heavy, m.opId));
       case 'guard': {
         e.guard = m.on; e.guardSince = m.on ? Date.now() : undefined; e.labelVer++;
         this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;

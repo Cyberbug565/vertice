@@ -1,7 +1,7 @@
 // Combate automático por armas, red (quickhacks), facciones, policía, Rescate Ámbar y transporte de cuerpos.
 import { isSick, substanceEffects } from '../game/substances.js';
 import { randomUUID } from 'node:crypto';
-import { AIM, COVER_FULL, COVER_HALF, PART_NAMES, hitPart, type AimZone, type BodyPart, diversifyAppearance } from '@vertice/shared';
+import { AIM, COVER_FULL, COVER_HALF, PART_NAMES, hitPart, type AimZone, type BodyPart, diversifyAppearance, facingToIdx } from '@vertice/shared';
 import { checkChance, dangerAt, findPath, lineWalkable, nearestWalkable, isWalkable, skillLevelForXp, type ClientMsg, type FactionsView, type AmbarView, type ItemDef, type ScanView, type TargetMenuView, type WeaponDef } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { Entity } from './entity.js';
@@ -345,6 +345,38 @@ export class Combat {
     this.w.send(c, { t: 'ack', seq: m.seq, ok: true });
   }
 
+  /** v0.20 · Golpe cuerpo a cuerpo hacia donde apuntas (clic izquierdo con el derecho mantenido): si hay alguien a tiro
+   *  en esa dirección le da; si no, el golpe se lanza al aire igualmente (se ve el movimiento, con o sin arma). */
+  async swing(c: PlayerConn, dx: number, dy: number, heavy: boolean, opId: string) {
+    const p = c.p!, e = c.e!, now = Date.now();
+    if (p.status !== 'alive' || p.sleeping || p.driving || isSick(p.substances, now) || e.ghostOf || e.transit || e.carriedBy) throw new GameError('Ahora no puedes.');
+    if ((e.stunUntil ?? 0) > now) throw new GameError('Estás aturdido.');
+    if (effective(this.c, p).armsLost >= 2) throw new GameError('Sin brazos no puedes golpear.');
+    const wp = this.weaponOf(p);
+    if (wp.w.kind !== 'melee') throw new GameError('Con un arma a distancia se dispara: clic sobre el objetivo.');
+    if (now < p.nextAttackAt) return;
+    const len = Math.hypot(dx, dy) || 1; dx /= len; dy /= len;
+    e.facing = facingToIdx(dx, dy); e.labelVer++;
+    // ¿Alguien delante y a tiro? (un cono de unos 60° hacia donde apuntas)
+    let best: Entity | undefined, bd = Infinity;
+    const protectedHere = dangerAt(e.zone.grid, e.x, e.y) === 'protected';
+    for (const o of e.zone.query(e.x, e.y, wp.w.range + 1)) {
+      if (o === e || (o.kind !== 'npc' && o.kind !== 'player') || o.state === 'downed' || o.dead || o.ghostOf) continue;
+      if (o.npcType === 'essential' || (o.kind === 'npc' && !o.npcMax && !o.fugitive)) continue;
+      const vx = o.x - e.x, vy = o.y - e.y, d = Math.hypot(vx, vy);
+      if (d > wp.w.range + 0.3 || d < 1e-3 || (vx * dx + vy * dy) / d < 0.5) continue;
+      if (d < bd) { bd = d; best = o; }
+    }
+    if (best && !protectedHere && dangerAt(best.zone.grid, best.x, best.y) !== 'protected') {
+      await this.execute(c, best, heavy ? 'heavy' : wp.w.nonlethal === 'solo' ? 'knockout' : 'attack', opId);
+      return;
+    }
+    // Al aire: mismo gesto y su recuperación (algo menor), sin daño.
+    if (heavy) { if (p.stamina < 3) throw new GameError('Sin aguante para un golpe fuerte.'); p.stamina -= 3; }
+    p.nextAttackAt = now + wp.w.cooldown * 600 * (heavy ? 1.8 : 1);
+    this.fx(e, heavy ? 'heavy' : 'hit', e.id, e.id, { weapon: wp.id === 'punos' ? undefined : wp.id, hit: false, x: e.x + dx, y: e.y + dy });
+  }
+
   /** Comprueba en cada paso si una acción pendiente ya está a tiro (para no esperar a llegar al destino exacto). */
   checkPending(c: PlayerConn) {
     const e = c.e!, pa = e.pendingAction;
@@ -651,10 +683,12 @@ export class Combat {
     }
   }
 
-  /** Respuesta del jugador atacado según su postura: Defender/Agresiva devuelve el golpe; Evitar se retira. */
+  /** Respuesta del jugador atacado según su postura: Defender/Agresiva devuelve el golpe; Evitar se retira.
+   *  v0.20 · Solo en modo automático: si no, el control es siempre del jugador (antes, con «Evitar», al recibir un
+   *  disparo el personaje salía corriendo solo hacia el refugio más cercano y no te dejaba moverte). */
   private counter(victim: Entity, attacker: Entity) {
     const vc = victim.conn, vp = vc?.p;
-    if (!vc || !vp || vp.status !== 'alive' || isSick(vp.substances)) return;
+    if (!vc || !vp || vp.status !== 'alive' || isSick(vp.substances) || !vp.auto.on) return;
     this.w.nightlife.stop(victim);
     if (vp.stance === 'avoid') { if (!victim.path.length) this.w.handle(vc, { t: 'retreat', seq: 0 } as any); return; }
     if (!victim.pendingAction && !victim.task) victim.pendingAction = { target: attacker.id, action: vp.stance === 'aggressive' ? 'attack' : 'knockout', opId: `counter-${randomUUID()}` };

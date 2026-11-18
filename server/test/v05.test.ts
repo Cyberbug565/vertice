@@ -123,6 +123,7 @@ describe('v0.5 · ciudad única, puestos y automático', () => {
     const l = await join('saqueadora');
     await app.world.teleport(conn('saqueadora'), 'base-marea', [23, 9]);
     await l.until(() => E('saqueadora').zone.id === 'base-marea', 5000, 'en la base');
+    (P('saqueadora') as any).god = true; // v0.20: ya no huye sola de los guardias (el control es del jugador)
     const loot = [...E('saqueadora').zone.entities].find((o) => o.objKind === 'loot')!;
     E('saqueadora').x = loot.x - 1; E('saqueadora').y = loot.y;
     const m0 = P('saqueadora').money;

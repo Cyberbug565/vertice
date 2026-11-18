@@ -23,6 +23,7 @@ for (let i = 0; i < 3; i++) await page.click('.overlay button.btn.primary', { ti
 await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove()));
 const c = [...app.world.conns.values()][0];
 const w = app.world as any;
+if (process.env.PUNCH) { (c.p as any).equipped = null; w.survival.sheet(c); }
 if (process.env.TORMENTA) { w.survival.wear(c, 'torso_ext', 'exo-tormenta', true); }
 for (const spot of (process.env.SPOTS ?? 'callejon:163,18:2.2').split(';')) {
   const [name, xy, z] = spot.split(':'); const [x, y] = xy.split(',').map(Number);
@@ -31,6 +32,12 @@ for (const spot of (process.env.SPOTS ?? 'callejon:163,18:2.2').split(';')) {
   await page.evaluate((zz) => { const v = (window as any).__vt.view; v.setZoom(zz); v.zoom = zz; }, Number(z ?? 2));
   await sleep(Number(process.env.WAIT ?? 5000));
   await page.evaluate(() => document.querySelectorAll('.overlay, .toast').forEach((o) => o.remove()));
+  if (process.env.PUNCH) {
+    // v0.20 · Guardia (clic derecho mantenido) y puñetazo al aire (clic izquierdo).
+    await page.mouse.move(700, 330); await page.mouse.down({ button: 'right' }); await sleep(1200);
+    await page.mouse.click(720, 340); await sleep(Number(process.env.PUNCH));
+  }
   await page.screenshot({ path: `${OUT}v19-${name}.png`, timeout: 180000 }); console.log('📸', name);
+  if (process.env.PUNCH) await page.mouse.up({ button: 'right' });
 }
 await browser.close(); await app.close(); process.exit(0);
