@@ -11,12 +11,14 @@ import { fabricCanvas, skinCanvas, tattooCanvas } from './textures';
 import { dress, LEGS, TOP } from './clothes3d';
 import { faceDecal, faceParams } from './face3d';
 import { roboticParts } from './cyber3d';
-import { buildMech, poseMech, type Mech } from './mech3d';
+import { hairsVersion, isCollectionHair } from './hairs3d';
+import { samuraiVersion } from './samurai3d';
+import { buildTormenta, loadTormenta, poseTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
 import { dancePose } from './dance';
 import { City3D, tickNeon } from './city3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
-import { exoArmor, humansReady, humansVersion, loadHumans, makeHuman, poseHuman, supportHand, tickArmor, REG, type Human } from './human3d';
+import { humansReady, humansVersion, loadHumans, makeHuman, poseHuman, supportHand, REG, type Human } from './human3d';
 
 /** Altura del juego: 32 px por unidad (la proyección real daría 39,2): comprimimos el eje vertical igual. */
 const Y_SQUASH = 32 / (45.2548 * Math.cos(Math.PI / 6));
@@ -169,7 +171,7 @@ interface Rig {
   /** v0.15 · cuerpo del kit (esqueleto), marcador del guardamanos y si apunta ahora mismo. */
   human?: Human; grip2?: THREE.Object3D; aimNow?: boolean;
   /** v0.16 · Superarmadura «Tormenta» (el piloto va dentro, oculto). */
-  mech?: Mech;
+  mech?: Tormenta;
 }
 
 export class Chars3D {
@@ -309,7 +311,7 @@ export class Chars3D {
     }
     const face = faceParams(a, r, kind === 'femenino');
     const kitHairName = KIT_HAIR[a.hairStyle];
-    const helmet = a.headwear === 'casco' || a.headwear === 'casco-moto';
+    const helmet = a.headwear === 'casco' || a.headwear === 'casco-moto' || a.headwear === 'casco-oni';
     const kitBeard = kind === 'masculino' && (a.facial === 'barba' || a.facial === 'barba-larga');
     // Debajo de la ropa, la piel se tiñe del color de la prenda (por si asoma en algún pliegue).
     const topTex = tex(fabricCanvas('liso', a.jacket || '#333344', a.accent, 2, 2)), pantsTex = tex(fabricCanvas('liso', a.pants || '#1a1a24', a.accent, 2, 2));
@@ -318,7 +320,7 @@ export class Chars3D {
       hair: helmet ? '' : kitHairName ?? '', hairColor: a.hair, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost });
     if (!H) return null;
     { const bm = H.bodyMesh.material as THREE.Material; bm.userData.owned = [...(bm.userData.owned ?? []), topTex, pantsTex]; }
-    if (a.top === 'exo-tormenta') { H.root.visible = false; return H; } // el piloto va dentro de la superarmadura
+    if (a.top === 'exo-tormenta') return H; // el piloto va dentro de la superarmadura (se oculta al montarla)
     if (chrome.size) H.mats.push(...roboticParts(H, chrome, a.chromeTier ?? {}, a.accent, seed, cover));
     if (a.top !== 'exo-tormenta') {
       H.mats.push(...dress(H, {
@@ -333,7 +335,7 @@ export class Chars3D {
   }
   /** v0.15 · Pasa la pose del juego a los huesos del cuerpo del kit y lleva la mano libre al arma. */
   private applyHuman(r: Rig) {
-    if (r.mech) poseMech(r.mech, { hips: r.hips, spine: r.spine, neck: r.neck, shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, thP: r.thighR, knP: r.kneeR, thM: r.thighL, knM: r.kneeL }, performance.now() / 1000);
+    if (r.mech) poseTormenta(r.mech, { hips: r.hips, spine: r.spine, neck: r.neck, shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, thP: r.thighR, knP: r.kneeR, thM: r.thighL, knM: r.kneeL }, performance.now() / 1000);
     if (!r.human || r.mech) return;
     const two = r.ranged && (r.big || !!r.aimNow) && r.lie < 0.3;
     const W = poseHuman(r.human, { hips: r.hips, spine: r.spine, chest: r.chest, neck: r.neck, thighP: r.thighR, kneeP: r.kneeR, thighM: r.thighL, kneeM: r.kneeL,
@@ -591,8 +593,13 @@ export class Chars3D {
     this.world.add(root);
     const rigHips = H ? proxy() : hips;
     // v0.16 · Superarmadura «Tormenta»: dos veces más alta y ancha que la persona (que va dentro).
-    let mech: Mech | undefined;
-    if (H && a.top === 'exo-tormenta') { mech = buildMech(); body.add(mech.root); mats.push(...mech.mats); shadow.scale.multiplyScalar(2.2); }
+    let mech: Tormenta | undefined;
+    if (H && a.top === 'exo-tormenta') {
+      // v0.17 · Superarmadura «Tormenta» (modelo Ophiel): el piloto va dentro. Mientras se descarga, se ve a la persona.
+      const t = buildTormenta(a.accent2 && /^#/.test(a.accent2) ? a.accent2 : '#2fb8ff');
+      if (t) { mech = t; body.add(t.root); mats.push(...t.mats); shadow.scale.multiplyScalar(2.4); H.root.visible = false; }
+      else { loadTormenta(() => {}); H.root.visible = true; }
+    }
     return { mech, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
       shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, mats, lastX: e.x, lastY: e.y, speed: 0 };
   }
@@ -777,13 +784,13 @@ export class Chars3D {
   // ================================================================ animación y dibujo
   /** Sincroniza los modelos con las entidades visibles y dibuja el fotograma. */
   render(ents: Iterable<Ent3D>, opts: { W: number; H: number; zoom: number; worldX: number; worldY: number; meId: number; guarding: boolean; now: number; dt: number; serverNow: number; hidden: (e: Ent3D) => boolean }) {
-    tickArmor(opts.now / 1000); tickNeon(opts.now / 1000);
+    tickNeon(opts.now / 1000);
     const seen = new Set<number>();
     for (const e of ents) {
       const s = e.s;
       if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) continue;
       seen.add(s.id);
-      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion()]);
+      const key = JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0]);
       let r = this.rigs.get(s.id);
       if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
       this.animate(r, e, opts);
@@ -980,7 +987,7 @@ export class Preview3D {
     if (this.idleSpin && !this.drag) this.angle = 0.25 * (1 - this.zoomK) + Math.sin(now / 2600) * 0.85 * (1 - 0.65 * this.zoomK);
     const c = this.c3d;
     const s = this.ent.s;
-    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion()]);
+    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion()]);
     let r = c.rigs.get(1);
     if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
     // Un gesto cada pocos segundos para que se vea vivo.

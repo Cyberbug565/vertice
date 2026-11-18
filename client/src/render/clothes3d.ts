@@ -12,6 +12,8 @@
 import * as THREE from 'three';
 import type { Human, KitData, Landmarks } from './human3d';
 import { REG, HEAD_MORPH, HEAD_UNIFORMS } from './human3d';
+import { collectionHair, hairFailed, isCollectionHair, REF_HEAD_W } from './hairs3d';
+import { samuraiPiece, SAMURAI_SCALE } from './samurai3d';
 
 export interface VI { x: number; y: number; z: number; nx: number; ny: number; nz: number; reg: number; armT: number; legT: number; bone: string; ax: number }
 type Fn = (v: VI, L: Landmarks) => number;
@@ -401,7 +403,13 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   else add(skirt(d, o.legs === 'falda-larga' ? 0.62 : 0.3, 0.07, 0, L.pelvisY + 0.06), mat({ color: o.legColor, pattern: o.legPattern, accent, rough: 0.8 }));
   // Calzado.
   const sc = SHOES[o.shoes] ?? SHOES.botas;
-  add(shell(d, kind, shoeShell(o.shoes)), mat({ color: o.shoeColor, pattern: null, accent, rough: o.shoes === 'mocasines' || o.shoes === 'tacones' || o.shoes === 'zapatos' ? 0.35 : 0.6, sole: sc.sole, soleY: sc.soleY, trim: o.shoes === 'zapatillas' ? 0.6 : 0 }));
+  if (o.shoes === 'grebas-flotantes') {
+    // v0.17 · Grebas con sandalias flotantes del samurái (modelo de la release).
+    for (const [file, side] of [['bota-izq', 'l'], ['bota-der', 'r']] as const) {
+      const p = samuraiPiece(file); if (!p) continue;
+      add(samuraiBoot(d, kind, file, side, p.geo), p.mat);
+    }
+  } else add(shell(d, kind, shoeShell(o.shoes)), mat({ color: o.shoeColor, pattern: null, accent, rough: o.shoes === 'mocasines' || o.shoes === 'tacones' || o.shoes === 'zapatos' ? 0.35 : 0.6, sole: sc.sole, soleY: sc.soleY, trim: o.shoes === 'zapatillas' ? 0.6 : 0 }));
   // Prenda de dentro (si la de fuera es abierta o sin mangas) y prenda de fuera.
   const cut = TOP[o.top] ?? TOP.chaqueta;
   // Debajo solo asoma una camiseta si la prenda de fuera es abierta (chaqueta, blazer, chaleco…); no con tops y tirantes.
@@ -421,9 +429,14 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   // Guantes.
   if (o.gloves) add(shell(d, kind, gloveShell(o.gloves === 'sin-dedos')), mat({ color: o.gloveColor, pattern: null, accent, rough: o.gloves === 'tacticos' ? 0.7 : 0.4, trim: o.gloves === 'led' ? 1 : 0 }));
   // Peinado (si no lo tapa un casco) y vello facial.
-  const covered = o.head === 'casco' || o.head === 'casco-moto';
+  const covered = o.head === 'casco' || o.head === 'casco-moto' || o.head === 'casco-oni';
   const hairM = () => headMat({ color: o.hairColor, pattern: null, accent, rough: 0.6, hair: o.hair === 'rapado' ? 2 : 1 });
-  if (!covered && !o.kitHair) {
+  if (!covered && !o.kitHair && isCollectionHair(o.hair)) {
+    // v0.17 · Peinado de la colección (modelo de verdad), encajado en la cabeza de este cuerpo.
+    const g = collectionHair(o.hair);
+    if (g && o.head !== 'capucha' && o.head !== 'gorro') add(fittedHair(d, kind, o.hair, g), hairM());
+    else if (!g && hairFailed(o.hair)) { const hs = hairShell('corto'); if (hs) add(shell(d, kind, hs), hairM()); }
+  } else if (!covered && !o.kitHair) {
     const hs = hairShell(o.hair);
     if (hs) {
       const hm = hairM();
@@ -435,7 +448,11 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   if (!o.kitBeard) { const fs = facialShell(o.facial); if (fs) add(shell(d, kind, fs), headMat({ color: o.hairColor, pattern: null, accent, rough: 0.7, hair: 1 })); }
   // Prenda de cabeza.
   const hc = o.headColor || '#2a2a34';
-  if (o.head && HEADWEAR[o.head]) {
+  if (o.head === 'casco-oni') {
+    // v0.17 · Kabuto oni de neón del samurái (modelo de la release), centrado en la cabeza.
+    const p = samuraiPiece('casco');
+    if (p) add(samuraiHelmet(d, kind, p.geo), p.mat);
+  } else if (o.head && HEADWEAR[o.head]) {
     const em = o.head === 'diadema-led';
     const hm = headMat({ color: em ? accent : hc, pattern: null, accent, rough: o.head.startsWith('casco') ? 0.3 : 0.85, metal: o.head.startsWith('casco') ? 0.2 : 0, emissive: em ? 1.4 : 0 });
     add(shell(d, kind, HEADWEAR[o.head]), hm);
@@ -589,6 +606,35 @@ function hairExtras(d: KitData, style: string): THREE.BufferGeometry[] {
     case 'dos-moños': for (const s of [-1, 1]) out.push(bun(s * 0.055, L.headTop - 0.01, -0.01, 0.034)); break;
     case 'samurai': out.push(bun(0, L.headTop + 0.01, -0.02, 0.028), rigid(d, tubeGeo([V(0, L.headTop + 0.02, -0.04), V(0, L.headTop + 0.01, -0.09), V(0, L.headTop - 0.03, -0.12)], 0.012, 0.008, 12, 6), 'Head')); break;
   }
+  return out;
+}
+/** Piezas del samurái colocadas en este cuerpo (una vez por cuerpo). */
+function samuraiHelmet(d: KitData, kind: string, g: THREE.BufferGeometry) {
+  const key = `${kind}|casco-oni`; const hit = fitCache.get(key); if (hit) return hit;
+  const L = d.L, k = SAMURAI_SCALE * (L.headTop / 1.81) * 0.92;
+  const geo = g.clone(); geo.scale(k, k, k); geo.translate(0, L.eyeY + 0.012, (L.faceZ + L.headBackZ) / 2 + 0.005);
+  const out = rigid(d, geo, 'Head', { bone: 'neck_01', f: (p) => (p.y < L.headBase - 0.02 ? 1 : 0) });
+  fitCache.set(key, out); return out;
+}
+function samuraiBoot(d: KitData, kind: string, file: string, side: 'l' | 'r', g: THREE.BufferGeometry) {
+  const key = `${kind}|${file}`; const hit = fitCache.get(key); if (hit) return hit;
+  const L = d.L, k = SAMURAI_SCALE * (L.headTop / 1.81) * 0.98;
+  const x = (side === 'l' ? 1 : -1) * L.legX;
+  const geo = g.clone(); geo.scale(k, k, k); geo.translate(x, 0, 0.035);
+  const out = rigid(d, geo, `calf_${side}`, { bone: `foot_${side}`, f: (p) => (p.y < L.ankY + 0.015 ? 1 : 0) });
+  fitCache.set(key, out); return out;
+}
+/** Peinado de la colección colocado sobre la cabeza del kit (escala por la anchura de la cabeza), una vez por cuerpo. */
+const fitCache = new Map<string, THREE.BufferGeometry>();
+function fittedHair(d: KitData, kind: string, id: string, g: THREE.BufferGeometry) {
+  const key = `${kind}|${id}`;
+  const hit = fitCache.get(key); if (hit) return hit;
+  const L = d.L, k = (2 * L.earX * 0.97) / REF_HEAD_W;
+  const geo = g.clone();
+  geo.scale(k, k, k);
+  geo.translate(0, L.headTop + 0.012 * k, (L.faceZ + L.headBackZ) / 2);
+  const out = rigid(d, geo, 'Head');
+  fitCache.set(key, out);
   return out;
 }
 /** Une geometrías simples (posición, normal y uv) sin índices. */

@@ -222,7 +222,9 @@
    "carabina": 3,
    "escopeta-bombeo": 3,
    "cuchillo-combate": 8,
-   "guantes-tacticos": 3
+   "guantes-tacticos": 3,
+   "kabuto-oni": 1,
+   "grebas-flotantes": 2
   },
   "buys": [
    "arma"
@@ -664,7 +666,9 @@
    "mocasines-ejecutivos": 6,
    "guantes-cuero": 3,
    "guantes-sin-dedos": 3,
-   "guantes-led": 3
+   "guantes-led": 3,
+   "kabuto-oni": 1,
+   "grebas-flotantes": 2
   },
   "buys": [
    "ropa"

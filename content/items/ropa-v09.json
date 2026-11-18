@@ -2951,5 +2951,61 @@
     "ramSave": 0
    }
   }
+ },
+ {
+  "id": "kabuto-oni",
+  "name": "Kabuto oni de neón",
+  "desc": "Casco samurái de placas negras con máscara oni de ojos cian y penacho blanco. Intimida antes de desenvainar.",
+  "weight": 1.4,
+  "price": 7800,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 4,
+  "wear": {
+   "slot": "cabeza",
+   "style": "casco-oni",
+   "color": "#101418",
+   "pattern": "liso",
+   "detail": "ninguno",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 5,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "grebas-flotantes",
+  "name": "Grebas flotantes samurái",
+  "desc": "Grebas azul acero sobre sandalias con suela de levitación magnética. Pisada silenciosa y ligera.",
+  "weight": 1.8,
+  "price": 6400,
+  "category": "ropa",
+  "rarity": "epico",
+  "armor": 3,
+  "wear": {
+   "slot": "pies",
+   "style": "grebas-flotantes",
+   "color": "#3a5a8a",
+   "pattern": "liso",
+   "detail": "ninguno",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0.04,
+    "needs": 0,
+    "dodge": 0.02,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
  }
 ]

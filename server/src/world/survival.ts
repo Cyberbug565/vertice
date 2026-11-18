@@ -677,8 +677,11 @@ export class Survival {
   }
 
   /** Ponerse o quitarse una prenda: cambia el aspecto, el blindaje y las mejoras. */
-  wear(c: PlayerConn, slot: string, item: string | null) {
+  wear(c: PlayerConn, slot: string, item: string | null, confirm?: boolean) {
     const p = c.p!, e = c.e!;
+    // v0.17 · La superarmadura «Tormenta» se lleva para siempre: no se quita ni se cambia nada encima.
+    if (p.wear.torso_ext === 'exo-tormenta' && (p.inventory.get('exo-tormenta') ?? 0) > 0) throw new GameError('Vas dentro de la superarmadura «Tormenta»: no se abre nunca.');
+    if (item === 'exo-tormenta' && !confirm) throw new GameError('Ponerse la Tormenta es para siempre: confírmalo.');
     if (!['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies', 'manos'].includes(slot)) throw new GameError('Hueco de ropa desconocido.');
     if (item === null) { delete p.wear[slot]; }
     else {

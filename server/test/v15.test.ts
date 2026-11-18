@@ -37,7 +37,7 @@ describe('v0.15', () => {
     await b.connect(token, app.contentHash);
     const c = [...app.world.conns.values()].find((x) => x.p?.name === 'tormenta1')!;
     await (app.world as any).admin.give(c.p, 'exo-tormenta');
-    (app.world as any).survival.wear(c, 'torso_ext', 'exo-tormenta');
+    (app.world as any).survival.wear(c, 'torso_ext', 'exo-tormenta', true);
     expect(wornAppearance(content, c.p!).top).toBe('exo-tormenta');
     expect(effective(content, c.p!).armor).toBeGreaterThanOrEqual(9); // (sustituye a la chaqueta del principio)
   });

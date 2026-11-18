@@ -5,9 +5,13 @@ import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { HAIR_COLLECTION, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 import { Preview3D } from '../render/chars3d';
+
+/** v0.17 · ¿Están las miniaturas de la colección de peinados? (si no, no se ofrece la colección). */
+let hairSheetOk = false;
+if (typeof Image !== 'undefined') { const im = new Image(); im.onload = () => { hairSheetOk = true; }; im.src = '/models/extra/pelos/pelos-miniaturas.png'; }
 
 export function loginScreen(onDone: () => void) {
   clearUi();
@@ -107,6 +111,20 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
     h('div', { class: 'swatches', role: 'group', 'aria-label': label }, ...colors.map((c) => h('button', { class: `swatch${c ? '' : ' none'}`, style: { background: c || 'transparent' }, title: c ? c : 'Sin tatuaje', 'aria-label': `${label} ${c || 'ninguno'}`, 'aria-pressed': String(st.appearance[key] === c), onclick: () => { (st.appearance as any)[key] = c; render(); } }))));
   const optRow = (label: string, key: keyof typeof st.appearance, opts: readonly string[]) => h('div', { class: 'col' }, h('span', {}, label),
     h('div', { class: 'seg wrap', role: 'group', 'aria-label': label }, ...opts.map((o) => h('button', { class: 'segbtn', 'aria-pressed': String(st.appearance[key] === o), onclick: () => { (st.appearance as any)[key] = o; render(); } }, LABELS[o] ?? o))));
+  // v0.17 · Peinados de la colección (modelos 3D de la release): una cuadrícula de miniaturas. Si los recursos no
+  // están descargados en el servidor, la fila no aparece.
+  const hairCollectionRow = () => {
+    if (!hairSheetOk) return null;
+    const S = 44;
+    return h('div', { class: 'col' }, h('span', {}, 'Peinados de la colección'),
+      h('div', { class: 'hair-grid', role: 'group', 'aria-label': 'Peinados de la colección', style: { display: 'flex', flexWrap: 'wrap', gap: '4px', maxHeight: '200px', overflowY: 'auto' } },
+        ...HAIR_COLLECTION.map((id, i) => {
+          const real = id.startsWith('pelo-real');
+          return h('button', { class: 'segbtn hair-thumb', title: real ? 'Pelo realista' : `Peinado nº ${i + 1}`, 'aria-label': real ? 'Pelo realista' : `Peinado de la colección ${i + 1}`, 'aria-pressed': String(st.appearance.hairStyle === id),
+            style: real ? { width: `${S}px`, height: `${S}px`, padding: '0', fontSize: '10px' } : { width: `${S}px`, height: `${S}px`, padding: '0', backgroundImage: 'url(/models/extra/pelos/pelos-miniaturas.png)', backgroundSize: `${15 * S}px ${7 * S}px`, backgroundPosition: `-${(i % 15) * S}px -${Math.floor(i / 15) * S}px` },
+            onclick: () => { st.appearance.hairStyle = id; render(); } }, real ? 'Real' : '');
+        })));
+  };
   const randomize = () => {
     Object.assign(st.appearance, { skin: pick(SKIN), hair: pick(HAIR), jacket: pick(JACKET), accent: pick(ACCENT), eyes: pick(EYE_COLORS), pants: pick(PANTS),
       body: pick(BODIES), build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(TOPS.filter((t) => t !== 'exo-tormenta')), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO),
@@ -132,7 +150,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
         h('h4', { class: 'creator-sec' }, 'Cuerpo y cara'),
         optRow('Cuerpo base', 'body', BODIES), optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), optRow('Forma de la cara', 'faceShape', FACE_SHAPES), optRow('Nariz', 'nose', NOSES), optRow('Boca', 'mouth', MOUTHS), swatchRow('Ojos', 'eyes', [...EYE_COLORS]), optRow('Cejas', 'brows', BROWS),
         h('h4', { class: 'creator-sec' }, 'Pelo'),
-        optRow('Peinado', 'hairStyle', HAIR_STYLES), swatchRow('Color de pelo', 'hair', HAIR), optRow('Vello facial', 'facial', FACIALS),
+        optRow('Peinado', 'hairStyle', HAIR_STYLES), hairCollectionRow(), swatchRow('Color de pelo', 'hair', HAIR), optRow('Vello facial', 'facial', FACIALS),
         h('h4', { class: 'creator-sec' }, 'Detalles'),
         optRow('Maquillaje', 'makeup', MAKEUPS), swatchRow('Color del maquillaje', 'makeupColor', MAKEUP_COL), optRow('Piercing', 'piercing', PIERCINGS), optRow('Cicatriz', 'scar', SCARS),
         h('h4', { class: 'creator-sec' }, 'Tatuajes'),

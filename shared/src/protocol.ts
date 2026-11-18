@@ -62,7 +62,7 @@ export const ClientMsg = z.discriminatedUnion('t', [
   // ---- v0.4
   z.object({ t: z.literal('skillUp'), seq, skill: z.string().max(32), opId }),
   z.object({ t: z.literal('perkBuy'), seq, perk: z.string().max(48), opId }),
-  z.object({ t: z.literal('wear'), seq, slot: z.string().max(16), item: z.string().max(64).nullable() }),
+  z.object({ t: z.literal('wear'), seq, slot: z.string().max(16), item: z.string().max(64).nullable(), confirm: z.boolean().optional() }),
   z.object({ t: z.literal('ability'), seq, id: z.string().max(64) }),
   z.object({ t: z.literal('house'), seq, action: z.enum(['view', 'buy', 'sell', 'enter', 'ring', 'answer', 'permit', 'revoke', 'stashIn', 'stashOut', 'stash', 'realty']),
     house: z.string().max(80).optional(), building: z.string().max(80).optional(), name: z.string().max(24).optional(), who: z.number().int().optional(), allow: z.boolean().optional(),

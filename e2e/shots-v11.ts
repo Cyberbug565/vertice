@@ -35,7 +35,7 @@ if (process.env.KAIROS) { try { (app.world as any).relics.toggleKairos(c, Number
 if (process.env.WEAPON) { try { await (app.world as any).admin.give(c.p, process.env.WEAPON); await (app.world as any).survival.equip(c, process.env.WEAPON); } catch (err) { console.log('arma', (err as Error).message); } }
 const zoom = Number(process.argv[2] ?? 2.2);
 await page.evaluate((z) => (window as any).__vt.view.setZoom(z), zoom);
-if (process.env.WEAR) { try { await (app.world as any).admin.give(c.p, process.env.WEAR); (app.world as any).survival.wear(c, 'torso_ext', process.env.WEAR); } catch (err) { console.log('ropa', (err as Error).message); } }
+if (process.env.WEAR) { try { await (app.world as any).admin.give(c.p, process.env.WEAR); (app.world as any).survival.wear(c, 'torso_ext', process.env.WEAR, true); } catch (err) { console.log('ropa', (err as Error).message); } }
 if (process.env.BODY) { c.p.appearance.body = process.env.BODY; }
 if (process.env.MOVESHOT) { await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove())); await page.keyboard.down('d'); await sleep(2500); await page.screenshot({ path: `${OUT}${process.argv[5] ?? 'v11'}.png`, timeout: 180000 }); await page.keyboard.up('d'); console.log('📸 en movimiento'); await browser.close(); await app.close(); process.exit(0); }
 await page.keyboard.down('d'); await sleep(900); await page.keyboard.up('d');

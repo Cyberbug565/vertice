@@ -162,7 +162,19 @@ function invTab(s: CharacterSheet, ctx: CharCtx) {
   const items = [...inv].filter(([id, q]) => q > 0 && match(id)).sort((a, b) => (content.items.find((i) => i.id === a[0])?.category ?? '').localeCompare(content.items.find((i) => i.id === b[0])?.category ?? ''));
   const act = (id: string) => {
     const d = content.items.find((i) => i.id === id)!;
-    if (d.wear) { const on = s.wear[d.wear.slot] === id; net.send({ t: 'wear', slot: d.wear.slot, item: on ? null : id } as any); ctx.toast(on ? `Te quitas ${d.name}.` : `Te pones ${d.name}.`, 'info'); }
+    if (d.wear) {
+      const on = s.wear[d.wear.slot] === id;
+      // v0.17 · La superarmadura «Tormenta» no se quita nunca: se pregunta antes de entrar y luego ya no hay vuelta atrás.
+      if (id === 'exo-tormenta' && on) { ctx.toast('La Tormenta no se abre: ahora eres parte de ella.', 'warn'); blip('bad'); return; }
+      if (s.wear[d.wear.slot] === 'exo-tormenta') { ctx.toast('No puedes cambiar nada: vas dentro de la Tormenta.', 'warn'); blip('bad'); return; }
+      const go = () => { net.send({ t: 'wear', slot: d.wear!.slot, item: on ? null : id, confirm: id === 'exo-tormenta' || undefined } as any); ctx.toast(on ? `Te quitas ${d.name}.` : `Te pones ${d.name}.`, 'info'); };
+      if (id === 'exo-tormenta') {
+        ask('La superarmadura «Tormenta» se cierra sobre ti y su núcleo de fusión se une a tu sistema nervioso. Una vez dentro, NO podrás salir nunca más: ni quitártela, ni cambiarte de ropa. Solo la pierdes si mueres. ¿Entras?', go,
+          { title: 'Superarmadura «Tormenta»', ok: 'Entrar para siempre', cancel: 'Todavía no', danger: true });
+        return;
+      }
+      go();
+    }
     else if (d.weapon) net.send({ t: 'equip', item: s.weapon?.id === id ? null : id } as any);
     else if (d.consumable) net.send({ t: 'useItem', item: id, opId: newOpId() } as any);
     else ctx.toast(`${d.name}: no se puede usar directamente.`, 'info');

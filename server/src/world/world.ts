@@ -705,7 +705,7 @@ export class World {
       case 'equip': return guarded(m.seq, async () => sv.equip(c, m.item));
       case 'skillUp': return guarded(m.seq, () => this.progress.skillUp(c, m.skill));
       case 'perkBuy': return guarded(m.seq, () => this.progress.perkBuy(c, m.perk));
-      case 'wear': return guarded(m.seq, async () => sv.wear(c, m.slot, m.item));
+      case 'wear': return guarded(m.seq, async () => sv.wear(c, m.slot, m.item, (m as any).confirm === true));
       case 'ability': return guarded(m.seq, () => this.combat.ability(c, m.id));
       case 'props': this.send(c, { t: 'props', view: this.property.propsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'marketLive': this.property.liveOn(c, m.on); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;

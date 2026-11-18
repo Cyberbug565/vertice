@@ -26,7 +26,7 @@ await page.click('.overlay button.btn.primary', { timeout: 3000 }).catch(() => {
 await page.evaluate(() => document.querySelectorAll('.overlay').forEach((o) => o.remove()));
 const c = [...app.world.conns.values()][0];
 const w = app.world as any;
-await w.admin.give(c.p, 'exo-tormenta'); w.survival.wear(c, 'torso_ext', 'exo-tormenta');
+await w.admin.give(c.p, 'exo-tormenta'); w.survival.wear(c, 'torso_ext', 'exo-tormenta', true);
 await w.admin.give(c.p, 'rifle-asalto'); await w.survival.equip(c, 'rifle-asalto');
 await sleep(3000);
 await page.click('.overlay button.btn.primary', { timeout: 2000 }).catch(() => {});

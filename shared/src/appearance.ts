@@ -3,6 +3,8 @@
 export const BODIES = ['masculino', 'femenino'] as const;
 export const BUILDS = ['delgado', 'medio', 'robusto', 'atletico', 'corpulento', 'bajo', 'alto', 'musculoso', 'curvilineo', 'esbelto', 'fornido'] as const;
 export const HAIR_STYLES = ['rapado', 'corto', 'cresta', 'largo', 'coleta', 'afro', 'moño', 'rastas', 'calvo', 'asimetrico', 'undercut', 'trenzas', 'mohicano', 'melena', 'flequillo', 'puntas', 'coleta-alta', 'rizos', 'lobo', 'dos-moños', 'afro-corto', 'pompadour', 'bob', 'media-melena', 'trenza-larga', 'erizo', 'mullet', 'trenzas-pegadas', 'coleta-baja', 'ondas', 'samurai', 'pixie'] as const;
+/** v0.17 · Peinados de la colección (modelos de la release «pelos»): 105 numerados y uno realista. */
+export const HAIR_COLLECTION: string[] = [...Array.from({ length: 105 }, (_, i) => `pelo-${String(i + 1).padStart(3, '0')}`), 'pelo-real-001'];
 export const TOPS = ['chaqueta', 'gabardina', 'chaleco', 'sudadera', 'traje', 'top', 'mono', 'camiseta', 'tirantes', 'camisa', 'bomber', 'biker', 'abrigo', 'blazer', 'haori', 'poncho', 'armadura', 'arnes', 'cortavientos', 'chubasquero', 'exo-tormenta'] as const;
 export const FACIALS = ['ninguno', 'barba', 'bigote', 'perilla', 'barba-larga', 'patillas', 'candado'] as const;
 export const FACE_SHAPES = ['ovalada', 'angulosa', 'redonda', 'alargada', 'cuadrada', 'corazon', 'ancha', 'afilada', 'diamante', 'triangular'] as const;
@@ -63,7 +65,7 @@ export function normalizeAppearance(a: any): { ok: true; value: Record<string, s
   if (v.top === 'exo-tormenta') return { ok: false, error: 'La superarmadura «Tormenta» no se elige al crear: hay que quitársela al Gobierno' }; // v0.16
   if (v.tattoo && !HEX.test(v.tattoo)) return { ok: false, error: 'Tatuaje inválido' };
   const enumOk = (val: string, list: readonly string[], n: string) => (list.includes(val) ? null : `Opción inválida: ${n}`);
-  const e = enumOk(v.build, BUILDS, 'complexión') ?? enumOk(v.hairStyle, HAIR_STYLES, 'peinado') ?? enumOk(v.top, TOPS, 'ropa') ?? enumOk(v.facial, FACIALS, 'vello facial') ?? enumOk(v.accessory, ACCESSORIES, 'accesorio')
+  const e = enumOk(v.build, BUILDS, 'complexión') ?? (HAIR_COLLECTION.includes(v.hairStyle) ? null : enumOk(v.hairStyle, HAIR_STYLES, 'peinado')) ?? enumOk(v.top, TOPS, 'ropa') ?? enumOk(v.facial, FACIALS, 'vello facial') ?? enumOk(v.accessory, ACCESSORIES, 'accesorio')
     ?? enumOk(v.faceShape, FACE_SHAPES, 'cara') ?? enumOk(v.nose, NOSES, 'nariz') ?? enumOk(v.mouth, MOUTHS, 'boca') ?? enumOk(v.brows, BROWS, 'cejas') ?? enumOk(v.makeup, MAKEUPS, 'maquillaje') ?? enumOk(v.piercing, PIERCINGS, 'piercing') ?? enumOk(v.scar, SCARS, 'cicatriz') ?? enumOk(v.bodyTattoo, BODY_TATTOOS, 'tatuaje corporal')
     ?? enumOk(v.tattooZone, TATTOO_ZONES, 'zona del tatuaje') ?? enumOk(v.faceTattoo, FACE_TATTOOS, 'tatuaje facial') ?? enumOk(v.topPattern, FABRICS, 'tejido') ?? enumOk(v.pantsPattern, FABRICS, 'tejido') ?? enumOk(v.shoeStyle, SHOE_STYLES, 'calzado') ?? enumOk(v.topDetail, TOP_DETAILS, 'detalle') ?? (v.body ? enumOk(v.body, BODIES, 'cuerpo') : null);
   return e ? { ok: false, error: e } : { ok: true, value: v };

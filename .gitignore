@@ -7,3 +7,8 @@ loadtest-results/*.tmp
 e2e/out/
 .env
 e2e/out/*.png
+
+# v0.17 · Modelos con licencia sin confirmar: se descargan de la release con tools/fetch-assets.mjs
+client/public/models/extra/
+vertice-extra-v17.tar.gz
+.vertice-extra.tar.gz

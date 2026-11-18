@@ -47,6 +47,19 @@ describe('v0.16', () => {
     expect(['militar', 'lujo']).toContain(a.chromeTier.brazo_der);
   });
 
+  it('la Tormenta pide confirmación y no se quita nunca', async () => {
+    const c = await join('piloto1');
+    const w = app.world as any;
+    await w.admin.give(c.p, 'exo-tormenta');
+    expect(() => w.survival.wear(c, 'torso_ext', 'exo-tormenta')).toThrow(/confírmalo/);
+    w.survival.wear(c, 'torso_ext', 'exo-tormenta', true);
+    expect(c.p!.wear.torso_ext).toBe('exo-tormenta');
+    expect(() => w.survival.wear(c, 'torso_ext', null)).toThrow(/no se abre/);
+    await w.admin.give(c.p, 'guantes-led');
+    expect(() => w.survival.wear(c, 'manos', 'guantes-led')).toThrow(/no se abre/);
+    expect(c.p!.wear.torso_ext).toBe('exo-tormenta');
+  });
+
   it('la superarmadura «Tormenta» es mítica, no se vende y la da el convoy del Proyecto TORMENTA', () => {
     const w = app.world as any;
     const it = w.c.items.find((i: any) => i.id === 'exo-tormenta');
