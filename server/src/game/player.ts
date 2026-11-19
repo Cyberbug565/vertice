@@ -100,10 +100,36 @@ export function perkMods(c: Content, p: PlayerState) {
 const SHOE_STYLE: Record<string, string> = { calzado: 'botas', deportivas: 'zapatillas', zapatos: 'mocasines' };
 export function wornAppearance(c: Content, p: PlayerState): Appearance {
   const a: any = { ...p.appearance };
+  // v0.22 · Prendas 3D, ropa interior y partes al aire. Un hueco vacío ('') es que se ha quitado lo de serie.
+  const worn = (slot: string) => { const id = p.wear[slot]; const it = id ? c.items.find((i) => i.id === id) : undefined; return it?.wear && (p.inventory.get(it.id) ?? 0) > 0 ? it : undefined; };
+  const garments: string[] = [], bare = new Set<string>();
+  const covered = new Set<string>();
+  for (const slot of Object.keys(p.wear)) { const it = worn(slot); if (it?.wear?.also) for (const s2 of it.wear.also) covered.add(s2); }
+  const off = (slot: string) => p.wear[slot] === '' && !covered.has(slot);
+  if (off('torso_int') && !worn('torso_ext') || off('torso_ext') && !worn('torso_int')) bare.add('torso');
+  for (const [slot, part] of [['piernas', 'piernas'], ['pies', 'pies'], ['cabeza', 'cabeza'], ['cara', 'cara'], ['manos', 'manos']] as const) if (off(slot)) bare.add(part);
+  for (const slot of ['torso_int', 'torso_ext', 'piernas', 'pies', 'cabeza', 'cara', 'manos', 'accesorio']) {
+    const it = worn(slot);
+    if (!it?.wear?.style.startsWith('g:')) continue;
+    garments.push(it.wear.style.slice(2));
+    // Lo que tapa la prenda 3D no se dibuja con la ropa de serie (queda «al aire» debajo de la prenda).
+    for (const s2 of [slot, ...(it.wear.also ?? [])]) bare.add(s2 === 'torso_int' || s2 === 'torso_ext' ? 'torso' : s2);
+  }
+  // Con una prenda 3D en el tronco, la de serie solo se queda si el otro hueco lleva ropa clásica.
+  const classicTorso = ['torso_int', 'torso_ext'].some((s2) => worn(s2) && !worn(s2)!.wear!.style.startsWith('g:'));
+  if (classicTorso) bare.delete('torso');
+  for (const [slot, key] of [['interior_sup', 'underTop'], ['interior_inf', 'underBottom']] as const) {
+    if (p.wear[slot] === '') { a[key] = ''; continue; }
+    const it = worn(slot);
+    if (it?.wear?.style.startsWith('u:')) { a[key] = it.wear.style.slice(2); a[key + 'Color'] = it.wear.color; }
+  }
+  if (garments.length) a.garments = garments.join(',');
+  if (bare.size) a.bare = [...bare].join(',');
   for (const [slot, id] of Object.entries(p.wear)) {
     const it = id ? c.items.find((i) => i.id === id) : undefined;
     if (!it?.wear || (p.inventory.get(it.id) ?? 0) <= 0) continue;
     const w = it.wear;
+    if (w.style.startsWith('g:') || w.style.startsWith('u:') || slot === 'accesorio') continue;
     const ww = w as typeof w & { pattern?: string; detail?: string; accent?: string };
     if (slot === 'torso_ext') { a.top = w.style; a.jacket = w.color; a.outer = w.style; a.topPattern = ww.pattern ?? 'liso'; a.topDetail = ww.detail ?? 'ninguno'; if (ww.accent) a.accent2 = ww.accent; }
     else if (slot === 'torso_int') { a.shirt = w.color; if (!p.wear.torso_ext || (p.inventory.get(p.wear.torso_ext) ?? 0) <= 0) { a.top = w.style; a.jacket = w.color; a.topPattern = ww.pattern ?? 'liso'; a.topDetail = ww.detail ?? 'ninguno'; if (ww.accent) a.accent2 = ww.accent; } }

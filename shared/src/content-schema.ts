@@ -184,7 +184,7 @@ export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'he
 
 export const WEAPON_TRAITS = ['perforante', 'inteligente', 'quemadura', 'sangrado', 'electrica', 'emp', 'area', 'silenciosa', 'aturdidora'] as const;
 export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario', 'mitico'] as const;
-export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies', 'manos'] as const;
+export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies', 'manos', 'accesorio', 'interior_sup', 'interior_inf'] as const;
 export type WearSlot = (typeof WEAR_SLOTS)[number];
 /** v0.9 · Cuántos implantes caben en cada ranura: dos ojos, dos oídos, dos brazos, dos manos, cuatro dedos (dos por mano), dos piernas… */
 export const CYBER_SLOT_CAPACITY: Record<string, number> = { ojos: 2, oidos: 2, brazo: 2, manos: 2, dedos: 4, pierna: 2, cortex: 3, esqueleto: 2, circulatorio: 2, nervioso: 2, tegumento: 2, glandula: 2, bateria: 2, hombros: 2, columna: 1 };
@@ -228,6 +228,9 @@ export const ItemSchema = z.object({
       dodge: z.number().default(0), hpMax: z.number().default(0), aim: z.number().default(0), ramPlus: z.number().default(0), ramSave: z.number().default(0) }).prefault({}),
     /** v0.9 · Capacidad especial de la prenda (camaleon, termica, aislante, reflejos, anticamaras…). */
     perk: z.string().optional(),
+    /** v0.22 · Otros huecos que tapa (un mono ocupa camiseta y pantalón) y si es solo de hombre (m) o de mujer (f). */
+    also: z.array(z.enum(WEAR_SLOTS)).optional(),
+    sex: z.enum(['m', 'f']).optional(),
   }).optional(),
 });
 export type ItemDef = z.infer<typeof ItemSchema>;

@@ -26,6 +26,8 @@ export interface KitData {
 export interface Kit {
   scene: THREE.Group; bodyMat: THREE.MeshStandardMaterial; rest: Map<string, RestBone>; order: string[]; parent: Map<string, string | null>;
   headBase: number; headTop: number; eyeY: number; faceZ: number; data: KitData; kind: BodyKind;
+  /** v0.22 · Máscaras de ropa interior, entrepierna, pubis y un vértice del pubis (para saber si una prenda lo tapa). */
+  underTex: THREE.Texture; crotch: THREE.Vector3; pubis: THREE.Vector3; crotchV: number;
 }
 interface HairKit { obj: THREE.Object3D; mat: THREE.MeshStandardMaterial; forBody: BodyKind }
 let kits: { masculino: Kit; femenino: Kit; hair: Map<string, HairKit> } | null = null;
@@ -34,6 +36,8 @@ let version = 0;
 /** Cambia cuando terminan de cargar los cuerpos (los personajes se rehacen para estrenarlos). */
 export const humansVersion = () => version;
 export const humansReady = () => !!kits;
+/** v0.22 · Número de vértices del cuerpo y vértice del pubis (para las prendas que lo tapan). */
+export const kitInfo = (kind: BodyKind) => (kits ? { n: kits[kind].data.pos.length / 3, crotchV: kits[kind].crotchV } : null);
 
 /** Zona del cuerpo de cada hueso (para la ropa y el cromo). El lado +X del modelo son los huesos «_l». */
 export const REG = { head: 0, neck: 1, torso: 2, pelvis: 3, uaP: 4, faP: 5, handP: 6, uaM: 7, faM: 8, handM: 9, thP: 10, caP: 11, ftP: 12, thM: 13, caM: 14, ftM: 15 } as const;
@@ -105,6 +109,19 @@ export function loadHumans(onLoaded: () => void) {
       const l = Math.hypot(x, y, z) || 1;
       for (const v of vs) { nrm[v * 3] = x / l; nrm[v * 3 + 1] = y / l; nrm[v * 3 + 2] = z / l; }
     }
+    // v0.22 · La malla del cuerpo usa las normales soldadas (el kit traía un corte de luz bajo el pecho por las costuras).
+    geo.setAttribute('normal', new THREE.BufferAttribute(nrm.slice(), 3));
+    // v0.22 · Vértices tapados por prendas 3D (por persona; aquí, ninguno).
+    geo.setAttribute('aHide', new THREE.BufferAttribute(new Float32Array(n), 1));
+    // v0.22 · Máscaras de ropa interior en el UV del cuerpo (R, G, B, A = una forma cada canal).
+    const underTex = new THREE.TextureLoader().load(`${base}interior-${kind}.png`);
+    underTex.flipY = false; underTex.colorSpace = THREE.NoColorSpace;
+    // Entrepierna: el punto más bajo de la cadera junto al centro, y el pubis por delante.
+    let cY = 9, cZ = 0, fZ = -9;
+    for (let v = 0; v < n; v++) if (reg[v] === REG.pelvis && Math.abs(pos[v * 3]) < 0.012 && pos[v * 3 + 1] < cY) { cY = pos[v * 3 + 1]; cZ = pos[v * 3 + 2]; }
+    for (let v = 0; v < n; v++) if (Math.abs(pos[v * 3]) < 0.015 && pos[v * 3 + 1] > cY + 0.04 && pos[v * 3 + 1] < cY + 0.09) fZ = Math.max(fZ, pos[v * 3 + 2]);
+    let crotchV = 0, bestD = 9;
+    for (let v = 0; v < n; v++) { const d = Math.hypot(pos[v * 3], pos[v * 3 + 1] - (cY + 0.05), pos[v * 3 + 2] - fZ); if (d < bestD) { bestD = d; crotchV = v; } }
     const R = (nm: string) => rest.get(nm)!.p;
     let earX = 0.07, backZ = -0.1;
     for (let v = 0; v < n; v++) if (reg[v] === REG.head) { const y = pos[v * 3 + 1]; if (Math.abs(y - (eyeY - 0.015)) < 0.02) earX = Math.max(earX, Math.abs(pos[v * 3])); if (y > eyeY) backZ = Math.min(backZ, pos[v * 3 + 2]); }
@@ -119,7 +136,7 @@ export function loadHumans(onLoaded: () => void) {
     const LM: Landmarks = { shX: R('upperarm_l').x, elX: R('lowerarm_l').x, wrX: R('hand_l').x, armY: R('upperarm_l').y, hipY: R('thigh_l').y, legX: R('thigh_l').x, kneeY: R('calf_l').y, ankY: R('foot_l').y,
       pelvisY: R('pelvis').y, chestY: R('spine_03').y, neckY: R('neck_01').y, headBase: head.y, headTop: bb.max.y, eyeY, faceZ, mouthY: eyeY - 0.07, earX, headBackZ: backZ, eyeP, eyeM };
     const data: KitData = { pos, nrm, uv, si: siA, sw: swA, reg, bone, index: geo.index ? geo.index.array : Array.from({ length: n }, (_, i) => i), boneNames: names, L: LM };
-    return { scene, bodyMat, rest, order, parent, headBase: head.y, headTop: bb.max.y, eyeY, faceZ, data, kind };
+    return { scene, bodyMat, rest, order, parent, headBase: head.y, headTop: bb.max.y, eyeY, faceZ, data, kind, underTex, crotch: new THREE.Vector3(0, cY, cZ), pubis: new THREE.Vector3(0, cY + 0.06, fZ), crotchV };
   };
   const hair = async (name: string, forBody: BodyKind): Promise<[string, HairKit]> => {
     const g = await L.loadAsync(base + name + '.gltf');
@@ -149,6 +166,9 @@ export interface Look {
   tattoo?: HTMLCanvasElement | null; tattooZones?: number[];
   /** Calcomanía de la cara (maquillaje, cicatrices, tatuaje facial, pecas), en el rectángulo de la cara de la textura. */
   decal?: HTMLCanvasElement | null;
+  /** v0.22 · Vértices tapados por prendas 3D (1 = no se dibuja) y ropa interior (canal de la máscara o −1, encaje, color). */
+  hide?: Float32Array | null;
+  under?: { top: number; bot: number; topLace: boolean; botLace: boolean; topColor: string; botColor: string } | null;
 }
 const NO_TEX = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1); NO_TEX.needsUpdate = true;
 const canvasTex = (c: HTMLCanvasElement | null | undefined, repeat: boolean) => {
@@ -200,25 +220,39 @@ function bodyMaterial(kit: Kit, look: Look): THREE.MeshStandardMaterial {
     uTat: { value: canvasTex(look.tattoo, true) }, uTatZ: { value: look.tattooZones ?? new Array(16).fill(0) },
     uDecal: { value: canvasTex(look.decal, false) }, uDecalOn: { value: look.decal ? 1 : 0 },
     uArm: { value: new THREE.Vector4(kit.data.L.shX, kit.data.L.armY, kit.data.L.legX, kit.data.L.hipY) },
+    uUnderTex: { value: kit.underTex },
+    uUnder: { value: new THREE.Vector4(look.under?.top ?? -1, look.under?.bot ?? -1, look.under?.topLace ? 1 : 0, look.under?.botLace ? 1 : 0) },
+    uUnderTop: { value: new THREE.Color(look.under?.topColor ?? '#222') }, uUnderBot: { value: new THREE.Color(look.under?.botColor ?? '#222') },
   };
   m.userData.face = { uFace: uniforms.uFace, uFace2: uniforms.uFace2, uFace3: uniforms.uFace3, uFace4: uniforms.uFace4, uHead: uniforms.uHead };
   if (look.tattoo || look.decal) m.userData.owned = [uniforms.uTat.value, uniforms.uDecal.value].filter((t) => t !== NO_TEX);
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, uniforms);
-    sh.vertexShader = 'attribute float aRegion;\nvarying float vRegion;\nvarying vec3 vRP;\nuniform vec4 uFace;\nuniform vec4 uFace2;\nuniform vec4 uFace3;\nuniform vec4 uFace4;\nuniform vec4 uHead;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
-      vRegion = aRegion; vRP = position;
+    sh.vertexShader = 'attribute float aRegion;\nattribute float aHide;\nvarying float vHide;\nvarying float vRegion;\nvarying vec3 vRP;\nuniform vec4 uFace;\nuniform vec4 uFace2;\nuniform vec4 uFace3;\nuniform vec4 uFace4;\nuniform vec4 uHead;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+      vRegion = aRegion; vRP = position; vHide = aHide;
       if (aRegion < 0.5) {
 ${HEAD_MORPH}
       }`);
-    sh.fragmentShader = 'varying float vRegion;\nvarying vec3 vRP;\nuniform sampler2D uTat;\nuniform float uTatZ[16];\nuniform sampler2D uDecal;\nuniform float uDecalOn;\nuniform vec4 uArm;\nuniform vec3 uSkin;\nuniform sampler2D uTop;\nuniform sampler2D uPants;\nuniform vec3 uShoe;\nuniform vec3 uMetal;\nuniform vec3 uAccent;\nuniform float uCover[16];\n' + sh.fragmentShader
+    sh.fragmentShader = 'varying float vHide;\nuniform sampler2D uUnderTex;\nuniform vec4 uUnder;\nuniform vec3 uUnderTop;\nuniform vec3 uUnderBot;\nvarying float vRegion;\nvarying vec3 vRP;\nuniform sampler2D uTat;\nuniform float uTatZ[16];\nuniform sampler2D uDecal;\nuniform float uDecalOn;\nuniform vec4 uArm;\nuniform vec3 uSkin;\nuniform sampler2D uTop;\nuniform sampler2D uPants;\nuniform vec3 uShoe;\nuniform vec3 uMetal;\nuniform vec3 uAccent;\nuniform float uCover[16];\n' + sh.fragmentShader
       .replace('#include <map_fragment>', `#include <map_fragment>
         int rg = int(vRegion + 0.5);
         float cov = 0.0;
         for (int i = 0; i < 16; i++) { if (i == rg) cov = uCover[i]; }
         // 0 piel · 1 tela de arriba · 2 pantalón · 3 calzado · 4 cromo · 5 sustituido por una pieza robótica
-        if (cov > 4.5) discard;
+        if (cov > 4.5 || vHide > 0.5) discard;
         if (cov < 0.5) {
           diffuseColor.rgb *= uSkin;
+          // v0.22 · Ropa interior pintada sobre la piel (forma = canal de la máscara; el encaje deja ver la piel a trozos).
+          vec4 um = texture2D(uUnderTex, vMapUv);
+          float ut = uUnder.x < -0.5 ? 0.0 : uUnder.x < 0.5 ? um.r : uUnder.x < 1.5 ? um.g : uUnder.x < 2.5 ? um.b : um.a;
+          float ub = uUnder.y < -0.5 ? 0.0 : uUnder.y < 0.5 ? um.r : uUnder.y < 1.5 ? um.g : uUnder.y < 2.5 ? um.b : um.a;
+          float lace = 0.5 + 0.5 * sin(vMapUv.x * 1400.0) * sin(vMapUv.y * 1400.0);
+          float flower = smoothstep(0.35, 0.75, 0.5 + 0.5 * sin(vMapUv.x * 260.0 + sin(vMapUv.y * 300.0) * 2.0) * sin(vMapUv.y * 260.0));
+          float lt = uUnder.z > 0.5 ? mix(0.35, 1.0, max(step(0.55, lace), flower)) : 1.0;
+          float lb = uUnder.w > 0.5 ? mix(0.35, 1.0, max(step(0.55, lace), flower)) : 1.0;
+          float shade = 0.82 + 0.18 * clamp(diffuseColor.r / max(uSkin.r, 0.05) / 0.45, 0.0, 1.4);
+          diffuseColor.rgb = mix(diffuseColor.rgb, uUnderTop * shade, ut * lt);
+          diffuseColor.rgb = mix(diffuseColor.rgb, uUnderBot * shade, ub * lb);
           // v0.16 · Tatuaje proyectado sobre la piel según la zona (cilindro en brazos, piernas y cuello; plano en el tronco).
           float tz = 0.0; for (int i = 0; i < 16; i++) { if (i == rg) tz = uTatZ[i]; }
           if (tz > 0.5) {
@@ -243,7 +277,7 @@ ${HEAD_MORPH}
       .replace('#include <metalnessmap_fragment>', '#include <metalnessmap_fragment>\n metalnessFactor = cov > 3.5 ? 0.85 : 0.0;')
       .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n if (cov > 3.5) totalEmissiveRadiance += uAccent * step(0.93, fract(vMapUv.y * 22.0)) * 0.9;');
   };
-  m.customProgramCacheKey = () => 'vt-humano-2';
+  m.customProgramCacheKey = () => 'vt-humano-3';
   return m;
 }
 
@@ -258,7 +292,9 @@ export interface Human {
   /** Cuelga un contenedor (ejes del mundo en reposo) de un hueso, con origen en P (espacio del cuerpo en reposo). */
   attach: (boneName: string, P: THREE.Vector3, extraQ?: THREE.Quaternion) => THREE.Group;
 }
-export interface HumanOpts { kind: BodyKind; look: Look; hair: string; hairColor: string; beard: boolean; eyes: string; lost: Set<string> }
+export interface HumanOpts { kind: BodyKind; look: Look; hair: string; hairColor: string; beard: boolean; eyes: string; lost: Set<string>;
+  /** v0.22 · Genitales masculinos a la vista (cuerpo masculino sin nada que tape la entrepierna). */
+  genitals?: boolean }
 const qDownP = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.08, -1, 0).normalize());
 const qDownM = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(-1, 0, 0), new THREE.Vector3(-0.08, -1, 0).normalize());
 
@@ -279,6 +315,15 @@ export function makeHuman(o: HumanOpts): Human | null {
     else if (name.includes('Eyes')) { const em = (m.material as THREE.MeshStandardMaterial).clone(); em.color = new THREE.Color(1, 1, 1).lerp(new THREE.Color(o.eyes), 0.55).multiplyScalar(1.15); m.material = em; mats.push(em); }
     else { const hm = (m.material as THREE.MeshStandardMaterial).clone(); hm.color = new THREE.Color(o.hairColor).multiplyScalar(1.6); m.material = hm; mats.push(hm); } // cejas
   });
+  // v0.22 · Vértices tapados por prendas 3D: la malla de esta persona comparte todo con el kit menos ese atributo.
+  if (o.look.hide && bodyMesh) {
+    const bmh = bodyMesh as THREE.SkinnedMesh, g0 = bmh.geometry, g = new THREE.BufferGeometry();
+    g.setIndex(g0.index);
+    for (const k of Object.keys(g0.attributes)) g.setAttribute(k, g0.attributes[k]);
+    g.setAttribute('aHide', new THREE.BufferAttribute(o.look.hide, 1));
+    g.groups = g0.groups; g.boundingBox = g0.boundingBox; g.boundingSphere = g0.boundingSphere;
+    bmh.geometry = g;
+  }
   // Miembros perdidos: el hueso se encoge (desaparece el brazo o la pierna entera).
   for (const [part, bone] of [['brazo_der', 'upperarm_l'], ['brazo_izq', 'upperarm_r'], ['pierna_der', 'thigh_l'], ['pierna_izq', 'thigh_r'], ['mano_der', 'hand_l'], ['mano_izq', 'hand_r']] as const) {
     if (o.lost.has(part)) bones.get(bone)?.scale.setScalar(0.0001);
@@ -319,6 +364,19 @@ export function makeHuman(o: HumanOpts): Human | null {
     if (h.forBody !== o.kind) c.position.y += o.kind === 'masculino' ? 0.043 : -0.043;
     headBind.add(c);
   };
+  // v0.22 · Genitales masculinos (adulto): pene en reposo y escroto, del tono de la piel, colgados de la cadera.
+  if (o.genitals && o.kind === 'masculino') {
+    const skin = new THREE.Color(o.look.skin).multiplyScalar(0.86);
+    const gm = new THREE.MeshStandardMaterial({ color: skin, roughness: 0.62, metalness: 0 }); mats.push(gm);
+    const tip = new THREE.MeshStandardMaterial({ color: skin.clone().lerp(new THREE.Color(0.55, 0.28, 0.26), 0.25), roughness: 0.5, metalness: 0 }); mats.push(tip);
+    const g = attach('pelvis', kit.pubis.clone().add(new THREE.Vector3(0, -0.012, -0.012)));
+    const sc = new THREE.Mesh(new THREE.SphereGeometry(0.021, 18, 14), gm); sc.scale.set(1.32, 1.05, 0.95); sc.position.set(0, -0.052, -0.006); g.add(sc);
+    const shaft = new THREE.Group(); shaft.position.set(0, -0.004, 0.012); shaft.rotation.x = 0.32; g.add(shaft);
+    const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.0145, 0.0155, 0.062, 18, 1, true), gm); cyl.position.y = -0.031; shaft.add(cyl);
+    const base = new THREE.Mesh(new THREE.SphereGeometry(0.0155, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), gm); shaft.add(base);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.0158, 18, 14), tip); head.scale.set(1, 1.15, 1); head.position.y = -0.064; shaft.add(head);
+    for (const m of [sc, cyl, base, head]) { m.frustumCulled = false; m.castShadow = false; }
+  }
   if (o.hair) addHair(o.kind === 'femenino' && o.hair === 'Hair_Buzzed' ? 'Hair_BuzzedFemale' : o.hair);
   if (o.beard && o.kind === 'masculino') addHair('Hair_Beard');
   return { root, mats, kind: o.kind, head, headBind, chest, hips, handP, handM, bones, kit, attach, bodyMesh: bodyMesh! };

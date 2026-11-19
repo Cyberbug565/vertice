@@ -11,6 +11,57 @@ Vértice es un proyecto original. Estos son los recursos de terceros que incluye
 | Modular Character Outfits – Fantasy (Standard): jornalero y explorador | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/atuendos/`: atuendos completos (texturas de color a 1024 px) |
 | Vocations and Uniforms (Free): 17 personajes de oficios | Su autor en itch.io (ver la ficha original del recurso) | CC BY-SA | `client/public/models/cartoon/`: convertidos del `.blend` a GLB con una paleta común, sin otros cambios. Esos archivos derivados se distribuyen con la misma licencia CC BY-SA |
 
+### Ropa 3D (v0.22)
+
+Prendas de Sketchfab que aportó el dueño del proyecto (release «ropa»), ajustadas a los dos cuerpos del juego con Blender: escaladas, puestas en la postura del cuerpo, con los pesos de los huesos del kit y separadas de la piel. Texturas reducidas a 1024 px como máximo. Los archivos derivados están en `client/public/models/prendas/`.
+
+| Prendas | Autor | Licencia |
+|---|---|---|
+| Casco «Ronin oni» | 6 — [Sketchfab](https://sketchfab.com/3d-models/3ffdc227bda84cacb051f443a5cccaab) | CC-BY 4.0 |
+| Top futurista de manga larga | Alexander Kurmanin — [Sketchfab](https://sketchfab.com/3d-models/9aa10e27c5dd43f58c8d4920cf843016) | CC-BY 4.0 |
+| Corsé sci-fi | Alexander Kurmanin — [Sketchfab](https://sketchfab.com/3d-models/d28c1ffc888f4435bbb361daca449c31) | CC-BY 4.0 |
+| Vestido sci-fi | Alexander Kurmanin — [Sketchfab](https://sketchfab.com/3d-models/fbb07085e6b0419cbcf3636ce93c0083) | CC-BY 4.0 |
+| Traje sci-fi ajustado | Alexander Kurmanin — [Sketchfab](https://sketchfab.com/3d-models/0e938256aa4f4af3b3a23c811da585fa) | CC-BY 4.0 |
+| Cargo futurista | Alexander Kurmanin — [Sketchfab](https://sketchfab.com/3d-models/d06a6332d2394043ae343ea052c40007) | CC-BY 4.0 |
+| Falda sci-fi de volantes, Falda sci-fi larga | Alexander Kurmanin — [Sketchfab](https://sketchfab.com/3d-models/b8c3c5bb9fae44fdb678ce52479d97f5) | CC-BY 4.0 |
+| Pasamontañas | Alexander Kurmanin — [Sketchfab](https://sketchfab.com/3d-models/da7ccabba333455db76ecf22c39e341f) | CC-BY 4.0 |
+| Casco holográfico | Alexandr33D — [Sketchfab](https://sketchfab.com/3d-models/bc2ae46f6882431497f49abc7668eb3a) | CC-BY 4.0 |
+| Casco sci-fi de piloto | cenobyte — [Sketchfab](https://sketchfab.com/3d-models/57c4e5784952425bbe95e5975bbff694) | CC-BY 4.0 |
+| Chaqueta plateada | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/31289d17254b403fb939a57f83ea69e1) | CC-BY 4.0 |
+| Chaqueta caqui con capucha | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/538a0ad891ac4497a69b29f7ff89a91d) | CC-BY 4.0 |
+| Chaqueta táctica | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/0d883d962375451f8d50f830d3b41380) | CC-BY 4.0 |
+| Jersey cyberpunk, Pantalón cyberpunk | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/08b9da722fde459d935848ea616e326c) | CC-BY 4.0 |
+| Sudadera gruesa con capucha | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/72ba46e828fa418ca3041be51f9bfaa2) | CC-BY 4.0 |
+| Mono de trabajo | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/62c381f003474f9584efc1792c32bcf3) | CC-BY 4.0 |
+| Pantalón de cuero | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/2bcc007cab704372a0f2a20d0b06ab5d) | CC-BY 4.0 |
+| Botas de trabajo | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/40691624e9f74385be852b95b26b9f5f) | CC-BY 4.0 |
+| Botas de asalto, Guantes de asalto, Gorra táctica, Gafas tácticas | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/da288adbddf949aa85962968732f0999) | CC-BY 4.0 |
+| Guantes tácticos | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/da0ce7101abf4d12be84f661169d7fb9) | CC-BY 4.0 |
+| Máscara de carbono | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/2350f25aa25749398abd6a26f769d0ee) | CC-BY 4.0 |
+| Chaleco de placas | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/90c084b9a56441b1afcfa9293b6fe4af) | CC-BY 4.0 |
+| Auriculares tácticos | DanlyVostok — [Sketchfab](https://sketchfab.com/3d-models/a8ffea33203147609aa8f064e46f8426) | CC-BY 4.0 |
+| Chaqueta cyberpunk clásica | dejan31 — [Sketchfab](https://sketchfab.com/3d-models/17813414cc7d447e9f574c4299341c93) | CC-BY 4.0 |
+| Abrigo «Cyber-pop», Top «Cyber-pop», Pantalón «Cyber-pop» | deymar — [Sketchfab](https://sketchfab.com/3d-models/55395f2e9fe941b0a2da4e9cbc4e155f) | CC-BY 4.0 |
+| Jersey de punto | deymar — [Sketchfab](https://sketchfab.com/3d-models/ffd9ca805e624730aae1fcae790f9769) | CC-BY 4.0 |
+| Mono de policía cyber | deymar — [Sketchfab](https://sketchfab.com/3d-models/81b1c3f306e1411bb0a8c1dcff87642c) | CC-BY 4.0 |
+| Pantalón urbano | deymar — [Sketchfab](https://sketchfab.com/3d-models/8c3f5983e1a1430783b855271f4f9b64) | CC-BY 4.0 |
+| Abrigo largo «Monje» | Idmenthal — [Sketchfab](https://sketchfab.com/3d-models/2094df3960104c469eb7e1773780b404) | CC-BY 4.0 |
+| Chaqueta cyberpunk con capucha | Idmenthal — [Sketchfab](https://sketchfab.com/3d-models/1f3f90e45fe0403da45d56563d39c54a) | CC-BY 4.0 |
+| Chaqueta «CSI» | Idmenthal — [Sketchfab](https://sketchfab.com/3d-models/43e6b03da2384e82864a6490f6304d5d) | CC-BY 4.0 |
+| Chaqueta corta «2099» | Idmenthal — [Sketchfab](https://sketchfab.com/3d-models/44c4ae92e7f147989080cf45c26b9f34) | CC-BY 4.0 |
+| Body cyberpunk | Idmenthal — [Sketchfab](https://sketchfab.com/3d-models/71b1acb4fcc44bfcb3b8a00531f96cf1) | CC-BY 4.0 |
+| Capucha cyberpunk | Idmenthal — [Sketchfab](https://sketchfab.com/3d-models/06d288816a824e7a947a93e238c4dd64) | CC-BY 4.0 |
+| Máscara táctica | Idmenthal — [Sketchfab](https://sketchfab.com/3d-models/a6380b5071e34b908798ec97106a123c) | CC-BY 4.0 |
+| Casco de cúpula | infectedfury — [Sketchfab](https://sketchfab.com/3d-models/25461fb372fe4ed0887fca7a1de20f01) | CC-BY 4.0 |
+| Máscara estilizada | Matthew Hart — [Sketchfab](https://sketchfab.com/3d-models/c7e0e5820f6a4df196060bc55d857350) | CC-BY 4.0 |
+| Máscara cyberpunk | Nabo — [Sketchfab](https://sketchfab.com/3d-models/81437f5b38fb4b38a9063917a2922468) | CC-BY 4.0 |
+| Botas futuristas | Nullified — [Sketchfab](https://sketchfab.com/3d-models/70f9ec0ade5345889e45fe75f3e26ffb) | CC-BY 4.0 |
+| Cazadora de neón | RahulTambat — [Sketchfab](https://sketchfab.com/3d-models/e78ecaeb5b9c41869c692b884b3097d2) | CC-BY 4.0 |
+| Top «Alas», Pantalón «Alas» | RealityRoller — [Sketchfab](https://sketchfab.com/3d-models/c5d9b322ae2b41f0b86bf63371eedde0) | CC-BY 4.0 |
+| Conjunto dorado sci-fi | RealityRoller — [Sketchfab](https://sketchfab.com/3d-models/e7205b5f40104bf394349ffb1fc2e84e) | CC-BY 4.0 |
+
+**Cuerpos (v0.22):** las texturas de piel de los cuerpos de Quaternius (CC0) se han modificado para quitar la ropa interior pintada y añadir la anatomía. La ropa interior y la lencería se pintan sobre la piel con máscaras propias (`interior-*.png`). Los genitales masculinos son geometría propia generada por código.
+
 **Medieval 3D People (CraftPix, craftpix.net):** su licencia (craftpix.net/file-licenses) permite usarlo en el juego, pero no redistribuir los archivos. Por eso no está en el repositorio: se descarga de la release `moveset` con `tools/fetch-assets.mjs`.
 
 **Cuchilla serrada y moveset de armas pesadas:** son un modelo y unas animaciones propios, hechos por código. Se inspiran en la hoja de sprites 2D de un orco (`x320p_Spritesheets.zip`) que aportó el dueño del proyecto y que no se incluye.

@@ -4,8 +4,10 @@ export interface Settings {
   textSize: 'normal' | 'large' | 'xl'; showNames: boolean; music: number; ambient: number; sfx: number; ui: number;
   /** v0.11 · Personajes en 3D (si no, la figura 2D de antes). */
   chars3d: boolean;
+  /** v0.22 · Desnudos explícitos (si no, sin ropa interior se ve la de serie). */
+  nudity: boolean;
 }
-const DEFAULTS: Settings = { quality: 'high', fpsCap: 60, resScale: 1, reduceFlashes: false, reduceMotion: false, textSize: 'normal', showNames: true, music: 0.5, ambient: 0.4, sfx: 0.7, ui: 0.5, chars3d: true };
+const DEFAULTS: Settings = { quality: 'high', fpsCap: 60, resScale: 1, reduceFlashes: false, reduceMotion: false, textSize: 'normal', showNames: true, music: 0.5, ambient: 0.4, sfx: 0.7, ui: 0.5, chars3d: true, nudity: true };
 const KEY = 'vertice.settings.v1';
 
 function load(): Settings {

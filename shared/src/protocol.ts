@@ -110,6 +110,12 @@ export interface Appearance {
   gloves?: string; gloveColor?: string;
   /** v0.16 · Gama del cromo visible por parte (chatarra, estandar, militar, lujo). */
   chromeTier?: Record<string, string>;
+  /** v0.22 · Prendas 3D ajustadas al cuerpo (ids de GARMENTS, separadas por comas; las pone el servidor). */
+  garments?: string;
+  /** v0.22 · Ropa interior: estilo de arriba y de abajo (vacío = nada; sin definir = la de serie) y sus colores. */
+  underTop?: string; underBottom?: string; underTopColor?: string; underBottomColor?: string;
+  /** v0.22 · Partes que se ha quitado y quedan al aire (torso, piernas, pies, cabeza, cara, manos), separadas por comas. */
+  bare?: string;
 }
 export interface EntitySpawn {
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;

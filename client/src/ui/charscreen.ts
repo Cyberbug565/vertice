@@ -1,6 +1,6 @@
 // v0.4 · Pantalla de personaje a pantalla completa: inventario con huecos de ropa y armas, ciberware sobre la silueta,
 // habilidades 1–25 con barras de experiencia y árbol de perks.
-import { MATRICES, RARITY_COLOR, RARITY_LABEL, type CharacterSheet } from '@vertice/shared';
+import { MATRICES, RARITY_COLOR, RARITY_LABEL, bodyKindOf, hashString, type CharacterSheet } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
 import { $ui, fmtMoney, h, ask } from './dom';
@@ -16,8 +16,10 @@ const RARITY: Record<string, { name: string; color: string }> = {
   comun: { name: 'Común', color: '#9a9ac0' }, 'poco-comun': { name: 'Poco común', color: '#5affc8' }, raro: { name: 'Raro', color: '#43a8ff' },
   epico: { name: 'De lujo', color: '#b46cff' }, legendario: { name: 'Legendario', color: '#ffbf00' }, mitico: { name: 'Mítico', color: '#ff2040' },
 };
-const SLOT_NAMES: Record<string, string> = { cabeza: 'Cabeza', cara: 'Cara', torso_ext: 'Chaqueta', torso_int: 'Camiseta', piernas: 'Piernas', pies: 'Calzado', manos: 'Guantes' };
-const SLOT_ICON: Record<string, string> = { cabeza: '🧢', cara: '🕶', torso_ext: '🧥', torso_int: '👕', piernas: '👖', pies: '👟', manos: '🧤' };
+const SLOT_NAMES: Record<string, string> = { torso_ext: 'Chaqueta', torso_int: 'Camiseta', piernas: 'Pantalón', pies: 'Botas', cabeza: 'Casco', cara: 'Máscara', manos: 'Guantes', accesorio: 'Accesorio', interior_sup: 'Interior (arriba)', interior_inf: 'Interior (abajo)' };
+const SLOT_ICON: Record<string, string> = { cabeza: '⛑', cara: '🎭', torso_ext: '🧥', torso_int: '👕', piernas: '👖', pies: '🥾', manos: '🧤', accesorio: '🎒', interior_sup: '👙', interior_inf: '🩲' };
+/** v0.22 · Si la prenda es para el cuerpo de este personaje (la del otro sexo no se muestra). */
+const fitsMe = (s: CharacterSheet, d: { wear?: { sex?: string } }) => !d.wear?.sex || d.wear.sex === (bodyKindOf(s.look, hashString(`${s.name}#`)) === 'masculino' ? 'm' : 'f');
 const CAT_ICON: Record<string, string> = { comida: '🍜', bebida: '🥤', medicina: '💉', municion: '▮', herramienta: '🔧', chatarra: '⚙', ciberware: '🦾', equipo: '📟', contrabando: '📦', mision: '★', ropa: '🧥', arma: '🔫' };
 const FILTERS: [string, string][] = [['todo', 'Todo'], ['arma', 'Armas'], ['ropa', 'Ropa'], ['consumible', 'Consumibles'], ['municion', 'Munición'], ['otros', 'Otros']];
 const REGIONS: { id: string; name: string; slots: number; side: 'l' | 'r'; y: number }[] = [
@@ -132,10 +134,16 @@ function invTab(s: CharacterSheet, ctx: CharCtx) {
     h('h3', {}, 'Ropa'),
     h('div', { class: 'cs-slots' }, ...Object.keys(SLOT_NAMES).map((slot) => {
       const id = s.wear[slot];
+      // v0.22 · Sin definir = la ropa de serie del personaje; '' = se la ha quitado (se ve el cuerpo).
+      const off = id === '';
       const box = h('button', { class: `cs-slot${st.filter === `slot:${slot}` ? ' sel' : ''}`, onclick: () => { st.filter = st.filter === `slot:${slot}` ? 'todo' : `slot:${slot}`; render(); }, title: `Ver prendas para: ${SLOT_NAMES[slot]}` },
         h('span', { class: 'cs-slotname' }, SLOT_NAMES[slot]),
-        id ? h('span', { class: 'cs-ico', style: { color: RARITY[content.items.find((i) => i.id === id)?.rarity ?? 'comun'].color } }, SLOT_ICON[slot]) : h('span', { class: 'cs-ico muted' }, '＋'),
-        h('span', { class: 'cs-tname' }, id ? content.items.find((i) => i.id === id)?.name ?? id : 'Vacío'));
+        id ? h('span', { class: 'cs-ico', style: { color: RARITY[content.items.find((i) => i.id === id)?.rarity ?? 'comun'].color } }, SLOT_ICON[slot]) : h('span', { class: 'cs-ico muted' }, off ? '∅' : '＋'),
+        h('span', { class: 'cs-tname' }, id ? content.items.find((i) => i.id === id)?.name ?? id : off ? 'Nada' : slot === 'accesorio' ? 'Vacío' : 'De serie'),
+        s.wear.torso_ext === 'exo-tormenta' ? null : h('span', {
+          class: 'cs-slotx', title: off ? 'Volver a la ropa de serie' : 'Quitar (queda al aire)',
+          onclick: (ev: Event) => { ev.stopPropagation(); hideTip(); net.send({ t: 'wear', slot, item: off ? 'default' : null } as any); blip('step'); },
+        }, off ? '↺' : '✕'));
       if (id) { box.addEventListener('mouseenter', () => showTip(box, itemCard(id))); box.addEventListener('mouseleave', hideTip); }
       return box;
     })));
@@ -159,7 +167,7 @@ function invTab(s: CharacterSheet, ctx: CharCtx) {
     if (f === 'municion') return d.category === 'municion';
     return !d.weapon && !d.wear && !d.consumable && d.category !== 'municion';
   };
-  const items = [...inv].filter(([id, q]) => q > 0 && match(id)).sort((a, b) => (content.items.find((i) => i.id === a[0])?.category ?? '').localeCompare(content.items.find((i) => i.id === b[0])?.category ?? ''));
+  const items = [...inv].filter(([id, q]) => q > 0 && match(id) && fitsMe(s, content.items.find((i) => i.id === id) ?? {})).sort((a, b) => (content.items.find((i) => i.id === a[0])?.category ?? '').localeCompare(content.items.find((i) => i.id === b[0])?.category ?? ''));
   const act = (id: string) => {
     const d = content.items.find((i) => i.id === id)!;
     if (d.wear) {

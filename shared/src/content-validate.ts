@@ -203,6 +203,7 @@ export function validateContent(c: Content): string[] {
   for (const z of c.zones) for (const o of z.objects) if (o.kind === 'dealer' && !c.dealers.some((d) => d.id === o.dealer)) errs.push(`${z.id}/${o.id}: concesionario ${o.dealer}`);
   for (const p of c.posts) { if (!zoneIds.has(p.zone)) errs.push(`puesto ${p.id}: zona ${p.zone}`); else walk(p.zone, p.at, `puesto ${p.id}`); if (!skillIds.has(p.skill)) errs.push(`puesto ${p.id}: habilidad ${p.skill}`); }
   for (const it of c.items) for (const k of Object.keys(it.wear?.mods.skills ?? {})) if (!skillIds.has(k)) errs.push(`prenda ${it.id}: habilidad ${k}`);
+  { const seen = new Set<string>(); for (const it of c.items) { if (seen.has(it.id)) errs.push(`objeto repetido: ${it.id}`); seen.add(it.id); } } // v0.22
   for (const cw of c.cyberware) for (const k of Object.keys(cw.effects.skills ?? {})) if (!skillIds.has(k)) errs.push(`ciberware ${cw.id}: habilidad ${k}`);
   for (const d of c.world.districts) if (!zoneIds.has(d.zone) && !districtIds.has(d.zone)) errs.push(`mundo: distrito ${d.zone}`);
   for (const p of c.ambar) for (const z of p.zones) if (!zoneIds.has(z) && !districtIds.has(z)) errs.push(`Ámbar ${p.id}: zona ${z}`);

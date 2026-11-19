@@ -5,7 +5,7 @@
 // del juego, y los edificios (y el mobiliario grande) se añaden como volúmenes invisibles que tapan a quien está detrás.
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { hashString, seededRng, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
+import { hashString, seededRng, bodyKindOf, garmentById, underwearById, DEFAULT_UNDER, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
 import { content } from '../content';
 import { loadAnims, sampleClip, clipDur } from './anim3d';
 import { buildCartoon, cartoonVersion, type Cartoon } from './cartoon3d';
@@ -21,7 +21,9 @@ import { dancePose } from './dance';
 import { City3D, tickNeon } from './city3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
-import { humansReady, humansVersion, loadHumans, makeHuman, poseHuman, supportHand, REG, type Human } from './human3d';
+import { humansReady, humansVersion, kitInfo, loadHumans, makeHuman, poseHuman, supportHand, REG, type Human } from './human3d';
+import { attachGarments, garmentsLoaded, garmentsVersion, hideMask } from './garments3d';
+import { settings } from '../settings';
 
 /** Altura del juego: 32 px por unidad (la proyección real daría 39,2): comprimimos el eje vertical igual. */
 const Y_SQUASH = 32 / (45.2548 * Math.cos(Math.PI / 6));
@@ -302,7 +304,22 @@ export class Chars3D {
   private kitHuman(s: EntitySpawn, a: Required<Appearance>, chrome: Set<string>, lost: Set<string>): Human | null {
     const seed = hashString(`${s.name ?? ''}#${s.kind === 'player' ? '' : s.id}`) || 1;
     const r = seededRng(seed * 13 + 5);
-    const kind = a.body === 'masculino' || a.body === 'femenino' ? a.body : ['barba', 'barba-larga', 'candado', 'perilla', 'bigote'].includes(a.facial) ? 'masculino' : seed % 2 ? 'masculino' : 'femenino';
+    const kind = bodyKindOf(a, seed);
+    // v0.22 · Partes al aire, prendas 3D (solo las de este cuerpo y ya descargadas) y ropa interior.
+    const bare = new Set((a.bare || '').split(',').filter(Boolean));
+    const sexK = kind === 'masculino' ? 'm' : 'f';
+    const gids = (a.garments || '').split(',').filter((id) => { const g = garmentById(id); return !!g && (g.sex === 'u' || g.sex === sexK); });
+    const gready = garmentsLoaded(gids, kind);
+    const ki = kitInfo(kind);
+    const hide = gready.length && ki ? hideMask(gready, kind, ki.n) : null;
+    const hidesHair = gready.some((id) => garmentById(id)?.hidesHair);
+    const noTop = bare.has('torso'), noLegs = bare.has('piernas'), noShoes = bare.has('pies');
+    const nudeOk = settings.nudity !== false;
+    let utId = a.underTop === undefined ? DEFAULT_UNDER[kind].sup : a.underTop, ubId = a.underBottom === undefined ? DEFAULT_UNDER[kind].inf : a.underBottom;
+    if (!nudeOk) { if (!utId && kind === 'femenino') utId = DEFAULT_UNDER[kind].sup; if (!ubId) ubId = DEFAULT_UNDER[kind].inf; }
+    const UW = (id: string) => { const u = underwearById(id); return u && u.sex === sexK ? u : undefined; };
+    const uT = UW(utId), uB = UW(ubId);
+    const under = { top: uT?.channel ?? -1, bot: uB?.channel ?? -1, topLace: !!uT?.lace, botLace: !!uB?.lace, topColor: a.underTopColor || DEFAULT_UNDER[kind].color, botColor: a.underBottomColor || DEFAULT_UNDER[kind].color };
     // v0.16 · La ropa de verdad la pone clothes3d.ts; debajo, la piel se tiñe del color de la prenda solo donde la prenda
     // la tapa entera (así no asoma la piel en los pliegues), y queda al aire donde la prenda no llega.
     const top = a.top === 'exo-tormenta' ? 'mono' : a.top;
@@ -315,6 +332,9 @@ export class Chars3D {
     for (const k of [REG.thP, REG.thM]) cover[k] = lc && lc.len >= 0.5 ? 2 : 0;
     for (const k of [REG.caP, REG.caM]) cover[k] = lc && lc.len >= 0.95 ? 2 : 0;
     for (const k of [REG.ftP, REG.ftM]) cover[k] = 3;
+    if (noTop) for (const k of [REG.torso, REG.uaP, REG.uaM, REG.faP, REG.faM]) cover[k] = 0;
+    if (noLegs) for (const k of [REG.pelvis, REG.thP, REG.thM, REG.caP, REG.caM]) cover[k] = 0;
+    if (noShoes) for (const k of [REG.ftP, REG.ftM]) cover[k] = 0;
     // v0.21 · Con un atuendo completo de Quaternius solo se dibuja la cabeza y el cuello del cuerpo (el atuendo trae lo demás).
     if (isOutfit(a.top)) for (let i = 0; i < 16; i++) if (i !== REG.head && i !== REG.neck) cover[i] = 5;
     if (chrome.has('mano_der') || chrome.has('dedos_der')) cover[REG.handP] = 4;
@@ -338,9 +358,10 @@ export class Chars3D {
     const kitBeard = kind === 'masculino' && (a.facial === 'barba' || a.facial === 'barba-larga');
     // Debajo de la ropa, la piel se tiñe del color de la prenda (por si asoma en algún pliegue).
     const topTex = tex(fabricCanvas('liso', a.jacket || '#333344', a.accent, 2, 2)), pantsTex = tex(fabricCanvas('liso', a.pants || '#1a1a24', a.accent, 2, 2));
+    const genitals = kind === 'masculino' && nudeOk && under.bot < 0 && cover[REG.pelvis] === 0 && !(hide && ki && hide[ki.crotchV]) && !a.model && a.top !== 'exo-tormenta';
     const H = makeHuman({ kind, look: { skin: a.skin, top: topTex, pants: pantsTex, shoe: a.shoes || '#101018', accent: a.accent, cover, face,
-      tattoo: tst ? tattooCanvas(tst, a.tattooInk || '#14141e', a.accent) : null, tattooZones: zones, decal: faceDecal(a, seed) },
-      hair: helmet || a.top === 'atuendo-explorador' ? '' : kitHairName ?? '', hairColor: a.hair, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost });
+      tattoo: tst ? tattooCanvas(tst, a.tattooInk || '#14141e', a.accent) : null, tattooZones: zones, decal: faceDecal(a, seed), hide, under },
+      hair: helmet || hidesHair || a.top === 'atuendo-explorador' ? '' : kitHairName ?? '', hairColor: a.hair, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost, genitals });
     if (!H) return null;
     { const bm = H.bodyMesh.material as THREE.Material; bm.userData.owned = [...(bm.userData.owned ?? []), topTex, pantsTex]; }
     if (a.top === 'exo-tormenta') return H; // el piloto va dentro de la superarmadura (se oculta al montarla)
@@ -348,14 +369,16 @@ export class Chars3D {
     if (chrome.size) H.mats.push(...roboticParts(H, chrome, a.chromeTier ?? {}, a.accent, seed, cover));
     if (a.top !== 'exo-tormenta') {
       H.mats.push(...dress(H, {
-        top, topColor: a.jacket, topPattern: a.topPattern && a.topPattern !== 'liso' ? fabricCanvas(a.topPattern, a.jacket, a.accent, 8, 8) : null, detail: a.topDetail || '',
-        shirtColor: a.shirt || '#2a2a3a', inner: 'camiseta', legs: lw, legColor: a.pants, legPattern: a.pantsPattern && a.pantsPattern !== 'liso' ? fabricCanvas(a.pantsPattern, a.pants, a.accent, 8, 8) : null,
-        shoes: a.shoeStyle || 'botas', shoeColor: a.shoes || '#101018', gloves: (a as any).gloves || '', gloveColor: (a as any).gloveColor || '#141418',
-        head: a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: a.eyewear || '', hair: a.top === 'atuendo-explorador' ? 'calvo' : a.hairStyle, hairColor: a.hair,
+        top: noTop ? 'ninguno' : top, topColor: a.jacket, topPattern: a.topPattern && a.topPattern !== 'liso' ? fabricCanvas(a.topPattern, a.jacket, a.accent, 8, 8) : null, detail: a.topDetail || '',
+        shirtColor: a.shirt || '#2a2a3a', inner: 'camiseta', legs: noLegs ? 'ninguno' : lw, legColor: a.pants, legPattern: a.pantsPattern && a.pantsPattern !== 'liso' ? fabricCanvas(a.pantsPattern, a.pants, a.accent, 8, 8) : null,
+        shoes: noShoes ? 'descalzo' : a.shoeStyle || 'botas', shoeColor: a.shoes || '#101018', gloves: bare.has('manos') ? '' : (a as any).gloves || '', gloveColor: (a as any).gloveColor || '#141418',
+        head: bare.has('cabeza') ? '' : a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: bare.has('cara') ? '' : a.eyewear || '', hair: a.top === 'atuendo-explorador' || hidesHair ? 'calvo' : a.hairStyle, hairColor: a.hair,
         facial: a.facial, accent: a.accent, accent2: a.accent2, kitHair: kitHairName !== undefined && !helmet && a.top !== 'atuendo-explorador', kitBeard, accessory: a.accessory,
       }));
       // v0.21 · Atuendo completo de Quaternius (se ata a los huesos de esta persona).
       if (isOutfit(a.top)) { const ms = buildOutfit(a.top, kind, H.bodyMesh, H.bones); if (ms) H.mats.push(...ms.map((m) => m.material as THREE.Material)); }
+      // v0.22 · Prendas 3D ajustadas al cuerpo.
+      if (gready.length) H.mats.push(...attachGarments(gready, kind, H.bodyMesh, H.bones));
     }
     return H;
   }
@@ -840,9 +863,9 @@ export class Chars3D {
       // v0.19 · La firma del modelo (JSON de su aspecto) solo se recalcula si cambia alguna de sus piezas: antes se
       // serializaba la apariencia entera de cada persona en cada fotograma.
       let r = this.rigs.get(s.id);
-      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion()];
+      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), settings.nudity];
       const same = !!r && !!r.src && r.src.length === src.length && r.src.every((v, i) => v === src[i]);
-      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, s.appearance?.model ? cartoonVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0]);
+      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, s.appearance?.model ? cartoonVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0, s.appearance?.garments ? garmentsVersion() : 0, settings.nudity]);
       if (r) r.src = src;
       if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; r.src = src; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
       this.leaving.delete(s.id);
@@ -1159,7 +1182,7 @@ export class Preview3D {
     if (this.idleSpin && !this.drag) this.angle = 0.25 * (1 - this.zoomK) + Math.sin(now / 2600) * 0.85 * (1 - 0.65 * this.zoomK);
     const c = this.c3d;
     const s = this.ent.s;
-    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion()]);
+    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), settings.nudity]);
     let r = c.rigs.get(1);
     if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
     // Un gesto cada pocos segundos para que se vea vivo.

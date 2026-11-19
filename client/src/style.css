@@ -261,6 +261,9 @@ table.sheet tr:hover td { background: rgba(67, 243, 255, 0.04); }
 .cs-slot .cs-ico { grid-row: 1 / span 2; font-size: 1.3em; }
 .cs-slotname { font-size: 0.62em; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cs-red); }
 .cs-slot .cs-tname { text-align: left; }
+.cs-slot { position: relative; }
+.cs-slotx { position: absolute; right: 4px; top: 2px; font-size: 0.8em; opacity: 0.55; padding: 0 4px; border-radius: 4px; }
+.cs-slotx:hover { opacity: 1; background: rgba(255, 63, 164, 0.25); }
 .cs-weapon { padding: 6px 8px; border: 1px solid #5a3a1a; background: rgba(40, 20, 6, 0.4); }
 .cs-weapon b { color: var(--orange); }
 .cs-center { display: flex; flex-direction: column; align-items: center; gap: 10px; }

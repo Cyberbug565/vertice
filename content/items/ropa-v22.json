@@ -1,0 +1,2330 @@
+[
+ {
+  "id": "abrigo-monje",
+  "name": "Abrigo largo «Monje»",
+  "desc": "Abrigo negro hasta los tobillos con capucha y ribetes azules.",
+  "weight": 2,
+  "price": 760,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:abrigo-monje",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaqueta-capucha-cyber",
+  "name": "Chaqueta cyberpunk con capucha",
+  "desc": "Chaqueta corta con capucha y paneles acolchados.",
+  "weight": 2,
+  "price": 640,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:chaqueta-capucha-cyber",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "chaqueta-clasica-cyber",
+  "name": "Chaqueta cyberpunk clásica",
+  "desc": "Chaqueta de cuero con el cuello alto iluminado.",
+  "weight": 2,
+  "price": 580,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:chaqueta-clasica-cyber",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaqueta-csi",
+  "name": "Chaqueta «CSI»",
+  "desc": "Chaqueta de investigador con bolsillos.",
+  "weight": 2,
+  "price": 480,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:chaqueta-csi",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaqueta-plata",
+  "name": "Chaqueta plateada",
+  "desc": "Chaqueta metalizada que brilla con el neón.",
+  "weight": 2,
+  "price": 540,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:chaqueta-plata",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaqueta-caqui",
+  "name": "Chaqueta caqui con capucha",
+  "desc": "Chaqueta de trabajo con capucha.",
+  "weight": 2,
+  "price": 360,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:chaqueta-caqui",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaqueta-tactica-velcro",
+  "name": "Chaqueta táctica",
+  "desc": "Chaqueta militar con parches y velcro.",
+  "weight": 2,
+  "price": 450,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:chaqueta-tactica-velcro",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 1,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cazadora-cremallera",
+  "name": "Cazadora de neón",
+  "desc": "Cazadora corta con cremallera.",
+  "weight": 2,
+  "price": 420,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:cazadora-cremallera",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaqueta-2099",
+  "name": "Chaqueta corta «2099»",
+  "desc": "Chaqueta corta de mujer con hombros marcados.",
+  "weight": 2,
+  "price": 560,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:chaqueta-2099",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "abrigo-pop",
+  "name": "Abrigo «Cyber-pop»",
+  "desc": "Abrigo ligero de colores ácidos.",
+  "weight": 2,
+  "price": 600,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_ext",
+   "style": "g:abrigo-pop",
+   "color": "#3a3a48",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "jersey-cyber",
+  "name": "Jersey cyberpunk",
+  "desc": "Jersey técnico de cuello alto.",
+  "weight": 2,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:jersey-cyber",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sudadera-gruesa",
+  "name": "Sudadera gruesa con capucha",
+  "desc": "Sudadera de punto grueso con capucha.",
+  "weight": 2,
+  "price": 220,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:sudadera-gruesa",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "jersey-pulover",
+  "name": "Jersey de punto",
+  "desc": "Jersey de punto con capucha.",
+  "weight": 2,
+  "price": 180,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:jersey-pulover",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "top-futurista",
+  "name": "Top futurista de manga larga",
+  "desc": "Top ajustado con cortes asimétricos.",
+  "weight": 2,
+  "price": 280,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:top-futurista",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "top-alas",
+  "name": "Top «Alas»",
+  "desc": "Top corto de tirantes cruzados.",
+  "weight": 2,
+  "price": 300,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:top-alas",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "top-pop",
+  "name": "Top «Cyber-pop»",
+  "desc": "Top ajustado de colores ácidos.",
+  "weight": 2,
+  "price": 240,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:top-pop",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "mono-bolsillos",
+  "name": "Mono de trabajo",
+  "desc": "Mono de una pieza con bolsillos.",
+  "weight": 2,
+  "price": 340,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:mono-bolsillos",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "also": [
+    "piernas"
+   ]
+  }
+ },
+ {
+  "id": "mono-poli-cyber",
+  "name": "Mono de policía cyber",
+  "desc": "Mono ajustado de patrulla con hombreras.",
+  "weight": 2,
+  "price": 700,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:mono-poli-cyber",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "also": [
+    "piernas"
+   ],
+   "sex": "f"
+  }
+ },
+ {
+  "id": "body-cyber",
+  "name": "Body cyberpunk",
+  "desc": "Body de manga larga con pantalón corto.",
+  "weight": 2,
+  "price": 420,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:body-cyber",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "also": [
+    "piernas"
+   ],
+   "sex": "f"
+  }
+ },
+ {
+  "id": "conjunto-dorado",
+  "name": "Conjunto dorado sci-fi",
+  "desc": "Top y pantalón con correas y detalles dorados.",
+  "weight": 2,
+  "price": 760,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:conjunto-dorado",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "also": [
+    "piernas"
+   ],
+   "sex": "f"
+  }
+ },
+ {
+  "id": "corse-scifi",
+  "name": "Corsé sci-fi",
+  "desc": "Corsé con pantalón corto integrado.",
+  "weight": 2,
+  "price": 380,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:corse-scifi",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "also": [
+    "piernas"
+   ],
+   "sex": "f"
+  }
+ },
+ {
+  "id": "vestido-scifi",
+  "name": "Vestido sci-fi",
+  "desc": "Vestido ajustado de manga larga.",
+  "weight": 2,
+  "price": 480,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:vestido-scifi",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "also": [
+    "piernas"
+   ],
+   "sex": "f"
+  }
+ },
+ {
+  "id": "traje-scifi",
+  "name": "Traje sci-fi ajustado",
+  "desc": "Traje de cuerpo entero con paneles.",
+  "weight": 2,
+  "price": 540,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "torso_int",
+   "style": "g:traje-scifi",
+   "color": "#44444f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "also": [
+    "piernas"
+   ],
+   "sex": "f"
+  }
+ },
+ {
+  "id": "pantalon-cuero-ajustado",
+  "name": "Pantalón de cuero",
+  "desc": "Pantalón de cuero ajustado.",
+  "weight": 1,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:pantalon-cuero-ajustado",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "pantalon-cyber",
+  "name": "Pantalón cyberpunk",
+  "desc": "Pantalón técnico con rodilleras.",
+  "weight": 1,
+  "price": 240,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:pantalon-cyber",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "pantalon-parka",
+  "name": "Pantalón urbano",
+  "desc": "Pantalón de ciudad con bolsillos.",
+  "weight": 1,
+  "price": 200,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:pantalon-parka",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cargo-futurista",
+  "name": "Cargo futurista",
+  "desc": "Pantalón cargo ajustado con correas.",
+  "weight": 1,
+  "price": 280,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:cargo-futurista",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "pantalon-alas",
+  "name": "Pantalón «Alas»",
+  "desc": "Pantalón ancho con faldones laterales.",
+  "weight": 1,
+  "price": 300,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:pantalon-alas",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "pantalon-pop",
+  "name": "Pantalón «Cyber-pop»",
+  "desc": "Pantalón ajustado de colores ácidos.",
+  "weight": 1,
+  "price": 240,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:pantalon-pop",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "falda-volantes",
+  "name": "Falda sci-fi de volantes",
+  "desc": "Falda larga con volante en la cadera.",
+  "weight": 1,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:falda-volantes",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "falda-larga",
+  "name": "Falda sci-fi larga",
+  "desc": "Falda de tubo hasta los tobillos.",
+  "weight": 1,
+  "price": 240,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "piernas",
+   "style": "g:falda-larga",
+   "color": "#24242c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   },
+   "sex": "f"
+  }
+ },
+ {
+  "id": "botas-futuristas",
+  "name": "Botas futuristas",
+  "desc": "Botas altas con refuerzos y hebillas.",
+  "weight": 1,
+  "price": 340,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "pies",
+   "style": "g:botas-futuristas",
+   "color": "#18181c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-cordones",
+  "name": "Botas de trabajo",
+  "desc": "Botas de cordones.",
+  "weight": 1,
+  "price": 160,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "pies",
+   "style": "g:botas-cordones",
+   "color": "#18181c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "botas-striker",
+  "name": "Botas de asalto",
+  "desc": "Botas tácticas de caña media.",
+  "weight": 1,
+  "price": 220,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "pies",
+   "style": "g:botas-striker",
+   "color": "#18181c",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "guantes-nudillos",
+  "name": "Guantes tácticos",
+  "desc": "Guantes con nudillos reforzados.",
+  "weight": 1,
+  "price": 120,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "manos",
+   "style": "g:guantes-nudillos",
+   "color": "#1a1a1e",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "guantes-striker",
+  "name": "Guantes de asalto",
+  "desc": "Guantes largos de mono táctico.",
+  "weight": 1,
+  "price": 140,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "manos",
+   "style": "g:guantes-striker",
+   "color": "#1a1a1e",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "casco-holo",
+  "name": "Casco holográfico",
+  "desc": "Casco cerrado con visor holográfico.",
+  "weight": 1,
+  "price": 680,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "cabeza",
+   "style": "g:casco-holo",
+   "color": "#30303a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 5,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "casco-cupula",
+  "name": "Casco de cúpula",
+  "desc": "Casco redondo con orejeras.",
+  "weight": 1,
+  "price": 520,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "g:casco-cupula",
+   "color": "#30303a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 4,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "casco-scifi",
+  "name": "Casco sci-fi de piloto",
+  "desc": "Casco de piloto con respirador.",
+  "weight": 1,
+  "price": 780,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "cabeza",
+   "style": "g:casco-scifi",
+   "color": "#30303a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 6,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "casco-ronin",
+  "name": "Casco «Ronin oni»",
+  "desc": "Casco samurái mecánico con cuernos de oni.",
+  "weight": 1,
+  "price": 1400,
+  "category": "ropa",
+  "rarity": "epico",
+  "wear": {
+   "slot": "cabeza",
+   "style": "g:casco-ronin",
+   "color": "#30303a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 8,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "capucha-cyber",
+  "name": "Capucha cyberpunk",
+  "desc": "Capucha amplia que cae sobre los hombros.",
+  "weight": 1,
+  "price": 200,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "g:capucha-cyber",
+   "color": "#30303a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "gorra-striker",
+  "name": "Gorra táctica",
+  "desc": "Gorra de visera militar.",
+  "weight": 1,
+  "price": 90,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cabeza",
+   "style": "g:gorra-striker",
+   "color": "#30303a",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "pasamontanas",
+  "name": "Pasamontañas",
+  "desc": "Pasamontañas de tres agujeros.",
+  "weight": 1,
+  "price": 80,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cara",
+   "style": "g:pasamontanas",
+   "color": "#202024",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mascara-carbono",
+  "name": "Máscara de carbono",
+  "desc": "Máscara de calavera de fibra de carbono.",
+  "weight": 1,
+  "price": 260,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "g:mascara-carbono",
+   "color": "#202024",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mascara-cyber",
+  "name": "Máscara cyberpunk",
+  "desc": "Media máscara metálica.",
+  "weight": 1,
+  "price": 300,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "g:mascara-cyber",
+   "color": "#202024",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mascara-estilizada",
+  "name": "Máscara estilizada",
+  "desc": "Máscara de boca con luces.",
+  "weight": 1,
+  "price": 280,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "g:mascara-estilizada",
+   "color": "#202024",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "mascara-tactica",
+  "name": "Máscara táctica",
+  "desc": "Máscara rígida de cara completa.",
+  "weight": 1,
+  "price": 220,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "cara",
+   "style": "g:mascara-tactica",
+   "color": "#202024",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "gafas-striker",
+  "name": "Gafas tácticas",
+  "desc": "Gafas de protección.",
+  "weight": 1,
+  "price": 70,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "cara",
+   "style": "g:gafas-striker",
+   "color": "#202024",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "chaleco-placas",
+  "name": "Chaleco de placas",
+  "desc": "Portaplacas con bolsas. Va encima de la chaqueta.",
+  "weight": 1,
+  "price": 900,
+  "category": "ropa",
+  "rarity": "raro",
+  "wear": {
+   "slot": "accesorio",
+   "style": "g:chaleco-placas",
+   "color": "#2c3026",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 10,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "cascos-tacticos",
+  "name": "Auriculares tácticos",
+  "desc": "Auriculares militares con micrófono.",
+  "weight": 1,
+  "price": 240,
+  "category": "ropa",
+  "rarity": "poco-comun",
+  "wear": {
+   "slot": "accesorio",
+   "style": "g:cascos-tacticos",
+   "color": "#2c3026",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "calzoncillos-negro",
+  "name": "Calzoncillos negros",
+  "desc": "Calzoncillos de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:calzoncillos",
+   "color": "#18181e",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "calzoncillos-blanco",
+  "name": "Calzoncillos blancos",
+  "desc": "Calzoncillos de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:calzoncillos",
+   "color": "#e8e8ee",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "calzoncillos-rojo",
+  "name": "Calzoncillos rojos",
+  "desc": "Calzoncillos de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:calzoncillos",
+   "color": "#b0182c",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "calzoncillos-neon",
+  "name": "Calzoncillos neón",
+  "desc": "Calzoncillos de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:calzoncillos",
+   "color": "#3fd8ff",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "boxer-negro",
+  "name": "Bóxer negro",
+  "desc": "Bóxer ajustado.",
+  "weight": 0.1,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:boxer",
+   "color": "#18181e",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "boxer-blanco",
+  "name": "Bóxer blanco",
+  "desc": "Bóxer ajustado.",
+  "weight": 0.1,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:boxer",
+   "color": "#e8e8ee",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "boxer-rojo",
+  "name": "Bóxer rojo",
+  "desc": "Bóxer ajustado.",
+  "weight": 0.1,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:boxer",
+   "color": "#b0182c",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "boxer-neon",
+  "name": "Bóxer neón",
+  "desc": "Bóxer ajustado.",
+  "weight": 0.1,
+  "price": 30,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:boxer",
+   "color": "#3fd8ff",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camiseta-interior-negro",
+  "name": "Camiseta interior negra",
+  "desc": "Camiseta de tirantes.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:camiseta-interior",
+   "color": "#18181e",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camiseta-interior-blanco",
+  "name": "Camiseta interior blanca",
+  "desc": "Camiseta de tirantes.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:camiseta-interior",
+   "color": "#e8e8ee",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camiseta-interior-rojo",
+  "name": "Camiseta interior roja",
+  "desc": "Camiseta de tirantes.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:camiseta-interior",
+   "color": "#b0182c",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "camiseta-interior-neon",
+  "name": "Camiseta interior neón",
+  "desc": "Camiseta de tirantes.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:camiseta-interior",
+   "color": "#3fd8ff",
+   "sex": "m",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-negro",
+  "name": "Braguitas negras",
+  "desc": "Braguitas de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas",
+   "color": "#18181e",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-blanco",
+  "name": "Braguitas blancas",
+  "desc": "Braguitas de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas",
+   "color": "#e8e8ee",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-rojo",
+  "name": "Braguitas rojas",
+  "desc": "Braguitas de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas",
+   "color": "#b0182c",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-neon",
+  "name": "Braguitas neón",
+  "desc": "Braguitas de algodón.",
+  "weight": 0.1,
+  "price": 25,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas",
+   "color": "#3fd8ff",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-encaje-negro",
+  "name": "Braguitas de encaje negras",
+  "desc": "Lencería de encaje.",
+  "weight": 0.1,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas-encaje",
+   "color": "#18181e",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-encaje-blanco",
+  "name": "Braguitas de encaje blancas",
+  "desc": "Lencería de encaje.",
+  "weight": 0.1,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas-encaje",
+   "color": "#e8e8ee",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-encaje-rojo",
+  "name": "Braguitas de encaje rojas",
+  "desc": "Lencería de encaje.",
+  "weight": 0.1,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas-encaje",
+   "color": "#b0182c",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "braguitas-encaje-neon",
+  "name": "Braguitas de encaje neón",
+  "desc": "Lencería de encaje.",
+  "weight": 0.1,
+  "price": 60,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:braguitas-encaje",
+   "color": "#3fd8ff",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-negro",
+  "name": "Tanga negro",
+  "desc": "Tanga.",
+  "weight": 0.1,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga",
+   "color": "#18181e",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-blanco",
+  "name": "Tanga blanco",
+  "desc": "Tanga.",
+  "weight": 0.1,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga",
+   "color": "#e8e8ee",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-rojo",
+  "name": "Tanga rojo",
+  "desc": "Tanga.",
+  "weight": 0.1,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga",
+   "color": "#b0182c",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-neon",
+  "name": "Tanga neón",
+  "desc": "Tanga.",
+  "weight": 0.1,
+  "price": 35,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga",
+   "color": "#3fd8ff",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-encaje-negro",
+  "name": "Tanga de encaje negro",
+  "desc": "Tanga de lencería de encaje.",
+  "weight": 0.1,
+  "price": 65,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga-encaje",
+   "color": "#18181e",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-encaje-blanco",
+  "name": "Tanga de encaje blanco",
+  "desc": "Tanga de lencería de encaje.",
+  "weight": 0.1,
+  "price": 65,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga-encaje",
+   "color": "#e8e8ee",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-encaje-rojo",
+  "name": "Tanga de encaje rojo",
+  "desc": "Tanga de lencería de encaje.",
+  "weight": 0.1,
+  "price": 65,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga-encaje",
+   "color": "#b0182c",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "tanga-encaje-neon",
+  "name": "Tanga de encaje neón",
+  "desc": "Tanga de lencería de encaje.",
+  "weight": 0.1,
+  "price": 65,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_inf",
+   "style": "u:tanga-encaje",
+   "color": "#3fd8ff",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-negro",
+  "name": "Sujetador negro",
+  "desc": "Sujetador.",
+  "weight": 0.1,
+  "price": 40,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador",
+   "color": "#18181e",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-blanco",
+  "name": "Sujetador blanco",
+  "desc": "Sujetador.",
+  "weight": 0.1,
+  "price": 40,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador",
+   "color": "#e8e8ee",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-rojo",
+  "name": "Sujetador rojo",
+  "desc": "Sujetador.",
+  "weight": 0.1,
+  "price": 40,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador",
+   "color": "#b0182c",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-neon",
+  "name": "Sujetador neón",
+  "desc": "Sujetador.",
+  "weight": 0.1,
+  "price": 40,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador",
+   "color": "#3fd8ff",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-encaje-negro",
+  "name": "Sujetador de encaje negro",
+  "desc": "Sujetador de lencería de encaje.",
+  "weight": 0.1,
+  "price": 80,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador-encaje",
+   "color": "#18181e",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-encaje-blanco",
+  "name": "Sujetador de encaje blanco",
+  "desc": "Sujetador de lencería de encaje.",
+  "weight": 0.1,
+  "price": 80,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador-encaje",
+   "color": "#e8e8ee",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-encaje-rojo",
+  "name": "Sujetador de encaje rojo",
+  "desc": "Sujetador de lencería de encaje.",
+  "weight": 0.1,
+  "price": 80,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador-encaje",
+   "color": "#b0182c",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "sujetador-encaje-neon",
+  "name": "Sujetador de encaje neón",
+  "desc": "Sujetador de lencería de encaje.",
+  "weight": 0.1,
+  "price": 80,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:sujetador-encaje",
+   "color": "#3fd8ff",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "top-deportivo-negro",
+  "name": "Top deportivo negro",
+  "desc": "Sujetador deportivo.",
+  "weight": 0.1,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:top-deportivo",
+   "color": "#18181e",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "top-deportivo-blanco",
+  "name": "Top deportivo blanco",
+  "desc": "Sujetador deportivo.",
+  "weight": 0.1,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:top-deportivo",
+   "color": "#e8e8ee",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "top-deportivo-rojo",
+  "name": "Top deportivo rojo",
+  "desc": "Sujetador deportivo.",
+  "weight": 0.1,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:top-deportivo",
+   "color": "#b0182c",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ },
+ {
+  "id": "top-deportivo-neon",
+  "name": "Top deportivo neón",
+  "desc": "Sujetador deportivo.",
+  "weight": 0.1,
+  "price": 45,
+  "category": "ropa",
+  "rarity": "comun",
+  "wear": {
+   "slot": "interior_sup",
+   "style": "u:top-deportivo",
+   "color": "#3fd8ff",
+   "sex": "f",
+   "mods": {
+    "skills": {},
+    "carry": 0,
+    "speed": 0,
+    "needs": 0,
+    "dodge": 0,
+    "hpMax": 0,
+    "aim": 0,
+    "ramPlus": 0,
+    "ramSave": 0
+   }
+  }
+ }
+]

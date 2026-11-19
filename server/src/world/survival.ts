@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   checkChance, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
-  OBJECTIVES, PART_NAMES, TREATMENTS, WOUND_INFO, type TreatmentId, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView, REMOTE_RANGE } from '@vertice/shared';
+  OBJECTIVES, PART_NAMES, TREATMENTS, WOUND_INFO, type TreatmentId, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView, REMOTE_RANGE, WEAR_SLOTS, bodyKindOf, hashString } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { MythicTransfer } from './mythics.js';
 import type { Entity, RunningTask } from './entity.js';
@@ -737,14 +737,21 @@ export class Survival {
     // v0.17 · La superarmadura «Tormenta» se lleva para siempre: no se quita ni se cambia nada encima.
     if (p.wear.torso_ext === 'exo-tormenta' && (p.inventory.get('exo-tormenta') ?? 0) > 0) throw new GameError('Vas dentro de la superarmadura «Tormenta»: no se abre nunca.');
     if (item === 'exo-tormenta' && !confirm) throw new GameError('Ponerse la Tormenta es para siempre: confírmalo.');
-    if (!['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies', 'manos'].includes(slot)) throw new GameError('Hueco de ropa desconocido.');
-    if (item === null) { delete p.wear[slot]; }
+    if (!(WEAR_SLOTS as readonly string[]).includes(slot)) throw new GameError('Hueco de ropa desconocido.');
+    // v0.22 · Quitar deja el hueco vacío de verdad (se ve el cuerpo); «default» vuelve a la ropa de serie del personaje.
+    const freeAlso = (s2: string) => { for (const [k, id] of Object.entries(p.wear)) { const d2 = id ? this.w.c.items.find((i) => i.id === id) : undefined; if (k !== slot && d2?.wear?.also?.includes(s2 as any)) p.wear[k] = ''; } };
+    if (item === null) { p.wear[slot] = ''; }
+    else if (item === 'default') { delete p.wear[slot]; freeAlso(slot); }
     else {
       const def = this.w.c.items.find((i) => i.id === item);
       if (!def?.wear) throw new GameError('Eso no se puede poner.');
       if (def.wear.slot !== slot) throw new GameError('Esa prenda va en otro sitio.');
       if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No la tienes.');
+      if (def.wear.sex && def.wear.sex !== (bodyKindOf(p.appearance, hashString(`${p.name}#`)) === 'masculino' ? 'm' : 'f')) throw new GameError('Esa prenda no es para tu cuerpo.');
       p.wear[slot] = item;
+      // Una prenda que ocupa varios huecos (un mono) los deja libres; y ponerse algo en un hueco que tapaba un mono lo quita.
+      for (const s2 of def.wear.also ?? []) p.wear[s2] = '';
+      freeAlso(slot);
     }
     e.appearance = wornAppearance(this.w.c, p); this.bump(e);
     void savePlayerVitals(this.w.db, p).catch(() => {});

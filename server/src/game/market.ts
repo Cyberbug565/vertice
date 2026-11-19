@@ -1,7 +1,7 @@
 // Red de mercado: las corporaciones fijan el margen de cada categoría y cada tienda ajusta por existencias.
 // Las compras y ventas de los jugadores mueven el precio; la reposición y la política corporativa lo devuelven a su cauce.
 import { randomUUID } from 'node:crypto';
-import { checkChance, type Content, type ItemCategory, type MarketView, type ShopView } from '@vertice/shared';
+import { checkChance, bodyKindOf, hashString, type Content, type ItemCategory, type MarketView, type ShopView } from '@vertice/shared';
 import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
 import { effective, flagValue, perkMods, weaponFits, type PlayerState } from './player.js';
@@ -98,7 +98,9 @@ export class MarketService {
   shopView(shopId: string, p: PlayerState): ShopView {
     const sh = this.c.shops.find((x) => x.id === shopId)!;
     const bar = this.c.zones.find((z) => z.id === sh.zone)?.nightlife !== undefined;
-    const items: ShopView['items'] = [...(this.stock.get(shopId) ?? new Map()).entries()].map(([it, e]) => {
+    // v0.22 · La ropa que es solo del otro cuerpo no se ve en la tienda.
+    const sex = bodyKindOf(p.appearance, hashString(`${p.name}#`)) === 'masculino' ? 'm' : 'f';
+    const items: ShopView['items'] = [...(this.stock.get(shopId) ?? new Map()).entries()].filter(([it]) => { const w = this.c.items.find((i) => i.id === it)?.wear; return !w?.sex || w.sex === sex; }).map(([it, e]) => {
       const def = this.c.items.find((i) => i.id === it)!;
       const price = this.price(shopId, it, p);
       const ref = Math.round(this.corpPrice(it, def.category) * sh.priceMult);
