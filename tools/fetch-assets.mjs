@@ -23,7 +23,7 @@ try {
   let res = null;
   for (const u of URLS) {
     console.log('[recursos] descargando', u);
-    const r = await fetch(u, { redirect: 'follow' }).catch(() => null);
+    const r = await fetch(u, { redirect: 'follow', signal: AbortSignal.timeout(12000) }).catch(() => null);
     if (r?.ok) { res = r; break; }
     console.log('[recursos]  no está ahí', r ? `(HTTP ${r.status})` : '');
   }
@@ -39,7 +39,7 @@ try {
   // v0.20 · Plan B: el modelo de la Tormenta suelto (tormenta.glb, 3,7 MB) en la release «armaduras» o «modelos-extra-v17».
   for (const tag of ['armaduras', 'modelos-extra-v17']) {
     const u = `https://github.com/Cyberbug565/vertice/releases/download/${tag}/tormenta.glb`;
-    const r = await fetch(u, { redirect: 'follow' }).catch(() => null);
+    const r = await fetch(u, { redirect: 'follow', signal: AbortSignal.timeout(12000) }).catch(() => null);
     if (!r?.ok) continue;
     mkdirSync(join(dest, 'extra'), { recursive: true });
     writeFileSync(marker, Buffer.from(await r.arrayBuffer()));
@@ -56,7 +56,7 @@ async function fetchMedieval() {
   if (existsSync(join(out, 'people_texture_map.png')) && !process.argv.includes('--force')) return;
   const u = 'https://github.com/Cyberbug565/vertice/releases/download/moveset/Free.Medieval.3D.People.Low.Poly.Pack.zip';
   try {
-    const r = await fetch(u, { redirect: 'follow' });
+    const r = await fetch(u, { redirect: 'follow', signal: AbortSignal.timeout(12000) });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const zip = Buffer.from(await r.arrayBuffer());
     mkdirSync(out, { recursive: true });
