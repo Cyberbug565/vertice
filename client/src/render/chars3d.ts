@@ -310,6 +310,11 @@ export class Chars3D {
     const sexK = kind === 'masculino' ? 'm' : 'f';
     const gids = (a.garments || '').split(',').filter((id) => { const g = garmentById(id); return !!g && (g.sex === 'u' || g.sex === sexK); });
     const gready = garmentsLoaded(gids, kind);
+    // La prenda anterior sigue visible durante la descarga. El servidor marca
+    // esos huecos como libres para sustituirla, pero la malla 3D aún no existe.
+    const parts = (id: string) => { const g = garmentById(id)!; return [g.slot, ...g.also].map((p) => p === 'torso_int' || p === 'torso_ext' ? 'torso' : p); };
+    const readyParts = new Set(gready.flatMap(parts));
+    for (const id of gids) if (!gready.includes(id)) for (const part of parts(id)) if (!readyParts.has(part)) bare.delete(part);
     const ki = kitInfo(kind);
     const hide = gready.length && ki ? hideMask(gready, kind, ki.n) : null;
     const hidesHair = gready.some((id) => garmentById(id)?.hidesHair);
@@ -378,7 +383,7 @@ export class Chars3D {
       // v0.21 · Atuendo completo de Quaternius (se ata a los huesos de esta persona).
       if (isOutfit(a.top)) { const ms = buildOutfit(a.top, kind, H.bodyMesh, H.bones); if (ms) H.mats.push(...ms.map((m) => m.material as THREE.Material)); }
       // v0.22 · Prendas 3D ajustadas al cuerpo.
-      if (gready.length) H.mats.push(...attachGarments(gready, kind, H.bodyMesh, H.bones));
+      if (gready.length) H.mats.push(...attachGarments(gready, kind, H.bodyMesh));
     }
     return H;
   }
