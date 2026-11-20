@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.22)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.23)
+
+Cuentas persistentes, selección de personajes, expediente y memorial detallado; modos **Iniciar en local** y **Publicar**: [guía y comprobaciones](docs/CUENTAS_Y_ARRANQUE.md).
 
 Ajuste de la ropa al cuerpo y las animaciones: [cambios, comprobaciones y capturas](docs/AJUSTE_ROPA.md).
 
