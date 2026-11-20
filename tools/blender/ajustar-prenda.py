@@ -54,7 +54,8 @@ REGION = {
     'head': r'^(Head|neck)',
 }[KIND]
 inreg = np.array([bool(re.match(REGION, d)) for d in dom])
-polys = [list(p.vertices) for p in body.data.polygons]
+body.data.calc_loop_triangles()
+polys = [list(t.vertices) for t in body.data.loop_triangles]
 regpolys = [p for p in polys if all(inreg[i] for i in p)]
 
 def body_world(evaluated=True):
@@ -312,6 +313,10 @@ else:
     posed = fx(gco)
     pose_d = d
     mirror = False
+    # La búsqueda deja el esqueleto en la última muestra evaluada, que puede ser
+    # distinta de la ganadora (también al reutilizar una entrada de la caché).
+    # El skinning inverso debe usar exactamente la postura que ajustó la prenda.
+    set_pose(d.get('e'), d.get('f', 0), d.get('l'))
 
 # ------------------------------------------------------------------ skinning inverso (postura de la prenda → reposo)
 def finalize(P, poly_offset=0):
@@ -331,10 +336,14 @@ def finalize(P, poly_offset=0):
             w = np.zeros(len(bones)); w[head_i] = 1
         else:
             loc, nrm, fi, dist = bvh.find_nearest(Vector(p))
-            vs = polys[fi]; tri = [Vector(co[i]) for i in vs[:3]]
-            # Pesos interpolados (inverso de la distancia a los vértices de la cara más cercana).
-            dd = np.array([max(1e-4, (loc - Vector(co[i])).length) for i in vs])
-            w = (W[vs] / dd[:, None]).sum(0); w /= w.sum()
+            vs = polys[fi]
+            # Coordenadas baricéntricas: reproducen el skinning de la superficie
+            # donante incluso junto a los codos; la distancia inversa no lo hace.
+            from mathutils.geometry import barycentric_transform
+            tri = [Vector(co[i]) for i in vs[:3]]
+            bc = barycentric_transform(loc, *tri, Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1)))
+            ww = np.maximum(0, np.array(bc)); ww /= max(ww.sum(), 1e-8)
+            w = (W[vs[:3]] * ww[:, None]).sum(0); w /= max(w.sum(), 1e-8)
         # Solo los 4 huesos más fuertes.
         top = np.argsort(w)[-4:]; w2 = np.zeros_like(w); w2[top] = w[top]; w2 /= w2.sum()
         M = np.tensordot(w2, S, 1)
