@@ -47,7 +47,7 @@ export class BotClient {
     return token;
   }
 
-  connect(token: string, contentVersion: string): Promise<Extract<ServerMsg, { t: 'welcome' }>> {
+  connect(token: string, contentVersion: string, characterId?: string): Promise<Extract<ServerMsg, { t: 'welcome' }>> {
     const url = this.base.replace(/^http/, 'ws') + '/ws';
     this.ws = new WebSocket(url, { perMessageDeflate: false });
     this.ws.binaryType = 'nodebuffer';
@@ -64,7 +64,7 @@ export class BotClient {
       this.onMsg(m);
     });
     this.ws.on('close', (code) => { this.closed = true; this.closeCode = code; clearInterval(this.secTimer); for (const w of this.waiters) { clearTimeout(w.timer); w.reject(new Error(`cerrado ${code}`)); } this.waiters = []; });
-    this.ws.on('open', () => this.raw({ t: 'hello', token, v: PROTOCOL_VERSION, contentVersion }));
+    this.ws.on('open', () => this.raw({ t: 'hello', token, v: PROTOCOL_VERSION, contentVersion, characterId }));
     return this.waitFor((m) => m.t === 'welcome' || m.t === 'error', 10000).then((m) => { if (m.t !== 'welcome') throw new Error(`hello rechazado: ${(m as any).reason}`); return m; });
   }
 
