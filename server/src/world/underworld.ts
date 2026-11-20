@@ -4,6 +4,7 @@ import { GameError } from '../game/effects.js';
 import { buildSheet, effective, type PlayerState } from '../game/player.js';
 import { alliedCrews, crewRivals, underworldStatus, type UnderworldState } from '../game/underworld.js';
 import { isSick } from '../game/substances.js';
+import { recordActivity } from '../game/records.js';
 import type { Entity } from './entity.js';
 import type { PlayerConn, World } from './world.js';
 
@@ -18,6 +19,7 @@ const DRUG_INVENTORY_LIMIT = 30;
 const commissionRate = (crew: Crew) => crew.tier === 'principal' ? 0.28 : 0.24;
 
 interface Change {
+  sale?: { item: string; qty: number; gross: number };
   state?: UnderworldState;
   money?: number;
   item?: { id: string; delta: number };
@@ -205,7 +207,7 @@ export class Underworld {
     if ((p.inventory.get(item.id) ?? 0) < qty) throw new GameError('No tienes esa cantidad.');
     const deal = this.deal(p, buyer, item, qty, false);
     const rep = (p.underworld.rep ?? 0) + (deal.riskEvent ? 0 : qty);
-    const change: Change = { state: { ...p.underworld, rep }, money: deal.gross, item: { id: item.id, delta: -qty }, reason: `Mercado negro · venta de ${item.name}` };
+    const change: Change = { state: { ...p.underworld, rep }, money: deal.gross, item: { id: item.id, delta: -qty }, sale: { item: item.id, qty, gross: deal.gross }, reason: `Mercado negro · venta de ${item.name}` };
     if (deal.riskEvent === 'rival') change.faction = { id: buyer.crew, delta: -2 };
     if (!await this.commit(p, op, change)) return;
     this.afterDeal(c, buyer, qty, deal.riskEvent);
@@ -238,7 +240,7 @@ export class Underworld {
     const deal = this.deal(p, buyer, item, job.qty, true);
     const next: UnderworldState = { ...state, job: { phase: 'cash', crew: crew.id, item: item.id, qty: job.qty, base: base.id,
       gross: deal.gross, commission: Math.round(deal.gross * commissionRate(crew)), deadline: Date.now() + time * 1000 } };
-    if (!await this.commit(p, op, { state: next, reason: 'Cobro para la banda' })) return;
+    if (!await this.commit(p, op, { state: next, sale: { item: item.id, qty: job.qty, gross: deal.gross }, reason: 'Cobro para la banda' })) return;
     this.afterDeal(c, buyer, job.qty, deal.riskEvent);
     this.w.send(c, { t: 'notice', kind: 'warn', text: `Llevas ${deal.gross} €$ de la banda. Tienes ${time} s para entregarlos en ${this.location(this.sites.get(base.id)!)}.` });
   }
@@ -333,6 +335,7 @@ export class Underworld {
       const fresh = await q.query("INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,'underworld',$3) ON CONFLICT DO NOTHING RETURNING op_id",
         [op, p.charId, JSON.stringify({ reason, money, item })]);
       if (!fresh.rows.length) return null;
+      if (change.sale) await recordActivity(q, p.charId, `sale:${op}`, 'drug_sale', { item: change.sale.item }, change.sale.qty, change.sale.gross);
       const char = await q.query<{ money: string }>("UPDATE characters SET underworld=$2, money=money+$3 WHERE id=$1 AND status <> 'dead' AND underworld=$4::jsonb AND money+$3 >= 0 RETURNING money",
         [p.charId, JSON.stringify(state), money, JSON.stringify(p.underworld)]);
       if (!char.rows.length) throw new GameError(money < 0 ? 'No tienes suficientes eurodólares.' : 'El trato ha cambiado. Vuelve a hablar con tu contacto.');

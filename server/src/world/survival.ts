@@ -14,6 +14,7 @@ import { GameError } from '../game/effects.js';
 import { isSick, substanceEffects, takeDose } from '../game/substances.js';
 import { hasOpenWounds, woundCarePrice, woundList } from './wounds.js';
 import { buildSheet, chromeParts, effective, objectiveStatus, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
+import { characterRecord, recordActivity } from '../game/records.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
 const SHOP_RANGE = REMOTE_RANGE + 1;
@@ -554,12 +555,12 @@ export class Survival {
   }
 
   // ================================================================ derribo, rescate y muerte
-  downed(c: PlayerConn | undefined, cause: string, p0?: PlayerState, e0?: Entity, lethal = true) {
+  downed(c: PlayerConn | undefined, cause: string, p0?: PlayerState, e0?: Entity, lethal = true, by?: { charId: string; name: string }) {
     const p = p0 ?? c!.p!, e = e0 ?? c!.e!;
     if (p.status !== 'alive') return;
     if (c) { this.w.cancelActivity(e); this.w.closeDialog(c); }
     if (p.carrying) { const t = this.w.entities.get(p.carrying); if (t) { t.carriedBy = undefined; t.labelVer++; } p.carrying = null; }
-    p.sleeping = null; p.hp = 0; p.status = 'downed'; p.downedCause = cause; p.downedLethal = lethal;
+    p.sleeping = null; p.hp = 0; p.status = 'downed'; p.downedCause = cause; p.downedLethal = lethal; p.downedBy = lethal ? by : undefined;
     if (p.driving && c) this.w.property.park(c, true);
     // Segundas oportunidades: segundo corazón (implante), «Segunda vida» y «Milagro» (perks).
     if (lethal) {
@@ -617,9 +618,20 @@ export class Survival {
     (p as any).dead = true;
     const place = `${e.zone.def.name}`;
     let summary: DeathSummary | null = null;
+    const attacker = e.lastAttacker && this.w.entities.get(e.lastAttacker);
+    killer ??= attacker ? this.w.playerOf(attacker) : undefined;
+    const killerInfo = killer ? { charId: killer.charId, name: killer.name } : p.status === 'downed' ? p.downedBy : undefined;
     const heir = this.w.mythics.resolveKiller(e, killer);
     let mythics: MythicTransfer[] = [];
     const refunds = await this.w.db.tx(async (q) => {
+      const prior = await q.query<any>("SELECT status FROM characters WHERE id=$1 FOR UPDATE", [p.charId]);
+      if (!prior.rows[0] || prior.rows[0].status === 'dead') return [];
+      p.x = e.x; p.y = e.y; p.zone = e.zone.id;
+      await savePlayerVitals(q, p);
+      // La foto de la vida se toma antes de repartir implantes y liberar casas, coches y empleo.
+      const record = (await characterRecord(q, this.w.c, p.charId, p))!;
+      record.status = 'dead'; record.diedAt = new Date().toISOString(); record.cause = killerInfo ? `${cause} (${killerInfo.name})` : cause;
+      if (killerInfo && killerInfo.charId !== p.charId) await recordActivity(q, killerInfo.charId, `player-death:${p.charId}`, 'kill', { name: p.name, id: p.charId, kind: 'player', cause, place });
       // Míticos únicos: pasan al asesino antes de que el resto del cromo se pierda con el cuerpo.
       mythics = await this.w.mythics.onDeathTx(q, p, heir);
       const r = await q.query<any>("UPDATE characters SET status='dead', died_at=now(), cause_of_death=$2, hp=0 WHERE id=$1 AND status <> 'dead' RETURNING created_at, level, money", [p.charId, cause]);
@@ -628,20 +640,20 @@ export class Survival {
       await q.query('DELETE FROM houses_owned WHERE character_id=$1', [p.charId]);
       await q.query('DELETE FROM cars_owned WHERE character_id=$1', [p.charId]);
       await q.query('DELETE FROM posts_held WHERE character_id=$1', [p.charId]);
-      for (const [k, h] of this.w.posts.held) if (h.charId === p.charId) this.w.posts.held.delete(k);
       if (!r.rows.length) return [];
       await q.query("UPDATE cyberware_instances SET location='lost', history = history || $2::jsonb WHERE character_id=$1 AND location IN ('inventory','installed')", [p.charId, JSON.stringify([{ at: new Date().toISOString(), event: 'perdido con la muerte de su portador' }])]);
       const refunds = await this.bounties.expireForCharTx(q, p.charId);
-      const jobs = await q.query<any>('SELECT count(*)::int AS n FROM job_log WHERE character_id=$1', [p.charId]);
       const ctr = await q.query<any>("SELECT count(*)::int AS n FROM contract_progress WHERE character_id=$1 AND state='completed'", [p.charId]);
       summary = {
         name: p.name, role: this.w.c.roles.find((x) => x.id === p.role)?.name ?? p.role, profession: this.w.c.professions.find((x) => x.id === p.profession)?.name ?? p.profession,
-        level: p.level, cause: killer ? `${cause} (${killer.name})` : cause, place, money: p.money, minutesAlive: Math.round((Date.now() - new Date(r.rows[0].created_at).getTime()) / 60000),
-        jobs: jobs.rows[0].n, contracts: ctr.rows[0].n,
+        level: p.level, cause: record.cause!, place, money: p.money, minutesAlive: Math.round((Date.now() - new Date(r.rows[0].created_at).getTime()) / 60000),
+        jobs: record.stats.jobsCompleted, contracts: ctr.rows[0].n, record,
       };
       await q.query('INSERT INTO memorial (id, account_id, character_id, summary) VALUES ($1,$2,$3,$4) ON CONFLICT (character_id) DO NOTHING', [randomUUID(), p.accountId, p.charId, JSON.stringify(summary)]);
+      await q.query('UPDATE accounts SET selected_character_id=NULL WHERE id=$1 AND selected_character_id=$2', [p.accountId, p.charId]);
       return refunds;
-    });
+    }).catch((err) => { delete (p as any).dead; throw err; });
+    for (const [k, h] of this.w.posts.held) if (h.charId === p.charId) this.w.posts.held.delete(k);
     this.w.mythics.afterDeath(p, mythics);
     for (const rf of refunds) { const oc = this.connOf(rf.placedBy); if (oc?.p) { oc.p.money += rf.amount; this.notice(oc, 'info', `${p.name} ha muerto sin que nadie cobrara tu recompensa: te devuelven ${rf.amount} €$.`); this.sheet(oc); } }
     this.w.metrics.inc('deaths');
