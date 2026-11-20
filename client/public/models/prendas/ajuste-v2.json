@@ -1,0 +1,847 @@
+{
+  "version": 2,
+  "base_commit": "1f6ffa721cbadd1069f401bc899a57a1b57131c9",
+  "license_and_authors": "CREDITOS.md",
+  "sources": {
+    "faldas": {
+      "url": "https://github.com/Cyberbug565/vertice/releases/download/ropa/sci-fi-skirt-for-female-metahuman.zip",
+      "sha256": "6e52ea5a319cac24cde27d243ddff6302ff0aeabad52b697694a3b2f45f8cb4b",
+      "objects": {
+        "falda-larga": "Skirt_mesh.001",
+        "falda-volantes": "Skirt_mesh.002"
+      }
+    }
+  },
+  "assets": [
+    {
+      "path": "femenino/abrigo-monje.glb",
+      "id": "abrigo-monje",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "ca7a1cd8d74e1884bc7b2f401caa0ce36ba3f13a7c141df9c37378e9f5869783",
+      "bytes": 381956,
+      "vertices": 3761,
+      "base_asset_sha256": "c70eee86bcd5d811434a43fc340472f7414a7c41e02b7f1c7fc5282938257bfb"
+    },
+    {
+      "path": "femenino/abrigo-pop.glb",
+      "id": "abrigo-pop",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "703123a808649f4fd207238b9f7ca933ace40d1982ef8542a161c5d69db5d66d",
+      "bytes": 226272,
+      "vertices": 2133,
+      "base_asset_sha256": "0748a87c7c7a770b7f30992cba78d24066461d98397ab7265154dc02b673747d"
+    },
+    {
+      "path": "femenino/body-cyber.glb",
+      "id": "body-cyber",
+      "body": "femenino",
+      "type": "full",
+      "sha256": "23a6661117a8a6cb0c9197067274d1d76084f3bd93e2396921adfdbbfa2559d7",
+      "bytes": 987256,
+      "vertices": 14299,
+      "base_asset_sha256": "f9eda6a0dea586507b44dc44d5c1fd701aa688efca7940bdb4056edda9d35b15"
+    },
+    {
+      "path": "femenino/botas-cordones.glb",
+      "id": "botas-cordones",
+      "body": "femenino",
+      "type": "boots",
+      "sha256": "c46bb4f080dfc4688e657462f0e9c3697e8a8c87ebbf6bc0a68e608f98b12e24",
+      "bytes": 413136,
+      "vertices": 4959,
+      "base_asset_sha256": "cd794365283244bd3e697815c85dfa16d78d009b1463bd14be1b9ddfbe12afc3"
+    },
+    {
+      "path": "femenino/botas-futuristas.glb",
+      "id": "botas-futuristas",
+      "body": "femenino",
+      "type": "boots",
+      "sha256": "73d7a8b1880d194836e77b36a4d5156f5bab0485f3a4e8ad2cc76f9b690302ec",
+      "bytes": 905848,
+      "vertices": 12930,
+      "base_asset_sha256": "be995311aa8d01dcd44415f8afe47ea91376feb95b12da91e9d7423eeae8eff3"
+    },
+    {
+      "path": "femenino/botas-striker.glb",
+      "id": "botas-striker",
+      "body": "femenino",
+      "type": "boots",
+      "sha256": "cf47c4720123d3f10100d778371d4246ae6e1fb1e3d32d796253f18c88350637",
+      "bytes": 124956,
+      "vertices": 1004,
+      "base_asset_sha256": "20b3a36bd5fce4db63796779ac32e31c150a4a6e5f12194f6f9493660836b4c8"
+    },
+    {
+      "path": "femenino/capucha-cyber.glb",
+      "id": "capucha-cyber",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "1be8fdb136b12cb7ecec8f20b4b31f467b72b6f63d469df2b1bc22a399b6dfb5",
+      "bytes": 470888,
+      "vertices": 6239,
+      "base_asset_sha256": "f1c27e1c268ddc1d8f1ff336755712c23c05703fa207f58ad96bb1d40f589bcf"
+    },
+    {
+      "path": "femenino/cargo-futurista.glb",
+      "id": "cargo-futurista",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "a2c0da9e6cd8e012c58a9ffd76e6ead22d35c3d7c5b38a0031e1ea96b9c6c5f8",
+      "bytes": 198008,
+      "vertices": 2761,
+      "base_asset_sha256": "1570ed7e70142077718179a798e8dabffdd37ac8bdfb529a8d2b9d4d6e966cd2"
+    },
+    {
+      "path": "femenino/casco-cupula.glb",
+      "id": "casco-cupula",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "7e70076b491f1dc8c265dccf2f9cdc57ca9b866c84d8dcc4af583ea245bd09e9",
+      "bytes": 143184,
+      "vertices": 1416,
+      "base_asset_sha256": "16244b6a954702d219f08d333e18b49eb0f542ae12649aae3d0133cc6947b26f"
+    },
+    {
+      "path": "femenino/casco-holo.glb",
+      "id": "casco-holo",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "45b5c1f5db4526b6cc1929df26a76cb87b61e2aa622d3fef99bd156ebec4a797",
+      "bytes": 287628,
+      "vertices": 2843,
+      "base_asset_sha256": "bc100dcf672083a337c6dae35c94bfb86247eb2bfa1c9dd06dad66eeeef83be9"
+    },
+    {
+      "path": "femenino/casco-ronin.glb",
+      "id": "casco-ronin",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "3007db73c73c0d42191c62a6d73e43b9d90f6923e8e17f584a99ea676cae931e",
+      "bytes": 1038164,
+      "vertices": 15084,
+      "base_asset_sha256": "e0ab4842a82461c157eb5af301497a81c45459c5060e52f281c2d65eecca9c97"
+    },
+    {
+      "path": "femenino/casco-scifi.glb",
+      "id": "casco-scifi",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "338b57f85251d14f0beffa74b9cf878659a8a1db95b4175ffcb97c339269b355",
+      "bytes": 1016760,
+      "vertices": 14634,
+      "base_asset_sha256": "265981b90b19c2f5db8f37f442fc5eff6a8aad35c8ffe41eca73f15bd7b722cc"
+    },
+    {
+      "path": "femenino/cascos-tacticos.glb",
+      "id": "cascos-tacticos",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "28ce7417c84570b74d7fdbfee6d3529a4b5d56dcd2ed344181108b734508d417",
+      "bytes": 298624,
+      "vertices": 3960,
+      "base_asset_sha256": "337d40d6c7abb4fb6a7216b56d53627b3c687ae32201a74e44362c7c763f5357"
+    },
+    {
+      "path": "femenino/cazadora-cremallera.glb",
+      "id": "cazadora-cremallera",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "01bc8526c87d08b25781c00cd0f150c5069ea7c3b9f9cb1f95f13b58e6f2e954",
+      "bytes": 205072,
+      "vertices": 1959,
+      "base_asset_sha256": "3569b4b247f43e7171834fdbdebf68b0bfc060b9fdc49423d384a6226e33b29d"
+    },
+    {
+      "path": "femenino/chaleco-placas.glb",
+      "id": "chaleco-placas",
+      "body": "femenino",
+      "type": "vest",
+      "sha256": "933918b9459adcafb1987aff37da97b58393a922c20faca210ae221f31a0ea25",
+      "bytes": 410276,
+      "vertices": 4333,
+      "base_asset_sha256": "e9b67e6453710325e3a7aac5040fdc78ee59172895bc03fb5377516b5e8080cf"
+    },
+    {
+      "path": "femenino/chaqueta-2099.glb",
+      "id": "chaqueta-2099",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "8adde89fcb32456becb075c1f0efd3caf7853bc1d4bd154601aefdd75cf15e9d",
+      "bytes": 704140,
+      "vertices": 10888,
+      "base_asset_sha256": "bca43a06cef4d068409a1815251f0898eb66f06addf5dad63419e283b6bb331b"
+    },
+    {
+      "path": "femenino/chaqueta-capucha-cyber.glb",
+      "id": "chaqueta-capucha-cyber",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "1189343330d5cddfbda2b507ebfd863f2d5d80f0c19cf738189e3927053932f7",
+      "bytes": 817360,
+      "vertices": 11484,
+      "base_asset_sha256": "b30a4e41da1230e78f4a58001a0d52dd32a42405d8734250a251ef22c398ada5"
+    },
+    {
+      "path": "femenino/chaqueta-caqui.glb",
+      "id": "chaqueta-caqui",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "a3ba33b5277a5386d2599eb3f80b01eee8c63311d301bd40c85750d4b1d10f2e",
+      "bytes": 260996,
+      "vertices": 2784,
+      "base_asset_sha256": "cb524c79c08a2ee018f63411ac42c9304e2656d0ab115c8a6b167e3a1f18d0ca"
+    },
+    {
+      "path": "femenino/chaqueta-clasica-cyber.glb",
+      "id": "chaqueta-clasica-cyber",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "ce9cef7d6d823900b2fba1edbc99568326c2676d7c161be36cae327bc9d09b03",
+      "bytes": 800564,
+      "vertices": 11872,
+      "base_asset_sha256": "435b1fb9277f49f456f138a106ead1aa1bdba9ef0f8ae202d8c2aac0a64b0af8"
+    },
+    {
+      "path": "femenino/chaqueta-csi.glb",
+      "id": "chaqueta-csi",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "00cd5361ed628d1c2c8768354d6e13f367776436ab45b80e4c67205b7ae2f5c3",
+      "bytes": 628576,
+      "vertices": 9670,
+      "base_asset_sha256": "63c072c59f1067ff7b14f284cd26e92f4142c1061a14a83ae59a70132ca85b60"
+    },
+    {
+      "path": "femenino/chaqueta-plata.glb",
+      "id": "chaqueta-plata",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "0e89bbcde34a6cdcb98d4a2aeb6ac67cbbf3d69b9bbaec90f6d20fb999cd99cc",
+      "bytes": 282820,
+      "vertices": 3017,
+      "base_asset_sha256": "57446f4ee481b6ec602b4b49e121fbc74a82bf93b293d0d16659f0f495cfd5b2"
+    },
+    {
+      "path": "femenino/chaqueta-tactica-velcro.glb",
+      "id": "chaqueta-tactica-velcro",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "0f347b0e9b4e8c9a22e823f82fa85258c2240085cab68d6ce42bf85979fc6ed4",
+      "bytes": 335440,
+      "vertices": 3955,
+      "base_asset_sha256": "959bc77fd894878ae95dbaf122ff165ae6628063d6b6d611ef641713fa5379f4"
+    },
+    {
+      "path": "femenino/conjunto-dorado.glb",
+      "id": "conjunto-dorado",
+      "body": "femenino",
+      "type": "full",
+      "sha256": "50c5614ba3aad8d45582a220daf271ead71a378b6b99b5c66b64b453cc9af889",
+      "bytes": 766552,
+      "vertices": 9938,
+      "base_asset_sha256": "da7348e4d1febd74c7e12d2a30b2a9707398c291fb0257f5504b42da793ffee1"
+    },
+    {
+      "path": "femenino/corse-scifi.glb",
+      "id": "corse-scifi",
+      "body": "femenino",
+      "type": "full",
+      "sha256": "bbf5643f6c6a43f5d1d66218f784ea5f7c4dd891811908f30d5e324fcf17a8f5",
+      "bytes": 296712,
+      "vertices": 3293,
+      "base_asset_sha256": "df3afee19c6138390c2cce2af8f6b5028cc17f8cd2a5886c584bd01006578591"
+    },
+    {
+      "path": "femenino/falda-larga.glb",
+      "id": "falda-larga",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "6f7d8c1997558b666c1ea216e01fa5bd79b246907547097fda99314af7767f5c",
+      "bytes": 264096,
+      "vertices": 3023,
+      "base_asset_sha256": "3a059cb0bb98387f76175c1a0884d0de46d9f1b9114d1c20009cddd76ee46a0d"
+    },
+    {
+      "path": "femenino/falda-volantes.glb",
+      "id": "falda-volantes",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "3564e45767391b17e755024288e11571140095ccab81a23cb14f371a2ac410ef",
+      "bytes": 310636,
+      "vertices": 3764,
+      "base_asset_sha256": "eb43d9e4067f0735b6affeed2a7169f6f562e277ee31cff329b714585579c540"
+    },
+    {
+      "path": "femenino/gafas-striker.glb",
+      "id": "gafas-striker",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "bea492a3267204acae2549695822b7838676101e5deed3e19a6e2388222eed79",
+      "bytes": 31916,
+      "vertices": 39,
+      "base_asset_sha256": "cd88f4a54f6dc1eb142bba020d0d99f6cba8cc3179b5f49240e0818d56b78c70"
+    },
+    {
+      "path": "femenino/gorra-striker.glb",
+      "id": "gorra-striker",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "61f653538398e370d706815a428027f2c4f4e1975687266ab0fb646d5aec1acf",
+      "bytes": 71564,
+      "vertices": 610,
+      "base_asset_sha256": "c7cdb6888078033f2bc0fee0407e8ee8589c868f6db39052fd4129bb1926fdea"
+    },
+    {
+      "path": "femenino/guantes-nudillos.glb",
+      "id": "guantes-nudillos",
+      "body": "femenino",
+      "type": "gloves",
+      "sha256": "93dd064bd74fdac53575420c3fd5bda4ab4062931fde99f87c71957d558e5457",
+      "bytes": 544708,
+      "vertices": 9324,
+      "base_asset_sha256": "ad38e5a6c361ec3d7f09cfc3f50f75b21368789b3a3c2c389c784cb6bfddd765"
+    },
+    {
+      "path": "femenino/guantes-striker.glb",
+      "id": "guantes-striker",
+      "body": "femenino",
+      "type": "gloves",
+      "sha256": "0ef9ae5a4e2587e25111ed77168d16b3ee44b8f7bcce4bd053b762cf8131c1cb",
+      "bytes": 190504,
+      "vertices": 2400,
+      "base_asset_sha256": "21e8d3f2e6af19f6f6fc78a3bba234b7cca970612de848e94f993c8e08774c04"
+    },
+    {
+      "path": "femenino/jersey-cyber.glb",
+      "id": "jersey-cyber",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "ab79b29941ac9377663b431a775fc6cba8ad016212526c63aeb15e7c838545ee",
+      "bytes": 263276,
+      "vertices": 3137,
+      "base_asset_sha256": "6e4a22a48f5e2e1c93f9121a0f3b1a3fe46d86fdea3f9fcff6b7746e8503df28"
+    },
+    {
+      "path": "femenino/jersey-pulover.glb",
+      "id": "jersey-pulover",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "33f9755c9d1d966a3bb8db0b9b3a62397ab1882872722cebdc94215e6ce033f6",
+      "bytes": 270352,
+      "vertices": 3356,
+      "base_asset_sha256": "f405aed6443a8236654d865095d95c773ea26bd17619d7dd97f21d1b58e37f47"
+    },
+    {
+      "path": "femenino/mascara-carbono.glb",
+      "id": "mascara-carbono",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "a609b9040b058930be2a60b07a13f29fd4c00f91a96eb6809f63c0c99817eeaf",
+      "bytes": 100564,
+      "vertices": 1090,
+      "base_asset_sha256": "e5d9f0337c9c9a26452c66df9178ac8ebaa0a364a526a9785a0f502b77658dee"
+    },
+    {
+      "path": "femenino/mascara-cyber.glb",
+      "id": "mascara-cyber",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "19a28908b8c52c7e6181cb8e4a3bf5fc75e9d62784a8975490dbadf64f5b3750",
+      "bytes": 114660,
+      "vertices": 1229,
+      "base_asset_sha256": "4c7c27488d6ded7f06cc80384c80cea9adc9706ebc4e774ae45c13f213d75c2b"
+    },
+    {
+      "path": "femenino/mascara-estilizada.glb",
+      "id": "mascara-estilizada",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "8c166729c11157665faf4407083041787ca424d19b99814e5bc5e95ea4893693",
+      "bytes": 209108,
+      "vertices": 2723,
+      "base_asset_sha256": "5f1e150c42502c4c056ce8a65af5644f3f02fa5ca1fdb6dd8422781cfc851f2f"
+    },
+    {
+      "path": "femenino/mascara-tactica.glb",
+      "id": "mascara-tactica",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "bae48a0899c41d8be045cc564896a1a3abd7f48e3a354e6f84367c98f8898afc",
+      "bytes": 165036,
+      "vertices": 2218,
+      "base_asset_sha256": "f13a88c4370552027252ceda5c9ff294a1cc51e7d2c543fa530b94878414ad89"
+    },
+    {
+      "path": "femenino/mono-bolsillos.glb",
+      "id": "mono-bolsillos",
+      "body": "femenino",
+      "type": "full",
+      "sha256": "f9e6239029df80c34404045e7713cc8586ef24326d4bd3183c7bc5b5654c1c08",
+      "bytes": 513696,
+      "vertices": 6940,
+      "base_asset_sha256": "0b58025709fef1f6b874635eb64cb7ffbd2eadb43bd9ba1f3163080debdcde8e"
+    },
+    {
+      "path": "femenino/mono-poli-cyber.glb",
+      "id": "mono-poli-cyber",
+      "body": "femenino",
+      "type": "full",
+      "sha256": "503f8eb672b1854662379fa68e4de047fa10ef737252c2ebfcc16078ca7e402d",
+      "bytes": 478236,
+      "vertices": 6167,
+      "base_asset_sha256": "51743e54bef980e39740f9cce0198031907738a0bb77b4afa3d96c331ac43f6f"
+    },
+    {
+      "path": "femenino/pantalon-alas.glb",
+      "id": "pantalon-alas",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "6e7b945edebab1c0c823e76062025be776e28ab9ece00ec3ff06d88f28a336ca",
+      "bytes": 385024,
+      "vertices": 4662,
+      "base_asset_sha256": "0b5f86af7211633958bf22a746e232d2be70452fe49cd8cc4a5f398a49d4b36d"
+    },
+    {
+      "path": "femenino/pantalon-cuero-ajustado.glb",
+      "id": "pantalon-cuero-ajustado",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "2353e8d331fe9e081b601d251e1fed01b6ea253fe5be313347f06d6a82aa780a",
+      "bytes": 252332,
+      "vertices": 2785,
+      "base_asset_sha256": "7477b7f46b455df6b97e06d4e7f3b2cd6c37a15830be96e2369733de8ef079ba"
+    },
+    {
+      "path": "femenino/pantalon-cyber.glb",
+      "id": "pantalon-cyber",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "a905e4962381bf2e6e62ad0252b37d0cc3d2099a0aadf90edbee64379f17221d",
+      "bytes": 259944,
+      "vertices": 2969,
+      "base_asset_sha256": "7f4af7018c19532b068f714da624f39f8bf34581dd93283cd6ee6357cd5434de"
+    },
+    {
+      "path": "femenino/pantalon-parka.glb",
+      "id": "pantalon-parka",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "b3bac2a942f9216b32b56892b634a151cde26e6c6c428798933fda32644f5614",
+      "bytes": 213428,
+      "vertices": 2581,
+      "base_asset_sha256": "e65522da4ee45263dd45015cb40f577b8a519055aa0233700cf890258f667e19"
+    },
+    {
+      "path": "femenino/pantalon-pop.glb",
+      "id": "pantalon-pop",
+      "body": "femenino",
+      "type": "pants",
+      "sha256": "f135644e9527890234d3c32756062dca41fce098d41f31e38c74b461b64a1019",
+      "bytes": 337772,
+      "vertices": 2589,
+      "base_asset_sha256": "c048efb5696c1d63574542265da3f5d1f771d0e85b2eec795c8178d4fa4c8687"
+    },
+    {
+      "path": "femenino/pasamontanas.glb",
+      "id": "pasamontanas",
+      "body": "femenino",
+      "type": "head",
+      "sha256": "3afe3f9307b994a94771ff3fa4e7e95ecd13ed35b4d66edde84ad86267e28f20",
+      "bytes": 354104,
+      "vertices": 5125,
+      "base_asset_sha256": "50476de12b9af456b3351ea75e5efbe6ff55df4ba98b835e46ea88faeabb7b65"
+    },
+    {
+      "path": "femenino/sudadera-gruesa.glb",
+      "id": "sudadera-gruesa",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "d5f00bd41ced862734e66cd61098e24186879cfef915f34e4c2c5ad51cc85d77",
+      "bytes": 325784,
+      "vertices": 3430,
+      "base_asset_sha256": "6c74295bc60c8cf8a34cb460e48a17b5351b2e1537d846e7c19ec572a22b553d"
+    },
+    {
+      "path": "femenino/top-alas.glb",
+      "id": "top-alas",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "9844e75a9fb1a6b0a3fed7955e0203e2c6abd70fcfbd4d31d32c0bd32152930b",
+      "bytes": 210664,
+      "vertices": 1983,
+      "base_asset_sha256": "472555767c05290be9c4c69d4f013751e5a570abd6d8c59fd06ed42f8a3a82b5"
+    },
+    {
+      "path": "femenino/top-futurista.glb",
+      "id": "top-futurista",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "385fba5780386794125de7c0a0c22cd8544b843da0c4fa50c65c3ff6e94035fb",
+      "bytes": 216720,
+      "vertices": 2094,
+      "base_asset_sha256": "439d5cc06b3d85900a6739d04373f5f80dcc9726716e54be22e84c699303a733"
+    },
+    {
+      "path": "femenino/top-pop.glb",
+      "id": "top-pop",
+      "body": "femenino",
+      "type": "top",
+      "sha256": "061c3a7eb929c76b7a5d4e2cecbb7c191837aa5fa9fc7fe1241920c1541dfff3",
+      "bytes": 216608,
+      "vertices": 1987,
+      "base_asset_sha256": "1d34cde5660564edff34b9007a69a9dcdec434eb6fe97e2a866ff78417671e21"
+    },
+    {
+      "path": "femenino/traje-scifi.glb",
+      "id": "traje-scifi",
+      "body": "femenino",
+      "type": "full",
+      "sha256": "515ddd5e5fd9a8ba082019bf03f9d6ac19a1419bc6c17402dc6ca325465f939e",
+      "bytes": 521024,
+      "vertices": 5940,
+      "base_asset_sha256": "64e35259d4ac51000431e6163f3693b3d78de8dead5f1e14287bc177fe763def"
+    },
+    {
+      "path": "femenino/vestido-scifi.glb",
+      "id": "vestido-scifi",
+      "body": "femenino",
+      "type": "full",
+      "sha256": "14bb46c49b1ef5aecb7c7d2341e2946f527104d1e7d7c8662a24cb9e4396aadf",
+      "bytes": 356192,
+      "vertices": 5275,
+      "base_asset_sha256": "ee46a98eca38c01acf260f24aba1aedf1687fe9912dd724d2a3417084a676d43"
+    },
+    {
+      "path": "masculino/abrigo-monje.glb",
+      "id": "abrigo-monje",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "8d53118d80d7d4ba0b57f60aba7dee476d75a6611567f3de6564eec14537d45b",
+      "bytes": 395140,
+      "vertices": 3968,
+      "base_asset_sha256": "68a455d829f169294ae831fabc0b82e43e3e632dfa9260f24ca913a935e7b680"
+    },
+    {
+      "path": "masculino/botas-cordones.glb",
+      "id": "botas-cordones",
+      "body": "masculino",
+      "type": "boots",
+      "sha256": "ab7679248e2d50927524f8fccb27eb5870fd1c90529a2e2e0e4fa51e45fc0ade",
+      "bytes": 414004,
+      "vertices": 4974,
+      "base_asset_sha256": "f8cb5a5b699c3455e398361328403844bd81861ddc2241842f0fda7e0bb110e9"
+    },
+    {
+      "path": "masculino/botas-futuristas.glb",
+      "id": "botas-futuristas",
+      "body": "masculino",
+      "type": "boots",
+      "sha256": "85cc91ef9029b5a4084d8307098680e012e2caa865cd66ea5c3d37886c64cb2d",
+      "bytes": 905824,
+      "vertices": 12928,
+      "base_asset_sha256": "ee3a54183e59c5f156f8c6844683f29b592fd70a9064394066ff27c175b7a2f0"
+    },
+    {
+      "path": "masculino/botas-striker.glb",
+      "id": "botas-striker",
+      "body": "masculino",
+      "type": "boots",
+      "sha256": "21b85940a6c55cd955d209d2281a991bd604496d91aad43c8e56802d09d1594e",
+      "bytes": 125036,
+      "vertices": 1004,
+      "base_asset_sha256": "aef222376d68ae9018b1c64b9f7bd9eebdad6bab335c66e607e2c14ffa23cf92"
+    },
+    {
+      "path": "masculino/capucha-cyber.glb",
+      "id": "capucha-cyber",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "28e096224ddee7ef167685ba42d434f088a6ff9e34f15b563660a291d86402bc",
+      "bytes": 470972,
+      "vertices": 6239,
+      "base_asset_sha256": "ac158f66c454f45ba5f7cab0e46b49f0be66b93ffb21da351d9daee6799cb6f9"
+    },
+    {
+      "path": "masculino/casco-cupula.glb",
+      "id": "casco-cupula",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "55098ee52282290ba6f5a1049a586a819fd092d4783337c3e9ca5518200d54c2",
+      "bytes": 143268,
+      "vertices": 1416,
+      "base_asset_sha256": "bf9c23a004e0006d48a28aedab4921964cefbf0f6e447e89b6804a004956dc71"
+    },
+    {
+      "path": "masculino/casco-holo.glb",
+      "id": "casco-holo",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "b9e892be47d7d40b69046fee4d539bb20bf98fe50655b205f959df3cf35048de",
+      "bytes": 287712,
+      "vertices": 2843,
+      "base_asset_sha256": "59a2fc005589c71dca43d834addeb5b6e92cc6836fd424bacb42e7a0cb6c752f"
+    },
+    {
+      "path": "masculino/casco-ronin.glb",
+      "id": "casco-ronin",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "a40abcac87c5931ddd35f04dcf9a88ad97ac271494c3037afbbeec7915b0aefe",
+      "bytes": 1038248,
+      "vertices": 15084,
+      "base_asset_sha256": "ba7f68b6ac5f02a0dee3461fc1634f9ba4c30f0d33f03e6596fe419ba0737e06"
+    },
+    {
+      "path": "masculino/casco-scifi.glb",
+      "id": "casco-scifi",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "397b6635378647749c1fe20e731c3e21fc0044570689f3f89e05fb0d9296fb0e",
+      "bytes": 1017052,
+      "vertices": 14638,
+      "base_asset_sha256": "6c2acb09cce9497c3e61198a91546020d78649dba195a2be847bcbef76ff2a83"
+    },
+    {
+      "path": "masculino/cascos-tacticos.glb",
+      "id": "cascos-tacticos",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "15f8a740c9dfcb340e581b16210430cfc730b332db60cf972bc3a7deb56aea98",
+      "bytes": 298708,
+      "vertices": 3960,
+      "base_asset_sha256": "b73dc2976523897e8bee7102c305e3d04e7fb1a20901c8215eb2827a24df6790"
+    },
+    {
+      "path": "masculino/cazadora-cremallera.glb",
+      "id": "cazadora-cremallera",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "5be174ef4d646ba3470c29b10e226b1167f1a4af6b232dcb6f8d7d282c4ef940",
+      "bytes": 233864,
+      "vertices": 2401,
+      "base_asset_sha256": "c61bb1519264029b708596bf68ce9a3fc8712ba2f2cfa2e8893432c5ecdab8a4"
+    },
+    {
+      "path": "masculino/chaleco-placas.glb",
+      "id": "chaleco-placas",
+      "body": "masculino",
+      "type": "vest",
+      "sha256": "298c922602db30d531010bf9bcea95c32c4370adcd319ac585a391e82936b6de",
+      "bytes": 431720,
+      "vertices": 4668,
+      "base_asset_sha256": "339e8ee6dae120a24e49f55da34b9059bd4c7aa003c43045fd00e9d2e79896e1"
+    },
+    {
+      "path": "masculino/chaqueta-caqui.glb",
+      "id": "chaqueta-caqui",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "eacf9739375193b53b215eec6f2c8ea89fdcb53f6b9264672958c1ceb6f0ad37",
+      "bytes": 298688,
+      "vertices": 3365,
+      "base_asset_sha256": "8b4064678e8bd1d1319e017e22202c32c26290a44e1083090f67abca30cf6f7d"
+    },
+    {
+      "path": "masculino/chaqueta-clasica-cyber.glb",
+      "id": "chaqueta-clasica-cyber",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "409a64da80540b18465b753f53f893662039ec2b659708d180d1f5976136c9ab",
+      "bytes": 801992,
+      "vertices": 11889,
+      "base_asset_sha256": "66a5b53958eec4a56b92287d51cd5d88bc77ec97b657ad492e4fb9867b1db672"
+    },
+    {
+      "path": "masculino/chaqueta-csi.glb",
+      "id": "chaqueta-csi",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "4ad00e2e8b2db85505de6ca0121c0591b8c8b78850595f84a4a39e8e1c81069a",
+      "bytes": 625564,
+      "vertices": 9623,
+      "base_asset_sha256": "1d8dfaae33116a636ac0accbb8c53f1212bb1b51203701002fbb21e41fd7b5bc"
+    },
+    {
+      "path": "masculino/chaqueta-plata.glb",
+      "id": "chaqueta-plata",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "728135fe1b3aaf1105aca4cba192901305c120887aaa2d3f19cefe1b91287d92",
+      "bytes": 349412,
+      "vertices": 4051,
+      "base_asset_sha256": "45c0bb811849a6e97b956cf144c57231ac771a255a1156ddf2205e6c5e20ba22"
+    },
+    {
+      "path": "masculino/chaqueta-tactica-velcro.glb",
+      "id": "chaqueta-tactica-velcro",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "20dcd5c16892ebfe9cd5a63e9e88d857f09b7f52d27aee919fbe143efb6dc179",
+      "bytes": 371480,
+      "vertices": 4508,
+      "base_asset_sha256": "c0b5b155a83153d2ae5feb6d94662fa314272b73c9854bcee50394fc43fc68f2"
+    },
+    {
+      "path": "masculino/gafas-striker.glb",
+      "id": "gafas-striker",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "256748a7467be2183ee33d5c63613adb65035232390fa3fa85f2d02e4a01e1bf",
+      "bytes": 31996,
+      "vertices": 39,
+      "base_asset_sha256": "0e7793f89605e39d46d3095c60149f6ea9b3cc81986e11a5db71ac99d29a9034"
+    },
+    {
+      "path": "masculino/gorra-striker.glb",
+      "id": "gorra-striker",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "8a78a525b7ef9a4fbd055308e2fedc7c0389827c93705fad5060c4473a619aec",
+      "bytes": 71648,
+      "vertices": 610,
+      "base_asset_sha256": "0beb1ac566c96d02d14314cdbf77b11013ef7f4cf2c1d1fa78aee904aeea3c25"
+    },
+    {
+      "path": "masculino/guantes-nudillos.glb",
+      "id": "guantes-nudillos",
+      "body": "masculino",
+      "type": "gloves",
+      "sha256": "c117a22cc7333f694a443be7e84bad861b20027add0cddbf61e07a247b555854",
+      "bytes": 585628,
+      "vertices": 10082,
+      "base_asset_sha256": "aeb384419ef10fe439e19d1d1ebacc6fca6c190ed9b17011c64c7658d6da2dc7"
+    },
+    {
+      "path": "masculino/guantes-striker.glb",
+      "id": "guantes-striker",
+      "body": "masculino",
+      "type": "gloves",
+      "sha256": "707bde1f92afecc7e2493811d0f49815b5c4f4d6baacb3242eeb3c8ed95250ef",
+      "bytes": 190568,
+      "vertices": 2400,
+      "base_asset_sha256": "60e6554bb71996072cf566b3d50909cf9020e0c1cf49081ad285f886357def0e"
+    },
+    {
+      "path": "masculino/jersey-cyber.glb",
+      "id": "jersey-cyber",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "0fca244fb5a668c6091632181f17cb5a8119c6ac05dcd12acea7dc3b6a0706ce",
+      "bytes": 326640,
+      "vertices": 4120,
+      "base_asset_sha256": "a3e5c9b2ba6ea9f9b9eb6aa27a22251d537d39db28012dbffccabd56e069480e"
+    },
+    {
+      "path": "masculino/jersey-pulover.glb",
+      "id": "jersey-pulover",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "459a66d6608dbf7e77086e425969f7d9d70ba3465cada71654fe916cc03a2cc8",
+      "bytes": 262404,
+      "vertices": 3212,
+      "base_asset_sha256": "2c90265a0e464bdac0e6b308ab5191531ee09907dd08201f0f988eed20644568"
+    },
+    {
+      "path": "masculino/mascara-carbono.glb",
+      "id": "mascara-carbono",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "cc3371c3b9afac31242259c38797eca0b9afcc276229a45c40203e9e5ffe4eb5",
+      "bytes": 100652,
+      "vertices": 1090,
+      "base_asset_sha256": "d976ea7a00e95481f5b679393089624b7bec800fe85561ef6494ec473313c404"
+    },
+    {
+      "path": "masculino/mascara-cyber.glb",
+      "id": "mascara-cyber",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "bff17378c895c50ba823d98bd015130af428a181cb958d78e3a41bd519e2a136",
+      "bytes": 114740,
+      "vertices": 1229,
+      "base_asset_sha256": "a20e7bc2adb85fafa811be4d896a415346a89f3bdc389c63bd54e530f1f6e679"
+    },
+    {
+      "path": "masculino/mascara-estilizada.glb",
+      "id": "mascara-estilizada",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "35db5bf504c4acea3bf56363fd083e7011b33c26a235bcea4180302092a895ec",
+      "bytes": 209192,
+      "vertices": 2723,
+      "base_asset_sha256": "6f575c45332bb152fd29b6c2b72da217856dec8d83101f0e2b07b3d26266222c"
+    },
+    {
+      "path": "masculino/mascara-tactica.glb",
+      "id": "mascara-tactica",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "babcd04ebf00cd79900745bb89cd56a24edbf2920f75de3dfe50484e9011f720",
+      "bytes": 165120,
+      "vertices": 2218,
+      "base_asset_sha256": "0f2d942a11f6c6a4bd6876b64600b7bbfaff7911c0ee081dfe2f2508349a663c"
+    },
+    {
+      "path": "masculino/mono-bolsillos.glb",
+      "id": "mono-bolsillos",
+      "body": "masculino",
+      "type": "full",
+      "sha256": "dfb1c99d10ff0ef5c42396f95aba1f50a5d009e511f6e4c3446c1f08d60f2030",
+      "bytes": 536744,
+      "vertices": 7369,
+      "base_asset_sha256": "72d112145f23f25c1f452ecd453f51916ebde594a7efbee8888de624f99f4c26"
+    },
+    {
+      "path": "masculino/pantalon-cuero-ajustado.glb",
+      "id": "pantalon-cuero-ajustado",
+      "body": "masculino",
+      "type": "pants",
+      "sha256": "776e5684f1e0cc5727aecc817e94558a084aff94abec2fc8fc5b52f4de46b850",
+      "bytes": 246420,
+      "vertices": 2690,
+      "base_asset_sha256": "f2b34828f9a1e71adfb86c63c06999d6f3fa2af92f689cb76e7014141d0127ea"
+    },
+    {
+      "path": "masculino/pantalon-cyber.glb",
+      "id": "pantalon-cyber",
+      "body": "masculino",
+      "type": "pants",
+      "sha256": "4c4d63c7dfceebc06aaec9d87c68438cab9e42b3534d2b05996cad691388db4e",
+      "bytes": 252768,
+      "vertices": 2854,
+      "base_asset_sha256": "b828ede5e406bb0eb4946f830b7d80f3abd3dff18d5d0d12bae3b9ebc283c390"
+    },
+    {
+      "path": "masculino/pantalon-parka.glb",
+      "id": "pantalon-parka",
+      "body": "masculino",
+      "type": "pants",
+      "sha256": "8350b8a29d14ccff7b5b8691224beb8e1d53c195ef05987f121e766b476aa522",
+      "bytes": 211752,
+      "vertices": 2554,
+      "base_asset_sha256": "bb7c6a7eb39b1ce492f19850fffd715f86a156d131094d082b8c94638cfb9003"
+    },
+    {
+      "path": "masculino/pasamontanas.glb",
+      "id": "pasamontanas",
+      "body": "masculino",
+      "type": "head",
+      "sha256": "f53f7f305552a0188a9327252bc9fedaf332965e9e0dc0ff5dda7987e6a788ee",
+      "bytes": 354188,
+      "vertices": 5125,
+      "base_asset_sha256": "0b612630366511bf11929eb081493a4a4769e1a6a43771d43f30220b7d2070ed"
+    },
+    {
+      "path": "masculino/sudadera-gruesa.glb",
+      "id": "sudadera-gruesa",
+      "body": "masculino",
+      "type": "top",
+      "sha256": "40def7014de47727665d46a98f3e3b89e3011c2bc4c3100eaa436cec71ded189",
+      "bytes": 377140,
+      "vertices": 4223,
+      "base_asset_sha256": "2aa1ce0c69870ce0de72ae626e876b9a970ce900f70127fa78d10e070db06c45"
+    }
+  ]
+}
