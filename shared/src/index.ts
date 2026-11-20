@@ -13,3 +13,4 @@ export * from './nightlife.js';
 export * from './relics.js';
 export * from './traffic.js';
 export * from './garments.js';
+export * from './records.js';
