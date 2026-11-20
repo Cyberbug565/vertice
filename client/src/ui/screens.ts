@@ -1,5 +1,5 @@
 // Pantallas fuera del juego: acceso, menú principal, creación de personaje, ajustes y memorial.
-import { ATTRIBUTE_IDS, RULES, carryCapacity, chromeCapacity, humanityBase, maxHp, maxStamina, walkSpeed, type Attributes } from '@vertice/shared';
+import { ATTRIBUTE_IDS, RULES, carryCapacity, chromeCapacity, humanityBase, maxHp, maxStamina, walkSpeed, type Attributes, type AccountRoster } from '@vertice/shared';
 import { api, setToken } from '../api';
 import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
@@ -8,6 +8,7 @@ import { $ui, clearUi, fmtMoney, h } from './dom';
 import { CARTOON_MODELS, HAIR_COLLECTION, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 import { Preview3D } from '../render/chars3d';
+import { recordPanel } from './record';
 
 /** v0.17 · ¿Están las miniaturas de la colección de peinados? (si no, no se ofrece la colección). */
 let hairSheetOk = false;
@@ -18,6 +19,8 @@ export function loginScreen(onDone: () => void) {
   const err = h('div', { class: 'error', role: 'alert' });
   const user = h('input', { id: 'username', autocomplete: 'username', placeholder: 'usuario', maxLength: 24 });
   const pass = h('input', { id: 'password', type: 'password', autocomplete: 'current-password', placeholder: 'contraseña (mín. 6)' });
+  const mode = h('p', { class: 'eyebrow', role: 'status' });
+  void api<{ mode?: string }>('/api/content-version').then((r) => { mode.textContent = r.mode === 'local' ? 'MODO LOCAL · CUENTAS Y PARTIDAS DE PRUEBA' : 'SERVIDOR DE VÉRTICE'; }).catch(() => { mode.textContent = 'SERVIDOR NO DISPONIBLE'; });
   const go = async (mode: 'login' | 'register') => {
     initAudio();
     err.textContent = '';
@@ -32,38 +35,62 @@ export function loginScreen(onDone: () => void) {
     h('label', { for: 'username' }, 'Usuario'), user, h('label', { for: 'password' }, 'Contraseña'), pass, err,
     h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'submit', id: 'btn-login' }, 'Entrar'), h('button', { class: 'btn', type: 'button', id: 'btn-register', onclick: () => go('register') }, 'Crear cuenta')));
   $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card narrow' },
-    h('h1', { class: 'logo neon' }, 'VÉRTICE'), h('p', { class: 'muted' }, 'Ciudad Vértice · una sola ciudad enorme. Edición de universo original. Alfa v0.5.'), form)));
+    h('h1', { class: 'logo neon' }, 'VÉRTICE'), mode, h('p', { class: 'muted' }, 'Ciudad Vértice · Alfa v0.23. Cada cuenta conserva sus personajes y su memorial.'), form)));
   user.focus();
 }
 
-export async function mainMenu(opts: { onEnter: () => void; onCreate: () => void; onLogout: () => void }) {
+export async function mainMenu(opts: { onEnter: (characterId: string) => void; onCreate: () => void; onLogout: () => void }) {
   clearUi();
-  let me: any, cities: any[] = [];
-  try { [me, cities] = await Promise.all([api('/api/me'), api<any[]>('/api/cities')]); }
-  catch (e: any) { if (e.status === 401) { setToken(null); return opts.onLogout(); } throw e; }
-  const ch = me.character;
+  $ui().append(h('div', { class: 'screen' }, h('p', { class: 'muted', role: 'status' }, 'Recuperando tus personajes…')));
+  let me: AccountRoster, cities: any[] = [];
+  try { [me, cities] = await Promise.all([api<AccountRoster>('/api/me'), api<any[]>('/api/cities')]); }
+  catch (e: any) {
+    if (e.status === 401) { setToken(null); return opts.onLogout(); }
+    clearUi();
+    $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card narrow' }, h('h1', {}, 'No se pudo conectar'), h('p', { class: 'error', role: 'alert' }, e.message),
+      h('p', { class: 'muted' }, 'Comprueba que el servidor siga encendido y que estés usando su enlace actual.'), h('button', { class: 'btn primary', onclick: () => void mainMenu(opts) }, 'Reintentar'), h('button', { class: 'btn', onclick: () => { setToken(null); opts.onLogout(); } }, 'Volver al acceso'))));
+    return;
+  }
+  clearUi();
+  let selected = me.character?.id ?? me.characters[0]?.id;
+  const error = h('p', { class: 'error', role: 'alert' });
+  const cards = h('div', { class: 'character-roster', role: 'group', 'aria-label': 'Tus personajes' });
+  const enter = h('button', { class: 'btn primary', id: 'btn-enter', disabled: !selected, onclick: async () => {
+    if (!selected) return; enter.disabled = true; error.textContent = '';
+    try { await api('/api/characters/select', { id: selected }); opts.onEnter(selected); }
+    catch (e: any) { error.textContent = e.message; enter.disabled = false; }
+  } }, 'Continuar personaje');
+  const renderRoster = () => {
+    cards.replaceChildren(...me.characters.map((ch) => h('div', { class: `roster-card${selected === ch.id ? ' selected' : ''}` },
+      h('button', { class: 'roster-pick', 'aria-pressed': String(selected === ch.id), onclick: () => { selected = ch.id; renderRoster(); } },
+        h('span', { class: 'eyebrow' }, ch.status === 'downed' ? 'DERRIBADO/A' : 'CON VIDA'), h('strong', {}, ch.name), h('span', {}, `${content.roles.find((r) => r.id === ch.role)?.name} · nivel ${ch.level}`),
+        h('small', { class: 'muted' }, `${content.professions.find((r) => r.id === ch.profession)?.name} · ${fmtMoney(ch.money)}`), h('small', { class: 'muted' }, zoneDef(ch.zone_id)?.name ?? ch.zone_id)),
+      h('button', { class: 'btn small', onclick: () => recordPanel(ch.id), 'aria-label': `Ver expediente de ${ch.name}` }, 'Ver expediente'))));
+    enter.textContent = selected ? `Continuar con ${me.characters.find((ch) => ch.id === selected)?.name}` : 'Continuar personaje';
+  };
+  renderRoster();
   const city = h('select', { id: 'city', 'aria-label': 'Ciudad lógica' }, ...cities.map((c) => h('option', { value: c.id }, `${c.name} — ${c.players} conectados (objetivo ${c.capacityTarget})`)));
   const body = h('div', { class: 'col' },
     h('h1', { class: 'logo neon' }, 'VÉRTICE'),
     h('p', { class: 'muted' }, `Cuenta: ${me.account.username}`),
-    ch ? h('div', { class: 'choice' }, h('h4', {}, ch.name), h('p', {}, `${content.roles.find((r) => r.id === ch.role)?.name} · nivel ${ch.level} · ${fmtMoney(Number(ch.money))} · ${zoneDef(ch.zone_id)?.name ?? ch.zone_id}`))
-      : h('p', {}, 'No tienes ningún personaje vivo. Cada personaje tiene una sola vida.'),
+    h('h2', {}, 'Tus personajes'),
+    me.characters.length ? h('p', { class: 'muted' }, 'Continúa una vida existente o crea un personaje nuevo. Cada uno conserva su propio progreso.') : h('p', {}, 'Crea tu primer personaje para entrar en la ciudad.'), cards, error,
     h('label', { for: 'city' }, 'Ciudad lógica'), city,
     h('div', { class: 'row' },
-      h('button', { class: 'btn primary', id: 'btn-enter', disabled: !ch, onclick: opts.onEnter }, 'Entrar al mundo'),
-      h('button', { class: 'btn', id: 'btn-create', disabled: !!ch, onclick: opts.onCreate, title: ch ? 'Solo una vida activa por cuenta en la alfa' : '' }, 'Crear personaje'),
+      enter,
+      h('button', { class: 'btn', id: 'btn-create', onclick: opts.onCreate }, 'Crear personaje nuevo'),
       h('button', { class: 'btn', onclick: () => settingsPanel() }, 'Ajustes'),
-      h('button', { class: 'btn', onclick: () => memorialPanel(me.memorial) }, 'Memorial'),
+      h('button', { class: 'btn', id: 'btn-memorial', onclick: () => memorialPanel(me.memorial) }, `Memorial (${me.memorial.length})`),
       h('button', { class: 'btn', onclick: () => { setToken(null); opts.onLogout(); } }, 'Salir')),
   );
-  $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card narrow' }, body)));
+  $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card account-menu' }, body)));
 }
 
 function memorialPanel(list: any[]) {
   const close = () => ov.remove();
   const ov = h('div', { class: 'overlay', onclick: (e: Event) => e.target === ov && close() }, h('div', { class: 'reward' },
     h('h2', {}, 'Memorial'),
-    list.length ? h('ul', {}, ...list.map((m) => h('li', {}, `${m.summary.name} — ${m.summary.cause}`))) : h('p', { class: 'muted' }, 'Aún no ha caído nadie. Los personajes fallecidos se recordarán aquí, sin traspasar recursos.'),
+    list.length ? h('div', { class: 'memorial-list' }, ...list.map((m) => h('div', { class: 'roster-card' }, h('h3', {}, m.summary.name), h('p', {}, `${m.summary.role} · nivel ${m.summary.level}`), h('p', { class: 'muted' }, m.summary.cause), h('button', { class: 'btn', onclick: () => recordPanel(m.character_id, m.summary.record) }, 'Ver vida completa')))) : h('p', { class: 'muted' }, 'Aún no ha caído nadie. Los personajes fallecidos se recordarán aquí, sin traspasar recursos.'),
     h('button', { class: 'btn', onclick: close }, 'Cerrar')));
   $ui().append(ov);
 }
@@ -82,7 +109,7 @@ const SHOES = ['#101018', '#e8e8f0', '#5a3a1a', '#a82020', '#43f3ff', '#3a3a3a']
 const MAKEUP_COL = ['#ff3fa4', '#43f3ff', '#ffd23f', '#b46cff', '#a82020', '#1a1a1a'];
 const pick = <T,>(l: readonly T[]) => l[Math.floor(Math.random() * l.length)];
 
-export function creationScreen(onDone: () => void, onCancel: () => void) {
+export function creationScreen(onDone: (id: string) => void, onCancel: () => void) {
   clearUi();
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
     appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], body: 'masculino', build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
@@ -101,7 +128,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
   let preview: { el: HTMLElement; show: (ap: any, chrome: string[]) => Promise<void> | void; destroy: () => void };
   try { preview = settings.chars3d ? new Preview3D(240, 300) : new Preview(); } catch { preview = new Preview(); }
   const leave = (fn: () => void) => () => { preview.destroy(); fn(); };
-  onDone = leave(onDone); onCancel = leave(onCancel);
+  onCancel = leave(onCancel);
   const card = h('div', { class: 'card' });
   $ui().append(h('div', { class: 'screen' }, card));
   const spent = () => ATTRIBUTE_IDS.reduce((s, k) => s + st.attributes[k], 0);
@@ -241,7 +268,7 @@ export function creationScreen(onDone: () => void, onCancel: () => void) {
     return null;
   };
   const submit = async () => {
-    try { await api('/api/characters', { name: st.name.trim(), origin: st.origin, role: st.role, profession: st.profession, attributes: st.attributes, appearance: st.appearance, bio: st.bio, skillPoints: Object.fromEntries(Object.entries(st.skillPoints).filter(([, v]) => v > 0)) }); blip('good'); onDone(); }
+    try { const r = await api<{ id: string }>('/api/characters', { name: st.name.trim(), origin: st.origin, role: st.role, profession: st.profession, attributes: st.attributes, appearance: st.appearance, bio: st.bio, skillPoints: Object.fromEntries(Object.entries(st.skillPoints).filter(([, v]) => v > 0)) }); blip('good'); preview.destroy(); onDone(r.id); }
     catch (e: any) { err.textContent = e.message; blip('bad'); }
   };
   render();

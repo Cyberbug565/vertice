@@ -8,6 +8,7 @@ import { Preview } from './preview';
 import { Preview3D } from '../render/chars3d';
 import { settings } from '../settings';
 import { blip } from '../audio';
+import { recordPanel } from './record';
 
 export interface CharCtx { net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
 type Tab = 'inv' | 'cyber' | 'skills' | 'sheet';
@@ -321,6 +322,7 @@ function skillsTab(s: CharacterSheet, ctx: CharCtx) {
 function sheetTab(s: CharacterSheet) {
   const role = content.roles.find((r) => r.id === s.role);
   return h('div', { class: 'sheet-tab' },
+    h('button', { class: 'btn primary', id: 'btn-record', onclick: () => recordPanel(s.id) }, 'Expediente · estadísticas e historial de vida'),
     h('div', { class: 'cards' },
       h('div', { class: 'fcard', style: { borderTopColor: role?.accent ?? '#43f3ff' } }, h('b', {}, `${s.name}`), h('div', {}, `${role?.name} · ${content.origins.find((o) => o.id === s.origin)?.name}`), h('div', { class: 'small muted' }, `${role?.ability}: ${role?.abilityDesc}`)),
       h('div', { class: 'fcard', style: { borderTopColor: '#5affc8' } }, h('b', {}, 'Oficio'), h('div', {}, `${s.professionName} · rango ${s.professionRank}`), h('div', { class: 'small muted' }, `Búsqueda ${s.wanted}`)),

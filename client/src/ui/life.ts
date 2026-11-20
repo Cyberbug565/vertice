@@ -5,6 +5,7 @@ import { renderZoneMap } from './minimap';
 import type { Net } from '../net';
 import { newOpId } from '../net';
 import { $ui, fmtMoney, h, ask } from './dom';
+import { recordPanel } from './record';
 import { blip } from '../audio';
 
 export interface LifeCtx { net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
@@ -285,6 +286,7 @@ export function deathScreen(s: DeathSummary, onNew: () => void) {
     h('ul', {}, h('li', {}, `${s.role} · ${s.profession} · nivel ${s.level}`), h('li', {}, `Lugar: ${s.place}`), h('li', {}, `Sobrevivió ${s.minutesAlive} min reales`),
       h('li', {}, `Turnos de trabajo: ${s.jobs} · encargos completados: ${s.contracts}`), h('li', {}, `Dinero perdido: ${fmtMoney(s.money)}`)),
     h('p', { class: 'muted' }, 'Una sola vida: su nivel, implantes, equipo y dinero se pierden. Tu cuenta conserva ajustes y el memorial.'),
-    h('button', { class: 'btn primary', onclick: () => { ov.remove(); onNew(); } }, 'Volver al menú y empezar otra vida')));
+    s.record ? h('button', { class: 'btn', onclick: () => recordPanel(s.record!.id, s.record) }, 'Ver expediente completo') : null,
+    h('button', { class: 'btn primary', onclick: () => { ov.remove(); onNew(); } }, 'Volver a mis personajes')));
   $ui().append(ov);
 }
