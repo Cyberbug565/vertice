@@ -13,15 +13,17 @@ export async function createApp(overrides: Partial<Config> = {}) {
   const { content, hash } = loadValidatedContent();
   if (cfg.cityHourMs) (content.manifest as { cityHourMs: number }).cityHourMs = cfg.cityHourMs;
   const db = await openDb(cfg.databaseUrl, cfg.pgliteDir);
-  await migrate(db, cfg.logLevel === 'info');
-  await ensureAdminAccount(db).catch((err) => console.error('[admin]', err));
-  const metrics = new Metrics();
-  const world = new World(content, hash, db, cfg, metrics);
-  await world.init();
-  world.start();
-  const srv = await startServer(cfg, db, world, metrics);
-  return {
-    cfg, db, world, metrics, port: srv.port, contentHash: hash,
-    async close() { await srv.close(); await world.shutdown(); await db.close(); },
-  };
+  try {
+    await migrate(db, cfg.logLevel === 'info');
+    await ensureAdminAccount(db).catch((err) => console.error('[admin]', err));
+    const metrics = new Metrics();
+    const world = new World(content, hash, db, cfg, metrics);
+    await world.init();
+    const srv = await startServer(cfg, db, world, metrics);
+    world.start();
+    return {
+      cfg, db, world, metrics, port: srv.port, contentHash: hash,
+      async close() { await srv.close(); await world.shutdown(); await db.close(); },
+    };
+  } catch (err) { await db.close(); throw err; }
 }

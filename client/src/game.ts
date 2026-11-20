@@ -21,6 +21,7 @@ import { keysPanel, pauseMenu } from './ui/pause';
 import { cheatPanel, legendPanel } from './ui/legends';
 import { buildingPanel, dealerPanel, marketLivePanel, propsPanel, realtyPanel, ringPrompt, scanCard, stashPanel, type PropCtx } from './ui/property';
 import { lootPanel } from './ui/loot';
+import { closeRecordPanel, recordPanel } from './ui/record';
 /** v0.13 · Gestos que no son bailes (sentado, manos arriba…): no cuentan como «estás bailando». */
 const isDance = (m: string) => !['nausea', 'sentado', 'manos-arriba', 'telefono', 'fumar', 'gesto'].includes(m);
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
@@ -35,20 +36,20 @@ const STANCES = [
 const ABIL_ICON: Record<string, string> = { kairos: '⏩', onda: '🌊', proyeccion: '👻', 'tiempo-bala': '⏱', invisible: '👻', curar: '💉', pulso: '💥', esprint: '💨', carga: '🚀', senuelo: '🎭', torbellino: '🌀', 'disparo-cargado': '🎯', 'pico-ram': '🧠', 'onda-ko': '⚡', marcar: '📡', escudo: '🛡', salto: '🦘' };
 const BUFF_NAME: Record<string, string> = { 'tiempo-bala': '⏱ Tiempo bala', invisible: '👻 Invisible', curar: '💉 Curando', esprint: '💨 Esprint', senuelo: '🎭 Señuelo', carga: '🚀 Carga', 'disparo-cargado': '🎯 Cargado', marcar: '📡 Objetivos marcados', escudo: '🛡 Escudo' };
 
-export async function startGame(token: string, onExit0: (reason?: string) => void) {
+export async function startGame(token: string, onExit0: (reason?: string) => void, characterId?: string) {
   const timers: number[] = [];
   const eventScope = new AbortController();
   let combatMusicUntil = 0;
   let localDance: DanceId | null = null;
   let exited = false;
-  const onExit = (reason?: string) => { if (exited) return; exited = true; eventScope.abort(); audioScene(null); window.removeEventListener('keydown', keys); for (const t of timers) clearInterval(t); net.close(); try { view.app.destroy(true); } catch {} onExit0(reason); };
+  const onExit = (reason?: string) => { if (exited) return; exited = true; closeRecordPanel(); closeCharScreen(); eventScope.abort(); audioScene(null); window.removeEventListener('keydown', keys); for (const t of timers) clearInterval(t); net.close(); try { view.app.destroy(true); } catch {} onExit0(reason); };
   clearUi();
   initAudio();
   const resumeOnGesture = () => initAudio();
   document.addEventListener('pointerdown', resumeOnGesture, { once: true, capture: true, signal: eventScope.signal });
   document.addEventListener('keydown', resumeOnGesture, { once: true, capture: true, signal: eventScope.signal });
   const view = new GameView();
-  const net = new Net(token);
+  const net = new Net(token, characterId);
   const st = {
     sheet: null as CharacterSheet | null, journal: [] as JournalEntry[], dialog: null as DialogView | null, facts: {} as Record<string, unknown>,
     zone: '', sector: '', danger: 'public', action: '', destination: '', cityHourMs: 60000, cityEpoch: 0, luck: 0,
@@ -67,7 +68,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const cityHour = () => ((((Date.now() + net.clockOffset) / st.cityHourMs + st.cityEpoch) % 24) + 24) % 24;
   const gameEl = document.getElementById('game')!;
   gameEl.replaceChildren();
-  await view.init(gameEl, cityHour);
+  try { await view.init(gameEl, cityHour); }
+  catch (err) { eventScope.abort(); try { view.app.destroy(true); } catch {} throw err; }
 
   // ---------------------------------------------------------------- HUD
   const hpBar = h('i', { style: { background: 'var(--red)' } }), stBar = h('i', { style: { background: 'var(--green)' } });
@@ -498,7 +500,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const m = h('div', { class: 'ctx-menu', id: 'target-menu', role: 'menu', style: { left: `${Math.min(window.innerWidth - 300, sp.x + 14)}px`, top: `${Math.max(10, sp.y - 120)}px` } },
       h('div', { class: 'ctx-head' }, h('b', {}, st.sheet?.name ?? 'Tú'), h('button', { class: 'btn small', onclick: () => m.remove() }, '✕')),
       h('div', { class: 'ctx-group' },
-        item('💃 Bailar', 'dance', () => openDances()), item('🫀 Salud y heridas', 'body', () => bodyPanel.toggle(true)), item('🎒 Inventario', 'inventory', () => charScreen('inv')),
+        item('💃 Bailar', 'dance', () => openDances()), item('🫀 Salud y heridas', 'body', () => bodyPanel.toggle(true)), item('🎒 Inventario', 'inventory', () => charScreen('inv')), item('📑 Expediente personal', 'character', () => { if (st.sheet) recordPanel(st.sheet.id); }),
         item(st.sheet?.sleeping ? '☀ Despertar' : '💤 Dormir aquí', 'sleep', () => toggleSleep()), item('🏃 Retirada al refugio', 'retreat', () => retreat())),
       h('div', { class: 'ctx-group' }, h('div', { class: 'ctx-glabel' }, 'Al atacar con clic derecho, apunta a:'),
         h('div', { class: 'ctx-parts' }, ...['torso', 'cabeza', 'brazos', 'manos', 'piernas'].map((pp) => h('button', { class: `chip-btn${aimPart === pp ? ' on' : ''}`, onclick: (ev: Event) => { aimPart = pp; (ev.currentTarget as HTMLElement).parentElement!.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b === ev.currentTarget)); } }, pp)))));
@@ -625,7 +627,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     const a = ARROWS[e.key.toLowerCase()] ?? actionFor(e.key.toLowerCase());
     if (a && MOVE[a] && held.delete(a)) pushSteer();
   }, { signal: eventScope.signal });
-  const openPause = () => pauseMenu({ onSettings: () => settingsPanel(() => view.applySettings()), onLogout: () => onExit('logout'), onKeysChanged: () => { renderToolbar(); chatIn.placeholder = `Chat local (${keyOf('chat')})…`; globalIn.placeholder = `Chat global (${keyOf('chatGlobal')})…`; } });
+  const openPause = () => pauseMenu({ onSettings: () => settingsPanel(() => view.applySettings()), onLogout: () => onExit('logout'), onCharacters: () => onExit(), onKeysChanged: () => { renderToolbar(); chatIn.placeholder = `Chat local (${keyOf('chat')})…`; globalIn.placeholder = `Chat global (${keyOf('chatGlobal')})…`; } });
   const keys = (e: KeyboardEvent) => {
     const tag = (e.target as HTMLElement)?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
@@ -714,12 +716,16 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   net.onPositions = (p) => view.positions(p.ents);
   const life: LifeCtx = { net, toast };
   net.onStatus = (s, detail) => {
+    if (s === 'online') document.getElementById('reconnect-panel')?.remove();
     if (s === 'offline') {
       if (detail === 'auth' || detail === 'no_character') return onExit(detail);
       toast(detail ?? 'Desconectado', 'bad');
       $ui().append(h('div', { class: 'overlay' }, h('div', { class: 'reward' }, h('h2', {}, 'Sesión cerrada'), h('p', {}, detail ?? ''), h('button', { class: 'btn primary', onclick: () => location.reload() }, 'Volver a conectar'))));
     }
-    if (s === 'reconnecting') toast(detail ?? 'Reconectando…', 'warn');
+    if (s === 'reconnecting') {
+      toast(detail ?? 'Reconectando…', 'warn');
+      if (!document.getElementById('reconnect-panel')) $ui().append(h('div', { class: 'reconnect-panel', id: 'reconnect-panel', role: 'status' }, h('b', {}, 'Conexión interrumpida'), h('p', {}, 'Intentando recuperar tu personaje. El servidor debe seguir encendido.'), h('button', { class: 'btn small', onclick: () => onExit() }, 'Volver a mis personajes')));
+    }
   };
   net.onMsg = (m) => {
     switch (m.t) {

@@ -39,13 +39,16 @@ afterAll(async () => { for (const c of clients) c.close(); await app?.close(); }
 describe('hito 1 · corte jugable de Ferro', () => {
   let ana: BotClient, bruno: BotClient, anaToken = '', brunoToken = '';
 
-  it('creación de personaje: valida puntos y una sola vida activa por cuenta', async () => {
+  it('creación de personaje: valida puntos y mantiene vidas independientes por cuenta', async () => {
     const { token } = await BotClient.api(base, '/api/register', { username: 'validar', password: 'password1' });
     const bad = { name: 'Malo', origin: 'callejero', role: 'solo', attributes: { INT: 8, REF: 8, DEX: 8, TECH: 8, COOL: 8, WILL: 8, LUCK: 2, MOVE: 2, BODY: 2, EMP: 2 }, appearance: { skin: '#c89070', hair: '#1a1a1a', jacket: '#40506a', accent: '#43f3ff' } };
     await expect(BotClient.api(base, '/api/characters', bad, token)).rejects.toThrow(/55/);
     const good = { ...bad, attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } };
-    await BotClient.api(base, '/api/characters', good, token);
-    await expect(BotClient.api(base, '/api/characters', { ...good, name: 'Otro' }, token)).rejects.toThrow(/personaje vivo/);
+    const first = await BotClient.api(base, '/api/characters', good, token);
+    const other = await BotClient.api(base, '/api/characters', { ...good, name: 'Otro' }, token);
+    const me = await BotClient.api(base, '/api/me', undefined, token);
+    expect(me.characters.map((c: any) => c.id)).toEqual(expect.arrayContaining([first.id, other.id]));
+    expect(me.character.id).toBe(other.id);
   });
 
   it('dos personas coinciden en el mismo vestíbulo y se ven', async () => {

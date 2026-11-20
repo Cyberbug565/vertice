@@ -1,11 +1,18 @@
 {
   "name": "vertice",
   "private": true,
-  "version": "0.22.0",
+  "version": "0.23.0",
   "type": "module",
   "description": "RPG multijugador persistente isométrico de ambientación cyberpunk (universo original: Ciudad Vértice)",
-  "workspaces": ["shared", "server", "client", "tools/loadtest"],
-  "engines": { "node": ">=22.12" },
+  "workspaces": [
+    "shared",
+    "server",
+    "client",
+    "tools/loadtest"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "dev": "concurrently -n server,client -c magenta,cyan \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "node tools/fetch-assets.mjs && npm run build -w client",
@@ -16,7 +23,8 @@
     "test": "vitest run",
     "test:e2e": "node e2e/two-browsers.mjs",
     "loadtest": "npm run run -w tools/loadtest --",
-    "publicar": "node scripts/publicar.mjs"
+    "publicar": "node scripts/publicar.mjs",
+    "local": "node scripts/local.mjs"
   },
   "devDependencies": {
     "@types/node": "26.6.5",

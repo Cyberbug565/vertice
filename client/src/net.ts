@@ -10,6 +10,8 @@ export class Net {
   private ws?: WebSocket;
   private seq = 1;
   private pingTimer?: number;
+  private retryTimer?: number;
+  private connectTimer?: number;
   private retry = 0;
   private stopped = false;
   status: NetStatus = 'connecting';
@@ -20,7 +22,7 @@ export class Net {
   onPositions: (p: Positions) => void = () => {};
   onStatus: (s: NetStatus, detail?: string) => void = () => {};
 
-  constructor(private token: string) {}
+  constructor(private token: string, private characterId?: string) {}
 
   connect() {
     this.stopped = false;
@@ -29,7 +31,8 @@ export class Net {
     ws.binaryType = 'arraybuffer';
     this.ws = ws;
     this.setStatus(this.retry ? 'reconnecting' : 'connecting');
-    ws.onopen = () => ws.send(JSON.stringify({ t: 'hello', token: this.token, v: PROTOCOL_VERSION, contentVersion: contentHash }));
+    this.connectTimer = window.setTimeout(() => { if (this.status !== 'online') ws.close(); }, 12000);
+    ws.onopen = () => ws.send(JSON.stringify({ t: 'hello', token: this.token, v: PROTOCOL_VERSION, contentVersion: contentHash, characterId: this.characterId }));
     ws.onmessage = (ev) => {
       if (typeof ev.data !== 'string') {
         this.bytesIn += (ev.data as ArrayBuffer).byteLength;
@@ -39,7 +42,7 @@ export class Net {
       }
       this.bytesIn += ev.data.length;
       const m = JSON.parse(ev.data) as ServerMsg;
-      if (m.t === 'welcome') { this.retry = 0; this.setStatus('online'); this.startPing(); }
+      if (m.t === 'welcome') { clearTimeout(this.connectTimer); this.retry = 0; this.setStatus('online'); this.startPing(); }
       if (m.t === 'pong') { const now = performance.now(); this.rtt = now - m.ct; this.clockOffset = m.st - (Date.now() - this.rtt / 2); }
       if (m.t === 'kicked') { this.stopped = true; this.setStatus('offline', m.reason); }
       if (m.t === 'error') {
@@ -50,12 +53,13 @@ export class Net {
       this.onMsg(m);
     };
     ws.onclose = () => {
+      clearTimeout(this.connectTimer);
       clearInterval(this.pingTimer);
       if (this.stopped) return;
       this.retry++;
       const delay = Math.min(8000, 400 * 2 ** Math.min(this.retry, 5));
       this.setStatus('reconnecting', `Reconectando en ${Math.round(delay / 1000)} s…`);
-      setTimeout(() => !this.stopped && this.connect(), delay);
+      this.retryTimer = window.setTimeout(() => !this.stopped && this.connect(), delay);
     };
   }
   private setStatus(s: NetStatus, detail?: string) { this.status = s; this.onStatus(s, detail); }
@@ -71,7 +75,7 @@ export class Net {
     if (this.ws?.readyState === WebSocket.OPEN) this.ws.send(JSON.stringify({ ...m, seq }));
     return seq;
   }
-  close() { this.stopped = true; clearInterval(this.pingTimer); this.ws?.close(); }
+  close() { this.stopped = true; clearInterval(this.pingTimer); clearTimeout(this.retryTimer); clearTimeout(this.connectTimer); this.ws?.close(); }
 }
 
 export const newOpId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()).replace(/-/g, '');

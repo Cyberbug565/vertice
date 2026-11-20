@@ -9,6 +9,7 @@ import type { Survival } from './survival.js';
 import { ambientBrain } from './npc.js';
 import { GameError } from '../game/effects.js';
 import { NET_RANKS, aimOf, chromeParts, effective, perkMods, skillLevel, weaponFits, type PlayerState } from '../game/player.js';
+import { recordActivity } from '../game/records.js';
 import { Wounds } from './wounds.js';
 import { randomUUID as uuid } from 'node:crypto';
 import type { Bounty } from '../game/bounty.js';
@@ -706,13 +707,14 @@ export class Combat {
     if (te.conn) this.w.send(te.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) });
     if (tp.hp <= 0) {
       if (src.police && !lethal && te.conn) { void this.arrest(te.conn); return; }
-      this.sv.downed(te.conn, `${lethal ? 'disparos o heridas' : 'golpes'} de ${src.name}`, tp, te, lethal);
+      this.sv.downed(te.conn, `${lethal ? 'disparos o heridas' : 'golpes'} de ${src.name}`, tp, te, lethal, src.charId ? { charId: src.charId, name: src.name } : undefined);
     }
   }
 
   damageNpc(target: Entity, dmg: number, lethal: boolean, by?: PlayerConn) {
     target.npcHp = (target.npcHp ?? target.npcMax ?? 40) - dmg;
-    target.lastAttacker = by?.e?.id;
+    if (by?.e) target.lastAttacker = by.e.id;
+    if (by?.p) target.lastAttackerInfo = { charId: by.p.charId, name: by.p.name };
     this.bump(target);
     if (by?.e) this.provokeNpc(target, by.e, lethal);
     if ((target.npcHp ?? 0) <= 0) this.npcDowned(target, lethal);
@@ -776,12 +778,19 @@ export class Combat {
     if (target.state !== 'downed') throw new GameError('No está derribado.');
     if (target.dead) throw new GameError('Ya está muerto.');
     target.npcLethalDown = true; target.downedUntil = 0;
-    this.npcDeath(target, c);
+    await this.npcDeath(target, c);
     if (target.faction && target.npcType !== 'civil') await this.repChange(c, target.faction, -15, `${opId}:fac`);
     this.crime(c, target, true, 'kill');
   }
 
   private npcDeath(target: Entity, by?: PlayerConn) {
+    if (target.dead) return Promise.resolve();
+    target.dead = true;
+    const attacker = target.lastAttacker && this.w.entities.get(target.lastAttacker);
+    by ??= attacker ? attacker.conn : undefined;
+    const killer = by?.p ?? (attacker ? this.w.playerOf(attacker) : undefined);
+    const killerId = killer?.charId ?? target.lastAttackerInfo?.charId;
+    const recorded = killerId ? recordActivity(this.w.db, killerId, `npc-death:${randomUUID()}`, 'kill', { name: target.name, kind: 'npc', cause: 'combate', place: target.zone.def.name }) : Promise.resolve();
     for (const o of target.zone.query(target.x, target.y, 20)) if (o.kind === 'player' && o.conn) this.notice(o.conn, 'bad', `${target.name} ha muerto.`);
     if (target.fugitive) {
       const p = by?.p;
@@ -795,6 +804,7 @@ export class Combat {
     if (target.body) target.body.bleed = 0;
     this.w.corpses.onDeath(target, by);
     this.bump(target);
+    return recorded;
   }
 
   /** Consecuencias legales: solo cuenta donde la PCV patrulla. Cobrar recompensas no es delito. */
@@ -1515,8 +1525,8 @@ export class Combat {
       if (e.kind !== 'npc' || e.state !== 'downed' || !e.downedUntil || e.carriedBy) continue;
       if (now < e.downedUntil) continue;
       if (e.dead) { if (e.carriedBy) { const carrier = this.w.entities.get(e.carriedBy); if (carrier?.conn?.p) carrier.conn.p.carrying = null; } this.w.removeEntity(e); continue; }
-      if (e.npcLethalDown) this.npcDeath(e);
-      else { e.state = 'alive'; e.npcHp = Math.round((e.npcMax ?? 40) * 0.5); e.label = 'Aturdido'; e.fleeUntil = now + 10000; this.bump(e); }
+      if (e.npcLethalDown) await this.npcDeath(e);
+      else { e.state = 'alive'; e.lastAttackerInfo = undefined; e.npcHp = Math.round((e.npcMax ?? 40) * 0.5); e.label = 'Aturdido'; e.fleeUntil = now + 10000; this.bump(e); }
     }
     for (const r of [...this.respawnQueue]) {
       if (now < r.at) continue;

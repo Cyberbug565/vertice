@@ -31,7 +31,7 @@ legendId?: string;
   predator?: boolean; escortOf?: number; lootTier?: number; lootChrome?: string[]; dispatchedUntil?: number; callingUntil?: number;
   lastHitBy?: number; lastHitAt?: number; faction?: string; npcMax?: number; defense?: number; weaponId?: string; chrome?: string[];
   aggro?: number; aggroLethal?: boolean; nextAttackAt?: number; fleeUntil?: number; nextPathAt?: number;
-  downedUntil?: number; npcLethalDown?: boolean; lastAttacker?: number; carriedBy?: number; blindUntil?: number;
+  downedUntil?: number; npcLethalDown?: boolean; lastAttacker?: number; lastAttackerInfo?: { charId: string; name: string }; carriedBy?: number; blindUntil?: number;
   respawn?: { zone: string; template: Record<string, unknown> }; hunting?: string; expiresAt?: number;
   pendingAction?: { target: number; action: string; opId: string; part?: import('@vertice/shared').AimZone };
   // ---- v0.4

@@ -15,5 +15,6 @@ ENV NODE_ENV=production PORT=8080 HOST=0.0.0.0 TRUST_PROXY=true
 WORKDIR /app
 COPY --from=build /app /app
 EXPOSE 8080
+VOLUME ["/app/data"]
 HEALTHCHECK --interval=30s --timeout=5s CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||8080)+'/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 CMD ["npx", "tsx", "server/src/main.ts"]

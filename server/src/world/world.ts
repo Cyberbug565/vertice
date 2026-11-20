@@ -32,6 +32,7 @@ import { Admin } from './admin.js';
 import { Nightlife } from './nightlife.js';
 import { Underworld } from './underworld.js';
 import { isSick } from '../game/substances.js';
+import { selectCharacter } from '../game/accounts.js';
 
 export interface PlayerConn {
   ws: WebSocket; accountId: string; username: string; p?: PlayerState; e?: Entity;
@@ -54,7 +55,8 @@ export class World {
   readonly zones = new Map<string, Zone>();
   readonly entities = new Map<number, Entity>();
   readonly conns = new Map<string, PlayerConn>();
-  private lingering = new Map<string, { e: Entity; p: PlayerState; timer: NodeJS.Timeout }>();
+  private lingering = new Map<string, { e: Entity; p: PlayerState; timer: NodeJS.Timeout; queue: Promise<void> }>();
+  private removals = new Map<string, Promise<void>>();
   private attachLocks = new Map<string, Promise<void>>();
   tick = 0;
   private nextId = 1;
@@ -67,6 +69,7 @@ export class World {
   readonly inst: InstanceService;
   readonly effects: EffectEngine;
   private saving = false;
+  private closing = false;
   readonly survival: Survival;
   readonly combat: Combat;
   readonly progress: Progress;
@@ -543,17 +546,20 @@ export class World {
   }
 
   // ---------------------------------------------------------------- sesiones
-  async attach(ws: WebSocket, accountId: string, username: string): Promise<PlayerConn | null> {
+  async attach(ws: WebSocket, accountId: string, username: string, characterId?: string): Promise<PlayerConn | null> {
     const prev = this.attachLocks.get(accountId) ?? Promise.resolve();
     let release!: () => void;
     const lock = new Promise<void>((r) => (release = r));
-    this.attachLocks.set(accountId, prev.then(() => lock));
+    const tail = prev.then(() => lock);
+    this.attachLocks.set(accountId, tail);
     await prev;
-    try { return await this.attachInner(ws, accountId, username); } finally { release(); if (this.attachLocks.get(accountId) === lock) this.attachLocks.delete(accountId); }
+    try { await this.removals.get(accountId); return await this.attachInner(ws, accountId, username, characterId); } finally { release(); if (this.attachLocks.get(accountId) === tail) this.attachLocks.delete(accountId); }
   }
 
-  private async attachInner(ws: WebSocket, accountId: string, username: string): Promise<PlayerConn | null> {
+  private async attachInner(ws: WebSocket, accountId: string, username: string, characterId?: string): Promise<PlayerConn | null> {
     const conn: PlayerConn = { ws, accountId, username, known: new Map(), lastSnapTick: 0, queue: Promise.resolve(), chatTimes: [], closed: false, bytesOut: 0 };
+    if (characterId && !await selectCharacter(this.db, accountId, characterId)) { ws.send(JSON.stringify({ t: 'error', reason: 'no_character' })); ws.close(4004, 'no_character'); return null; }
+    const selected = characterId ?? await activeCharacterId(this.db, accountId);
     const old0 = this.conns.get(accountId);
     const old = old0 && !(old0.p as any)?.dead ? old0 : undefined;
     const ling0 = this.lingering.get(accountId);
@@ -564,14 +570,18 @@ export class World {
       try { old.ws.send(JSON.stringify({ t: 'kicked', reason: 'Has abierto el juego en otra pestaña o dispositivo.' })); old.ws.close(4001, 'replaced'); } catch {}
       this.metrics.inc('kicks');
       await old.queue.catch(() => {});
-      conn.p = old.p; conn.e = old.e;
+      if (old.p?.charId === selected) { conn.p = old.p; conn.e = old.e; }
+      else if (old.e && old.p) { this.conns.delete(accountId); await this.removePlayer(accountId, old.e, old.p); }
       this.metrics.inc('reconnects');
     } else if (ling) {
       clearTimeout(ling.timer); this.lingering.delete(accountId);
-      conn.p = ling.p; conn.e = ling.e;
+      await ling.queue;
+      if (ling.p.charId === selected) { conn.p = ling.p; conn.e = ling.e; }
+      else await this.removePlayer(accountId, ling.e, ling.p);
       this.metrics.inc('reconnects');
-    } else {
-      const charId = await activeCharacterId(this.db, accountId);
+    }
+    if (!conn.p) {
+      const charId = selected;
       if (!charId) { ws.send(JSON.stringify({ t: 'error', reason: 'no_character' })); ws.close(4004, 'no_character'); return null; }
       const p = await loadPlayer(this.db, charId);
       if (!p) { ws.send(JSON.stringify({ t: 'error', reason: 'no_character' })); ws.close(4004, 'no_character'); return null; }
@@ -604,6 +614,7 @@ export class World {
   }
 
   detach(conn: PlayerConn) {
+    if (this.closing) { conn.closed = true; return; }
     if (conn.closed) return;
     if (this.relics.ghosts.has(conn)) this.relics.endGhost(conn, false);
     conn.closed = true;
@@ -614,11 +625,27 @@ export class World {
     this.nightlife.stop(e);
     e.task = undefined; e.channel = undefined; e.path = []; e.pendingInteract = undefined; e.moving = false; e.conn = undefined;
     const danger = dangerAt(e.zone.grid, e.x, e.y);
-    if (danger === 'protected' || this.cfg.lingerSeconds <= 0) { void this.removePlayer(conn.accountId, e, p); return; }
+    if (danger === 'protected' || this.cfg.lingerSeconds <= 0) { this.scheduleRemoval(conn.accountId, e, p, conn.queue); return; }
     // Política breve y defensiva: el personaje permanece unos segundos en el mundo antes de retirarse.
     e.label = 'Desconectado'; e.labelVer++;
-    const timer = setTimeout(() => { this.lingering.delete(conn.accountId); void this.removePlayer(conn.accountId, e, p); }, this.cfg.lingerSeconds * 1000);
-    this.lingering.set(conn.accountId, { e, p, timer });
+    const timer = setTimeout(() => { this.lingering.delete(conn.accountId); this.scheduleRemoval(conn.accountId, e, p, conn.queue); }, this.cfg.lingerSeconds * 1000);
+    this.lingering.set(conn.accountId, { e, p, timer, queue: conn.queue });
+  }
+
+  /** También disponible para las lecturas de la ficha mientras se termina de guardar una desconexión. */
+  playerForAccount(accountId: string, charId?: string) {
+    const p = this.conns.get(accountId)?.p ?? this.lingering.get(accountId)?.p;
+    const e = this.conns.get(accountId)?.e ?? this.lingering.get(accountId)?.e;
+    if (p && e) { const body = this.conns.get(accountId) ? this.relics.bodyOf(this.conns.get(accountId)!) : e; p.x = body.x; p.y = body.y; p.zone = body.zone.id; }
+    return p && !(p as any).dead && (!charId || p.charId === charId) ? p : undefined;
+  }
+
+  async waitForAccountSave(accountId: string) { await this.removals.get(accountId); }
+
+  private scheduleRemoval(accountId: string, e: Entity, p: PlayerState, queue: Promise<void>) {
+    const task = queue.then(() => this.removePlayer(accountId, e, p));
+    this.removals.set(accountId, task);
+    void task.catch((err) => console.error('[guardado]', err)).finally(() => { if (this.removals.get(accountId) === task) this.removals.delete(accountId); });
   }
 
   private async removePlayer(_accountId: string, e: Entity, p: PlayerState) {
@@ -627,7 +654,7 @@ export class World {
     e.zone.remove(e);
     this.entities.delete(e.id);
     p.x = e.x; p.y = e.y; p.zone = e.zone.id;
-    await savePlayerVitals(this.db, p).catch((err) => console.error('[world] no se pudo guardar', err));
+    await savePlayerVitals(this.db, p);
   }
 
   async persistAll() {
@@ -647,9 +674,15 @@ export class World {
   }
 
   async shutdown() {
+    this.closing = true;
     this.stop();
-    for (const [k, l] of this.lingering) { clearTimeout(l.timer); await this.removePlayer(k, l.e, l.p); }
+    for (const c of this.conns.values()) c.closed = true;
+    for (const l of this.lingering.values()) clearTimeout(l.timer);
+    await Promise.all([...this.conns.values()].map((c) => c.queue));
+    for (const [k, l] of this.lingering) { clearTimeout(l.timer); await l.queue; await this.removePlayer(k, l.e, l.p); }
     this.lingering.clear();
+    await Promise.all(this.removals.values());
+    while (this.saving) await new Promise((r) => setTimeout(r, 10));
     await this.persistAll();
   }
 
@@ -657,6 +690,7 @@ export class World {
 
   // ---------------------------------------------------------------- intenciones
   handle(c: PlayerConn, m: ClientMsg) {
+    if (c.closed) return;
     const e = c.e;
     if (!e || !c.p) return;
     this.metrics.inc('msgsIn');

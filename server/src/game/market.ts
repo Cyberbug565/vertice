@@ -1,6 +1,7 @@
 // Red de mercado: las corporaciones fijan el margen de cada categoría y cada tienda ajusta por existencias.
 // Las compras y ventas de los jugadores mueven el precio; la reposición y la política corporativa lo devuelven a su cauce.
 import { randomUUID } from 'node:crypto';
+import { recordActivity } from './records.js';
 import { checkChance, bodyKindOf, hashString, type Content, type ItemCategory, type MarketView, type ShopView } from '@vertice/shared';
 import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
@@ -213,6 +214,7 @@ export class MarketService {
       await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:sell`, p.charId, total, p.money + total, `Venta: ${qty}× ${def.name} en ${sh.name} (${unit} €$/u)`]);
       await q.query('UPDATE characters SET money = money + $2 WHERE id = $1', [p.charId, total]);
       await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'sell', JSON.stringify({ shopId, itemId, qty, total })]);
+      if (def.substance?.kind === 'drug') await recordActivity(q, p.charId, `sale:${opId}`, 'drug_sale', { item: itemId }, qty, total);
     });
     p.money += total;
     p.inventory.set(itemId, (p.inventory.get(itemId) ?? 0) - qty);

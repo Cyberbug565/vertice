@@ -9,7 +9,7 @@ const seq = z.number().int().nonnegative();
 const opId = z.string().min(8).max(64).regex(/^[A-Za-z0-9_-]+$/);
 
 export const ClientMsg = z.discriminatedUnion('t', [
-  z.object({ t: z.literal('hello'), token: z.string().min(10).max(200), v: z.number().int(), contentVersion: z.string() }),
+  z.object({ t: z.literal('hello'), token: z.string().min(10).max(200), v: z.number().int(), contentVersion: z.string(), characterId: z.string().uuid().optional() }),
   z.object({ t: z.literal('move'), seq, x: z.number().finite(), y: z.number().finite() }),
   z.object({ t: z.literal('stop'), seq }),
   // v0.7 · movimiento con WASD (dirección en el mundo; 0,0 = parar), guardia con clic derecho, curar una zona del cuerpo y reparar cromo.
@@ -194,7 +194,7 @@ export interface TargetMenuView {
 }
 export interface FactionsView { factions: { id: string; name: string; kind: string; color: string; archetype: string; desc: string; territory: string[]; rep: number; standing: string; allies: string[]; enemies: string[] }[] }
 export interface AmbarView { active: { plan: string; name: string; usesLeft: number; expiresInMin: number } | null; plans: { id: string; name: string; price: number; days: number; arrival: number; uses: number; revive: number; zones: string[]; color: string; desc: string }[]; money: number }
-export interface DeathSummary { name: string; role: string; profession: string; level: number; cause: string; place: string; money: number; minutesAlive: number; jobs: number; contracts: number }
+export interface DeathSummary { name: string; role: string; profession: string; level: number; cause: string; place: string; money: number; minutesAlive: number; jobs: number; contracts: number; record?: import('./records.js').CharacterRecord }
 
 export interface SubstanceView {
   drunk: number; sick: boolean; hangover: boolean; aim: number; speed: number;

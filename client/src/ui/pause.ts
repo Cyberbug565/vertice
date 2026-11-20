@@ -2,7 +2,7 @@
 import { KEY_ACTIONS, keyLabel, keymap, resetKeys, setKey } from '../keymap';
 import { $ui, h, ask } from './dom';
 
-export function pauseMenu(opts: { onSettings: () => void; onLogout: () => void; onKeysChanged: () => void }) {
+export function pauseMenu(opts: { onSettings: () => void; onLogout: () => void; onKeysChanged: () => void; onCharacters?: () => void }) {
   document.getElementById('pause-menu')?.remove();
   const close = () => ov.remove();
   const ov = h('div', { class: 'overlay pause', id: 'pause-menu', role: 'dialog', 'aria-label': 'Menú' },
@@ -11,6 +11,7 @@ export function pauseMenu(opts: { onSettings: () => void; onLogout: () => void; 
       h('button', { class: 'pbtn', autofocus: true, onclick: close }, '▶ Continuar'),
       h('button', { class: 'pbtn', onclick: () => { close(); opts.onSettings(); } }, '⚙ Ajustes'),
       h('button', { class: 'pbtn', onclick: () => { close(); keysPanel(opts.onKeysChanged); } }, '⌨ Teclas'),
+      opts.onCharacters ? h('button', { class: 'pbtn', onclick: () => { close(); opts.onCharacters!(); } }, 'Mis personajes') : null,
       h('button', { class: 'pbtn danger', onclick: () => { ask('¿Cerrar sesión? Tu personaje se queda donde está (si estás en la calle, unos segundos).', () => { close(); opts.onLogout(); }, { danger: true }); } }, '⏻ Cerrar sesión')));
   ov.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } });
   ov.addEventListener('pointerdown', (e) => { if (e.target === ov) close(); });

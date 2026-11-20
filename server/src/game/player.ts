@@ -9,10 +9,14 @@ import {
 import type { Db, Queryable } from '../db/db.js';
 import { substanceEffects, type SubstanceUse } from './substances.js';
 import { underworldStatus, type UnderworldState } from './underworld.js';
+import { selectedCharacterId } from './accounts.js';
+import { playedMs } from './records.js';
 
 export interface ContractProgress { instanceId: string; contractId: string; version: number; state: 'active' | 'completed' | 'abandoned'; objectives: Record<string, boolean>; outcome?: string | null }
 
 export interface PlayerState {
+  playedMs?: number; playSessionAt?: number;
+  downedBy?: { charId: string; name: string };
   charId: string; accountId: string; name: string; role: string; origin: string;
   attributes: Attributes; skills: Record<string, number>; appearance: Appearance;
   level: number; xp: number; roleRank: number; money: number; hp: number; stamina: number; luck: number; humanity: number;
@@ -300,6 +304,8 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
   const equipped = role.id === 'solo' ? 'pistola-ligera' : role.id === 'lawman' ? 'taser' : role.id === 'nomad' ? 'bate' : 'navaja';
   try {
     await db.tx(async (q) => {
+      // Serializa la selección y creación de vidas dentro de la misma cuenta.
+      await q.query('SELECT id FROM accounts WHERE id=$1 FOR UPDATE', [accountId]);
       await q.query(
         `INSERT INTO characters (id, account_id, name, origin, role, attributes, skills, appearance, money, hp, stamina, luck, humanity, zone_id, pos_x, pos_y, rules_version, content_version, profession, humanity_max)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$13)`,
@@ -308,9 +314,9 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
       await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$3,$4)', [`start-${id}`, id, startMoney, `Fondos iniciales (${origin.name})`]);
       await q.query('UPDATE characters SET money = $2, equipped = $3, skill_xp = $4, wear = $5, bio = $6 WHERE id = $1', [id, startMoney, equipped, JSON.stringify(skillXp), JSON.stringify(wear), bio ? JSON.stringify({ ...bio, done: false }) : null]);
       for (const [def, qty] of items) await q.query('INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4)', [randomUUID(), id, def, qty]);
+      await q.query('UPDATE accounts SET selected_character_id=$2 WHERE id=$1', [accountId, id]);
     });
   } catch (e: any) {
-    if (/characters_one_active_uq/.test(e.message ?? '') || /characters_one_active_uq/.test(e.constraint ?? '')) return { error: 'Ya tienes un personaje vivo en esta cuenta' };
     if (/characters_name_alive_uq/.test(e.message ?? '') || /characters_name_alive_uq/.test(e.constraint ?? '')) return { error: 'Ese nombre ya está en uso' };
     throw e;
   }
@@ -318,8 +324,7 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
 }
 
 export async function activeCharacterId(db: Queryable, accountId: string): Promise<string | null> {
-  const r = await db.query<{ id: string }>("SELECT id FROM characters WHERE account_id = $1 AND status <> 'dead'", [accountId]);
-  return r.rows[0]?.id ?? null;
+  return selectedCharacterId(db, accountId);
 }
 
 export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerState | null> {
@@ -341,6 +346,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
   const invMap = new Map<string, number>(inv.rows.map((x: any) => [x.def_id, x.qty]));
   const wear: Record<string, string> = row.wear ?? ((invMap.get('chaqueta') ?? 0) > 0 ? { torso_ext: 'chaqueta' } : {});
   const p: PlayerState = {
+    playedMs: Number(row.played_ms ?? 0), playSessionAt: Date.now(),
     charId, accountId: row.account_id, name: row.name, role: row.role, origin: row.origin,
     attributes: row.attributes, skills: row.skills, appearance: row.appearance,
     level: row.level, xp: row.xp, roleRank: row.role_rank, money: Number(row.money), hp: row.hp, stamina: row.stamina, luck: row.luck, humanity: row.humanity,
@@ -352,7 +358,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     checks: new Map(checks.rows.map((x: any) => [x.check_key, { success: x.success, roll: x.roll, total: x.total }])),
     hunger: row.hunger, thirst: row.thirst, fatigue: row.fatigue, wanted: row.wanted,
     profession: row.profession, professionRank: row.profession_rank, professionXp: row.profession_xp, autoNeeds: row.auto_needs, activeJob: row.active_job,
-    status: row.status === 'downed' ? 'downed' : 'alive', downedUntil: row.status === 'downed' ? Date.now() + (row.downed_left_ms ?? 30000) : 0, downedCause: 'heridas',
+    status: row.status === 'downed' ? 'downed' : 'alive', downedUntil: row.status === 'downed' ? Date.now() + (row.downed_left_ms ?? 30000) : 0, downedCause: row.downed_cause ?? 'heridas', downedBy: row.downed_by ?? undefined,
     sleeping: null,
     cyber: cyber.rows.map((x: any) => ({ id: x.id, def: x.def_id, location: x.location, stolen: x.stolen, part: x.part })),
     humanityMax: row.humanity_max ?? humanityBase(row.attributes.EMP),
@@ -478,10 +484,10 @@ export function buildJournal(c: Content, p: PlayerState, participants: (instance
 export async function savePlayerVitals(db: Queryable, p: PlayerState) {
   await db.query(`UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4, hp=$5, stamina=$6, luck=$7, stance=$8, hunger=$9, thirst=$10, fatigue=$11, wanted=$12,
      auto_needs=$13, active_job=$14, status=$15, downed_left_ms=$16, equipped=$17, net_xp=$18, net_rank=$19, downed_lethal=$20,
-     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27, autopilot=$28, body=$29, bio=$30, identified=$31, psyche=$32, relics=$33, legends=$34 WHERE id=$1 AND status <> 'dead'`,
+     skill_xp=$21, perks=$22, skill_points_spent=$23, wear=$24, second_life_at=$25, level=$26, xp=$27, autopilot=$28, body=$29, bio=$30, identified=$31, psyche=$32, relics=$33, legends=$34, played_ms=$35, downed_by=$36, downed_cause=$37 WHERE id=$1 AND status <> 'dead'`,
     [p.charId, p.zone, p.x, p.y, Math.round(p.hp), Math.round(p.stamina), p.luck, p.stance, p.hunger, p.thirst, p.fatigue, p.wanted, p.autoNeeds, p.activeJob,
       p.status, p.status === 'downed' ? Math.max(0, p.downedUntil - Date.now()) : null, p.equipped, p.netXp, p.netRank, p.downedLethal,
-      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp, JSON.stringify({ on: p.auto.on, personality: p.auto.personality }), JSON.stringify(p.body), p.bio ? JSON.stringify(p.bio) : null, p.identified ? JSON.stringify(p.identified) : null, JSON.stringify(p.psyche), JSON.stringify(p.relics ?? { matrices: [], socketExtra: 0 }), JSON.stringify(p.legends ?? {})]);
+      JSON.stringify(p.skillXp), JSON.stringify(p.perks), p.skillPointsSpent, JSON.stringify(p.wear), p.secondLifeAt, p.level, p.xp, JSON.stringify({ on: p.auto.on, personality: p.auto.personality }), JSON.stringify(p.body), p.bio ? JSON.stringify(p.bio) : null, p.identified ? JSON.stringify(p.identified) : null, JSON.stringify(p.psyche), JSON.stringify(p.relics ?? { matrices: [], socketExtra: 0 }), JSON.stringify(p.legends ?? {}), playedMs(p), p.downedBy ? JSON.stringify(p.downedBy) : null, p.downedCause]);
 }
 
 /** Puntos de habilidad y de perk disponibles: se ganan al subir de nivel (y los de perk también cada 5 niveles de habilidad). */

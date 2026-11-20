@@ -691,3 +691,36 @@ body.hack-mode canvas { cursor: crosshair !important; filter: hue-rotate(-12deg)
 .loot-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 8px; font-size: 0.85em; }
 .loot-empty { margin: 10px 0 0; }
 @media (max-width: 900px) { .loot-mini { right: 16px; top: 70px; } }
+
+/* Cuenta, vidas y expediente: las mismas pantallas en local y en publicación. */
+.account-menu { width: min(840px, 95vw); }
+.character-roster, .memorial-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; max-height: 46vh; overflow: auto; padding: 3px; }
+.roster-card { border: 1px solid #303d51; background: #101925; border-radius: 9px; padding: 14px; display: flex; flex-direction: column; gap: 9px; }
+.roster-card.selected { border-color: #43f3ff; background: #132737; box-shadow: inset 3px 0 #43f3ff; }
+.roster-pick { display: flex; flex-direction: column; gap: 8px; width: 100%; border: 0; padding: 0; background: transparent; text-align: left; color: inherit; cursor: pointer; font: inherit; }
+.roster-pick strong { font-size: 1.2rem; }
+.eyebrow { color: #7b9fb5; font: 10px ui-monospace, monospace; letter-spacing: .12em; }
+.record-overlay { z-index: 2000; background: #040810d9; padding: 16px; }
+.record-shell { width: min(1000px, 97vw); max-height: 92vh; display: flex; flex-direction: column; border: 1px solid #335165; border-radius: 12px; background: #0b131e; color: #e1edf4; box-shadow: 0 20px 100px #0009; overflow: hidden; }
+.record-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 26px; border-bottom: 1px solid #2a3a49; background: #101d2b; }
+.record-head h2 { margin: 7px 0; font-size: clamp(18px, 2vw, 25px); }
+.record-shell > .error:not(:empty) { padding: 10px 24px; }
+.record-body { overflow: auto; padding: 24px; }
+.record-identity { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 18px; }
+.record-identity h3 { font-size: 19px; margin: 12px 0 8px; }
+.record-work { display: flex; flex-direction: column; gap: 7px; padding: 12px 18px; border-left: 2px solid #48dcba; min-width: 200px; }
+.record-work strong { font-size: 18px; }
+.record-cause { border-left: 2px solid #ff6484; background: #491e2a55; padding: 12px 16px; }
+.record-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 8px 0 16px; }
+.record-stat { padding: 15px 12px; border: 1px solid #283d50; border-radius: 7px; background: #121f2e; }
+.record-stat dt { color: #92aebe; font-size: 11px; }
+.record-stat dd { margin: 10px 0 0; color: #6ef2dc; font: 600 clamp(16px, 1.6vw, 22px) ui-monospace, monospace; }
+.record-section { border-top: 1px solid #263746; padding: 4px 0; }
+.record-section summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 12px 4px; font-size: 14px; }
+.record-section summary:before { content: '+'; margin-right: 10px; color: #43f3ff; }
+.record-section[open] summary:before { content: '−'; }
+.record-section summary .badge { margin-left: auto; }
+.record-list { margin: 0; padding: 0 8px 12px 25px; color: #b5c8d6; font-size: 13px; }
+.record-list li { padding: 7px 0; }
+.reconnect-panel { position: fixed; z-index: 1500; top: 18px; left: 50%; transform: translateX(-50%); max-width: 420px; padding: 16px; background: #241b15f5; border: 1px solid #cfa664; border-radius: 9px; pointer-events: auto; }
+@media (max-width: 650px) { .record-stats { grid-template-columns: repeat(2, 1fr); } .record-identity { align-items: flex-start; flex-direction: column; gap: 8px; } .record-head, .record-body { padding: 16px; } .record-work { min-width: 0; } }
