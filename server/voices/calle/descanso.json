@@ -1,0 +1,111 @@
+{
+  "id": "descanso",
+  "requiere": {
+    "all": [
+      "cerca:bench"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Queda libre ese lado del banco?",
+      "respuestas": [
+        "Salvo que tenga cita la paloma.",
+        "Mi amigo tarda, siéntate.",
+        "Te aparto estas bolsas.",
+        "Mejor el otro lado, hay un tornillo.",
+        "Es tuyo por una historia nueva."
+      ]
+    },
+    {
+      "abre": "¿Para qué traes lápiz al descanso?",
+      "respuestas": [
+        "Dibujo la misma esquina cada estación.",
+        "Tacho lo que ya no me preocupa.",
+        "El papel sobrevive a mi batería.",
+        "Ensayo la firma de mi nuevo nombre.",
+        "Llevo los tantos del dominó."
+      ]
+    },
+    {
+      "abre": "¿Ves la grieta con forma de río?",
+      "respuestas": [
+        "La sigo hasta el bordillo.",
+        "Yo veo un dragón con hipo.",
+        "Ayer flotaban barcos de hoja.",
+        "Un río que no me marea.",
+        "En su puerto brotó una ramita."
+      ]
+    },
+    {
+      "abre": "¿Me despiertas en diez minutos?",
+      "respuestas": [
+        "Al pasar el camión del reparto.",
+        "Si tú me despiertas primero.",
+        "Pongo dos alarmas por si acaso.",
+        "Apóyate aquí para no perder el visor.",
+        "La última vez preguntaste en sueños."
+      ]
+    },
+    {
+      "abre": "¿Quién hizo una bufanda al árbol?",
+      "respuestas": [
+        "Sobró lana en el centro.",
+        "Mi abuela cree que encoge en invierno.",
+        "Es el color del grupo de jardinería.",
+        "Una señora que espera que florezca.",
+        "Le dejaron bastante hueco para crecer."
+      ]
+    },
+    {
+      "abre": "¿Dónde conseguiste ese libro de papel?",
+      "respuestas": [
+        "En el estante del portal amarillo.",
+        "Aquí está el billete que guardaba mi madre.",
+        "Lo cambié por dos pilas.",
+        "Calzaba la mesa del bar.",
+        "Es del quiosco. Se devuelve con nota."
+      ]
+    },
+    {
+      "abre": "¿A qué juegan esos mayores?",
+      "respuestas": [
+        "A resistirse a darle pan al pájaro.",
+        "Al dominó. Once años de desempate.",
+        "A nombrar edificios derribados.",
+        "Cartas; el pañuelo rojo lo cuenta todo.",
+        "Esperan a fichar a quien pregunte."
+      ]
+    },
+    {
+      "abre": "¿Cuánto te queda de descanso?",
+      "respuestas": [
+        "Dos sorbos y un cordón.",
+        "Lo que dure tu historia.",
+        "Tres minutos para mí, uno para mi jefe.",
+        "Libro hoy. Vine por vosotros.",
+        "Un sol entero de este lado."
+      ]
+    },
+    {
+      "abre": "¿Quieres media mandarina?",
+      "respuestas": [
+        "Siempre elijo los gajos desparejados.",
+        "Guárdala para tu regreso.",
+        "Te doy un trozo de queso.",
+        "Me basta la cáscara por el olor.",
+        "Gracias. Toma un pañuelo para las manos."
+      ]
+    },
+    {
+      "abre": "¿Es nueva la placa del banco?",
+      "respuestas": [
+        "Es por quien enseñaba a silbar aquí.",
+        "Le falta una letra a mi apellido.",
+        "Hay que sentarse para leerla.",
+        "La fecha es de cuando plantaron el fresno.",
+        "Que siga poniendo que cabe cualquiera."
+      ]
+    }
+  ]
+}

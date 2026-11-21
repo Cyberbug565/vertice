@@ -1,0 +1,111 @@
+{
+  "id": "ferro",
+  "requiere": {
+    "all": [
+      "barrio:ferro"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Sigue atascado el ascensor?",
+      "respuestas": [
+        "Entre el segundo y el lunes.",
+        "La portera ha bajado sillas.",
+        "Lo adelanté por la escalera.",
+        "Para subir exige compañía.",
+        "Ya funciona. Echo de menos las tertulias."
+      ]
+    },
+    {
+      "abre": "¿Quién cuida el limonero del tejado?",
+      "respuestas": [
+        "Cada piso riega un día.",
+        "Mi abuelo le habla por la rejilla.",
+        "La del cuarto, desde que tenía dos hojas.",
+        "Nadie confiesa quién cogió el primer limón.",
+        "Lo plantó Paco; lo cuida medio Ferro."
+      ]
+    },
+    {
+      "abre": "¿No eran grises los buzones?",
+      "respuestas": [
+        "Los niños votaron colores de helado.",
+        "Es imprimación. Mañana volverán al gris.",
+        "El mío sigue gris bajo los avisos.",
+        "Los pintaron según cuánto chirrían.",
+        "Solo ha cambiado el tuyo, cumpleañero."
+      ]
+    },
+    {
+      "abre": "En mi patio se oye hasta cortar pan.",
+      "respuestas": [
+        "En mi casa sabemos quién desayuna tostadas.",
+        "Intercambiamos cotilleos culinarios el domingo.",
+        "Mi vecino afila a las siete.",
+        "Si preparas sopa, avísame tú.",
+        "Así conocí a mi pareja: pedí otra rebanada."
+      ]
+    },
+    {
+      "abre": "¿Queda agua caliente en el bloque?",
+      "respuestas": [
+        "Busca la tregua entre dos duchas.",
+        "Trae un cubo, en mi piso hay.",
+        "Hoy llega por el grifo azul.",
+        "Igual si preguntas deprisa.",
+        "El depósito nuevo da para toda la escalera."
+      ]
+    },
+    {
+      "abre": "La portera guarda llaves huérfanas.",
+      "respuestas": [
+        "Una abre mi armario. Me da corte probarlas.",
+        "Mi hija hace música con ellas.",
+        "Ahí estaba la del piso de la abuela.",
+        "Algunas son de puertas demolidas.",
+        "Las etiqueta por el sonido al caer."
+      ]
+    },
+    {
+      "abre": "¿Qué festejan en ese balcón?",
+      "respuestas": [
+        "La pequeña aprobó mecánica.",
+        "El del quinto vuelve del hospital.",
+        "En Ferro siempre sobra un plato.",
+        "Una boda. El novio sale por el visor.",
+        "El último plazo de la nevera."
+      ]
+    },
+    {
+      "abre": "¿Puedo pisar el mosaico del patio?",
+      "respuestas": [
+        "Si te quitas las botas de obra.",
+        "Ya tiene la firma del gato.",
+        "La vecina pidió esperar a mañana.",
+        "Pisa los bordes, el azul mancha.",
+        "Para eso mismo lo hemos puesto."
+      ]
+    },
+    {
+      "abre": "¿De quién es el dibujo del portal?",
+      "respuestas": [
+        "Lo empezó una niña y acabó el cartero.",
+        "De todas esas manos pintadas.",
+        "De Nora, que dibuja sol en los muros.",
+        "Lo calcó mi abuelo de la acera antigua.",
+        "Sin firma nadie podrá venderlo."
+      ]
+    },
+    {
+      "abre": "Gotea el toldo del diecisiete.",
+      "respuestas": [
+        "Pon mi cubo, suena más afinado.",
+        "Ayer juraban que solo con lluvia.",
+        "La de abajo ha plantado menta.",
+        "Falta el canalón nuevo.",
+        "Es mi sobrino regando otra vez."
+      ]
+    }
+  ]
+}

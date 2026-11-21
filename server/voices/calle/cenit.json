@@ -1,0 +1,111 @@
+{
+  "id": "cenit",
+  "requiere": {
+    "all": [
+      "barrio:cenit"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Te has visto reflejado en esa torre?",
+      "respuestas": [
+        "Yo y cien versiones más delgadas.",
+        "Solo veo mis zapatos. Qué vergüenza.",
+        "Me devolvió tarde la sonrisa.",
+        "Me saludé por educación.",
+        "Parece que piso una nube."
+      ]
+    },
+    {
+      "abre": "¿A quién saludan los tornos de Cénit?",
+      "respuestas": [
+        "A las chaquetas caras, supongo.",
+        "Llevo once años siendo visitante.",
+        "Al de los bollos, por su nombre.",
+        "Mi pase dice invitada. El torno, mamá.",
+        "A todos con la misma voz cansada."
+      ]
+    },
+    {
+      "abre": "¿Hay que fichar para entrar al jardín?",
+      "respuestas": [
+        "Solo si quieres un árbol con enchufe.",
+        "El jardinero sí. Las palomas, gratis.",
+        "Mi pase admite acompañante.",
+        "Han pintado una puerta en el muro.",
+        "Antes bastaba saludar al portero."
+      ]
+    },
+    {
+      "abre": "La fuente cambia con los ascensores.",
+      "respuestas": [
+        "La violeta llega al piso más alto.",
+        "Estarán todos comiendo ahora.",
+        "Mi primo sabe así cuándo viene la jefa.",
+        "La roja parece zumo al sol.",
+        "En el apagón vi que era agua clara."
+      ]
+    },
+    {
+      "abre": "¿Deportivas con ese traje?",
+      "respuestas": [
+        "La entrevista es arriba y falla el ascensor.",
+        "Olvidé mis zapatos en el taxi.",
+        "Para correr al bus no sirve la elegancia.",
+        "Las llevaba cuando me contrataron.",
+        "Tengo boda después del turno."
+      ]
+    },
+    {
+      "abre": "¿Te leen la corbata al entrar?",
+      "respuestas": [
+        "Lleva impresa mi acreditación.",
+        "La mía delata mi almuerzo.",
+        "Torcida me manda a la reunión de imagen.",
+        "Al portero le gustan los dibujos.",
+        "Por eso mi padre guarda la pajarita."
+      ]
+    },
+    {
+      "abre": "El limpiacristales mira hacia dentro.",
+      "respuestas": [
+        "Su hija presenta un proyecto hoy.",
+        "Querrá saber qué comen con tanto cubierto.",
+        "Saluda al relevo de la tarde.",
+        "Tiene mejores vistas hacia el otro lado.",
+        "Se ha visto sin neón por primera vez."
+      ]
+    },
+    {
+      "abre": "¿Para qué es esa fila tan ordenada?",
+      "respuestas": [
+        "Para sacar turno en otra con sillas.",
+        "Dan café por opinar del vestíbulo.",
+        "Yo estoy por la sombra.",
+        "Buscan al sustituto del robot que ordena la cola.",
+        "Es la foto del personal temporal."
+      ]
+    },
+    {
+      "abre": "¿Hay una nube en el vestíbulo?",
+      "respuestas": [
+        "Es vapor para el jardín vertical.",
+        "Han abierto la cocina durante la presentación.",
+        "La exposición es sobre cielos perdidos.",
+        "El humidificador me despeinó ayer.",
+        "Que llueva fuera de horario, por favor."
+      ]
+    },
+    {
+      "abre": "¿Se ve Ferro desde tan arriba?",
+      "respuestas": [
+        "Busca el toldo naranja de mi madre.",
+        "Hasta el tendedero si lavan los cristales.",
+        "Desde mi mesa veo reflejada otra mesa.",
+        "En el mapa del vestíbulo es un punto.",
+        "Mi primer día busqué mi propia calle."
+      ]
+    }
+  ]
+}

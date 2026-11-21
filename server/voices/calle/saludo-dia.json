@@ -1,0 +1,15 @@
+{
+  "id": "saludo-dia",
+  "requiere": {
+    "all": [
+      "dia",
+      "saludo"
+    ]
+  },
+  "comentarios": [
+    "Buen día. Por la sombra se va mejor.",
+    "Pasa tú, que no tengo prisa.",
+    "¿También te despertó el camión del reparto?"
+  ],
+  "escenas": []
+}

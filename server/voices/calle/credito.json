@@ -1,0 +1,111 @@
+{
+  "id": "credito",
+  "requiere": {
+    "all": [
+      "cerca:atm"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Te felicitó el cajero por tu cumpleaños?",
+      "respuestas": [
+        "Me cobró el saludo.",
+        "Con la voz de mi profesor.",
+        "Fue el primero del día.",
+        "Hoy no cumplo, ese es el problema.",
+        "Regaló un cupón para mis velas."
+      ]
+    },
+    {
+      "abre": "Se me rompió el monedero vacío.",
+      "respuestas": [
+        "Llevabas demasiados recibos.",
+        "El vacío pesa a fin de mes.",
+        "Mi tía aprovecha el cierre.",
+        "Te queda el bolsillo pequeño.",
+        "¿Y la piedra que te regaló la niña?"
+      ]
+    },
+    {
+      "abre": "¿Entiendes un recibo de esos eternos?",
+      "respuestas": [
+        "Empiezo abajo y lloro hacia arriba.",
+        "Mi hijo hace cometas con ellos.",
+        "Hay una lupa en el mostrador.",
+        "Separa depósitos de compras primero.",
+        "Sé leerlos. Doblarlos es peor."
+      ]
+    },
+    {
+      "abre": "Me ha llegado una peseta virtual.",
+      "respuestas": [
+        "¿Es de cuando compartíamos piso?",
+        "Mi padre comprueba así las cuentas.",
+        "Alguien se acordó de ti.",
+        "Mira la referencia, será devolución.",
+        "Espero que sobreviva a las comisiones."
+      ]
+    },
+    {
+      "abre": "¿Compartimos el almuerzo?",
+      "respuestas": [
+        "Hoy invito, pagaste el desayuno.",
+        "A medias salvo tu torre de postre.",
+        "Mañana cobro, ¿adelantas hoy?",
+        "Está apuntado en la servilleta.",
+        "Han cobrado el pan. Que lo traigan."
+      ]
+    },
+    {
+      "abre": "¿Nadie arregla la fecha del cajero?",
+      "respuestas": [
+        "Costará más de lo que contiene.",
+        "Vino ayer, que según él es mañana.",
+        "Así todavía soy joven.",
+        "Tiene cinta desde la última nevada.",
+        "Ya perdí dos cumpleaños de intereses."
+      ]
+    },
+    {
+      "abre": "¿Por qué guardas ese billete descolorido?",
+      "respuestas": [
+        "Me lo dio mi abuelo en mi primer turno.",
+        "El número coincide con mi boda.",
+        "Es de una fábrica que pagaba en papel.",
+        "Huele a la cartera de mi madre.",
+        "Ya nadie puede darme cambio."
+      ]
+    },
+    {
+      "abre": "¿Te fías de la hucha que habla?",
+      "respuestas": [
+        "Si da las gracias y calla.",
+        "Ha contado más secretos que monedas.",
+        "La silencié tras el divorcio.",
+        "Mi sobrino ahorra si le canta.",
+        "El altavoz ocupa media hucha."
+      ]
+    },
+    {
+      "abre": "Hoy me devolvieron el cambio en caldo.",
+      "respuestas": [
+        "Con el frío has salido ganando.",
+        "Me deben medio litro del martes.",
+        "¿En qué bolsillo lo guardas?",
+        "Aquí el trueque tiene solera.",
+        "Dame un sorbo y estamos en paz."
+      ]
+    },
+    {
+      "abre": "¿Te anularon el cobro doble?",
+      "respuestas": [
+        "Me atendió una persona y me despisté.",
+        "Solo devolvieron el pequeño.",
+        "Quieren ver mi recibo en el puesto.",
+        "Sí, con dos confirmaciones.",
+        "Me lo apuntaron a favor en la libreta."
+      ]
+    }
+  ]
+}

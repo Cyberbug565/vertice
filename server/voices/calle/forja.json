@@ -1,0 +1,111 @@
+{
+  "id": "forja",
+  "requiere": {
+    "all": [
+      "barrio:forja"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Notas el suelo antes de la sirena?",
+      "respuestas": [
+        "Me vibra la cuchara un segundo antes.",
+        "Creía que la calle respiraba.",
+        "Mi rodilla nueva aún se extraña.",
+        "Mira el vaso, ahí viene.",
+        "Sí. Los perros se levantan primero."
+      ]
+    },
+    {
+      "abre": "¿Has perdido otro guante?",
+      "respuestas": [
+        "El mismo por tercera vez.",
+        "Ya tengo cinco izquierdos.",
+        "Hoy solo pica este lado.",
+        "Lo tiene mi aprendiz, rompió el suyo.",
+        "Está secándose en la barandilla."
+      ]
+    },
+    {
+      "abre": "¿Viste la escultura de recortes?",
+      "respuestas": [
+        "Reconocí mi primera prensa.",
+        "Parece un pájaro. Mi jefe ve una grapadora.",
+        "Mi niña puso la cola de chapa.",
+        "La pintan cada viernes.",
+        "Silba cuando gira el viento."
+      ]
+    },
+    {
+      "abre": "¿Qué hay en esa fiambrera doble?",
+      "respuestas": [
+        "Guiso abajo. Notas de mi hija arriba.",
+        "Comida para quien olvide la suya.",
+        "Un bollo que nadie debe descubrir.",
+        "Mi cena y el desayuno de mañana.",
+        "Dos tortillas. La nave está dividida."
+      ]
+    },
+    {
+      "abre": "El mecánico escribe poemas en las facturas.",
+      "respuestas": [
+        "Rimó rodamiento con arrepentimiento.",
+        "Guardé el de mi cambio de eje.",
+        "A mí me tocó el de la morosidad.",
+        "La contable corrige la métrica en rojo.",
+        "Mejor que el dibujo de mi avería."
+      ]
+    },
+    {
+      "abre": "¿De dónde cae esa nieve negra?",
+      "respuestas": [
+        "Del abrigo que sacuden arriba.",
+        "Hoy sopla carbonilla hacia los patios.",
+        "De la chimenea que iban a jubilar.",
+        "Ni se te ocurra hacer bolas.",
+        "Sacúdete antes de entrar a comer."
+      ]
+    },
+    {
+      "abre": "Suena distinta la sirena del horno.",
+      "respuestas": [
+        "Aún se reconoce el barrio.",
+        "Mi abuelo la afinaba de oído.",
+        "Hay una lona sobre la rejilla.",
+        "Parece que anuncia la sopa.",
+        "Quise grabarla y pasó un camión."
+      ]
+    },
+    {
+      "abre": "¿Conservas tu primer remache?",
+      "respuestas": [
+        "En un cordón. Suspendió la prueba.",
+        "Sigue en un puente que aguanta.",
+        "Mi maestro lo tiene en su caja.",
+        "Lo cambié por mi primera pinta.",
+        "Sí, y aún me cabe aquel mono."
+      ]
+    },
+    {
+      "abre": "¿Te arreglaron la taquilla torcida?",
+      "respuestas": [
+        "Ahora abre cantando.",
+        "La levantaron con media baldosa.",
+        "Me cambié con alguien más bajo.",
+        "Tengo que pedir sitio a la de al lado.",
+        "Dibujaron una cara sobre la abolladura."
+      ]
+    },
+    {
+      "abre": "¿Hace tanto calor en la nave?",
+      "respuestas": [
+        "Mi queso llegó fundido.",
+        "Tengo un abanico del sindicato.",
+        "La camisa se seca antes de colgarla.",
+        "Fuera del horno parece noviembre.",
+        "Mi padre mide el calor en jarras de agua."
+      ]
+    }
+  ]
+}

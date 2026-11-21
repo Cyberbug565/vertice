@@ -1,0 +1,112 @@
+{
+  "id": "musica",
+  "requiere": {
+    "any": [
+      "barrio:neon-rojo",
+      "noche"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿De dónde sale el ritmo de tres golpes?",
+      "respuestas": [
+        "Del zapatero, que se salta el cuarto.",
+        "Del ensayo al otro lado del patio.",
+        "Del tren al pasar tres juntas.",
+        "Del chico de los cubos de pintura.",
+        "Del corazón de ese anuncio estropeado."
+      ]
+    },
+    {
+      "abre": "El violinista dejó una nota colgando.",
+      "respuestas": [
+        "La calle entera espera la siguiente.",
+        "Rompió una cuerda. Escucha el cambio.",
+        "A que termina desde la otra esquina.",
+        "Quiere oír a la niña que contesta.",
+        "Aún vibra en esta barandilla."
+      ]
+    },
+    {
+      "abre": "¿Dónde ensayamos sin molestar?",
+      "respuestas": [
+        "En el sótano de la lavandería al cierre.",
+        "Mi abuela oye poco y ama el contrabajo.",
+        "En el patio si el bebé ya ha dormido.",
+        "Los miércoles hay hueco en la peña.",
+        "Mi taller queda vacío al salir."
+      ]
+    },
+    {
+      "abre": "¿Sabes tocar sin batería?",
+      "respuestas": [
+        "Las palmas y a veces mal.",
+        "Tengo una flauta de lata.",
+        "El piano de la estación si sujetas la tapa.",
+        "Dos acordes y medio.",
+        "La caja del visor sirve de tambor."
+      ]
+    },
+    {
+      "abre": "¿Quién se queda con la gorra del dinero?",
+      "respuestas": [
+        "Dicen que reparten por peso de instrumento.",
+        "Hoy paga una cuerda para Vera.",
+        "El perro custodia y la violinista cuenta.",
+        "Una moneda mía entró rodando.",
+        "El último compra cena para todos."
+      ]
+    },
+    {
+      "abre": "¿Por qué grabas los pasos?",
+      "respuestas": [
+        "Quiero una avenida en la percusión.",
+        "Busco el sonido de los zapatos de mi padre.",
+        "Al abrir el mercado cambia el compás.",
+        "Necesito tres suelos para la radionovela.",
+        "Si te paras me estropeas el final."
+      ]
+    },
+    {
+      "abre": "¿A qué suena ese instrumento de vidrio?",
+      "respuestas": [
+        "A una copa con un secreto dentro.",
+        "A lluvia con los dedos mojados.",
+        "Al silbato de mi puerto natal.",
+        "Más grave de lo que parece.",
+        "A diez años ahorrando para no soltarlo."
+      ]
+    },
+    {
+      "abre": "¿Hay baile sin altavoces?",
+      "respuestas": [
+        "Mi tía baila con las obras.",
+        "Yo cuento los pasos mentalmente.",
+        "Anoche bailaron con la cafetera.",
+        "La pareja ya trae otro compás.",
+        "Es cuando se oyen los tacones."
+      ]
+    },
+    {
+      "abre": "¿Por qué se oye más el bajo arriba?",
+      "respuestas": [
+        "Mi tubería hace de altavoz.",
+        "La del quinto tiene primera fila en cama.",
+        "Toca la pared, ahí está la canción.",
+        "El técnico culpa al hueco de escalera.",
+        "Abajo igual encontramos la batería."
+      ]
+    },
+    {
+      "abre": "¿Aplaudo o falta una estrofa?",
+      "respuestas": [
+        "Espera a que abra los ojos.",
+        "Si vas a tiempo lo meterá en el tema.",
+        "Falta la dedicada a su hermano.",
+        "Ahora sí. Bajó el arco.",
+        "La primera fila tampoco lo sabe."
+      ]
+    }
+  ]
+}

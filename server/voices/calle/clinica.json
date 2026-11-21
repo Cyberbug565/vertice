@@ -1,0 +1,112 @@
+{
+  "id": "clinica",
+  "requiere": {
+    "any": [
+      "servicio:clinica",
+      "cromo:visible"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Tu rodilla nueva también hace clic?",
+      "respuestas": [
+        "Al subir tres pisos seguidos.",
+        "La mía canta cuando va a llover.",
+        "Eso son mis llaves del bolsillo.",
+        "Tras ajustarme la junta dejó de hacerlo.",
+        "Se calló al cambiar de botas."
+      ]
+    },
+    {
+      "abre": "La cola de la clínica no avanza.",
+      "respuestas": [
+        "El cartel sigue celebrando el cuarenta.",
+        "Tengo el cuarenta y tampoco he entrado.",
+        "Atienden una urgencia, podemos esperar.",
+        "Te paso las revistas menos antiguas.",
+        "Pongo alarma y traigo dos caldos."
+      ]
+    },
+    {
+      "abre": "¿Aparecieron tus gafas tras cambiar de ojos?",
+      "respuestas": [
+        "Las llevaba puestas. Ni me acordaba.",
+        "Las usa mi hermana. Le quedan mejor.",
+        "Las guardé para recordar mi cara antigua.",
+        "Me dieron la funda de otro.",
+        "Sí. Explicárselo al seguro fue peor."
+      ]
+    },
+    {
+      "abre": "¿Te acompaño a la revisión?",
+      "respuestas": [
+        "Ven, que luego olvido mis preguntas.",
+        "Hasta la puerta, dentro prefiero entrar solo.",
+        "Si no te importa esperar, sí.",
+        "Lleva tú la carpeta y yo el paraguas.",
+        "La cambiaron al jueves. ¿Puedes?"
+      ]
+    },
+    {
+      "abre": "Mi brazo reconoce la voz de mi madre.",
+      "respuestas": [
+        "El mío solo conoce al cobrador.",
+        "Así sabe cuándo llevar chaqueta.",
+        "¿Te corrige al coger la cuchara?",
+        "Conserva su grabación, la echarías de menos.",
+        "Le hablará incluso mientras carga."
+      ]
+    },
+    {
+      "abre": "¿Por qué traes una naranja a consulta?",
+      "respuestas": [
+        "Quiero pelarla sin hacerla puré.",
+        "Es para quien me guardó la cita.",
+        "Para comparar colores después del ajuste.",
+        "Vine a la hora de merendar.",
+        "Para saber cuándo vuelve el olfato."
+      ]
+    },
+    {
+      "abre": "¿Qué carcasa has elegido?",
+      "respuestas": [
+        "Con las pecas de mi abuelo.",
+        "Azul taller. Mejora al rayarse.",
+        "Transparente, para ver las piezas.",
+        "Los colores de mis dos pequeños.",
+        "Estoy mirando la muestra al sol."
+      ]
+    },
+    {
+      "abre": "¿Quién bordó los cables del guante?",
+      "respuestas": [
+        "Mi tía, para que la recuerde al saludar.",
+        "Un aprendiz que cobra demasiado poco.",
+        "Yo, con la mano en garantía.",
+        "La misma chica que arregló mi abrigo.",
+        "La funda trae los canales vistos."
+      ]
+    },
+    {
+      "abre": "Me saludó el espejo de la consulta.",
+      "respuestas": [
+        "A mí me pidió que me enfocara.",
+        "Si dice mi nombre cambia de silla.",
+        "Tiene la voz del médico antiguo.",
+        "Simpático hasta enseñarte la factura.",
+        "Yo saludo primero por llevarle la contraria."
+      ]
+    },
+    {
+      "abre": "Vuelvo a oír por la izquierda.",
+      "respuestas": [
+        "Siéntate aquí, por este lado cuento mejores chistes.",
+        "Te guardo sitio junto al trío de cuerda.",
+        "¿Has vuelto a oír hervir el café?",
+        "Te hablaré bajito, por si acaso.",
+        "Espera al amanecer. El barrendero tararea precioso."
+      ]
+    }
+  ]
+}

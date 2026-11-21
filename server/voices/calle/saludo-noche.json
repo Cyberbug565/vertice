@@ -1,0 +1,15 @@
+{
+  "id": "saludo-noche",
+  "requiere": {
+    "all": [
+      "noche",
+      "saludo"
+    ]
+  },
+  "comentarios": [
+    "Buenas noches. Hoy hasta la calle tiene sueño.",
+    "Qué gusto cuando baja el ruido.",
+    "Que se te haga corto el camino."
+  ],
+  "escenas": []
+}

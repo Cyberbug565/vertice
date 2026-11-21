@@ -1,0 +1,111 @@
+{
+  "id": "arrabal",
+  "requiere": {
+    "all": [
+      "barrio:arrabal"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Funciona la antena de cucharas?",
+      "respuestas": [
+        "Capta hasta la radio del zapatero.",
+        "Mientras nadie quiera sopa, sí.",
+        "Solo con viento del sur.",
+        "Está girando hacia el partido.",
+        "Aguantó más que la de catálogo."
+      ]
+    },
+    {
+      "abre": "¿Me dejas una silla para el patio?",
+      "respuestas": [
+        "¿La coja o la que cuenta secretos?",
+        "Lleva dos, siempre viene alguien.",
+        "Si puedo volver para el flan.",
+        "Te bajo la de respaldo alto.",
+        "Mi chico ya la dejó en la esquina."
+      ]
+    },
+    {
+      "abre": "¿Qué subastan bajo el toldo?",
+      "respuestas": [
+        "Un reloj de tres generaciones impuntuales.",
+        "Piezas del cine que cerró.",
+        "Botones agrupados por década.",
+        "La última miel de la azotea.",
+        "La subastadora ya vale la visita."
+      ]
+    },
+    {
+      "abre": "¿Aún canta el timbre de tu vecina?",
+      "respuestas": [
+        "Ahora pide propina.",
+        "Lo cambiamos y canta ella al abrir.",
+        "Aprendí a llamar con los nudillos.",
+        "Solo el trozo favorito de su nieta.",
+        "Son cinco estrofas, no te acerques."
+      ]
+    },
+    {
+      "abre": "¿Cómo llamas a ese bicho de hojalata?",
+      "respuestas": [
+        "Tizón. Persigue sombras de bicis.",
+        "Administrador. Inspecciona las bolsas.",
+        "Todavía no lo hemos bautizado.",
+        "Mi madre le dice nieto pequeño.",
+        "Con dos golpes en el cuenco viene."
+      ]
+    },
+    {
+      "abre": "¡Un tendedero de acera a acera!",
+      "respuestas": [
+        "Es la pantalla del cine de esta noche.",
+        "El del primero perdió el balcón.",
+        "Pasa, las sábanas están limpias.",
+        "El viento entrega los calcetines al azar.",
+        "Tiene campana para las furgonetas."
+      ]
+    },
+    {
+      "abre": "¿Para qué juntáis tapones en la fuente?",
+      "respuestas": [
+        "Son teselas para el mosaico.",
+        "Así beben los pájaros pequeños.",
+        "Enseñamos a contar con los rojos.",
+        "El taller paga por peso.",
+        "Son fichas para las carreras de chapas."
+      ]
+    },
+    {
+      "abre": "¿Qué le falta al mural?",
+      "respuestas": [
+        "Una ventana a altura infantil.",
+        "La firma de quien prestó la brocha.",
+        "El hueco es para el árbol.",
+        "El repartidor trae el azul.",
+        "Tu cara. Llevamos días buscándote."
+      ]
+    },
+    {
+      "abre": "¿Da avisos reales ese altavoz?",
+      "respuestas": [
+        "Ayer recordó una tortilla al fuego.",
+        "Depende de si urge el dominó.",
+        "Hoy leyó los objetos perdidos.",
+        "Era de fábrica. Ahora nos reúne.",
+        "Avisó de agua y acertó."
+      ]
+    },
+    {
+      "abre": "¿Algún enchufe libre en la plaza?",
+      "respuestas": [
+        "Bajo el banco que dice prohibido sentarse.",
+        "Uno. Sujeta la tapa con el pie.",
+        "Comparte mi alargador, ya acabo.",
+        "Dos ciruelas por una carga con el frutero.",
+        "Sin mi ventilador, podemos negociar."
+      ]
+    }
+  ]
+}

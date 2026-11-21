@@ -1,0 +1,111 @@
+{
+  "id": "noche",
+  "requiere": {
+    "all": [
+      "noche"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Quién apaga el último neón?",
+      "respuestas": [
+        "Un reloj que siempre llega tarde.",
+        "Mi vecina, que le alumbra la cuna.",
+        "Nadie; mira los insectos.",
+        "El dueño del bar tiene la llave.",
+        "Anoche lo apagó el corte general."
+      ]
+    },
+    {
+      "abre": "¿Te guardo la mesa hasta que salgas?",
+      "respuestas": [
+        "La pequeña, lejos del bajo.",
+        "Salgo en media hora; pide agua.",
+        "Cédesela al grupo. Cabe en la barra.",
+        "Di que soy el del abrigo naranja.",
+        "Hoy voy a doblar turno."
+      ]
+    },
+    {
+      "abre": "¿Cómo se llama la canción que ponen al cerrar?",
+      "respuestas": [
+        "Mi padre decía que era un bolero de ascensor.",
+        "La improvisan cada jueves.",
+        "Preguntémosle a la baterista.",
+        "Tengo una grabación con claxon incluido.",
+        "Tararea el principio otra vez."
+      ]
+    },
+    {
+      "abre": "¿Vuelves andando después del baile?",
+      "respuestas": [
+        "Despacio, que mis pies siguen dentro.",
+        "Hasta la fuente, luego me recogen.",
+        "Hay un puesto de sopa por el camino.",
+        "Si prometes no marcar el compás.",
+        "Primero encontremos mi otra zapatilla."
+      ]
+    },
+    {
+      "abre": "¿Por qué hay luz en tu ventana?",
+      "respuestas": [
+        "La gata maneja el interruptor.",
+        "Mi hermano estudia el carné de grúa.",
+        "Para encontrar las llaves al volver.",
+        "Es el acuario; allí es de día.",
+        "Esa es de Lola. Vivo debajo."
+      ]
+    },
+    {
+      "abre": "La luna parece cuadrada esta noche.",
+      "respuestas": [
+        "La miras en un anuncio de colchones.",
+        "Es el puente, inclina la cabeza.",
+        "Con tanto andamio hasta el cielo tiene esquinas.",
+        "Mi visor tiene el mismo defecto.",
+        "En mi barrio dirían que está encajada."
+      ]
+    },
+    {
+      "abre": "¿Quién compra flores de madrugada?",
+      "respuestas": [
+        "La panadera, al apagar el horno.",
+        "Yo. Es nuestro aniversario.",
+        "Mi vecino las deja al turno entrante.",
+        "La chica de los taxis vende más de noche.",
+        "Quien vuelve tarde también quiere a alguien."
+      ]
+    },
+    {
+      "abre": "El DJ se dejó abierto el micrófono.",
+      "respuestas": [
+        "Bailamos al pedido de hielo, entonces.",
+        "Le dedicó un tema a su perro.",
+        "Creí que el bostezo era parte de la mezcla.",
+        "Desde fuera oigo mejor el bocata que el bombo.",
+        "Voy a avisar antes de que llame a casa."
+      ]
+    },
+    {
+      "abre": "¿De dónde salen tus dos chaquetas?",
+      "respuestas": [
+        "Una es de la chica del tobillo torcido.",
+        "Entré en verano y salgo en enero.",
+        "Cambio una por un taxi.",
+        "¡La roja aún tiene el número del guardarropa!",
+        "La segunda es mi almohada del bus."
+      ]
+    },
+    {
+      "abre": "¿Te da pena que amanezca?",
+      "respuestas": [
+        "Solo si sigo fregando vasos.",
+        "Quiero ver de qué color era tu abrigo.",
+        "Tengo cita con los primeros churros.",
+        "Me da sueño. La pena va con la alarma.",
+        "Depende de quién se quede a verlo."
+      ]
+    }
+  ]
+}

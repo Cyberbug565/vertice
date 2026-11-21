@@ -1,0 +1,118 @@
+{
+  "id": "susto",
+  "requiere": {
+    "all": [
+      "arma:potente",
+      "caracter:cauto"
+    ]
+  },
+  "comentarios": [
+    "Me voy. Esa cosa ocupa media acera.",
+    "¡Qué susto de arma! Ven, por este lado.",
+    "¿Podemos esperar a que pase?",
+    "Ni siquiera he recogido el cambio.",
+    "Me está temblando hasta el visor."
+  ],
+  "escenas": [
+    {
+      "abre": "¿Has visto el tamaño de eso?",
+      "respuestas": [
+        "Ni se te ocurra señalarlo.",
+        "Sí. Deja sitio para pasar.",
+        "Ven, por la puerta del patio.",
+        "Acerca a la niña, que va distraída.",
+        "Vi uno igual desde debajo de un banco."
+      ]
+    },
+    {
+      "abre": "Me tiemblan los dientes cuando eso pasa cerca.",
+      "respuestas": [
+        "A mí me tiembla uno de repuesto.",
+        "Dame la bolsa, te acompaño.",
+        "Respira conmigo hasta que doble la esquina.",
+        "Siéntate en el escalón conmigo.",
+        "Se te oye por encima de la radio."
+      ]
+    },
+    {
+      "abre": "¿Crees que nos ha visto?",
+      "respuestas": [
+        "Ha pasado de largo. Sigue comiendo.",
+        "En el escaparate ya se aleja.",
+        "No pienso mirar otra vez.",
+        "Si te agachas llaman más la atención tus botas.",
+        "Estabas detrás de mí, a ti no creo."
+      ]
+    },
+    {
+      "abre": "Mi visor acaba de marcar peligro.",
+      "respuestas": [
+        "El mío también, y lo llevo apagado.",
+        "Guárdalo, ya lo ven mis ojos.",
+        "Avisa a mi padre, que viene de frente.",
+        "Por una vez ha acertado ese trasto.",
+        "Ven, cabemos detrás del pilar."
+      ]
+    },
+    {
+      "abre": "Tenía que traer hoy al crío, claro.",
+      "respuestas": [
+        "Le entretengo yo. Tú busca el tranvía.",
+        "Mira mis cordones, ni se ha enterado.",
+        "Venga, peque. A contar ventanas conmigo.",
+        "Tápale el visor para que no lo grabe.",
+        "Acércale al escaparate de los peces."
+      ]
+    },
+    {
+      "abre": "Qué silencio ha dejado esa arma.",
+      "respuestas": [
+        "Ha parado hasta el vendedor de cupones.",
+        "Oigo tu implante desde aquí.",
+        "Al doblar la esquina volverán a regatear.",
+        "La de arriba ha bajado la persiana.",
+        "Hoy prefiero el ruido de las obras."
+      ]
+    },
+    {
+      "abre": "Voy a echar el cierre un momento.",
+      "respuestas": [
+        "Espera, que tengo el abrigo dentro.",
+        "Te ayudo con la persiana.",
+        "Que Lúa entre por el patio.",
+        "Deja luz en el escalón, por favor.",
+        "Me quedo contigo hasta que pase."
+      ]
+    },
+    {
+      "abre": "¿Ese chasquido ha salido de ahí?",
+      "respuestas": [
+        "De mi hebilla. Menudo susto.",
+        "Es la lata que has pisado.",
+        "El toldo cruje cuando sopla aire.",
+        "No me quedaré a oír el siguiente.",
+        "Se me ha partido la uña de cromo."
+      ]
+    },
+    {
+      "abre": "Júrame que no vas a pedirle una foto.",
+      "respuestas": [
+        "Hoy me conformo con llegar a casa.",
+        "Ni he sacado el teléfono.",
+        "Guardo la cámara, ¿ves?",
+        "Se la pido al gato del quiosco.",
+        "Con este pulso ni la enfocaría."
+      ]
+    },
+    {
+      "abre": "No me gusta cómo miran esa arma.",
+      "respuestas": [
+        "Mírame a mí. ¿Cómo fue el turno?",
+        "Yo cruzaría en el siguiente semáforo.",
+        "El de la gorra ya recoge a los pequeños.",
+        "Es mi primera semana aquí. ¿Pasa mucho?",
+        "Si alguien tropieza, todos echarán a correr."
+      ]
+    }
+  ]
+}
