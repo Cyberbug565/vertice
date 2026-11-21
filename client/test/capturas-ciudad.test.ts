@@ -1,6 +1,7 @@
 // Banco de pruebas fotográficas. VERTICE_CAPTURAS apunta a los estados de la partida
 // escritos por server/test/ciudad-viva. Sin la variable, la suite normal omite el render.
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
+vi.mock('../src/settings',()=>({settings:{}}));
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';

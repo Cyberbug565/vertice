@@ -129,7 +129,7 @@ export class Street {
     const c=novel||CONVOS[Math.floor(this.rng()*CONVOS.length)];
     const until=now+c.length*3200;
     this.chatUntil.set(a,until); this.chatUntil.set(b,until);
-    for(const e of [a,b])if(e.npc)e.npc.pauseUntil=Math.max(e.npc.pauseUntil,this.w.tick+Math.ceil((until-now)/100));
+    for(const e of [a,b])if(e.npc)e.npc.pauseUntil=Math.max(e.npc.pauseUntil,this.w.tick+Math.ceil((until-now)/50));
     this.face(a, b.x, b.y); this.face(b, a.x, a.y);
     this.emote(a, 'gesto'); this.emote(b, 'gesto');
     c.forEach((text, i) => this.say(i % 2 ? b : a, text, 800 + i * 3200, i % 2 ? a : b));
@@ -146,7 +146,7 @@ export class Street {
       if (!e || e.dead || e.state === 'downed') continue;
       if(l.partner!==undefined){
         const b=this.w.entities.get(l.partner);
-        if(!b||!this.calm(e)||!this.calm(b)||b.zone!==e.zone||Math.hypot(e.x-b.x,e.y-b.y)>4||this.aimedAt.has(e.id)||this.aimedAt.has(b.id))continue;
+        if(!b||!this.calm(e)||!this.calm(b)||b.zone!==e.zone||Math.hypot(e.x-b.x,e.y-b.y)>4||!this.w.combat.lineClear(e,b)||this.aimedAt.has(e.id)||this.aimedAt.has(b.id))continue;
       }
       for (const o of e.zone.query(e.x, e.y, 18)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'speech', id: e.id, text: l.text });
     }

@@ -6,6 +6,7 @@ import { createApp } from '../src/app.js';
 import { loadPlayer } from '../src/game/player.js';
 import { mapKnowledge, rememberMap } from '../src/game/exploration.js';
 import { missionModules, powerful, streetModules, Voices } from '../src/game/voices.js';
+import { Street } from '../src/world/street.js';
 import { BotClient } from '../../tools/loadtest/src/botclient.js';
 
 it('contiene mil intercambios distintos y 500 líneas de misión distribuidas por persona y etapa', () => {
@@ -32,6 +33,31 @@ it('aplica los requisitos de carácter y evita repetir una reacción o pista seg
   expect(voices.comment(npc,'impresionado',new Set(['arma:potente','caracter:curioso']))).toBeTruthy();
   expect(voices.mission(npc,'sable','fin')).not.toBe(voices.mission(npc,'sable','fin'));
   expect(powerful(undefined)).toBe(false);
+});
+
+it('un transeúnte solo reacciona al arma potente equipada que alcanza a ver',()=>{
+  const now=Date.now();
+  const bystander=(id:number)=>({id,kind:'npc',npcType:'civil',npc:{type:'ambient',pauseUntil:0},x:5,y:0,path:[],labelVer:0});
+  const npcs=[bystander(11),bystander(12)];
+  const zone={query:()=>npcs};
+  let lineClear=true;
+  const weapon={id:'pesada',weapon:{damage:[15,35],kind:'ranged'}};
+  const world={c:{items:[weapon]},combat:{lineClear:()=>lineClear},tick:10};
+  const street=new Street(world as any) as any;
+  street.rng=()=>.1;
+  const player:any={kind:'player',x:0,y:0,facing:0,guard:false,conn:{p:{wanted:0}},inventory:[weapon]};
+  const perceive=()=>street.aroundPlayer(zone,player,now);
+  perceive();expect(street.lines).toHaveLength(0);
+  player.weaponId='pesada';lineClear=false;perceive();expect(street.lines).toHaveLength(0);
+  lineClear=true;player.buffs={invisible:now+5000};perceive();expect(street.lines).toHaveLength(0);
+  player.buffs={};player.x=-6;perceive();expect(street.lines).toHaveLength(0);
+  player.x=0;perceive();
+  const lines=street.lines as {id:number;text:string}[];
+  expect(lines).toHaveLength(2);
+  for(const [id,pool] of [[11,'susto'],[12,'impresionado']] as const){
+    expect(streetModules.find(m=>m.id===pool)!.comentarios).toContain(lines.find(l=>l.id===id)?.text);
+  }
+  perceive();expect(street.lines).toHaveLength(2);
 });
 
 describe('descubrimiento del mapa por WebSocket y base de datos', () => {

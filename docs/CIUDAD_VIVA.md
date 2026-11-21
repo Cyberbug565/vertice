@@ -45,3 +45,9 @@ Las [voces de misión](../server/voices/misiones) tienen un archivo por personaj
 ## Probar la actualización
 
 En Windows, abre **iniciar-local.bat**. También puedes ejecutar `npm run local` con Node 22.12 o posterior. Para publicar desde el mismo proyecto, usa **publicar.bat**. Las pruebas de regresión se ejecutan con `npm test`.
+
+## Imágenes de la versión
+
+[Recorrido y descubrimiento de la Clínica Sato](pruebas-025/mapa.png) · [Pierna Corredora en cuatro poses](pruebas-025/pierna-corredora.png) · [Cuatro estilos con abrigo y brazo Vigía](pruebas-025/estilos-de-paso.png).
+
+El mapa se dibuja con el código del cliente y el conocimiento guardado durante una partida de prueba. Las láminas de movimiento usan los modelos, texturas, pesos y ángulos del juego en un banco con cámara fija. Los números indican la flexión de cada rodilla en ese instante.
