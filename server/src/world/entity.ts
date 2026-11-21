@@ -36,7 +36,7 @@ legendId?: string;
   pendingAction?: { target: number; action: string; opId: string; part?: import('@vertice/shared').AimZone };
   // ---- v0.4
   objId?: string; dealer?: string; hiddenDoc?: string; vehicle?: string | null; level?: number; stunUntil?: number; dots?: { until: number; dmg: number; next: number; by?: number }[];
-  buffs?: Record<string, number>; decoyUntil?: number;
+  gaitFlags?:string[]; buffs?: Record<string, number>; decoyUntil?: number;
   // ---- v0.6
   emote?: EmoteState; marketSite?: string;
   /** v0.13 · Botín completo del cuerpo, datos del cadáver (hallazgo e investigación) y contenedor donde se esconde. */
@@ -51,5 +51,5 @@ export function spawnOf(e: Entity): EntitySpawn {
     bounty: e.bounty || undefined, state: e.state && e.state !== 'alive' ? e.state : undefined, fugitive: e.fugitive ? true : undefined,
     chrome: e.chrome?.length ? e.chrome : undefined, faction: e.faction, npcType: e.npcType, carried: e.carriedBy ? true : undefined,
     hpPct: e.npcMax ? Math.max(0, Math.round(((e.npcHp ?? e.npcMax) / e.npcMax) * 100)) : undefined,
-    level: e.level, emote: e.emote, sign: e.sign, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, carry: e.carry?.length ? e.carry : undefined, dead: e.dead || undefined, buffs: e.buffs || e.guard || e.kairosTier ? [...Object.entries(e.buffs ?? {}).filter(([, u]) => u > Date.now()).map(([k]) => k), ...(e.guard ? ['guardia'] : []), ...(e.kairosTier ? [`kairos${e.kairosTier}`] : [])] : undefined };
+    level: e.level, emote: e.emote, sign: e.sign, vehicle: e.vehicle ?? undefined, lost: e.body?.lost.length ? [...e.body.lost] : undefined, bleeding: (e.body?.bleed ?? 0) > 0.2 || undefined, weapon: e.weaponId, carry: e.carry?.length ? e.carry : undefined, dead: e.dead || undefined, buffs: e.buffs || e.guard || e.kairosTier || e.gaitFlags?.length ? [...(e.gaitFlags??[]),...Object.entries(e.buffs ?? {}).filter(([, u]) => u > Date.now()).map(([k]) => k), ...(e.guard ? ['guardia'] : []), ...(e.kairosTier ? [`kairos${e.kairosTier}`] : [])] : undefined };
 }

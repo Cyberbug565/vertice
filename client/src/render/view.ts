@@ -1,5 +1,6 @@
 // Vista isométrica: bloques de suelo bajo demanda, orden por profundidad topológica, atenuación de edificios,
 // interpolación de entidades remotas y predicción del personaje propio.
+import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
 import { Traffic } from './traffic';
 import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
 import { BUILDING_H, Chars3D } from './chars3d';
@@ -21,6 +22,7 @@ export interface CEnt {
   charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
   vehX?: Container; vehY?: Container; lvl?: Text;
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
+  kneeL?:Container; kneeR?:Container; footL?:Container; footR?:Container;
   legL?: Container; legR?: Container; armB?: Container; armF?: Container; hand?: Container; bodyY?: number;
   weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit' | 'heavy'; dropAt?: number; faceSign?: number; rollAt?: number; kickAt?: number; poolAt?: number; poolSize?: number;
 }
@@ -425,6 +427,7 @@ export class GameView {
       if (this.chars3d) ch.root.visible = false; // v0.11: la figura la dibuja la capa 3D
       // Ciberpsicópata: aura roja que late bajo los pies.
       if (s.npcType === 'psycho') { const aura = new Graphics().ellipse(0, 0, 22, 11).fill({ color: 0xff2020, alpha: 0.25 }).ellipse(0, 0, 22, 11).stroke({ width: 2, color: 0xff2020, alpha: 0.9 }); view.addChildAt(aura, 0); ch.root.scale.set(CHAR_SCALE * 1.15); }
+      ent.kneeL=ch.kneeL;ent.kneeR=ch.kneeR;ent.footL=ch.footL;ent.footR=ch.footR;
       ent.legL = ch.legL; ent.legR = ch.legR; ent.armB = ch.armB; ent.armF = ch.armF; ent.hand = ch.hand; ent.bodyY = ch.bodyY;
       // Arma empuñada (se ve en la mano; las largas se llevan con las dos manos).
       const wi = s.weapon ? content.items.find((i) => i.id === s.weapon) : undefined;
@@ -1271,29 +1274,43 @@ export class GameView {
   }
 
   /** Andar orgánico: piernas desde la cadera y brazos desde el hombro en contrafase, balanceo del tronco y postura de arma. */
+  private legFrameL=new Float64Array(6);
+  private legFrameR=new Float64Array(6);
   private animateBody(e: CEnt, dt: number, now: number, serverNow: number) {
     const rm = settings.reduceMotion;
-    const run = e.moving && (e.s.buffs?.includes('corriendo') || (e.samples.length > 1 && Math.hypot(e.samples[e.samples.length - 1].x - e.samples[0].x, e.samples[e.samples.length - 1].y - e.samples[0].y) / Math.max(1, (e.samples[e.samples.length - 1].t - e.samples[0].t) / 1000) > 3.2));
-    const spd = e.moving ? (run ? 15 : 10) : 1.6;
-    e.phase += dt * spd;
-    const sw = rm ? 0 : e.moving ? Math.sin(e.phase) : 0;
-    const amp = run ? 0.75 : 0.48;
-    const bob = rm ? 0 : e.moving ? Math.abs(Math.cos(e.phase)) * (run ? 2.2 : 1.3) : Math.sin(e.phase) * 0.35;
+    const first=e.samples[0],last=e.samples[e.samples.length-1],flags=e.s.buffs??[];
+    const speed=first && last && last.t>first.t?Math.hypot(last.x-first.x,last.y-first.y)*1000/(last.t-first.t):2.4;
+    const guard=e.s.id===this.meId?this.guarding:flags.includes('guardia');
+    const hurtL=flags.includes('paso-izq')||e.s.lost?.includes('pierna_izq');
+    const hurtR=flags.includes('paso-der')||e.s.lost?.includes('pierna_der');
+    const style=chooseGait(speed,flags.includes('corriendo'),guard,flags,hurtL||hurtR),profile=gaitProfile(style);
+    const run=style==='trote'||style==='esprint';
+    e.phase=(e.phase+dt*(e.moving?2*Math.PI*cadence(style,speed):1.6))%(2*Math.PI);
+    const L=this.legFrameL,R=this.legFrameR;
+    if(e.moving && !rm){
+      sampleLeg(style==='cojera'&&!hurtL?'paseo':style,e.phase/(2*Math.PI),L);
+      sampleLeg(style==='cojera'&&!hurtR?'paseo':style,e.phase/(2*Math.PI)+.5,R);
+    }else{L.fill(0);R.fill(0);}
+    const sw=e.moving&&!rm?Math.cos(e.phase):0;
+    const bob=rm?0:e.moving?Math.sin(2*e.phase-Math.PI/2)*(run?1.6:.65):Math.sin(e.phase)*.35;
     const facing = e.faceSign ?? 1;
     e.body!.scale.x = facing; e.legs!.scale.x = 1;
     e.body!.x = 0; e.legs!.x = 0; e.legs!.y = 0;
     e.body!.y = (e.bodyY ?? 0) - bob;
-    e.body!.rotation = e.moving && !rm ? (run ? 0.1 : 0.03) * (e.body!.scale.x >= 0 ? 1 : -1) : 0;
+    e.body!.rotation = e.moving && !rm ? profile.tronco*Math.PI/180*facing : 0;
     e.legs!.skew.x = 0; e.legs!.scale.y = e.legs!.scale.y || 1;
-    if (e.legL) e.legL.rotation = sw * amp;
-    if (e.legR) e.legR.rotation = -sw * amp;
+    if(e.legL)e.legL.rotation=-L[0]*facing;
+    if(e.legR)e.legR.rotation=-R[0]*facing;
+    if(e.kneeL)e.kneeL.rotation=L[1]*facing;
+    if(e.kneeR)e.kneeR.rotation=R[1]*facing;
+    if(e.footL)e.footL.rotation=(L[0]-L[1]+L[2])*facing;
+    if(e.footR)e.footR.rotation=(R[0]-R[1]+R[2])*facing;
     // Brazos: balanceo natural, o postura de combate con el arma.
     const since = e.attackAt ? now - e.attackAt : 1e9;
-    let front = -sw * amp * 0.8, back = sw * amp * 0.8;
+    let front=R[4],back=L[4];
     if (e.weaponKind === 'ranged') { front = since < 380 ? -1.45 : -0.55 + sw * 0.08; if (e.weaponBig) back = front + 0.25; }
     else if (e.weaponKind === 'melee') { front = -0.25 - sw * 0.2; if (e.weaponBig) back = front + 0.3; }
     // Guardia: apuntando (brazo extendido hacia el objetivo) o bloqueando (arma cruzada delante).
-    const guard = e.s.id === this.meId ? this.guarding : !!e.s.buffs?.includes('guardia');
     if (guard && since >= 380) { if (e.weaponKind === 'ranged') { front = -1.5; if (e.weaponBig) back = -1.3; } else { front = -1.05; back = -0.9; } }
     if (since < 320 && e.attackKind === 'hit') { const k = since / 320; front = 2.0 - k * 3.8; if (e.weaponBig) back = front + 0.3; }
     else if (since < 380 && e.attackKind === 'shot' && !e.weaponKind) front = -1.4;

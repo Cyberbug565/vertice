@@ -391,7 +391,7 @@ export interface PoseIn {
   hips: THREE.Object3D; spine: THREE.Object3D; chest: THREE.Object3D; neck: THREE.Object3D;
   thighP: THREE.Object3D; kneeP: THREE.Object3D; thighM: THREE.Object3D; kneeM: THREE.Object3D;
   shP: THREE.Object3D; elP: THREE.Object3D; shM: THREE.Object3D; elM: THREE.Object3D;
-  gripP: number; gripM: number;
+  gripP: number; gripM: number; ankleP?:number; ankleM?:number; toeP?:number; toeM?:number;
 }
 /** Pasa la pose del juego (ángulos por articulación, con los ejes del mundo) a los huesos del esqueleto. */
 export function poseHuman(h: Human, p: PoseIn) {
@@ -400,6 +400,9 @@ export function poseHuman(h: Human, p: PoseIn) {
   const armP = Ds.clone().multiply(eul(p.shP)), armM = Ds.clone().multiply(eul(p.shM));
   const foreP = armP.clone().multiply(rx(p.elP.rotation.x)), foreM = armM.clone().multiply(rx(p.elM.rotation.x));
   const legP = Dp.clone().multiply(rx(p.thighP.rotation.x)), legM = Dp.clone().multiply(rx(p.thighM.rotation.x));
+  const shinP=legP.clone().multiply(rx(p.kneeP.rotation.x)),shinM=legM.clone().multiply(rx(p.kneeM.rotation.x));
+  const footP=shinP.clone().multiply(rx(p.ankleP??0)),footM=shinM.clone().multiply(rx(p.ankleM??0));
+  const toesP=footP.clone().multiply(rx(p.toeP??0)),toesM=footM.clone().multiply(rx(p.toeM??0));
   const curlP = rz(-1.1 * p.gripP), curlM = rz(1.1 * p.gripM);
   for (const name of k.order) {
     const par = k.parent.get(name) ?? null;
@@ -413,9 +416,13 @@ export function poseHuman(h: Human, p: PoseIn) {
       case 'upperarm_r': d = armM.clone().multiply(qDownM); break;
       case 'lowerarm_r': case 'hand_r': d = foreM.clone().multiply(qDownM); break;
       case 'thigh_l': d = legP; break;
-      case 'calf_l': case 'foot_l': case 'ball_l': case 'ball_leaf_l': d = legP.clone().multiply(rx(p.kneeP.rotation.x)); break;
+      case 'calf_l': d=shinP; break;
+      case 'foot_l': d=footP; break;
+      case 'ball_l': case 'ball_leaf_l': d=toesP; break;
       case 'thigh_r': d = legM; break;
-      case 'calf_r': case 'foot_r': case 'ball_r': case 'ball_leaf_r': d = legM.clone().multiply(rx(p.kneeM.rotation.x)); break;
+      case 'calf_r': d=shinM; break;
+      case 'foot_r': d=footM; break;
+      case 'ball_r': case 'ball_leaf_r': d=toesM; break;
       default: {
         // Dedos: se cierran sobre la palma (agarre del arma) en el marco del brazo colgando.
         const m = /^(index|middle|ring|pinky|thumb)_0([123])_([lr])$/.exec(name);

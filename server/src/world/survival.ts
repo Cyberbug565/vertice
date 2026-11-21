@@ -144,6 +144,13 @@ export class Survival {
     // v0.10 · Las demás armas que llevas encima se ven: las grandes a la espalda y las pequeñas en la cadera.
     const carry = this.w.stealth.detectable(p).filter((id) => id !== shown);
     if ((e.carry ?? []).join() !== carry.join()) { e.carry = carry; e.labelVer++; }
+    const gait:string[]=[];
+    if(p.carrying || ef.weight>ef.carryMax)gait.push('paso-carga');
+    if(p.running && p.stamina>3 && !p.carrying && !p.sleeping && ef.legsLost===0)gait.push('corriendo');
+    for(const part of ['pierna_izq','pierna_der'] as const){
+      if((p.body.wounds[part]??0)>=10||ef.chromeBroken.includes(part))gait.push(part==='pierna_izq'?'paso-izq':'paso-der');
+    }
+    if(gait.join()!==(e.gaitFlags??[]).join()){e.gaitFlags=gait;e.labelVer++;}
     // Velocidad: atributos efectivos, oficio y cansancio.
     const car = this.w.property.carOf(p);
     if (car && e.zone.def.kind === 'exterior') e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * car.speed * (1 + ef.carSpeed);

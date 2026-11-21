@@ -15,7 +15,7 @@ const OUT = 0x07070d;
 const edge = { width: 0.45, color: OUT, alpha: 0.55 } as const;
 const tex = (texture: Texture) => ({ texture, textureSpace: 'local' as const });
 
-export interface CharParts { root: Container; legs: Container; body: Container; visor: Graphics; legL: Container; legR: Container; armB: Container; armF: Container; hand: Container; handB: Container; bodyY: number }
+export interface CharParts { root: Container; legs: Container; body: Container; visor: Graphics; legL: Container; legR: Container; kneeL:Container; kneeR:Container; footL:Container; footR:Container; armB: Container; armF: Container; hand: Container; handB: Container; bodyY: number }
 const SLEEVELESS = new Set(['top', 'chaleco', 'tirantes', 'arnes']);
 const SHORT_SLEEVE = new Set(['camiseta', 'camisa']);
 const WIDE_SLEEVE = new Set(['haori', 'poncho']);
@@ -75,31 +75,40 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
     const x = side * 3.2 * bf - 2.4 * bf, w = 4.8 * bf;
     const holder = new Container();
     holder.pivot.set(x + w / 2, -19); holder.position.set(x + w / 2, -19);
-    holder.addChild(g);
-    if (gone.has(side < 0 ? 'pierna_izq' : 'pierna_der')) { g.roundRect(x, -19, w, 4, 1.5).fill(pants); g.ellipse(x + w / 2, -15, w / 2, 1.4).fill(BLOOD); return holder; }
+    const knee=new Container(),foot=new Container(),shin=new Graphics(),boot=new Graphics();
+    knee.pivot.set(x+w/2,-10); knee.position.copyFrom(knee.pivot);
+    foot.pivot.set(x+w/2,-2); foot.position.copyFrom(foot.pivot);
+    holder.addChild(g,knee); knee.addChild(shin,foot); foot.addChild(boot);
+    if (gone.has(side < 0 ? 'pierna_izq' : 'pierna_der')) { g.roundRect(x, -19, w, 4, 1.5).fill(pants); g.ellipse(x + w / 2, -15, w / 2, 1.4).fill(BLOOD); return {holder,knee,foot}; }
     const isChrome = cr.has(side < 0 ? 'pierna_izq' : 'pierna_der');
     if (isChrome) {
-      g.roundRect(x, -19, w, 18, 1.5).fill(metal).stroke(edge);
-      for (let yy = -17; yy < -3; yy += 3) g.rect(x + 0.3, yy, w - 0.6, 0.5).fill(metalDark);
+      g.roundRect(x,-19,w,10,1.5).fill(metal).stroke(edge);
+      shin.roundRect(x,-11,w,10,1.5).fill(metal).stroke(edge);
+      for (let yy = -17; yy < -3; yy += 3) (yy < -10 ? g : shin).rect(x + 0.3, yy, w - 0.6, 0.5).fill(metalDark);
       g.circle(x + w / 2, -10.5, 1.6).fill(metalDark); g.circle(x + w / 2, -10.5, 0.9).fill(accent);
-      g.rect(x + w - 1.2, -18, 1.2, 15).fill({ color: accent, alpha: 0.6 });
-      g.rect(x + 0.6, -18, 0.6, 15).fill({ color: metalLight, alpha: 0.7 });
+      shin.rect(x + w - 1.2,-10,1.2,7).fill({ color: accent, alpha: 0.6 });
+      g.rect(x + 0.6,-18,.6,8).fill({ color: metalLight, alpha: 0.7 });
     } else if (bareLeg) {
-      g.roundRect(x, -19, w, 18, 1.5).fill(tex(skinTex('pierna', w, 18))).stroke(edge);
+      const skin=tex(skinTex('pierna',w,18));
+      g.roundRect(x,-19,w,10,1.5).fill(skin).stroke(edge);
+      shin.roundRect(x,-11,w,10,1.5).fill(skin).stroke(edge);
       if (lw === 'shorts') g.roundRect(x - 0.2, -19, w + 0.4, 7, 1.5).fill(tex(fabricTexture(a.pantsPattern, a.pants, a.accent, w + 0.4, 7))).stroke(edge);
       if (lw === 'bermudas') g.roundRect(x - 0.3, -19, w + 0.6, 10, 1.5).fill(tex(fabricTexture(a.pantsPattern, a.pants, a.accent, w + 0.6, 10))).stroke(edge);
     } else {
       const narrow = lw === 'leggins' ? 0.4 : 0;
-      g.roundRect(x + narrow, -19, w - narrow * 2, 18, 1.5).fill(tex(fabricTexture(a.pantsPattern, a.pants, a.accent, w, 18))).stroke(edge);
-      g.moveTo(x + w * 0.5, -18).lineTo(x + w * 0.5, -3).stroke({ width: 0.35, color: shade(pants, 0.6), alpha: 0.8 }); // costura
+      const cloth=tex(fabricTexture(a.pantsPattern,a.pants,a.accent,w,18));
+      g.roundRect(x+narrow,-19,w-2*narrow,10,1.5).fill(cloth).stroke(edge);
+      shin.roundRect(x+narrow,-11,w-2*narrow,10,1.5).fill(cloth).stroke(edge);
+      g.moveTo(x + w * 0.5, -18).lineTo(x + w * 0.5, -10).stroke({ width: 0.35, color: shade(pants, 0.6), alpha: 0.8 }); // costura
       g.moveTo(x + 0.8, -10.6).quadraticCurveTo(x + w / 2, -9.6, x + w - 0.8, -10.6).stroke({ width: 0.35, color: shade(pants, 0.55), alpha: 0.7 }); // rodilla
       if (lw === 'cargo') { g.roundRect(x + (side < 0 ? 0.2 : w - 2.8), -14.5, 2.6, 3.4, 0.5).fill(shade(pants, 0.82)).stroke({ width: 0.3, color: shade(pants, 0.5) }); g.rect(x + (side < 0 ? 0.2 : w - 2.8), -14.5, 2.6, 0.8).fill(shade(pants, 0.7)); }
       if (lw === 'tactico') { g.roundRect(x + 0.3, -12, w - 0.6, 3, 1).fill(0x2a2a30).stroke(edge); g.rect(x + 0.8, -11.2, w - 1.6, 0.4).fill({ color: accent, alpha: 0.6 }); }
     }
-    shoe(g, x, w);
-    return holder;
+    shoe(boot,x,w);
+    return {holder,knee,foot};
   };
-  const legL = leg(-1), legR = leg(1);
+  const leftLeg=leg(-1),rightLeg=leg(1);
+  const legL=leftLeg.holder,legR=rightLeg.holder;
   legs.addChild(legL, legR);
   legs.scale.y = hf;
   if (lw === 'falda' || lw === 'falda-larga') {
@@ -358,5 +367,5 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   body.addChild(armBack, torso, belt, hairBack, head, visor, armFront);
   root.addChild(legs, body);
   if (B === 'bajo') root.scale.set(0.96); if (B === 'alto') root.scale.set(1.02);
-  return { root, legs, body, visor, legL, legR, armB: armBack, armF: armFront, hand: (armFront as any).hand, handB: (armBack as any).hand, bodyY };
+  return { root, legs, body, visor, legL, legR, kneeL:leftLeg.knee,kneeR:rightLeg.knee,footL:leftLeg.foot,footR:rightLeg.foot, armB: armBack, armF: armFront, hand: (armFront as any).hand, handB: (armBack as any).hand, bodyY };
 }
