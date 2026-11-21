@@ -1,3 +1,4 @@
+import { CYBER_MODELS, type CyberModel } from './cyber-models.js';
 // Esquemas validables del contenido del mundo. El motor no conoce lugares concretos: todo vive en /content.
 import { z } from 'zod';
 import { ATTRIBUTE_IDS } from './rules.js';
@@ -187,7 +188,7 @@ export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario', '
 export const WEAR_SLOTS = ['cabeza', 'cara', 'torso_ext', 'torso_int', 'piernas', 'pies', 'manos', 'accesorio', 'interior_sup', 'interior_inf'] as const;
 export type WearSlot = (typeof WEAR_SLOTS)[number];
 /** v0.9 · Cuántos implantes caben en cada ranura: dos ojos, dos oídos, dos brazos, dos manos, cuatro dedos (dos por mano), dos piernas… */
-export const CYBER_SLOT_CAPACITY: Record<string, number> = { ojos: 2, oidos: 2, brazo: 2, manos: 2, dedos: 4, pierna: 2, cortex: 3, esqueleto: 2, circulatorio: 2, nervioso: 2, tegumento: 2, glandula: 2, bateria: 2, hombros: 2, columna: 1 };
+export const CYBER_SLOT_CAPACITY: Record<string, number> = { ojos: 2, oidos: 2, brazo: 2, manos: 2, dedos: 4, pierna: 2, cortex: 3, esqueleto: 2, circulatorio: 2, nervioso: 2, tegumento: 2, glandula: 2, bateria: 2, hombros: 2, antebrazo: 2, columna: 1 };
 export const cyberSlotCapacity = (slot: string) => CYBER_SLOT_CAPACITY[slot] ?? 1;
 /** Nombre de cada hueco de una ranura doble (para la pantalla de ciberware). */
 export const CYBER_SLOT_SIDES: Record<string, string[]> = { ojos: ['Ojo izq.', 'Ojo der.'], oidos: ['Oído izq.', 'Oído der.'], brazo: ['Brazo izq.', 'Brazo der.'], manos: ['Mano izq.', 'Mano der.'],
@@ -288,7 +289,8 @@ export const CyberwareSchema = z.object({
   passive: z.string().optional(),
   prosthetic: z.boolean().default(false),
   /** Parte del cuerpo donde se ve: se dibuja en el personaje. */
-  visible: z.enum(['cabeza', 'ojos', 'torso', 'brazo', 'pierna', 'piernas', 'ninguna']).default('ninguna'),
+  model: z.enum(Object.keys(CYBER_MODELS) as [CyberModel, ...CyberModel[]]).optional(),
+  visible: z.enum(['cabeza', 'ojos', 'torso', 'brazo', 'pierna', 'piernas', 'mano', 'antebrazo', 'ojo', 'mandibula', 'columna', 'ninguna']).default('ninguna'),
 });
 export type CyberwareDef = z.infer<typeof CyberwareSchema>;
 

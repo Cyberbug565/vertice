@@ -1,3 +1,4 @@
+import { CYBER_SIDES, type CyberSide, type CyberModel } from './cyber-models.js';
 // Protocolo compartido cliente ↔ servidor. Los mensajes de control viajan como JSON; las posiciones, como binario.
 import { z } from 'zod';
 import { DANCE_IDS, type DanceId } from './nightlife.js';
@@ -45,7 +46,7 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('jobStart'), seq }),
   z.object({ t: z.literal('jobQuit'), seq }),
   z.object({ t: z.literal('profession'), seq, profession: z.string().max(64), opId }),
-  z.object({ t: z.literal('clinicDo'), seq, doc: z.string().max(64), action: z.enum(['install', 'remove']), source: z.enum(['stock', 'stolen', 'inventory', 'installed']), ref: z.string().max(64), opId }),
+  z.object({ t: z.literal('clinicDo'), seq, doc: z.string().max(64), action: z.enum(['install', 'remove']), source: z.enum(['stock', 'stolen', 'inventory', 'installed']), ref: z.string().max(64), side: z.enum(CYBER_SIDES).optional(), opId }),
   z.object({ t: z.literal('bounties'), seq }),
   z.object({ t: z.literal('bountyPlace'), seq, kind: z.enum(['player', 'npc']), target: z.string().min(1).max(64), amount: z.number().int().min(100).max(1_000_000), reason: z.string().min(1).max(120), aliveOnly: z.boolean().default(false), opId }),
   z.object({ t: z.literal('hostile'), seq, target: z.number().int().nonnegative(), action: z.enum(['rob', 'beat', 'claim', 'attack', 'knockout', 'finish', 'carry', 'talk', 'aim', 'search', 'extract', 'heavy', 'kick']), opId, part: z.enum(['torso', 'cabeza', 'brazos', 'manos', 'piernas']).optional(), chrome: z.string().max(64).optional(), remote: z.boolean().optional() }),
@@ -110,6 +111,7 @@ export interface Appearance {
   gloves?: string; gloveColor?: string;
   /** v0.16 · Gama del cromo visible por parte (chatarra, estandar, militar, lujo). */
   chromeTier?: Record<string, string>;
+  chromeModels?: Record<string, CyberModel>;
   /** v0.22 · Prendas 3D ajustadas al cuerpo (ids de GARMENTS, separadas por comas; las pone el servidor). */
   garments?: string;
   /** v0.22 · Ropa interior: estilo de arriba y de abajo (vacío = nada; sin definir = la de serie) y sus colores. */
@@ -175,7 +177,7 @@ export interface JobsView {
 export interface ClinicOffer {
   source: 'stock' | 'stolen' | 'inventory' | 'installed'; ref: string; action: 'install' | 'remove'; def: string; name: string; grade: number; slot: string; family: string; desc: string; stolen: boolean;
   capacity: number; humanity: number; price: number; survival: number; clean: number; theft: number; danger: string; humanityAfter: number; capacityAfter: number; blocked?: string; replaces?: string;
- warning?: string;}
+ rarity?: string; sides?: CyberSide[]; part?: string | null; warning?: string;}
 export interface ClinicView { doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[]; repair?: { parts: string[]; price: number } | null; heal?: { wounds: number; price: number; amputations: number } | null }
 export interface BountyView {
   money: number;

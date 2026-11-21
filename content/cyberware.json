@@ -4620,5 +4620,476 @@
   "prosthetic": false,
   "visible": "ninguna",
   "passive": "critico"
+ },
+ {
+  "id": "cromo-taller",
+  "name": "Mano de taller",
+  "family": "Manos",
+  "slot": "manos",
+  "region": "manos",
+  "grade": 1,
+  "rarity": "comun",
+  "capacity": 2,
+  "humanity": 0,
+  "price": 380,
+  "maker": "chatarreros",
+  "desc": "Pinza recuperada con nudillos independientes. +1 a Reparación.",
+  "effects": {
+   "skills": {
+    "reparacion": 1
+   }
+  },
+  "model": "taller",
+  "prosthetic": true,
+  "visible": "mano"
+ },
+ {
+  "id": "cromo-protesis",
+  "name": "Pierna de encaje",
+  "family": "Piernas",
+  "slot": "pierna",
+  "region": "piernas",
+  "grade": 1,
+  "rarity": "comun",
+  "capacity": 2,
+  "humanity": 0,
+  "price": 440,
+  "maker": "teselia",
+  "desc": "Encaje de resina y vástago de acero. +1 a Atletismo.",
+  "effects": {
+   "skills": {
+    "atletismo": 1
+   }
+  },
+  "model": "protesis",
+  "prosthetic": true,
+  "visible": "pierna"
+ },
+ {
+  "id": "cromo-circuito",
+  "name": "Brazo Circuito",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 2,
+  "rarity": "poco-comun",
+  "capacity": 3,
+  "humanity": 1,
+  "price": 1950,
+  "maker": "engranajes",
+  "desc": "Servos de segunda mano con un carenado ligero. +3 kg de carga y +1 a Reparación.",
+  "effects": {
+   "carry": 3,
+   "skills": {
+    "reparacion": 1
+   }
+  },
+  "model": "circuito",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-pinza",
+  "name": "Mano de precisión Pinza",
+  "family": "Manos",
+  "slot": "manos",
+  "region": "manos",
+  "grade": 2,
+  "rarity": "poco-comun",
+  "capacity": 3,
+  "humanity": 1,
+  "price": 2200,
+  "maker": "engranajes",
+  "desc": "Cinco dedos mecánicos con retorno independiente. +2 a Reparación.",
+  "effects": {
+   "skills": {
+    "reparacion": 2
+   }
+  },
+  "model": "pinza",
+  "prosthetic": true,
+  "visible": "mano"
+ },
+ {
+  "id": "cromo-corredor",
+  "name": "Pierna Corredora",
+  "family": "Piernas",
+  "slot": "pierna",
+  "region": "piernas",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 5900,
+  "maker": "aurora",
+  "desc": "Pie articulado y amortiguador de carrera. +4 % de velocidad y +1 a Atletismo.",
+  "effects": {
+   "speed": 0.04,
+   "skills": {
+    "atletismo": 1
+   }
+  },
+  "model": "corredor",
+  "prosthetic": true,
+  "visible": "pierna"
+ },
+ {
+  "id": "cromo-bio",
+  "name": "Brazo de tendones Biónica",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 6400,
+  "maker": "teselia",
+  "desc": "Tendones mecánicos de precisión. +2 a Medicina y +2 puntos de probabilidad quirúrgica.",
+  "effects": {
+   "skills": {
+    "medicina": 2
+   },
+   "surgery": 0.02
+  },
+  "model": "bio",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-correo-brazo",
+  "name": "Brazo de mensajería",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 6600,
+  "maker": "aurora",
+  "desc": "Paneles segmentados para abrirse paso entre el tráfico. +4 kg de carga y +8 % de daño cuerpo a cuerpo.",
+  "effects": {
+   "carry": 4,
+   "meleeDmg": 0.08
+  },
+  "model": "correo-brazo",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-correo-pierna",
+  "name": "Pierna de mensajería",
+  "family": "Piernas",
+  "slot": "pierna",
+  "region": "piernas",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 6900,
+  "maker": "aurora",
+  "desc": "Prótesis ligera con talón articulado. +5 % de velocidad y +2 puntos de esquiva.",
+  "effects": {
+   "speed": 0.05,
+   "dodge": 0.02
+  },
+  "model": "correo-pierna",
+  "prosthetic": true,
+  "visible": "pierna"
+ },
+ {
+  "id": "cromo-rotula",
+  "name": "Columna de discos Rótula",
+  "family": "Esqueleto",
+  "slot": "columna",
+  "region": "esqueleto",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 7300,
+  "maker": "engranajes",
+  "desc": "Segmentos dorsales visibles que reparten el peso. +5 kg de carga y +5 de salud máxima.",
+  "effects": {
+   "carry": 5,
+   "hpMax": 5
+  },
+  "model": "rotula",
+  "prosthetic": false,
+  "visible": "columna"
+ },
+ {
+  "id": "cromo-optico",
+  "name": "Óptica Centinela",
+  "family": "Óptica",
+  "slot": "ojos",
+  "region": "ojos",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 8400,
+  "maker": "okami",
+  "desc": "Lente monocular iluminada. +2 a Percepción y +1 a Armas.",
+  "effects": {
+   "skills": {
+    "percepcion": 2,
+    "armas": 1
+   }
+  },
+  "model": "optico",
+  "prosthetic": false,
+  "visible": "ojo"
+ },
+ {
+  "id": "cromo-mordaza",
+  "name": "Mandíbula Mordaza",
+  "family": "Cara",
+  "slot": "mandibula",
+  "region": "cara",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 6800,
+  "maker": "engranajes",
+  "desc": "Mandíbula blindada con respiraderos laterales. +2 a Intimidación y +1 de blindaje.",
+  "effects": {
+   "skills": {
+    "intimidacion": 2
+   },
+   "armor": 1
+  },
+  "model": "mordaza",
+  "prosthetic": false,
+  "visible": "mandibula"
+ },
+ {
+  "id": "cromo-vigia",
+  "name": "Brazo Vigía",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 4,
+  "humanity": 2,
+  "price": 8500,
+  "maker": "halcon",
+  "desc": "Bastidor táctico y muñeca estabilizada. +1 de blindaje y +2 a Armas.",
+  "effects": {
+   "armor": 1,
+   "skills": {
+    "armas": 2
+   }
+  },
+  "model": "vigia",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-servo",
+  "name": "Brazo Servo industrial",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 3,
+  "rarity": "epico",
+  "capacity": 6,
+  "humanity": 4,
+  "price": 18600,
+  "maker": "engranajes",
+  "desc": "Actuador de carga y mano articulada. +1 a Cuerpo y +16 % de daño cuerpo a cuerpo.",
+  "effects": {
+   "attrs": {
+    "BODY": 1
+   },
+   "meleeDmg": 0.16
+  },
+  "model": "servo",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-grua",
+  "name": "Pierna Grúa",
+  "family": "Piernas",
+  "slot": "pierna",
+  "region": "piernas",
+  "grade": 3,
+  "rarity": "epico",
+  "capacity": 6,
+  "humanity": 4,
+  "price": 21500,
+  "maker": "engranajes",
+  "desc": "Talón reforzado y placas de carga. +8 kg de carga y +2 de blindaje.",
+  "effects": {
+   "carry": 8,
+   "armor": 2
+  },
+  "model": "grua",
+  "prosthetic": true,
+  "visible": "pierna"
+ },
+ {
+  "id": "cromo-modulo",
+  "name": "Módulo de antebrazo Inductor",
+  "family": "Módulos de antebrazo",
+  "slot": "antebrazo",
+  "region": "brazos",
+  "grade": 3,
+  "rarity": "epico",
+  "capacity": 6,
+  "humanity": 4,
+  "price": 20100,
+  "maker": "halcon",
+  "desc": "Módulo táctico exterior montado sobre el antebrazo. +18 % de daño cuerpo a cuerpo y +1 a Armas.",
+  "effects": {
+   "meleeDmg": 0.18,
+   "skills": {
+    "armas": 1
+   }
+  },
+  "model": "modulo",
+  "prosthetic": false,
+  "visible": "antebrazo"
+ },
+ {
+  "id": "cromo-atlas",
+  "name": "Brazo Estibador",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 3,
+  "rarity": "epico",
+  "capacity": 6,
+  "humanity": 4,
+  "price": 24000,
+  "maker": "engranajes",
+  "desc": "Dos carriles de carga sostienen el hombro. +10 kg de carga y +15 % de daño cuerpo a cuerpo.",
+  "effects": {
+   "carry": 10,
+   "meleeDmg": 0.15
+  },
+  "model": "atlas",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-bastion",
+  "name": "Brazo Bastión",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 3,
+  "rarity": "epico",
+  "capacity": 6,
+  "humanity": 4,
+  "price": 27000,
+  "maker": "halcon",
+  "desc": "Blindaje de escolta con junta de codo expuesta. +2 de blindaje y +12 de salud máxima.",
+  "effects": {
+   "armor": 2,
+   "hpMax": 12
+  },
+  "model": "bastion",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-yelmo",
+  "name": "Cabeza integral Centinela",
+  "family": "Cabeza",
+  "slot": "cabeza",
+  "region": "cara",
+  "grade": 3,
+  "rarity": "epico",
+  "capacity": 6,
+  "humanity": 4,
+  "price": 29000,
+  "maker": "okami",
+  "desc": "Cráneo sintético con visor central. +2 de blindaje y +2 a Percepción. Sustituye la cabeza completa.",
+  "effects": {
+   "armor": 2,
+   "skills": {
+    "percepcion": 2
+   }
+  },
+  "model": "yelmo",
+  "prosthetic": true,
+  "visible": "cabeza"
+ },
+ {
+  "id": "cromo-asedio",
+  "name": "Brazo de asedio Arconte",
+  "family": "Brazos",
+  "slot": "brazo",
+  "region": "brazos",
+  "grade": 5,
+  "rarity": "legendario",
+  "capacity": 9,
+  "humanity": 7,
+  "price": 65000,
+  "maker": "okami",
+  "desc": "Placas escalonadas y servo de torsión pesado. +1 a Cuerpo, +30 % de daño cuerpo a cuerpo y +2 de blindaje.",
+  "effects": {
+   "attrs": {
+    "BODY": 1
+   },
+   "meleeDmg": 0.3,
+   "armor": 2
+  },
+  "model": "asedio",
+  "prosthetic": true,
+  "visible": "brazo"
+ },
+ {
+  "id": "cromo-coloso",
+  "name": "Pierna Coloso",
+  "family": "Piernas",
+  "slot": "pierna",
+  "region": "piernas",
+  "grade": 5,
+  "rarity": "legendario",
+  "capacity": 9,
+  "humanity": 7,
+  "price": 61000,
+  "maker": "halcon",
+  "desc": "Rodillera de asalto y doble actuador de impulso. +1 a Movimiento, +10 % de velocidad y +2 de blindaje.",
+  "effects": {
+   "attrs": {
+    "MOVE": 1
+   },
+   "speed": 0.1,
+   "armor": 2
+  },
+  "model": "coloso",
+  "prosthetic": true,
+  "visible": "pierna"
+ },
+ {
+  "id": "cromo-titan",
+  "name": "Pierna Titán",
+  "family": "Piernas",
+  "slot": "pierna",
+  "region": "piernas",
+  "grade": 5,
+  "rarity": "legendario",
+  "capacity": 9,
+  "humanity": 7,
+  "price": 69000,
+  "maker": "okami",
+  "desc": "Bastidor pesado con espinillera acorazada. +1 a Cuerpo, +3 de blindaje y +14 kg de carga.",
+  "effects": {
+   "attrs": {
+    "BODY": 1
+   },
+   "armor": 3,
+   "carry": 14
+  },
+  "model": "titan",
+  "prosthetic": true,
+  "visible": "pierna"
  }
 ]

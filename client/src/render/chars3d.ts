@@ -1,3 +1,4 @@
+import { attachImplants, implantsVersion, wearerImplantRevision, implantRegions, loadedImplants, npcImplants } from './implants3d';
 // v0.11 · Personajes en 3D (Three.js) dentro de la vista isométrica: modelos articulados con volumen, ropa y piel con las
 // texturas detalladas (tejidos y tatuajes), cara pintada, peinados, complementos, cromo metálico con luces, armas en la mano,
 // a la espalda y en la cadera, y animación procedural (andar, correr, respirar, golpear, apuntar, bloquear, patada, rodar,
@@ -268,7 +269,7 @@ export class Chars3D {
   /** v0.19 · Al quitar un modelo se liberan sus texturas, pero no se llama a `dispose()` de sus materiales: si no, en
    *  cuanto se va el último PNJ que usaba un sombreador, three.js borra el programa y lo vuelve a compilar al llegar el
    *  siguiente (era el 40 % del tiempo de CPU paseando por la ciudad). Los programas distintos son pocos (~50). */
-  private disposeRig(r: Rig) { this.world.remove(r.root); for (const m of r.mats) for (const t of (m.userData.owned ?? []) as THREE.Texture[]) t.dispose(); for (const m of r.ghostMats ?? []) m.dispose(); }
+  private disposeRig(r: Rig) { this.world.remove(r.root); r.root.traverse((o) => { const mesh = o as THREE.Mesh; if (mesh.userData.implantGeometry) mesh.geometry.dispose(); }); for (const m of r.mats) if (m.userData.implantMaterial) m.dispose(); for (const m of r.mats) for (const t of (m.userData.owned ?? []) as THREE.Texture[]) t.dispose(); for (const m of r.ghostMats ?? []) m.dispose(); }
   /** Convierte un modelo en fantasma: cada material pasa a translúcido, sin escribir profundidad y con brillo propio. */
   private ghostify(r: Rig, color: number) {
     const tint = new THREE.Color(color);
@@ -317,7 +318,9 @@ export class Chars3D {
     for (const id of gids) if (!gready.includes(id)) for (const part of parts(id)) if (!readyParts.has(part)) bare.delete(part);
     const ki = kitInfo(kind);
     const hide = gready.length && ki ? hideMask(gready, kind, ki.n) : null;
-    const hidesHair = gready.some((id) => garmentById(id)?.hidesHair);
+    const implants = loadedImplants(a.chromeModels, kind, lost);
+    const metalHead = implants.has('cabeza');
+    const hidesHair = metalHead || gready.some((id) => garmentById(id)?.hidesHair);
     const noTop = bare.has('torso'), noLegs = bare.has('piernas'), noShoes = bare.has('pies');
     const nudeOk = settings.nudity !== false;
     let utId = a.underTop === undefined ? DEFAULT_UNDER[kind].sup : a.underTop, ubId = a.underBottom === undefined ? DEFAULT_UNDER[kind].inf : a.underBottom;
@@ -342,8 +345,8 @@ export class Chars3D {
     if (noShoes) for (const k of [REG.ftP, REG.ftM]) cover[k] = 0;
     // v0.21 · Con un atuendo completo de Quaternius solo se dibuja la cabeza y el cuello del cuerpo (el atuendo trae lo demás).
     if (isOutfit(a.top)) for (let i = 0; i < 16; i++) if (i !== REG.head && i !== REG.neck) cover[i] = 5;
-    if (chrome.has('mano_der') || chrome.has('dedos_der')) cover[REG.handP] = 4;
-    if (chrome.has('mano_izq') || chrome.has('dedos_izq')) cover[REG.handM] = 4;
+    if (chrome.has('mano_izq') || chrome.has('dedos_izq')) cover[REG.handP] = 4;
+    if (chrome.has('mano_der') || chrome.has('dedos_der')) cover[REG.handM] = 4;
     // (Brazos, piernas, ojos, mandíbula y pecho de cromo: piezas robóticas de cyber3d.ts, más abajo.)
     // Tatuaje corporal por zonas (solo se ve en la piel al aire).
     const tst = a.bodyTattoo && a.bodyTattoo !== 'ninguno' ? a.bodyTattoo : '';
@@ -360,7 +363,7 @@ export class Chars3D {
     const face = faceParams(a, r, kind === 'femenino');
     const kitHairName = KIT_HAIR[a.hairStyle];
     const helmet = a.headwear === 'casco' || a.headwear === 'casco-moto' || a.headwear === 'casco-oni';
-    const kitBeard = kind === 'masculino' && (a.facial === 'barba' || a.facial === 'barba-larga');
+    const kitBeard = !metalHead && kind === 'masculino' && (a.facial === 'barba' || a.facial === 'barba-larga');
     // Debajo de la ropa, la piel se tiñe del color de la prenda (por si asoma en algún pliegue).
     const topTex = tex(fabricCanvas('liso', a.jacket || '#333344', a.accent, 2, 2)), pantsTex = tex(fabricCanvas('liso', a.pants || '#1a1a24', a.accent, 2, 2));
     const genitals = kind === 'masculino' && nudeOk && under.bot < 0 && cover[REG.pelvis] === 0 && !(hide && ki && hide[ki.crotchV]) && !a.model && a.top !== 'exo-tormenta';
@@ -371,14 +374,26 @@ export class Chars3D {
     { const bm = H.bodyMesh.material as THREE.Material; bm.userData.owned = [...(bm.userData.owned ?? []), topTex, pantsTex]; }
     if (a.top === 'exo-tormenta') return H; // el piloto va dentro de la superarmadura (se oculta al montarla)
     if (a.model) return H; // v0.21 · personaje cartoon: el cuerpo del kit solo mueve el esqueleto (ni ropa ni pelo)
-    if (chrome.size) H.mats.push(...roboticParts(H, chrome, a.chromeTier ?? {}, a.accent, seed, cover));
+    const fallback = new Set([...chrome].filter((part) => !implants.has(part) && !lost.has(part)));
+    if (implants.has('ojo_der') || implants.has('ojo_izq')) fallback.delete('ojos');
+    if (implants.has('mandibula')) fallback.delete('cabeza');
+    if (fallback.size) H.mats.push(...roboticParts(H, fallback, a.chromeTier ?? {}, a.accent, seed, cover, new Set([...implants.keys(), ...lost])));
+    for (const p of implants.keys()) for (const reg of implantRegions(p)) cover[reg] = 5;
+    if (metalHead) H.bodyMesh.parent!.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.isMesh && /Eyes|Eyebrow/i.test((m.material as THREE.Material).name)) m.visible = false;
+    });
+    H.mats.push(...attachImplants(implants, H.bodyMesh, H.kit.data, {
+      mask: hide, sleeve: noTop ? 0 : cut.sleeve, trouser: noLegs ? 0 : lc?.len ?? 1,
+      gloves: !bare.has('manos') && !!a.gloves, shoes: !noShoes && a.shoeStyle !== 'descalzo', outfit: isOutfit(a.top), back: !noTop && !['arnes','top'].includes(top),
+    }, lost));
     if (a.top !== 'exo-tormenta') {
       H.mats.push(...dress(H, {
         top: noTop ? 'ninguno' : top, topColor: a.jacket, topPattern: a.topPattern && a.topPattern !== 'liso' ? fabricCanvas(a.topPattern, a.jacket, a.accent, 8, 8) : null, detail: a.topDetail || '',
         shirtColor: a.shirt || '#2a2a3a', inner: 'camiseta', legs: noLegs ? 'ninguno' : lw, legColor: a.pants, legPattern: a.pantsPattern && a.pantsPattern !== 'liso' ? fabricCanvas(a.pantsPattern, a.pants, a.accent, 8, 8) : null,
         shoes: noShoes ? 'descalzo' : a.shoeStyle || 'botas', shoeColor: a.shoes || '#101018', gloves: bare.has('manos') ? '' : (a as any).gloves || '', gloveColor: (a as any).gloveColor || '#141418',
         head: bare.has('cabeza') ? '' : a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: bare.has('cara') ? '' : a.eyewear || '', hair: a.top === 'atuendo-explorador' || hidesHair ? 'calvo' : a.hairStyle, hairColor: a.hair,
-        facial: a.facial, accent: a.accent, accent2: a.accent2, kitHair: kitHairName !== undefined && !helmet && a.top !== 'atuendo-explorador', kitBeard, accessory: a.accessory,
+        facial: metalHead ? 'ninguno' : a.facial, accent: a.accent, accent2: a.accent2, kitHair: !metalHead && kitHairName !== undefined && !helmet && a.top !== 'atuendo-explorador', kitBeard, accessory: a.accessory,
       }));
       // v0.21 · Atuendo completo de Quaternius (se ata a los huesos de esta persona).
       if (isOutfit(a.top)) { const ms = buildOutfit(a.top, kind, H.bodyMesh, H.bones); if (ms) H.mats.push(...ms.map((m) => m.material as THREE.Material)); }
@@ -403,6 +418,7 @@ export class Chars3D {
       faceShape: 'ovalada', brows: 'normales', makeup: 'ninguno', makeupColor: '#ff3fa4', piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: '', shoes: '#101018',
       headwear: '', headColor: '', eyewear: '', legwear: 'pantalon', rarityGlow: '', tattooZone: 'brazos', tattooInk: '#14141e', faceTattoo: 'ninguno', topPattern: 'liso', pantsPattern: 'liso',
       shoeStyle: 'botas', topDetail: 'ninguno', accent2: '', nose: 'recta', mouth: 'neutra', outer: '', ...(s.appearance ?? {}) } as Required<Appearance>;
+    if (s.kind === 'npc' && !a.chromeModels) a.chromeModels = npcImplants(s);
     const chrome = new Set(s.chrome ?? []), lost = new Set(s.lost ?? []);
     const mats: THREE.Material[] = [];
     const mk = <T extends THREE.Material>(m: T) => { mats.push(m); return m; };
@@ -449,7 +465,7 @@ export class Chars3D {
     // v0.21 · Personaje cartoon: se monta sobre el esqueleto del kit (en reposo) y el cuerpo del kit no se dibuja.
     let cartoon: Cartoon | undefined;
     if (H && a.model && a.top !== 'exo-tormenta') {
-      const c = buildCartoon(a.model, H.root, H.bones);
+      const c = buildCartoon(a.model, H.root, H.bones, loadedImplants(a.chromeModels, H.kind, lost), lost, H.kind);
       if (c) { cartoon = c; mats.push(...c.mats); H.root.traverse((o) => { if ((o as THREE.Mesh).isMesh && !c.mats.includes((o as THREE.Mesh).material as THREE.Material)) o.visible = false; }); }
     }
     const proxy = () => new THREE.Group();
@@ -868,9 +884,9 @@ export class Chars3D {
       // v0.19 · La firma del modelo (JSON de su aspecto) solo se recalcula si cambia alguna de sus piezas: antes se
       // serializaba la apariencia entera de cada persona en cada fotograma.
       let r = this.rigs.get(s.id);
-      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), settings.nudity];
+      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), implantsVersion(), settings.nudity];
       const same = !!r && !!r.src && r.src.length === src.length && r.src.every((v, i) => v === src[i]);
-      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, s.appearance?.model ? cartoonVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0, s.appearance?.garments ? garmentsVersion() : 0, settings.nudity]);
+      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, s.appearance?.model ? cartoonVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0, s.appearance?.garments ? garmentsVersion() : 0, wearerImplantRevision(s), settings.nudity]);
       if (r) r.src = src;
       if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; r.src = src; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
       this.leaving.delete(s.id);
@@ -1187,7 +1203,7 @@ export class Preview3D {
     if (this.idleSpin && !this.drag) this.angle = 0.25 * (1 - this.zoomK) + Math.sin(now / 2600) * 0.85 * (1 - 0.65 * this.zoomK);
     const c = this.c3d;
     const s = this.ent.s;
-    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), settings.nudity]);
+    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), wearerImplantRevision(s), settings.nudity]);
     let r = c.rigs.get(1);
     if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
     // Un gesto cada pocos segundos para que se vea vivo.

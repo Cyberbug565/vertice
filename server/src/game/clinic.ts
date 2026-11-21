@@ -1,15 +1,15 @@
 // Matasanos: catálogo, retirada, procedencia del cromo, precio, riesgo y resultado de la cirugía en una sola transacción.
 import { randomUUID } from 'node:crypto';
-import { cyberSlotCapacity, humanityBase, surgeryRisk, type ClinicOffer, type ClinicView, type Content, type CyberwareDef, type RipperdocDef } from '@vertice/shared';
+import { CYBER_SIDES, pairedSlot, cyberSide, rarityOfGrade, type CyberSide, cyberSlotCapacity, humanityBase, surgeryRisk, type ClinicOffer, type ClinicView, type Content, type CyberwareDef, type RipperdocDef } from '@vertice/shared';
 import type { Db } from '../db/db.js';
 import { GameError } from './effects.js';
-import { chromeParts, effective, type PlayerState } from './player.js';
+import { mechanicalParts, effective, type PlayerState } from './player.js';
 import { ROMAN, type MarketService } from './market.js';
 import { woundCarePrice } from '../world/wounds.js';
 
 const MORALITY: Record<string, string> = { estricta: 'Estricta: nunca instala cromo robado', flexible: 'Flexible: acepta cromo robado con recargo', sin_escrupulos: 'Sin escrúpulos: instala lo que sea' };
 
-export interface SurgeryResult { outcome: 'clean' | 'complications' | 'death'; lines: string[]; stolenMoney: number; cause?: string; def: CyberwareDef }
+export interface SurgeryResult { outcome: 'clean' | 'complications' | 'death'; lines: string[]; stolenMoney: number; cause?: string; def: CyberwareDef; part?: string }
 
 export class ClinicService {
   constructor(private db: Db, private c: Content, private market: MarketService, private rng: () => number = Math.random) {}
@@ -54,7 +54,17 @@ export class ClinicService {
     }
     if (!blocked && d.id === 'vex' && this.rep(p, d) < -10) blocked = 'Vex no quiere tocarte: tienes mala fama con las Hojas Rojas.';
     if (!blocked && p.money < price) blocked = `No tienes suficientes eurodólares (${price} €$).`;
+    const prefix = pairedSlot[def.slot];
+    const installed = p.cyber.filter((ci) => ci.location === 'installed');
+    const sides = prefix && !removal ? CYBER_SIDES.filter((side) => !((prefix === 'mano' || prefix === 'antebrazo') && p.body.lost.includes(side === 'izq' ? 'brazo_izq' : 'brazo_der')) && !installed.some((ci) => {
+      const other = this.c.cyberware.find((d) => d.id === ci.def);
+      return (other?.slot === def.slot && cyberSide(ci.part) === side) ||
+        (prefix === 'pierna' && other?.visible === 'piernas');
+    })) : undefined;
+    if (!blocked && sides?.length === 0) blocked = 'No hay un lado disponible. Retira el implante que ocupa el hueco o repón el brazo amputado.';
+    if (!blocked && !removal && def.visible === 'piernas' && installed.some((ci) => this.c.cyberware.find((d) => d.id === ci.def)?.slot === 'pierna')) blocked = 'Esta pareja de piernas necesita los dos lados libres.';
     return {
+      rarity: def.rarity ?? rarityOfGrade(def.grade), sides, part: removal ? installed.find((ci) => ci.id === ref)?.part : undefined,
       source, ref, action: removal ? 'remove' : 'install', def: def.id, name: def.name, grade: def.grade, slot: def.slot, family: def.family, desc: def.desc, stolen,
       capacity: def.capacity, humanity: def.humanity, price, survival: risk.survival, clean: risk.clean, theft: risk.theft, danger: risk.label,
       humanityAfter: removal ? p.humanity : humanityAfter, capacityAfter, blocked, replaces, warning,
@@ -73,12 +83,12 @@ export class ClinicService {
     }
     const dangerLabel = d.danger >= 0.3 ? 'Peligroso: tiene fama de robar a sus pacientes' : d.danger > 0.05 ? 'Algo turbio' : 'De confianza';
     return { doc: d.id, name: d.name, skill: d.skill, morality: MORALITY[d.morality], dangerLabel, desc: d.desc, money: p.money, humanity: p.humanity, humanityMax: p.humanityMax, chromeUsed: ef.chromeUsed, chromeCapacity: ef.chromeCapacity, rep: this.rep(p, d), offers,
-      repair: (() => { const parts = chromeParts(this.c, p).filter((k) => (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0) > 0); const dmg = parts.reduce((acc, k) => acc + (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0), 0); return parts.length ? { parts, price: Math.max(60, Math.round(dmg * 9 * d.priceMult)) } : null; })(),
+      repair: (() => { const parts = mechanicalParts(this.c, p).filter((k) => (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0) > 0); const dmg = parts.reduce((acc, k) => acc + (p.body.wounds[k as keyof typeof p.body.wounds] ?? 0), 0); return parts.length ? { parts, price: Math.max(60, Math.round(dmg * 9 * d.priceMult)) } : null; })(),
       heal: (() => { const list = (p.body.list ?? []).filter((w) => w.kind !== 'amputacion' && w.kind !== 'contusion'); const amp = (p.body.list ?? []).filter((w) => w.kind === 'amputacion').length; return list.length || amp ? { wounds: list.length, amputations: amp, price: woundCarePrice(p, d.priceMult) } : null; })() };
   }
 
   /** Opera. La tirada, el cobro, el cambio de cromo y las consecuencias se aplican juntas e idempotentes. */
-  async operate(p: PlayerState, docId: string, action: 'install' | 'remove', source: ClinicOffer['source'], ref: string, opId: string): Promise<SurgeryResult> {
+  async operate(p: PlayerState, docId: string, action: 'install' | 'remove', source: ClinicOffer['source'], ref: string, opId: string, side?: CyberSide): Promise<SurgeryResult> {
     const d = this.doc(docId);
     let def: CyberwareDef | undefined, inst: { id: string; stolen: boolean } | undefined;
     if (source === 'stock' || source === 'stolen') {
@@ -95,6 +105,10 @@ export class ClinicService {
     if (!def) throw new GameError('Implante desconocido.');
     const offer = this.offer(p, d, def, source, ref, source === 'stolen' || !!inst?.stolen);
     if (offer.blocked) throw new GameError(offer.blocked);
+    if (side && !offer.sides?.includes(side)) throw new GameError('Ese lado no está disponible para este implante.');
+    const defaultSide = offer.sides?.find((s) => p.body.lost.includes((pairedSlot[def!.slot] + '_' + s) as keyof typeof p.body.wounds)) ?? offer.sides?.[0];
+    const chosen = side ?? defaultSide;
+    const part = chosen ? pairedSlot[def.slot] + '_' + chosen : undefined;
     const u = this.rng(), t = this.rng(), k = this.rng();
     const outcome: SurgeryResult['outcome'] = u > offer.survival ? 'death' : u > offer.clean ? 'complications' : 'clean';
     const ef = effective(this.c, p);
@@ -115,10 +129,10 @@ export class ClinicService {
       if (stolenMoney) { bal -= stolenMoney; await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:theft`, p.charId, -stolenMoney, bal, `Robo de ${d.name} durante la anestesia`]); }
       const hist = JSON.stringify([{ at: new Date().toISOString(), event: action === 'install' ? `instalado por ${d.name}` : `retirado por ${d.name}`, outcome }]);
       if (action === 'install') {
-        if (inst) await q.query("UPDATE cyberware_instances SET location = $3, history = history || $4::jsonb WHERE id=$1 AND character_id=$2 AND location='inventory'", [instId, p.charId, outcome === 'death' ? 'lost' : 'installed', hist]);
-        else await q.query('INSERT INTO cyberware_instances (id, def_id, character_id, location, stolen, history) VALUES ($1,$2,$3,$4,$5,$6)', [instId, def!.id, p.charId, outcome === 'death' ? 'lost' : 'installed', source === 'stolen', hist]);
+        if (inst) await q.query("UPDATE cyberware_instances SET location = $3, history = history || $4::jsonb, part=$5 WHERE id=$1 AND character_id=$2 AND location='inventory'", [instId, p.charId, outcome === 'death' ? 'lost' : 'installed', hist, part ?? null]);
+        else await q.query('INSERT INTO cyberware_instances (id, def_id, character_id, location, stolen, history, part) VALUES ($1,$2,$3,$4,$5,$6,$7)', [instId, def!.id, p.charId, outcome === 'death' ? 'lost' : 'installed', source === 'stolen', hist, part ?? null]);
       } else {
-        await q.query("UPDATE cyberware_instances SET location = 'inventory', history = history || $3::jsonb WHERE id=$1 AND character_id=$2 AND location='installed'", [instId, p.charId, hist]);
+        await q.query("UPDATE cyberware_instances SET location = 'inventory', part=NULL, history = history || $3::jsonb WHERE id=$1 AND character_id=$2 AND location='installed'", [instId, p.charId, hist]);
       }
       await q.query('UPDATE characters SET money=$2, hp=$3, humanity=$4, humanity_max=$5 WHERE id=$1', [p.charId, bal, Math.round(hp), Math.round(humanity), humMax]);
       await q.query('INSERT INTO incidents (kind, actor_char, zone, detail) VALUES ($1,$2,$3,$4)', ['cirugia', p.charId, d.zone, JSON.stringify({ doc: d.id, def: def!.id, action, outcome, survival: offer.survival, roll: u, stolenMoney })]);
@@ -126,12 +140,12 @@ export class ClinicService {
     });
     p.money = moneyAfterCharge - stolenMoney; p.hp = hp; p.humanity = humanity; p.humanityMax = humMax;
     if (action === 'install') {
-      if (inst) { const ci = p.cyber.find((x) => x.id === instId)!; if (outcome === 'death') p.cyber = p.cyber.filter((x) => x.id !== instId); else ci.location = 'installed'; }
-      else if (outcome !== 'death') p.cyber.push({ id: instId, def: def.id, location: 'installed', stolen: source === 'stolen' });
-    } else { p.cyber.find((x) => x.id === instId)!.location = 'inventory'; }
+      if (inst) { const ci = p.cyber.find((x) => x.id === instId)!; if (outcome === 'death') p.cyber = p.cyber.filter((x) => x.id !== instId); else { ci.location = 'installed'; ci.part = part; } }
+      else if (outcome !== 'death') p.cyber.push({ id: instId, def: def.id, location: 'installed', part, stolen: source === 'stolen' });
+    } else { const ci = p.cyber.find((x) => x.id === instId)!; ci.location = 'inventory'; ci.part = null; }
     if (outcome === 'clean') lines.push('Operación limpia.');
     if (outcome === 'complications') lines.push(`Complicaciones: salud ${hp}, Humanidad ${humanity}.`);
     if (stolenMoney) lines.push(`Al despertar te faltan ${stolenMoney} €$.`);
-    return { outcome, lines, stolenMoney, def, cause: outcome === 'death' ? `Murió en la mesa de ${d.name} (${def.name}, supervivencia estimada ${Math.round(offer.survival * 100)} %)` : undefined };
+    return { outcome, lines, stolenMoney, def, part, cause: outcome === 'death' ? `Murió en la mesa de ${d.name} (${def.name}, supervivencia estimada ${Math.round(offer.survival * 100)} %)` : undefined };
   }
 }

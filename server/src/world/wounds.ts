@@ -8,7 +8,7 @@
 // (de 1 día de juego a 2 semanas) si están bien tratadas; las que no se vendan se infectan.
 // Los miembros de cromo no sangran ni se pierden; un miembro perdido se recupera implantando una prótesis en un matasanos.
 import { AIM, PART_NAMES, WOUND_INFO, effectiveBleed, isLimb, woundList, newBody, treatmentsFor, zoneOfPart, type BodyPart, type BodyState, type TreatmentId, type WeaponDef, type Wound, type WoundKind } from '@vertice/shared';
-import { chromeParts, effective, skillLevel, type PlayerState } from '../game/player.js';
+import { chromeParts, mechanicalParts, effective, skillLevel, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
 import type { World } from './world.js';
 
@@ -28,7 +28,7 @@ export class Wounds {
   private isChrome(e: Entity, tp: PlayerState | undefined, part: BodyPart) {
     const parts = tp ? chromeParts(this.w.c, tp) : e.chrome ?? [];
     const key = part.startsWith('mano_') ? part.replace('mano_', 'brazo_') : part;
-    return parts.includes(key) || (part.startsWith('pierna') && parts.includes('piernas'));
+    return parts.includes(part) || parts.includes(key) || (part.startsWith('pierna') && parts.includes('piernas'));
   }
   private add(b: BodyState, part: BodyPart, kind: WoundKind, scale: number, extra: Partial<Wound> = {}) {
     const list = woundList(b);
@@ -159,7 +159,10 @@ export class Wounds {
     for (const wd of list) if (wd.heal >= 1) out.healed.push(`${WOUND_INFO[wd.kind].name.toLowerCase()} en ${PART_NAMES[wd.part]}`);
     p.body.list = list.filter((wd) => wd.heal < 1);
     // El daño por zona (para el cromo y las amputaciones) baja a la par.
-    for (const part of Object.keys(p.body.wounds) as BodyPart[]) if (!p.body.list.some((wd) => wd.part === part) && !chromeParts(this.w.c, p).includes(part)) delete p.body.wounds[part];
+    const mechanical = new Set(mechanicalParts(this.w.c, p));
+    for (const part of Object.keys(p.body.wounds) as BodyPart[]) {
+      if (!p.body.list.some((wd) => wd.part === part) && !mechanical.has(part)) delete p.body.wounds[part];
+    }
     return out;
   }
 
@@ -211,7 +214,7 @@ export class Wounds {
     if (visible === 'brazo') { const side = part?.endsWith('izq') ? 'izq' : part?.endsWith('der') ? 'der' : p.body.lost.find((x) => x.startsWith('brazo'))?.slice(-3) ?? 'der'; drop(`brazo_${side}`); drop(`mano_${side}`); }
     if (visible === 'pierna') { const side = part?.endsWith('izq') ? 'izq' : part?.endsWith('der') ? 'der' : p.body.lost.find((x) => x.startsWith('pierna'))?.slice(-3) ?? 'der'; drop(`pierna_${side}`); }
     if (visible === 'piernas') { drop('pierna_izq'); drop('pierna_der'); }
-    if (visible === 'manos') { const h = p.body.lost.find((x) => x.startsWith('mano')); if (h) drop(h); }
+    if (visible === 'mano' || visible === 'manos') { const hand = part ?? p.body.lost.find((x) => x.startsWith('mano')); if (hand) drop(hand); }
     return p.body.lost.length < before;
   }
   describe(part: BodyPart) { return PART_NAMES[part]; }

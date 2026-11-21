@@ -1,7 +1,7 @@
 // Estado en memoria de una vida de personaje y su persistencia básica.
 import { randomUUID } from 'node:crypto';
 import {
-  ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
+  pairedRegion, cyberSide, type CyberwareDef, ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
   CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, woundList, effectiveBleed, painOf, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
@@ -70,18 +70,30 @@ export interface PlayerState {
 export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean; part?: string | null }
 
 export const NET_RANKS = [0, 3, 8, 15, 25, 38, 55, 75, 100, 130, 170];
-/** Partes visibles del cuerpo con cromo. */
+export function visibleParts(def: CyberwareDef, part?: string | null): string[] {
+  if (def.visible === 'ninguna') return [];
+  if (def.visible === 'piernas') return ['pierna_izq', 'pierna_der'];
+  if (pairedRegion(def.visible)) return [def.visible + '_' + (cyberSide(part) ?? 'der')];
+  return [def.visible];
+}
+
 export function chromeParts(c: Content, p: { cyber: CyberInstance[] }): string[] {
   const out = new Set<string>();
   for (const ci of p.cyber) {
     if (ci.location !== 'installed') continue;
-    const d = c.cyberware.find((x) => x.id === ci.def);
-    if (!d || d.visible === 'ninguna') continue;
-    if (d.visible === 'brazo' || d.visible === 'pierna') out.add(ci.part ?? `${d.visible}_der`);
-    else if (d.visible === 'piernas') { out.add('pierna_izq'); out.add('pierna_der'); }
-    else out.add(d.visible);
+    const def = c.cyberware.find((d) => d.id === ci.def);
+    if (def) for (const part of visibleParts(def, ci.part)) out.add(part);
   }
   return [...out];
+}
+
+/** Un brazo completo también protege la mano y permite repararla en la consulta. */
+export function mechanicalParts(c: Content, p: { cyber: CyberInstance[] }): string[] {
+  const parts = new Set(chromeParts(c, p));
+  for (const side of ['izq', 'der']) {
+    if (parts.has('brazo_' + side)) parts.add('mano_' + side);
+  }
+  return [...parts];
 }
 
 /** Atributos, habilidades y modificadores efectivos (base + ciberware + oficio). */
@@ -153,7 +165,8 @@ export function wornAppearance(c: Content, p: PlayerState): Appearance {
     if (!d || d.visible === 'ninguna') continue;
     const r = d.rarity ?? '';
     const t = r === 'mitico' || r === 'legendario' || d.grade >= 5 ? 'lujo' : d.grade >= 4 || r === 'epico' ? 'militar' : d.grade >= 2 ? 'estandar' : 'chatarra';
-    const parts = d.visible === 'brazo' || d.visible === 'pierna' ? [ci.part ?? `${d.visible}_der`] : d.visible === 'piernas' ? ['pierna_izq', 'pierna_der'] : [d.visible];
+    const parts = visibleParts(d, ci.part);
+    if (d.model) for (const part of parts) (a.chromeModels ??= {})[part] = d.model;
     for (const pt of parts) if (!tiers[pt] || rank(t) > rank(tiers[pt])) tiers[pt] = t;
   }
   if (Object.keys(tiers).length) a.chromeTier = tiers;
@@ -229,7 +242,7 @@ export function effective(c: Content, p: PlayerState) {
   const lost = new Set(p.body?.lost ?? []);
   const armsLost = (['izq', 'der'] as const).filter((s) => lost.has(`brazo_${s}`) || lost.has(`mano_${s}`)).length;
   const legsLost = (['izq', 'der'] as const).filter((s) => lost.has(`pierna_${s}`)).length;
-  const chromeBroken = chromeParts(c, p).filter((k) => (p.body?.wounds?.[k as BodyPart] ?? 0) >= 24);
+  const chromeBroken = mechanicalParts(c, p).filter((k) => (p.body?.wounds?.[k as BodyPart] ?? 0) >= 24);
   const brokenArms = chromeBroken.filter((k) => k.startsWith('brazo')).length, brokenLegs = chromeBroken.filter((k) => k.startsWith('pierna')).length;
   const eq = p.equipped && ((p.inventory.get(p.equipped) ?? 0) > 0 || integrated.includes(p.equipped)) ? c.items.find((i) => i.id === p.equipped) : undefined;
   const weapon = eq?.weapon && armsLost < 2 && !(armsLost && twoHanded(eq)) ? eq : undefined;
@@ -431,7 +444,7 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     discovered: [...p.flags.keys()].filter((k) => k.startsWith('descubierto:')).map((k) => k.slice(12)),
     speedMult: Math.round((1 + ef.speed) * 100) / 100, dodge: Math.round(ef.dodge * 100), uniques: [...ef.flags],
     running: p.running, auto: { on: p.auto.on, personality: p.auto.personality }, post: sheetHooks.post(p),
-    body: { wounds: { ...p.body.wounds } as Record<string, number>, lost: [...p.body.lost], bleed: Math.round(p.body.bleed * 10) / 10, chrome: chromeParts(c, p), broken: effective(c, p).chromeBroken,
+    body: { wounds: { ...p.body.wounds } as Record<string, number>, lost: [...p.body.lost], bleed: Math.round(p.body.bleed * 10) / 10, chrome: mechanicalParts(c, p), broken: effective(c, p).chromeBroken,
       list: woundList(p.body).map((w) => ({ ...w, bleed: Math.round(effectiveBleed(w) * 1000) / 1000})), tempHp: p.tempHp ? Math.round(p.tempHp.amount) : 0, tempHpS: p.tempHp ? Math.max(0, Math.round((p.tempHp.until - Date.now()) / 1000)) : 0, pain: painOf(p.body) },
     weaponSlots: weaponSlotsOf(c, p), aim: aimOf(c, p),
     bio: p.bio ? { ...p.bio, objectiveName: OBJECTIVES.find((o) => o.id === p.bio!.objective)?.name ?? p.bio.objective, progress: sheetHooks.objective(p) } : null,

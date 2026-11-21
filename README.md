@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.23)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.24)
+
+La v0.24 incorpora 21 implantes 3D visibles, con lado anatómico, ajuste a la ropa y cinco rarezas comprables. [Catálogo, clínicas y fotos de las pruebas](docs/CIBERWARE_3D.md).
 
 Cuentas persistentes, selección de personajes, expediente y memorial detallado; modos **Iniciar en local** y **Publicar**: [guía y comprobaciones](docs/CUENTAS_Y_ARRANQUE.md).
 

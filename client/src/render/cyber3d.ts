@@ -50,7 +50,7 @@ export function robotMat(tier: Tier, accent: string, joint = false, face?: Recor
 }
 
 /** Cromo visible de una persona: devuelve los materiales (y oculta la carne del miembro sustituido). */
-export function roboticParts(h: Human, parts: Set<string>, tiers: Record<string, string>, accent: string, seed: number, cover: number[]): THREE.Material[] {
+export function roboticParts(h: Human, parts: Set<string>, tiers: Record<string, string>, accent: string, seed: number, cover: number[], separateHands: Set<string>): THREE.Material[] {
   const d = h.kit.data, L = d.L, body = h.bodyMesh, kind = h.kind;
   const mats: THREE.Material[] = [];
   const add = (g: THREE.BufferGeometry, m: THREE.Material) => {
@@ -71,7 +71,7 @@ export function roboticParts(h: Human, parts: Set<string>, tiers: Record<string,
     for (const r of regs) cover[r] = 5; // la carne de ese miembro no se dibuja
     const plate = robotMat(tier, accent), joint = robotMat(tier, accent, true), capM = robotMat(tier, accent); capM.userData.noGlow = true;
     const rs = new Set(regs);
-    add(shell(d, kind, { key: `robo:${key}:${tier}`, cov: (v) => (rs.has(v.reg) ? 1 : -1), off: (v) => st.off + (tier === 'militar' && v.ny > -0.3 ? 0.004 : 0), relax: st.relax }), plate);
+    add(shell(d, kind, { key: `robo:${key}:${tier}:${regs.join(',')}`, cov: (v) => (rs.has(v.reg) ? 1 : -1), off: (v) => st.off + (tier === 'militar' && v.ny > -0.3 ? 0.004 : 0), relax: st.relax }), plate);
     const sx = side;
     const sfx = side > 0 ? '_l' : '_r';
     const parts: THREE.BufferGeometry[] = [], jparts: THREE.BufferGeometry[] = [];
@@ -114,10 +114,10 @@ export function roboticParts(h: Human, parts: Set<string>, tiers: Record<string,
       add(rigid(d, mergeSimple(pist), `calf${sfx}`), joint);
     }
   };
-  if (parts.has('brazo_der')) limb('brazo_der', [REG.uaP, REG.faP, REG.handP], 1, true);
-  if (parts.has('brazo_izq')) limb('brazo_izq', [REG.uaM, REG.faM, REG.handM], -1, true);
-  if (parts.has('pierna_der')) limb('pierna_der', [REG.thP, REG.caP, REG.ftP], 1, false);
-  if (parts.has('pierna_izq')) limb('pierna_izq', [REG.thM, REG.caM, REG.ftM], -1, false);
+  if (parts.has('brazo_izq')) limb('brazo_izq', separateHands.has('mano_izq') ? [REG.uaP, REG.faP] : [REG.uaP, REG.faP, REG.handP], 1, true);
+  if (parts.has('brazo_der')) limb('brazo_der', separateHands.has('mano_der') ? [REG.uaM, REG.faM] : [REG.uaM, REG.faM, REG.handM], -1, true);
+  if (parts.has('pierna_izq')) limb('pierna_izq', [REG.thP, REG.caP, REG.ftP], 1, false);
+  if (parts.has('pierna_der')) limb('pierna_der', [REG.thM, REG.caM, REG.ftM], -1, false);
   // Mandíbula metálica (cromo de cabeza).
   if (parts.has('cabeza')) {
     const tier = pickTier('cabeza');
