@@ -724,3 +724,11 @@ body.hack-mode canvas { cursor: crosshair !important; filter: hue-rotate(-12deg)
 .record-list li { padding: 7px 0; }
 .reconnect-panel { position: fixed; z-index: 1500; top: 18px; left: 50%; transform: translateX(-50%); max-width: 420px; padding: 16px; background: #241b15f5; border: 1px solid #cfa664; border-radius: 9px; pointer-events: auto; }
 @media (max-width: 650px) { .record-stats { grid-template-columns: repeat(2, 1fr); } .record-identity { align-items: flex-start; flex-direction: column; gap: 8px; } .record-head, .record-body { padding: 16px; } .record-work { min-width: 0; } }
+
+#world-panel { width:min(900px,94vw); }
+.atlas-tools,.atlas-info,.atlas-foot { display:flex; gap:.65rem; align-items:center; flex-wrap:wrap; margin:.5rem 0; }
+.atlas-tools select {max-width:42vw;}
+.atlas-view {display:block;width:100%;height:clamp(180px,55vh,580px);touch-action:none;cursor:grab;background:#070b12;border:1px solid #435061;}
+.atlas-view:active {cursor:grabbing;}
+.atlas-view:focus-visible {outline:2px solid #69e8ce;}
+.atlas-foot {justify-content:space-between;font-size:.85em;}
