@@ -51,9 +51,14 @@ describe('articulación de la marcha', () => {
       const a=new Float64Array(6), b=new Float64Array(6);
       sampleLeg(style,0,a); sampleLeg(style,1-1e-8,b);
       for(let i=0;i<a.length;i++)expect(a[i]).toBeCloseTo(b[i],5);
-      sampleLeg(style,.61,b);
-      expect(Math.abs(a[1]-b[1])).toBeGreaterThan(.1);
-      expect(Math.abs(a[2]-b[2])).toBeGreaterThan(.1);
+      const samples=Array.from({length:100},(_,frame)=>{
+        sampleLeg(style,frame/100,b);
+        return [b[1],b[2],b[3]];
+      });
+      for(let joint=0;joint<3;joint++){
+        const angles=samples.map(frame=>frame[joint]);
+        expect(Math.max(...angles)-Math.min(...angles)).toBeGreaterThan(.15);
+      }
       expect(p.poses.some(frame=>frame[3]<-5)).toBe(true);
       expect(cadence(style,2)).toBeGreaterThan(0);
     }

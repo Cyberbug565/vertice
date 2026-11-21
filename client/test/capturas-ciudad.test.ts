@@ -81,8 +81,8 @@ it.skipIf(!output)('fotografía el atlas y las ocho poses con los mismos datos y
     {kind:'femenino',garments:['cazadora-cremallera','falda-volantes','gorra-striker'],implant:{id:'corredor',part:'pierna_izq'},
       file:'pierna-corredora.png',title:'Pierna Corredora izquierda',subtitle:'Cazadora con cremallera, falda y gorra · mallas del juego sobre el esqueleto del personaje.',
       shots:[['Apoyo','marcha',2.45,.50,[]],['Despegue','marcha',2.45,.12,[]],['Balanceo','trote',4.0,.23,['corriendo']],['Esprint','esprint',5.7,.22,['esprint']]]},
-    {kind:'masculino',garments:['abrigo-monje','cargo-futurista','botas-striker'],implant:{id:'vigia',part:'brazo_der'},
-      file:'estilos-de-paso.png',title:'Cuatro estilos de movimiento',subtitle:'Modelo masculino con abrigo, pantalón cargo, botas y brazo Vigía derecho.',
+    {kind:'masculino',garments:['abrigo-monje','pantalon-cuero-ajustado','botas-striker'],implant:{id:'vigia',part:'brazo_der'},
+      file:'estilos-de-paso.png',title:'Cuatro estilos de movimiento',subtitle:'Modelo masculino con abrigo, pantalón de cuero, botas y brazo Vigía derecho.',
       shots:[['Paseo','paseo',1.35,.07,[]],['Trote','trote',4.1,.72,['corriendo']],['Cautela','cautela',1.95,.18,[]],['Cojera izquierda','cojera',2.2,.24,['paso-izq']]]}
   ];
   for(const setup of configurations){

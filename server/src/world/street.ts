@@ -2,7 +2,7 @@
 // (se sienta en los bancos, saca algo de la máquina, tira la basura, espera el bus, fuma junto a una farola), reacciones al
 // jugador (manos arriba si le apuntas, quejas si le empujas, saludos) y pequeños sucesos: atracos, controles de la PCV y
 // discusiones que acaban mal. Todo se decide cerca de los jugadores para no gastar en barrios vacíos.
-import { facingToIdx, isWalkable, nearestWalkable } from '@vertice/shared';
+import { facingToIdx, isWalkable, nearestWalkable, RULES } from '@vertice/shared';
 import type { Entity } from './entity.js';
 import { powerful, voices } from '../game/voices.js';
 import type { World } from './world.js';
@@ -129,7 +129,7 @@ export class Street {
     const c=novel||CONVOS[Math.floor(this.rng()*CONVOS.length)];
     const until=now+c.length*3200;
     this.chatUntil.set(a,until); this.chatUntil.set(b,until);
-    for(const e of [a,b])if(e.npc)e.npc.pauseUntil=Math.max(e.npc.pauseUntil,this.w.tick+Math.ceil((until-now)/50));
+    for(const e of [a,b])if(e.npc)e.npc.pauseUntil=Math.max(e.npc.pauseUntil,this.w.tick+Math.ceil((until-now)*RULES.tickRate/1000));
     this.face(a, b.x, b.y); this.face(b, a.x, a.y);
     this.emote(a, 'gesto'); this.emote(b, 'gesto');
     c.forEach((text, i) => this.say(i % 2 ? b : a, text, 800 + i * 3200, i % 2 ? a : b));
