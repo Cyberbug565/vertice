@@ -1,0 +1,61 @@
+name: Capturas del mapa y los personajes
+on:
+  push:
+    branches: [codex/ciudad-viva-025]
+    paths:
+      - '.github/workflows/capturas-ciudad.yml'
+      - 'tools/pruebas-ciudad/**'
+      - 'client/test/capturas-ciudad.test.ts'
+      - 'server/test/ciudad-viva.test.ts'
+permissions:
+  contents: read
+jobs:
+  fotografiar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Preparar el lienzo de pruebas
+        run: npm install --prefix "$RUNNER_TEMP/vertice-canvas" @napi-rs/canvas@0.1.80
+      - name: Recorrer la ciudad y fotografiar las mallas
+        run: |
+          export VERTICE_CAPTURAS="$RUNNER_TEMP/vertice-fotos"
+          export VERTICE_CANVAS="$RUNNER_TEMP/vertice-canvas/node_modules/@napi-rs/canvas"
+          npx vitest run server/test/ciudad-viva.test.ts
+          npx vitest run client/test/capturas-ciudad.test.ts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pruebas-visuales-025
+          path: ${{ runner.temp }}/vertice-fotos/*.png
+          if-no-files-found: error
+  guardar:
+    needs: fotografiar
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/ciudad-viva-025
+      - uses: actions/download-artifact@v4
+        with:
+          name: pruebas-visuales-025
+          path: docs/pruebas-025
+      - name: Guardar las tres imágenes de la revisión probada
+        env:
+          REVISION: ${{ github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$REVISION"
+          git add -- docs/pruebas-025/mapa.png docs/pruebas-025/pierna-corredora.png docs/pruebas-025/estilos-de-paso.png
+          if ! git diff --cached --quiet; then
+            git -c user.name=github-actions -c user.email=github-actions[bot]@users.noreply.github.com commit -m "Añade las fotos de las pruebas de la ciudad y de los personajes"
+            git push origin HEAD:refs/heads/codex/ciudad-viva-025
+          fi

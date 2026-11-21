@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Atlas, cellKey, skillXpFor } from '@vertice/shared';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join as joinPath } from 'node:path';
 import { createApp } from '../src/app.js';
 import { loadPlayer } from '../src/game/player.js';
 import { mapKnowledge, rememberMap } from '../src/game/exploration.js';
@@ -35,7 +37,7 @@ it('aplica los requisitos de carácter y evita repetir una reacción o pista seg
 describe('descubrimiento del mapa por WebSocket y base de datos', () => {
   let app:Awaited<ReturnType<typeof createApp>>;
   const clients:BotClient[]=[];
-  beforeAll(async()=>{app=await createApp({port:0,host:'127.0.0.1',pgliteDir:'memory://',ambientNpcs:0,crowdNpcs:0,threats:false,lingerSeconds:0,logLevel:'warn'});});
+  beforeAll(async()=>{app=await createApp({port:0,host:'127.0.0.1',pgliteDir:'memory://',ambientNpcs:0,crowdNpcs:0,speedScale:process.env.VERTICE_CAPTURAS?12:1,threats:false,lingerSeconds:0,logLevel:'warn'});});
   afterAll(async()=>{for(const b of clients)b.close();await app?.close();});
   it('recuerda la clínica tras reconectar y exige Interfaz 15 al personaje que descifra el plano', async()=>{
     const base='http://127.0.0.1:'+app.port;
@@ -48,14 +50,20 @@ describe('descubrimiento del mapa por WebSocket y base de datos', () => {
       return {b,c,token};
     }
     const a=await join('PruebaAtlas'), other=await join('OtroAtlas');
-    await app.world.teleport(a.c,'vertice',[39,201]);
+    const output=process.env.VERTICE_CAPTURAS;
+    if(output){
+      await a.b.enterDoor('Salida');
+      await a.b.moveAndArrive(39.5,201.5,20000);
+    } else await app.world.teleport(a.c,'vertice',[39,201]);
     const door=[...a.c.e!.zone.entities].find(d=>d.doorTo?.zone==='clinica-sato')!;
     expect(door).toBeTruthy();
     const p=a.c.p!, seen=()=>mapKnowledge(p);
     expect(seen().places).not.toContain('clinica-sato');
-    expect(seen().cells).toContain(cellKey('vertice',39,201));
+    await a.b.until(()=>seen().cells.includes(cellKey('vertice',39,201)));
+    const states=[seen()];
     expect((await a.b.cmd({t:'interact',target:door.id})).ok).toBe(true);
     await a.b.until(()=>a.b.zone==='clinica-sato'&&seen().places.includes('clinica-sato'));
+    states.push(seen());
     expect(mapKnowledge((await loadPlayer(app.db,p.charId))!).places).toContain('clinica-sato');
     const deltas=await Promise.all([rememberMap(app.db,p,'vertice',88,88),rememberMap(app.db,p,'vertice',88,88)]);
     expect(deltas.filter(Boolean)).toHaveLength(1);
@@ -64,6 +72,11 @@ describe('descubrimiento del mapa por WebSocket y base de datos', () => {
     p.skillXp.interfaz=skillXpFor(15);
     expect((await a.b.cmd({t:'mapHack'})).ok).toBe(true);
     expect((await a.b.cmd({t:'mapHack'})).ok).toBe(true);
+    if(output){
+      states.push(seen());
+      mkdirSync(output,{recursive:true});
+      writeFileSync(joinPath(output,'estados.json'),JSON.stringify(states));
+    }
     a.b.close();
     await a.b.until(()=>!app.world.conns.has(a.c.accountId));
     const back=await join('PruebaAtlas',a.token);
