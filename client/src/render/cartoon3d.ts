@@ -1,3 +1,4 @@
+import { fitCartoonImplants, type BoneFit } from './cartoon-implants';
 // v0.21 · Personajes cartoon de pocos polígonos: «Vocations and Uniforms» (17 oficios, CC BY-SA, en el repositorio) y
 // «Medieval 3D People» (14 personajes de CraftPix; se descargan de la release «moveset» con tools/fetch-assets.mjs y no van
 // en el repositorio). Cada uno tiene su propio esqueleto: se les traslada en cada fotograma la pose del esqueleto del kit
@@ -69,11 +70,15 @@ export interface Cartoon { root: THREE.Object3D; update: () => void; mats: THREE
  * Monta el personaje cartoon `id` sobre el cuerpo del kit `kitRoot` (cuyos huesos están en reposo) y devuelve la función
  * que copia la pose en cada fotograma; null mientras se descarga (o si no está: entonces se ve el cuerpo del kit).
  */
-export function buildCartoon(id: string, kitRoot: THREE.Object3D, kitBones: Map<string, THREE.Bone>): Cartoon | null {
+export function buildCartoon(id: string, kitRoot: THREE.Object3D, kitBones: Map<string, THREE.Bone>, implants = new Map<string, THREE.SkinnedMesh>(), lost = new Set<string>(), kind = 'masculino'): Cartoon | null {
   load(id);
   const src = cache.get(id);
   const def = CARTOON_MODELS.find((m) => m.id === id);
   if (!src || !def) return null;
+  return mountCartoon(def, src, kitRoot, kitBones, implants, lost, kind);
+}
+
+export function mountCartoon(def: (typeof CARTOON_MODELS)[number], src: Src, kitRoot: THREE.Object3D, kitBones: Map<string, THREE.Bone>, implants: Map<string, THREE.SkinnedMesh>, lost: Set<string>, kind: string): Cartoon | null {
   const root = new THREE.Group();
   const model = cloneSkinned(src.scene);
   const mats: THREE.Material[] = [];
@@ -113,6 +118,7 @@ export function buildCartoon(id: string, kitRoot: THREE.Object3D, kitBones: Map<
   const pairs: Pair[] = [];
   const qW = (o: THREE.Object3D) => o.getWorldQuaternion(new THREE.Quaternion());
   const align = new Map<string, THREE.Quaternion>();
+  const fit = new Map<string, BoneFit>();
   for (const [k, child] of CHAIN) {
     const sb = kitBones.get(k), db = B(k);
     if (!sb || !db) continue;
@@ -123,6 +129,10 @@ export function buildCartoon(id: string, kitRoot: THREE.Object3D, kitBones: Map<
       if (sd.lengthSq() > 0.5 && dd.lengthSq() > 0.5) al = new THREE.Quaternion().setFromUnitVectors(dd, sd);
     }
     align.set(k, al);
+    if (implants.size || lost.size) {
+      const ratio = sc && dc ? wpos(dc).distanceTo(wpos(db)) / Math.max(.0001, wpos(sc).distanceTo(wpos(sb))) : fit.get(kitParentChain(k))?.scale ?? 1;
+      fit.set(k, { bone: db, align: al, scale: Math.min(2.3, Math.max(.35, ratio)) });
+    }
     const off = qW(sb).invert().multiply(al).multiply(qW(db));
     pairs.push({ src: sb, dst: db, offset: off });
   }
@@ -138,6 +148,7 @@ export function buildCartoon(id: string, kitRoot: THREE.Object3D, kitBones: Map<
       p.dst.updateMatrixWorld(true);
     }
   };
+  if (implants.size || lost.size) mats.push(...fitCartoonImplants(def.id, kind, root, kitRoot, kitBones, fit, implants, lost));
   return { root, update, mats };
 }
 const KIT_PARENT: Record<string, string> = { spine_01: 'pelvis', spine_02: 'spine_01', spine_03: 'spine_02', neck_01: 'spine_03', Head: 'neck_01' };

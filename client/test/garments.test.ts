@@ -3,6 +3,9 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { CYBER_MODELS, pairedRegion } from '../../shared/src/cyber-models';
+import { implantEntries, fitImplant } from '../src/render/implants3d';
+import type { KitData } from '../src/render/human3d';
 import { GARMENTS } from '../../shared/src/garments';
 import { bindGarment } from '../src/render/garment-skinning';
 
@@ -101,4 +104,131 @@ describe('prendas de la release ropa', () => {
     body.bind(new THREE.Skeleton([other]));
     expect(() => bindGarment(source, body)).toThrow('Falta el hueso');
   });
+});
+
+describe('implantes visibles', () => {
+  for (const kind of ['masculino', 'femenino']) {
+    it.each(Object.entries(CYBER_MODELS))(`${kind} · %s se une a sus huesos anatómicos`, async (id, region) => {
+      const body = bodies.get(kind)!;
+      body.parent!.updateWorldMatrix(true, true);
+      const g = await load(resolve(base, `cromo/${kind}/${id}.glb`));
+      g.scene.updateMatrixWorld(true);
+      const entries = implantEntries(g.scene);
+      const sides = pairedRegion(region) ? ['izq', 'der'] : [''];
+      expect(entries.size).toBe(sides.length);
+      for (const side of sides) {
+        const mesh = entries.get(side ? id + '_' + side : id)!;
+        const joined = bindGarment(mesh, body);
+        const geo = joined.geometry,
+          weights = geo.getAttribute('skinWeight'),
+          joints = geo.getAttribute('skinIndex');
+        const position = geo.getAttribute('position'),
+          near = geo.getAttribute('_vtbody'),
+          fit = geo.getAttribute('_vtfit');
+        const count = body.geometry.getAttribute('position').count;
+        let sumX = 0,
+          wrong = 0,
+          biggest = 0,
+          sumError = 0,
+          invalid = 0;
+        for (let v = 0; v < position.count; v++) {
+          let total = 0;
+          sumX += position.getX(v);
+          for (let k = 0; k < 4; k++) {
+            const weight = weights.getComponent(v, k);
+            total += weight;
+            const bone = body.skeleton.bones[joints.getComponent(v, k)];
+            if (!bone) invalid++;
+            if (side && region !== 'ojo' && weight > 0.0001 && bone.name.endsWith(side === 'izq' ? '_r' : '_l'))
+              wrong++;
+          }
+          if (!Number.isFinite(position.getY(v)) || near.getX(v) < 0 || near.getX(v) >= count) invalid++;
+          sumError = Math.max(sumError, Math.abs(total - 1));
+          biggest = Math.max(biggest, Math.abs(fit.getZ(v)), Math.abs(fit.getX(v)), Math.abs(fit.getY(v)));
+        }
+        expect(invalid).toBe(0);
+        expect(wrong).toBe(0);
+        expect(sumError).toBeLessThan(0.0001);
+        expect(biggest).toBeLessThan(0.112);
+        if (side) expect(Math.sign(sumX)).toBe(side === 'izq' ? 1 : -1);
+        const point = Math.floor(position.count / 2);
+        const bind = new THREE.Vector3().fromBufferAttribute(position, point);
+        expect(joined.applyBoneTransform(point, bind.clone()).distanceTo(bind)).toBeLessThan(0.0001);
+      }
+    });
+  }
+
+  it('remete el cromo solo bajo tela y deja libres los vértices descubiertos', async () => {
+    const body = bodies.get('masculino')!;
+    const src = implantEntries((await load(resolve(base, 'cromo/masculino/servo.glb'))).scene).get('servo_der')!;
+    const pos = src.geometry.getAttribute('position'),
+      delta = src.geometry.getAttribute('_vtfit'),
+      map = src.geometry.getAttribute('_vtbody');
+    const n = body.geometry.getAttribute('position').count;
+    const data = { reg: new Float32Array(n), L: {} } as KitData;
+    const mask = Float32Array.from({ length: n }, (_, i) => i % 2);
+    const fitted = fitImplant(src, body, data, {
+      mask,
+      sleeve: 0,
+      trouser: 0,
+      shoes: false,
+      gloves: false,
+      outfit: false,
+    });
+    const result = fitted.geometry.getAttribute('position');
+    let changed = 0,
+      uncovered = 0;
+    for (let i = 0; i < pos.count; i++) {
+      const expected = new THREE.Vector3().fromBufferAttribute(pos, i);
+      if (mask[map.getX(i)]) expected.add(new THREE.Vector3().fromBufferAttribute(delta, i));
+      else uncovered++;
+      const got = new THREE.Vector3().fromBufferAttribute(result, i);
+      if (got.distanceTo(new THREE.Vector3().fromBufferAttribute(pos, i)) > 0.001) changed++;
+      if (got.distanceTo(expected) > 0.00001) throw new Error('Deformación incorrecta en ' + i);
+    }
+    expect(changed).toBeGreaterThan(40);
+    expect(uncovered).toBeGreaterThan(40);
+    expect(src.geometry.getAttribute('position')).toBe(pos);
+  });
+});
+
+it('acopla un brazo a un NPC de uniforme, elimina la extremidad original y sigue el codo del NPC', async () => {
+  const { mountCartoon } = await import('../src/render/cartoon3d');
+  const { CARTOON_MODELS } = await import('@vertice/shared');
+  const kit = await load(resolve(base, 'humanos/Superhero_Male_FullBody.gltf'));
+  const native = await load(resolve(base, 'cartoon/policia.glb'));
+  const body = meshes(kit.scene).find((m) => (m.material as THREE.Material).name.includes('Superhero'))!;
+  const bones = new Map(body.skeleton.bones.map((b) => [b.name, b]));
+  const arm = implantEntries((await load(resolve(base, 'cromo/masculino/servo.glb'))).scene).get('servo_der')!;
+  const initial = meshes(native.scene).reduce(
+    (sum, m) => sum + (m.geometry.index?.count ?? m.geometry.getAttribute('position').count),
+    0,
+  );
+  const npc = mountCartoon(
+    CARTOON_MODELS.find((m) => m.id === 'policia')!,
+    { scene: native.scene, map: null },
+    kit.scene,
+    bones,
+    new Map([['brazo_der', arm]]),
+    new Set(),
+    'masculino',
+  )!;
+  const all = meshes(npc.root),
+    implant = all.find((m) => m.name === arm.name)!;
+  expect(implant).toBeDefined();
+  expect(
+    all.filter((m) => m !== implant).reduce((sum, m) => sum + (m.geometry.index?.count ?? 0), 0),
+  ).toBeLessThan(initial);
+  npc.update();
+  const p = implant.geometry.getAttribute('position');
+  const sample = (i: number) =>
+    implant
+      .applyBoneTransform(i, new THREE.Vector3().fromBufferAttribute(p, i))
+      .applyMatrix4(implant.matrixWorld);
+  const samples = Array.from({ length: 20 }, (_, i) => Math.floor((i * p.count) / 20));
+  const initialPoints = samples.map(sample);
+  expect(initialPoints.every((pt) => Number.isFinite(pt.x) && pt.length() < 3)).toBe(true);
+  bones.get('lowerarm_r')!.rotateZ(0.85);
+  npc.update();
+  expect(Math.max(...samples.map((v, i) => sample(v).distanceTo(initialPoints[i])))).toBeGreaterThan(0.045);
 });

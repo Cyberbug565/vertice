@@ -13,7 +13,7 @@ import { BountyService, type Bounty } from '../game/bounty.js';
 import { GameError } from '../game/effects.js';
 import { isSick, substanceEffects, takeDose } from '../game/substances.js';
 import { hasOpenWounds, woundCarePrice, woundList } from './wounds.js';
-import { buildSheet, chromeParts, effective, objectiveStatus, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
+import { buildSheet, chromeParts, mechanicalParts, effective, objectiveStatus, savePlayerVitals, wornAppearance, type PlayerState } from '../game/player.js';
 import { characterRecord, recordActivity } from '../game/records.js';
 
 const PROF_RANKS = [0, 5, 12, 22, 35];
@@ -413,7 +413,7 @@ export class Survival {
     if (!o || o.doc !== docId || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
     const p = c.p!;
     const doc = this.w.c.ripperdocs.find((d) => d.id === docId)!;
-    const parts = chromeParts(this.w.c, p).filter((k) => (p.body.wounds[k as BodyPart] ?? 0) > 0) as BodyPart[];
+    const parts = mechanicalParts(this.w.c, p).filter((k) => (p.body.wounds[k as BodyPart] ?? 0) > 0) as BodyPart[];
     if (!parts.length) throw new GameError('Tu cromo está en perfecto estado.');
     const price = this.chromeRepairPrice(p, doc.priceMult);
     if (p.money < price) throw new GameError(`La reparación cuesta ${price} €$.`);
@@ -461,7 +461,7 @@ export class Survival {
     this.w.send(c, { t: 'clinic', view: this.clinic.view(docId, p) });
   }
   chromeRepairPrice(p: PlayerState, mult: number) {
-    const dmg = chromeParts(this.w.c, p).reduce((acc, k) => acc + (p.body.wounds[k as BodyPart] ?? 0), 0);
+    const dmg = mechanicalParts(this.w.c, p).reduce((acc, k) => acc + (p.body.wounds[k as BodyPart] ?? 0), 0);
     return Math.max(60, Math.round(dmg * 9 * mult));
   }
 
@@ -971,7 +971,7 @@ export class Survival {
     if (!o || o.doc !== m.doc || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
     const p = c.p!;
     if (p.sleeping) this.wake(c);
-    const r = await this.clinic.operate(p, m.doc, m.action, m.source, m.ref, m.opId);
+    const r = await this.clinic.operate(p, m.doc, m.action, m.source, m.ref, m.opId, m.side);
     if (r.outcome === 'death') {
       this.w.send(c, { t: 'reward', title: 'La operación ha salido mal', lines: r.lines });
       await this.die(p, c.e!, r.cause!);
@@ -980,8 +980,11 @@ export class Survival {
     if (m.action === 'remove') this.w.threats.onRemoval(c);
     if (m.action === 'install') {
       this.w.progress.gain(c.p!, 'filo', 12);
-      if (this.w.combat.wounds.restore(p, r.def.visible)) { c.e!.labelVer++; this.notice(c, 'good', `${r.def.name}: vuelves a tener el miembro que perdiste.`); }
+      if ((r.def.prosthetic || !r.def.model) && this.w.combat.wounds.restore(p, r.def.visible, r.part)) { c.e!.labelVer++; this.notice(c, 'good', `${r.def.name}: vuelves a tener el miembro que perdiste.`); }
     }
+    c.e!.appearance = wornAppearance(this.w.c, p);
+    c.e!.chrome = chromeParts(this.w.c, p);
+    this.bump(c.e!);
     this.w.send(c, { t: 'reward', title: r.outcome === 'clean' ? `Operación limpia: ${r.def.name}` : `Operación con complicaciones: ${r.def.name}`, lines: r.lines });
     this.sheet(c);
     this.w.send(c, { t: 'clinic', view: this.clinic.view(m.doc, p) });

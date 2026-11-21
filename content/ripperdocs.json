@@ -107,7 +107,25 @@
    "optica-analisis",
    "traductor-cultural",
    "interfaz-vehiculo",
-   "compartimento-oculto"
+   "compartimento-oculto",
+   "cromo-taller",
+   "cromo-protesis",
+   "cromo-circuito",
+   "cromo-pinza",
+   "cromo-corredor",
+   "cromo-bio",
+   "cromo-correo-brazo",
+   "cromo-correo-pierna",
+   "cromo-rotula",
+   "cromo-optico",
+   "cromo-mordaza",
+   "cromo-vigia",
+   "cromo-servo",
+   "cromo-grua",
+   "cromo-modulo",
+   "cromo-atlas",
+   "cromo-bastion",
+   "cromo-yelmo"
   ],
   "desc": "Buena cirujana y honrada: nunca instala cromo robado.",
   "hidden": false,
@@ -361,7 +379,17 @@
    "huesos-densos",
    "modulador-voz",
    "garras-retractiles",
-   "palma-electrica"
+   "palma-electrica",
+   "cromo-circuito",
+   "cromo-pinza",
+   "cromo-corredor",
+   "cromo-bio",
+   "cromo-correo-brazo",
+   "cromo-correo-pierna",
+   "cromo-rotula",
+   "cromo-optico",
+   "cromo-mordaza",
+   "cromo-vigia"
   ],
   "stolenStock": [
    "coprocesador"
@@ -468,7 +496,11 @@
    "esqueleto-titanio",
    "huesos-densos",
    "interfaz-vehiculo",
-   "implante-mandibula"
+   "implante-mandibula",
+   "cromo-taller",
+   "cromo-protesis",
+   "cromo-circuito",
+   "cromo-pinza"
   ],
   "desc": "Prótesis asequibles y cromo básico. Grado máximo II.",
   "hidden": true,
@@ -592,7 +624,16 @@
    "refuerzo-sinaptico",
    "optica-analisis",
    "esqueleto-titanio",
-   "proyector-holografico"
+   "proyector-holografico",
+   "cromo-servo",
+   "cromo-grua",
+   "cromo-modulo",
+   "cromo-atlas",
+   "cromo-bastion",
+   "cromo-yelmo",
+   "cromo-asedio",
+   "cromo-coloso",
+   "cromo-titan"
   ],
   "desc": "La mejor y la más cara. Procedencia verificada.",
   "hidden": false,
@@ -722,7 +763,21 @@
    "proyector-holografico",
    "refuerzo-sinaptico",
    "modulador-voz",
-   "pulso-emp"
+   "pulso-emp",
+   "cromo-corredor",
+   "cromo-bio",
+   "cromo-correo-brazo",
+   "cromo-correo-pierna",
+   "cromo-rotula",
+   "cromo-optico",
+   "cromo-mordaza",
+   "cromo-vigia",
+   "cromo-servo",
+   "cromo-grua",
+   "cromo-modulo",
+   "cromo-atlas",
+   "cromo-bastion",
+   "cromo-yelmo"
   ],
   "stolenStock": [
    "ice-aislamiento",
@@ -858,7 +913,10 @@
    "latigo-monofilamento",
    "segundo-corazon",
    "piernas-propulsion",
-   "optica-analisis"
+   "optica-analisis",
+   "cromo-asedio",
+   "cromo-coloso",
+   "cromo-titan"
   ],
   "stolenStock": [
    "camuflaje-optico",

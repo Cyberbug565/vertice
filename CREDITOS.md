@@ -71,3 +71,23 @@ Prendas de Sketchfab que aportó el dueño del proyecto (release «ropa»), ajus
 La antigua exoarmadura de placas (v0.15–v0.16) era un diseño propio (placas y grietas de luz generadas por código), inspirado en una imagen de referencia que no se incluye.
 
 No se usa ningún modelo, textura ni diseño de otros videojuegos ni de tiendas con licencias que impidan publicarlos.
+
+## Ciberware visible de Vértice v0.24
+
+Las siguientes obras se adaptaron bajo [Creative Commons Atribución 4.0 Internacional](https://creativecommons.org/licenses/by/4.0/). Las adaptaciones incluyen extracción de las piezas indicadas, reducción de polígonos, ajuste de escala y silueta, materiales de juego, variantes anatómicas y pesos de animación sobre los cuerpos de Quaternius.
+
+| Obra original | Autor | Piezas de Vértice |
+| --- | --- | --- |
+| [Cybernetic_Arms](https://sketchfab.com/3d-models/cybernetic-arms-57b2232ebbe94f77a89901df5eb5c7f3) | [KeisukePaws](https://sketchfab.com/KeisukePaws) | Brazo Circuito |
+| [Robotic Prosthetic Arm](https://sketchfab.com/3d-models/robotic-prosthetic-arm-43b482c8526f45709b56434924dc4d3c) | [Daz](https://sketchfab.com/Darren.Hogan) | Brazo Servo industrial |
+| [Bionic arm](https://sketchfab.com/3d-models/bionic-arm-6f344b7280374c42936930fef3069917) | [efforya](https://sketchfab.com/efforya) | Brazo de tendones Biónica |
+| [Hand for the robot](https://sketchfab.com/3d-models/hand-for-the-robot-10871b7b2a314f52b36351281ff9903c) | [krilov.aleksandr](https://sketchfab.com/krilov.aleksandr) | Mano de precisión Pinza |
+| [leg prosthesis](https://sketchfab.com/3d-models/leg-prosthesis-59d7e2b28b8b45ec8b179fff0134ceec) | [victorghys](https://sketchfab.com/victorghys) | Pierna de encaje |
+| [Robotic Prosthetic Leg - Final Assignment](https://sketchfab.com/3d-models/robotic-prosthetic-leg-final-assignment-b3d10eb88e5145be961fe51b4b88a93a) | [Dixcit](https://sketchfab.com/Dixcit) | Pierna Corredora |
+| [mech leg](https://sketchfab.com/3d-models/mech-leg-731ac5d369184eb7813ccbd1d2a3886e) | [Ilya.Krupenkov](https://sketchfab.com/Ilya.Krupenkov) | Pierna Grúa |
+| [Cyborg Weapon](https://sketchfab.com/3d-models/cyborg-weapon-8bf111f38ff34ad38068739819fdaf0d) | [Enalrem](https://sketchfab.com/enalrem) | Módulo de antebrazo Inductor |
+| [Security Cyborg](https://sketchfab.com/3d-models/security-cyborg-94ea8c717c374e3fa8aaa7549235b323) | [fletcherkinnear](https://sketchfab.com/fletcherkinnear) | Cabeza integral Centinela, Mandíbula Mordaza, Óptica Centinela |
+| [Cyber Girl](https://sketchfab.com/3d-models/cyber-girl-46640796f0dd4fbab5eba5262d542e25) | [Rotmill](https://sketchfab.com/Rotmill) | Brazo de mensajería, Pierna de mensajería |
+| [Spine Implant Segment](https://sketchfab.com/3d-models/spine-implant-segment-8026497f40d646c38de51e86608e2ab0) | [dxvs](https://sketchfab.com/dxvs) | Columna de discos Rótula |
+
+Mano de taller, Vigía, Estibador, Bastión, Arconte, Coloso y Titán se modelaron para Vértice. El [inventario de la release](docs/CIBERWARE_3D.md#inventario-del-release) identifica las piezas y los dos archivos idénticos.

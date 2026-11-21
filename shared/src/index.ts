@@ -14,3 +14,4 @@ export * from './relics.js';
 export * from './traffic.js';
 export * from './garments.js';
 export * from './records.js';
+export * from './cyber-models.js';

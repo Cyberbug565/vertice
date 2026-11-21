@@ -209,7 +209,12 @@ function sideLabel(region: string, i: number) {
 function cyberTab(s: CharacterSheet) {
   const installed = s.cyber.filter((c) => c.location === 'installed');
   const box = (r: (typeof REGIONS)[number]) => {
-    const list = installed.filter((c) => c.region === r.id);
+    const regional = installed.filter((c) => c.region === r.id);
+    const paired = ['ojos', 'piernas', 'brazos', 'manos'].includes(r.id);
+    const list = paired
+      ? [regional.find((c) => c.part?.endsWith('_izq')), regional.find((c) => c.part?.endsWith('_der'))]
+      : [...regional];
+    if (paired) list.push(...regional.filter((c) => !list.includes(c)));
     const slots = Math.max(r.slots, list.length);
     return h('div', { class: `cy-box ${r.side}`, style: { gridRow: String(r.y + 1) } },
       h('div', { class: 'cy-title' }, r.name.toUpperCase()),
@@ -217,7 +222,7 @@ function cyberTab(s: CharacterSheet) {
         const c = list[i];
         if (!c) return h('div', { class: 'cy-slot empty', title: 'Hueco libre: instálalo en un matasanos' }, h('span', { class: 'cy-side' }, sideLabel(r.id, i)));
         const rc = RARITY_COLOR[c.rarity ?? 'comun'];
-        const el = h('div', { class: `cy-slot g${c.grade} r-${c.rarity ?? 'comun'}`, style: { borderColor: rc } }, h('span', { class: 'cs-ico' }, c.ability ? '⚡' : '🦾'), h('span', { class: 'cy-name', style: { color: rc } }, c.name));
+        const el = h('div', { class: `cy-slot g${c.grade} r-${c.rarity ?? 'comun'}`, style: { borderColor: rc } }, h('span', { class: 'cs-ico' }, c.ability ? '⚡' : '🦾'), h('span', { class: 'cy-name', style: { color: rc } }, c.name), c.part ? h('span', { class: 'cy-side' }, c.part.endsWith('izq') ? 'Izq.' : 'Der.') : null);
         el.addEventListener('mouseenter', () => showTip(el, h('div', { class: 'cs-card', style: { borderColor: rc } },
           h('div', { class: 'cs-card-rar', style: { color: rc } }, `${(RARITY_LABEL[c.rarity ?? 'comun'] ?? '').toUpperCase()} · ${c.family.toUpperCase()} · GRADO ${['I', 'II', 'III', 'IV', 'V'][c.grade - 1]}`), h('b', {}, c.name), h('p', { class: 'muted' }, c.desc),
           h('div', { class: 'mono' }, `Capacidad ${c.capacity} · Humanidad −${c.humanity}`), c.part ? h('div', {}, `Lado: ${c.part.endsWith('izq') ? 'izquierdo' : 'derecho'}`) : null,

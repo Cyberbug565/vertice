@@ -1,5 +1,6 @@
 // Paneles de la v0.2: tienda, red de mercado, empleos, matasanos, recompensas, menú de acciones y pantalla de muerte.
 import type { AmbarView, BountyView, ClinicOffer, ClinicView, DeathSummary, FactionsView, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
+import { RARITY_COLOR, RARITY_LABEL } from '@vertice/shared';
 import { content } from '../content';
 import { renderZoneMap } from './minimap';
 import type { Net } from '../net';
@@ -80,8 +81,10 @@ export function jobsPanel(ctx: LifeCtx, v: JobsView, filter: { mine: boolean } =
 
 export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
   const confirmOp = (o: ClinicOffer) => {
+    const side = h('select', { 'aria-label': 'Lado del implante' }, ...(o.sides ?? []).map((s) => h('option', { value: s }, s === 'izq' ? 'Izquierdo' : 'Derecho'))) as HTMLSelectElement;
     const ov = h('div', { class: 'overlay' }, h('div', { class: 'reward', role: 'dialog' },
       h('h2', {}, `${o.action === 'install' ? 'Instalar' : 'Retirar'} ${o.name}`),
+      o.sides?.length ? h('label', {}, 'Lado del implante ', side) : null,
       h('p', {}, `Peligrosidad: `, h('b', { class: o.danger === 'Baja' ? 'netok' : o.danger === 'Moderada' ? 'netmid' : 'netbad' }, o.danger)),
       h('ul', {},
         h('li', {}, 'Probabilidad de sobrevivir: ', h('b', {}, pct(o.survival))),
@@ -91,12 +94,12 @@ export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
         h('li', {}, `Humanidad tras la operación: ${o.humanityAfter} · Capacidad de cromo: ${o.capacityAfter}/${v.chromeCapacity}`)),
       o.warning ? h('p', { class: 'netbad' }, `⚠ ${o.warning}`) : null,
       h('p', { class: 'muted' }, 'Si mueres en la mesa, pierdes este personaje para siempre.'),
-      h('div', { class: 'row' }, h('button', { class: 'btn danger', onclick: () => { ov.remove(); ctx.net.send({ t: 'clinicDo', doc: v.doc, action: o.action, source: o.source, ref: o.ref, opId: newOpId() } as any); } }, 'Operar'),
+      h('div', { class: 'row' }, h('button', { class: 'btn danger', onclick: () => { ov.remove(); ctx.net.send({ t: 'clinicDo', doc: v.doc, action: o.action, source: o.source, ref: o.ref, side: side.value || undefined, opId: newOpId() } as any); } }, 'Operar'),
         h('button', { class: 'btn', onclick: () => ov.remove() }, 'Cancelar'))));
     $ui().append(ov);
   };
   const row = (o: ClinicOffer) => h('tr', {},
-    h('td', {}, h('b', {}, o.name), ` · grado ${['I', 'II', 'III', 'IV', 'V'][o.grade - 1]}`, o.stolen ? h('span', { class: 'netbad' }, ' · robado') : '',
+    h('td', {}, h('b', { style: { color: RARITY_COLOR[o.rarity ?? 'comun'] } }, o.name), ` · ${RARITY_LABEL[o.rarity ?? 'comun']}${o.part ? (o.part.endsWith('izq') ? ' · izq.' : ' · der.') : ''} · grado ${['I', 'II', 'III', 'IV', 'V'][o.grade - 1]}`, o.stolen ? h('span', { class: 'netbad' }, ' · robado') : '',
       h('div', { class: 'muted', style: { fontSize: '0.82em' } }, `${o.family} · ranura ${o.slot} · ${o.desc} · capacidad ${o.capacity}, Humanidad −${o.humanity}`)),
     h('td', { class: 'mono' }, fmtMoney(o.price)),
     h('td', { class: 'mono' }, h('span', { class: o.survival > 0.97 ? 'netok' : o.survival > 0.9 ? 'netmid' : 'netbad' }, pct(o.survival)), h('div', { class: 'muted' }, o.danger)),

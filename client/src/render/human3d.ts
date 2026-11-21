@@ -325,7 +325,7 @@ export function makeHuman(o: HumanOpts): Human | null {
     bmh.geometry = g;
   }
   // Miembros perdidos: el hueso se encoge (desaparece el brazo o la pierna entera).
-  for (const [part, bone] of [['brazo_der', 'upperarm_l'], ['brazo_izq', 'upperarm_r'], ['pierna_der', 'thigh_l'], ['pierna_izq', 'thigh_r'], ['mano_der', 'hand_l'], ['mano_izq', 'hand_r']] as const) {
+  for (const [part, bone] of [['brazo_izq', 'upperarm_l'], ['brazo_der', 'upperarm_r'], ['pierna_izq', 'thigh_l'], ['pierna_der', 'thigh_r'], ['mano_izq', 'hand_l'], ['mano_der', 'hand_r']] as const) {
     if (o.lost.has(part)) bones.get(bone)?.scale.setScalar(0.0001);
   }
   // Contenedor con ejes del mundo en reposo, colgado de un hueso, con su origen en el punto P (en el espacio del cuerpo).
