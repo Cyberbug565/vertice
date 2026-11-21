@@ -83,7 +83,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('elevator'), seq, floor: z.number().int().min(0).max(40).optional(), hack: z.boolean().optional() }),
   // ---- v0.6
   z.object({ t: z.literal('searchPeople'), seq, query: z.string().min(2).max(24), device: z.enum(['phone', 'computer']) }),
-  z.object({ t: z.literal('goto'), seq, kind: z.enum(['place', 'person', 'door', 'cancel']), x: z.number().finite().optional(), y: z.number().finite().optional(), key: z.string().max(80).optional(), door: z.number().int().optional() }),
+  z.object({ t: z.literal('mapHack'), seq }),
+  z.object({ t: z.literal('goto'), seq, kind: z.enum(['place', 'person', 'door', 'cancel']), zone: z.string().max(100).optional(), x: z.number().finite().optional(), y: z.number().finite().optional(), key: z.string().max(80).optional(), door: z.number().int().optional() }),
   z.object({ t: z.literal('trunk'), seq, action: z.enum(['view', 'in', 'out']), item: z.string().max(64).optional(), qty: z.number().int().min(1).max(999).optional() }),
   z.object({ t: z.literal('dance'), seq, move: z.enum(DANCE_IDS).nullable() }),
   z.object({ t: z.literal('underworld'), seq,
@@ -284,6 +285,7 @@ export interface DialogView {
 }
 
 export type ServerMsg =
+  | { t: 'atlas'; map: import('./atlas.js').MapKnowledge; reset?: boolean }
   | { t: 'welcome'; you: number; sheet: CharacterSheet; zone: string; x: number; y: number; tick: number; cityHourMs: number; cityEpoch: number; journal: JournalEntry[]; facts: Record<string, unknown>; sector: string; danger: string }
   | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
   | { t: 'spawn'; e: EntitySpawn[] }

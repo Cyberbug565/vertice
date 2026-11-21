@@ -104,7 +104,7 @@ export class Intel {
     return { zone: intel.zone, x: intel.x, y: intel.y, live: false, name: intel.name };
   }
 
-  start(c: PlayerConn, m: { kind: 'place' | 'person' | 'door' | 'cancel'; x?: number; y?: number; key?: string; door?: number }) {
+  start(c: PlayerConn, m: { kind: 'place' | 'person' | 'door' | 'cancel'; zone?: string; x?: number; y?: number; key?: string; door?: number }) {
     const p = c.p!, e = c.e!;
     if (m.kind === 'cancel') { this.cancel(c, 'Objetivo desmarcado.'); return; }
     let st: GotoState;
@@ -119,7 +119,9 @@ export class Intel {
     } else {
       if (m.x === undefined || m.y === undefined) throw new GameError('Marca un punto del mapa.');
       const city = [...this.w.zones.values()].find((z) => z.def.kind === 'exterior' && z.def.districts?.length) ?? e.zone;
-      const zone = e.zone.def.kind === 'exterior' ? e.zone : city;
+      const zone = m.zone === e.zone.id || e.zone.def.kind === 'exterior' ? e.zone : city;
+      if (m.zone && zone.id !== m.zone) throw new GameError('Ese plano pertenece a otra zona.');
+      if (m.x < 0 || m.y < 0 || m.x >= zone.def.width || m.y >= zone.def.height) throw new GameError('El punto queda fuera del plano.');
       st = { kind: 'place', label: this.placeName(zone.id, m.x, m.y), zone: zone.id, x: m.x, y: m.y, lastPathAt: 0, tx: NaN, ty: NaN };
     }
     this.setGoal(c, st);

@@ -11,6 +11,7 @@ import { Zone } from './zone.js';
 import { spawnOf, type Entity } from './entity.js';
 import { ambientBrain, scheduledBrain, thinkNpc } from './npc.js';
 import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, objectiveStatus, savePlayerVitals, sheetHooks, wornAppearance, type PlayerState } from '../game/player.js';
+import { applyMapKeys, mapKeys, rememberMap, mapKnowledge, unlockMap, writeMapKeys } from '../game/exploration.js';
 import { FactService, InstanceService } from '../game/services.js';
 import { EffectEngine, GameError, type EffectOutcome } from '../game/effects.js';
 import { allOk, buildView, checkNumbers, entryNode } from '../game/dialog.js';
@@ -332,6 +333,13 @@ export class World {
     }
     // Instantáneas escalonadas: cada cliente recibe una cada `snapshotEveryTicks` ticks, repartidos entre ticks consecutivos.
     { const every = RULES.snapshotEveryTicks, phase = this.tick % every; let i = 0; for (const c of this.conns.values()) { if ((i++ % every) === phase) this.snapshot(c); } }
+    if (this.tick % 5 === 0) for (const c of this.conns.values()) {
+      const e = c.e;
+      if (!e || !c.p || e.ghostOf || e.transit) continue;
+      void rememberMap(this.db,c.p,e.zone.id,e.x,e.y,true).then(delta => {
+        if (delta && !c.closed) this.send(c,{t:'atlas',map:delta});
+      }).catch(err => console.warn('[atlas]',err));
+    }
     this.combat.everyTick();
     if (this.tick % 20 === 0 && this.tick % 200 === 0) { try { this.property.sample(); } catch (err) { console.error('[propiedad]', err); } }
     if (this.tick % 20 === 10) { try { this.intel.tick(); } catch (err) { console.error('[objetivo]', err); } }
@@ -608,6 +616,8 @@ export class World {
       t: 'welcome', you: e.id, sheet: buildSheet(this.c, conn.p!), zone: e.zone.id, x: e.x, y: e.y, tick: this.tick,
       cityHourMs: this.c.manifest.cityHourMs, cityEpoch: this.cfg.cityHourOffset, journal: this.journal(conn.p!), facts: this.facts.all(), sector: s.name, danger: conn.lastDanger,
     });
+    await rememberMap(this.db,conn.p!,e.zone.id,e.x,e.y,true);
+    this.send(conn,{t:'atlas',map:mapKnowledge(conn.p!),reset:true});
     this.corpses.sendBlood(conn);
     if (e.path.length) this.send(conn, { t: 'ack', seq: 0, ok: true, path: e.path });
     return conn;
@@ -736,6 +746,10 @@ export class World {
       case 'interact': return this.onInteract(c, e, m.seq, m.target, m.remote);
       case 'retreat': return this.onRetreat(c, e, m.seq);
       case 'closeDialog': this.closeDialog(c); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
+      case 'mapHack': return guarded(m.seq,async () => {
+        await unlockMap(this.db,p);
+        this.send(c,{t:'atlas',map:{cells:[],places:[],unlocked:true}});
+      });
       case 'stance': p.stance = m.stance; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
       case 'chat': return this.onChat(c, e, m.seq, m.text, m.channel);
       case 'choose': this.enqueue(c, () => this.onChoose(c, m)); return;
@@ -1000,12 +1014,14 @@ export class World {
     e.path = []; e.moving = false;
     const transferId = randomUUID();
     const nx = door.doorTo.at[0] + 0.5, ny = door.doorTo.at[1] + 0.5;
+    const entered = mapKeys(p,to.id,nx,ny,true);
     const t0 = performance.now();
     try {
       // El traslado se confirma en la base de datos antes de cambiar de autoridad; si falla, el origen sigue siendo propietario.
       await this.db.tx(async (q) => {
         await q.query('UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4 WHERE id=$1', [p.charId, to.id, nx, ny]);
         await q.query('INSERT INTO zone_transfers (id, character_id, from_zone, to_zone) VALUES ($1,$2,$3,$4)', [transferId, p.charId, e.zone.id, to.id]);
+        await writeMapKeys(q,p.charId,entered);
       });
     } catch (err) {
       e.transit = false;
@@ -1018,6 +1034,7 @@ export class World {
     e.zone.remove(e);
     e.x = nx; e.y = ny; p.zone = to.id; p.x = nx; p.y = ny;
     to.add(e);
+    const discovery = applyMapKeys(p,entered);
     e.transit = false;
     e.pendingAction = undefined;
     if (p.carrying) { const body = this.entities.get(p.carrying); if (body) this.moveEntityTo(body, to, nx + 0.3, ny + 0.3); }
@@ -1030,6 +1047,7 @@ export class World {
       e.sectorId = s.id;
       conn.lastDanger = dangerAt(to.grid, nx, ny);
       this.send(conn, { t: 'zone', zone: to.id, x: nx, y: ny, sector: s.name, danger: conn.lastDanger });
+      if (discovery) this.send(conn,{t:'atlas',map:discovery});
       if (e.hiddenIn) { e.hiddenIn = undefined; delete conn.p!.buffs.escondido; }
       this.corpses.sendBlood(conn);
       void this.legends.event(conn, { type: 'visit', zone: to.id }).catch(() => {});
