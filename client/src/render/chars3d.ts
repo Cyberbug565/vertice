@@ -973,7 +973,7 @@ export class Chars3D {
     const normalR=style==='cojera'&&!(r.human?soreLeft:soreRight);
     if(moving){sampleLeg(normalL?'paseo':style,cycle,L);sampleLeg(normalR?'paseo':style,cycle+.5,R);}
     else{L.fill(0);R.fill(0);}
-    const bob=moving?-profile.descenso+(run?.042:.015)*Math.sin(2*r.phase-Math.PI/2):Math.sin(r.phase)*.006;
+    const bob=moving?-profile.descenso+(run ? .042 : .015)*Math.sin(2*r.phase-Math.PI/2):Math.sin(r.phase)*.006;
     let thL=L[0],thR=R[0],knL=L[1],knR=R[1];
     let shL=L[4],shR=R[4],elL=moving?L[5]:-.12,elR=moving?R[5]:-.12;
     let shLz=-.06,shRz=.06,spineX=moving?profile.tronco*Math.PI/180:0,spineY=moving?sw*.08:0,neckX=0;
