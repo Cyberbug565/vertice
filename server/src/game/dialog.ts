@@ -1,5 +1,6 @@
 // Evaluación de condiciones y construcción de vistas de diálogo (sin efectos secundarios).
 import { checkChance, t, RULES, type Condition, type Content, type DialogDef, type DialogOption, type DialogView } from '@vertice/shared';
+import { voices } from './voices.js';
 import { flagValue, type PlayerState } from './player.js';
 import type { FactService } from './services.js';
 
@@ -32,8 +33,10 @@ export function checkNumbers(c: Content, p: PlayerState, o: DialogOption) {
 
 export function buildView(c: Content, p: PlayerState, f: FactService, d: DialogDef, nodeId: string, dialogNo: number, speaker: { name: string; title?: string }): DialogView {
   const node = d.nodes[nodeId];
+  const nadia:Record<string,string>={offer:'inicio',details:'detalle',accepted:'encurso',active:'encurso',report:'informe',report_fixer:'informe',report_market:'informe',abandoned:'despues',after_fixer:'despues',after_market:'despues',closed:'despues'};
+  const aside=d.speaker==='nadia'?voices.mission(p,'nadia',nadia[nodeId]):undefined;
   return {
-    dialog: dialogNo, speaker: speaker.name, title: speaker.title, text: t(c, node.text),
+    dialog: dialogNo, speaker: speaker.name, title: speaker.title, text: t(c, node.text)+(aside?'\n\n'+aside:''),
     options: node.options.filter((o) => allOk(c, p, f, o.if)).map((o) => {
       const disabled = o.require.length && !allOk(c, p, f, o.require) ? t(c, o.requireText!) : undefined;
       let check;

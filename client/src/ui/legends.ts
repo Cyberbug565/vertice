@@ -11,6 +11,7 @@ export function legendPanel(net: Net, v: LegendView) {
       h('div', { class: 'mono small', style: { color: v.color } }, `${v.role.toUpperCase()} · LEYENDA DE VÉRTICE`),
       h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Confianza'), h('b', { class: 'mono' }, `${v.trust}/100`)), bar,
       h('div', { class: 'small muted' }, `Encargo ${Math.min(v.step + 1, v.steps)} de ${v.steps} · Al final: ${v.final}`)),
+    v.voice ? h('blockquote',{class:'legend-voice'},v.voice) : null,
     v.done ? h('p', { style: { color: v.color } }, '★ Has terminado todos sus encargos. Te considera de los suyos.')
       : v.mission ? h('div', { class: 'fcard', style: { borderTopColor: v.color } },
         h('h3', { style: { color: v.color, margin: '0 0 4px' } }, v.mission.title),

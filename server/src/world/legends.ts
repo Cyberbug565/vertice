@@ -4,6 +4,7 @@
 // También: entrar y salir del ciberespacio (sillas de inmersión, cuna neural) y el acceso al Velo.
 import { randomUUID } from 'node:crypto';
 import { nearestWalkable, type LegendView } from '@vertice/shared';
+import { voices } from '../game/voices.js';
 import { GameError } from '../game/effects.js';
 import type { PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
@@ -90,7 +91,9 @@ export class Legends {
   view(p: PlayerState, L: LegendDef): LegendView {
     const s = this.state(p, L.id);
     const step = L.steps[s.step];
-    return { id: L.id, name: L.name, role: L.role, color: L.color, trust: Math.min(100, s.trust), step: s.step, steps: L.steps.length, active: s.active, done: !!s.done,
+    const stage=s.done&&L.id==='sable'?'fin':String(Math.min(s.step,L.steps.length-1));
+    const voice=!s.done||L.id==='sable'?voices.mission(p,L.id,stage):undefined;
+    return { id: L.id, name: L.name, voice, role: L.role, color: L.color, trust: Math.min(100, s.trust), step: s.step, steps: L.steps.length, active: s.active, done: !!s.done,
       mission: step && !s.done ? { title: step.title, desc: step.desc, progress: this.progressText(step.goal, s.count), ready: false } : null,
       reward: step && !s.done ? this.altRewardText(p, step) ?? [step.money ? `${step.money.toLocaleString('es-ES')} €$` : '', step.item ? this.w.c.items.find((i) => i.id === step.item)?.name ?? step.item : '', step.cyber ? this.w.c.cyberware.find((x) => x.id === step.cyber)?.name ?? step.cyber : '', step.trust ? `+${step.trust} de confianza` : ''].filter(Boolean).join(' · ') : '',
       final: L.final };
