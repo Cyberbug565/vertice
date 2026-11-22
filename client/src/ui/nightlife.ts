@@ -1,4 +1,4 @@
-import { DANCES, DANCE_IDS, type DanceId, type SubstanceView } from '@vertice/shared';
+import { CLUB_DANCES, DANCES, DANCE_IDS, type DanceId, type SubstanceView } from '@vertice/shared';
 import { $ui, h } from './dom';
 
 export function closeDanceMenus() {
@@ -22,23 +22,24 @@ export function worldActions(x: number, y: number, dance: () => void, cancel: ()
 
 export function danceWheel(current: DanceId | null, choose: (choice: DanceId | null) => void) {
   closeDanceMenus();
-  const description = h('p', {}, 'Selecciona un paso');
-  const heading = h('h2', { id: 'dance-title' }, 'Bailar');
+  const description = h('p', {}, 'Selecciona un baile o un gesto');
+  const heading = h('h2', { id: 'dance-title' }, 'Bailes y gestos');
   const close = () => closeDanceMenus();
   const select = (choice: DanceId | null) => { close(); choose(choice); };
   const center = h('div', { class: 'dance-center' }, heading, description,
     h('button', { class: 'btn small', onclick: current ? () => select(null) : close }, current ? 'Dejar de bailar' : 'Cerrar'));
   const steps: HTMLButtonElement[] = [];
   for (const [i, id] of DANCE_IDS.entries()) {
-    const move = DANCES[id], angle = i * Math.PI / 3;
+    const move = DANCES[id], angle = i * Math.PI * 2 / CLUB_DANCES.length;
     const preview = () => { heading.textContent = move.name; description.textContent = move.detail; };
     steps.push(h('button', {
-      class: 'dance-step', 'aria-label': move.name, 'aria-pressed': String(id === current),
-      style: { left: `${50 + 35 * Math.sin(angle)}%`, top: `${50 - 35 * Math.cos(angle)}%` },
+      class: i<CLUB_DANCES.length?'dance-step':'btn small', 'aria-label': move.name, 'aria-pressed': String(id === current),
+      style: i>=CLUB_DANCES.length?{}:{ left: `${50 + 35 * Math.sin(angle)}%`, top: `${50 - 35 * Math.cos(angle)}%` },
       onpointerenter: preview, onfocus: preview, onclick: () => select(id),
     }, h('span', { 'aria-hidden': 'true' }, move.icon), h('b', {}, move.name)));
   }
-  const wheel = h('div', { class: 'dance-wheel' }, center, ...steps);
+  const wheel = h('div', { class: 'dance-wheel' }, center, ...steps.slice(0,CLUB_DANCES.length));
+  const gestures=h('div',{class:'dance-gestures'},...steps.slice(CLUB_DANCES.length));
   const overlay = h('div', { id: 'dance-wheel', class: 'dance-overlay', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Elegir baile',
     onclick: (ev: MouseEvent) => { if (ev.target === overlay) close(); },
     onkeydown: (ev: KeyboardEvent) => {
@@ -51,7 +52,7 @@ export function danceWheel(current: DanceId | null, choose: (choice: DanceId | n
       ev.stopPropagation();
       buttons[i < 0 ? 0 : (i + delta + buttons.length) % buttons.length].focus();
     },
-  }, wheel);
+  }, wheel,gestures);
   $ui().append(overlay);
   steps[Math.max(0, DANCE_IDS.indexOf(current ?? DANCE_IDS[0]))].focus({ preventScroll: true });
 }

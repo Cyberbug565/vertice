@@ -1,0 +1,44 @@
+clip,banco,uso_en_partida,evento
+A_TPose,adicional,referencia,Pose de calibración
+Chest_Open,base,disponible,Sin evento jugable asignado
+ClimbUp_1m,adicional,disponible,Sin evento jugable asignado
+Consume,base,activo,Gesto de consumo confirmado de sustancias.
+Farm_Harvest,adicional,disponible,Sin evento jugable asignado
+Farm_PlantSeed,adicional,disponible,Sin evento jugable asignado
+Farm_Watering,adicional,disponible,Sin evento jugable asignado
+Hit_Knockback,base,activo,Retroceso genérico al recibir un golpe.
+Idle_FoldArms_Loop,base,activo,Peatón con los brazos cruzados.
+Idle_Lantern_Loop,base,disponible,Sin evento jugable asignado
+Idle_No_Loop,base,activo,Respuesta de un peatón.
+Idle_Rail_Call,adicional,disponible,Sin evento jugable asignado
+Idle_Rail_Loop,adicional,disponible,Sin evento jugable asignado
+Idle_Shield_Break,adicional,activo,Agotamiento del escudo durante un impacto.
+Idle_Shield_Loop,adicional,disponible,Sin evento jugable asignado
+Idle_TalkingPhone_Loop,base,activo,Teléfono de un peatón.
+LayToIdle,base,respaldo,Incorporación antes de cargar las capturas.
+Melee_Hook,base,respaldo,Puñetazo antes de cargar las capturas.
+Melee_Hook_Rec,base,respaldo,Recuperación del puñetazo.
+NinjaJump_Idle_Loop,adicional,disponible,Sin evento jugable asignado
+NinjaJump_Land,base,disponible,Sin evento jugable asignado
+NinjaJump_Start,base,disponible,Sin evento jugable asignado
+OverhandThrow,base,disponible,Sin evento jugable asignado
+Shield_Dash,adicional,activo,Carga con escudo.
+Shield_OneShot,adicional,activo,El escudo absorbe el golpe conservando carga.
+Slide_Exit,base,disponible,Sin evento jugable asignado
+Slide_Loop,base,disponible,Sin evento jugable asignado
+Slide_Start,base,disponible,Sin evento jugable asignado
+Sword_Block,base,activo,Bloqueo con arma blanca sin escudo.
+Sword_Dash,adicional,activo,Carga con hoja.
+Sword_Heavy_Combo,base,disponible,Sin evento jugable asignado
+Sword_Regular_A,base,activo,Tajo con arma de una mano.
+Sword_Regular_A_Rec,base,activo,Recuperación tras el primer tajo.
+Sword_Regular_B,base,activo,Variante de tajo de una mano.
+Sword_Regular_B_Rec,base,activo,Recuperación tras el segundo tajo.
+Sword_Regular_C,base,activo,Golpe fuerte con arma de una mano.
+Sword_Regular_Combo,adicional,disponible,Sin evento jugable asignado
+TreeChopping_Loop,adicional,disponible,Sin evento jugable asignado
+Walk_Carry_Loop,base,activo,Marcha con carga.
+Yes,base,activo,Respuesta de un peatón.
+Zombie_Idle_Loop,base,disponible,Sin evento jugable asignado
+Zombie_Scratch,base,disponible,Sin evento jugable asignado
+Zombie_Walk_Fwd_Loop,base,disponible,Sin evento jugable asignado

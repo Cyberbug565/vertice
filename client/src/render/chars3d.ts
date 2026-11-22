@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { hashString, seededRng, bodyKindOf, garmentById, underwearById, DEFAULT_UNDER, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
 import { content } from '../content';
-import { loadAnims, sampleClip, clipDur } from './anim3d';
+import { loadAnims, loadExtraAnims, sampleClip, clipDur } from './anim3d';
 import { buildCartoon, cartoonVersion, type Cartoon } from './cartoon3d';
 import { buildOutfit, isOutfit, outfitVersion } from './outfit3d';
 import { fabricCanvas, skinCanvas, tattooCanvas } from './textures';
@@ -19,6 +19,8 @@ import { hairsVersion, isCollectionHair } from './hairs3d';
 import { samuraiVersion } from './samurai3d';
 import { buildTormenta, loadTormenta, poseTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
 import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
+import { kineticShield, placeShield } from './kinetic-shield';
+import { CapturePlayer, captureLength, gaitCapture, loadCapture, type Sample } from './captured-motion';
 import { dancePose } from './dance';
 import { City3D, tickNeon } from './city3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
@@ -35,7 +37,7 @@ const M = 0.9 / 1.8;
 export const BUILDING_H = 1.35;
 
 export interface Ent3D {
-  x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; swingN?: number; hurtAt?: number; rollAt?: number; kickAt?: number;
+  x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; swingN?: number; hurtAt?: number; rollAt?: number; kickAt?: number; drawAt?: number; headHitAt?: number; cue?:{id:import('@vertice/shared').MotionCue;at:number}; jumpAt?: number; sideRoll?: number;
   samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number }; flags?: number;
   /** v0.12 · Fantasma (compañeros de las matrices): translúcido, flota y se tiñe del color de su matriz. */
   ghost?: { color: number; alpha: number; float: number };
@@ -182,6 +184,8 @@ interface Rig {
   handR: THREE.Group; coat: THREE.Object3D[]; shadow: THREE.Mesh; key: string; heading: number; phase: number; lie: number; big: boolean; ranged: boolean; mats: THREE.Material[]; ghostMats?: THREE.Material[];
   lastX: number; lastY: number; speed: number;
   /** v0.21 · Arma pesada (moveset de golpes pesados) y cuándo se levantó del suelo (animación de incorporarse). */
+  capture?: CapturePlayer; shield?: THREE.Group; observedAt?: number; baseMotion?: Sample;
+  turn?: { id: string; at: number; mirror: boolean }; travel?: number; wasMoving?: boolean; guardSince?: number;
   heavy?: boolean; upAt?: number; wasDown?: boolean; emoteAt?: number;
   /** v0.21 · Personaje cartoon que copia la pose del cuerpo del kit (invisible). */
   cartoon?: Cartoon;
@@ -951,22 +955,53 @@ export class Chars3D {
     const dx = e.x - r.lastX, dy = e.y - r.lastY; r.lastX = e.x; r.lastY = e.y;
     const sp = Math.hypot(dx, dy) / Math.max(0.001, dt);
     r.speed += (sp - r.speed) * Math.min(1, dt * 8);
+    const flags=s.buffs??[];
+    const guard=s.id===o.meId?o.guarding:flags.includes('guardia');
+    const travelling=Math.hypot(dx,dy)>.0015, travel=travelling?Math.atan2(dx,dy):r.travel;
+    const remoteGuard=guard && e.flags!==undefined && s.id!==o.meId;
+    const netAngle=(((e.flags??0)>>1)&7)*Math.PI/4;
+    const angleDelta=(a:number,b:number)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
     let want = r.heading;
     if (e.lookAt && now < e.lookAt.until) want = Math.atan2(e.lookAt.x - e.x, e.lookAt.y - e.y);
+    else if (remoteGuard) want=Math.atan2(Math.cos(netAngle),Math.sin(netAngle));
     else if (Math.hypot(dx, dy) > 0.0015) want = Math.atan2(dx, dy);
     else if (e.flags !== undefined && s.id !== o.meId) { const a = ((e.flags >> 1) & 7) * Math.PI / 4; want = Math.atan2(Math.cos(a), Math.sin(a)); } // quieto: hacia donde dice el servidor
     let diff = want - r.heading; while (diff > Math.PI) diff -= Math.PI * 2; while (diff < -Math.PI) diff += Math.PI * 2;
     r.heading += diff * Math.min(1, dt * 12);
     r.root.rotation.y = r.heading;
     const moving = e.moving || r.speed > 0.25;
-    const flags=s.buffs??[];
-    const guard=s.id===o.meId?o.guarding:flags.includes('guardia');
     const soreLeft=flags.includes('paso-izq')||s.lost?.includes('pierna_izq');
     const soreRight=flags.includes('paso-der')||s.lost?.includes('pierna_der');
     const style=chooseGait(r.speed,flags.includes('corriendo'),guard,flags,soreLeft||soreRight);
     const profile=gaitProfile(style),run=style==='trote'||style==='esprint';
     r.phase=(r.phase+dt*(moving?2*Math.PI*cadence(style,r.speed):1.6))%(2*Math.PI);
     const cycle=r.phase/(2*Math.PI),sw=moving?Math.cos(r.phase):0;
+    r.observedAt=o.serverNow;
+    if(guard)r.guardSince??=now;else r.guardSince=undefined;
+    let id=(e.moving||travelling)?gaitCapture(style,flags,r.speed,!!r.big&&!!r.ranged):'';
+    let mirror=id==='herido' && !!soreRight;
+    const offset=travel===undefined?0:angleDelta(travel,want);
+    if(guard && (e.moving||travelling) && !soreLeft && !soreRight && !flags.includes('paso-carga') && travel!==undefined){
+      if(Math.abs(offset)>2.3)id='retroceso';
+      else if(Math.abs(offset)>.67)id=offset>0?'lateral-izq':'lateral-der';
+      else if(!id)id=r.ranged&&r.big?'fusil':'andar';
+    }
+    if(!guard && travelling && travel!==undefined && !soreLeft && !soreRight && !flags.includes('paso-carga')){
+      const bend=r.travel!==undefined?angleDelta(travel,r.travel):0;
+      if(r.wasMoving!==undefined && now-(r.turn?.at??-Infinity)>750){
+        if(!r.wasMoving && Math.abs(diff)>2.15)r.turn={id:'pivote',at:now,mirror:diff>0};
+        else if(r.wasMoving && Math.abs(bend)>2.15)r.turn={id:'revertir',at:now,mirror:bend<0};
+        else if(run && Math.abs(bend)>.27)r.turn={id:'curva',at:now,mirror:bend<0};
+      }
+    }
+    r.travel=travel;r.wasMoving=travelling;
+    let phase=cycle;
+    if(r.turn && id && !guard){
+      const age=now-r.turn.at, duration=r.turn.id==='pivote'?630:r.turn.id==='revertir'?520:480;
+      if(age<duration){id=r.turn.id;mirror=r.turn.mirror;phase=id==='curva'?cycle:age/duration;}
+      else r.turn=undefined;
+    }
+    r.baseMotion=id?{id,phase,mirror,mask:s.weapon?'piernas':'cuerpo'}:undefined;
     const L=r.leftFrame,R=r.rightFrame;
     // En UBC el lado anatómico izquierdo corresponde a X positivo.
     const normalL=style==='cojera'&&!(r.human?soreRight:soreLeft);
@@ -1108,6 +1143,61 @@ export class Chars3D {
   dispose() { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); }
   /** v0.21 · Animaciones de la librería universal encima del movimiento procedural (ver anim3d.ts). */
   private playClips(r: Rig, e: Ent3D, now: number, guard: boolean) {
+    loadCapture();
+    this.legacyClips(r,e,now,guard);
+    if(!captureLength('andar'))return;
+    const s=e.s, moving=e.moving||r.speed>.25;
+    let base=r.baseMotion, action:Sample|undefined;
+    const age=(t:number|undefined)=>t===undefined?Infinity:now-t;
+    const since=age(e.attackAt), flags=s.buffs??[];
+    const fighting=e.attackKind==='hit'||e.attackKind==='heavy';
+    const busy=fighting && since>=0 && since<(r.heavy?1300:560);
+    const swing=e.swingN??0;
+    const impact=age(e.headHitAt);
+    const emote=s.emote?.move, elapsed=s.emote?Math.max(0,(r.observedAt??Date.now())-s.emote.at)/1000:0;
+    const whole=(id:string,phase:number,mirror=false):Sample=>({id,phase,mirror});
+    const upper=(id:string,phase:number,mirror=false):Sample=>({id,phase,mirror,mask:moving?'torso':'cuerpo'});
+    const lying=s.dead||s.state==='sleeping'||s.state==='downed';
+    if(lying||s.vehicle||s.carried||age(e.kickAt)<320){base=undefined;}
+    else if(age(e.jumpAt)<760){action=whole('aterrizar',age(e.jumpAt)/760);}
+    else if(age(e.rollAt)<420){
+      action=whole(e.sideRoll?'esquiva-lateral':'rodar',age(e.rollAt)/420,(e.sideRoll??0)<0);
+    }else if(impact>=0 && impact<560){action=upper('mandibula',impact/560);}
+    else if(busy && !s.weapon && since<(e.attackKind==='heavy'?560:420)){
+      const id=e.attackKind==='heavy'?'boxeo':'jab';
+      action=upper(id,since/(id==='jab'?420:560),swing%2===0);
+    }else if(busy && /katana|cuchilla-serrada|espada/.test(s.weapon??'') &&
+      ((r.heavy && swing%3===2)||(!r.heavy && e.attackKind==='heavy'))){
+      action=whole('tajo-aereo',since/(r.heavy?1300:560),true);
+    }else if(busy || (age(e.hurtAt)>=0 && age(e.hurtAt)<510)){
+      if(base)base={...base,mask:'piernas'};
+    }else if(age(r.upAt)<1700 && !moving){action=whole('incorporar',age(r.upAt)/1700);}
+    else if(e.cue && age(e.cue.at)<1000 && e.cue.id==='abrir' && !moving){
+      action=whole('abrir',age(e.cue.at)/1000);
+    }else if(e.cue && e.cue.id!=='abrir' && age(e.cue.at)<1000){
+      if(base)base={...base,mask:'piernas'};
+    }else if(age(e.drawAt)<460){action=upper('desenvainar',age(e.drawAt)/460,true);}
+    else if(guard && !r.ranged && (flags.includes('escudo')||!s.weapon)){
+      const shield=flags.includes('escudo'),id=shield?'escudo':'guardia',hold=age(r.guardSince);
+      action=upper(id,shield?Math.min(1,hold/370):hold/900,shield&&!!s.weapon);
+    }else if(!moving && emote){
+      const social:Record<string,string>={uprock:'uprock',entrenar:'saco',provocar:'provocar',lanzar:'lanzar',abrir:'abrir'};
+      const id=social[emote],len=id?captureLength(id):0;
+      if(len && (emote==='uprock'||emote==='entrenar'||elapsed<len))action=whole(id,elapsed/len);
+    }
+    if(action && action.mask!=='torso'){
+      // La voltereta y el descenso están en el esqueleto capturado.
+      r.body.rotation.x=0;r.body.rotation.y=0;r.body.position.set(0,0,0);
+    }else if(base)r.body.position.y=0;
+    (r.capture??=new CapturePlayer(r.human!)).apply(base,action,now);
+    if(action?.id==='escudo'){
+      const field=r.shield??=kineticShield(r.human!);
+      field.visible=true;
+      placeShield(field,r.human!,!!s.weapon);
+    }else if(r.shield)r.shield.visible=false;
+  }
+
+  private legacyClips(r: Rig, e: Ent3D, now: number, guard: boolean) {
     loadAnims();
     const s = e.s, bones = r.human!.bones;
     const moving = e.moving || r.speed > 0.25;
@@ -1115,6 +1205,13 @@ export class Chars3D {
     if (lying) { r.wasDown = true; return; }
     if (r.wasDown) { r.wasDown = false; r.upAt = now; }
     const fade = (t: number, dur: number, fin = 0.15, fout = 0.18) => Math.max(0, Math.min(1, t / fin, (dur - t) / fout));
+    if(e.cue && e.cue.id!=='abrir' && now-e.cue.at>=0 && now-e.cue.at<1000){
+      const ids={consumir:'Consume',absorber:'Shield_OneShot','romper-escudo':'Idle_Shield_Break','carga-escudo':'Shield_Dash','carga-espada':'Sword_Dash'};
+      const id=ids[e.cue.id];
+      if(e.cue.id!=='consumir')loadExtraAnims();
+      const phase=(now-e.cue.at)/1000;
+      if(sampleClip(bones,id,phase*clipDur(id),fade(phase,1,.09,.16),moving))return;
+    }
     // 1) Golpe cuerpo a cuerpo (con las manos vacías o con arma de una mano; las pesadas tienen su propio moveset).
     const since = e.attackAt !== undefined ? (now - e.attackAt) / 1000 : 1e9;
     if ((e.attackKind === 'hit' || e.attackKind === 'heavy') && !r.ranged && !r.heavy) {
@@ -1231,6 +1328,7 @@ export class Preview3D {
     s.emote = t > 9 && t < 12.5 ? { move: 'gesto', at: Date.now() - (t - 9) * 1000 } : undefined;
     c.animate(r, this.ent, { meId: 1, guarding: false, now, dt, serverNow: Date.now() });
     c.applyHuman(r);
+    if(r.human && !r.mech)c.playClips(r,this.ent,now,false);
     r.cartoon?.update(); // v0.21 · personaje cartoon
     r.root.rotation.y = this.angle;
     this.zoomK += (this.zoomGoal - this.zoomK) * Math.min(1, dt * 8);

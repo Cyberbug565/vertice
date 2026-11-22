@@ -145,6 +145,7 @@ export class Survival {
     const carry = this.w.stealth.detectable(p).filter((id) => id !== shown);
     if ((e.carry ?? []).join() !== carry.join()) { e.carry = carry; e.labelVer++; }
     const gait:string[]=[];
+    if(substances.drunk>=35)gait.push('paso-ebrio');
     if(p.carrying || ef.weight>ef.carryMax)gait.push('paso-carga');
     if(p.running && p.stamina>3 && !p.carrying && !p.sleeping && ef.legsLost===0)gait.push('corriendo');
     for(const part of ['pierna_izq','pierna_der'] as const){
@@ -354,6 +355,7 @@ export class Survival {
     if (qty === null) return;
     p.inventory.set(d.id, qty);
     p.substances = next.state;
+    if(!next.sick)this.w.motion(e,'consumir');
     p.thirst = thirst;
     p.fatigue = fatigue;
     p.stamina = stamina;
@@ -841,6 +843,7 @@ export class Survival {
     this.w.progress.gain(p, 'percepcion', 2);
     const e = c.e!;
     this.w.cancelActivity(e);
+    this.w.motion(e,'abrir');
     e.channel = { startTick: this.w.tick, endTick: this.w.tick + 60, label: 'Rebuscando en la basura', targetId: trash.id, apply: () => this.w.enqueue(c, async () => {
       const mods = this.w.c.professions.find((y) => y.id === p.profession)?.mods;
       const r = this.rng();

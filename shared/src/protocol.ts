@@ -15,7 +15,7 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('stop'), seq }),
   // v0.7 · movimiento con WASD (dirección en el mundo; 0,0 = parar), guardia con clic derecho, curar una zona del cuerpo y reparar cromo.
   z.object({ t: z.literal('steer'), seq, dx: z.number().finite().min(-1).max(1), dy: z.number().finite().min(-1).max(1) }),
-  z.object({ t: z.literal('guard'), seq, on: z.boolean() }),
+  z.object({ t: z.literal('guard'), seq, on: z.boolean(), facing:z.number().int().min(0).max(7).optional() }),
   // v0.8 · matrices del zócalo, leyendas y menú de trucos (solo cuentas de administración).
   z.object({ t: z.literal('matrix'), seq, action: z.enum(['equip', 'remove']), item: z.string().max(64) }),
   z.object({ t: z.literal('legend'), seq, legend: z.string().max(32), action: z.enum(['view', 'accept']) }),
@@ -95,7 +95,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
 export type ClientMsg = z.infer<typeof ClientMsg>;
 
 /** v0.13 · además de los bailes: sentado, manos arriba, al teléfono, fumando y gesticulando al hablar. */
-export interface EmoteState { move: DanceId | 'nausea' | 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos'; at: number }
+export type MotionCue = 'abrir'|'consumir'|'absorber'|'romper-escudo'|'carga-escudo'|'carga-espada';
+export interface EmoteState { move: DanceId | 'nausea' | 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos' | 'lanzar' | 'abrir'; at: number }
 export type EntityKind = 'player' | 'npc' | 'door' | 'object';
 export interface Appearance {
   skin: string; hair: string; jacket: string; accent: string; eyes?: string; pants?: string; build?: string; hairStyle?: string; top?: string; facial?: string; accessory?: string; tattoo?: string; nose?: string; mouth?: string;
@@ -317,7 +318,8 @@ export type ServerMsg =
   | { t: 'blood'; reset?: boolean; spots: { id: number; zone: string; x: number; y: number; r: number; until: number }[] }
   | { t: 'stealth'; view: StealthView }
   | { t: 'noise'; x: number; y: number; r: number }
-  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave' | 'alarm'; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean }
+  | { t:'motion'; id:number; cue:MotionCue }
+  | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave' | 'alarm'; jump?: boolean; dx?:number; dy?:number; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean }
   | { t: 'searchResults'; device: 'phone' | 'computer'; results: SearchResult[] }
   | { t: 'gotoTarget'; target: { label: string; zone: string; x: number; y: number } | null }
   | { t: 'trunk'; view: TrunkView }

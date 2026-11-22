@@ -62,7 +62,7 @@ describe('Vida nocturna y comercio clandestino', () => {
     }
     await at(b, a.zone, [19, 8]);
     await b.until(() => b.entities.has(a.you));
-    for (const move of ['onda', 'rebote']) {
+    for (const move of ['onda', 'rebote', 'uprock', 'entrenar', 'provocar']) {
       const remote = b.waitFor((m) => m.t === 'label' && m.id === a.you && m.emote?.move === move);
       expect((await a.cmd({ t: 'dance', move })).ok).toBe(true);
       await remote;
@@ -71,6 +71,13 @@ describe('Vida nocturna y comercio clandestino', () => {
     expect((await a.move(18.5, 8.5)).ok).toBe(true);
     await clear;
     expect(conn(a).e!.emote).toBeUndefined();
+    expect((await a.cmd({t:'guard',on:true,facing:0})).ok).toBe(true);
+    const e=conn(a).e!,since=e.guardSince;
+    expect((await a.cmd({t:'guard',on:true,facing:6})).ok).toBe(true);
+    expect(e.guardSince).toBe(since);
+    expect(e.facing).toBe(6);
+    expect((await a.cmd({t:'guard',on:false})).ok).toBe(true);
+    expect(e.guardFacing).toBeUndefined();
   });
 
   it('compra en la barra, castiga la puntería y persiste intoxicación, vómitos y dependencia', async () => {

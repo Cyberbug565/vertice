@@ -434,7 +434,7 @@ export class Combat {
     e.x = x; e.y = y; e.path = []; e.moving = false; e.pendingAction = undefined; e.zone.moved(e);
     e.dodgeUntil = now + 450; e.dodgeReadyAt = now + 900;
     this.w.cancelActivity(e);
-    for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind: 'dodge', from: e.id, to: e.id, x: fromX, y: fromY });
+    for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind: 'dodge', from: e.id, to: e.id, x: fromX, y: fromY, dx:e.x-fromX, dy:e.y-fromY });
     this.w.send(c, { t: 'sheet', sheet: (this.sv as any).sheetOf(p) });
   }
 
@@ -701,7 +701,10 @@ export class Combat {
     if (te.ghostOwner) this.w.relics.endGhost(te.ghostOwner, false);
     this.w.nightlife.stop(te);
     // v0.9 · Escudo cinético: absorbe daño mientras dura.
-    if ((tp.buffs.escudo ?? 0) > Date.now() && (tp.shield ?? 0) > 0) { const ab = Math.min(tp.shield!, dmg); tp.shield! -= ab; dmg -= ab; if (dmg <= 0) { this.notice(te.conn, 'good', `Tu escudo absorbe el golpe de ${src.name}.`); return; } }
+    if ((tp.buffs.escudo ?? 0) > Date.now() && (tp.shield ?? 0) > 0) { const ab = Math.min(tp.shield!, dmg); tp.shield! -= ab; dmg -= ab;
+      this.w.motion(te,tp.shield!>0?'absorber':'romper-escudo');
+      if(tp.shield===0){delete tp.buffs.escudo;te.labelVer++;}
+      if (dmg <= 0) { this.notice(te.conn, 'good', `Tu escudo absorbe el golpe de ${src.name}.`); return; } }
     tp.hp -= dmg; tp.lastCombatAt = Date.now();
     this.notice(te.conn, 'bad', `${src.name} te ${lethal ? 'hiere' : 'golpea'}: −${dmg} de salud.`);
     if (te.conn) this.w.send(te.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) });
@@ -1457,7 +1460,7 @@ export class Combat {
         for (let i = 1; i <= ab.power * 4; i++) { const nx = e.x + (dir.dx / len) * 0.25 * i, ny = e.y + (dir.dy / len) * 0.25 * i; if (!isWalkable(e.zone.grid, nx, ny)) break; x = nx; y = ny; }
         const fx0 = e.x, fy0 = e.y;
         e.x = x; e.y = y; e.path = []; e.moving = false; e.zone.moved(e); e.dodgeUntil = now + 300;
-        for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind: 'dodge', from: e.id, to: e.id, x: fx0, y: fy0 });
+        for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind: 'dodge', jump:true, from: e.id, to: e.id, x: fx0, y: fy0 });
         this.notice(c, 'good', `${ab.name}: saltas ${Math.hypot(x - fx0, y - fy0).toFixed(1)} m.`);
         break;
       }
@@ -1468,6 +1471,10 @@ export class Combat {
         const step = Math.min(ab.power, Math.max(0, dist - 1));
         const nx = e.x + ((t.x - e.x) / dist) * step, ny = e.y + ((t.y - e.y) / dist) * step;
         if (step > 0 && lineWalkable(e.zone.grid, e.x, e.y, nx, ny)) { e.x = nx; e.y = ny; e.path = []; e.lastMoveTick = this.w.tick; e.zone.moved(e); }
+        if(step>0 && e.x===nx && e.y===ny){
+          if((p.buffs.escudo??0)>now)this.w.motion(e,'carga-escudo');
+          else if(/katana|espada|cuchilla-serrada/.test(e.weaponId??''))this.w.motion(e,'carga-espada');
+        }
         p.nextAttackAt = 0; p.buffs.carga = now + 2500;
         this.notice(c, 'good', `${ab.name}: te lanzas sobre ${t.name} (+3 al próximo ataque).`);
         break;
