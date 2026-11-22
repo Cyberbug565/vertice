@@ -1,0 +1,111 @@
+{
+  "id": "muelles",
+  "requiere": {
+    "all": [
+      "barrio:muelles-viejos"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Por qué lleva un lazo la grúa?",
+      "respuestas": [
+        "Se jubila quien la conduce.",
+        "Los barcos traen flores hoy.",
+        "Para que no se pierda en el cielo gris.",
+        "La hija del gruista ganó una carrera.",
+        "Con tanto hierro no encontraron el asa del regalo."
+      ]
+    },
+    {
+      "abre": "¿A qué sabe el café del puerto?",
+      "respuestas": [
+        "A las seis y un poquito de sal.",
+        "A junta nueva de cafetera.",
+        "Mejor si no remueves con la llave.",
+        "A mi primer empleo.",
+        "Cuando deje de hacer olas te digo."
+      ]
+    },
+    {
+      "abre": "¿Viste la marea bajo el muelle?",
+      "respuestas": [
+        "La marca de ayer llega al tobillo.",
+        "Se llevó el reflejo de la luna.",
+        "Reapareció mi boya favorita.",
+        "Desde la rampa se ven peces.",
+        "Tengo que levantar ese cajón."
+      ]
+    },
+    {
+      "abre": "Han traído un contenedor de campanas.",
+      "respuestas": [
+        "Por eso canta el muelle.",
+        "Que no lo descarguen durante mi siesta.",
+        "Confío en que el siguiente traiga orejeras.",
+        "Una parece decir mi nombre.",
+        "El albarán pone mercancía sonora."
+      ]
+    },
+    {
+      "abre": "¿A quién espera ese perro en la rampa?",
+      "respuestas": [
+        "Al patrón con su sardina diaria.",
+        "Al barco amarillo. Ignora los demás.",
+        "A mí, pero esconde la correa.",
+        "Estaba aquí antes de que yo fichara.",
+        "A la cocinera. Sabe quién manda."
+      ]
+    },
+    {
+      "abre": "¿Por qué pintan ojos en las barcazas?",
+      "respuestas": [
+        "Así encuentran la vuelta, decía mi abuela.",
+        "Distingues la proa en la niebla.",
+        "La hija del carpintero inició la moda.",
+        "Para que el río mire a la ciudad.",
+        "La mía lleva pecas, no ojos."
+      ]
+    },
+    {
+      "abre": "¿Qué pone en esa caja mojada?",
+      "respuestas": [
+        "Frágil en cuatro tipos de mancha.",
+        "Abrir con la merienda, diría yo.",
+        "La marca de mi conservera.",
+        "No sé, suena algo dentro.",
+        "La etiqueta está abajo. Ayúdame."
+      ]
+    },
+    {
+      "abre": "¿Te acostumbras al olor del río?",
+      "respuestas": [
+        "Fuera del puerto lo echo de menos.",
+        "Me supo a cuerda húmeda una semana.",
+        "Me guía hasta casa.",
+        "Solo aprendes de dónde sopla.",
+        "Mi ropa se acostumbró antes que yo."
+      ]
+    },
+    {
+      "abre": "¿Para qué te llevas esa tabla?",
+      "respuestas": [
+        "Para el estante del pequeño.",
+        "Tiene los años de mi primer barco.",
+        "Te lo cuento si prestas el carro.",
+        "Aún hace una buena mesa.",
+        "Lleva marcada la altura de mi hija cada verano."
+      ]
+    },
+    {
+      "abre": "¿Quién toca la bocina dos veces?",
+      "respuestas": [
+        "La patrona saluda a su padre.",
+        "El remolcador presume de voz.",
+        "Es la señal del reparto de hielo.",
+        "Una novata que pide permiso para hacer ruido.",
+        "A esta hora todos reconocemos a alguien."
+      ]
+    }
+  ]
+}

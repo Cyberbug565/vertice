@@ -1,0 +1,16 @@
+{
+  "id": "apuntado",
+  "requiere": {
+    "all": [
+      "apuntado"
+    ]
+  },
+  "comentarios": [
+    "Bajo la bolsa, mira, despacio.",
+    "No quiero líos. ¿Puedo apartarme?",
+    "¡Que hay gente detrás de mí!",
+    "Me quedaré quieta. De verdad.",
+    "Son las llaves lo que llevo en la mano."
+  ],
+  "escenas": []
+}

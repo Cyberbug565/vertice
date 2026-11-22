@@ -62,6 +62,7 @@ export const SOCKET_BASE = 2, SOCKET_MAX = 4;
 
 /** Leyendas de la ciudad: personajes conocidos y escondidos. Hay que ganarse su confianza (y la de su gente) para trabajar con ellos. */
 export interface LegendView {
+  voice?: string;
   id: string; name: string; role: string; color: string; trust: number; step: number; steps: number; active: boolean; done: boolean;
   mission: { title: string; desc: string; progress: string; ready: boolean } | null; reward: string; final: string; hint?: string;
 }

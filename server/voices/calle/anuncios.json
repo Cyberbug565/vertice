@@ -1,0 +1,112 @@
+{
+  "id": "anuncios",
+  "requiere": {
+    "any": [
+      "cerca:holo",
+      "cerca:billboard"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "El anuncio me llama por otro nombre.",
+      "respuestas": [
+        "El mío sigue felicitando a mi ex.",
+        "Por lo menos te deja en paz a ti.",
+        "A ver si al otro le hacen descuento.",
+        "A mí me llama licenciado y dejé los estudios.",
+        "Habla con tu abrigo de segunda mano."
+      ]
+    },
+    {
+      "abre": "¿Ves la errata del cartel?",
+      "respuestas": [
+        "Regalan clavos en vez de claves.",
+        "La pintora espera a ver quién se atreve.",
+        "Desde que la vi solo leo eso.",
+        "El de la estación regalaba primos.",
+        "Al parpadear se come otra letra."
+      ]
+    },
+    {
+      "abre": "La modelo de la pantalla parece triste.",
+      "respuestas": [
+        "Lleva años diciendo que hoy es su día.",
+        "Se fundió una tira sobre su ceja.",
+        "Su dibujante hacía esa misma mueca.",
+        "Le compraría algo si supiera qué vende.",
+        "Al atardecer le cambia la expresión."
+      ]
+    },
+    {
+      "abre": "¿Qué venden con esa pantalla en blanco?",
+      "respuestas": [
+        "Pausas. Ya he comprado una.",
+        "Cristales demasiado limpios.",
+        "El técnico dejó abierto el menú.",
+        "Un detergente excesivamente bueno.",
+        "Se te ve el polvo del abrigo."
+      ]
+    },
+    {
+      "abre": "¿Te pagan por llevar esa frase en la manga?",
+      "respuestas": [
+        "Solo si me ven de perfil.",
+        "Fue un regalo. Tapo la frase al entrar.",
+        "En créditos para comprar otra manga.",
+        "La bordé por un amigo.",
+        "Si pagaran por preguntas sería rico."
+      ]
+    },
+    {
+      "abre": "El holograma ha estornudado.",
+      "respuestas": [
+        "Detrás hay un técnico con pañuelo.",
+        "Hasta los anuncios cogen frío.",
+        "Está demostrando el jarabe al revés.",
+        "Buen momento para vender pañuelos.",
+        "Yo le he dicho salud."
+      ]
+    },
+    {
+      "abre": "¿Cómo se compra una puesta de sol?",
+      "respuestas": [
+        "Me quedé la muestra del jueves.",
+        "Arriba la ven sin alquilar pantalla.",
+        "Que incluyan la brisa, al menos.",
+        "En mi azotea cuesta seis pisos.",
+        "El proyector se paga. La espera es tuya."
+      ]
+    },
+    {
+      "abre": "¿De quién es ese jingle tan pegadizo?",
+      "respuestas": [
+        "De mi primo. Queda entre nosotros.",
+        "Del puesto que juré olvidar.",
+        "En tres minutos te contagio otro.",
+        "Mi hijo ya canta los coros.",
+        "De la chica que vende tapones."
+      ]
+    },
+    {
+      "abre": "¿Podrían bajar el brillo durante la cena?",
+      "respuestas": [
+        "Lo pidió todo el bloque.",
+        "Yo cené el viernes con gafas de sol.",
+        "Lo bajan si pasa el inspector.",
+        "Me cuece las lechugas del balcón.",
+        "Por fin veríamos la lámpara nueva."
+      ]
+    },
+    {
+      "abre": "Han tapado la foto de la esquina.",
+      "respuestas": [
+        "La familia conserva una copia.",
+        "Aún asoma la oreja del perro.",
+        "Mañana ponen un marco en el patio.",
+        "Tengo una foto del día que la colgaron.",
+        "La pintora dejó una ventana en el centro."
+      ]
+    }
+  ]
+}

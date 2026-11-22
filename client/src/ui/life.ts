@@ -2,7 +2,6 @@
 import type { AmbarView, BountyView, ClinicOffer, ClinicView, DeathSummary, FactionsView, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
 import { RARITY_COLOR, RARITY_LABEL } from '@vertice/shared';
 import { content } from '../content';
-import { renderZoneMap } from './minimap';
 import type { Net } from '../net';
 import { newOpId } from '../net';
 import { $ui, fmtMoney, h, ask } from './dom';
@@ -209,78 +208,7 @@ export function ambarPanel(ctx: LifeCtx, v: AmbarView) {
 }
 
 /** Mapa global: distritos de la megápolis colocados como en un mapa de juego. */
-let cityMapCache: { canvas: HTMLCanvasElement; project: (x: number, y: number) => { x: number; y: number } } | null = null;
-/** Mapa global: toda la ciudad única en isométrico, con los distritos rotulados, tu posición y viaje en coche. */
-export function worldMapPanel(current: string, opts: { discovered?: string[]; hasCar?: boolean; travel?: (zone: string) => void; me?: { x: number; y: number }; goal?: { x: number; y: number; zone: string } | null; goto?: (x: number, y: number) => void } = {}) {
-  const W = content.world;
-  const city = content.zones.find((z) => z.id === 'vertice')!;
-  const inR = (x: number, y: number, [rx, ry, rw, rh]: number[]) => x >= rx && y >= ry && x < rx + rw && y < ry + rh;
-  // ¿Dónde estoy? En la calle, por mi posición; dentro de un local, por su salida.
-  let pos = opts.me && current === 'vertice' ? opts.me : null;
-  if (!pos) {
-    const zid = current.startsWith('casa:') ? null : current;
-    const z = zid ? content.zones.find((x) => x.id === zid) : null;
-    const lobby = z?.tower ? content.zones.find((x) => x.id === `${z.tower!.id}-p0`) : z;
-    const out = lobby?.doors.find((d) => d.to.zone === 'vertice');
-    if (out) pos = { x: out.to.at[0], y: out.to.at[1] };
-    if (current.startsWith('casa:')) { const hh = content.houses.find((x) => x.id === current.slice(5)); const o = hh && city.objects.find((x) => x.id === hh.building); if (o) pos = { x: o.at[0], y: o.at[1] }; }
-  }
-  const here = pos ? city.districts.find((d) => inR(pos!.x, pos!.y, d.rect))?.id ?? '' : '';
-  const facName = (id: string) => content.factions.find((f) => f.id === id);
-  const info = h('div', { class: 'fcard', style: { minHeight: '120px' } });
-  const showInfo = (did: string) => {
-    const d = W.districts.find((x) => x.zone === did);
-    const meta = city.districts.find((x) => x.id === did);
-    if (!d || !meta) return;
-    const inD = (at: number[]) => inR(at[0], at[1], meta.rect);
-    const places = city.doors.filter((x) => inD(x.at) && !x.to.zone.startsWith('pasarela-'))
-      .map((x) => (x.hidden ? ((opts.discovered ?? []).includes(x.hidden) ? `⚕ ${content.ripperdocs.find((r) => r.id === x.hidden)?.name ?? 'Matasanos'}` : null) : x.name)).filter((x): x is string => !!x);
-    const portals = city.objects.filter((o) => o.kind === 'housing' && inD(o.at)).length;
-    const works = city.objects.filter((o) => o.kind === 'hiring' && inD(o.at)).length;
-    info.replaceChildren(...([h('h3', { style: { color: d.color, margin: '0 0 4px' } }, meta.name, did === here ? ' · estás aquí' : ''), h('p', { style: { margin: '4px 0' } }, d.desc),
-      h('div', {}, '👮 Presencia policial: ', h('b', {}, d.police)),
-      h('div', { class: 'row', style: { gap: '4px', margin: '6px 0' } }, ...d.factions.map((f) => { const fd = facName(f); return h('span', { class: 'chip', style: { background: (fd?.color ?? '#888') + '33', color: fd?.color } }, fd?.name ?? f); })),
-      places.length ? h('div', { style: { fontSize: '0.85em' } }, '🚪 ', places.join(' · ')) : null,
-      h('div', { style: { fontSize: '0.85em' } }, `🏠 ${portals} portales con ${content.houses.filter((x) => x.district === did).length} viviendas${works ? ` · 🏗 obra con puestos de trabajo` : ''}`),
-      did !== here && opts.travel ? h('button', { class: 'btn small primary', disabled: !opts.hasCar, title: opts.hasCar ? '' : 'Necesitas un coche', onclick: () => { opts.travel!(did); document.getElementById('world-panel')?.remove(); } }, opts.hasCar ? `🚗 Ir en coche a ${meta.name}` : '🚗 Ir en coche (necesitas uno)') : null] as (Node | null)[]).filter((x): x is Node => !!x));
-  };
-  if (!cityMapCache) { const cv = document.createElement('canvas'); cityMapCache = { canvas: cv, project: renderZoneMap(city, cv, 0.8).project }; }
-  const { canvas, project } = cityMapCache;
-  const img = h('img', { src: canvas.toDataURL(), class: 'citymap-img', alt: 'Mapa de Ciudad Vértice', title: opts.goto ? 'Clic: marcar destino (vas solo hasta allí)' : '', style: { cursor: opts.goto ? 'crosshair' : 'default' },
-    onclick: (ev: MouseEvent) => {
-      if (!opts.goto) return;
-      const r = img.getBoundingClientRect();
-      const px = ((ev.clientX - r.left) / r.width) * canvas.width, py = ((ev.clientY - r.top) / r.height) * canvas.height;
-      const s0 = 0.8, a = (px - city.height * s0) / s0, b = (2 * py) / s0;
-      const x = (a + b) / 2, y = (b - a) / 2;
-      if (x < 0 || y < 0 || x >= city.width || y >= city.height) return;
-      opts.goto(x, y); document.getElementById('world-panel')?.remove();
-    } }) as HTMLImageElement;
-  const pct = (x: number, y: number) => { const p = project(x, y); return { left: `${(100 * p.x) / canvas.width}%`, top: `${(100 * p.y) / canvas.height}%` }; };
-  const labels = city.districts.map((m) => {
-    const d = W.districts.find((x) => x.zone === m.id);
-    const [rx, ry, rw, rh] = m.rect;
-    return h('button', { class: `citymap-label${m.id === here ? ' here' : ''}`, style: { ...pct(rx + rw / 2, ry + rh / 2), color: d?.color ?? '#fff', borderColor: d?.color ?? '#fff' }, onclick: () => showInfo(m.id) }, m.name);
-  });
-  const rooms = new Set(content.zones.filter((z) => z.nightlife).map((z) => z.id));
-  const venues = city.doors.filter((d) => rooms.has(d.to.zone));
-  const marks = [
-    ...venues.map((d) => {
-      const contact = content.underworld.contacts.find((s) => s.zone === d.to.zone);
-      const title = contact ? `${d.name} · contacto: ${contact.name}` : d.name;
-      return h('button', { class: 'citymap-night', title, 'aria-label': title, style: pct(d.at[0] + 0.5, d.at[1] + 0.5),
-        onclick: () => { opts.goto?.(d.at[0] + 0.5, d.at[1] + 0.5); document.getElementById('world-panel')?.remove(); } }, '♫');
-    }),
-    ...city.doors.filter((x) => x.to.zone.startsWith('torre-')).map((x) => h('span', { class: 'citymap-mark', title: x.name, style: pct(x.at[0], x.at[1]) }, '🏢')),
-    ...city.doors.filter((x) => (x.to.zone.startsWith('base-') || x.to.zone.startsWith('refugio-'))).map((x) => h('span', { class: 'citymap-mark', title: x.name, style: pct(x.at[0], x.at[1]) }, '☠')),
-    ...city.doors.filter((x) => x.hidden && (opts.discovered ?? []).includes(x.hidden)).map((x) => h('span', { class: 'citymap-mark', title: content.ripperdocs.find((r) => r.id === x.hidden)?.name, style: pct(x.at[0], x.at[1]) }, '⚕')),
-    ...(pos ? [h('span', { class: 'citymap-me', title: 'Estás aquí', style: pct(pos.x, pos.y) })] : []),
-    ...(opts.goal && opts.goal.zone === 'vertice' ? [h('span', { class: 'citymap-mark', title: 'Destino marcado', style: { ...pct(opts.goal.x, opts.goal.y), color: '#ff40ff' } }, '◆')] : []),
-  ];
-  const map = h('div', { class: 'citymap' }, img, ...labels, ...marks);
-  showInfo(here || 'ferro');
-  showPanel('world-panel', `Mapa de ${W.name}`, h('p', { class: 'muted' }, 'Toda la ciudad es un único mapa. Haz clic en el plano para marcar un destino: tu personaje irá solo hasta allí. Colores: verde zona segura, sin tinte zona vigilada, rojo zona peligrosa y negro zona sin ley. 🏢 torres · ♫ bares y discotecas · ☠ bases de bandas · ⚕ matasanos descubiertos · ◆ destino.'), map, info);
-}
+
 
 export function deathScreen(s: DeathSummary, onNew: () => void) {
   const ov = h('div', { class: 'overlay', style: { background: 'rgba(40,0,10,0.85)' } }, h('div', { class: 'reward', style: { borderColor: 'var(--red)' } },

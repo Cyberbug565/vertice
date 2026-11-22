@@ -327,10 +327,17 @@ for path in files:
                 w[:] = 0; w[bi['Head']] = 1
             # Un faldón continuo reparte la zancada; no se pega a una sola pierna.
             if ('falda' in gid or gid == 'vestido-scifi') and p[2] < rest['pelvis'][2]:
-                fraction = float(smooth((rest['pelvis'][2] - p[2]) / .35)) * .50
-                blend = float(smooth((p[0] + .20) / .40))
-                w[:] = 0; w[bi['pelvis']] = 1 - fraction
-                w[bi['thigh_l']] = fraction * blend; w[bi['thigh_r']] = fraction * (1 - blend)
+                hip_height = rest['pelvis'][2]
+                knee_height = rest['calf_' + side][2]
+                hip_width = abs(rest['thigh_l'][0] - rest['thigh_r'][0])
+                follow = float(smooth((hip_height - p[2]) / (.65 * (hip_height - knee_height))))
+                left = float(smooth(.5 + p[0] / hip_width))
+                bend = .86 * float(smooth((knee_height + .10 - p[2]) / .25))
+                w[:] = 0
+                w[bi['pelvis']] = 1 - follow
+                for suffix, share in [('l', left), ('r', 1 - left)]:
+                    w[bi['thigh_' + suffix]] = share * follow * (1 - bend)
+                    w[bi['calf_' + suffix]] = share * follow * bend
             top = np.argsort(w)[-4:]; ww = np.zeros_like(w); ww[top] = w[top]; ww /= max(ww.sum(), 1e-9); WW[i] = ww
         ob.parent = arm; ob.matrix_world = Matrix.Identity(4)
         for v, p in zip(me.vertices, P): v.co = p
@@ -371,7 +378,7 @@ for path in files:
         if distance > limit: continue
         hit = cloth.ray_cast(Vector(p) - n * .002, n, limit + .002)
         if hit[0] is not None: hide[i] = True
-    meta['fit_version'] = 2
+    meta['fit_version'] = 3 if 'falda' in gid or gid == 'vestido-scifi' else 2
     bpy.context.scene['vt_hide'] = base64.b64encode(np.packbits(hide.astype(np.uint8)).tobytes()).decode()
     bpy.context.scene['vt_meta'] = json.dumps(meta, ensure_ascii=False)
     for ob in bpy.context.scene.objects: ob.select_set(ob in outobjects or ob == arm)

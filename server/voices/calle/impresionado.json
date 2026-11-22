@@ -1,0 +1,118 @@
+{
+  "id": "impresionado",
+  "requiere": {
+    "all": [
+      "arma:potente",
+      "caracter:curioso"
+    ]
+  },
+  "comentarios": [
+    "¡Pero qué pedazo de arma!",
+    "¿Habéis visto el acabado de esa carcasa?",
+    "Mi hombro ya se ha cansado de mirarla.",
+    "¿De qué taller habrá salido esa maravilla?",
+    "¡Con razón venden la funda por separado!"
+  ],
+  "escenas": [
+    {
+      "abre": "¿Has visto qué pedazo de arma?",
+      "respuestas": [
+        "Hace falta menuda espalda para eso.",
+        "En la funda cabría mi desayuno.",
+        "Mi miniatura acaba de encoger.",
+        "Yo venía a mirar zapatillas, fíjate.",
+        "La lleva con más cuidado que yo mi guitarra."
+      ]
+    },
+    {
+      "abre": "Ese acabado me suena de algo.",
+      "respuestas": [
+        "Mi madre esmaltaba carcasas así.",
+        "Salió en la portada de Hierro Fino.",
+        "La del museo tenía el grabado al revés.",
+        "Lo has visto en el escaparate de empeños.",
+        "Se parece a tu termo, salvo por el precio."
+      ]
+    },
+    {
+      "abre": "¿Esa pieza está pintada a mano?",
+      "respuestas": [
+        "Ese borde torcido tiene firma.",
+        "En serie no mezclan esos azules.",
+        "No sé, cambia de brillo a la sombra.",
+        "Si lo está, que me pinten el casco.",
+        "Conozco a quien hace esas filigranas."
+      ]
+    },
+    {
+      "abre": "¿Ves cómo equilibra ese trasto?",
+      "respuestas": [
+        "Yo haría malabares para dejarlo en el suelo.",
+        "Debe llevar peso a diario.",
+        "Ni ha rozado la chaqueta al girar.",
+        "Mi cámara pesa menos y me quejo.",
+        "Me recuerda al maquinista con su contrabajo."
+      ]
+    },
+    {
+      "abre": "¿Cuánto cuesta algo así?",
+      "respuestas": [
+        "Más que todos mis muebles juntos.",
+        "Mi sueldo pagaría el estuche.",
+        "Yo con eso arreglo el techo del bloque.",
+        "Dímelo en cafés, en billetes me pierdo.",
+        "Con número de taller, manda el dueño."
+      ]
+    },
+    {
+      "abre": "Me gusta más el grabado que el arma.",
+      "respuestas": [
+        "Parece un pez bajo el neón.",
+        "Yo habría dejado el metal desnudo.",
+        "Esa curva parece la firma de mi hermana.",
+        "Vaya pulso para esas letras tan pequeñas.",
+        "Hasta lo que da miedo puede tener artesanía."
+      ]
+    },
+    {
+      "abre": "Mira el reflejo que va dejando.",
+      "respuestas": [
+        "Ha pintado el toldo de rojo.",
+        "En el cristal parece que lleva dos.",
+        "Creí que venía un coche detrás.",
+        "Lástima que mi visor grabe en gris.",
+        "Ya tengo color para mi bici."
+      ]
+    },
+    {
+      "abre": "¿Eso será de coleccionista?",
+      "respuestas": [
+        "Un coleccionista no lo sacaría entre tanto polvo.",
+        "Yo enmarcaría hasta la factura.",
+        "Mi tío pagaría por medir la caja.",
+        "Las de exposición no tienen esos roces.",
+        "Pues no lo cambies por tu ciclomotor."
+      ]
+    },
+    {
+      "abre": "Estaba dibujándola y se me ha ido.",
+      "respuestas": [
+        "Empieza por la sombra, esa la recuerdas.",
+        "Te sujeto el cuaderno. Dibuja.",
+        "Retrata también al chaval boquiabierto.",
+        "Te falta media hoja de largo.",
+        "Ese garabato ya tiene más vida que los anuncios."
+      ]
+    },
+    {
+      "abre": "Nunca vi una así en la calle.",
+      "respuestas": [
+        "Mi colección de cromos ya parece poca cosa.",
+        "Mi abuela diría que es exceso de equipaje.",
+        "Yo solo desde el fondo de una feria.",
+        "No pestañees, ya casi se va.",
+        "Y justo hoy tengo el visor sin batería."
+      ]
+    }
+  ]
+}

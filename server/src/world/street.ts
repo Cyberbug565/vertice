@@ -2,13 +2,14 @@
 // (se sienta en los bancos, saca algo de la máquina, tira la basura, espera el bus, fuma junto a una farola), reacciones al
 // jugador (manos arriba si le apuntas, quejas si le empujas, saludos) y pequeños sucesos: atracos, controles de la PCV y
 // discusiones que acaban mal. Todo se decide cerca de los jugadores para no gastar en barrios vacíos.
-import { facingToIdx, isWalkable, nearestWalkable } from '@vertice/shared';
+import { facingToIdx, isWalkable, nearestWalkable, RULES } from '@vertice/shared';
 import type { Entity } from './entity.js';
+import { powerful, voices } from '../game/voices.js';
 import type { World } from './world.js';
 import type { Zone } from './zone.js';
 
 type Emote = 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos';
-interface Line { at: number; id: number; text: string }
+interface Line { at: number; id: number; text: string; partner?: number }
 interface Goal { kind: string; x: number; y: number; face: [number, number]; label: string; emote?: Emote; line?: string; len: [number, number] }
 interface StreetEvent { kind: 'atraco' | 'control' | 'pelea'; a: number; b: number; step: number; next: number }
 
@@ -27,10 +28,6 @@ const CONVOS: string[][] = [
   ['Mi abuela dice que antes se veían las estrellas.', 'Tu abuela dice muchas cosas.'],
   ['¿Has probado el ramen del puesto de la esquina?', 'Sabe a pila. Pero a pila buena.'],
 ];
-const GREET_DAY = ['Buenos días.', 'Hola.', 'Buen día, ¿eh?', 'Qué calor hace hoy.'];
-const GREET_NIGHT = ['Buenas noches.', 'Cuidado por aquí de noche.', 'No es hora de pasear…', 'Hola, guapo/a.'];
-const BUMP = ['¡Eh, mira por dónde vas!', '¡Cuidado!', 'Perdona… o no.', '¿Tienes prisa o qué?', '¡Que me pisas!'];
-const HANDS = ['¡No dispares! ¡No dispares!', 'Vale, vale, tranquilo…', '¡No llevo nada, lo juro!', 'Por favor… tengo familia.'];
 const PROPS: Record<string, Omit<Goal, 'x' | 'y' | 'face'>[]> = {
   bench: [{ kind: 'bench', label: 'Sentado en el banco', emote: 'sentado', len: [120, 300] }],
   vending: [{ kind: 'vending', label: 'Sacando algo de la máquina', line: '*clonc* …Otra vez se ha tragado la moneda.', len: [30, 60] }],
@@ -49,13 +46,14 @@ export class Street {
   private events: StreetEvent[] = [];
   private nextEvent = new Map<string, number>();
   private said = new Map<number, number>(); // última frase espontánea por PNJ
+  private chatUntil=new WeakMap<Entity,number>();
   private aimedAt = new Map<number, number>(); // PNJ con las manos arriba → hasta cuándo
   private idx = new Map<string, Map<string, { type: string; x: number; y: number }[]>>();
   private rng = Math.random;
   constructor(private w: World) {}
 
   // ================================================================ utilidades
-  private say(e: Entity, text: string, delayMs = 0) { this.lines.push({ at: Date.now() + delayMs, id: e.id, text }); }
+  private say(e: Entity, text: string, delayMs = 0, partner?: Entity) { this.lines.push({ at: Date.now() + delayMs, id: e.id, text, partner:partner?.id }); }
   private emote(e: Entity, move: Emote | undefined) { e.emote = move ? { move: move as any, at: Date.now() } : undefined; e.labelVer++; }
   private label(e: Entity, l: string) { if (e.label !== l) { e.label = l; e.labelVer++; } }
   private face(a: Entity, x: number, y: number) { a.facing = facingToIdx(x - a.x, y - a.y); a.lastMoveTick = this.w.tick; }
@@ -105,12 +103,36 @@ export class Street {
     if (g.line && this.rng() < 0.6) this.say(e, g.line, 600);
     return Math.floor(g.len[0] + this.rng() * (g.len[1] - g.len[0]));
   }
+  private dayPart() { const h=this.w.cityHour(); return h>=21||h<6?'noche':'dia'; }
+  private temperament(e:Entity) { return e.id%2?'caracter:cauto':'caracter:curioso'; }
+  private nearbyTags(e:Entity) {
+    const z=e.zone, tags=new Set([this.dayPart(),this.temperament(e),'barrio:'+(z.districtAt(e.x,e.y)?.id??z.id)]);
+    for(const p of this.propsNear(z,e.x,e.y,7)) tags.add('cerca:'+p.type);
+    if(this.w.c.ripperdocs.some(d=>d.zone===z.id))tags.add('servicio:clinica');
+    for(const o of z.query(e.x,e.y,8)){
+      if(o===e || o.hiddenIn || o.dead || o.state==='downed' || (o.buffs?.invisible??0)>Date.now())continue;
+      const shown=o.kind==='player' && o.weaponId && powerful(this.w.c.items.find(i=>i.id===o.weaponId));
+      const cop=o.npcType==='police',chrome=!!o.chrome?.length;
+      if(!(shown||cop||chrome)||Math.hypot(o.x-e.x,o.y-e.y)>8||!this.w.combat.lineClear(e,o))continue;
+      if(shown)tags.add('arma:potente');
+      if(cop)tags.add('policia:visible');
+      if(chrome)tags.add('cromo:visible');
+    }
+    return tags;
+  }
   /** Conversación de verdad entre dos transeúntes que se han parado a charlar. */
   converse(a: Entity, b: Entity) {
-    const c = CONVOS[Math.floor(this.rng() * CONVOS.length)];
+    if(!this.civ(a)||!this.civ(b)||!this.w.combat.lineClear(a,b))return;
+    const now=Date.now();
+    if((this.chatUntil.get(a)??0)>now || (this.chatUntil.get(b)??0)>now)return;
+    const novel=this.rng()<.95 && voices.conversation(a,this.nearbyTags(a));
+    const c=novel||CONVOS[Math.floor(this.rng()*CONVOS.length)];
+    const until=now+c.length*3200;
+    this.chatUntil.set(a,until); this.chatUntil.set(b,until);
+    for(const e of [a,b])if(e.npc)e.npc.pauseUntil=Math.max(e.npc.pauseUntil,this.w.tick+Math.ceil((until-now)*RULES.tickRate/1000));
     this.face(a, b.x, b.y); this.face(b, a.x, a.y);
     this.emote(a, 'gesto'); this.emote(b, 'gesto');
-    c.forEach((text, i) => this.say(i % 2 ? b : a, text, 800 + i * 3200));
+    c.forEach((text, i) => this.say(i % 2 ? b : a, text, 800 + i * 3200, i % 2 ? a : b));
   }
 
   // ================================================================ cada segundo
@@ -122,6 +144,10 @@ export class Street {
       this.lines.splice(i, 1);
       const e = this.w.entities.get(l.id);
       if (!e || e.dead || e.state === 'downed') continue;
+      if(l.partner!==undefined){
+        const b=this.w.entities.get(l.partner);
+        if(!b||!this.calm(e)||!this.calm(b)||b.zone!==e.zone||Math.hypot(e.x-b.x,e.y-b.y)>4||!this.w.combat.lineClear(e,b)||this.aimedAt.has(e.id)||this.aimedAt.has(b.id))continue;
+      }
       for (const o of e.zone.query(e.x, e.y, 18)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'speech', id: e.id, text: l.text });
     }
     for (const z of this.w.zones.values()) {
@@ -135,30 +161,43 @@ export class Street {
       const e = this.w.entities.get(id);
       if (e && !e.dead && e.state !== 'downed') { this.emote(e, undefined); e.fleeUntil = now + 8000; this.label(e, 'Huyendo'); }
     }
+    for(const [id,until] of this.said)if(until<=now)this.said.delete(id);
     this.runEvents(now);
   }
 
   /** Reacciones de la gente a un jugador: manos arriba si le apuntas, quejas si le empujas y algún saludo. */
   private aroundPlayer(z: Zone, pe: Entity, now: number) {
-    const p = pe.conn?.p; if (!p || pe.hiddenIn) return;
-    const ranged = !!pe.weaponId && this.w.c.items.find((i) => i.id === pe.weaponId)?.weapon?.kind === 'ranged';
+    const p = pe.conn?.p; if (!p || pe.hiddenIn || pe.dead || pe.state==='downed' || (pe.buffs?.invisible??0)>now) return;
+    const shown=pe.weaponId ? this.w.c.items.find(i=>i.id===pe.weaponId) : undefined;
+    const ranged=shown?.weapon?.kind==='ranged',strong=powerful(shown);
     const dir = (pe.facing * Math.PI) / 4, fx = Math.cos(dir), fy = Math.sin(dir);
     for (const o of z.query(pe.x, pe.y, 10)) {
       if (o.kind !== 'npc' || !this.calm(o) || o.npcType === 'gang' || o.npcType === 'police' || o.npcType === 'hierro' || o.npcType === 'essential' || o.predator) continue;
       const dx = o.x - pe.x, dy = o.y - pe.y, d = Math.hypot(dx, dy) || 0.01;
       // Le apuntas con un arma de fuego: manos arriba (y en cuanto bajas el arma, sale corriendo).
       if (pe.guard && ranged && d < 9 && (dx * fx + dy * fy) / d > 0.82 && this.w.combat.lineClear(pe, o)) {
-        if (!this.aimedAt.has(o.id)) { this.emote(o, 'manos-arriba'); this.label(o, 'Con las manos arriba'); this.face(o, pe.x, pe.y); this.say(o, HANDS[Math.floor(this.rng() * HANDS.length)]); if (o.path.length) o.path = []; if (o.npc) o.npc.pauseUntil = this.w.tick + 400; }
+        if (!this.aimedAt.has(o.id)) { this.emote(o, 'manos-arriba'); this.label(o, 'Con las manos arriba'); this.face(o, pe.x, pe.y); this.say(o,voices.reaction(o,new Set(['apuntado']))??'¡Espera!'); if (o.path.length) o.path = []; if (o.npc) o.npc.pauseUntil = this.w.tick + 400; }
         this.aimedAt.set(o.id, now + 2500);
         continue;
       }
       if (o.npc?.type !== 'ambient' || (this.said.get(o.id) ?? 0) > now) continue;
-      if (d < 0.75 && pe.moving) { this.said.set(o.id, now + 30000); this.face(o, pe.x, pe.y); this.say(o, BUMP[Math.floor(this.rng() * BUMP.length)]); continue; }
+      if (d < 0.75 && pe.moving) { this.said.set(o.id, now + 30000); this.face(o, pe.x, pe.y); this.say(o,voices.reaction(o,new Set(['empujon']))??'¡Cuidado!'); continue; }
+      if(this.aimedAt.has(o.id)||(this.chatUntil.get(o)??0)>now)continue;
+      if(strong && d<=8 && this.rng()<.22 && this.w.combat.lineClear(pe,o)){
+        const trait=this.temperament(o),line=voices.reaction(o,new Set(['arma:potente',trait]));
+        if(line){
+          this.say(o,line);this.said.set(o.id,now+60000);this.face(o,pe.x,pe.y);
+          if(trait==='caracter:cauto'){o.fleeUntil=now+4500;o.path=[];this.label(o,'Busca distancia');}
+          else { this.emote(o,'gesto');if(o.npc)o.npc.pauseUntil=this.w.tick+20; }
+          continue;
+        }
+      }
       if (d < 3 && !o.path.length && this.rng() < 0.025) {
         this.said.set(o.id, now + 120000); this.face(o, pe.x, pe.y);
-        const h = this.w.cityHour(); const night = h >= 21 || h < 6;
-        const pool = p.wanted >= 2 ? ['Tú… ¿no eres el de las noticias?', 'Yo no he visto nada.'] : night ? GREET_NIGHT : GREET_DAY;
-        this.say(o, pool[Math.floor(this.rng() * pool.length)]);
+        const tags=this.nearbyTags(o);tags.add('saludo');
+        if(p.wanted>=2)tags.add('buscado');
+        const line=tags.has('buscado')?voices.comment(o,'buscado',tags):voices.reaction(o,tags);
+        if(line)this.say(o,line);
       }
     }
   }

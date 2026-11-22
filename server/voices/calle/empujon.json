@@ -1,0 +1,16 @@
+{
+  "id": "empujon",
+  "requiere": {
+    "all": [
+      "empujon"
+    ]
+  },
+  "comentarios": [
+    "¡El caldo! Casi me lo llevo puesto.",
+    "¿Una carrera aquí, con la compra?",
+    "Mis botas no tienen parachoques.",
+    "Espera a que pase la señora, anda.",
+    "Menudo susto. ¿Tú estás bien?"
+  ],
+  "escenas": []
+}

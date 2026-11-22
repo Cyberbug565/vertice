@@ -1,0 +1,112 @@
+{
+  "id": "mercado",
+  "requiere": {
+    "any": [
+      "cerca:stall",
+      "cerca:kiosk"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "Estas naranjas llevan números.",
+      "respuestas": [
+        "Es el lote, tira la pegatina.",
+        "La siete salió ácida.",
+        "Quédate la trece. Aquí trae suerte.",
+        "Mi nieta las ordena antes de pelarlas.",
+        "Dame tres pares para el zumo."
+      ]
+    },
+    {
+      "abre": "¿Te fías de esa báscula?",
+      "respuestas": [
+        "Me pesa hasta los remordimientos.",
+        "Probé con mi llave y acertó.",
+        "Con este viento adelgazamos todos.",
+        "La señora descuenta el papel a mano.",
+        "Solo si no se sube el gato."
+      ]
+    },
+    {
+      "abre": "¿Qué vale la taza sin asa?",
+      "respuestas": [
+        "Dos fichas y la historia de cómo se rompió.",
+        "Mi padre guardaría tornillos ahí.",
+        "El asa sola estará enfrente.",
+        "Si te llevas el plato hablamos.",
+        "Me gusta así para calentar las manos."
+      ]
+    },
+    {
+      "abre": "Tengo cambio de sobra en arandelas.",
+      "respuestas": [
+        "El panadero solo las quiere de cobre.",
+        "Dame dos para mi mesa coja.",
+        "Yo soy millonario en tapones.",
+        "Con eso cuelgo el letrero.",
+        "Paga mañana cuando cobres."
+      ]
+    },
+    {
+      "abre": "¿Ese toldo era azul el martes?",
+      "respuestas": [
+        "Lo han vuelto del revés.",
+        "Depende del anuncio que tenga enfrente.",
+        "Antes era una camisa de mi hermano.",
+        "Te confundes con el puesto de pescado.",
+        "Hasta que llovió encima del tinte, sí."
+      ]
+    },
+    {
+      "abre": "¿Me sujetas el puesto un minuto?",
+      "respuestas": [
+        "Sí. ¿A cuánto las aceitunas?",
+        "Si preguntan por tallas, te llamo.",
+        "Te cambio el favor por un cuenco de caldo.",
+        "Deja al gato, vende mejor que yo.",
+        "Corre, ya viene el hielo."
+      ]
+    },
+    {
+      "abre": "¿Queda pan de anoche?",
+      "respuestas": [
+        "Uno redondo, perfecto para mojar.",
+        "Lo compró la chica de las sopas.",
+        "A mitad si pones la bolsa.",
+        "Prueba el de maíz. Dura dos días.",
+        "Bajo el paño está el tuyo."
+      ]
+    },
+    {
+      "abre": "¿Qué huele tan bien si está cerrado?",
+      "respuestas": [
+        "La olla de la portera.",
+        "El anuncio perfuma la acera.",
+        "Estoy tostando comino para cenar.",
+        "El horno no entiende de horarios.",
+        "Han abierto una caja de mandarinas."
+      ]
+    },
+    {
+      "abre": "¿Regateas por una silla coja?",
+      "respuestas": [
+        "Por tres patas doy tres cuartos.",
+        "Me llevaré la que aguanta derecha.",
+        "Tengo la pata exacta en casa.",
+        "Quiero la madera para un estante.",
+        "Si me caigo al probarla, es gratis."
+      ]
+    },
+    {
+      "abre": "He olvidado a qué venía.",
+      "respuestas": [
+        "Llevas una bombilla fundida en la mano.",
+        "Hiciste la lista en tu guante.",
+        "Creo que venías a devolver mi carro.",
+        "Eso te pasa por probar todos los encurtidos.",
+        "Lleva cebollas. Siempre hacen falta."
+      ]
+    }
+  ]
+}

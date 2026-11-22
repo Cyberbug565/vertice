@@ -1,0 +1,107 @@
+{
+  "id": "familia",
+  "requiere": {},
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "Mi niña pregunta dónde duerme el tranvía.",
+      "respuestas": [
+        "Con los demás, en una cochera de ronquidos.",
+        "Mi padre le enseña el depósito el domingo.",
+        "¿Quién le lee un cuento tan largo?",
+        "Desde el puente se ve su cama.",
+        "La mía pensaba que circulaba dormido."
+      ]
+    },
+    {
+      "abre": "¿Se acuerda tu abuelo de esta esquina?",
+      "respuestas": [
+        "Según él estaba en otra calle.",
+        "Me reconoció por cómo pisé el bordillo.",
+        "Ayer nombró a todos sus compañeros de juegos.",
+        "Por el olor a pan encontró su portal.",
+        "Dice que falta el árbol."
+      ]
+    },
+    {
+      "abre": "¿Por qué traes dos meriendas distintas?",
+      "respuestas": [
+        "Uno odia las pasas, la otra las colecciona.",
+        "Mi padre y mi hija descansan a la vez.",
+        "Una para ir y otra para fingir que no comí.",
+        "La pequeña es para el perro.",
+        "Hay dos cumpleaños y nadie acuerda sabor."
+      ]
+    },
+    {
+      "abre": "¿Qué dibujó tu hermana en el yeso?",
+      "respuestas": [
+        "Una escalera hasta la rodilla.",
+        "Un pez por cada día que falta.",
+        "El plano de casa para navegar el sofá.",
+        "Un dragón sin la última escama.",
+        "Las firmas de los primos que viven fuera."
+      ]
+    },
+    {
+      "abre": "¿Te recoge alguien al salir?",
+      "respuestas": [
+        "Mi madre aún desconfía del bus.",
+        "Mi hija estrena permiso. Hoy conduzco de copiloto.",
+        "Si nadie llega, te acompaño.",
+        "Mi hermano espera a que abra el paraguas.",
+        "Mi novio trae dos cascos por si escampa."
+      ]
+    },
+    {
+      "abre": "¿Quién te enseñó a zurcir?",
+      "respuestas": [
+        "La del sexto, a cambio de arreglar la radio.",
+        "Mi padre también reparaba lo blando.",
+        "Aprendí deshaciendo una manga.",
+        "Mi nieta, que tiene mejor pulso.",
+        "La costurera del puerto."
+      ]
+    },
+    {
+      "abre": "Estamos votando cómo llamar a la gata.",
+      "respuestas": [
+        "Ella votaría Sardina.",
+        "Voto Chispa por ese arañazo.",
+        "Igual solo responde a la lata.",
+        "Los críos meten papeletas repetidas.",
+        "Corto, que tendrás que gritarlo al patio."
+      ]
+    },
+    {
+      "abre": "Mi hermano vuelve tras diez años.",
+      "respuestas": [
+        "Déjale pasear sin pantalla.",
+        "¿Es el que silbaba al cruzar?",
+        "Dile que me debe un partido.",
+        "Reconocerá caras con bastante menos pelo.",
+        "Que elija él la primera esquina."
+      ]
+    },
+    {
+      "abre": "¿Una postal de verdad, con sello?",
+      "respuestas": [
+        "A mi tía le chifla el sello.",
+        "No puedo mandar este olor por visor.",
+        "Me llevo dos, suelo equivocarme.",
+        "Quiero que reconozca mi letra torcida.",
+        "Si llega tarde la leeremos juntos."
+      ]
+    },
+    {
+      "abre": "¿Qué lleva el crío en esa caja agujereada?",
+      "respuestas": [
+        "Una piedra. Dice que respira.",
+        "Un escarabajo de vacaciones.",
+        "Un dibujo para mirar por partes.",
+        "Una merienda secreta.",
+        "Toca música soplando los agujeros."
+      ]
+    }
+  ]
+}

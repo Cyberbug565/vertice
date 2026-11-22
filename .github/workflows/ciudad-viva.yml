@@ -1,0 +1,42 @@
+name: Pruebas de Vértice
+on:
+  push:
+    branches: [codex/ciudad-viva-025]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  juego:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test -- --reporter=dot
+      - run: npm run build -w client
+      - name: Iniciar en local y comprobar cliente y servidor
+        env:
+          LOCAL_PORT: 18849
+        run: |
+          export LOCAL_PGLITE_DIR="$RUNNER_TEMP/vertice-db"
+          node scripts/local.mjs --no-open > "$RUNNER_TEMP/vertice-local.log" 2>&1 &
+          game_pid=$!
+          trap 'kill -TERM "$game_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 120); do
+            if curl -fsS http://127.0.0.1:18849/healthz > "$RUNNER_TEMP/salud.json" 2>/dev/null; then break; fi
+            if ! kill -0 "$game_pid" 2>/dev/null; then cat "$RUNNER_TEMP/vertice-local.log"; exit 1; fi
+            sleep 1
+          done
+          node -e "const s=JSON.parse(require('node:fs').readFileSync(process.env.RUNNER_TEMP+'/salud.json','utf8')); if(!s.ok || s.service!=='vertice')process.exit(1)"
+          curl -fsS http://127.0.0.1:18849/ | grep -i 'Vértice'
+          kill -TERM "$game_pid"
+          wait "$game_pid"
+          trap - EXIT

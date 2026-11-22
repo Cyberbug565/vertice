@@ -1,0 +1,111 @@
+{
+  "id": "dia",
+  "requiere": {
+    "all": [
+      "dia"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Siempre desayunas en ese mismo escalón?",
+      "respuestas": [
+        "Es el primero que toca el sol.",
+        "Ayer me adelantó un perro.",
+        "Desde aquí veo venir el bus.",
+        "Aquí vendía pan mi abuela.",
+        "Ya tiene la forma de mi trasero."
+      ]
+    },
+    {
+      "abre": "¿Quién adelantó el reloj de la plaza?",
+      "respuestas": [
+        "Nadie. Hoy has llegado temprano.",
+        "Se guía por la sirena de fábrica.",
+        "Lo desenchufaron al pintar el escaparate.",
+        "Llevo la mañana discutiendo con mi visor.",
+        "Así la fila del café tiene más fe."
+      ]
+    },
+    {
+      "abre": "¿Te traigo café con algo?",
+      "respuestas": [
+        "Con silla y cinco minutos.",
+        "Con leche que no brille a oscuras.",
+        "Solo; ya tuve bastantes sorpresas hoy.",
+        "Con canela, como los domingos.",
+        "En vaso grande, lo compartimos."
+      ]
+    },
+    {
+      "abre": "¿Qué dibujan los críos en el suelo?",
+      "respuestas": [
+        "Sombras. Volverán a medirlas.",
+        "Un circuito de chapas.",
+        "Lo que ven desde el quinto.",
+        "Un mapa con premio de galleta.",
+        "Una casa, me nombraron portero."
+      ]
+    },
+    {
+      "abre": "¿Se secó la ropa del balcón?",
+      "respuestas": [
+        "Los bolsillos siguen en invierno.",
+        "Arriba es mediodía, abajo llueve.",
+        "La del tercero me prestó pinzas.",
+        "Espera al aire que levanta el camión.",
+        "Mi camisa huele al horno de abajo."
+      ]
+    },
+    {
+      "abre": "Tengo una hora libre. ¿Algún plan?",
+      "respuestas": [
+        "Ven al banco; se aprende rápido.",
+        "Mi madre busca rival para las damas.",
+        "Haz tu paseo habitual al revés.",
+        "Voy a mirar ese mosaico de cerca.",
+        "Dame diez minutos y te devuelvo un bocadillo."
+      ]
+    },
+    {
+      "abre": "¿Viste al cartero con sandalias?",
+      "respuestas": [
+        "Las botas ya hicieron su jornada.",
+        "Con esos calcetines todos lo vimos.",
+        "Tiene una ampolla con apellido.",
+        "Nunca le verás llegar tarde.",
+        "Los sobres traen arena del río."
+      ]
+    },
+    {
+      "abre": "¿Desde cuándo abren los domingos?",
+      "respuestas": [
+        "Desde que cerraron por error un martes.",
+        "Desde que su hija lleva la caja.",
+        "Solo media persiana para los vecinos.",
+        "Venden lo que ayer quedó feo.",
+        "Mira el reloj. Hoy es lunes."
+      ]
+    },
+    {
+      "abre": "La sombra del viaducto cruza la fila.",
+      "respuestas": [
+        "Cuando llegue al buzón, descanso.",
+        "Atrás, te quemas la nuca.",
+        "Antes así se medían las horas.",
+        "Ojalá la sombra guardase turno.",
+        "Hoy parece un perro con boina."
+      ]
+    },
+    {
+      "abre": "¿De quién es la radio del alféizar?",
+      "respuestas": [
+        "Del frutero, que comparte el resultado.",
+        "Mi prima ensaya voces entre emisoras.",
+        "Del que está pintando justo enfrente.",
+        "Lleva ahí desde antes de la mudanza.",
+        "La del tercero da los buenos días por radio."
+      ]
+    }
+  ]
+}

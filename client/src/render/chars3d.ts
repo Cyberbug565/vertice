@@ -18,6 +18,7 @@ import { roboticParts } from './cyber3d';
 import { hairsVersion, isCollectionHair } from './hairs3d';
 import { samuraiVersion } from './samurai3d';
 import { buildTormenta, loadTormenta, poseTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
+import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
 import { dancePose } from './dance';
 import { City3D, tickNeon } from './city3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
@@ -177,6 +178,7 @@ const FADE_MS = 500;
 interface Rig {
   root: THREE.Group; body: THREE.Group; hips: THREE.Group; spine: THREE.Group; chest: THREE.Group; neck: THREE.Group;
   thighL: THREE.Group; thighR: THREE.Group; kneeL: THREE.Group; kneeR: THREE.Group; shoulderL: THREE.Group; shoulderR: THREE.Group; elbowL: THREE.Group; elbowR: THREE.Group;
+  ankleL:THREE.Group; ankleR:THREE.Group; toeL:THREE.Group; toeR:THREE.Group; leftFrame:Float64Array; rightFrame:Float64Array;
   handR: THREE.Group; coat: THREE.Object3D[]; shadow: THREE.Mesh; key: string; heading: number; phase: number; lie: number; big: boolean; ranged: boolean; mats: THREE.Material[]; ghostMats?: THREE.Material[];
   lastX: number; lastY: number; speed: number;
   /** v0.21 · Arma pesada (moveset de golpes pesados) y cuándo se levantó del suelo (animación de incorporarse). */
@@ -407,7 +409,7 @@ export class Chars3D {
     if (r.mech) poseTormenta(r.mech, { hips: r.hips, spine: r.spine, neck: r.neck, shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, thP: r.thighR, knP: r.kneeR, thM: r.thighL, knM: r.kneeL }, performance.now() / 1000);
     if (!r.human || r.mech) return;
     const two = r.ranged && (r.big || !!r.aimNow) && r.lie < 0.3;
-    const W = poseHuman(r.human, { hips: r.hips, spine: r.spine, chest: r.chest, neck: r.neck, thighP: r.thighR, kneeP: r.kneeR, thighM: r.thighL, kneeM: r.kneeL,
+    const W = poseHuman(r.human, { hips: r.hips, spine: r.spine, chest: r.chest, neck: r.neck, thighP: r.thighR, kneeP: r.kneeR, thighM: r.thighL, kneeM:r.kneeL,ankleP:r.ankleR.rotation.x,ankleM:r.ankleL.rotation.x,toeP:r.toeR.rotation.x,toeM:r.toeL.rotation.x,
       shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, gripP: r.handR.children.length ? 1 : 0.3, gripM: two ? 0.9 : 0.3 });
     if (two && r.grip2) supportHand(r.human, W, r.grip2);
   }
@@ -478,7 +480,7 @@ export class Chars3D {
     const legFor = (side: -1 | 1) => {
       const key = side < 0 ? 'pierna_izq' : 'pierna_der';
       const thigh = group(hips, side * 0.1 * hipW, 0);
-      if (lost.has(key)) { part(thigh, G.cyl, mk(lam({ color: 0x8a0a12 })), 0.12, 0.04, 0.12, 0, -0.02); return { thigh, knee: group(thigh, 0, -0.42) }; }
+      if (lost.has(key)) { part(thigh, G.cyl, mk(lam({ color: 0x8a0a12 })), 0.12, 0.04, 0.12, 0, -0.02); return {thigh,knee:group(thigh,0,-0.42),foot:proxy(),toe:proxy()}; }
       const isChrome = chrome.has(key);
       const thighMat = isChrome ? metalM : lw === 'shorts' || lw === 'bermudas' ? pantsM : bare ? skinM('leg', 3, 6) : pantsM;
       part(thigh, G.thigh, thighMat, 0.21 * limb * (hipW > 1 ? 1.1 : 1), 0.46, 0.22 * limb, 0, -0.21);
@@ -493,11 +495,14 @@ export class Chars3D {
       if (shaft) part(knee, G.cyl, shoeM, 0.16, shaft, 0.17, 0, -0.44 + shaft / 2);
       const foot = group(knee, 0, -0.44);
       part(foot, G.box, shoeM, 0.13, 0.1, st === 'tacones' ? 0.22 : 0.28, 0, -0.01, 0.05);
-      part(foot, G.box, soleM, 0.135, st === 'plataformas' ? 0.06 : 0.03, st === 'tacones' ? 0.22 : 0.29, 0, -0.06, 0.05);
+      const toe=group(foot,0,-.06,.11);
+      part(toe,G.box,soleM,.13,.03,.09,0,0,.04);
+      part(foot, G.box, soleM, 0.135, st === 'plataformas' ? 0.06 : 0.03, st === 'tacones' ? 0.17 : 0.21, 0, -0.06, 0.01);
       if (st === 'zapatillas') part(foot, G.box, glowM, 0.116, 0.015, 0.12, 0, 0.0, 0.05);
-      return { thigh, knee };
+      return {thigh,knee,foot,toe};
     };
-    const L = H ? { thigh: proxy(), knee: proxy() } : legFor(-1), R = H ? { thigh: proxy(), knee: proxy() } : legFor(1);
+    const legProxy=()=>({thigh:proxy(),knee:proxy(),foot:proxy(),toe:proxy()});
+    const L=H?legProxy():legFor(-1), R=H?legProxy():legFor(1);
     // Faldas y abrigos largos.
     const coat: THREE.Object3D[] = [];
     if (!H && (lw === 'falda' || lw === 'falda-larga')) { const sk = part(hips, G.cone, pantsM, 0.42, lw === 'falda' ? 0.32 : 0.7, 0.36, 0, lw === 'falda' ? -0.12 : -0.3); (sk.material as THREE.Material).side = THREE.DoubleSide; }
@@ -679,7 +684,7 @@ export class Chars3D {
       const t = buildTormenta(a.accent2 && /^#/.test(a.accent2) ? a.accent2 : '#2fb8ff');
       mech = t; body.add(t.root); mats.push(...t.mats); shadow.scale.multiplyScalar(1.8); H.root.visible = false;
     }
-    return { mech, cartoon, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
+    return { ankleL:L.foot,ankleR:R.foot,toeL:L.toe,toeR:R.toe,leftFrame:new Float64Array(6),rightFrame:new Float64Array(6),mech, cartoon, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
       shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, heavy: heavyW, mats, lastX: e.x, lastY: e.y, speed: 0 };
   }
 
@@ -954,17 +959,26 @@ export class Chars3D {
     r.heading += diff * Math.min(1, dt * 12);
     r.root.rotation.y = r.heading;
     const moving = e.moving || r.speed > 0.25;
-    const run = moving && (s.buffs?.includes('corriendo') || r.speed > 3.2);
-    r.phase += dt * (moving ? (run ? 11 : 7.5) : 1.6);
-    const sw = moving ? Math.sin(r.phase) : 0, amp = run ? 0.8 : 0.5;
-    const bob = moving ? Math.abs(Math.cos(r.phase)) * (run ? 0.05 : 0.025) : Math.sin(r.phase) * 0.006;
-    // Postura base.
-    let thL = sw * amp, thR = -sw * amp, knL = Math.max(0, -Math.cos(r.phase)) * (run ? 1.2 : 0.7) * (moving ? 1 : 0), knR = Math.max(0, Math.cos(r.phase)) * (run ? 1.2 : 0.7) * (moving ? 1 : 0);
-    let shL = sw * amp * 0.8, shR = -sw * amp * 0.8, elL = moving ? -0.35 - (run ? 0.6 : 0) : -0.12, elR = moving ? -0.35 - (run ? 0.6 : 0) : -0.12;
-    let shLz = -0.06, shRz = 0.06, spineX = run ? 0.18 : moving ? 0.05 : 0, spineY = moving ? sw * 0.08 : 0, neckX = 0;
+    const flags=s.buffs??[];
+    const guard=s.id===o.meId?o.guarding:flags.includes('guardia');
+    const soreLeft=flags.includes('paso-izq')||s.lost?.includes('pierna_izq');
+    const soreRight=flags.includes('paso-der')||s.lost?.includes('pierna_der');
+    const style=chooseGait(r.speed,flags.includes('corriendo'),guard,flags,soreLeft||soreRight);
+    const profile=gaitProfile(style),run=style==='trote'||style==='esprint';
+    r.phase=(r.phase+dt*(moving?2*Math.PI*cadence(style,r.speed):1.6))%(2*Math.PI);
+    const cycle=r.phase/(2*Math.PI),sw=moving?Math.cos(r.phase):0;
+    const L=r.leftFrame,R=r.rightFrame;
+    // En UBC el lado anatómico izquierdo corresponde a X positivo.
+    const normalL=style==='cojera'&&!(r.human?soreRight:soreLeft);
+    const normalR=style==='cojera'&&!(r.human?soreLeft:soreRight);
+    if(moving){sampleLeg(normalL?'paseo':style,cycle,L);sampleLeg(normalR?'paseo':style,cycle+.5,R);}
+    else{L.fill(0);R.fill(0);}
+    const bob=moving?-profile.descenso+(run ? .042 : .015)*Math.sin(2*r.phase-Math.PI/2):Math.sin(r.phase)*.006;
+    let thL=L[0],thR=R[0],knL=L[1],knR=R[1];
+    let shL=L[4],shR=R[4],elL=moving?L[5]:-.12,elR=moving?R[5]:-.12;
+    let shLz=-.06,shRz=.06,spineX=moving?profile.tronco*Math.PI/180:0,spineY=moving?sw*.08:0,neckX=0;
     r.chest.scale.setScalar(1 + (moving ? 0 : Math.sin(r.phase * 1.4) * 0.012)); // respiración
     // Armas: postura de combate o de apuntar.
-    const guard = s.id === o.meId ? o.guarding : !!s.buffs?.includes('guardia');
     const since = e.attackAt ? now - e.attackAt : 1e9;
     r.aimNow = guard || (since < 300 && e.attackKind === 'shot');
     if (r.ranged) { shR = -1.25 + sw * 0.05; elR = -0.2; if (r.big) { shL = -1.1; shLz = 0.45; elL = -0.6; } }
@@ -1074,12 +1088,15 @@ export class Chars3D {
     const kk = Math.min(1, dt * (snappy ? 30 : 14));
     const to = (o3: THREE.Euler, ax: 'x' | 'y' | 'z', v: number) => { o3[ax] += (v - o3[ax]) * kk; };
     to(r.thighL.rotation, 'x', -thL); to(r.thighR.rotation, 'x', -thR); to(r.kneeL.rotation, 'x', knL); to(r.kneeR.rotation, 'x', knR);
+    const feetActive=moving && !lying && !s.vehicle && !s.carried && !g && !snappy;
+    to(r.ankleL.rotation,'x',feetActive?L[0]-L[1]+L[2]:0);to(r.ankleR.rotation,'x',feetActive?R[0]-R[1]+R[2]:0);
+    to(r.toeL.rotation,'x',feetActive?L[3]:0);to(r.toeR.rotation,'x',feetActive?R[3]:0);
     to(r.shoulderL.rotation, 'x', shL); to(r.shoulderL.rotation, 'z', shLz); to(r.shoulderR.rotation, 'x', shR); to(r.shoulderR.rotation, 'z', shRz);
     to(r.elbowL.rotation, 'x', elL); to(r.elbowR.rotation, 'x', elR);
     to(r.spine.rotation, 'x', spineX); to(r.spine.rotation, 'y', spineY); to(r.neck.rotation, 'x', neckX);
     // Cadera que acompaña la zancada, peso que cambia de pierna en reposo y cabeza que compensa el giro del tronco.
     to(r.hips.rotation, 'y', moving ? -sw * (run ? 0.18 : 0.12) : Math.sin(r.phase * 0.35) * 0.04);
-    to(r.hips.rotation, 'z', moving ? Math.cos(r.phase) * 0.035 : Math.sin(r.phase * 0.35) * 0.025);
+    to(r.hips.rotation, 'z', moving ? Math.sin(r.phase)*profile.balanceo*Math.PI/180 : Math.sin(r.phase * 0.35) * 0.025);
     to(r.neck.rotation, 'y', -spineY * 0.6);
     for (const [i, c] of r.coat.entries()) c.rotation.x = i === 2 ? Math.max(0, Math.abs(sw) * 0.25) : -Math.max(0, (i ? thR : thL)) * 0.6;
     // Invisible (camuflaje): casi transparente para los demás.
@@ -1121,6 +1138,9 @@ export class Chars3D {
     // 4) Se incorpora tras estar en el suelo.
     const up = r.upAt !== undefined ? (now - r.upAt) / 1000 : 1e9, dl = clipDur('LayToIdle');
     if (dl && up < dl && !moving) { sampleClip(bones, 'LayToIdle', up, fade(up, dl, 0.05, 0.3)); return; }
+    if(moving && !guard && !s.weapon && s.buffs?.includes('paso-carga')){
+      sampleClip(bones,'Walk_Carry_Loop',r.phase/(2*Math.PI)*clipDur('Walk_Carry_Loop'),.85,true,true);
+    }
     // 5) Gestos de la vida en la calle (quieto).
     const g = s.emote && !moving && !s.vehicle ? s.emote.move : '';
     const clip = g === 'telefono' ? 'Idle_TalkingPhone_Loop' : g === 'gesto' ? (s.id % 2 ? 'Idle_No_Loop' : 'Yes') : g === 'brazos' ? 'Idle_FoldArms_Loop' : '';

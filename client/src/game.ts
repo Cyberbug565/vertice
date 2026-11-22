@@ -1,5 +1,5 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
-import { checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
+import { Atlas, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
@@ -10,7 +10,8 @@ import { stealthBar, weaponWheel } from './ui/stealth';
 import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
 import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
 import { $ui, clearUi, fmtMoney, h, ask } from './ui/dom';
-import { Minimap, renderZoneMap } from './ui/minimap';
+import { Minimap } from './ui/minimap';
+import { openAtlas } from './ui/atlas-panel';
 import { settingsPanel } from './ui/screens';
 import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen } from './ui/charscreen';
 import { autoPanel, elevatorPanel, hiringPanel } from './ui/work';
@@ -24,7 +25,7 @@ import { lootPanel } from './ui/loot';
 import { closeRecordPanel, recordPanel } from './ui/record';
 /** v0.13 · Gestos que no son bailes (sentado, manos arriba…): no cuentan como «estás bailando». */
 const isDance = (m: string) => !['nausea', 'sentado', 'manos-arriba', 'telefono', 'fumar', 'gesto'].includes(m);
-import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, worldMapPanel, type LifeCtx } from './ui/life';
+import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Segura (verde)', public: 'Vigilada (amarilla)', disputed: 'Peligrosa (roja)', lawless: 'Sin ley (negra)' };
 const STANCES = [
@@ -91,7 +92,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Aguante'), stTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Aguante' }, stBar),
     needsEl, psycheEl, statusEl, substancesEl, moneyEl, statsEl);
   const mm = h('canvas', { id: 'minimap', title: 'Mapa grande (M)', onclick: () => bigMap() }) as HTMLCanvasElement;
-  const minimap = new Minimap(mm);
+  const atlas = new Atlas();
+  const minimap = new Minimap(mm,atlas);
   const sectorEl = h('div', { style: { fontWeight: '600', marginTop: '4px' } }), dangerEl = h('span', { class: 'badge' }), clockEl = h('span', { class: 'mono' }), netEl = h('span', { class: 'mono' });
   // Reloj de la ciudad (un día dura 1 h 30 min reales) y turno del puesto de trabajo.
   const phaseEl = h('span', { class: 'phase' }), shiftEl = h('div', { class: 'shift' });
@@ -374,17 +376,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
           h('td', {}, def?.consumable ? h('button', { class: 'btn small', onclick: () => net.send({ t: 'useItem', item: it.def, opId: newOpId() } as any) }, 'Usar') : ''));
       })));
   };
-  const bigMap = () => {
-    const z = zoneDef(st.zone)!;
-    const c = h('canvas', { style: { maxWidth: '100%', display: 'block', margin: '0 auto' } }) as HTMLCanvasElement;
-    const pr = renderZoneMap(z, c, z.kind === 'interior' ? 24 : 6).project;
-    const ctx = c.getContext('2d')!;
-    ctx.font = '12px system-ui'; ctx.textAlign = 'center';
-    for (const b of z.buildings) if (b.name) { const p = pr(b.rect[0] + b.rect[2] / 2, b.rect[1] + b.rect[3] / 2); ctx.fillStyle = '#fff'; ctx.fillText(b.name, p.x, p.y); }
-    for (const d of z.doors) { const p = pr(d.at[0] + 0.5, d.at[1] + 0.5); ctx.fillStyle = '#5affc8'; ctx.fillRect(p.x - 3, p.y - 3, 6, 6); ctx.fillText(`🚪 ${d.name}`, p.x, p.y - 6); }
-    const me = view.me; const mp = pr(me.x, me.y); ctx.fillStyle = '#ff3fa4'; ctx.beginPath(); ctx.arc(mp.x, mp.y, 6, 0, 7); ctx.fill();
-    panel('map-panel', `Mapa · ${z.name} (planta baja)`, c, h('p', { class: 'muted' }, 'Verde: puertas a interiores protegidos. Rosa: tú. Los recorridos de transporte llegan en hitos posteriores.'));
-  };
+  const bigMap = () => mapPanel(true);
 
   // ---------------------------------------------------------------- órdenes
   const stop = () => { net.send({ t: 'stop' } as any); view.cancelPrediction(); st.destination = ''; setAction(''); };
@@ -706,7 +698,13 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   function toggleRun() { if (st.sheet) { net.send({ t: 'run', on: !st.sheet.running } as any); toast(st.sheet.running ? 'Andas.' : 'Corres: más rápido, pero gastas aguante.', 'info'); } }
   function toggleAuto() { if (!st.sheet) return; if (st.sheet.auto.on) net.send({ t: 'auto', on: false } as any); else autoPanel(st.sheet.auto.personality, (personality) => net.send({ t: 'auto', on: true, personality } as any)); }
   function toggleDrive() { if (!st.sheet) return; if (st.sheet.driving) net.send({ t: 'car', action: 'park' } as any); else if (!st.sheet.cars.length) toast('No tienes coche: cómpralo en un concesionario (mira el mapa).', 'warn'); else net.send({ t: 'car', action: 'drive' } as any); }
-  function mapPanel() { worldMapPanel(st.zone, { discovered: st.sheet?.discovered ?? [], hasCar: (st.sheet?.cars.length ?? 0) > 0, travel: (zone) => net.send({ t: 'car', action: 'travel', zone } as any), me: { x: view.me.x, y: view.me.y }, goal: minimap.goal, goto: (x, y) => net.send({ t: 'goto', kind: 'place', x, y } as any) }); }
+  function mapPanel(local = false) {
+    openAtlas({ current:st.zone, local, atlas, position:()=>view.me, level:st.sheet?.skillProg.find(s=>s.id==='interfaz')?.level ?? 1,
+      hasCar:!!st.sheet?.cars.length, goal:minimap.goal,
+      travel:zone=>net.send({t:'car',action:'travel',zone} as any),
+      goto:(x,y)=>net.send({t:'goto',kind:'place',zone:st.zone,x,y} as any),
+      hack:()=>{const seq=net.send({t:'mapHack'} as any); st.pending.set(seq,a=>toast(a.ok?'Plano municipal descifrado.':a.reason??'No se pudo descifrar.',a.ok?'good':'warn'));} });
+  }
   let liveOn = false, livePending = false;
   function marketLive(on: boolean) { if (on && liveOn && document.getElementById('market-live-panel')) { closePanels(); marketLive(false); return; } liveOn = on; livePending = on; net.send({ t: 'marketLive', on } as any); }
   const pctx: PropCtx = { net, toast, money: () => st.sheet?.money ?? 0 };
@@ -729,7 +727,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   net.onMsg = (m) => {
     switch (m.t) {
+      case 'atlas': atlas.apply(m.map,m.reset); minimap.refresh(); document.dispatchEvent(new Event('vertice-atlas')); break;
       case 'welcome':
+        atlas.apply({cells:[],places:[],unlocked:false},true);
         localDance = null;
         view.meId = m.you; st.sheet = m.sheet; st.journal = m.journal; st.facts = m.facts; st.cityHourMs = m.cityHourMs; st.cityEpoch = m.cityEpoch;
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger;

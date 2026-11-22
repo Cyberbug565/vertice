@@ -129,8 +129,14 @@ export function fitImplant(
     delta = original.getAttribute('_vtfit');
   const pos = original.getAttribute('position');
   let fitted: THREE.BufferAttribute | undefined;
+  let clothMask: Uint8Array | undefined;
   for (let i = 0; i < pos.count; i++) {
-    if (!coveredByClothes(data, map.getX(i), fit)) continue;
+    const bodyIndex = map.getX(i);
+    if (fit.mask?.[bodyIndex]) {
+      clothMask ??= new Uint8Array(pos.count);
+      clothMask[i] = 1;
+    }
+    if (!coveredByClothes(data, bodyIndex, fit)) continue;
     fitted ??= new THREE.Float32BufferAttribute(new Float32Array(pos.count * 3), 3).copyArray(pos.array);
     fitted.setXYZ(i, pos.getX(i) + delta.getX(i), pos.getY(i) + delta.getY(i), pos.getZ(i) + delta.getZ(i));
   }
@@ -138,6 +144,7 @@ export function fitImplant(
     const g = new THREE.BufferGeometry();
     for (const [k, a] of Object.entries(original.attributes)) g.setAttribute(k, a);
     if (fitted) g.setAttribute('position', fitted);
+    if (clothMask) g.setAttribute('aClothHide', new THREE.Uint8BufferAttribute(clothMask, 1));
     g.setIndex(original.index);
     if (omitHand !== undefined && original.index) {
       const kept: number[] = [];
@@ -152,6 +159,16 @@ export function fitImplant(
   }
   const mat = (source.material as THREE.MeshStandardMaterial).clone();
   mat.userData.implantMaterial = true;
+  if (clothMask) {
+    // El implante y la piel respetan el mismo borde de una prenda opaca.
+    mat.onBeforeCompile = (shader) => {
+      shader.vertexShader = 'attribute float aClothHide;\nvarying float vClothHide;\n' +
+        shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvClothHide = aClothHide;');
+      shader.fragmentShader = 'varying float vClothHide;\n' + shader.fragmentShader
+        .replace('#include <alphatest_fragment>', '#include <alphatest_fragment>\nif (vClothHide > 0.5) discard;');
+    };
+    mat.customProgramCacheKey = () => 'vt-implante-tela';
+  }
   mesh.material = mat;
   return mesh;
 }
@@ -174,13 +191,16 @@ export function attachImplants(
     if (['mandibula', 'cabeza', 'ojo_der', 'ojo_izq'].includes(part)) {
       const uniforms = (body.material as THREE.Material).userData.face;
       if (uniforms) {
-        mat.onBeforeCompile = (shader) => {
+        const prepareSurface = mat.onBeforeCompile.bind(mat);
+        const hasClothMask = mesh.geometry.hasAttribute('aClothHide');
+        mat.onBeforeCompile = (shader, renderer) => {
+          prepareSurface(shader, renderer);
           Object.assign(shader.uniforms, uniforms);
           shader.vertexShader =
             HEAD_UNIFORMS +
             shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n' + HEAD_MORPH);
         };
-        mat.customProgramCacheKey = () => 'vt-implante-facial';
+        mat.customProgramCacheKey = () => hasClothMask ? 'vt-implante-facial-tela' : 'vt-implante-facial';
       }
     }
     body.parent!.add(mesh);

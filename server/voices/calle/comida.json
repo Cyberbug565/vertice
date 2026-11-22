@@ -1,0 +1,113 @@
+{
+  "id": "comida",
+  "requiere": {
+    "any": [
+      "cerca:vending",
+      "cerca:stall",
+      "cerca:kiosk"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Queda sopa de setas en la máquina?",
+      "respuestas": [
+        "Ahora se llama paisaje de otoño.",
+        "Abajo quedaban dos ayer.",
+        "La mía supo a pera.",
+        "Tengo una cuchara para compartir.",
+        "Dice agotada pero huele muy bien."
+      ]
+    },
+    {
+      "abre": "¿Para qué pegaste una nota al vaso?",
+      "respuestas": [
+        "Mi hermana confunde picante y tomate.",
+        "Por si desaparece algún día la receta.",
+        "Dentro hay tornillos, no café.",
+        "Mi sobrino dibujó una cara.",
+        "La camarera lo reconoce sin probarlo."
+      ]
+    },
+    {
+      "abre": "¿Te gustan esas algas moradas?",
+      "respuestas": [
+        "Saben a mi infancia en la estación.",
+        "Me gustan si aún crujen.",
+        "Solo fuera del horario de reuniones.",
+        "El color asusta más.",
+        "Prueba con limón."
+      ]
+    },
+    {
+      "abre": "¿Qué tal te conoce el dispensador?",
+      "respuestas": [
+        "Me reconoce por la mancha de salsa.",
+        "Conoce la muesca de mi taza.",
+        "Me ofrece papilla desde que me afeité.",
+        "Tras ocho años ya era hora.",
+        "Me llamó señora cafetera."
+      ]
+    },
+    {
+      "abre": "¿Qué buscas bajo la mesa?",
+      "respuestas": [
+        "Una ficha para el postre.",
+        "El tapón del termo.",
+        "El teléfono del cocinero en un papel.",
+        "La aceituna que salió disparada.",
+        "Mi dignidad al abrir el yogur."
+      ]
+    },
+    {
+      "abre": "¿Una ración para dos?",
+      "respuestas": [
+        "Si me toca el borde tostado.",
+        "Prefiero dos pequeñas. Tú abusas del picante.",
+        "Para tres, mira quién viene.",
+        "Una cuchara más y trato hecho.",
+        "Sí, quiero hueco para ese bollo."
+      ]
+    },
+    {
+      "abre": "¿Ya probaste el plato sin nombre?",
+      "respuestas": [
+        "Cambia según el reparto.",
+        "Así empezó el famoso guiso del bloque.",
+        "Lo pedí por señas, me aplaudieron.",
+        "Mejor que el menú con catorce apellidos.",
+        "Adivina qué es lo que cruje."
+      ]
+    },
+    {
+      "abre": "¿Quién trae la miel al centro?",
+      "respuestas": [
+        "Baja de la azotea de al lado.",
+        "Una ciclista con olor a romero.",
+        "El hostelero devuelve sus tarros.",
+        "La hermana del jardinero.",
+        "Un señor que no cree en las marcas."
+      ]
+    },
+    {
+      "abre": "¿Por qué han atado una cuchara aquí?",
+      "respuestas": [
+        "Con ella miden las cinco especias.",
+        "Se la llevaban hasta sin pedir.",
+        "La soldó el hijo de la dueña.",
+        "Marca hasta dónde llegaba el guiso.",
+        "La pequeña es para comer. Esta, para recordar."
+      ]
+    },
+    {
+      "abre": "¿Te guardo el último pastel?",
+      "respuestas": [
+        "Partámoslo ya. Los planes caducan.",
+        "Bajo la servilleta verde, por favor.",
+        "Para mi madre, hoy le dan el alta.",
+        "En el bolsillo no, esta vez.",
+        "Que elija la niña que lleva tanto mirando."
+      ]
+    }
+  ]
+}

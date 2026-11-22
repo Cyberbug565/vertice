@@ -1,0 +1,111 @@
+{
+  "id": "patrulla",
+  "requiere": {
+    "all": [
+      "policia:visible"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿Ha vuelto la misma patrulla?",
+      "respuestas": [
+        "Reconozco el faro amarillo.",
+        "Hoy van a pie. Mira las botas.",
+        "Mi tío les presta el baño cada ronda.",
+        "La ruta sí, la pareja cambió.",
+        "Pasan al final del recreo."
+      ]
+    },
+    {
+      "abre": "¿A quién buscaban en la plaza?",
+      "respuestas": [
+        "A quien perdió una chaqueta con cartera.",
+        "A un testigo de la farola caída.",
+        "A un chico perdido en el desfile.",
+        "Al dueño de una bici con luces verdes.",
+        "No sé, me dejaron seguir."
+      ]
+    },
+    {
+      "abre": "El agente perdió su libreta.",
+      "respuestas": [
+        "Avísale, tiene sus iniciales.",
+        "Entonces lo lleva apuntado en la mano.",
+        "La recogió junto al puesto, no es suya.",
+        "Todavía se le ve. Le llamo.",
+        "Que apunte también quién la encontró."
+      ]
+    },
+    {
+      "abre": "¿Son nuevos los emblemas bordados?",
+      "respuestas": [
+        "Las pegatinas desteñían en las camisas.",
+        "Mi hermana hizo esos con hilo reflectante.",
+        "Solo los lleva esta ronda.",
+        "Él cosió el suyo.",
+        "El antiguo sigue en el puño."
+      ]
+    },
+    {
+      "abre": "Cortaron el paso por el charco.",
+      "respuestas": [
+        "Cedió la tapa que hay debajo.",
+        "Rodeamos por el quiosco.",
+        "Hoy las vallas sí sirven.",
+        "El joven lleva toda la mañana calado.",
+        "Avisaré a mi madre antes de que baje el carro."
+      ]
+    },
+    {
+      "abre": "¿Entiendes el megáfono?",
+      "respuestas": [
+        "Solo gracias, el resto rebota.",
+        "Van a mover la furgoneta.",
+        "Enfrente el eco llega más claro.",
+        "Es el organizador del desfile.",
+        "Espera, sale también en el panel."
+      ]
+    },
+    {
+      "abre": "¿El perro de la patrulla es nuevo?",
+      "respuestas": [
+        "Aún saluda a todas las palomas.",
+        "Es el de siempre, recién peinado.",
+        "El guía también se pierde.",
+        "De cachorro ya le gustaban las peras.",
+        "De viejo solo hace rondas cortas."
+      ]
+    },
+    {
+      "abre": "El agente ha comprado hilo.",
+      "respuestas": [
+        "Se descosió el pantalón en el turno.",
+        "El quiosquero también le prestó aguja.",
+        "Para atar una etiqueta de objetos perdidos.",
+        "Su hija expone mañana un tapiz.",
+        "Mira el botón que guarda en la mano."
+      ]
+    },
+    {
+      "abre": "¿Quién pintó las nuevas líneas?",
+      "respuestas": [
+        "La brigada con los del colegio.",
+        "Mi cuñado hizo el tramo amarillo.",
+        "A la esquina le llovió encima.",
+        "Las repasan si cambian de sitio un puesto.",
+        "Las marcas son nuevas, el paso no."
+      ]
+    },
+    {
+      "abre": "¿Por qué te saludó esa agente?",
+      "respuestas": [
+        "Compartimos pupitre.",
+        "Le devolví el gorro en el temporal.",
+        "Compra pan antes de ponerse el uniforme.",
+        "Me confunde con mi gemelo.",
+        "Saludó a todos. Es su primera ronda."
+      ]
+    }
+  ]
+}

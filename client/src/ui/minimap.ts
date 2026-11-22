@@ -1,5 +1,5 @@
 // Minimapa y mapa grande por planta, proyectados en isométrico para coincidir con la vista.
-import { GROUND_TYPES, buildZoneGrid, type ZoneDef } from '@vertice/shared';
+import { Atlas, MAP_CELL, GROUND_TYPES, buildZoneGrid, type ZoneDef } from '@vertice/shared';
 
 const COL: Record<string, string> = { asphalt: '#2a2a3a', sidewalk: '#44445a', plaza: '#4e4868', market: '#6a4a5a', water: '#0d3050', bridge: '#5a5a6a', deck: '#4a4640', gravel: '#5a5448', crosswalk: '#3a3a4a', wood: '#6a4a36', tile: '#5e6078', metal: '#4e5a64', dirt: '#5a4a3a', void: '#000', alley: '#1c1a24', grass: '#2f5a3a', sand: '#8a7458', data: '#0a2a4a', grid: '#3a0a18' };
 
@@ -12,7 +12,7 @@ export function renderZoneMap(zone: ZoneDef, canvas: HTMLCanvasElement, scale: n
   ctx.setTransform(scale, scale / 2, -scale, scale / 2, zone.height * scale, 0);
   for (let y = 0; y < zone.height; y++) for (let x = 0; x < zone.width; x++) {
     const i = y * zone.width + x;
-    ctx.fillStyle = g.walk[i] ? COL[GROUND_TYPES[g.ground[i]]] ?? '#333' : g.buildingAt[i] >= 0 ? zone.buildings[g.buildingAt[i]].color : GROUND_TYPES[g.ground[i]] === 'water' ? COL.water : '#6a6a7a';
+    ctx.fillStyle = g.walk[i] ? COL[GROUND_TYPES[g.ground[i]]] ?? '#333' : g.buildingAt[i] >= 0 ? '#404251' : GROUND_TYPES[g.ground[i]] === 'water' ? COL.water : '#6a6a7a';
     ctx.fillRect(x, y, 1.05, 1.05);
     // Zonas de color: verde segura, amarilla vigilada (sin tinte), roja peligrosa y negra sin ley.
     if (zone.kind === 'exterior') { const dg = g.danger[i]; if (dg !== 1) { ctx.fillStyle = DANGER_TINT[dg]; ctx.fillRect(x, y, 1.05, 1.05); } }
@@ -21,15 +21,38 @@ export function renderZoneMap(zone: ZoneDef, canvas: HTMLCanvasElement, scale: n
   return { project: (x: number, y: number) => ({ x: (x - y) * scale + zone.height * scale, y: ((x + y) * scale) / 2 }) };
 }
 
+const terrainCache = new WeakMap<ZoneDef, Map<number,HTMLCanvasElement>>();
+export function mapTerrain(zone: ZoneDef, atlas: Atlas, scale: number) {
+  let scales = terrainCache.get(zone);
+  if (!scales) { scales = new Map(); terrainCache.set(zone,scales); }
+  let terrain = scales.get(scale);
+  if (!terrain) { terrain=document.createElement('canvas'); renderZoneMap(zone,terrain,scale); scales.set(scale,terrain); }
+  if (atlas.unlocked) return terrain;
+  const canvas=document.createElement('canvas');
+  canvas.width=terrain.width; canvas.height=terrain.height;
+  const ctx=canvas.getContext('2d')!;
+  ctx.setTransform(scale,scale/2,-scale,scale/2,zone.height*scale,0);
+  ctx.beginPath();
+  const prefix=zone.id+'@';
+  for (const key of atlas.cells) if (key.startsWith(prefix)) {
+    const [cx,cy]=key.slice(prefix.length).split(',').map(Number), x=cx*MAP_CELL, y=cy*MAP_CELL;
+    ctx.rect(x,y,Math.min(MAP_CELL,zone.width-x),Math.min(MAP_CELL,zone.height-y));
+  }
+  ctx.clip();ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(terrain,0,0);
+  return canvas;
+}
+
 export class Minimap {
   private base = document.createElement('canvas');
   private proj: ((x: number, y: number) => { x: number; y: number }) | null = null;
   private zone?: ZoneDef;
-  constructor(private canvas: HTMLCanvasElement) {}
+  constructor(private canvas: HTMLCanvasElement, private atlas: Atlas) {}
+  refresh() { if (this.zone) this.setZone(this.zone); }
   setZone(z: ZoneDef) {
     this.zone = z;
     const scale = z.kind === 'interior' ? 6 : 1.4;
-    this.proj = renderZoneMap(z, this.base, scale).project;
+    this.base = mapTerrain(z,this.atlas,scale);
+    this.proj=(x,y)=>({x:(x-y+z.height)*scale,y:(x+y)*scale/2});
   }
   /** Destino marcado (se dibuja como un rombo magenta; si está fuera, una flecha en el borde). */
   goal: { x: number; y: number; zone: string } | null = null;
@@ -51,11 +74,17 @@ export class Minimap {
     ctx.fillStyle = '#070710'; ctx.fillRect(0, 0, W, H);
     ctx.drawImage(this.base, Math.round(W / 2 - m.x), Math.round(H / 2 - m.y));
     for (const o of others) {
+      if (!this.atlas.seen(this.zone.id,o.x,o.y)) continue;
+      if (o.kind==='door') {
+        const d=this.zone.doors.find(d=>Math.abs(d.at[0]+.5-o.x)<1 && Math.abs(d.at[1]+.5-o.y)<1);
+        if (!d || !this.atlas.knows(d.to.zone)) continue;
+      }
+      if (o.kind==='object' && this.zone.kind==='exterior' && !this.atlas.unlocked) continue;
       const p = this.proj(o.x, o.y);
       ctx.fillStyle = o.kind === 'player' ? '#43f3ff' : o.kind === 'door' ? '#5affc8' : o.kind === 'object' ? '#ffd23f' : '#c8c8d8';
       ctx.fillRect(W / 2 + p.x - m.x - 1.5, H / 2 + p.y - m.y - 1.5, o.kind === 'npc' ? 2 : 3, o.kind === 'npc' ? 2 : 3);
     }
-    if (this.goal && this.goal.zone === this.zone.id) {
+    if (this.goal && this.goal.zone === this.zone.id && this.atlas.seen(this.zone.id,this.goal.x,this.goal.y)) {
       const p = this.proj(this.goal.x, this.goal.y);
       let gx = W / 2 + p.x - m.x, gy = H / 2 + p.y - m.y;
       const out = gx < 6 || gy < 6 || gx > W - 6 || gy > H - 6;

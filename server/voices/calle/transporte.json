@@ -1,0 +1,111 @@
+{
+  "id": "transporte",
+  "requiere": {
+    "any": [
+      "cerca:busstop"
+    ]
+  },
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "El panel dice que el bus llega ayer.",
+      "respuestas": [
+        "Entonces llevo un día de ventaja.",
+        "Ayer ponía lo mismo y vino uno.",
+        "También se ha congelado la ruedecita.",
+        "¿Ayer había sitio para sentarse?",
+        "Le mandaré una foto al encargado."
+      ]
+    },
+    {
+      "abre": "¿Te guardo ventana?",
+      "respuestas": [
+        "Sí, si no gotea por dentro.",
+        "Pasillo, bajo en dos paradas.",
+        "Déjasela a la señora del bastón.",
+        "Me gusta ver cambiar el barrio.",
+        "Despiértame en la curva grande."
+      ]
+    },
+    {
+      "abre": "Otra vez le cambian el nombre a la parada.",
+      "respuestas": [
+        "Así acaba mi padre en el depósito.",
+        "Me basta el puesto de peras de enfrente.",
+        "El chófer la llama como antes.",
+        "Mi mapa ya tiene tres pegatinas encima.",
+        "Yo la reconozco por el olor a pan."
+      ]
+    },
+    {
+      "abre": "¿De quién es ese guante del asiento?",
+      "respuestas": [
+        "Con seis dedos mío no es.",
+        "Entrégalo al conductor, como el mío el martes.",
+        "Lleva un nombre bordado por dentro.",
+        "Lo dejó el chico de amarillo.",
+        "Es una funda de herramientas."
+      ]
+    },
+    {
+      "abre": "¿Oyes cantar al conductor?",
+      "respuestas": [
+        "Cambia de tema en cada semáforo.",
+        "Afina mejor en las rectas.",
+        "Es mi primo. En casa canta peor.",
+        "Nos anuncia las paradas con rima.",
+        "En el estribillo todavía llego al turno."
+      ]
+    },
+    {
+      "abre": "¿Te marea el elevado?",
+      "respuestas": [
+        "Solo cuando veo los coches por debajo.",
+        "Cuento remaches y se me pasa.",
+        "Un poco. ¿Me cedes ese lado?",
+        "Cierro los ojos en la curva grande.",
+        "El regreso se hace más corto."
+      ]
+    },
+    {
+      "abre": "El lector se ha tragado mi abono.",
+      "respuestas": [
+        "A mí me devolvió uno de jubilado.",
+        "Dile al conductor el número de máquina.",
+        "Te pago hoy, mañana me invitas.",
+        "Asoma por la ranura de abajo.",
+        "Te habrá llegado el recibo al visor."
+      ]
+    },
+    {
+      "abre": "¿Caben las bicis en ese vagón?",
+      "respuestas": [
+        "Levantando las ruedas delanteras, sí.",
+        "Esperemos el coche de carga.",
+        "Una bici y mi optimismo, como mucho.",
+        "El último coche lleva ganchos amarillos.",
+        "La mía se pliega. ¿Me ayudas?"
+      ]
+    },
+    {
+      "abre": "Me he sentado en la parada contraria.",
+      "respuestas": [
+        "Aquí da la sombra por lo menos.",
+        "Esta línea da la vuelta entera.",
+        "Cruza conmigo, también voy al mercado.",
+        "Has llegado justo a mi aniversario de espera.",
+        "La letra es tan chica que me pasó igual."
+      ]
+    },
+    {
+      "abre": "¿Llega aquí el nocturno?",
+      "respuestas": [
+        "Busca la franja violeta.",
+        "El último para dos calles más abajo.",
+        "Los viernes sí; ayer me dejó aquí.",
+        "Se oye venir. Chilla como mi rodilla.",
+        "El quiosquero cierra cuando pasa. Pregúntale."
+      ]
+    }
+  ]
+}

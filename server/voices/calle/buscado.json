@@ -1,0 +1,15 @@
+{
+  "id": "buscado",
+  "requiere": {
+    "all": [
+      "buscado",
+      "saludo"
+    ]
+  },
+  "comentarios": [
+    "Conozco esa cara de algún aviso.",
+    "Yo voy a mirar el escaparate y seguir mi camino.",
+    "Recoge la silla. Viene alguien conocido."
+  ],
+  "escenas": []
+}

@@ -1,0 +1,107 @@
+{
+  "id": "apagones",
+  "requiere": {},
+  "comentarios": [],
+  "escenas": [
+    {
+      "abre": "¿También se apagó tu visor?",
+      "respuestas": [
+        "El mío va a cuerda y me asusté.",
+        "No. Te alumbro la escalera.",
+        "Se ha puesto a contar estrellas imaginarias.",
+        "Es el anuncio. Por fin veo tus ojos.",
+        "Creí haberme dormido un segundo."
+      ]
+    },
+    {
+      "abre": "¿Encuentras tus velas a oscuras?",
+      "respuestas": [
+        "Ahora sí, después de aquella noche del armario.",
+        "Están en una taza de asa rugosa.",
+        "Siempre digo que sí hasta que hace falta.",
+        "La portera guarda una por piso.",
+        "Mi hija puso pegatinas luminosas en el cajón."
+      ]
+    },
+    {
+      "abre": "¿Recuerdas el apagón de verano?",
+      "respuestas": [
+        "Conocimos al vecino del chelo.",
+        "Me comí todo el helado.",
+        "Vi estrellas desde la lavandería.",
+        "Estaba en un ascensor. Aprendí cuatro juegos.",
+        "Tengo una foto totalmente negra."
+      ]
+    },
+    {
+      "abre": "Las lámparas del portal laten por parejas.",
+      "respuestas": [
+        "Será la carga del ascensor.",
+        "Un corazón cansado, dice mi madre.",
+        "Así distingue el electricista el tramo.",
+        "Una se retrasa. Me cae bien.",
+        "El gato espera los dos destellos."
+      ]
+    },
+    {
+      "abre": "¿Y si se apagan en mitad de la función?",
+      "respuestas": [
+        "A esa actriz se la oye sin verla.",
+        "Guardan teatro de sombras de reserva.",
+        "Aplaudimos para que nos encuentren.",
+        "Se puede afinar a oscuras.",
+        "Que devuelvan el precio de las bombillas."
+      ]
+    },
+    {
+      "abre": "Mi nevera escribe cuando se va la luz.",
+      "respuestas": [
+        "La nuestra gime como una ballena.",
+        "Guarda una carta; valdrá dinero.",
+        "¿Quién atiende el buzón sin corriente?",
+        "La mía convierte todo en sopa.",
+        "Más educada que varios parientes."
+      ]
+    },
+    {
+      "abre": "¿De quién es la linterna verde?",
+      "respuestas": [
+        "Del vecino que presta pilas.",
+        "De la niña que juega a ser farera.",
+        "El del acuario mira la ventana.",
+        "Mi hermana me da así las buenas noches.",
+        "Marca la reunión de escalera."
+      ]
+    },
+    {
+      "abre": "La farola se enciende si le cantas.",
+      "respuestas": [
+        "Pues he suspendido la audición.",
+        "Es el sensor. Te acercas al cantar.",
+        "Mi tía lo cree. No le quites la ilusión.",
+        "Cántale lento mientras me ato la bota.",
+        "Así la del karaoke nunca se apaga."
+      ]
+    },
+    {
+      "abre": "¿Dónde te pilló la vuelta de la luz?",
+      "respuestas": [
+        "Prometiendo ahorrar batería.",
+        "Debajo de la mesa buscando enchufe.",
+        "Escuchando llover por primera vez en semanas.",
+        "En la barbería, con media cabeza hecha.",
+        "Mirando encenderse ventanas piso por piso."
+      ]
+    },
+    {
+      "abre": "¿Puedes cargarme el reloj?",
+      "respuestas": [
+        "Trae el cable corto.",
+        "Cuando termine mi audífono.",
+        "Me quedan dos vueltas de esfera.",
+        "Si adelanta como el mío sobra batería.",
+        "Justo queda un puerto libre."
+      ]
+    }
+  ]
+}
