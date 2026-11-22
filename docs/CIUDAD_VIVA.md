@@ -48,6 +48,6 @@ En Windows, abre **iniciar-local.bat**. También puedes ejecutar `npm run local`
 
 ## Imágenes de la versión
 
-[Recorrido y descubrimiento de la Clínica Sato](pruebas-025/mapa.png) · [Pierna Corredora en cuatro poses](pruebas-025/pierna-corredora.png) · [Cuatro estilos con abrigo y brazo Vigía](pruebas-025/estilos-de-paso.png).
+[Recorrido y descubrimiento de la Clínica Sato](pruebas-025/mapa.png) · [Rodilla y tobillo de la Corredora con body corto](pruebas-025/corredora-visible.png) · [La misma pierna bajo la falda en cuatro poses](pruebas-025/pierna-corredora.png) · [Cuatro estilos con abrigo y brazo Vigía](pruebas-025/estilos-de-paso.png).
 
-El mapa se dibuja con el código del cliente y el conocimiento guardado durante una partida de prueba. Las láminas de movimiento usan los modelos, texturas, pesos y ángulos del juego en un banco con cámara fija. Los números indican la flexión de cada rodilla en ese instante.
+El mapa se dibuja con el código del cliente y el conocimiento guardado durante una partida de prueba. Las láminas de movimiento usan los modelos, texturas, pesos y ángulos del juego en un banco con cámara fija. Los números indican la flexión de cada rodilla en ese instante. Las faldas largas y el vestido reparten el movimiento del bajo entre ambos muslos y ambas pantorrillas. El borde de tela opaca oculta los mismos puntos en el implante y en la piel.

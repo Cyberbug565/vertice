@@ -3,6 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import * as T from 'three';
+import { garmentById } from '@vertice/shared';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { bindGarment } from '../../client/src/render/garment-skinning';
 import { fitImplant, implantEntries, implantRegions } from '../../client/src/render/implants3d';
@@ -69,6 +70,13 @@ export async function mannequin(kind,clothes,implant,canvas){
     if(bits)for(let i=0;i<pos.count;i++)if(bits[i>>3]&(128>>(i&7))){hidden[i]=1;covered[i]=1;}
     for(const original of g.meshes){
       const mesh=bindGarment(original,body);
+      // El shader de las prendas separa cada capa en la dirección de su normal.
+      // Replica ese desplazamiento en la geometría del banco, que no ejecuta shaders.
+      mesh.geometry=mesh.geometry.clone();
+      const position=mesh.geometry.getAttribute('position'), normal=mesh.geometry.getAttribute('normal');
+      const distance=Number(((garmentById(file)?.layer??0)*.0035).toFixed(4));
+      for(let v=0;v<position.count;v++)position.setXYZ(v,position.getX(v)+normal.getX(v)*distance,
+        position.getY(v)+normal.getY(v)*distance,position.getZ(v)+normal.getZ(v)*distance);
       body.parent.add(mesh);
       meshes.push({mesh,tex:g.textures.get(original.material.name),tint:[142,155,166]});
     }
@@ -78,7 +86,7 @@ export async function mannequin(kind,clothes,implant,canvas){
   if(!source)throw Error('Falta el implante '+implant.id+' '+side);
   const fitted=fitImplant(source,body,{reg,pos:pos.array,L:{}},{mask:covered,sleeve:0,trouser:0,shoes:false,gloves:false,outfit:false});
   body.parent.add(fitted);
-  meshes.push({mesh:fitted,tint:[163,181,195],metal:true});
+  meshes.push({mesh:fitted,tint:[163,181,195],metal:true,hidden:fitted.geometry.getAttribute('aClothHide')?.array});
   return {scene:base.scene,meshes,human:{bones,kit:{order,parent,rest},root:base.scene}};
 }
 
@@ -120,6 +128,7 @@ export function renderPose(model,canvas,width,height,yaw=.98){
         for(let x=Math.max(0,Math.floor(Math.min(ax,bx,cx)));x<=Math.min(width-1,Math.ceil(Math.max(ax,bx,cx)));x++){
           const A=((by-cy)*(x+.5-cx)+(cx-bx)*(y+.5-cy))/d,B=((cy-ay)*(x+.5-cx)+(ax-cx)*(y+.5-cy))/d,C=1-A-B;
           if(Math.min(A,B,C)<-.000002)continue;
+          if(hidden && A*hidden[ia]+B*hidden[ib]+C*hidden[ic]>.5)continue;
           const zi=A*points[a+2]+B*points[b+2]+C*points[c+2],index=y*width+x;
           if(zi<=depth[index])continue;
           let at=-1;

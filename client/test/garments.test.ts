@@ -87,6 +87,20 @@ describe('prendas de la release ropa', () => {
     for (const m of attached) m.removeFromParent();
   });
 
+  it.each(['falda-volantes','falda-larga','vestido-scifi'])('el bajo de %s sigue las dos rodillas al doblarse', async (id) => {
+    const garment = await load(resolve(base, 'prendas/femenino/'+id+'.glb'));
+    const strongest = {calf_l:0, calf_r:0};
+    for (const mesh of meshes(garment.scene)) {
+      const weights=mesh.geometry.getAttribute('skinWeight'), joints=mesh.geometry.getAttribute('skinIndex');
+      for(let v=0;v<weights.count;v++) for(let k=0;k<4;k++) {
+        const name=mesh.skeleton.bones[joints.getComponent(v,k)].name;
+        if (name==='calf_l'||name==='calf_r') strongest[name]=Math.max(strongest[name],weights.getComponent(v,k));
+      }
+    }
+    expect(strongest.calf_l).toBeGreaterThan(.3);
+    expect(strongest.calf_r).toBeGreaterThan(.3);
+  });
+
   it('remapea un orden de huesos diferente y rechaza huesos ajenos', () => {
     const root = new THREE.Bone(); root.name = 'root';
     const hand = new THREE.Bone(); hand.name = 'hand_l'; hand.position.x = 1; root.add(hand); root.updateMatrixWorld(true);
@@ -176,6 +190,12 @@ describe('implantes visibles', () => {
       outfit: false,
     });
     const result = fitted.geometry.getAttribute('position');
+    const cloth = fitted.geometry.getAttribute('aClothHide');
+    expect(cloth.count).toBe(pos.count);
+    for (let i = 0; i < pos.count; i++) {
+      if (cloth.getX(i) !== mask[map.getX(i)]) throw Error('El borde del cromo no coincide con la tela en ' + i);
+    }
+    expect(src.geometry.hasAttribute('aClothHide')).toBe(false);
     let changed = 0,
       uncovered = 0;
     for (let i = 0; i < pos.count; i++) {

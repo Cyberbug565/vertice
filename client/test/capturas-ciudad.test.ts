@@ -36,7 +36,7 @@ function pose(model:any,style:Gait,speed:number,phase:number,buffs:string[],guar
   return {knee:Math.round(rig.kneeR.rotation.x*180/Math.PI),other:Math.round(rig.kneeL.rotation.x*180/Math.PI)};
 }
 
-it.skipIf(!output)('fotografía el atlas y las ocho poses con los mismos datos y articulaciones que usa el cliente',async()=>{
+it.skipIf(!output)('fotografía el atlas y las poses con ambos atuendos usando los mismos datos y articulaciones que usa el cliente',async()=>{
   const load=createRequire(import.meta.url);
   const native=load(process.env.VERTICE_CANVAS??'@napi-rs/canvas');
   const out=output!;
@@ -58,7 +58,7 @@ it.skipIf(!output)('fotografía el atlas y las ocho poses con los mismos datos y
   const original=Object.getOwnPropertyDescriptor(globalThis,'document');
   Object.defineProperty(globalThis,'document',{configurable:true,value:{createElement:(name:string)=>{if(name!=='canvas')throw Error(name);return native.createCanvas(1,1);}}});
   try{
-    const {result,ctx}=paper('Explorar Ferro','Misma partida · datos de la partida antes de entrar, al registrar la visita y después de descifrar el plano.',1390,488);
+    const {result,ctx}=paper('Explorar Ferro','Clínica Sato · Datos de la partida antes de entrar, al registrar la visita y después de descifrar el plano.',1390,488);
     const captions=[['Desde la calle','La ruta está descubierta. La clínica aún no tiene marcador.'],['Tras entrar','La Clínica Sato ya figura entre los lugares conocidos.'],['Interfaz 15','El plano municipal revela los demás servicios.']];
     for(let i=0;i<states.length;i++){
       const atlas=new Atlas();atlas.apply(states[i],true);
@@ -85,6 +85,10 @@ it.skipIf(!output)('fotografía el atlas y las ocho poses con los mismos datos y
       file:'estilos-de-paso.png',title:'Cuatro estilos de movimiento',subtitle:'Modelo masculino con abrigo, pantalón de cuero, botas y brazo Vigía derecho.',
       shots:[['Paseo','paseo',1.35,.07,[]],['Trote','trote',4.1,.72,['corriendo']],['Cautela','cautela',1.95,.18,[]],['Cojera izquierda','cojera',2.2,.24,['paso-izq']]]}
   ];
+  configurations.push({...configurations[0],
+    garments:['body-cyber','gorra-striker'],
+    file:'corredora-visible.png',title:'Rodilla y tobillo de la Corredora',
+    subtitle:'Mismo implante y mismas cuatro poses con el body corto. La rodilla y el tobillo quedan a la vista.'});
   for(const setup of configurations){
     const model=await mannequin(setup.kind,setup.garments,setup.implant,native);
     const {result,ctx}=paper(setup.title,setup.subtitle,1355,572);

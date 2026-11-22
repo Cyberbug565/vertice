@@ -49,12 +49,12 @@ jobs:
         with:
           name: pruebas-visuales-025
           path: docs/pruebas-025
-      - name: Guardar las tres imágenes de la revisión probada
+      - name: Guardar las imágenes de la revisión probada
         env:
           REVISION: ${{ github.sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$REVISION"
-          git add -- docs/pruebas-025/mapa.png docs/pruebas-025/pierna-corredora.png docs/pruebas-025/estilos-de-paso.png
+          git add -- docs/pruebas-025/mapa.png docs/pruebas-025/pierna-corredora.png docs/pruebas-025/estilos-de-paso.png docs/pruebas-025/corredora-visible.png
           if ! git diff --cached --quiet; then
             git -c user.name=github-actions -c user.email=github-actions[bot]@users.noreply.github.com commit -m "Añade las fotos de las pruebas de la ciudad y de los personajes"
             git push origin HEAD:refs/heads/codex/ciudad-viva-025
