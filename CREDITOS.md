@@ -5,6 +5,7 @@ Vértice es un proyecto original. Aquí figuran los recursos de terceros y su pr
 | Recurso | Autor | Licencia | Dónde se usa |
 |---|---|---|---|
 | City Kit Commercial 2.1 (edificios y versiones ligeras) | Kenney — www.kenney.nl | CC0 1.0 (dominio público) | `client/public/models/kenney/`: edificios de respaldo para zonas sin modelo asignado |
+| Puertas recortadas de City Kit Commercial 2.1 (building-c: portal; building-a: puerta doble de cristal) | Kenney — www.kenney.nl | CC0 1.0 (dominio público) | `client/public/models/puertas/`, recortadas con `tools/puertas/extraer.py` (v0.36) |
 | Pack de armas low-poly (pistolas, revólveres, subfusiles, rifles, escopetas, francotiradores y accesorios) | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/armas/`: armas de fuego en las manos |
 | Universal Base Characters (cuerpos masculino y femenino con esqueleto, peinados y barba) | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/humanos/`: cuerpos de todas las personas (texturas reducidas a 1024 px) |
 | Universal Animation Library 2 (Standard): 28 animaciones recortadas | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/anim/ual2.glb`: golpes, bloqueo, reacciones y gestos |

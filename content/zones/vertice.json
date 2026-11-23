@@ -57380,7 +57380,7 @@
    "name": "Portal · Edificio VILLA SOL",
    "at": [
     194,
-    24
+    21
    ],
    "kind": "housing"
   },
@@ -57388,7 +57388,7 @@
    "id": "colinas-portal-8",
    "name": "Portal · Bloque 8",
    "at": [
-    202,
+    207,
     17
    ],
    "kind": "housing"
@@ -57397,8 +57397,8 @@
    "id": "colinas-portal-9",
    "name": "Portal · Bloque 9",
    "at": [
-    202,
-    24
+    207,
+    20
    ],
    "kind": "housing"
   },
@@ -57407,7 +57407,7 @@
    "name": "Portal · Edificio OKAMI SPA",
    "at": [
     210,
-    24
+    21
    ],
    "kind": "housing"
   },
@@ -57415,8 +57415,8 @@
    "id": "colinas-portal-11",
    "name": "Portal · Bloque 11",
    "at": [
-    217,
-    17
+    213,
+    16
    ],
    "kind": "housing"
   },
@@ -57424,8 +57424,8 @@
    "id": "colinas-portal-12",
    "name": "Portal · Bloque 12",
    "at": [
-    217,
-    24
+    213,
+    20
    ],
    "kind": "housing"
   },
@@ -57533,7 +57533,7 @@
    "name": "Portal · Edificio CLUB PRIVADO",
    "at": [
     193,
-    84
+    78
    ],
    "kind": "housing"
   },
@@ -57541,8 +57541,8 @@
    "id": "colinas-portal-25",
    "name": "Portal · Bloque 25",
    "at": [
-    201,
-    74
+    197,
+    73
    ],
    "kind": "housing"
   },
@@ -57550,8 +57550,8 @@
    "id": "colinas-portal-26",
    "name": "Portal · Bloque 26",
    "at": [
-    201,
-    84
+    196,
+    78
    ],
    "kind": "housing"
   },
@@ -57560,7 +57560,7 @@
    "name": "Portal · Bloque 27",
    "at": [
     210,
-    84
+    78
    ],
    "kind": "housing"
   },
@@ -57568,8 +57568,8 @@
    "id": "colinas-portal-28",
    "name": "Portal · Bloque 28",
    "at": [
-    217,
-    74
+    213,
+    73
    ],
    "kind": "housing"
   },
@@ -57577,8 +57577,8 @@
    "id": "colinas-portal-29",
    "name": "Portal · Bloque 29",
    "at": [
-    217,
-    84
+    212,
+    78
    ],
    "kind": "housing"
   },
@@ -57614,7 +57614,7 @@
    "name": "Portal · Edificio JARDINES",
    "at": [
     273,
-    84
+    78
    ],
    "kind": "housing"
   },
@@ -57622,8 +57622,8 @@
    "id": "colinas-portal-34",
    "name": "Portal · Bloque 34",
    "at": [
-    280,
-    74
+    276,
+    73
    ],
    "kind": "housing"
   },
@@ -57631,8 +57631,8 @@
    "id": "colinas-portal-35",
    "name": "Portal · Bloque 35",
    "at": [
-    280,
-    84
+    285,
+    83
    ],
    "kind": "housing"
   },
@@ -57667,8 +57667,8 @@
    "id": "colinas-portal-39",
    "name": "Portal · Bloque 39",
    "at": [
-    162,
-    100
+    175,
+    99
    ],
    "kind": "housing"
   },
@@ -57676,8 +57676,8 @@
    "id": "colinas-portal-40",
    "name": "Portal · Bloque 40",
    "at": [
-    162,
-    107
+    163,
+    123
    ],
    "kind": "housing"
   },
@@ -57694,8 +57694,8 @@
    "id": "colinas-portal-42",
    "name": "Portal · Bloque 42",
    "at": [
-    175,
-    107
+    176,
+    102
    ],
    "kind": "housing"
   },
@@ -57704,7 +57704,7 @@
    "name": "Portal · Edificio CLUB PRIVADO",
    "at": [
     193,
-    107
+    104
    ],
    "kind": "housing"
   },
@@ -57712,7 +57712,7 @@
    "id": "colinas-portal-44",
    "name": "Portal · Bloque 44",
    "at": [
-    202,
+    207,
     100
    ],
    "kind": "housing"
@@ -57721,8 +57721,8 @@
    "id": "colinas-portal-45",
    "name": "Portal · Bloque 45",
    "at": [
-    202,
-    107
+    207,
+    103
    ],
    "kind": "housing"
   },
@@ -57731,7 +57731,7 @@
    "name": "Portal · Edificio KAITEN HOMES",
    "at": [
     210,
-    107
+    104
    ],
    "kind": "housing"
   },
@@ -57739,8 +57739,8 @@
    "id": "colinas-portal-47",
    "name": "Portal · Bloque 47",
    "at": [
-    216,
-    100
+    213,
+    99
    ],
    "kind": "housing"
   },
@@ -57748,8 +57748,8 @@
    "id": "colinas-portal-48",
    "name": "Portal · Bloque 48",
    "at": [
-    217,
-    107
+    213,
+    103
    ],
    "kind": "housing"
   },
@@ -57757,8 +57757,8 @@
    "id": "colinas-portal-49",
    "name": "Portal · Edificio CLUB PRIVADO",
    "at": [
-    239,
-    100
+    252,
+    99
    ],
    "kind": "housing"
   },
@@ -57766,8 +57766,8 @@
    "id": "colinas-portal-50",
    "name": "Portal · Bloque 50",
    "at": [
-    239,
-    107
+    240,
+    123
    ],
    "kind": "housing"
   },
@@ -57784,8 +57784,8 @@
    "id": "colinas-portal-52",
    "name": "Portal · Bloque 52",
    "at": [
-    252,
-    107
+    253,
+    102
    ],
    "kind": "housing"
   },
@@ -57794,7 +57794,7 @@
    "name": "Portal · Bloque 53",
    "at": [
     273,
-    107
+    104
    ],
    "kind": "housing"
   },
@@ -57802,8 +57802,8 @@
    "id": "colinas-portal-54",
    "name": "Portal · Bloque 54",
    "at": [
-    280,
-    100
+    276,
+    99
    ],
    "kind": "housing"
   },
@@ -57811,8 +57811,8 @@
    "id": "colinas-portal-55",
    "name": "Portal · Bloque 55",
    "at": [
-    280,
-    107
+    285,
+    106
    ],
    "kind": "housing"
   },
@@ -59897,7 +59897,7 @@
    "name": "Portal · Bloque 9",
    "at": [
     94,
-    212
+    213
    ],
    "kind": "housing"
   },
@@ -59996,7 +59996,7 @@
    "name": "Portal · Bloque 20",
    "at": [
     110,
-    212
+    213
    ],
    "kind": "housing"
   },

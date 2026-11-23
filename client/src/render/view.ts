@@ -27,7 +27,7 @@ export interface CEnt {
   vehX?: Container; vehY?: Container; vehSprite?: Sprite; lvl?: Text;
   vehicleHover?: boolean;
   /** v0.35 · Hoja de la puerta (corredera de dos mitades) y cuánto está abierta (0-1). */
-  door?: { g: Graphics; k: number; drawn: number; along: 'x' | 'y'; col: number };
+  door?: { g: Graphics; k: number; drawn: number; along: 'x' | 'y'; col: number; d3?: boolean };
   vehicleModel?: import('@vertice/shared').CarDef['model'];
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
   kneeL?:Container; kneeR?:Container; footL?:Container; footR?:Container;
@@ -150,7 +150,7 @@ export class GameView {
     if (settings.chars3d && (r as any).gl) {
       try { this.chars3d = new Chars3D(this.app.canvas, (r as any).gl); } catch (err) { console.warn('[3d] sin personajes 3D:', err); this.chars3d = undefined; }
       // Cuando terminan de cargar los edificios 3D, se reconstruye la zona para quitar las fachadas 2D.
-      if (this.chars3d) { this.chars3d.quality = settings.quality === 'low' ? 'low' : 'high'; this.chars3d.onCityReady = () => { this.dropSceneCache(); if (this.zone) this.rebuild(); }; }
+      if (this.chars3d) { this.chars3d.quality = settings.quality === 'low' ? 'low' : 'high'; this.chars3d.onCityReady = () => { this.dropSceneCache(); if (this.zone) { this.rebuild(); this.replaceDoors3D(); } }; }
     }
     this.app.ticker.add(() => {
       if (this.chars3d && this.pending3d) { try { this.chars3d.render(...this.pending3d); } catch (err) { console.warn('[3d]', err); } (r as any).resetState?.(); }
@@ -571,6 +571,39 @@ export class GameView {
     this.place(ent);
   }
 
+  /** v0.36 · Encaja la puerta 3D del kit en el muro del edificio que hay junto a la casilla de la puerta. */
+  private placeDoor3D(ent: CEnt): boolean {
+    const c3 = this.chars3d, z = this.zone, g = this.grid, s = ent.s;
+    if (!c3 || !z || !g) return false;
+    if (s.sign?.icon === 'subir' || s.sign?.icon === 'bajar' || s.sign?.icon === 'flecha' || /^(Escaleras|Subir|Bajar)/.test(s.name)) return false;
+    const fx = Math.floor(s.x), fy = Math.floor(s.y);
+    const to = (s as any).doorTo?.zone as string | undefined;
+    const kind = s.objKind === 'housing' || /^(casa:|portal:)/.test(to ?? '') || z.id.startsWith('casa:') || z.id.startsWith('portal:') || /^(Puerta de|Salir al rellano)/.test(s.name) ? 'portal' : 'tienda';
+    let dir: [number, number] | null = null, at: [number, number] | null = null;
+    if (z.kind === 'interior') {
+      dir = fx === z.width - 1 ? [1, 0] : fy === z.height - 1 ? [0, 1] : fx === 0 ? [-1, 0] : fy === 0 ? [0, -1] : null;
+      if (!dir) return false;
+      // Bordes de delante (derecha, abajo): en el canto; paredes del fondo: en su cara interior.
+      const k = dir[0] + dir[1] > 0 ? 0.5 : -0.5;
+      at = [fx + 0.5 + dir[0] * k, fy + 0.5 + dir[1] * k];
+    } else {
+      // El edificio de al lado: el que tenga el muro más cerca (rayo contra el edificio 3D; si aún no hay, el borde de la casilla).
+      let best = Infinity;
+      for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]] as const) {
+        const X = fx + dx, Y = fy + dy;
+        if (X < 0 || Y < 0 || X >= g.w || Y >= g.h || g.buildingAt[Y * g.w + X] < 0) continue;
+        const hit = c3.wallDistance(fx + 0.5, fy + 0.5, dx, dy, 3.5);
+        const d = hit ?? 0.5;
+        if (d < best) { best = d; dir = [dx, dy]; at = [fx + 0.5 + dx * (d - 0.02), fy + 0.5 + dy * (d - 0.02)]; }
+      }
+      if (!dir || !at) return false;
+    }
+    c3.doors.set(s.id, kind, at[0], at[1], dir[0], dir[1]);
+    return true;
+  }
+  /** Vuelve a encajar las puertas (cuando termina de cargar la ciudad 3D). */
+  private replaceDoors3D() { for (const e of this.ents.values()) if (e.door?.d3) this.placeDoor3D(e); }
+
   private drawDoor(ent: CEnt, fx: number, fy: number) {
     const d = ent.door!; const g = d.g; const k = d.k;
     if (Math.abs(d.drawn - k) < 0.01) return;
@@ -602,7 +635,8 @@ export class GameView {
       const want = people.some((p) => Math.hypot(p.x - cx, p.y - cy) < 1.7) ? 1 : 0;
       if (d.k === want) continue;
       d.k = want > d.k ? Math.min(1, d.k + dt * 4.5) : Math.max(0, d.k - dt * 2.2);
-      this.drawDoor(e, Math.floor(e.x), Math.floor(e.y));
+      if (d.d3) this.chars3d?.doors.setOpen(e.s.id, d.k);
+      else this.drawDoor(e, Math.floor(e.x), Math.floor(e.y));
     }
   }
 
@@ -665,8 +699,9 @@ export class GameView {
       } else {
       const leaf = new Graphics(); // hija de `g`, que ya está desplazada a la loseta
       ent.door = { g: leaf, k: 0, drawn: -1, along, col };
-      this.drawDoor(ent, fx, fy);
-      g.addChild(leaf);
+      // v0.36 · Con personajes 3D, la puerta es la del kit de edificios, encajada en la fachada: no se pinta el marco 2D.
+      if (this.placeDoor3D(ent)) ent.door.d3 = true;
+      else { this.drawDoor(ent, fx, fy); g.addChild(leaf); }
       }
     } else if (s.objKind === 'generator') {
       const col = this.powered ? 0x5affc8 : 0xff5a5a;
@@ -736,7 +771,7 @@ export class GameView {
   }
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
-  private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); e.bubble?.destroy({ children: true }); if (this.hovered === e) { this.hovered = null; this.onHover(null, 0, 0); } }
+  private destroyEnt(e: CEnt) { if (e.door?.d3) this.chars3d?.doors.remove(e.s.id); e.view.destroy({ children: true }); e.label?.destroy(); e.bubble?.destroy({ children: true }); if (this.hovered === e) { this.hovered = null; this.onHover(null, 0, 0); } }
   setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EntitySpawn['emote'] | null; carry?: string[] }) {
     const e = this.ents.get(id);
     if (!e) return;

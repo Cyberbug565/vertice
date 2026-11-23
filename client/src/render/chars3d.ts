@@ -22,6 +22,7 @@ import { kineticShield, placeShield } from './kinetic-shield';
 import { CapturePlayer, captureLength, gaitCapture, loadCapture, type Sample } from './captured-motion';
 import { dancePose } from './dance';
 import { City3D, tickNeon } from './city3d';
+import { Doors3D } from './doors3d';
 import { Vehicles3D } from './vehicles3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -205,6 +206,8 @@ export class Chars3D {
   private scene = new THREE.Scene();
   private world = new THREE.Group();
   readonly vehicles = new Vehicles3D();
+  /** v0.36 · Puertas del kit encajadas en las fachadas. */
+  readonly doors = new Doors3D();
   private camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 4000);
   private rigs = new Map<number, Rig>();
   private occl = new THREE.Group();
@@ -232,7 +235,7 @@ export class Chars3D {
     this.scene.add(this.world, this.hemi, this.sun, this.rim);
     this.sun.position.set(2, 8, 5); // luz principal desde arriba y de cara a la cámara
     this.rim.position.set(-6, 4, -6); // contraluz frío: separa la silueta del fondo
-    this.world.add(this.vehicles.world);
+    this.world.add(this.vehicles.world, this.doors.group);
     loadHumans(() => {}); // v0.15 · cuerpos del kit (los personajes se rehacen al cargarlos)
     loadGuns(() => {}); // v0.14 · modelos de armas de fuego (los personajes se rehacen solos al cambiar la versión)
   }
@@ -273,6 +276,19 @@ export class Chars3D {
     this.city = this.interior.city; this.occl = this.interior.occl;
     return this.buildScene(z);
   }
+  /** v0.36 · Distancia desde (x, z) hasta el muro del edificio 3D en la dirección (dx, dz), o null si no hay muro cerca. */
+  wallDistance(x: number, z: number, dx: number, dz: number, max = 4): number | null {
+    const city = this.city;
+    if (!city?.active) return null;
+    this.world.updateMatrixWorld(true);
+    const o = this.world.localToWorld(new THREE.Vector3(x, 0.6, z));
+    const t = this.world.localToWorld(new THREE.Vector3(x + dx, 0.6, z + dz)).sub(o).normalize();
+    const rc = new THREE.Raycaster(o, t, 0, max * 1.01);
+    const meshes = city.group.children.filter((m) => (m as THREE.InstancedMesh).isInstancedMesh && m.visible && !(m as any).isGhost);
+    const hit = rc.intersectObjects(meshes, false)[0];
+    if (!hit) return null;
+    return this.world.worldToLocal(hit.point.clone()).sub(new THREE.Vector3(x, 0.6, z)).length();
+  }
   /** Las escenas guardadas se rehacen la próxima vez (calidad nueva, kit de edificios recién cargado…). */
   invalidate() { for (const sc of this.scenes.values()) sc.built = false; }
   private buildScene(z: ZoneDef): boolean {
@@ -287,8 +303,9 @@ export class Chars3D {
       // volumen invisible para que el edificio 3D no se pinte por encima.
       const tall: Record<string, [number, number]> = { lamp: [0.18, 4.3], busstop: [0.9, 1.6], billboard: [0.9, 3.2], palm: [0.4, 3], plant: [0.5, 1], stall: [0.9, 1.6], tent: [0.9, 1.4], bench: [0.8, 0.6], hydrant: [0.3, 0.6], vending: [0.7, 1.6], antenna: [0.2, 3], crane: [0.6, 6], column: [0.5, 2.5], screen: [0.6, 2], planter: [0.8, 0.7], trash: [0.5, 0.7] };
       for (const p of z.props) { const t = tall[p.type]; if (t) box(p.at[0] + 0.5 - t[0] / 2 + (p.type === 'lamp' ? 0.0 : 0), p.at[1] + 0.5 - t[0] / 2, t[0], t[0], t[1]); }
-      for (const o of z.objects) box(o.at[0] + 0.2, o.at[1] + 0.2, 0.6, 0.6, o.kind === 'camera' ? 3 : 1.6);
-      for (const d of z.doors) box(d.at[0] + 0.1, d.at[1] + 0.1, 0.8, 0.8, 1.4);
+      // v0.36 · Las puertas y los portales ya son 3D (doors3d.ts): no llevan caja que tape el edificio.
+      for (const o of z.objects) if (o.kind !== 'housing') box(o.at[0] + 0.2, o.at[1] + 0.2, 0.6, 0.6, o.kind === 'camera' ? 3 : 1.6);
+      for (const d of z.doors) if (/^Escaleras/.test(d.name)) box(d.at[0] + 0.1, d.at[1] + 0.1, 0.8, 0.8, 1.4);
       for (const sb of z.skybridges ?? []) { const [ax, ay] = sb.from, [bx, by] = sb.to; const hz = ay === by; box(Math.min(ax, bx), Math.min(ay, by), hz ? Math.abs(bx - ax) : 1, hz ? 1 : Math.abs(by - ay), 0.8, sb.z * BUILDING_H); }
     }
     for (const bl of z.blocks) box(bl.rect[0], bl.rect[1], bl.rect[2], bl.rect[3], bl.type === 'fence' ? 1.1 : bl.height);

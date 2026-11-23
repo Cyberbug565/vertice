@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.35)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.36)
+
+La v0.36 pone puertas de verdad en las fachadas: las del kit de edificios de Kenney (un portal y una puerta doble de cristal), encajadas en el muro de cada edificio, con hojas que se abren hacia dentro al acercarse alguien. Además, 32 portales que estaban sueltos en la acera quedan pegados a su edificio. [Novedades y capturas](docs/NOVEDADES-v0.36.md).
 
 La v0.35 abre los edificios de viviendas por dentro: el portal es una puerta que da al vestíbulo, y por la escalera se sube planta a planta hasta la puerta de tu piso. Ya no hay pantallas de carga: las puertas se abren y se cierran, y la ciudad no se reconstruye al entrar y salir de un interior (de unos 750 ms a menos de 80 ms). Los dos casinos grandes tienen dos porteros en la puerta que te dicen si entras o no, y la PCV patrulla alrededor de cada comisaría. Las plantas y casas solo existen en el servidor mientras alguien las usa. [Novedades, capturas y medidas](docs/NOVEDADES-v0.35.md).
 
