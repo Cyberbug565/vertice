@@ -2,7 +2,7 @@
 // (se sienta en los bancos, saca algo de la máquina, tira la basura, espera el bus, fuma junto a una farola), reacciones al
 // jugador (manos arriba si le apuntas, quejas si le empujas, saludos) y pequeños sucesos: atracos, controles de la PCV y
 // discusiones que acaban mal. Todo se decide cerca de los jugadores para no gastar en barrios vacíos.
-import { facingToIdx, isWalkable, nearestWalkable, RULES } from '@vertice/shared';
+import { facingToIdx, pedestrianGrid, isWalkable, nearestWalkable, RULES } from '@vertice/shared';
 import type { Entity } from './entity.js';
 import { powerful, voices } from '../game/voices.js';
 import type { World } from './world.js';
@@ -81,13 +81,12 @@ export class Street {
     const opts = PROPS[p.type];
     const g = opts[Math.floor(this.rng() * opts.length)];
     // Un sitio libre al lado del mueble (en el propio banco, para sentarse).
-    const spot = p.type === 'bench' ? { x: p.x + 0.5, y: p.y + 0.5 } : nearestWalkable(e.zone.grid, p.x + 0.5 + (this.rng() < 0.5 ? -1 : 1) * 0.9, p.y + 0.5 + 0.9, 2);
-    if (!spot) return false;
-    if ([...e.zone.query(spot.x, spot.y, 0.6)].some((o) => o !== e && o.kind === 'npc')) return false; // ocupado
-    if (p.type !== 'bench' && !isWalkable(e.zone.grid, spot.x, spot.y)) return false;
-    const path = p.type === 'bench' ? this.w.npcPath(e, nearestWalkable(e.zone.grid, spot.x, spot.y + 0.8, 2)?.x ?? spot.x, nearestWalkable(e.zone.grid, spot.x, spot.y + 0.8, 2)?.y ?? spot.y) : this.w.npcPath(e, spot.x, spot.y);
-    if (!path) return false;
-    e.goal = { ...g, x: spot.x, y: spot.y, face: [p.x + 0.5, p.y + 0.5] };
+    const pavement = pedestrianGrid(e.zone.grid, 'stop');
+    const seat = { x: p.x + .5, y: p.y + .5 };
+    const spot = nearestWalkable(pavement, seat.x + (p.type === 'bench' ? 0 : this.rng() < .5 ? -.9 : .9), seat.y + .9, 2);
+    if (!spot || e.zone.query(spot.x, spot.y, .6).some(o => o !== e && o.kind === 'npc')) return false;
+    if (!this.w.npcPath(e, spot.x, spot.y)) return false;
+    e.goal = { ...g, x: spot.x, y: spot.y, face: [seat.x, seat.y] };
     this.label(e, `De camino: ${g.label.toLowerCase()}`);
     return true;
   }
@@ -95,7 +94,6 @@ export class Street {
   arrive(e: Entity): number {
     const g = e.goal as Goal | undefined; e.goal = undefined;
     if (!g) return 0;
-    if (g.kind === 'bench') { e.x = g.x; e.y = g.y; e.zone.moved(e); }
     this.face(e, g.face[0], g.face[1]);
     if (g.kind === 'bench') e.facing = facingToIdx(0, 1); // mirando a la calle
     this.label(e, g.label);

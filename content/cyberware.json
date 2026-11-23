@@ -475,11 +475,15 @@
   "humanity": 2,
   "price": 1400,
   "maker": "halcon",
-  "desc": "Marcado de objetivos: +2 Armas y +1 Percepción.",
+  "desc": "Marcado de objetivos: +2 Armas y +1 Percepción. Campo visual de 170° y alcance de 26 losetas.",
   "effects": {
    "skills": {
     "armas": 2,
     "percepcion": 1
+   },
+   "sight": {
+    "range": 26,
+    "degrees": 170
    }
   },
   "visible": "ojos",
@@ -1175,7 +1179,7 @@
   "humanity": 1,
   "price": 900,
   "maker": "aurora",
-  "desc": "Zoom óptico ×4 y balance de blancos nocturno.",
+  "desc": "Zoom óptico ×4 y balance de blancos nocturno. Campo visual de 150° y alcance de 23 losetas.",
   "effects": {
    "attrs": {},
    "skills": {
@@ -1191,7 +1195,11 @@
    "meleeDmg": 0,
    "speed": 0,
    "carSpeed": 0,
-   "dodge": 0
+   "dodge": 0,
+   "sight": {
+    "range": 23,
+    "degrees": 150
+   }
   },
   "region": "ojos",
   "rarity": "comun",
@@ -1343,7 +1351,7 @@
   "humanity": 3,
   "price": 9500,
   "maker": "teselia",
-  "desc": "Lee la tensión muscular de quien te ataca medio segundo antes: +12 % de esquiva.",
+  "desc": "Lee la tensión muscular de quien te ataca medio segundo antes: +12 % de esquiva. Campo visual de 210° y alcance de 29 losetas.",
   "effects": {
    "attrs": {},
    "skills": {},
@@ -1357,7 +1365,11 @@
    "meleeDmg": 0,
    "speed": 0,
    "carSpeed": 0,
-   "dodge": 0.12
+   "dodge": 0.12,
+   "sight": {
+    "range": 29,
+    "degrees": 210
+   }
   },
   "region": "ojos",
   "rarity": "epico",
@@ -1408,7 +1420,7 @@
   "humanity": 6,
   "price": 42000,
   "maker": "halcon",
-  "desc": "Coprocesador balístico de uso militar: el 90 % de tus disparos acierta aunque estés fuera de tu alcance seguro.",
+  "desc": "Coprocesador balístico de uso militar: el 90 % de tus disparos acierta aunque estés fuera de tu alcance seguro. Campo visual de 300° y alcance de 32 losetas.",
   "effects": {
    "attrs": {},
    "skills": {
@@ -1424,7 +1436,11 @@
    "meleeDmg": 0,
    "speed": 0,
    "carSpeed": 0,
-   "dodge": 0
+   "dodge": 0,
+   "sight": {
+    "range": 32,
+    "degrees": 300
+   }
   },
   "region": "ojos",
   "rarity": "legendario",
@@ -1442,7 +1458,7 @@
   "humanity": 5,
   "price": 36000,
   "maker": "aurora",
-  "desc": "Ve en el espectro de las cámaras: sabes cuándo te graban y cuándo no.",
+  "desc": "Ve en el espectro de las cámaras: sabes cuándo te graban y cuándo no. Campo visual de 360° y alcance de 28 losetas.",
   "effects": {
    "attrs": {},
    "skills": {
@@ -1459,7 +1475,11 @@
    "meleeDmg": 0,
    "speed": 0,
    "carSpeed": 0,
-   "dodge": 0
+   "dodge": 0,
+   "sight": {
+    "range": 28,
+    "degrees": 360
+   }
   },
   "region": "ojos",
   "rarity": "legendario",

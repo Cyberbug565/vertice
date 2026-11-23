@@ -1228,7 +1228,7 @@ export class Combat {
     const now = Date.now();
     if ((e.stunUntil ?? 0) > now) { e.path = []; e.moving = false; return true; }
     if (e.fleeUntil && e.fleeUntil > now) {
-      if (!e.path.length) { const wp = e.zone.def.waypoints[Math.floor(this.rng() * e.zone.def.waypoints.length)]; if (wp) { const r = findPath(e.zone.grid, e.x, e.y, wp[0] + 0.5, wp[1] + 0.5, 4000); if (r.ok) { e.path = r.path; e.moving = true; } } }
+      if (!e.path.length) { const wp = e.zone.def.waypoints[Math.floor(this.rng() * e.zone.def.waypoints.length)]; if (wp) this.w.npcPath(e, wp[0] + 0.5, wp[1] + 0.5); }
       if (e.label !== 'Huyendo') { e.label = 'Huyendo'; this.bump(e); }
       return true;
     }
@@ -1245,8 +1245,7 @@ export class Combat {
       if (!inRange) {
         if (!e.path.length || (e.nextPathAt ?? 0) < now) {
           e.nextPathAt = now + 1500;
-          const r = findPath(e.zone.grid, e.x, e.y, t.x, t.y, 4000);
-          if (r.ok) { e.path = r.path.slice(0, -1).length ? r.path.slice(0, -1) : r.path; e.moving = true; }
+          if (this.w.npcPath(e, t.x, t.y) && e.path.length > 1) e.path.pop();
         }
         return true;
       }
@@ -1317,8 +1316,7 @@ export class Combat {
     if (!inRange) {
       if (!e.path.length || (e.nextPathAt ?? 0) < now) {
         e.nextPathAt = now + 1500;
-        const r = findPath(e.zone.grid, e.x, e.y, t.x, t.y, 4000);
-        if (r.ok) { e.path = r.path.slice(0, -1).length ? r.path.slice(0, -1) : r.path; e.moving = true; }
+        if (this.w.npcPath(e, t.x, t.y) && e.path.length > 1) e.path.pop();
       }
       return true;
     }

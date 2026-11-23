@@ -21,3 +21,4 @@ export * from './casino.js';
 
 export * from './prison.js';
 export * from './worn-appearance.js';
+export * from './sight.js';

@@ -1,4 +1,4 @@
-import {facingToIdx,nearestWalkable,RULES,type NpcDef,type ZoneDef} from '@vertice/shared';
+import {facingToIdx,nearestWalkable,pedestrianGrid,RULES,type NpcDef,type ZoneDef} from '@vertice/shared';
 import type {Entity} from './entity.js';
 import type {PlayerConn,World} from './world.js';
 
@@ -85,7 +85,9 @@ export class CityPeople {
       if(this.observed(e.zone.id,e.x,e.y))continue;
       this.update(e,life,shift);
       const target=this.world.zones.get(shift.zone)!;
-      let x=tx+.5,y=ty+.5;
+      const stop=nearestWalkable(pedestrianGrid(target.grid,'stop'),tx+.5,ty+.5,8);
+      if(!stop)continue;
+      let {x,y}=stop;
       if(this.observed(shift.zone,x,y)){
         if(e.zone===target)continue;
         const route=this.route(e.zone.def,shift.zone),last=route.at(-1);
@@ -98,7 +100,7 @@ export class CityPeople {
       this.world.moveEntityTo(e,target,x,y);
       e.path=[];e.moving=false;life.target=-1;this.pose(e,undefined);
       this.world.metrics.inc('residentDormantTransitions');
-      if(Math.hypot(x-tx-.5,y-ty-.5)<.6)this.settle(e,life,shift);
+      if(Math.hypot(x-stop.x,y-stop.y)<.6)this.settle(e,life,shift);
     }
   }
 
@@ -149,8 +151,10 @@ export class CityPeople {
     }
     const stops=1+(shift.stops?.length??0);
     const [x,y]=life.target>0?shift.stops![life.target-1]:shift.at;
-    if(Math.hypot(e.x-x-.5,e.y-y-.5)>.72){
-      if(this.walk(e,x+.5,y+.5)){
+    const stop=nearestWalkable(pedestrianGrid(e.zone.grid,'stop'),x+.5,y+.5,8);
+    if(!stop)return true;
+    if(Math.hypot(e.x-stop.x,e.y-stop.y)>.72){
+      if(this.walk(e,stop.x,stop.y)){
         e.npc!.state='travel';e.npcShop=undefined;this.pose(e,undefined);
         this.label(e,shift.stops?.length?shift.label:'De camino · '+shift.label.toLowerCase());
       }

@@ -14,8 +14,8 @@ const inside = ([x, y, w, h]: number[], a: number, b: number) => a >= x && b >= 
 
 describe('Ensanche de Vértice', () => {
   it('conecta los barrios nuevos con la ciudad y reserva callejones transitables', () => {
-    expect([zone.width, zone.height]).toEqual([744, 432]);
-    const districts = zone.districts.filter(d => d.rect[0] >= 608 || d.rect[1] >= 344);
+    expect([zone.width, zone.height]).toEqual([744, 560]);
+    const districts = zone.districts.filter(d => d.rect[1] < 432 && (d.rect[0] >= 608 || d.rect[1] >= 344));
     expect(districts).toHaveLength(8);
     const lanes = zone.ground.filter(g => g.type === 'asphalt' && g.street?.startsWith('ensanche-'));
     const rm = roadMap(grid);

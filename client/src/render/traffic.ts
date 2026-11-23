@@ -126,7 +126,7 @@ export class Traffic {
   }
 
   /** Avanza el tráfico. `people` son las posiciones de personas en la calle (los coches frenan si hay alguien delante). */
-  update(dt: number, now: number, cx: number, cy: number, people: { x: number; y: number }[], motion = 1) {
+  update(dt: number, now: number, cx: number, cy: number, people: { x: number; y: number }[], motion = 1, visibleAt: (x: number, y: number) => boolean = () => true) {
     dt = Math.min(0.1, dt) * motion;
     // Población alrededor de la cámara.
     while (this.cars.length < this.count) { const c = this.spawn(null, cx, cy); if (!c) break; this.cars.push(c); }
@@ -145,7 +145,7 @@ export class Traffic {
       c.rx += (tx - c.rx) * k; c.ry += (ty - c.ry) * k;
       this.draw(c);
       const p = worldToScreen(c.rx, c.ry);
-      c.g.position.set(p.x, p.y); c.g.alpha = c.alpha; c.g.visible = c.alpha > 0.01;
+      c.g.position.set(p.x, p.y); c.g.alpha = c.alpha; c.g.visible = c.alpha > 0.01 && visibleAt(c.rx, c.ry);
     }
     if (now - this.lastLights > 200) { this.lastLights = now; this.drawLights(now, cx, cy); }
   }

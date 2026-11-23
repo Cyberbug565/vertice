@@ -65,6 +65,8 @@ it('sincroniza relevos, comercio, conversación y seguridad con dos clientes y a
     const [a,b]=bots,[ac,bc]=connections;
     const go=async(conn:typeof ac,e:typeof vendor,offset=0)=>{
       await w.teleport(conn,e.zone.id,[Math.floor(e.x),Math.floor(e.y)+offset]);
+      await (conn===ac?a:b).cmd({t:'guard',on:true,facing:facingToIdx(e.x-conn.e!.x,e.y-conn.e!.y)});
+      await (conn===ac?a:b).cmd({t:'guard',on:false});
     };
     await go(ac,vendor);await go(bc,vendor,1);
     await a.until(()=>a.entities.has(vendor.id));await b.until(()=>b.entities.has(vendor.id));

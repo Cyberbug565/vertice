@@ -1,0 +1,46 @@
+[
+ {
+  "id": "ojo-horizonte",
+  "name": "Óptica Horizonte",
+  "family": "Óptica",
+  "slot": "ojos",
+  "region": "ojos",
+  "grade": 2,
+  "rarity": "raro",
+  "capacity": 3,
+  "humanity": 2,
+  "price": 4900,
+  "maker": "aurora",
+  "desc": "Telescopio monocular de calle. Distingue movimiento a 30 losetas en un arco de 150°.",
+  "effects": {
+   "sight": {
+    "range": 30,
+    "degrees": 150
+   }
+  },
+  "model": "optico",
+  "visible": "ojo"
+ },
+ {
+  "id": "ojo-panorama",
+  "name": "Corona óptica Panorama",
+  "family": "Óptica",
+  "slot": "ojos",
+  "region": "ojos",
+  "grade": 4,
+  "rarity": "legendario",
+  "capacity": 6,
+  "humanity": 5,
+  "price": 36500,
+  "maker": "okami",
+  "desc": "Matriz de visión periférica. Cubre 360° y 32 losetas hasta la primera pared.",
+  "effects": {
+   "sight": {
+    "range": 32,
+    "degrees": 360
+   }
+  },
+  "model": "optico",
+  "visible": "ojo"
+ }
+]

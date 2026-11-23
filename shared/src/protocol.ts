@@ -133,6 +133,7 @@ export interface Appearance {
   bare?: string;
 }
 export interface EntitySpawn {
+  facing?: number;
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;
   appearance?: Appearance; role?: string; label?: string; interactive: boolean; objKind?: string; danger?: string;
   bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; fugitive?: boolean;

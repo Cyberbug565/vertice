@@ -123,7 +123,8 @@ describe('hito 1 · corte jugable de Ferro', () => {
 
   it('Solo: negocia con Tomás leyendo la amenaza y consigue el acoplamiento', async () => {
     await ana.enterDoor('Salida');
-    await ana.moveAndArrive(70.5, 198.5);
+    // Rodea la nave hasta la acera que da al puesto de Tomás.
+    await ana.moveAndArrive(70.5, 204.5);
     const d = await ana.interactAndDialog('Tomás');
     expect(d.options.map((o) => o.id)).toEqual(expect.arrayContaining(['buy', 'solo', 'work']));
     await ana.choose('solo', 4);

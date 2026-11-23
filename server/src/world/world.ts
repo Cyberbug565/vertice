@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  installedSight, canSee, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db, Queryable } from '../db/db.js';
@@ -52,10 +52,14 @@ const POS_DV = new DataView(POS_BUF.buffer);
 const DOOR_RANGE = 1.3;
 /** Presupuesto de búsqueda de caminos según la distancia (en la ciudad única hay trayectos de cientos de losetas). */
 const pathBudgetFor = (ax: number, ay: number, bx: number, by: number) => { const d = Math.hypot(bx - ax, by - ay); return Math.min(160000, 9000 + Math.round(d * d * 2.5)); };
-const AMBIENT_NAMES = ['Repartidor', 'Vecina del Bloque 9', 'Estibador', 'Turista perdido', 'Estudiante', 'Mensajera', 'Jubilado', 'Guardia de turno', 'Camarera', 'Mecánico'];
+const AMBIENT_NAMES = ['Inés', 'Rui', 'Luz', 'Sam', 'Ariel', 'Uma', 'Izan', 'Aya', 'Noa', 'Leo', 'Nadia', 'Ren', 'Vega', 'Dani', 'Sol', 'Gael', 'Paz', 'Teo'];
+const AMBIENT_SURNAMES = ['Reyes', 'Seo', 'Lin', 'Vidal', 'Cruz', 'Kato', 'Pons', 'Vera', 'Mora', 'Costa', 'Gil', 'Varela', 'Park', 'Soto', 'Ferrer', 'Fuentes'];
+const STREET_ROLES = ['Estudiante', 'Artista de calle', 'Mensajería', 'Turista', 'Vecindario', 'Comerciante'];
+const YARD_ROLES = ['Taller mecánico', 'Estiba', 'Reciclaje', 'Mantenimiento', 'Transportista', 'Vecindario'];
 const PALETTE = { skin: ['#f6dcc8', '#f0c8a8', '#e8bc96', '#e0b48c', '#d0a078', '#c89070', '#b88060', '#b07a5a', '#9a6848', '#8a5a3c', '#744a30', '#6a4028', '#5a3420', '#46281a', '#c8ccd8'], hair: ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#c0c0c0'], jacket: ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a'], accent: ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'] };
 
 export class World {
+  private readonly optics: Map<string, Content['cyberware'][number]>;
   readonly zones = new Map<string, Zone>();
   readonly entities = new Map<number, Entity>();
   readonly conns = new Map<string, PlayerConn>();
@@ -97,6 +101,7 @@ export class World {
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
+    this.optics = new Map(c.cyberware.filter(d => d.effects.sight).map(d => [d.id, d]));
     this.facts = new FactService(db);
     this.inst = new InstanceService(db, c);
     this.effects = new EffectEngine(db, c, this.facts, this.inst);
@@ -137,11 +142,12 @@ export class World {
     const pick = <T,>(a: T[]) => a[Math.floor(rng() * a.length)];
     const exteriors = [...this.zones.values()].filter((z) => z.def.kind === 'exterior' && z.def.ambient > 0);
     // Ciudad única: la población se reparte por distritos (AMBIENT_NPCS es la de Ferro; el resto escala por su peso).
-    const districtsAll = exteriors.flatMap((z) => z.def.districts.map((d) => ({ z, d })));
-    const ref = districtsAll.find((x) => x.d.id === 'ferro')?.d.ambient || this.zones.get('ferro')?.def.ambient || exteriors.reduce((acc, z) => acc + z.def.ambient, 0) || 1;
+    const ref = 24; // Peso histórico de Ferro para la configuración AMBIENT_NPCS.
     const mkAmbient = (zone: Zone, x: number, y: number, home?: [number, number], radius?: number) => {
-      const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES), title: 'Transeúnte', x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.3 + rng() * 1.1,
-        appearance: { skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
+      const district = zone.districtAt(x, y);
+      const roles = (district?.ambient ?? 0) >= 16 ? STREET_ROLES : YARD_ROLES;
+      const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES) + ' ' + pick(AMBIENT_SURNAMES), title: pick(roles), x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.3 + rng() * 1.1,
+        appearance: { body: rng() < 0.5 ? 'femenino' : 'masculino', skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
       e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
       // Transeúntes: civiles con algo de cromo visible y salud propia.
       e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil', near: { x, y } } }; e.level = 1 + Math.floor(rng() * 6);
@@ -156,7 +162,17 @@ export class World {
     };
     for (const zone of exteriors) {
       if (zone.def.districts.length) {
-        for (const d of zone.def.districts) { const n = Math.round((this.cfg.ambientNpcs * d.ambient) / ref); for (let i = 0; i < n && d.waypoints.length; i++) { const wp = pick(d.waypoints); const local = rng() < 0.7; mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5, local ? [wp[0], wp[1]] : undefined, local ? 14 + Math.floor(rng() * 18) : undefined); } }
+        const pavement = pedestrianGrid(zone.grid, 'stop');
+        for (const d of zone.def.districts) {
+          const n = Math.round(this.cfg.ambientNpcs * d.ambient / ref);
+          for (let i = 0; i < n && d.waypoints.length; i++) {
+            const wp = pick(d.waypoints);
+            const x = Math.max(d.rect[0] + .5, Math.min(d.rect[0] + d.rect[2] - .5, wp[0] + (rng() - .5) * 17));
+            const y = Math.max(d.rect[1] + .5, Math.min(d.rect[1] + d.rect[3] - .5, wp[1] + (rng() - .5) * 17));
+            const pos = nearestWalkable(pavement, x, y, 7) ?? nearestWalkable(pavement, wp[0] + .5, wp[1] + .5, 10);
+            if (pos) mkAmbient(zone, pos.x, pos.y, [wp[0], wp[1]], 10 + Math.floor(rng() * 18));
+          }
+        }
         continue;
       }
       const n = Math.round((this.cfg.ambientNpcs * zone.def.ambient) / ref);
@@ -300,6 +316,10 @@ export class World {
       id: this.nextId++, zone: z, cellKey: 0, sectorId: '', path: [], facing: 2, moving: false, lastMoveTick: 0, labelVer: 0, ...o,
       speed: (o.speed ?? RULES.walkSpeedBase) * (o.kind === 'npc' && o.speed ? 0.82 : 1) * this.cfg.speedScale,
     } as Entity;
+    if (o.kind === 'npc' && z.def.kind === 'exterior') {
+      const stop = nearestWalkable(pedestrianGrid(z.grid, 'stop'), e.x, e.y, 12);
+      if (stop) { e.x = stop.x; e.y = stop.y; }
+    }
     e.sectorId = sectorOf(z.grid, e.x, e.y).id;
     z.add(e);
     this.entities.set(e.id, e);
@@ -420,7 +440,7 @@ export class World {
 
   /** v0.19 · Un transeúnte que va a pisar la calzada espera a que su semáforo de peatones esté en verde. */
   private waitsForLight(e: Entity) {
-    if (!e.npc || e.aggro !== undefined || (e.npcType !== 'civil' && e.npcType !== 'essential') || e.zone.def.kind !== 'exterior' || !e.path.length) return false;
+    if (!e.npc || e.aggro !== undefined || e.zone.def.kind !== 'exterior' || !e.path.length) return false;
     const g = e.zone.grid, rm = roadMap(g);
     if (rm.axis[Math.floor(e.y) * g.w + Math.floor(e.x)]) return false; // ya está cruzando: que acabe
     const [tx, ty] = e.path[0], dx = tx - e.x, dy = ty - e.y, d = Math.hypot(dx, dy);
@@ -441,7 +461,8 @@ export class World {
     const step = e.speed * dt * (e.guard && !p?.driving ? 0.5 : 1) * (e.timeScale ?? 1);
     const { x: nx, y: ny } = stepWithCollision(e.zone.grid, e.x, e.y, s.dx * step, s.dy * step, !!e.ghostOf);
     const moved = nx !== e.x || ny !== e.y;
-    if (moved) { e.facing = e.guard && e.guardFacing!==undefined ? e.guardFacing : facingToIdx(nx-e.x,ny-e.y); e.x = nx; e.y = ny; e.zone.moved(e); }
+    e.facing = e.guard && e.guardFacing !== undefined ? e.guardFacing : facingToIdx(s.dx, s.dy);
+    if (moved) { e.x = nx; e.y = ny; e.zone.moved(e); }
     e.moving = moved;
     e.lastMoveTick = this.tick;
     if (e.kind === 'player' && e.conn) this.sectorCheck(e);
@@ -514,6 +535,9 @@ export class World {
   // ---------------------------------------------------------------- red
   send(c: PlayerConn, m: ServerMsg) {
     if (c.closed || c.ws.readyState !== 1) return;
+    if (c.e && (m.t === 'speech' || m.t === 'motion') && m.id !== c.e.id && !c.known.has(m.id)) return;
+    if (c.e && m.t === 'noise' && !canSee(c.e.zone.grid, c.e.x, c.e.y, c.e.facing, installedSight(c.p?.cyber ?? [], this.optics), m.x, m.y)) return;
+    if (c.e && m.t === 'fx' && m.from !== c.e.id && m.to !== c.e.id && !c.known.has(m.from)) return;
     const s = JSON.stringify(m);
     c.ws.send(s);
     c.bytesOut += s.length;
@@ -534,13 +558,17 @@ export class World {
     // Contrapresión: las posiciones son el último estado; si el cliente va atrasado no se envían y se reenviarán después.
     const skipPos = buffered > 256_000;
     if (skipPos) this.metrics.inc('snapshotsSkipped');
-    const vis = e.zone.query(e.x, e.y, this.cfg.viewRadius);
+    const sight = installedSight(c.p?.cyber ?? [], this.optics);
+    const vis = e.zone.query(e.x, e.y, Math.max(this.cfg.viewRadius, sight.range));
     const visIds = new Set<number>();
     const spawns: EntitySpawn[] = [];
     const labels: Entity[] = [];
     let np = 0;
     const NEAR2 = 12 * 12;
     for (const v of vis) {
+      // Puertas y mobiliario fijo ya figuran en la cartografía del cliente. Los actores y los objetos dinámicos sí se filtran aquí.
+      const fixed = v.kind === 'door' || v.kind === 'object' && !!v.objId;
+      if (!fixed && v !== e && !canSee(e.zone.grid, e.x, e.y, e.facing, sight, v.x, v.y)) continue;
       if (v.privateTo && v.privateTo !== c) continue;
       if(v.doorTo?.zone==='casino-meridiano-vip' && (!c.p||!this.casino.vip(c.p)))continue;
       visIds.add(v.id);
@@ -914,15 +942,17 @@ export class World {
 
   /** Ruta de PNJ con presupuesto por tick y caché de rutas comunes. */
   npcPath(e: Entity, x: number, y: number): boolean {
-    const key = `${e.zone.id}|${Math.floor(e.x)},${Math.floor(e.y)}|${Math.floor(x * 2)},${Math.floor(y * 2)}`;
+    const grid = e.zone.grid;
+    const end = nearestWalkable(pedestrianGrid(grid, 'stop'), x, y, 8);
+    if (!end) return false;
+    const key = `${e.zone.id}|${e.x},${e.y}|${end.x},${end.y}`;
     const cached = this.pathCache.get(key);
     if (cached) { this.metrics.inc('pathCacheHits'); e.path = cached.slice(); e.moving = true; return true; }
     if (this.pathBudget <= 0) return false;
     this.pathBudget--;
     this.metrics.inc('pathRequests');
     // v0.19 · Los transeúntes van por la acera y cruzan por los pasos de peatones.
-    const walker = e.npcType === 'civil' || e.npcType === 'essential';
-    const r = findPath(e.zone.grid, Math.floor(e.x) + 0.5, Math.floor(e.y) + 0.5, x, y, walker ? 9000 : 4000, { pedestrian: walker });
+    const r = findPath(grid, e.x, e.y, end.x, end.y, 9000, { pedestrian: true });
     this.metrics.inc('pathExpanded', r.expanded);
     if (!r.ok) { this.metrics.inc('pathFailures'); return false; }
     if (this.pathCache.size > 3000) this.pathCache.delete(this.pathCache.keys().next().value!);
@@ -1113,7 +1143,8 @@ export class World {
     const to = this.zones.get(zoneId);
     if (!to) return;
     e.zone.remove(e);
-    e.x = at[0] + 0.5; e.y = at[1] + 0.5; e.path = []; e.moving = false; e.lastMoveTick = this.tick;
+    const stop = nearestWalkable(pedestrianGrid(to.grid, 'stop'), at[0]+.5, at[1]+.5, 8);
+    e.x = stop?.x ?? at[0]+.5; e.y = stop?.y ?? at[1]+.5; e.path = []; e.moving = false; e.lastMoveTick = this.tick;
     to.add(e);
     this.metrics.inc('npcTransfers');
   }

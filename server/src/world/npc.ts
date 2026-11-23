@@ -1,5 +1,5 @@
 // Cerebros de PNJ: lógica compartida con parámetros (horario, deambular, multitud). Decisiones escalonadas a 4 Hz cerca y 1 Hz lejos.
-import { facingToIdx, nearestWalkable, seededRng, isWalkable, type NpcDef } from '@vertice/shared';
+import { facingToIdx, nearestWalkable, pedestrianGrid, seededRng, isWalkable, type NpcDef } from '@vertice/shared';
 import type { Entity } from './entity.js';
 import type { World } from './world.js';
 
@@ -85,7 +85,9 @@ function thinkScheduled(w: World, e: Entity) {
     setState(w, e, 'travel', `De camino: ${entry.label.toLowerCase()}`);
     return;
   }
-  const tx = entry.at[0] + 0.5, ty = entry.at[1] + 0.5;
+  const stop = nearestWalkable(pedestrianGrid(e.zone.grid, 'stop'), entry.at[0] + .5, entry.at[1] + .5, 8);
+  if (!stop) return;
+  const { x: tx, y: ty } = stop;
   if (Math.hypot(e.x - tx, e.y - ty) > 0.6) {
     if (!e.path.length) w.npcPath(e, tx, ty);
     setState(w, e, 'travel', `De camino: ${entry.label.toLowerCase()}`);

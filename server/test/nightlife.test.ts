@@ -61,12 +61,16 @@ describe('Vida nocturna y comercio clandestino', () => {
       expect([...app.world.zones.get(id)!.entities].some((e) => e.npcType === 'essential' && e.emote)).toBe(true);
     }
     await at(b, a.zone, [19, 8]);
+    await b.cmd({ t: 'guard', on: true, facing: 2 });
     await b.until(() => b.entities.has(a.you));
     for (const move of ['onda', 'rebote', 'uprock', 'entrenar', 'provocar']) {
       const remote = b.waitFor((m) => m.t === 'label' && m.id === a.you && m.emote?.move === move);
       expect((await a.cmd({ t: 'dance', move })).ok).toBe(true);
       await remote;
     }
+    await at(b, a.zone, [18, 6]);
+    await b.cmd({ t: 'guard', on: true, facing: 2 });
+    await b.until(() => b.entities.has(a.you));
     const clear = b.waitFor((m) => m.t === 'label' && m.id === a.you && m.emote === null);
     expect((await a.move(18.5, 8.5)).ok).toBe(true);
     await clear;
