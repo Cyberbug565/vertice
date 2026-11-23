@@ -43,6 +43,10 @@ it('permite recorrer los locales, conserva cartas y saldo, y liquida la herencia
     const door=app.world.c.zones.find(z=>z.id==='vertice')!.doors.find(d=>d.to.zone==='casino-meridiano')!;
     await put(a,1000);
     await app.world.teleport(conn,'vertice',door.at);
+    // v0.35 · Los porteros no dejan pasar con el arma en la mano: primero se guarda (puños).
+    const armed=bot.waitFor(m=>m.t==='notice'&&m.text.includes('Guarda el arma'));
+    await bot.cmd({t:'interact',target:[...conn.e!.zone.entities].find(e=>e.doorTo?.zone==='casino-meridiano')!.id,remote:true});
+    await armed;conn.p!.equipped=null;
     const denied=bot.waitFor(m=>m.t==='notice'&&m.text.includes('saldo mínimo'));
     await bot.cmd({t:'interact',target:[...conn.e!.zone.entities].find(e=>e.doorTo?.zone==='casino-meridiano')!.id,remote:true});
     await denied;expect(conn.e!.zone.id).toBe('vertice');

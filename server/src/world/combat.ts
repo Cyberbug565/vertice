@@ -28,6 +28,8 @@ export class Combat {
 
   constructor(private w: World, private sv: Survival) {}
   private get c() { return this.w.c; }
+  /** v0.35 · Lleva un arma empuñada (las integradas en el cuerpo no cuentan). */
+  weaponDrawn(p: PlayerState) { return !!(p.equipped && !effective(this.c, p).integrated.includes(p.equipped)); }
   private roll() { return 1 + Math.floor(this.rng() * 10); }
   private notice(conn: PlayerConn | undefined, kind: 'info' | 'good' | 'warn' | 'bad', text: string) { if (conn) this.w.send(conn, { t: 'notice', kind, text }); }
   private fx(e: Entity, kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number } = {}) { for (const o of e.zone.query(e.x, e.y, 28)) if (o.kind === 'player' && o.conn) this.w.send(o.conn, { t: 'fx', kind, from, to, ...extra }); }

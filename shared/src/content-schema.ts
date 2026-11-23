@@ -173,6 +173,8 @@ export const NpcResidentSchema = z.object({
   temper:z.enum(['cauto','curioso','cordial','seco','metodico','nervioso']),
   speed:z.number().min(1).max(3.2),
   personal:z.string().min(8).max(170),
+  /** v0.35 · Portero: zona (casino) cuya puerta de la calle vigila. Decide quién entra y lo dice en voz alta. */
+  door:z.string().optional(),
 });
 export const NpcSchema = z.object({
   id: z.string(),

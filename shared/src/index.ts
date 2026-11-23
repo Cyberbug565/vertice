@@ -23,3 +23,4 @@ export * from './prison.js';
 export * from './worn-appearance.js';
 export * from './sight.js';
 export * from './driving.js';
+export * from './residential.js';

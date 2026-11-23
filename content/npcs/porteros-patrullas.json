@@ -1,0 +1,2202 @@
+[
+  {
+    "id": "portero-meridiano-d1",
+    "name": "Marco Bastida",
+    "title": "Portero de Gran Meridiano",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "metodico",
+      "speed": 1.5,
+      "door": "casino-meridiano",
+      "personal": "Llevo años en la puerta de Gran Meridiano. Me fijo en las manos, en la ropa y en la cartera."
+    },
+    "appearance": {
+      "skin": "#8b5a3c",
+      "hair": "#7a2a1a",
+      "jacket": "#15131c",
+      "accent": "#d8b04a",
+      "body": "femenino",
+      "hairStyle": "cresta",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 8,
+        "to": 20,
+        "zone": "vertice",
+        "at": [
+          495,
+          33
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          496,
+          34
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 20,
+        "to": 21,
+        "zone": "vertice",
+        "at": [
+          493,
+          37
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 21,
+        "to": 8,
+        "zone": "casino-meridiano",
+        "at": [
+          29,
+          35
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "portero-meridiano-d2",
+    "name": "Lía Ferrán",
+    "title": "Portero de Gran Meridiano",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "seco",
+      "speed": 1.5,
+      "door": "casino-meridiano",
+      "personal": "Aquí dentro la casa siempre gana. Aquí fuera, decido yo quién juega."
+    },
+    "appearance": {
+      "skin": "#f1c7a8",
+      "hair": "#2a1d17",
+      "jacket": "#15131c",
+      "accent": "#d8b04a",
+      "body": "masculino",
+      "hairStyle": "corto",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 8,
+        "to": 20,
+        "zone": "vertice",
+        "at": [
+          497,
+          33
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          496,
+          34
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 20,
+        "to": 21,
+        "zone": "vertice",
+        "at": [
+          499,
+          37
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 21,
+        "to": 8,
+        "zone": "casino-meridiano",
+        "at": [
+          29,
+          35
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "portero-meridiano-n1",
+    "name": "Gael Sorní",
+    "title": "Portero de Gran Meridiano",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "metodico",
+      "speed": 1.5,
+      "door": "casino-meridiano",
+      "personal": "Llevo años en la puerta de Gran Meridiano. Me fijo en las manos, en la ropa y en la cartera."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#7a2a1a",
+      "jacket": "#15131c",
+      "accent": "#d8b04a",
+      "body": "femenino",
+      "hairStyle": "coleta",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 20,
+        "to": 8,
+        "zone": "vertice",
+        "at": [
+          495,
+          33
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          496,
+          34
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "zone": "vertice",
+        "at": [
+          493,
+          37
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 9,
+        "to": 20,
+        "zone": "casino-meridiano",
+        "at": [
+          29,
+          35
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "portero-meridiano-n2",
+    "name": "Unai Prats",
+    "title": "Portero de Gran Meridiano",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "seco",
+      "speed": 1.5,
+      "door": "casino-meridiano",
+      "personal": "Aquí dentro la casa siempre gana. Aquí fuera, decido yo quién juega."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#1f171d",
+      "jacket": "#15131c",
+      "accent": "#d8b04a",
+      "body": "femenino",
+      "hairStyle": "coleta",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 20,
+        "to": 8,
+        "zone": "vertice",
+        "at": [
+          497,
+          33
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          496,
+          34
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "zone": "vertice",
+        "at": [
+          499,
+          37
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 9,
+        "to": 20,
+        "zone": "casino-meridiano",
+        "at": [
+          29,
+          35
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "portero-hipodromo-d1",
+    "name": "Elsa Corbal",
+    "title": "Portero de Hipódromo Prisma",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "metodico",
+      "speed": 1.5,
+      "door": "casino-hipodromo",
+      "personal": "Llevo años en la puerta de Hipódromo Prisma. Me fijo en las manos, en la ropa y en la cartera."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#7a2a1a",
+      "jacket": "#1c1530",
+      "accent": "#ff3fa4",
+      "body": "femenino",
+      "hairStyle": "moño",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 8,
+        "to": 20,
+        "zone": "vertice",
+        "at": [
+          170,
+          304
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          171,
+          305
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 20,
+        "to": 21,
+        "zone": "vertice",
+        "at": [
+          167,
+          307
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 21,
+        "to": 8,
+        "zone": "casino-hipodromo",
+        "at": [
+          17,
+          19
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "portero-hipodromo-d2",
+    "name": "Rubén Tamés",
+    "title": "Portero de Hipódromo Prisma",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "seco",
+      "speed": 1.5,
+      "door": "casino-hipodromo",
+      "personal": "Aquí dentro la casa siempre gana. Aquí fuera, decido yo quién juega."
+    },
+    "appearance": {
+      "skin": "#f1c7a8",
+      "hair": "#1f171d",
+      "jacket": "#1c1530",
+      "accent": "#ff3fa4",
+      "body": "masculino",
+      "hairStyle": "moño",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 8,
+        "to": 20,
+        "zone": "vertice",
+        "at": [
+          172,
+          304
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          171,
+          305
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 20,
+        "to": 21,
+        "zone": "vertice",
+        "at": [
+          174,
+          308
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 21,
+        "to": 8,
+        "zone": "casino-hipodromo",
+        "at": [
+          17,
+          19
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "portero-hipodromo-n1",
+    "name": "Iria Valcárcel",
+    "title": "Portero de Hipódromo Prisma",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "metodico",
+      "speed": 1.5,
+      "door": "casino-hipodromo",
+      "personal": "Llevo años en la puerta de Hipódromo Prisma. Me fijo en las manos, en la ropa y en la cartera."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#2a1d17",
+      "jacket": "#1c1530",
+      "accent": "#ff3fa4",
+      "body": "masculino",
+      "hairStyle": "coleta",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 20,
+        "to": 8,
+        "zone": "vertice",
+        "at": [
+          170,
+          304
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          171,
+          305
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "zone": "vertice",
+        "at": [
+          167,
+          307
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 9,
+        "to": 20,
+        "zone": "casino-hipodromo",
+        "at": [
+          17,
+          19
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "portero-hipodromo-n2",
+    "name": "Dani Ochoa",
+    "title": "Portero de Hipódromo Prisma",
+    "essential": true,
+    "resident": {
+      "job": "seguridad",
+      "temper": "seco",
+      "speed": 1.5,
+      "door": "casino-hipodromo",
+      "personal": "Aquí dentro la casa siempre gana. Aquí fuera, decido yo quién juega."
+    },
+    "appearance": {
+      "skin": "#704333",
+      "hair": "#1f171d",
+      "jacket": "#1c1530",
+      "accent": "#ff3fa4",
+      "body": "masculino",
+      "hairStyle": "rapado",
+      "top": "chaqueta",
+      "build": "fornido",
+      "accessory": "gafas",
+      "pants": "#111118"
+    },
+    "schedule": [
+      {
+        "from": 20,
+        "to": 8,
+        "zone": "vertice",
+        "at": [
+          172,
+          304
+        ],
+        "state": "work",
+        "label": "Controla la puerta",
+        "face": [
+          171,
+          305
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "zone": "vertice",
+        "at": [
+          174,
+          308
+        ],
+        "state": "talk",
+        "label": "Se fuma un cigarro tras el relevo",
+        "pose": "fumar"
+      },
+      {
+        "from": 9,
+        "to": 20,
+        "zone": "casino-hipodromo",
+        "at": [
+          17,
+          19
+        ],
+        "state": "rest",
+        "label": "Descansa fuera de turno",
+        "pose": "telefono"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-colinas-d1",
+    "name": "Noa Garrido",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Colinas Doradas cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#7a2a1a",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "coleta",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          299,
+          21
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            296,
+            33
+          ],
+          [
+            285,
+            33
+          ],
+          [
+            280,
+            24
+          ],
+          [
+            285,
+            17
+          ],
+          [
+            297,
+            16
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-colinas",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-colinas",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-colinas-d2",
+    "name": "Hugo Sendra",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Colinas Doradas cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#8b5a3c",
+      "hair": "#2a1d17",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "afro",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          297,
+          16
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            285,
+            17
+          ],
+          [
+            280,
+            24
+          ],
+          [
+            285,
+            33
+          ],
+          [
+            296,
+            33
+          ],
+          [
+            299,
+            21
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-colinas",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-colinas",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-colinas-n1",
+    "name": "Abril Tena",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Colinas Doradas cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#b9b2a8",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "rapado",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          299,
+          21
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            296,
+            33
+          ],
+          [
+            285,
+            33
+          ],
+          [
+            280,
+            24
+          ],
+          [
+            285,
+            17
+          ],
+          [
+            297,
+            16
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-colinas",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-colinas",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-colinas-n2",
+    "name": "Mateo Ruidíaz",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Colinas Doradas cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#704333",
+      "hair": "#2a1d17",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "coleta",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          297,
+          16
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            285,
+            17
+          ],
+          [
+            280,
+            24
+          ],
+          [
+            285,
+            33
+          ],
+          [
+            296,
+            33
+          ],
+          [
+            299,
+            21
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-colinas",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-colinas",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-neon-rojo-d1",
+    "name": "Olga Sastre",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Neón Rojo cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#2a1d17",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "cresta",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          341,
+          82
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            332,
+            93
+          ],
+          [
+            322,
+            93
+          ],
+          [
+            317,
+            84
+          ],
+          [
+            322,
+            75
+          ],
+          [
+            333,
+            75
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-neon-rojo-d2",
+    "name": "Pol Arnau",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Neón Rojo cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#5a3a22",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "moño",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          333,
+          75
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            322,
+            75
+          ],
+          [
+            317,
+            84
+          ],
+          [
+            322,
+            93
+          ],
+          [
+            332,
+            93
+          ],
+          [
+            341,
+            82
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-neon-rojo-n1",
+    "name": "Carla Montes",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Neón Rojo cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#8b5a3c",
+      "hair": "#1f171d",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "coleta",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          341,
+          82
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            332,
+            93
+          ],
+          [
+            322,
+            93
+          ],
+          [
+            317,
+            84
+          ],
+          [
+            322,
+            75
+          ],
+          [
+            333,
+            75
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-neon-rojo-n2",
+    "name": "Iker Lamas",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Neón Rojo cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#2a1d17",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "corto",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          333,
+          75
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            322,
+            75
+          ],
+          [
+            317,
+            84
+          ],
+          [
+            322,
+            93
+          ],
+          [
+            332,
+            93
+          ],
+          [
+            341,
+            82
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-neon-rojo",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-arrabal-d1",
+    "name": "Zoe Barral",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Puesto de la PCV del Arrabal cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#704333",
+      "hair": "#7a2a1a",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "rapado",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          63,
+          331
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            54,
+            335
+          ],
+          [
+            43,
+            335
+          ],
+          [
+            41,
+            330
+          ],
+          [
+            45,
+            324
+          ],
+          [
+            57,
+            324
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-arrabal",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-arrabal",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-arrabal-d2",
+    "name": "Rai Cendón",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Puesto de la PCV del Arrabal cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#f1c7a8",
+      "hair": "#2a1d17",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "moño",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          57,
+          324
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            45,
+            324
+          ],
+          [
+            41,
+            330
+          ],
+          [
+            43,
+            335
+          ],
+          [
+            54,
+            335
+          ],
+          [
+            63,
+            331
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-arrabal",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-arrabal",
+        "at": [
+          7,
+          1
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-arrabal-n1",
+    "name": "Luna Escrivá",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Puesto de la PCV del Arrabal cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#f1c7a8",
+      "hair": "#7a2a1a",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "corto",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          63,
+          331
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            54,
+            335
+          ],
+          [
+            43,
+            335
+          ],
+          [
+            41,
+            330
+          ],
+          [
+            45,
+            324
+          ],
+          [
+            57,
+            324
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-arrabal",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-arrabal",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-arrabal-n2",
+    "name": "Tomás Viader",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Puesto de la PCV del Arrabal cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#d9a47f",
+      "hair": "#1f171d",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "moño",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          57,
+          324
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            45,
+            324
+          ],
+          [
+            41,
+            330
+          ],
+          [
+            43,
+            335
+          ],
+          [
+            54,
+            335
+          ],
+          [
+            63,
+            331
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-arrabal",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-arrabal",
+        "at": [
+          7,
+          1
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-ferro-d1",
+    "name": "Irene Gual",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Ferro cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#d9a47f",
+      "hair": "#2a1d17",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "corto",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          104,
+          186
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            98,
+            195
+          ],
+          [
+            87,
+            195
+          ],
+          [
+            80,
+            184
+          ],
+          [
+            86,
+            173
+          ],
+          [
+            99,
+            178
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-ferro",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-ferro",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-ferro-d2",
+    "name": "Bruno Calvet",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Ferro cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#8b5a3c",
+      "hair": "#1f171d",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "moño",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          99,
+          178
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            86,
+            173
+          ],
+          [
+            80,
+            184
+          ],
+          [
+            87,
+            195
+          ],
+          [
+            98,
+            195
+          ],
+          [
+            104,
+            186
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-ferro",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-ferro",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-ferro-n1",
+    "name": "Celia Nadal",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Ferro cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#8b5a3c",
+      "hair": "#5a3a22",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "moño",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          104,
+          186
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            98,
+            195
+          ],
+          [
+            87,
+            195
+          ],
+          [
+            80,
+            184
+          ],
+          [
+            86,
+            173
+          ],
+          [
+            99,
+            178
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-ferro",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-ferro",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-ferro-n2",
+    "name": "Erik Solé",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de Ferro cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#8b5a3c",
+      "hair": "#b9b2a8",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "rapado",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          99,
+          178
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            86,
+            173
+          ],
+          [
+            80,
+            184
+          ],
+          [
+            87,
+            195
+          ],
+          [
+            98,
+            195
+          ],
+          [
+            104,
+            186
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-ferro",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-ferro",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-cenit-d1",
+    "name": "Ainhoa Pujol",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de PCV cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#f1c7a8",
+      "hair": "#1f171d",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "coleta",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          261,
+          196
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            255,
+            205
+          ],
+          [
+            244,
+            205
+          ],
+          [
+            239,
+            196
+          ],
+          [
+            260,
+            184
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-int",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-int",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-cenit-d2",
+    "name": "Martí Quiles",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de PCV cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#704333",
+      "hair": "#b9b2a8",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "moño",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 6,
+        "to": 18,
+        "zone": "vertice",
+        "at": [
+          260,
+          184
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            239,
+            196
+          ],
+          [
+            244,
+            205
+          ],
+          [
+            255,
+            205
+          ],
+          [
+            261,
+            196
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "zone": "comisaria-int",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 19,
+        "to": 6,
+        "zone": "comisaria-int",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-cenit-n1",
+    "name": "Lola Requena",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cordial",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de PCV cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#d9a47f",
+      "hair": "#2a1d17",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "masculino",
+      "hairStyle": "moño",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          261,
+          196
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            255,
+            205
+          ],
+          [
+            244,
+            205
+          ],
+          [
+            239,
+            196
+          ],
+          [
+            260,
+            184
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-int",
+        "at": [
+          12,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-int",
+        "at": [
+          10,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  },
+  {
+    "id": "patrulla-cenit-n2",
+    "name": "Nil Tarrés",
+    "title": "Agente de la PCV · Patrulla",
+    "essential": true,
+    "resident": {
+      "job": "policia",
+      "temper": "cauto",
+      "speed": 2.1,
+      "personal": "Damos la vuelta a la manzana de PCV cada pocos minutos. Si ves algo raro, avisa."
+    },
+    "appearance": {
+      "skin": "#4a2c22",
+      "hair": "#1f171d",
+      "jacket": "#1e3250",
+      "accent": "#559efa",
+      "body": "femenino",
+      "hairStyle": "coleta",
+      "top": "chaleco",
+      "build": "medio",
+      "accessory": "gorra",
+      "pants": "#202a3a"
+    },
+    "schedule": [
+      {
+        "from": 18,
+        "to": 6,
+        "zone": "vertice",
+        "at": [
+          260,
+          184
+        ],
+        "state": "work",
+        "label": "Patrulla la manzana",
+        "stops": [
+          [
+            239,
+            196
+          ],
+          [
+            244,
+            205
+          ],
+          [
+            255,
+            205
+          ],
+          [
+            261,
+            196
+          ]
+        ],
+        "pose": "brazos"
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "zone": "comisaria-int",
+        "at": [
+          10,
+          5
+        ],
+        "state": "talk",
+        "label": "Redacta el parte del turno",
+        "pose": "gesto"
+      },
+      {
+        "from": 7,
+        "to": 18,
+        "zone": "comisaria-int",
+        "at": [
+          8,
+          2
+        ],
+        "state": "rest",
+        "label": "Descansa tras el relevo",
+        "pose": "sentado"
+      }
+    ]
+  }
+]

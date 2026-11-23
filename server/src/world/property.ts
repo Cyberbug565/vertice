@@ -1,6 +1,6 @@
 // v0.4 · Propiedades: viviendas (instancias privadas con permisos y alijo), coches, viaje en coche e índices de mercado en tiempo real.
 import { randomUUID } from 'node:crypto';
-import { nearestWalkable, vehicleSpeed, type BuildingView, type DealerView, type HouseDef, type MarketLiveView, type PropsView, type RealtyView, type StashView, type TrunkView } from '@vertice/shared';
+import { nearestWalkable, vehicleSpeed, parsePortalZone, portalZoneId, portalStreet, PORTAL_IN, type BuildingView, type DealerView, type HouseDef, type MarketLiveView, type PropsView, type RealtyView, type StashView, type TrunkView } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
 import { buildSheet, perkMods, weaponFits, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
@@ -81,6 +81,8 @@ export class Property {
   // ---------------------------------------------------------------- viviendas
   private near(c: PlayerConn, building: string) {
     const e = c.e!;
+    // v0.35 · Dentro del portal (vestíbulo o cualquier planta) también estás «en el portal».
+    if (parsePortalZone(e.zone.id)?.building === building) return true;
     const o = [...e.zone.entities].find((x) => x.objId === building);
     return !!o && Math.hypot(o.x - e.x, o.y - e.y) < 4.5;
   }
@@ -168,14 +170,40 @@ export class Property {
     await this.w.teleport(c, z.id, [z.def.safePoint[0], z.def.safePoint[1]]);
     this.w.send(c, { t: 'notice', kind: 'info', text: this.owners.get(houseId)!.charId === p.charId ? 'Estás en casa. Aquí nadie puede atacarte.' : `Entras en casa de ${this.owners.get(houseId)!.name}.` });
   }
-  /** Punto de salida de una vivienda: delante de su portal. */
+  /** v0.35 · Viviendas de un edificio (las de una sola vivienda, como las villas, no tienen vestíbulo). */
+  private unitsOf(building: string) { let n = 0; for (const h of this.houses.values()) if (h.building === building) n++; return n; }
+  /** Adónde lleva la puerta del portal desde la calle: al vestíbulo o, si solo hay una vivienda, a ella. */
+  portalEntry(building: string): { zone: string; at: [number, number] } | null {
+    const n = this.unitsOf(building);
+    if (!n) return null;
+    if (n === 1) {
+      const h = [...this.houses.values()].find((x) => x.building === building)!;
+      const tpl = this.w.c.zones.find((z) => z.id === h.template);
+      return tpl ? { zone: `casa:${h.id}`, at: [tpl.safePoint[0], tpl.safePoint[1]] } : null;
+    }
+    return { zone: portalZoneId(building, 0), at: [PORTAL_IN[0], PORTAL_IN[1]] };
+  }
+  /** Punto de la calle delante del portal de una vivienda. */
+  streetOf(houseId: string): { zone: string; at: [number, number] } | null {
+    const h = this.houses.get(houseId);
+    const s = h && portalStreet(this.w.c, h.building);
+    return s ? { zone: s.zone, at: s.at } : null;
+  }
+  /** Punto de salida de una vivienda: el rellano de su planta (o la calle si el edificio no tiene escalera). */
   exitOf(houseId: string): { zone: string; at: [number, number] } | null {
     const h = this.houses.get(houseId);
     if (!h) return null;
-    const z = this.w.c.zones.find((x) => x.id === h.zone);
-    const o = z?.objects.find((x) => x.id === h.building);
-    if (!z || !o) return null;
-    return { zone: z.id, at: [o.at[0], o.at[1] + 1] };
+    if (this.unitsOf(h.building) > 1) return { zone: portalZoneId(h.building, h.floor), at: [PORTAL_IN[0], PORTAL_IN[1]] };
+    return this.streetOf(houseId);
+  }
+  /** v0.35 · La puerta de una vivienda solo se abre a quien tiene llave o permiso; a los demás se les enseña el
+   *  portero automático (comprar si está en venta o llamar al timbre). */
+  denyDoor(c: PlayerConn, to: string): string | undefined {
+    if (!to.startsWith('casa:')) return undefined;
+    const id = to.slice(5), h = this.houses.get(id);
+    if (!h || this.canEnter(c.p!, id)) return undefined;
+    this.w.send(c, { t: 'building', view: this.buildingView(c.p!, h.building) });
+    return this.owners.has(id) ? `${h.name}: cerrada con llave. Llama al timbre para que te abran.` : `${h.name} está en venta: cómprala para tener la llave.`;
   }
   ring(c: PlayerConn, houseId: string) {
     const p = c.p!;

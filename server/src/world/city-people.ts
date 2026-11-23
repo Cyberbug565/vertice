@@ -41,6 +41,69 @@ export class CityPeople {
     this.update(e,state,shift);this.settle(e,state,shift);
   }
   remove(e:Entity){this.roster.delete(e);}
+
+  // ------------------------------------------------------------ v0.35 · porteros
+  private greeted=new Map<string,number>();
+  /** Porteros de servicio en la puerta de la calle de `zone` (vivos, sin pelear y en su puesto). */
+  doormen(zone:string){
+    const out:Entity[]=[];
+    for(const [e,life] of this.roster){
+      if(life.def.resident?.door!==zone||e.dead||e.state==='downed'||e.aggro!==undefined||e.carriedBy)continue;
+      const sh=shiftAt(life.def,this.world.cityHour());
+      if(sh.state!=='work'||e.zone.id!==sh.zone||Math.hypot(e.x-sh.at[0]-.5,e.y-sh.at[1]-.5)>3)continue;
+      out.push(e);
+    }
+    return out;
+  }
+  /** Lo que dice el portero de una persona: el motivo para no dejarla pasar, o nada si puede entrar. */
+  async doorVerdict(c:PlayerConn,zone:string,from:string):Promise<string|undefined>{
+    const p=c.p!,e=c.e!;
+    const bare=(e.appearance?.bare??'').split(',');
+    if(bare.includes('torso'))return 'Sin camiseta no se entra. Vístete y vuelve.';
+    if(bare.includes('piernas'))return 'En ropa interior, aquí no. Ponte unos pantalones.';
+    if(this.world.combat.weaponDrawn(p))return 'Guarda el arma (en la ruleta, elige los puños). Dentro nadie lleva nada en la mano.';
+    if(e.ghostOf)return undefined;
+    return this.world.casino.deny(p,from,zone);
+  }
+  /** Al cruzar la puerta: si hay porteros, deciden ellos (y lo dicen). Sin porteros, la puerta queda libre. */
+  async doorDeny(c:PlayerConn,from:string,to:string):Promise<string|undefined>{
+    const z=this.world.zones.get(from);
+    if(!z||z.def.kind!=='exterior')return undefined;
+    const crew=this.doormen(to);
+    if(!crew.length)return undefined;
+    const why=await this.doorVerdict(c,to,from);
+    const e=c.e!,d=crew.sort((a,b)=>Math.hypot(a.x-e.x,a.y-e.y)-Math.hypot(b.x-e.x,b.y-e.y))[0];
+    this.face(d,e.x,e.y);
+    if(why){this.pose(d,'gesto');this.world.street.speak(d,'No pasas. '+why);this.world.metrics.inc('doormanDenied');}
+    return why;
+  }
+  /** Cada segundo: el portero avisa a quien se acerca a la puerta de si va a poder entrar. */
+  watchDoors(){
+    const now=this.world.tick;
+    for(const [e,life] of this.roster){
+      const zone=life.def.resident?.door;
+      if(!zone||!e.zone.players.size)continue;
+      const crew=this.doormen(zone);
+      if(!crew.includes(e)||crew[0]!==e)continue;
+      for(const pe of e.zone.query(e.x,e.y,3.2)){
+        const c=pe.conn;
+        if(pe.kind!=='player'||!c?.p||pe.ghostOf)continue;
+        const key=zone+':'+c.p.charId;
+        if((this.greeted.get(key)??0)>now)continue;
+        this.greeted.set(key,now+ticks(45));
+        void this.doorVerdict(c,zone,e.zone.id).then((why)=>{
+          if(e.dead||!this.roster.has(e))return;
+          this.face(e,pe.x,pe.y);
+          const other=crew[1];
+          if(other){this.face(other,pe.x,pe.y);}
+          if(why){this.pose(e,'gesto');this.world.street.speak(e,'Tú no entras. '+why);}
+          else{this.pose(e,'abrir');this.world.street.speak(e,(e.id+now)%2?'Adelante. Suerte en las mesas.':'Puedes pasar. Disfruta de la noche.');}
+          this.world.metrics.inc('doormanChecks');
+        }).catch(()=>{});
+      }
+    }
+    if(this.greeted.size>2000)for(const [k,t] of this.greeted)if(t<now)this.greeted.delete(k);
+  }
   has(e:Entity){return this.roster.has(e);}
   holdsCasino(e:Entity){return (this.security.get(e)??0)>this.world.tick;}
   private walk(e:Entity,x:number,y:number){

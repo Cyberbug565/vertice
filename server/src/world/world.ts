@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
   installedSight, canSee, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
-  type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight } from '@vertice/shared';
+  type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight, portalZoneDef, isPortalZone, parsePortalZone } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db, Queryable } from '../db/db.js';
 import type { Metrics } from '../metrics.js';
@@ -231,21 +231,58 @@ export class World {
       const target = this.zones.get(d.to.zone);
       this.addEntity(z, { kind: 'door', name: d.name, x: d.at[0] + 0.5, y: d.at[1] + 0.5, interactive: true, doorTo: { zone: d.to.zone, at: d.to.at }, danger: d.danger ?? target?.def.danger ?? 'public', label: 'Puerta', hiddenDoc: d.hidden, sign: d.sign ? { text: d.sign, color: d.signColor, icon: d.signIcon } : undefined });
     }
-    for (const o of z.def.objects) this.addEntity(z, { kind: 'object', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, objKind: o.kind, dialog: o.dialog, label: '', shop: o.shop, sleep: o.sleep, workplace: o.workplace, objId: o.id, dealer: o.dealer });
+    for (const o of z.def.objects) {
+      // v0.35 · El portal de un edificio de viviendas es una puerta de verdad: da al vestíbulo (o, si solo hay una vivienda,
+      // directamente a ella). Conserva `objKind`/`objId` para el timbre, la compra y el modo automático.
+      if (o.kind === 'housing' && z.def.kind === 'exterior') {
+        const to = this.property.portalEntry(o.id);
+        if (to) { this.addEntity(z, { kind: 'door', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, doorTo: to, danger: 'public', label: 'Puerta', objKind: 'housing', objId: o.id, sign: { text: 'PORTAL', color: '#ffd23f', icon: 'casa' } }); continue; }
+      }
+      this.addEntity(z, { kind: 'object', name: o.name, x: o.at[0] + 0.5, y: o.at[1] + 0.5, interactive: true, objKind: o.kind, dialog: o.dialog, label: '', shop: o.shop, sleep: o.sleep, workplace: o.workplace, objId: o.id, dealer: o.dealer });
+    }
   }
   /** Devuelve una zona; las viviendas («casa:<id>») se instancian bajo demanda a partir de su plantilla. */
   ensureZone(id: string): Zone | undefined {
     const z = this.zones.get(id);
-    if (z || !isHouseZone(id)) return z;
+    if (z) return z;
+    if (isPortalZone(id)) {
+      const def = portalZoneDef(this.c, id);
+      if (!def) return undefined;
+      const nz = new Zone(def);
+      this.zones.set(id, nz); this.dynamicSince.set(id, this.tick);
+      this.populateZone(nz);
+      return nz;
+    }
+    if (!isHouseZone(id)) return z;
     const house = this.property.houses.get(id.slice(5));
     const tpl = house && this.c.zones.find((x) => x.id === house.template);
     const exit = house && this.property.exitOf(house.id);
     if (!tpl || !exit) return undefined;
-    const def = { ...structuredClone(tpl), id, name: house.name, doors: tpl.doors.map((d) => ({ ...d, name: 'Salir a la calle', to: { zone: exit.zone, at: exit.at } })) };
+    const out = isPortalZone(exit.zone) ? 'Salir al rellano' : 'Salir a la calle';
+    const def = { ...structuredClone(tpl), id, name: house.name, doors: tpl.doors.map((d) => ({ ...d, name: out, to: { zone: exit.zone, at: exit.at } })) };
     const nz = new Zone(def);
-    this.zones.set(id, nz);
+    this.zones.set(id, nz); this.dynamicSince.set(id, this.tick);
     this.populateZone(nz);
     return nz;
+  }
+
+  /** v0.35 · Plantas de portal y viviendas creadas bajo demanda (tick en el que se crearon o se usaron por última vez). */
+  readonly dynamicSince = new Map<string, number>();
+  /** Libera las zonas bajo demanda que llevan un rato vacías: con todos los portales abiertos, el servidor solo tiene en
+   *  memoria (y recorre en cada tick) las plantas y casas en las que hay alguien o que se han usado hace poco. */
+  collectZones(force = false) {
+    const keep = RULES.tickRate * 60;
+    for (const [id, since] of this.dynamicSince) {
+      const z = this.zones.get(id);
+      if (!z) { this.dynamicSince.delete(id); continue; }
+      let busy = false;
+      for (const e of z.entities) if (!(e.kind === 'door' || (e.kind === 'object' && e.objId))) { busy = true; break; }
+      if (busy) { this.dynamicSince.set(id, this.tick); continue; }
+      if (!force && this.tick - since < keep) continue;
+      for (const e of [...z.entities]) this.removeEntity(e);
+      this.zones.delete(id); this.dynamicSince.delete(id); this.districtCache.delete(id);
+      this.metrics.inc('zonesFreed');
+    }
   }
 
   /** Distrito al que pertenece un punto (en la ciudad única) o una zona interior (por su salida a la calle). */
@@ -257,6 +294,7 @@ export class World {
     if (cached) return cached;
     let out = zone.id;
     if (zone.id.startsWith('casa:')) out = this.property.houses.get(zone.id.slice(5))?.district || zone.id;
+    else if (isPortalZone(zone.id)) { const b = parsePortalZone(zone.id)!.building; out = this.c.houses.find((h) => h.building === b)?.district || zone.id; }
     else {
       const lobby = zone.def.tower ? this.zones.get(`${zone.def.tower.id}-p0`) : zone;
       const d = lobby?.def.doors.find((x) => this.zones.get(x.to.zone)?.def.kind === 'exterior');
@@ -360,11 +398,13 @@ export class World {
     const catchUp = this.catchUpDt; this.catchUpDt = 0;
     if (this.tick % 10 === 1) for (const z of this.zones.values()) if (z.def.districts.length) z.refreshActive();
     this.relics.dilation();
-    if(this.tick%20===1)this.cityPeople.everySecond();
+    if(this.tick%20===1){this.cityPeople.everySecond();this.cityPeople.watchDoors();}
     if(this.tick%20===11)this.prison.everySecond();
     for (const z of this.zones.values()) {
       // Nivel de detalle: lejos de cualquier jugador, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
       const anyone = z.players.size > 0;
+      // v0.35 · Una planta de portal o una casa vacía no tiene nada que simular (solo puertas y muebles).
+      if (!anyone && this.dynamicSince.has(z.id)) continue;
       for (const e of z.entities) {
         const resident=!!e.npc?.def?.resident;
         if(resident&&!z.isActive(e)&&e.aggro===undefined)continue;
@@ -411,6 +451,7 @@ export class World {
     if (this.tick % 20 === 5) this.threats.tick().catch((err) => console.error('[amenazas]', err));
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
+    if (this.tick % (RULES.tickRate * 20) === 7) this.collectZones();
     this.metrics.tick.push(performance.now() - t0);
   }
 
@@ -1106,7 +1147,7 @@ export class World {
     const to = this.ensureZone(door.doorTo.zone);
     if (!to) return;
     // v0.8: las guaridas de las leyendas y el Velo solo se abren a quien se ha ganado su confianza.
-    const deny = legal?undefined:(this.prison.portal(c,to.id)??await this.casino.deny(p,e.zone.id,to.id)??this.legends.denyEntry(p,to));
+    const deny = legal?undefined:(this.prison.portal(c,to.id)??await this.cityPeople.doorDeny(c,e.zone.id,to.id)??await this.casino.deny(p,e.zone.id,to.id)??this.legends.denyEntry(p,to)??this.property.denyDoor(c,to.id));
     if(e.transit)return;
     if (deny) { this.send(c, { t: 'notice', kind: 'warn', text: deny }); return; }
     this.nightlife.stop(e);

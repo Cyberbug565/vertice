@@ -1,5 +1,5 @@
 // El cliente empaqueta el mismo contenido que valida el servidor; la huella se compara en el saludo.
-import { assembleContent, type Content } from '@vertice/shared';
+import { assembleContent, portalZoneDef, type Content } from '@vertice/shared';
 
 const raw = import.meta.glob('../../content/**/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const files: Record<string, unknown> = {};
@@ -17,5 +17,7 @@ export function zoneDef(id: string) {
     const tpl = h && content.zones.find((z) => z.id === h.template);
     if (tpl && h) return { ...tpl, id, name: h.name };
   }
+  // v0.35 · Vestíbulo y plantas de los portales: se generan igual que en el servidor.
+  if (id.startsWith('portal:')) return portalZoneDef(content, id) ?? undefined;
   return content.zones.find((z) => z.id === id);
 }

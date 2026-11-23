@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.34)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.35)
+
+La v0.35 abre los edificios de viviendas por dentro: el portal es una puerta que da al vestíbulo, y por la escalera se sube planta a planta hasta la puerta de tu piso. Ya no hay pantallas de carga: las puertas se abren y se cierran, y la ciudad no se reconstruye al entrar y salir de un interior (de unos 750 ms a menos de 80 ms). Los dos casinos grandes tienen dos porteros en la puerta que te dicen si entras o no, y la PCV patrulla alrededor de cada comisaría. Las plantas y casas solo existen en el servidor mientras alguien las usa. [Novedades, capturas y medidas](docs/NOVEDADES-v0.35.md).
 
 La v0.33 amplía la ciudad hacia el sur con cinco distritos. Los peatones circulan por aceras y pasos señalizados. Al caminar o apuntar se orienta el campo visual. La ficha de cada óptica indica su alcance y su ángulo. Los muros bloquean incluso la visión panorámica.
 

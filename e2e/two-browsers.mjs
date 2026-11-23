@@ -58,10 +58,14 @@ const walkTo = async (p, pred, near) => {
         await p.waitForFunction(([x, y, n, z]) => { const m = window.__vt.me(); return m.zone !== z || Math.hypot(m.x - x, m.y - y) <= n; }, [e.x, e.y, near, z0], { timeout: 40000 }).catch(() => {});
         if ((await p.evaluate(() => window.__vt.me().zone)) !== z0) return 'entered';
       } }
+    let last = null;
     while (Date.now() - t0 < 60000) {
       const me = await p.evaluate(() => window.__vt.me());
-      const e = (await ents(p)).find(pred);
+      // v0.33+ · Solo se replica lo que está en tu campo visual: al girarte para rodear algo puede dejar de verse un
+      // momento; se sigue hacia la última posición conocida.
+      const e = (await ents(p)).find(pred) ?? last;
       if (!e) throw new Error('entidad no visible');
+      last = e;
       const dx = e.x - me.x, dy = e.y - me.y, d = Math.hypot(dx, dy);
       if (d <= near) return;
       if (d < best - 0.3) { best = d; bestAt = Date.now(); } else if (Date.now() - bestAt > 1500) { side = (side + 1) % 4; bestAt = Date.now(); best = d; }
@@ -80,8 +84,12 @@ const walkTo = async (p, pred, near) => {
 const clickEntity = async (p, pred) => {
   // Tras cambiar de zona las entidades llegan en varias tandas: se espera hasta 20 s a que aparezca.
   let e = null;
-  for (const t0 = Date.now(); !e && Date.now() - t0 < 20000; ) { e = (await ents(p)).find(pred); if (!e) await p.waitForTimeout(500); }
-  if (!e) throw new Error('entidad no visible');
+  // v0.33+ · Si queda a tu espalda no se ve: se gira como un jugador que mira alrededor (W, D, S, A).
+  for (let i = 0, t0 = Date.now(); !e && Date.now() - t0 < 20000; i++) {
+    e = (await ents(p)).find(pred);
+    if (!e) { const k = 'wdsa'[i % 4]; await p.keyboard.down(k); await p.waitForTimeout(90); await p.keyboard.up(k); await p.waitForTimeout(500); }
+  }
+  if (!e) throw new Error('entidad no visible: ' + pred.toString().slice(0, 80));
   if ((await walkTo(p, pred, e.kind === 'door' ? 1.6 : 5)) === 'entered') return;
   const s = await p.evaluate(([x, y]) => window.__vt.screenOf(x, y), [e.x, e.y]);
   await p.mouse.click(s.x, s.y - (e.kind === 'npc' ? 20 : 8));
@@ -178,7 +186,7 @@ try {
     const B2 = await ctxB.newPage(); watch(B2, 'B2');
     await B2.goto(BASE);
     await B2.click('#btn-enter');
-    await B2.waitForFunction(() => window.__vt && window.__vt.me().id > 0, null, { timeout: 15000 });
+    await B2.waitForFunction(() => window.__vt && window.__vt.me().id > 0, null, { timeout: 45000 });
     await B.waitForSelector('text=Sesión cerrada', { timeout: 8000 });
     await A.waitForTimeout(800);
     const n = (await ents(A)).filter((e) => e.kind === 'player' && e.name === nameB).length;

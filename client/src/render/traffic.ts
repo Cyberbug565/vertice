@@ -239,4 +239,7 @@ export class Traffic {
   }
 
   destroy() { for (const c of this.cars) c.g.destroy({ children: true }); this.cars = []; this.lightsG.destroy(); this.marks.destroy(); }
+  /** v0.35 · Se guarda sin destruir (entras en un interior) y se vuelve a poner al salir: los coches siguen donde estaban. */
+  detach() { this.layer.removeChild(this.marks, this.lightsG, ...this.cars.map((c) => c.g)); }
+  attach() { this.layer.addChildAt(this.marks, 0); this.layer.addChild(this.lightsG, ...this.cars.map((c) => c.g)); }
 }

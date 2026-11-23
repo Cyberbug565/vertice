@@ -232,7 +232,7 @@ export class Chars3D {
     this.scene.add(this.world, this.hemi, this.sun, this.rim);
     this.sun.position.set(2, 8, 5); // luz principal desde arriba y de cara a la cámara
     this.rim.position.set(-6, 4, -6); // contraluz frío: separa la silueta del fondo
-    this.world.add(this.occl, this.vehicles.world);
+    this.world.add(this.vehicles.world);
     loadHumans(() => {}); // v0.15 · cuerpos del kit (los personajes se rehacen al cargarlos)
     loadGuns(() => {}); // v0.14 · modelos de armas de fuego (los personajes se rehacen solos al cambiar la versión)
   }
@@ -243,13 +243,42 @@ export class Chars3D {
   setSize(w: number, h: number, res: number) { this.vpW = Math.round(w * res); this.vpH = Math.round(h * res); }
 
   /** Volúmenes invisibles que tapan: edificios, muros y mobiliario grande. */
-  setZone(z: ZoneDef): boolean {
+  /** v0.35 · Escenas 3D ya construidas por zona exterior (la ciudad): al volver de un interior no se reconstruyen. */
+  private scenes = new Map<string, { city: City3D; occl: THREE.Group; bOccl: (THREE.Mesh | null)[]; built: boolean; quality: string }>();
+  private interior = { city: null as City3D | null, occl: new THREE.Group() };
+  setZone(z: ZoneDef, force = false): boolean {
     this.vehicles.clear();
     for (const r of this.rigs.values()) this.disposeRig(r);
     this.rigs.clear(); this.born.clear();
-    this.occl.clear(); this.bOccl = [];
-    if (!this.city) { this.city = new City3D(); this.city.onReady = () => this.onCityReady?.(); this.world.add(this.city.group); }
-    const city = this.city.build(z, this.quality);
+    for (const sc of this.scenes.values()) { sc.city.group.visible = false; sc.occl.visible = false; }
+    if (this.interior.city) this.interior.city.group.visible = false;
+    this.interior.occl.visible = false;
+    if (z.kind === 'exterior') {
+      let sc = this.scenes.get(z.id);
+      if (!sc) {
+        const city = new City3D(); city.onReady = () => this.onCityReady?.();
+        sc = { city, occl: new THREE.Group(), bOccl: [], built: false, quality: '' };
+        this.world.add(city.group, sc.occl); this.scenes.set(z.id, sc);
+      }
+      sc.city.group.visible = true; sc.occl.visible = true;
+      this.city = sc.city; this.occl = sc.occl;
+      // Ya estaba hecha (con los edificios 3D si el kit había cargado): se vuelve a enseñar tal cual.
+      if (sc.built && !force && sc.quality === this.quality) { this.bOccl = sc.bOccl; return sc.city.active; }
+      const ok = this.buildScene(z);
+      sc.bOccl = this.bOccl; sc.built = true; sc.quality = this.quality;
+      return ok;
+    }
+    if (!this.interior.city) { this.interior.city = new City3D(); this.world.add(this.interior.city.group, this.interior.occl); }
+    this.interior.city.group.visible = true; this.interior.occl.visible = true;
+    this.city = this.interior.city; this.occl = this.interior.occl;
+    return this.buildScene(z);
+  }
+  /** Las escenas guardadas se rehacen la próxima vez (calidad nueva, kit de edificios recién cargado…). */
+  invalidate() { for (const sc of this.scenes.values()) sc.built = false; }
+  private buildScene(z: ZoneDef): boolean {
+    for (const o of [...this.occl.children]) this.occl.remove(o);
+    this.bOccl = [];
+    const city = this.city!.build(z, this.quality);
     const box = (x: number, y: number, w: number, d: number, h: number, y0 = 0) => { const m = new THREE.Mesh(G.box, this.occMat); m.scale.set(w, h, d); m.position.set(x + w / 2, y0 + h / 2, y + d / 2); m.renderOrder = -1; this.occl.add(m); return m; };
     // Con los edificios en 3D, ellos mismos tapan; si no, cajas invisibles con su volumen.
     for (const b of z.buildings) this.bOccl.push(city ? null : box(b.rect[0], b.rect[1], b.rect[2], b.rect[3], b.height * BUILDING_H));

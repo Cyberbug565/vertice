@@ -1,0 +1,49 @@
+{
+ "cityFirstBuildMs": 830.6000000000931,
+ "lobbyMs": 37.5,
+ "lobbyEntities": [
+  "door:Salir a la calle",
+  "door:Subir a planta 1º",
+  "object:Buzones y portero automático",
+  "player:Nia Corvo"
+ ],
+ "floor1Ms": 2.5,
+ "floor2Ms": 1.8999999999068677,
+ "landingEntities": [
+  "door:Bajar a planta 1º",
+  "door:Puerta de Loft 2ºD · Edificio OKAMI SPA",
+  "door:Subir a planta 3º",
+  "player:Nia Corvo"
+ ],
+ "homeMs": 5,
+ "backToLandingMs": 5.199999999720603,
+ "cityFromCacheMs": 44.8000000002794,
+ "doormen-casino-meridiano": [
+  "Marco Bastida @495.5,33.5",
+  "Lía Ferrán @497.5,33.5"
+ ],
+ "door-casino-meridiano": [
+  496,
+  32
+ ],
+ "doormen-casino-hipodromo": [
+  "Elsa Corbal @170.5,304.5",
+  "Rubén Tamés @172.5,304.5"
+ ],
+ "door-casino-hipodromo": [
+  171,
+  303
+ ],
+ "patrolNear": [
+  "Bruno Calvet",
+  "Irene Gual"
+ ],
+ "serverZones": {
+  "total": 134,
+  "dynamic": 0
+ },
+ "serverZonesAfterGc": {
+  "total": 134,
+  "dynamic": 0
+ }
+}

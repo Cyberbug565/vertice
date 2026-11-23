@@ -69,8 +69,10 @@ export class Autopilot {
       if (home) {
         const zid = `casa:${home}`;
         if (e.zone.id === zid) { const bed = [...e.zone.entities].find((o) => o.objKind === 'bed'); if (bed) { this.say(c, 'a dormir en casa'); this.w.handle(c, { t: 'interact', seq: 0, target: bed.id } as any); } return; }
+        const mine = this.w.property.houses.get(home);
+        if (mine && e.zone.id.startsWith(`portal:${mine.building}:`)) { void this.w.property.enterHouse(c, home).catch(() => {}); return; }
         if (e.zone.def.kind === 'interior') { this.navigate(c, 'vertice', 'volviendo a casa'); return; }
-        const exit = this.w.property.exitOf(home);
+        const exit = this.w.property.streetOf(home);
         if (exit && Math.hypot(exit.at[0] + 0.5 - e.x, exit.at[1] + 0.5 - e.y) > 3) { this.say(c, 'volviendo a casa'); this.w.handle(c, { t: 'move', seq: 0, x: exit.at[0] + 0.5, y: exit.at[1] + 0.5 } as any); return; }
         void this.w.property.enterHouse(c, home).catch(() => {});
         return;

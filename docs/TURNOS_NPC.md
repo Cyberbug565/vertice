@@ -13,6 +13,8 @@ Vértice 0.28 añade 67 personajes con nombre, aspecto, frase personal, ritmo de
 | Técnicos de red | 3 | Paneles de fibra y alumbrado |
 | Vecinos | 7 | Recados, paseos y paradas con distintos horarios |
 
+**v0.35:** se suman 8 porteros (dos por turno en Gran Meridiano y el Hipódromo Prisma) y 20 agentes que patrullan la manzana de las cinco comisarías, dos por turno. En total hay 95 personas con horario. Están en `content/npcs/porteros-patrullas.json`; ver [`NOVEDADES-v0.35.md`](NOVEDADES-v0.35.md).
+
 Cada persona alterna **trabajo, pausa y descanso**. Los tramos de madrugada pueden cruzar medianoche. Un turno puede definir varias paradas, un punto al que mira el NPC y una pose, como contestar al teléfono, revisar una terminal o sentarse. Las patrullas nuevas usan el sistema de reconocimiento y persecución de la PCV durante su turno. El cazador de recompensas, los vigilantes de edificios y los personajes de misión conservan sus sistemas.
 
 ## Probar en partida

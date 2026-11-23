@@ -26,6 +26,8 @@ export interface CEnt {
   charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
   vehX?: Container; vehY?: Container; vehSprite?: Sprite; lvl?: Text;
   vehicleHover?: boolean;
+  /** v0.35 · Hoja de la puerta (corredera de dos mitades) y cuánto está abierta (0-1). */
+  door?: { g: Graphics; k: number; drawn: number; along: 'x' | 'y'; col: number };
   vehicleModel?: import('@vertice/shared').CarDef['model'];
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
   kneeL?:Container; kneeR?:Container; footL?:Container; footR?:Container;
@@ -39,6 +41,12 @@ const CHAR_SCALE = 0.74 * RULES.actorScale;
 const FACTION_COLORS: Record<string, number> = { engranajes: 0xff3040, kitsune: 0xb46cff, 'hermandad-sol': 0xffb347, furias: 0xff4fa0, 'voces-vacio': 0x43f3ff, 'nomadas-polvo': 0xd9a066, saqueadores: 0x8a6a3a, pcv: 0x60a5fa, 'unidad-hierro': 0x1e3a8a, ambar: 0xffbf00, chatarreros: 0xff8a3d, 'hojas-rojas': 0xff5a5a };
 const CHUNK = 16;
 
+interface CachedScene {
+  zone: ZoneDef; quality: string; lightSrc: { sx: number; sy: number; r: number; k: number }[]; buildingObjs: SortObj[]; signPairs: [Container, SortObj][];
+  statics: SortObj[]; stallObjs: SortObj[]; ground: Container[]; chunks: Map<string, Container>; backdrop: Container[]; signs: Container[]; lights: Container[]; sky: Container[];
+  trafficSys: Traffic | null; beacons: { x: number; y: number }[]; holos: Container[]; cars: { lane: number; t: number; v: number; g: Sprite }[];
+  occluder: (x0: number, y0: number, x1: number, y1: number) => Occl;
+}
 export class GameView {
   app = new Application();
   sight = UNAIDED_SIGHT;
@@ -142,7 +150,7 @@ export class GameView {
     if (settings.chars3d && (r as any).gl) {
       try { this.chars3d = new Chars3D(this.app.canvas, (r as any).gl); } catch (err) { console.warn('[3d] sin personajes 3D:', err); this.chars3d = undefined; }
       // Cuando terminan de cargar los edificios 3D, se reconstruye la zona para quitar las fachadas 2D.
-      if (this.chars3d) { this.chars3d.quality = settings.quality === 'low' ? 'low' : 'high'; this.chars3d.onCityReady = () => { if (this.zone) this.rebuild(); }; }
+      if (this.chars3d) { this.chars3d.quality = settings.quality === 'low' ? 'low' : 'high'; this.chars3d.onCityReady = () => { this.dropSceneCache(); if (this.zone) this.rebuild(); }; }
     }
     this.app.ticker.add(() => {
       if (this.chars3d && this.pending3d) { try { this.chars3d.render(...this.pending3d); } catch (err) { console.warn('[3d]', err); } (r as any).resetState?.(); }
@@ -179,7 +187,7 @@ export class GameView {
     this.app.canvas.addEventListener('wheel', (e) => { e.preventDefault(); this.setZoom(this.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); }, { passive: false });
     // Pérdida del contexto gráfico: aviso y reconstrucción de la escena al recuperarlo.
     this.app.canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.onContextLost(true); });
-    this.app.canvas.addEventListener('webglcontextrestored', () => { this.rebuild(); this.onContextLost(false); });
+    this.app.canvas.addEventListener('webglcontextrestored', () => { this.dropSceneCache(); this.rebuild(); this.onContextLost(false); });
     document.addEventListener('visibilitychange', () => { this.app.ticker.maxFPS = document.hidden ? 4 : settings.fpsCap; });
     for (let i = 0; i < 160; i++) this.rainDrops.push({ x: Math.random(), y: Math.random(), v: 0.6 + Math.random() * 0.6 });
     this.app.ticker.add((t) => this.frame(t.deltaMS / 1000));
@@ -189,14 +197,23 @@ export class GameView {
     this.app.ticker.maxFPS = settings.fpsCap;
     this.app.renderer.resolution = (window.devicePixelRatio || 1) * settings.resScale;
     this.app.renderer.resize(window.innerWidth, window.innerHeight);
+    this.dropSceneCache();
     this.rebuild();
   }
 
   setZoom(z: number) { this.zoom = Math.max(0.9, Math.min(4.6, z)); } // v0.16 · cámara más cercana: más zoom y sin vista lejana
 
   // ------------------------------------------------------------------ zona
+  /** v0.35 · La ciudad ya dibujada se guarda al entrar en un interior y se vuelve a poner al salir: cruzar una puerta no
+   *  reconstruye nada (antes se rehacían los 744×560 de la ciudad, sus edificios 3D, el tráfico y las luces). */
+  private sceneCache = new Map<string, CachedScene>();
+  /** Tiempo (ms) que costó el último cambio de zona, para el indicador de rendimiento y las pruebas. */
+  lastZoneMs = 0;
   setZone(zoneId: string, x: number, y: number) {
     this.carMotion.speed = 0;
+    const t0 = performance.now();
+    const prev = this.zone;
+    if (prev && prev.id !== zoneId && prev.kind === 'exterior' && !this.sceneCache.has(prev.id)) this.sceneCache.set(prev.id, this.stash());
     this.zone = zoneDef(zoneId)!;
     this.grid = buildZoneGrid(this.zone);
     for (const e of this.ents.values()) this.destroyEnt(e);
@@ -204,7 +221,48 @@ export class GameView {
     this.hovered = null; this.onHover(null, 0, 0);
     this.cam.x = x; this.cam.y = y;
     this.me.x = x; this.me.y = y; this.me.path = []; this.me.serverX = x; this.me.serverY = y;
-    this.rebuild();
+    const cached = this.sceneCache.get(zoneId);
+    if (cached && cached.quality === settings.quality && cached.zone === this.zone) { this.sceneCache.delete(zoneId); this.teardown(); this.unstash(cached); }
+    else { if (cached) { this.sceneCache.delete(zoneId); this.destroyScene(cached); } this.rebuild(false); }
+    this.lastZoneMs = performance.now() - t0;
+  }
+  /** Olvida las escenas guardadas (cambio de calidad, edificios 3D recién cargados…). */
+  dropSceneCache() { for (const sc of this.sceneCache.values()) this.destroyScene(sc); this.sceneCache.clear(); this.chars3d?.invalidate(); }
+  /** Quita la escena actual de las capas sin destruirla. */
+  private stash(): CachedScene {
+    const take = (c: Container, keep: Container[] = []) => c.removeChildren().filter((x) => !keep.includes(x));
+    for (const st of this.statics) this.objects.removeChild(st.view);
+    this.trafficSys?.detach();
+    for (const g of this.outlines.values()) g.destroy(); this.outlines.clear();
+    const sc: CachedScene = {
+      zone: this.zone!, quality: settings.quality, lightSrc: this.lightSrc, buildingObjs: this.buildingObjs, signPairs: this.signPairs, statics: this.statics, stallObjs: this.stallObjs,
+      ground: take(this.ground), chunks: this.chunks, backdrop: take(this.backdrop), signs: take(this.signsLayer), lights: take(this.lightsLayer, [this.marketLights, this.beaconG]), sky: take(this.sky),
+      trafficSys: this.trafficSys, beacons: this.beacons, holos: this.holos, cars: this.cars, occluder: this.occluder,
+    };
+    this.lightsLayer.addChild(this.marketLights, this.beaconG);
+    this.statics = []; this.buildingObjs = []; this.signPairs = []; this.stallObjs = []; this.chunks = new Map(); this.trafficSys = null;
+    this.beacons = []; this.holos = []; this.cars = []; this.lightSrc = [];
+    return sc;
+  }
+  private unstash(sc: CachedScene) {
+    this.chars3d?.setZone(sc.zone, false);
+    this.lightSrc = sc.lightSrc; this.buildingObjs = sc.buildingObjs; this.signPairs = sc.signPairs; this.statics = sc.statics; this.stallObjs = sc.stallObjs;
+    this.chunks = sc.chunks; this.beacons = sc.beacons; this.holos = sc.holos; this.cars = sc.cars; this.occluder = sc.occluder; this.trafficSys = sc.trafficSys;
+    for (const st of this.statics) this.objects.addChild(st.view);
+    if (sc.ground.length) this.ground.addChild(...sc.ground);
+    if (sc.backdrop.length) this.backdrop.addChild(...sc.backdrop);
+    if (sc.signs.length) this.signsLayer.addChild(...sc.signs);
+    if (sc.sky.length) this.sky.addChild(...sc.sky);
+    if (sc.lights.length) this.lightsLayer.addChild(...sc.lights);
+    this.trafficSys?.attach();
+    this.buildDanceFloor();
+    this.redrawMarket();
+    this.ensureChunks(true);
+  }
+  private destroyScene(sc: CachedScene) {
+    for (const st of sc.statics) st.view.destroy({ children: true });
+    for (const c of [...sc.ground, ...sc.backdrop, ...sc.signs, ...sc.sky, ...sc.lights]) c.destroy({ children: true });
+    sc.trafficSys?.destroy();
   }
 
   /** Fuentes de luz fijas de la zona (en coordenadas de pantalla del mundo, precalculadas). */
@@ -245,11 +303,8 @@ export class GameView {
     for (let i = used; i < this.lightPool.length; i++) this.lightPool[i].visible = false;
   }
 
-  rebuild() {
-    if (!this.zone) return;
-    this.buildLights();
-    const city3d = this.chars3d?.setZone(this.zone) ?? false;
-    this.buildingObjs = [];
+  /** Destruye la escena dibujada de la zona actual. */
+  private teardown() {
     for (const g of this.outlines.values()) g.destroy(); this.outlines.clear();
     this.signsLayer.removeChildren().forEach((c) => c.destroy({ children: true })); this.signPairs = [];
     for (const c of this.chunks.values()) c.destroy({ children: true });
@@ -265,6 +320,15 @@ export class GameView {
     for (const t of this.traffic) t.g.destroy(); this.trafficMarks?.destroy(); this.trafficMarks = null;
     this.trafficSys?.destroy(); this.trafficSys = null;
     this.beacons = []; this.holos = []; this.cars = []; this.traffic = [];
+  }
+
+  /** Dibuja la zona actual desde cero (`force`: rehace también la ciudad 3D aunque estuviera guardada). */
+  rebuild(force = true) {
+    if (!this.zone) return;
+    this.teardown();
+    this.buildLights();
+    const city3d = this.chars3d?.setZone(this.zone, force) ?? false;
+    this.buildingObjs = [];
     const z = this.zone, q = settings.quality;
     this.buildDanceFloor();
     if (z.kind === 'interior') {
@@ -507,6 +571,41 @@ export class GameView {
     this.place(ent);
   }
 
+  private drawDoor(ent: CEnt, fx: number, fy: number) {
+    const d = ent.door!; const g = d.g; const k = d.k;
+    if (Math.abs(d.drawn - k) < 0.01) return;
+    d.drawn = k; g.clear();
+    const H = 1.75, W = 0.42;
+    const P = (u: number, h: number) => d.along === 'x' ? worldToScreen(fx + 0.5 + u, fy + 0.5, h) : worldToScreen(fx + 0.5, fy + 0.5 + u, h);
+    const quad = (u0: number, u1: number, h0: number, h1: number) => { const a = P(u0, h0), b = P(u1, h0), c = P(u1, h1), e = P(u0, h1); return [a.x, a.y, b.x, b.y, c.x, c.y, e.x, e.y]; };
+    // Marco
+    g.poly(quad(-0.5, -0.44, 0, H + 0.12)).fill(0x22222c).poly(quad(0.44, 0.5, 0, H + 0.12)).fill(0x22222c).poly(quad(-0.5, 0.5, H, H + 0.12)).fill(0x2a2a36);
+    // Hojas: se deslizan hacia los lados
+    const slide = W * k;
+    for (const [u0, u1] of [[-0.44, 0 - slide], [0 + slide, 0.44]] as const) {
+      if (u1 - u0 < 0.015) continue;
+      g.poly(quad(u0, u1, 0.02, H)).fill({ color: 0x3a3f52, alpha: 0.96 }).stroke({ width: 1, color: 0x0c0c12, alpha: 0.8 });
+      const inner = u0 < 0 ? u1 : u0;
+      g.poly(quad(inner - 0.02, inner + 0.02, 0.1, H - 0.1)).fill({ color: d.col, alpha: 0.85 });
+    }
+    // Piloto: verde abierta, color de la zona cerrada
+    const t = P(0, H + 0.06); g.circle(t.x, t.y, 2.2).fill(k > 0.5 ? 0x5affc8 : d.col);
+  }
+  /** Abre las puertas a las que se acerca alguien y cierra las demás (solo las que están cerca de la cámara). */
+  private animateDoors(dt: number) {
+    const people: CEnt[] = [];
+    for (const e of this.ents.values()) if ((e.s.kind === 'player' || e.s.kind === 'npc') && !e.s.dead && Math.abs(e.x - this.cam.x) + Math.abs(e.y - this.cam.y) < 40) people.push(e);
+    for (const e of this.ents.values()) {
+      const d = e.door;
+      if (!d || Math.abs(e.x - this.cam.x) + Math.abs(e.y - this.cam.y) > 36) continue;
+      const cx = Math.floor(e.x) + 0.5, cy = Math.floor(e.y) + 0.5;
+      const want = people.some((p) => Math.hypot(p.x - cx, p.y - cy) < 1.7) ? 1 : 0;
+      if (d.k === want) continue;
+      d.k = want > d.k ? Math.min(1, d.k + dt * 4.5) : Math.max(0, d.k - dt * 2.2);
+      this.drawDoor(e, Math.floor(e.x), Math.floor(e.y));
+    }
+  }
+
   private drawObjectEnt(ent: CEnt) {
     const s = ent.s;
     ent.view.removeChildren().forEach((c) => c.destroy({ children: true }));
@@ -519,9 +618,8 @@ export class GameView {
       const col = s.danger === 'protected' ? 0x5affc8 : s.danger === 'disputed' ? 0xff5a5a : 0xffd23f;
       rel((g) => {
         const a = worldToScreen(fx, fy), b = worldToScreen(fx + 1, fy), c = worldToScreen(fx + 1, fy + 1), d = worldToScreen(fx, fy + 1);
-        g.poly([a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y]).fill({ color: col, alpha: 0.18 }).stroke({ width: 2, color: col, alpha: 0.9 });
+        g.poly([a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y]).fill({ color: col, alpha: 0.12 }).stroke({ width: 1.5, color: col, alpha: 0.6 });
         const m = worldToScreen(fx + 0.5, fy + 0.5);
-        g.poly([m.x - 6, m.y - 30, m.x + 6, m.y - 30, m.x, m.y - 20]).fill(col);
         // v0.9 · Rótulo luminoso del local (COMISARÍA, FARMACIA, MATASANOS…) con su icono.
         if (s.sign) {
           const sc = s.sign.color ? parseInt(s.sign.color.slice(1), 16) : 0xffd23f;
@@ -533,11 +631,43 @@ export class GameView {
           if (s.sign.icon === 'cruz') g.rect(ix - 1.5, iy - 5, 3, 10).fill(sc).rect(ix - 5, iy - 1.5, 10, 3).fill(sc);
           else if (s.sign.icon === 'escudo') g.poly([ix - 5, iy - 5, ix + 5, iy - 5, ix + 5, iy + 1, ix, iy + 5, ix - 5, iy + 1]).fill(sc);
           else if (s.sign.icon === 'diana') g.circle(ix, iy, 5).stroke({ width: 1.5, color: sc }).circle(ix, iy, 1.5).fill(sc);
-          else if (s.sign.icon === 'flecha') g.poly([ix, iy - 6, ix + 5, iy + 1, ix + 2, iy + 1, ix + 2, iy + 5, ix - 2, iy + 5, ix - 2, iy + 1, ix - 5, iy + 1]).fill(sc);
+          else if (s.sign.icon === 'bajar') g.poly([ix, iy + 6, ix + 5, iy - 1, ix + 2, iy - 1, ix + 2, iy - 5, ix - 2, iy - 5, ix - 2, iy - 1, ix - 5, iy - 1]).fill(sc);
+          else if (s.sign.icon === 'casa') g.poly([ix, iy - 6, ix + 6, iy, ix + 4, iy, ix + 4, iy + 5, ix - 4, iy + 5, ix - 4, iy, ix - 6, iy]).fill(sc);
+          else if (s.sign.icon === 'flecha' || s.sign.icon === 'subir') g.poly([ix, iy - 6, ix + 5, iy + 1, ix + 2, iy + 1, ix + 2, iy + 5, ix - 2, iy + 5, ix - 2, iy + 1, ix - 5, iy + 1]).fill(sc);
           const t = new Text({ text: s.sign.text, style: { fontFamily: 'system-ui, sans-serif', fontWeight: '800', fontSize: 10, fill: sc, letterSpacing: 1 } });
           t.anchor.set(0.5); t.position.set(m.x + (s.sign.icon ? 6 : 0), m.y - 50); g.addChild(t);
         }
       });
+      // v0.35 · Puerta de verdad: marco y dos hojas correderas que se abren cuando alguien se acerca y se cierran detrás.
+      const grid = this.grid;
+      const blocked = (x: number, y: number) => !grid || x < 0 || y < 0 || x >= grid.w || y >= grid.h || !grid.walk[y * grid.w + x];
+      const along: 'x' | 'y' = this.zone?.kind === 'interior' ? (fy === 0 || fy === (this.zone.height - 1) ? 'x' : 'y') : blocked(fx - 1, fy) && blocked(fx + 1, fy) ? 'x' : blocked(fx, fy - 1) && blocked(fx, fy + 1) ? 'y' : blocked(fx, fy - 1) || blocked(fx, fy + 1) ? 'x' : 'y';
+      if (s.sign?.icon === 'subir' || s.sign?.icon === 'bajar') {
+        // v0.35 · Escalera: un tramo de peldaños que sube hacia la pared (o un hueco que baja), sin pantalla de carga.
+        const up = s.sign.icon === 'subir', n = 6;
+        if (!up) {
+          // Hueco de la escalera que baja: boca oscura en el suelo con los peldaños que se pierden hacia abajo.
+          const Q = (x0: number, y0: number, x1: number, y1: number) => [worldToScreen(x0, y0), worldToScreen(x1, y0), worldToScreen(x1, y1), worldToScreen(x0, y1)].flatMap((q) => [q.x, q.y]);
+          g.poly(Q(fx + 0.08, fy + 0.05, fx + 0.92, fy + 0.95)).fill(0x07070c).stroke({ width: 1.5, color: 0x8890a8, alpha: 0.8 });
+          for (let i = 0; i < 5; i++) { const y0 = fy + 0.12 + i * 0.16; g.poly(Q(fx + 0.14, y0, fx + 0.86, y0 + 0.07)).fill({ color: 0x8890a8, alpha: 0.55 - i * 0.1 }); }
+          const r0 = worldToScreen(fx + 0.92, fy + 0.95, 0.9), r1 = worldToScreen(fx + 0.92, fy + 0.05, 0.9);
+          g.moveTo(r0.x, r0.y).lineTo(r1.x, r1.y).stroke({ width: 2, color: col, alpha: 0.85 });
+        }
+        for (let i = 0; up && i < n; i++) {
+          const t0 = i / n, t1 = (i + 1) / n, h = up ? (i + 1) * 0.28 : -(i + 1) * 0.12;
+          const y0 = fy + 1 - t1, y1 = fy + 1 - t0;
+          const pts = [worldToScreen(fx + 0.08, y0, h), worldToScreen(fx + 0.92, y0, h), worldToScreen(fx + 0.92, y1, h), worldToScreen(fx + 0.08, y1, h)];
+          const shadeK = up ? 0.55 + 0.07 * i : 0.6 - 0.07 * i;
+          g.poly(pts.flatMap((q) => [q.x, q.y])).fill(shade(0x8890a8, shadeK)).stroke({ width: 1, color: 0x14141c, alpha: 0.7 });
+          if (up) { const f0 = worldToScreen(fx + 0.08, y1, h), f1 = worldToScreen(fx + 0.92, y1, h), f2 = worldToScreen(fx + 0.92, y1, h - 0.28), f3 = worldToScreen(fx + 0.08, y1, h - 0.28); g.poly([f0, f1, f2, f3].flatMap((q) => [q.x, q.y])).fill(shade(0x8890a8, 0.4)); }
+        }
+        if (up) { const r0 = worldToScreen(fx + 0.92, fy + 1, 0.9), r1 = worldToScreen(fx + 0.92, fy, n * 0.28 + 0.9); g.moveTo(r0.x, r0.y).lineTo(r1.x, r1.y).stroke({ width: 2, color: col, alpha: 0.85 }); }
+      } else {
+      const leaf = new Graphics(); // hija de `g`, que ya está desplazada a la loseta
+      ent.door = { g: leaf, k: 0, drawn: -1, along, col };
+      this.drawDoor(ent, fx, fy);
+      g.addChild(leaf);
+      }
     } else if (s.objKind === 'generator') {
       const col = this.powered ? 0x5affc8 : 0xff5a5a;
       rel((g) => { drawBox(g, fx + 0.1, fy + 0.1, 0.8, 0.8, 0, 1.1, 0x3a4048); const t = worldToScreen(fx + 0.5, fy + 1, 0.7); g.poly([t.x - 3, t.y - 12, t.x + 4, t.y - 12, t.x, t.y - 4, t.x + 4, t.y - 4, t.x - 4, t.y + 6, t.x - 1, t.y - 2, t.x - 5, t.y - 2]).fill(col); });
@@ -1269,7 +1399,8 @@ export class GameView {
         if (Math.hypot(dx, dy) > 0.002) this.face(e, dx, dy);
         e.x = nx; e.y = ny;
       }
-      e.view.visible = e.s.id === this.meId || this.inSight(e.x, e.y);
+      // v0.35 · Las puertas y objetos fijos son parte del edificio: se ven aunque queden fuera del cono de visión.
+      e.view.visible = e.s.id === this.meId || e.s.kind === 'door' || (e.s.kind === 'object' && !e.s.dead) || this.inSight(e.x, e.y);
       if (e.bubble) e.bubble.visible = e.view.visible;
       if (!e.view.visible) {
         if (e.label) e.label.visible = false;
@@ -1310,6 +1441,7 @@ export class GameView {
     this.updateCompanions(now, dt);
     this.updateHalluc(now);
     this.pulseDanceFloor(now);
+    this.animateDoors(dt);
     this.drawHover();
     this.drawNight();
     this.drawRain(dt);

@@ -782,7 +782,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         document.body.classList.toggle('cyber-zone', !!zoneDef(m.zone)?.cyber);
         view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(st.facts);
         st.destination = ''; renderLocation(); setAction(''); refreshScore(); blip('step');
-        toast(`Entras en ${zoneDef(m.zone)?.name} · zona ${DANGER_TXT[m.danger]}`, 'info');
+        // v0.35 · Cruzar una puerta es instantáneo: sin cartel de «Entras en…» (el nombre sale en la barra de lugar). Solo se avisa si el sitio es peligroso.
+        if (m.danger === 'disputed' || m.danger === 'lawless') toast(`${zoneDef(m.zone)?.name} · zona ${DANGER_TXT[m.danger]}`, 'warn');
         break;
       case 'spawn':
         for (const e of m.e) {

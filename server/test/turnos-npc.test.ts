@@ -18,8 +18,8 @@ it('sincroniza relevos, comercio, conversación y seguridad con dos clientes y a
     w.stop();
     const day=active(),defs=day.map(e=>e.npc!.def!);
     const city=defs.filter(n=>!prisonZone(n.schedule[0].zone));
-    expect(city).toHaveLength(67);
-    expect(new Set(city.map(n=>n.name)).size).toBe(67);
+    expect(city).toHaveLength(95); // v0.35: 67 + 8 porteros + 20 agentes de patrulla
+    expect(new Set(city.map(n=>n.name)).size).toBe(95);
     expect(defs.filter(n=>prisonZone(n.schedule[0].zone))).toHaveLength(49);
     expect(new Set(defs.map(n=>n.id)).size).toBe(defs.length);
     for(const def of defs){
