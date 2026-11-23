@@ -38,7 +38,7 @@ export class MapViewport {
   }
 }
 export function atlasMarks(zone: ZoneDef, atlas: Atlas) {
-  const places: MapMark[] = zone.doors.filter(d => atlas.knows(d.to.zone)).map(d => ({
+  const places: MapMark[] = zone.doors.filter(d => d.to.zone!=='casino-meridiano-vip' && atlas.knows(d.to.zone)).map(d => ({
     id:d.id, name:d.name, p:{x:d.at[0]+.5,y:d.at[1]+.5}
   }));
   const districts: MapMark[] = [];

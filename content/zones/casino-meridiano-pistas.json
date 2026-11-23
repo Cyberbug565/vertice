@@ -1,0 +1,783 @@
+{
+ "id": "casino-meridiano-pistas",
+ "name": "Tribuna Cenital",
+ "kind": "interior",
+ "width": 44,
+ "height": 26,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#7cdff8",
+ "safePoint": [
+  22,
+  23
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "meridiano",
+  "room": "Deportes y carreras"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    21,
+    2,
+    3,
+    22
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-meridiano-pistas-deportes",
+   "kind": "casino",
+   "name": "Pantalla de apuestas deportivas",
+   "games": [
+    "deportes"
+   ],
+   "at": [
+    15,
+    7
+   ]
+  },
+  {
+   "id": "casino-meridiano-pistas-caballos",
+   "kind": "casino",
+   "name": "Carreras de caballos",
+   "games": [
+    "caballos"
+   ],
+   "at": [
+    29,
+    7
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    23
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    8,
+    2
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    8,
+    23
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    2
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    23
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    20,
+    2
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    20,
+    23
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    2
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    23
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    32,
+    2
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    32,
+    23
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    38,
+    2
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    38,
+    23
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    15,
+    7
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    29,
+    7
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    15
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    20
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    39,
+    5
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    39,
+    10
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    39,
+    15
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "planter",
+   "at": [
+    39,
+    20
+   ],
+   "color": "#7cdff8"
+  },
+  {
+   "type": "screen",
+   "at": [
+    10,
+    3
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    12,
+    3
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    14,
+    3
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    29,
+    3
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    31,
+    3
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    33,
+    3
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    8,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    10,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    14,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    29,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    31,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    33,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    35,
+    11
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    8,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    10,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    14,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    29,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    31,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    33,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    35,
+    14
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    8,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    10,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    14,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    29,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    31,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    33,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    35,
+    17
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    8,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    10,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    14,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    29,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    31,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    33,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    35,
+    20
+   ],
+   "color": "#28536c",
+   "blocking": true
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    7,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    11,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    15,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    19,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    23,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    27,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    31,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    35,
+    6
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    7,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    11,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    15,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    19,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    23,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    27,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    31,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    35,
+    22
+   ],
+   "color": "#7cdff8",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    22,
+    3
+   ],
+   "color": "#7cdff8",
+   "text": "Tribuna Cenital",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-meridiano-pistas-vestibulo",
+   "name": "Volver al vestíbulo",
+   "at": [
+    22,
+    25
+   ],
+   "to": {
+    "zone": "casino-meridiano",
+    "at": [
+     38,
+     5
+    ]
+   },
+   "sign": "Volver al vestíbulo",
+   "signColor": "#7cdff8"
+  }
+ ]
+}

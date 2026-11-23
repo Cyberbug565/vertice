@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.26)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.27)
+
+La v0.27 abre cinco casinos con eurodólares del juego, mesas animadas y salas VIP. [Ubicaciones, apuestas, reglas y planos](docs/CASINOS.md).
 
 La v0.26 integra las capturas de la release de movimiento para jugadores y NPC. Incluye marcha, carrera, esquivas, guardias, gestos y Brooklyn Uprock. [Ver las fotos, la comparación y las animaciones pendientes](docs/ANIMACIONES_026.md).
 

@@ -9,6 +9,7 @@ import * as sfx from './sfx';
 import { stealthBar, weaponWheel } from './ui/stealth';
 import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
 import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
+import { casinoPanel } from './ui/casino';
 import { $ui, clearUi, fmtMoney, h, ask } from './ui/dom';
 import { Minimap } from './ui/minimap';
 import { openAtlas } from './ui/atlas-panel';
@@ -300,7 +301,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
 
   // ---------------------------------------------------------------- paneles
-  const closePanels = () => { closeDanceMenus(); for (const id of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
+  let casino:ReturnType<typeof casinoPanel>|undefined;
+  const closePanels = () => { closeDanceMenus(); for (const id of ['casino-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
@@ -756,6 +758,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'legend': if (m.open || document.getElementById('legend-panel')) legendPanel(net, m.view); break;
       case 'cheatInfo': cheatPanel(net, m); break;
       case 'zone':
+        casino?.root.remove();
         localDance = null;
         closeDanceMenus();
         document.getElementById('shop-panel')?.remove();
@@ -811,14 +814,26 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if (m.from === view.meId || m.to === view.meId) { combatMusicUntil = Date.now() + 11_000; refreshScore(); }
         break;
       }
+      case 'casino':
+        if(m.view.zone!==st.zone)break;
+        if(casino?.root.isConnected&&casino.table===m.view.table)casino.receive(m.view,m.seq);
+        else if(m.open)casino=casinoPanel(net,m.view);
+        break;
       case 'shop': shopPanel(life, m.view); break;
       case 'market': marketPanel(life, m.view); break;
       case 'jobs': jobsPanel(life, m.view); break;
       case 'clinic': clinicPanel(life, m.view); break;
       case 'bounties': bountyPanel(life, m.view); break;
       case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target, remote: true } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId(), remote: true } as any); else net.send({ t: 'interact', target: m.view.target, remote: true } as any); }); break; }
-      case 'death': sfx.voice('muerte', false, 0, 0); net.close(); audioScene(null); deathScreen(m.summary, () => onExit('dead')); break;
-      case 'ack': { const cb = st.pending.get(m.seq); st.pending.delete(m.seq); if (cb) cb(m); else if (!m.ok && m.reason) toast(m.reason, 'warn'); else if (m.ok && m.path && m.seq === 0) view.confirmPath(m.path); if (m.info && m.ok && !cb) toast(m.info); break; }
+      case 'death': {
+        net.close();audioScene(null);
+        const memorial=()=>{casino?.root.remove();sfx.voice('muerte',false,0,0);deathScreen(m.summary,()=>onExit('dead'));};
+        if(casino?.root.isConnected&&m.summary.cause.includes('Ruleta rusa')&&!settings.reduceMotion)window.setTimeout(memorial,1850);
+        else memorial();
+        break;
+      }
+      case 'ack': {
+        if(casino?.ack(m.seq,m.ok,m.reason))break; const cb = st.pending.get(m.seq); st.pending.delete(m.seq); if (cb) cb(m); else if (!m.ok && m.reason) toast(m.reason, 'warn'); else if (m.ok && m.path && m.seq === 0) view.confirmPath(m.path); if (m.info && m.ok && !cb) toast(m.info); break; }
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;
       case 'dialogClose': st.dialog = null; renderDialog(); break;
       case 'searchResults': searchPanel({ net }, m.device, m.results); break;

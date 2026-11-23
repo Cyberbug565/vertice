@@ -1,0 +1,425 @@
+{
+ "id": "casino-meridiano-cartas",
+ "name": "Galería de Nácar",
+ "kind": "interior",
+ "width": 36,
+ "height": 23,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#c097ef",
+ "safePoint": [
+  18,
+  20
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "meridiano",
+  "room": "Mesas de cartas"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    17,
+    2,
+    3,
+    19
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-meridiano-cartas-blackjack",
+   "kind": "casino",
+   "name": "Mesa de blackjack",
+   "games": [
+    "blackjack"
+   ],
+   "at": [
+    12,
+    7
+   ]
+  },
+  {
+   "id": "casino-meridiano-cartas-poker",
+   "kind": "casino",
+   "name": "Mesa de póker",
+   "games": [
+    "poker"
+   ],
+   "at": [
+    24,
+    7
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    20
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    7,
+    2
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    7,
+    20
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    12,
+    2
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    12,
+    20
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    17,
+    2
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    17,
+    20
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    20
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    27,
+    2
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    27,
+    20
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    32,
+    2
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    32,
+    20
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    12,
+    7
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    11,
+    8
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    13,
+    8
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    24,
+    7
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    23,
+    8
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    25,
+    8
+   ],
+   "color": "#c097ef",
+   "blocking": false
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#c097ef"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#c097ef"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    15
+   ],
+   "color": "#c097ef"
+  },
+  {
+   "type": "planter",
+   "at": [
+    31,
+    5
+   ],
+   "color": "#c097ef"
+  },
+  {
+   "type": "planter",
+   "at": [
+    31,
+    10
+   ],
+   "color": "#c097ef"
+  },
+  {
+   "type": "planter",
+   "at": [
+    31,
+    15
+   ],
+   "color": "#c097ef"
+  },
+  {
+   "type": "shelf",
+   "at": [
+    6,
+    3
+   ],
+   "color": "#695276",
+   "blocking": true
+  },
+  {
+   "type": "shelf",
+   "at": [
+    9,
+    3
+   ],
+   "color": "#695276",
+   "blocking": true
+  },
+  {
+   "type": "shelf",
+   "at": [
+    15,
+    3
+   ],
+   "color": "#695276",
+   "blocking": true
+  },
+  {
+   "type": "shelf",
+   "at": [
+    21,
+    3
+   ],
+   "color": "#695276",
+   "blocking": true
+  },
+  {
+   "type": "shelf",
+   "at": [
+    26,
+    3
+   ],
+   "color": "#695276",
+   "blocking": true
+  },
+  {
+   "type": "shelf",
+   "at": [
+    29,
+    3
+   ],
+   "color": "#695276",
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    8,
+    13
+   ],
+   "color": "#492b61",
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    12,
+    13
+   ],
+   "color": "#492b61",
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    23,
+    13
+   ],
+   "color": "#492b61",
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    27,
+    13
+   ],
+   "color": "#492b61",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    10,
+    14
+   ],
+   "color": "#8e7297",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    25,
+    14
+   ],
+   "color": "#8e7297",
+   "blocking": true
+  },
+  {
+   "type": "holo",
+   "at": [
+    18,
+    3
+   ],
+   "color": "#c097ef",
+   "text": "Galería de Nácar",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-meridiano-cartas-vestibulo",
+   "name": "Volver al vestíbulo",
+   "at": [
+    18,
+    22
+   ],
+   "to": {
+    "zone": "casino-meridiano",
+    "at": [
+     18,
+     5
+    ]
+   },
+   "sign": "Volver al vestíbulo",
+   "signColor": "#c097ef"
+  }
+ ]
+}

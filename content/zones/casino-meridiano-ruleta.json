@@ -1,0 +1,395 @@
+{
+ "id": "casino-meridiano-ruleta",
+ "name": "Salón Órbita",
+ "kind": "interior",
+ "width": 30,
+ "height": 22,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#f7c775",
+ "safePoint": [
+  15,
+  19
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "meridiano",
+  "room": "Sala de ruleta"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    14,
+    2,
+    3,
+    18
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-meridiano-ruleta-ruleta",
+   "kind": "casino",
+   "name": "Mesa de ruleta",
+   "games": [
+    "ruleta"
+   ],
+   "at": [
+    15,
+    7
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    19
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    19
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    19
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    2
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    19
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    2
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    19
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    19
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    2
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    19
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    15,
+    7
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    14,
+    8
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    8
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#f7c775"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#f7c775"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    15
+   ],
+   "color": "#f7c775"
+  },
+  {
+   "type": "planter",
+   "at": [
+    25,
+    5
+   ],
+   "color": "#f7c775"
+  },
+  {
+   "type": "planter",
+   "at": [
+    25,
+    10
+   ],
+   "color": "#f7c775"
+  },
+  {
+   "type": "planter",
+   "at": [
+    25,
+    15
+   ],
+   "color": "#f7c775"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    7,
+    9
+   ],
+   "color": "#604739",
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    22,
+    9
+   ],
+   "color": "#604739",
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    7,
+    13
+   ],
+   "color": "#604739",
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    22,
+    13
+   ],
+   "color": "#604739",
+   "blocking": true
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    4
+   ],
+   "color": "#f7c775",
+   "blocking": true
+  },
+  {
+   "type": "column",
+   "at": [
+    20,
+    4
+   ],
+   "color": "#f7c775",
+   "blocking": true
+  },
+  {
+   "type": "column",
+   "at": [
+    9,
+    17
+   ],
+   "color": "#f7c775",
+   "blocking": true
+  },
+  {
+   "type": "column",
+   "at": [
+    20,
+    17
+   ],
+   "color": "#f7c775",
+   "blocking": true
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    11
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    12,
+    11
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    11
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    11
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    11
+   ],
+   "color": "#f7c775",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    15,
+    3
+   ],
+   "color": "#f7c775",
+   "text": "Salón Órbita",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-meridiano-ruleta-vestibulo",
+   "name": "Volver al vestíbulo",
+   "at": [
+    15,
+    21
+   ],
+   "to": {
+    "zone": "casino-meridiano",
+    "at": [
+     8,
+     5
+    ]
+   },
+   "sign": "Volver al vestíbulo",
+   "signColor": "#f7c775"
+  }
+ ]
+}
