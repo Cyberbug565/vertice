@@ -253,7 +253,7 @@ export class Property {
     const zn = (id: string) => this.dname(id);
     return {
       houses: p.houses.map((id) => { const h = this.houses.get(id)!; const o = this.owners.get(id); return { id, name: h.name, zone: h.district, zoneName: zn(h.district), size: h.size, value: Math.round(this.housePrice(h) * 0.7), paid: o?.price ?? 0, permits: o?.permits ?? [] }; }),
-      cars: p.cars.map((x) => { const d = this.w.c.cars.find((k) => k.id === x.car)!; return { id: x.id, car: x.car, name: `${d.maker} ${d.name}`, class: d.class, value: Math.round(this.carPrice(d.id) * 0.6), speed: d.speed }; }),
+      cars: p.cars.map((x) => { const d = this.w.c.cars.find((k) => k.id === x.car)!; return { id: x.id, car: x.car, name: `${d.maker} ${d.name}`, class: d.class, value: Math.round(this.carPrice(d.id) * 0.6), speed: d.speed, acceleration: d.acceleration, handling: d.handling, braking: d.braking }; }),
       driving: p.driving,
     };
   }
@@ -264,7 +264,7 @@ export class Property {
     if (!d) throw new GameError('Concesionario desconocido.');
     return {
       dealer: d.id, name: d.name, desc: d.desc,
-      cars: this.w.c.cars.filter((x) => d.classes.includes(x.class)).map((x) => ({ id: x.id, name: x.name, maker: x.maker, class: x.class, speed: x.speed, trunk: x.trunk, seats: x.seats, armor: x.armor, price: this.carPrice(x.id, d.id, p), color: x.color, desc: x.desc })).sort((a, b) => a.price - b.price),
+      cars: this.w.c.cars.filter((x) => d.classes.includes(x.class)).map((x) => ({ id: x.id, name: x.name, maker: x.maker, class: x.class, speed: x.speed, acceleration: x.acceleration, handling: x.handling, braking: x.braking, model: x.model, trunk: x.trunk, seats: x.seats, armor: x.armor, price: this.carPrice(x.id, d.id, p), color: x.color, desc: x.desc })).sort((a, b) => a.price - b.price),
       owned: p.cars.map((x) => { const k = this.w.c.cars.find((c) => c.id === x.car)!; return { id: x.id, car: x.car, name: `${k.maker} ${k.name}`, value: Math.round(this.carPrice(k.id) * 0.6) }; }),
     };
   }
@@ -310,6 +310,8 @@ export class Property {
       await q.query('UPDATE characters SET money=$2 WHERE id=$1', [p.charId, bal]);
       await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'car-sell', JSON.stringify({ ownedId, value })]);
     });
+    const parked = this.parked.get(ownedId);
+    if (parked) { this.w.removeEntity(parked); this.parked.delete(ownedId); }
     p.money += value; p.cars = p.cars.filter((x) => x.id !== ownedId);
     if (p.driving === ownedId) this.park(c, true);
     this.w.send(c, { t: 'notice', kind: 'good', text: `Vendes el ${car.maker} ${car.name} por ${value.toLocaleString('es-ES')} €$.` });
@@ -321,8 +323,16 @@ export class Property {
     if (!p.cars.length) throw new GameError('No tienes coche. Cómpralo en un concesionario.');
     if (e.zone.def.kind !== 'exterior') throw new GameError('Solo se conduce en la calle.');
     if (p.status !== 'alive' || p.sleeping) throw new GameError('Ahora no puedes conducir.');
-    const own = (ownedId ? p.cars.find((x) => x.id === ownedId) : undefined) ?? [...p.cars].sort((a, b) => this.w.c.cars.find((x) => x.id === b.car)!.speed - this.w.c.cars.find((x) => x.id === a.car)!.speed)[0];
-    this.w.nightlife.stop(e);
+    const requested = ownedId ? p.cars.find((x) => x.id === ownedId) : undefined;
+    if (ownedId && !requested) throw new GameError('Ese coche no está en tu garaje.');
+    const nearby = p.cars.map(car => ({ car, parked: this.parked.get(car.id) })).filter(({ parked }) => parked?.zone === e.zone)
+      .map(({ car, parked }) => ({ car, distance: Math.hypot(parked!.x - e.x, parked!.y - e.y) }))
+      .filter(row => row.distance <= 4).sort((a, b) => a.distance - b.distance)[0]?.car;
+    const own = requested ?? nearby ?? [...p.cars].sort((a, b) => this.w.c.cars.find((x) => x.id === b.car)!.speed - this.w.c.cars.find((x) => x.id === a.car)!.speed)[0];
+    if (p.driving === own.id) return;
+    if (p.driving) this.park(c, true);
+    this.w.cancelActivity(e);
+    e.carMotion = { speed: 0, heading: e.facing * Math.PI / 4 };
     p.driving = own.id;
     e.vehicle = own.car; e.guard = false; e.guardFacing = undefined; e.guardSince = undefined; e.labelVer++;
     this.w.survival.refreshMovement(c);
@@ -337,23 +347,23 @@ export class Property {
     const p = c.p!, e = c.e!;
     if (!p.driving) return;
     const ownedId = p.driving;
-    p.driving = null; e.vehicle = null; e.labelVer++;
+    p.driving = null; e.vehicle = null; e.carMotion = undefined; e.labelVer++;
     this.w.survival.refreshMovement(c);
-    if (e.zone.def.kind === 'exterior') this.spawnParked(p, ownedId, e.zone.id, e.x, e.y, true);
+    if (e.zone.def.kind === 'exterior') this.spawnParked(p, ownedId, e.zone.id, e.x, e.y, true, e.facing);
     if (!quiet) this.w.send(c, { t: 'notice', kind: 'info', text: 'Aparcas y bajas del coche. Haz clic en él para abrir el maletero.' });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
   }
   // ---------------------------------------------------------------- v0.6: coches aparcados y maletero
   readonly parked = new Map<string, Entity>();
   /** Deja el coche aparcado en la calle (visible para todos) y guarda dónde. */
-  spawnParked(p: PlayerState, ownedId: string, zoneId: string, x: number, y: number, save: boolean) {
+  spawnParked(p: PlayerState, ownedId: string, zoneId: string, x: number, y: number, save: boolean, facing = 0) {
     const z = this.w.zones.get(zoneId);
     const own = p.cars.find((k) => k.id === ownedId);
     const car = own && this.w.c.cars.find((k) => k.id === own.car);
     if (!z || !car) return;
     const old = this.parked.get(ownedId); if (old) this.w.removeEntity(old);
     const at = nearestWalkable(z.grid, x, y, 6) ?? { x, y };
-    const ent = this.w.addEntity(z, { kind: 'object', name: `${car.maker} ${car.name} de ${p.name}`, x: at.x, y: at.y, interactive: true, objKind: 'mycar', label: '', vehicle: car.id });
+    const ent = this.w.addEntity(z, { kind: 'object', name: `${car.maker} ${car.name} de ${p.name}`, x: at.x, y: at.y, facing, interactive: true, objKind: 'mycar', label: '', vehicle: car.id });
     ent.ownerChar = p.charId; ent.carOwnedId = ownedId;
     this.parked.set(ownedId, ent);
     if (save) void this.w.db.query('UPDATE cars_owned SET zone=$2, pos_x=$3, pos_y=$4 WHERE id=$1', [ownedId, zoneId, ent.x, ent.y]).catch(() => {});

@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  installedSight, canSee, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  installedSight, canSee, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db, Queryable } from '../db/db.js';
@@ -370,7 +370,11 @@ export class World {
         if(resident&&!z.isActive(e)&&e.aggro===undefined)continue;
         if (e.npc && e.npcType !== 'essential' && e.aggro === undefined && (!anyone || !z.isActive(e))) continue;
         const edt = e.conn ? dt + catchUp : dt;
-        if (e.path.length) this.moveEntity(e, edt);
+        if (e.path.length) {
+          if (e.carMotion) { e.carMotion.speed = 0; e.carMotion.heading = e.facing * Math.PI / 4; }
+          this.moveEntity(e, edt);
+        }
+        else if (e.carMotion && (e.steer || e.carMotion.speed > 0)) this.driveEntity(e, edt);
         else if (e.steer) { for (let left = edt; left > 1e-6 && e.steer; left -= dt) this.steerEntity(e, Math.min(dt, left)); }
         if (e.pendingAction && e.conn) this.combat.checkPending(e.conn);
         if (e.channel && this.tick >= e.channel.endTick) { const ch = e.channel; e.channel = undefined; ch.apply(); }
@@ -449,6 +453,27 @@ export class World {
     const ax = crossingAxis(g, px, py, dx, dy);
     if (!ax) return false;
     return walkLight(Date.now(), px, py, ax) !== 'verde';
+  }
+
+  private driveEntity(e: Entity, dt: number) {
+    const p = this.playerOf(e), car = p && this.property.carOf(p);
+    const motion = e.carMotion!;
+    if (!car || !p || e.transit || e.carriedBy || e.state === 'downed' || p.status !== 'alive' || p.sleeping || (e.stunUntil ?? 0) > Date.now()) {
+      motion.speed = 0; e.steer = undefined; e.moving = false; e.lastMoveTick = this.tick;
+      return;
+    }
+    if (e.steer && Date.now() - e.steer.at > 1500) e.steer = undefined;
+    for (let remaining = dt; remaining > 1e-6; remaining -= 1 / RULES.tickRate) {
+      const next = stepCar(e.zone.grid, e.x, e.y, motion, e.steer?.dx ?? 0, e.steer?.dy ?? 0,
+        e.speed, car, Math.min(remaining, 1 / RULES.tickRate) * (e.timeScale ?? 1));
+      e.moving = next.x !== e.x || next.y !== e.y;
+      if (e.moving) { e.x = next.x; e.y = next.y; }
+      motion.speed = next.speed; motion.heading = next.heading;
+    }
+    e.facing = facingToIdx(Math.cos(motion.heading), Math.sin(motion.heading));
+    e.lastMoveTick = this.tick;
+    e.zone.moved(e);
+    if (e.conn) this.sectorCheck(e);
   }
 
   /** v0.7: movimiento libre con WASD. Se desliza por las paredes (prueba el eje X y el Y por separado). */
@@ -802,7 +827,7 @@ export class World {
         if (moving && e.hiddenIn) this.corpses.leaveHiding(c, true);
         e.steer = moving ? { dx: m.dx / len, dy: m.dy / len, at: Date.now() } : undefined;
         if (moving) e.lastDir = { dx: m.dx / len, dy: m.dy / len };
-        if (!moving) { e.moving = false; e.lastMoveTick = this.tick; }
+        if (!moving && !e.carMotion) { e.moving = false; e.lastMoveTick = this.tick; }
         return;
       }
       case 'dodge': return guarded(m.seq, async () => this.combat.dodge(c, m.dx, m.dy));
@@ -1118,6 +1143,7 @@ export class World {
     const discovery = applyMapKeys(p,entered);
     e.transit = false;
     e.pendingAction = undefined;
+    if (e.carMotion) { e.carMotion.speed = 0; e.steer = undefined; }
     if (p.carrying) { const body = this.entities.get(p.carrying); if (body) this.moveEntityTo(body, to, nx + 0.3, ny + 0.3); }
     this.metrics.inc('zoneTransfers');
     const conn = e.conn;

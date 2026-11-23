@@ -25,7 +25,7 @@ export { opposed as opposedChance } from './combat.js';
 interface ConnExtra {
   openShop?: { shop: string; entity: number }; openClinic?: { doc: string; entity: number };
   nextAutoAt: number; noFoodWarnAt: number; warned: Record<string, boolean>; lastSheetAt: number; nextHostileAt: number;
-  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean; lastPos?: { zone: string; x: number; y: number }; breathless?: boolean; sentSpeed?: number; sentGuard?: boolean;
+  rummaged: Map<number, number>; jobCd: Map<string, number>; loadedCd: boolean; lastPos?: { zone: string; x: number; y: number }; breathless?: boolean; sentSpeed?: number; sentGuard?: boolean; sentCar?: string;
 }
 
 export class Survival {
@@ -81,9 +81,9 @@ export class Survival {
       * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > now ? 0.55 : 1));
     e.speed = speed * this.w.cfg.speedScale;
     const x = this.x(c), v = Math.round(e.speed * (e.timeScale ?? 1) * 1000) / 1000;
-    if (x.sentSpeed !== v || x.sentGuard !== !!e.guard) {
-      x.sentSpeed = v; x.sentGuard = !!e.guard;
-      this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard });
+    if (x.sentSpeed !== v || x.sentGuard !== !!e.guard || x.sentCar !== car?.id) {
+      x.sentSpeed = v; x.sentGuard = !!e.guard; x.sentCar = car?.id;
+      this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard, tuning: car ? { acceleration: car.acceleration, braking: car.braking, handling: car.handling } : null });
     }
   }
 

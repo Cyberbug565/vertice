@@ -1,0 +1,23 @@
+{
+  "car_hatchback": ["kay-urbano", 1.78, "kay"],
+  "car_sedan": ["kay-sedan", 2.08, "kay"],
+  "car_stationwagon": ["kay-familiar", 2.22, "kay"],
+  "car_taxi": ["kay-taxi", 2.03, "kay"],
+  "car_police": ["kay-patrulla", 2.16, "kay"],
+  "coupe": ["hover-coupe", 2.02, "hover"],
+  "sedan": ["hover-sedan", 2.16, "hover"],
+  "van": ["hover-furgon", 2.39, "hover"],
+  "truck": ["hover-pickup", 2.56, "hover"],
+  "boxTruck": ["hover-carga", 2.83, "hover"],
+  "ambulance": ["hover-rescate", 2.62, "hover"],
+  "firetruck": ["hover-incendios", 2.89, "hover"],
+  "police_car": ["hover-patrulla", 2.25, "hover"],
+  "police_van": ["hover-blindada", 2.61, "hover"],
+  "publicWorks_truck": ["hover-municipal", 2.56, "hover"],
+  "publicWorks_boxTruck": ["hover-servicio", 2.82, "hover"],
+  "taxi": ["hover-taxi", 2.2, "hover"],
+  "Futuristic_Car_2.1_blend": ["prototipo", 2.25, "especial"],
+  "Royal_Hyper_X": ["royal", 2.38, "especial"],
+  "sci+fi+flying+car+01": ["maglev", 2.55, "especial"],
+  "BIKE+FINAL": ["kotetsu", 1.22, "especial"]
+}

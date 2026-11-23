@@ -38,6 +38,7 @@ export const BUILDING_H = 1.35;
 
 export interface Ent3D {
   x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; swingN?: number; hurtAt?: number; rollAt?: number; kickAt?: number; drawAt?: number; headHitAt?: number; cue?:{id:import('@vertice/shared').MotionCue;at:number}; jumpAt?: number; sideRoll?: number;
+  vehicleHover?: boolean;
   vehicleModel?: import('@vertice/shared').CarDef['model']; view?: { visible: boolean };
   samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number }; flags?: number;
   /** v0.12 · Fantasma (compañeros de las matrices): translúcido, flota y se tiñe del color de su matriz. */

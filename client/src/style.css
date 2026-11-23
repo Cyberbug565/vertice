@@ -328,9 +328,12 @@ button.chip { cursor: pointer; }
 
 /* Propiedades, concesionarios y mercado vivo */
 .fcard.car { gap: 4px; }
-.carpaint { height: 54px; display: flex; align-items: flex-end; justify-content: flex-end; padding: 4px 8px; font-size: 0.7em; letter-spacing: 0.12em; text-transform: uppercase; clip-path: polygon(0 30%, 18% 0, 82% 0, 100% 30%, 100% 100%, 0 100%); }
+.carpaint { position: relative; height: 108px; display: grid; align-items: end; justify-items: end; overflow: hidden; border-radius: 4px; }
+.carpaint img { position: absolute; inset: 0; margin: auto; width: 155px; height: 108px; object-fit: contain; transform: translateY(-8px) scale(1.24); filter: drop-shadow(0 5px 4px #030610a0); }
+.carpaint span { position: relative; padding: 3px 6px; color: #eff6fb; background: #090c16db; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+
 .carstats { display: grid; grid-template-columns: 1fr; gap: 2px; }
-.cstat { display: grid; grid-template-columns: 62px 1fr 48px; gap: 4px; align-items: center; }
+.cstat { display: grid; grid-template-columns: 72px 1fr 60px; gap: 4px; align-items: center; }
 .linkbtn { background: none; border: 0; color: var(--red); padding: 0 2px; }
 .fcard.idx .big { font-size: 1.3em; color: #9ad8ff; }
 .spark svg { display: block; }
