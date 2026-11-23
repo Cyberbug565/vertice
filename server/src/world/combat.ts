@@ -294,7 +294,13 @@ export class Combat {
     let action: string = m.action;
     if (action === 'beat') action = 'knockout';
     if (action === 'claim') action = this.claimable(target, p).some((b) => b.aliveOnly) || (target.fugitive?.alive ?? false) ? 'knockout' : 'attack';
-    if (action === 'talk') { this.talk(c, target); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true }); }
+    if (action === 'talk') {
+      if(this.w.cityPeople.has(target)){
+        if(Math.hypot(e.x-target.x,e.y-target.y)>4.5||!this.lineClear(e,target))return fail('Acércate para hablar con '+target.name+'.');
+        if(!this.w.cityPeople.interact(c,target))return fail('Ahora no puede hablar.');
+      }else this.talk(c,target);
+      return this.w.send(c,{t:'ack',seq:m.seq,ok:true});
+    }
     if (action === 'extract') { await this.w.threats.extract(c, target, m.chrome); return this.w.send(c, { t: 'ack', seq: m.seq, ok: true }); }
     if (action === 'search') {
       if (!(target.state === 'downed' || target.dead) || target.kind !== 'npc') return fail('Solo se puede registrar a alguien caído.');
@@ -1286,7 +1292,7 @@ export class Combat {
       return true;
     }
     // Vigilancia: policía busca a los buscados; bandas, a quien tienen fichado en su territorio.
-    if (e.npcType === 'police' || e.npcType === 'gang') {
+    if ((e.npcType === 'police' && (!this.w.cityPeople.has(e)||this.w.cityPeople.isWorking(e))) || e.npcType === 'gang') {
       const f = this.c.factions.find((x) => x.id === e.faction);
       for (const o of e.zone.query(e.x, e.y, e.npcType === 'police' ? 12 : 7)) {
         const op = o.kind === 'player' ? this.w.playerOf(o) : undefined;
@@ -1540,6 +1546,11 @@ export class Combat {
       this.respawnQueue.splice(this.respawnQueue.indexOf(r), 1);
       const z = this.w.zones.get(r.zone);
       const t = r.template as any;
+      if(t.resident){
+        const def=this.c.npcs.find(n=>n.id===t.resident);
+        if(def)this.w.spawnScheduled(def);
+        continue;
+      }
       if (z) { if (t.type === 'civil') this.w.spawnAmbient(z, t.near); else if (t.type === 'predator') this.w.threats.spawnPredator(z, [t.near.x, t.near.y]); else this.spawnFactionNpc(z, t.faction, t.type, t.area); }
     }
     await this.rescueTick();

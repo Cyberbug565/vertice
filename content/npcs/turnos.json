@@ -1,0 +1,4832 @@
+[
+ {
+  "id": "turno-1",
+  "name": "Dalia Soler",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 1.46,
+   "personal": "La primera semana me perdí buscando el vestuario. Ahora me sé cada salida. Por cierto, me llamo Dalia."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#2a1d17",
+   "jacket": "#2a2935",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaleco",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 20,
+    "zone": "casino-ultima-ficha",
+    "at": [
+     7,
+     8
+    ],
+    "state": "work",
+    "label": "Vigila el acceso",
+    "stops": [
+     [
+      5,
+      6
+     ],
+     [
+      12,
+      5
+     ]
+    ],
+    "face": [
+     8,
+     9
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 23,
+    "zone": "vertice",
+    "at": [
+     77,
+     212
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 23,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     75,
+     211
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-2",
+  "name": "Iván Navas",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 1.56,
+   "personal": "Mi turno favorito empieza cuando los carteles de la calle bajan la luz. Si necesitas algo, pregunta por Navas."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#865338",
+   "jacket": "#2a2935",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "chaleco",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 8,
+    "zone": "casino-ultima-ficha",
+    "at": [
+     9,
+     8
+    ],
+    "state": "work",
+    "label": "Hace una ronda entre las mesas",
+    "stops": [
+     [
+      4,
+      5
+     ],
+     [
+      11,
+      4
+     ]
+    ],
+    "face": [
+     8,
+     9
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 8,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     79,
+     212
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 11,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     76,
+     210
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-3",
+  "name": "Nerea Acosta",
+  "title": "Crupier",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "cordial",
+   "speed": 1.67,
+   "personal": "En el descanso juego a las cartas con la gente del turno anterior. Soy Nerea, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#1f171d",
+   "jacket": "#623850",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "traje",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 11,
+    "to": 20,
+    "zone": "casino-ultima-ficha",
+    "at": [
+     6,
+     4
+    ],
+    "state": "work",
+    "label": "Comprueba el registro de mesa",
+    "face": [
+     5,
+     4
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 20,
+    "to": 23,
+    "zone": "vertice",
+    "at": [
+     77,
+     213
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 23,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     74,
+     211
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-4",
+  "name": "Ciro Pardo",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "curioso",
+   "speed": 1.77,
+   "personal": "La primera semana me perdí buscando el vestuario. Ahora me sé cada salida. Por cierto, me llamo Ciro."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#d5c6bc",
+   "jacket": "#2a2935",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "chaleco",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 20,
+    "zone": "casino-bobina",
+    "at": [
+     8,
+     9
+    ],
+    "state": "work",
+    "label": "Comprueba el relevo",
+    "stops": [
+     [
+      6,
+      7
+     ],
+     [
+      13,
+      6
+     ]
+    ],
+    "face": [
+     9,
+     10
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 23,
+    "zone": "vertice",
+    "at": [
+     26,
+     83
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 23,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     24,
+     82
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-5",
+  "name": "Samira Saya",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "cauto",
+   "speed": 1.88,
+   "personal": "Tengo anotado quién me cubre si me llaman al otro extremo. Si necesitas algo, pregunta por Saya."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#2a1d17",
+   "jacket": "#2a2935",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "chaleco",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 8,
+    "zone": "casino-bobina",
+    "at": [
+     10,
+     9
+    ],
+    "state": "work",
+    "label": "Vigila el acceso",
+    "stops": [
+     [
+      5,
+      6
+     ],
+     [
+      12,
+      5
+     ]
+    ],
+    "face": [
+     9,
+     10
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 8,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     25,
+     82
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 11,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     23,
+     81
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-6",
+  "name": "Joel Salas",
+  "title": "Crupier",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "nervioso",
+   "speed": 1.98,
+   "personal": "Reconozco una ficha gastada en cuanto cae sobre el tapete. Soy Joel, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#865338",
+   "jacket": "#623850",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "traje",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 2,
+    "zone": "casino-bobina",
+    "at": [
+     7,
+     4
+    ],
+    "state": "work",
+    "label": "Comprueba el registro de mesa",
+    "face": [
+     6,
+     4
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     27,
+     83
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 5,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     24,
+     81
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-7",
+  "name": "Vera Vidal",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 2.09,
+   "personal": "Mi turno favorito empieza cuando los carteles de la calle bajan la luz. Por cierto, me llamo Vera."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#1f171d",
+   "jacket": "#2a2935",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "chaleco",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 20,
+    "zone": "casino-cero-rojo",
+    "at": [
+     10,
+     11
+    ],
+    "state": "work",
+    "label": "Revisa la salida de servicio",
+    "stops": [
+     [
+      8,
+      9
+     ],
+     [
+      15,
+      8
+     ]
+    ],
+    "face": [
+     11,
+     12
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 23,
+    "zone": "vertice",
+    "at": [
+     90,
+     291
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 23,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     89,
+     291
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-8",
+  "name": "Oriol Costa",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.19,
+   "personal": "Tengo anotado quién me cubre si me llaman al otro extremo. Si necesitas algo, pregunta por Costa."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#d5c6bc",
+   "jacket": "#2a2935",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "chaleco",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 8,
+    "zone": "casino-cero-rojo",
+    "at": [
+     12,
+     11
+    ],
+    "state": "work",
+    "label": "Comprueba el relevo",
+    "stops": [
+     [
+      7,
+      8
+     ],
+     [
+      14,
+      7
+     ]
+    ],
+    "face": [
+     11,
+     12
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 8,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     90,
+     293
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 11,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     89,
+     293
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-9",
+  "name": "Inés Ledo",
+  "title": "Crupier",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "cordial",
+   "speed": 2.3,
+   "personal": "Al cerrar ordeno las fichas de menor a mayor. Me ayuda a desconectar. Soy Inés, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#2a1d17",
+   "jacket": "#623850",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "traje",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 2,
+    "zone": "casino-cero-rojo",
+    "at": [
+     8,
+     4
+    ],
+    "state": "work",
+    "label": "Comprueba el registro de mesa",
+    "face": [
+     7,
+     4
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     90,
+     294
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 5,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     89,
+     294
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-10",
+  "name": "Álex Alves",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "curioso",
+   "speed": 2.4,
+   "personal": "Tengo anotado quién me cubre si me llaman al otro extremo. Por cierto, me llamo Álex."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#865338",
+   "jacket": "#2a2935",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "chaleco",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 20,
+    "zone": "casino-hipodromo",
+    "at": [
+     16,
+     18
+    ],
+    "state": "work",
+    "label": "Hace una ronda entre las mesas",
+    "stops": [
+     [
+      14,
+      16
+     ],
+     [
+      21,
+      15
+     ]
+    ],
+    "face": [
+     17,
+     19
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 23,
+    "zone": "vertice",
+    "at": [
+     175,
+     307
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 23,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     174,
+     307
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-11",
+  "name": "Mina Bravo",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "cauto",
+   "speed": 2.51,
+   "personal": "La primera semana me perdí buscando el vestuario. Ahora me sé cada salida. Si necesitas algo, pregunta por Bravo."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#1f171d",
+   "jacket": "#2a2935",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "chaleco",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 8,
+    "zone": "casino-hipodromo",
+    "at": [
+     18,
+     18
+    ],
+    "state": "work",
+    "label": "Revisa la salida de servicio",
+    "stops": [
+     [
+      13,
+      15
+     ],
+     [
+      20,
+      14
+     ]
+    ],
+    "face": [
+     17,
+     19
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 8,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     177,
+     307
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 11,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     176,
+     307
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-12",
+  "name": "Bruno Iborra",
+  "title": "Crupier",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "nervioso",
+   "speed": 1.46,
+   "personal": "Al cerrar ordeno las fichas de menor a mayor. Me ayuda a desconectar. Soy Bruno, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#d5c6bc",
+   "jacket": "#623850",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "traje",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 2,
+    "zone": "casino-hipodromo",
+    "at": [
+     9,
+     4
+    ],
+    "state": "work",
+    "label": "Comprueba el registro de mesa",
+    "face": [
+     8,
+     4
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     179,
+     307
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 5,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     178,
+     307
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-13",
+  "name": "Nora Ríos",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 1.56,
+   "personal": "La primera semana me perdí buscando el vestuario. Ahora me sé cada salida. Por cierto, me llamo Nora."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#2a1d17",
+   "jacket": "#2a2935",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "chaleco",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 20,
+    "zone": "casino-meridiano",
+    "at": [
+     28,
+     34
+    ],
+    "state": "work",
+    "label": "Vigila el acceso",
+    "stops": [
+     [
+      26,
+      32
+     ],
+     [
+      33,
+      31
+     ]
+    ],
+    "face": [
+     29,
+     35
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 23,
+    "zone": "vertice",
+    "at": [
+     505,
+     41
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 23,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     502,
+     39
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-14",
+  "name": "Jan Lozano",
+  "title": "Seguridad del casino",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 1.67,
+   "personal": "Mi turno favorito empieza cuando los carteles de la calle bajan la luz. Si necesitas algo, pregunta por Lozano."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#865338",
+   "jacket": "#2a2935",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "chaleco",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 8,
+    "zone": "casino-meridiano",
+    "at": [
+     30,
+     34
+    ],
+    "state": "work",
+    "label": "Hace una ronda entre las mesas",
+    "stops": [
+     [
+      25,
+      31
+     ],
+     [
+      32,
+      30
+     ]
+    ],
+    "face": [
+     29,
+     35
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 8,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     504,
+     40
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 11,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     501,
+     38
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-15",
+  "name": "Leire Roca",
+  "title": "Crupier",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "cordial",
+   "speed": 1.77,
+   "personal": "En el descanso juego a las cartas con la gente del turno anterior. Soy Leire, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#1f171d",
+   "jacket": "#623850",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "traje",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 2,
+    "zone": "casino-meridiano-cartas",
+    "at": [
+     13,
+     7
+    ],
+    "state": "work",
+    "label": "Comprueba el registro de mesa",
+    "face": [
+     12,
+     7
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     505,
+     40
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 5,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     502,
+     38
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-16",
+  "name": "Saúl Lago",
+  "title": "Seguridad privada",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "curioso",
+   "speed": 1.88,
+   "personal": "La primera semana me perdí buscando el vestuario. Ahora me sé cada salida. Por cierto, me llamo Saúl."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#d5c6bc",
+   "jacket": "#2a2935",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "chaleco",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 9,
+    "to": 21,
+    "zone": "casino-meridiano-vip",
+    "at": [
+     13,
+     12
+    ],
+    "state": "work",
+    "label": "Comprueba el relevo",
+    "stops": [
+     [
+      16,
+      12
+     ],
+     [
+      10,
+      13
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 21,
+    "to": 0,
+    "zone": "casino-meridiano",
+    "at": [
+     47,
+     24
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 0,
+    "to": 9,
+    "zone": "casino-meridiano",
+    "at": [
+     44,
+     22
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-17",
+  "name": "Ada Ruiz",
+  "title": "Seguridad privada",
+  "essential": true,
+  "resident": {
+   "job": "seguridad",
+   "temper": "cauto",
+   "speed": 1.98,
+   "personal": "Tengo anotado quién me cubre si me llaman al otro extremo. Si necesitas algo, pregunta por Ruiz."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#2a1d17",
+   "jacket": "#2a2935",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaleco",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 21,
+    "to": 9,
+    "zone": "casino-meridiano-vip",
+    "at": [
+     12,
+     11
+    ],
+    "state": "work",
+    "label": "Vigila el acceso",
+    "stops": [
+     [
+      15,
+      11
+     ],
+     [
+      9,
+      12
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 9,
+    "to": 12,
+    "zone": "casino-meridiano",
+    "at": [
+     46,
+     23
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 12,
+    "to": 21,
+    "zone": "casino-meridiano",
+    "at": [
+     43,
+     21
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-18",
+  "name": "Omar León",
+  "title": "Personal de sala",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "nervioso",
+   "speed": 2.09,
+   "personal": "Reconozco una ficha gastada en cuanto cae sobre el tapete. Soy Omar, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#865338",
+   "jacket": "#623850",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "traje",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 9,
+    "to": 21,
+    "zone": "casino-meridiano-pistas",
+    "at": [
+     21,
+     16
+    ],
+    "state": "work",
+    "label": "Comprueba el registro de mesa",
+    "stops": [
+     [
+      24,
+      16
+     ],
+     [
+      18,
+      17
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 21,
+    "to": 0,
+    "zone": "casino-meridiano",
+    "at": [
+     47,
+     23
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 0,
+    "to": 9,
+    "zone": "casino-meridiano",
+    "at": [
+     44,
+     21
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-19",
+  "name": "Jara Freire",
+  "title": "Personal de sala",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "metodico",
+   "speed": 2.19,
+   "personal": "Al cerrar ordeno las fichas de menor a mayor. Me ayuda a desconectar. Por cierto, me llamo Jara."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#1f171d",
+   "jacket": "#623850",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "traje",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 21,
+    "to": 9,
+    "zone": "casino-meridiano-pistas",
+    "at": [
+     20,
+     15
+    ],
+    "state": "work",
+    "label": "Ordena las fichas de la casa",
+    "stops": [
+     [
+      23,
+      15
+     ],
+     [
+      17,
+      16
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 9,
+    "to": 12,
+    "zone": "casino-meridiano",
+    "at": [
+     48,
+     23
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 12,
+    "to": 21,
+    "zone": "casino-meridiano",
+    "at": [
+     45,
+     21
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-20",
+  "name": "Teo Moya",
+  "title": "Personal de sala",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "seco",
+   "speed": 2.3,
+   "personal": "En el descanso juego a las cartas con la gente del turno anterior. Si necesitas algo, pregunta por Moya."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#d5c6bc",
+   "jacket": "#623850",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "traje",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 9,
+    "to": 21,
+    "zone": "casino-meridiano-ruleta",
+    "at": [
+     14,
+     13
+    ],
+    "state": "work",
+    "label": "Prepara el reparto",
+    "stops": [
+     [
+      17,
+      13
+     ],
+     [
+      11,
+      14
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 21,
+    "to": 0,
+    "zone": "casino-meridiano",
+    "at": [
+     46,
+     24
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 0,
+    "to": 9,
+    "zone": "casino-meridiano",
+    "at": [
+     43,
+     22
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-21",
+  "name": "Mai Benet",
+  "title": "Personal de sala",
+  "essential": true,
+  "resident": {
+   "job": "crupier",
+   "temper": "cordial",
+   "speed": 2.4,
+   "personal": "Al cerrar ordeno las fichas de menor a mayor. Me ayuda a desconectar. Soy Mai, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#2a1d17",
+   "jacket": "#623850",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "traje",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 21,
+    "to": 9,
+    "zone": "casino-meridiano-ruleta",
+    "at": [
+     13,
+     12
+    ],
+    "state": "work",
+    "label": "Comprueba el registro de mesa",
+    "stops": [
+     [
+      16,
+      12
+     ],
+     [
+      10,
+      13
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 9,
+    "to": 12,
+    "zone": "casino-meridiano",
+    "at": [
+     48,
+     24
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 12,
+    "to": 21,
+    "zone": "casino-meridiano",
+    "at": [
+     45,
+     22
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-22",
+  "name": "Unai Montes",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "okami-super",
+  "resident": {
+   "job": "venta",
+   "temper": "curioso",
+   "speed": 2.51,
+   "personal": "El último pedido del turno suele ser el más raro. Por cierto, me llamo Unai."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#865338",
+   "jacket": "#644e4e",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "camisa",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 17,
+    "zone": "okami-super-int",
+    "at": [
+     9,
+     7
+    ],
+    "state": "work",
+    "label": "Atiende el mostrador",
+    "face": [
+     8,
+     6
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 17,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     208,
+     172
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     205,
+     170
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-23",
+  "name": "Mar Roig",
+  "title": "Dependiente de relevo",
+  "essential": true,
+  "shop": "okami-super",
+  "resident": {
+   "job": "venta",
+   "temper": "cauto",
+   "speed": 1.46,
+   "personal": "Las cajas grandes las abro antes de que llegue el primer cliente. Si necesitas algo, pregunta por Roig."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#1f171d",
+   "jacket": "#3b496b",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "camiseta",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 19,
+    "to": 6,
+    "zone": "okami-super-int",
+    "at": [
+     7,
+     7
+    ],
+    "state": "work",
+    "label": "Prepara un pedido",
+    "face": [
+     8,
+     6
+    ]
+   },
+   {
+    "from": 6,
+    "to": 9,
+    "zone": "vertice",
+    "at": [
+     207,
+     171
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "vertice",
+    "at": [
+     204,
+     169
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-24",
+  "name": "Elías Vilar",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "boutique-aurelia",
+  "resident": {
+   "job": "venta",
+   "temper": "nervioso",
+   "speed": 1.56,
+   "personal": "Siempre guardo una bolsa seca debajo del mostrador. Soy Elías, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#d5c6bc",
+   "jacket": "#5f4e74",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "gabardina",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 18,
+    "zone": "boutique-int",
+    "at": [
+     8,
+     5
+    ],
+    "state": "work",
+    "label": "Ordena el género del turno",
+    "face": [
+     7,
+     4
+    ]
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "vertice",
+    "at": [
+     264,
+     33
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 21,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     261,
+     31
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-25",
+  "name": "Luz Kaur",
+  "title": "Farmacéutico/a",
+  "essential": true,
+  "shop": "farmacia",
+  "resident": {
+   "job": "venta",
+   "temper": "metodico",
+   "speed": 1.67,
+   "personal": "Las cajas grandes las abro antes de que llegue el primer cliente. Por cierto, me llamo Luz."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#2a1d17",
+   "jacket": "#3f615d",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaqueta",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "farmacia-ferro",
+    "at": [
+     8,
+     4
+    ],
+    "state": "work",
+    "label": "Atiende el mostrador",
+    "face": [
+     7,
+     3
+    ]
+   },
+   {
+    "from": 19,
+    "to": 22,
+    "zone": "vertice",
+    "at": [
+     59,
+     220
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 22,
+    "to": 9,
+    "zone": "vertice",
+    "at": [
+     56,
+     218
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-26",
+  "name": "Damián Mena",
+  "title": "Farmacéutico/a",
+  "essential": true,
+  "shop": "farmacia",
+  "resident": {
+   "job": "venta",
+   "temper": "seco",
+   "speed": 1.77,
+   "personal": "Siempre guardo una bolsa seca debajo del mostrador. Si necesitas algo, pregunta por Mena."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#865338",
+   "jacket": "#644e4e",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "camisa",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 21,
+    "to": 8,
+    "zone": "farmacia-ferro",
+    "at": [
+     6,
+     4
+    ],
+    "state": "work",
+    "label": "Prepara un pedido",
+    "face": [
+     7,
+     3
+    ]
+   },
+   {
+    "from": 8,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     58,
+     219
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 11,
+    "to": 21,
+    "zone": "vertice",
+    "at": [
+     55,
+     217
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-27",
+  "name": "Vega Ferrer",
+  "title": "Farmacéutico/a",
+  "essential": true,
+  "shop": "farmacia",
+  "resident": {
+   "job": "venta",
+   "temper": "cordial",
+   "speed": 1.88,
+   "personal": "El último pedido del turno suele ser el más raro. Soy Vega, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#1f171d",
+   "jacket": "#3b496b",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "camiseta",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 17,
+    "zone": "farmacia-neon-rojo",
+    "at": [
+     8,
+     4
+    ],
+    "state": "work",
+    "label": "Ordena el género del turno",
+    "face": [
+     7,
+     3
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 17,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     447,
+     93
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 20,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     444,
+     91
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-28",
+  "name": "Biel Khan",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "armeria-halcon",
+  "resident": {
+   "job": "venta",
+   "temper": "curioso",
+   "speed": 1.98,
+   "personal": "Las cajas grandes las abro antes de que llegue el primer cliente. Por cierto, me llamo Biel."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#d5c6bc",
+   "jacket": "#5f4e74",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "gabardina",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 18,
+    "zone": "armeria-int",
+    "at": [
+     8,
+     5
+    ],
+    "state": "work",
+    "label": "Atiende el mostrador",
+    "face": [
+     7,
+     4
+    ]
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "vertice",
+    "at": [
+     251,
+     172
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 21,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     248,
+     170
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-29",
+  "name": "Aina Reyes",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "ropa-neon",
+  "resident": {
+   "job": "venta",
+   "temper": "cauto",
+   "speed": 2.09,
+   "personal": "El último pedido del turno suele ser el más raro. Si necesitas algo, pregunta por Reyes."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#2a1d17",
+   "jacket": "#3f615d",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "chaqueta",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "ropa-neon-int",
+    "at": [
+     8,
+     5
+    ],
+    "state": "work",
+    "label": "Prepara un pedido",
+    "face": [
+     7,
+     4
+    ]
+   },
+   {
+    "from": 19,
+    "to": 22,
+    "zone": "vertice",
+    "at": [
+     335,
+     61
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 22,
+    "to": 9,
+    "zone": "vertice",
+    "at": [
+     332,
+     59
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-30",
+  "name": "Said Cruz",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "ramen-kanal",
+  "resident": {
+   "job": "venta",
+   "temper": "nervioso",
+   "speed": 2.19,
+   "personal": "Las cajas grandes las abro antes de que llegue el primer cliente. Soy Said, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#865338",
+   "jacket": "#644e4e",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "camisa",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 17,
+    "zone": "ramen-int",
+    "at": [
+     8,
+     3
+    ],
+    "state": "work",
+    "label": "Ordena el género del turno",
+    "face": [
+     7,
+     2
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 17,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     138,
+     178
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     135,
+     176
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-31",
+  "name": "Alba Gil",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "electronica-yokai",
+  "resident": {
+   "job": "venta",
+   "temper": "metodico",
+   "speed": 2.3,
+   "personal": "Siempre guardo una bolsa seca debajo del mostrador. Por cierto, me llamo Alba."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#1f171d",
+   "jacket": "#3b496b",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "camiseta",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 8,
+    "to": 18,
+    "zone": "electronica-yokai-int",
+    "at": [
+     8,
+     5
+    ],
+    "state": "work",
+    "label": "Atiende el mostrador",
+    "face": [
+     7,
+     4
+    ]
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "vertice",
+    "at": [
+     364,
+     60
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 21,
+    "to": 8,
+    "zone": "vertice",
+    "at": [
+     361,
+     58
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-32",
+  "name": "Daro Rivas",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "aurora-24h",
+  "resident": {
+   "job": "venta",
+   "temper": "seco",
+   "speed": 2.4,
+   "personal": "El último pedido del turno suele ser el más raro. Si necesitas algo, pregunta por Rivas."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#d5c6bc",
+   "jacket": "#5f4e74",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "gabardina",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 9,
+    "to": 21,
+    "zone": "tienda-24h-int",
+    "at": [
+     8,
+     4
+    ],
+    "state": "work",
+    "label": "Prepara un pedido",
+    "face": [
+     7,
+     3
+    ]
+   },
+   {
+    "from": 21,
+    "to": 0,
+    "zone": "vertice",
+    "at": [
+     84,
+     195
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 0,
+    "to": 9,
+    "zone": "vertice",
+    "at": [
+     81,
+     193
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-33",
+  "name": "Iván Salas",
+  "title": "Dependiente de relevo",
+  "essential": true,
+  "shop": "aurora-24h",
+  "resident": {
+   "job": "venta",
+   "temper": "curioso",
+   "speed": 2.51,
+   "personal": "Siempre guardo una bolsa seca debajo del mostrador. Soy Iván, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#865338",
+   "jacket": "#3f615d",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaqueta",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 21,
+    "to": 8,
+    "zone": "tienda-24h-int",
+    "at": [
+     6,
+     4
+    ],
+    "state": "work",
+    "label": "Ordena el género del turno",
+    "face": [
+     7,
+     3
+    ]
+   },
+   {
+    "from": 8,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     83,
+     194
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 11,
+    "to": 21,
+    "zone": "vertice",
+    "at": [
+     80,
+     192
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-34",
+  "name": "Nerea Vidal",
+  "title": "Dependiente",
+  "essential": true,
+  "shop": "mercadillo-arrabal",
+  "resident": {
+   "job": "venta",
+   "temper": "cauto",
+   "speed": 1.46,
+   "personal": "El último pedido del turno suele ser el más raro. Por cierto, me llamo Nerea."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#1f171d",
+   "jacket": "#644e4e",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "camisa",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 17,
+    "zone": "mercadillo-int",
+    "at": [
+     9,
+     6
+    ],
+    "state": "work",
+    "label": "Atiende el mostrador",
+    "face": [
+     8,
+     5
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 17,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     73,
+     257
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 20,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     70,
+     255
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-35",
+  "name": "Ciro Costa",
+  "title": "Personal de barra",
+  "essential": true,
+  "shop": "ultima-luz-barra",
+  "resident": {
+   "job": "venta",
+   "temper": "nervioso",
+   "speed": 1.56,
+   "personal": "Las cajas grandes las abro antes de que llegue el primer cliente. Si necesitas algo, pregunta por Costa."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#d5c6bc",
+   "jacket": "#3b496b",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "camiseta",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 18,
+    "to": 4,
+    "zone": "bar-ultima-luz",
+    "at": [
+     6,
+     4
+    ],
+    "state": "work",
+    "label": "Prepara un pedido",
+    "face": [
+     5,
+     3
+    ]
+   },
+   {
+    "from": 4,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     61,
+     256
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 7,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     58,
+     254
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-36",
+  "name": "Samira Ledo",
+  "title": "Dependiente de relevo",
+  "essential": true,
+  "shop": "ultima-luz-barra",
+  "resident": {
+   "job": "venta",
+   "temper": "metodico",
+   "speed": 1.67,
+   "personal": "Siempre guardo una bolsa seca debajo del mostrador. Soy Samira, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#2a1d17",
+   "jacket": "#5f4e74",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "gabardina",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 6,
+    "to": 17,
+    "zone": "bar-ultima-luz",
+    "at": [
+     4,
+     4
+    ],
+    "state": "work",
+    "label": "Ordena el género del turno",
+    "face": [
+     5,
+     3
+    ]
+   },
+   {
+    "from": 17,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     60,
+     255
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 20,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     57,
+     253
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-37",
+  "name": "Joel Alves",
+  "title": "Personal de barra",
+  "essential": true,
+  "shop": "circuito-barra",
+  "resident": {
+   "job": "venta",
+   "temper": "seco",
+   "speed": 1.77,
+   "personal": "Las cajas grandes las abro antes de que llegue el primer cliente. Por cierto, me llamo Joel."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#865338",
+   "jacket": "#3f615d",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "chaqueta",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 18,
+    "to": 4,
+    "zone": "discoteca-circuito",
+    "at": [
+     5,
+     8
+    ],
+    "state": "work",
+    "label": "Atiende el mostrador",
+    "face": [
+     4,
+     7
+    ]
+   },
+   {
+    "from": 4,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     321,
+     172
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 7,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     318,
+     170
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-38",
+  "name": "Vera Bravo",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "cordial",
+   "speed": 2.31,
+   "personal": "Me gusta patrullar a pie. En el coche se te escapan demasiadas cosas. Si necesitas algo, pregunta por Bravo."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#1f171d",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "chaleco",
+   "build": "esbelto",
+   "accessory": "gorra",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     94,
+     192
+    ],
+    "state": "work",
+    "label": "Comprueba un cruce",
+    "stops": [
+     [
+      87,
+      195
+     ],
+     [
+      104,
+      198
+     ],
+     [
+      96,
+      205
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "comisaria-ferro",
+    "at": [
+     14,
+     5
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 21,
+    "to": 7,
+    "zone": "comisaria-ferro",
+    "at": [
+     13,
+     5
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-39",
+  "name": "Oriol Iborra",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "curioso",
+   "speed": 2.42,
+   "personal": "Los vecinos de esta calle reconocen los pasos de mi compañero. Soy Oriol, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#d5c6bc",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "chaleco",
+   "build": "atletico",
+   "accessory": "gorra",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 19,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     95,
+     192
+    ],
+    "state": "work",
+    "label": "Vigila la ruta de regreso",
+    "stops": [
+     [
+      86,
+      194
+     ],
+     [
+      104,
+      199
+     ],
+     [
+      95,
+      204
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 6,
+    "to": 9,
+    "zone": "comisaria-ferro",
+    "at": [
+     14,
+     6
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "comisaria-ferro",
+    "at": [
+     12,
+     4
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-40",
+  "name": "Inés Ríos",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "cauto",
+   "speed": 2.52,
+   "personal": "Pido que me cambien la ruta cada viernes. Siempre acabo en el mismo cruce. Por cierto, me llamo Inés."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#2a1d17",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "chaleco",
+   "build": "robusto",
+   "accessory": "gorra",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     251,
+     202
+    ],
+    "state": "work",
+    "label": "Patrulla a pie",
+    "stops": [
+     [
+      244,
+      205
+     ],
+     [
+      260,
+      209
+     ],
+     [
+      248,
+      220
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "comisaria-int",
+    "at": [
+     14,
+     5
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 21,
+    "to": 7,
+    "zone": "comisaria-int",
+    "at": [
+     13,
+     5
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-41",
+  "name": "Álex Lozano",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "nervioso",
+   "speed": 2.63,
+   "personal": "Los vecinos de esta calle reconocen los pasos de mi compañero. Si necesitas algo, pregunta por Lozano."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#865338",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaleco",
+   "build": "alto",
+   "accessory": "gorra",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 19,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     252,
+     202
+    ],
+    "state": "work",
+    "label": "Comprueba un cruce",
+    "stops": [
+     [
+      243,
+      204
+     ],
+     [
+      260,
+      208
+     ],
+     [
+      249,
+      220
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 6,
+    "to": 9,
+    "zone": "comisaria-int",
+    "at": [
+     14,
+     6
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "comisaria-int",
+    "at": [
+     12,
+     4
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-42",
+  "name": "Mina Roca",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "metodico",
+   "speed": 2.73,
+   "personal": "Pido que me cambien la ruta cada viernes. Siempre acabo en el mismo cruce. Soy Mina, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#1f171d",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "chaleco",
+   "build": "bajo",
+   "accessory": "gorra",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     292,
+     30
+    ],
+    "state": "work",
+    "label": "Vigila la ruta de regreso",
+    "stops": [
+     [
+      285,
+      33
+     ],
+     [
+      301,
+      37
+     ],
+     [
+      294,
+      43
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "comisaria-colinas",
+    "at": [
+     14,
+     5
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 21,
+    "to": 7,
+    "zone": "comisaria-colinas",
+    "at": [
+     13,
+     5
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-43",
+  "name": "Bruno Lago",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "seco",
+   "speed": 2.83,
+   "personal": "Me gusta patrullar a pie. En el coche se te escapan demasiadas cosas. Por cierto, me llamo Bruno."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#d5c6bc",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "chaleco",
+   "build": "medio",
+   "accessory": "gorra",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 19,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     293,
+     30
+    ],
+    "state": "work",
+    "label": "Patrulla a pie",
+    "stops": [
+     [
+      284,
+      32
+     ],
+     [
+      300,
+      36
+     ],
+     [
+      293,
+      42
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 6,
+    "to": 9,
+    "zone": "comisaria-colinas",
+    "at": [
+     14,
+     6
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "comisaria-colinas",
+    "at": [
+     12,
+     4
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-44",
+  "name": "Nora Ruiz",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "cordial",
+   "speed": 2.94,
+   "personal": "Los vecinos de esta calle reconocen los pasos de mi compañero. Si necesitas algo, pregunta por Ruiz."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#2a1d17",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "chaleco",
+   "build": "esbelto",
+   "accessory": "gorra",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     329,
+     90
+    ],
+    "state": "work",
+    "label": "Comprueba un cruce",
+    "stops": [
+     [
+      322,
+      93
+     ],
+     [
+      338,
+      97
+     ],
+     [
+      332,
+      102
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "comisaria-neon-rojo",
+    "at": [
+     14,
+     5
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 21,
+    "to": 7,
+    "zone": "comisaria-neon-rojo",
+    "at": [
+     13,
+     5
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-45",
+  "name": "Jan León",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "curioso",
+   "speed": 1.89,
+   "personal": "Me gusta patrullar a pie. En el coche se te escapan demasiadas cosas. Soy Jan, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#865338",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "chaleco",
+   "build": "atletico",
+   "accessory": "gorra",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 19,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     330,
+     90
+    ],
+    "state": "work",
+    "label": "Vigila la ruta de regreso",
+    "stops": [
+     [
+      321,
+      92
+     ],
+     [
+      337,
+      96
+     ],
+     [
+      332,
+      103
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 6,
+    "to": 9,
+    "zone": "comisaria-neon-rojo",
+    "at": [
+     14,
+     6
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "comisaria-neon-rojo",
+    "at": [
+     12,
+     4
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-46",
+  "name": "Leire Freire",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "cauto",
+   "speed": 1.99,
+   "personal": "Los vecinos de esta calle reconocen los pasos de mi compañero. Por cierto, me llamo Leire."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#1f171d",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "chaleco",
+   "build": "robusto",
+   "accessory": "gorra",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 7,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     55,
+     333
+    ],
+    "state": "work",
+    "label": "Patrulla a pie",
+    "stops": [
+     [
+      48,
+      336
+     ],
+     [
+      64,
+      340
+     ],
+     [
+      53,
+      342
+     ]
+    ],
+    "pose": "brazos"
+   },
+   {
+    "from": 18,
+    "to": 21,
+    "zone": "comisaria-arrabal",
+    "at": [
+     14,
+     5
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 21,
+    "to": 7,
+    "zone": "comisaria-arrabal",
+    "at": [
+     13,
+     5
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-47",
+  "name": "Saúl Moya",
+  "title": "Agente de la PCV",
+  "essential": true,
+  "resident": {
+   "job": "policia",
+   "temper": "nervioso",
+   "speed": 2.1,
+   "personal": "Pido que me cambien la ruta cada viernes. Siempre acabo en el mismo cruce. Si necesitas algo, pregunta por Moya."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#d5c6bc",
+   "jacket": "#1e3250",
+   "accent": "#559efa",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "chaleco",
+   "build": "alto",
+   "accessory": "gorra",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 19,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     56,
+     333
+    ],
+    "state": "work",
+    "label": "Comprueba un cruce",
+    "stops": [
+     [
+      47,
+      335
+     ],
+     [
+      63,
+      339
+     ],
+     [
+      54,
+      342
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 6,
+    "to": 9,
+    "zone": "comisaria-arrabal",
+    "at": [
+     14,
+     6
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 9,
+    "to": 19,
+    "zone": "comisaria-arrabal",
+    "at": [
+     12,
+     4
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-48",
+  "name": "Ada Benet",
+  "title": "Repartidor/a",
+  "essential": true,
+  "resident": {
+   "job": "reparto",
+   "temper": "metodico",
+   "speed": 2,
+   "personal": "Por la noche reparto mirando los rótulos. Los números no se ven. Soy Ada, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#2a1d17",
+   "jacket": "#5f4e74",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "gabardina",
+   "build": "bajo",
+   "accessory": "auriculares",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 6,
+    "to": 14,
+    "zone": "vertice",
+    "at": [
+     72,
+     179
+    ],
+    "state": "work",
+    "label": "Recoge una bolsa térmica",
+    "stops": [
+     [
+      79,
+      178
+     ],
+     [
+      80,
+      179
+     ],
+     [
+      74,
+      187
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 14,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     62,
+     188
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 17,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     59,
+     186
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-49",
+  "name": "Omar Montes",
+  "title": "Repartidor/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "reparto",
+   "temper": "seco",
+   "speed": 2.11,
+   "personal": "Mi pedido favorito es el que tiene portal y timbre funcionando. Por cierto, me llamo Omar."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#865338",
+   "jacket": "#3f615d",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaqueta",
+   "build": "medio",
+   "accessory": "auriculares",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 18,
+    "to": 2,
+    "zone": "vertice",
+    "at": [
+     62,
+     177
+    ],
+    "state": "work",
+    "label": "Entrega un pedido",
+    "stops": [
+     [
+      66,
+      187
+     ],
+     [
+      71,
+      183
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     58,
+     183
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 5,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     56,
+     182
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-50",
+  "name": "Jara Roig",
+  "title": "Limpieza urbana",
+  "essential": true,
+  "resident": {
+   "job": "limpieza",
+   "temper": "cordial",
+   "speed": 1.98,
+   "personal": "Por la mañana paso antes que el camión y dejo el cubo listo. Si necesitas algo, pregunta por Roig."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#1f171d",
+   "jacket": "#644e4e",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "camisa",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 1,
+    "zone": "vertice",
+    "at": [
+     13,
+     70
+    ],
+    "state": "work",
+    "label": "Revisa las papeleras",
+    "stops": [
+     [
+      18,
+      75
+     ],
+     [
+      23,
+      72
+     ],
+     [
+      17,
+      80
+     ]
+    ],
+    "pose": "abrir"
+   },
+   {
+    "from": 1,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     6,
+     80
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 4,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     3,
+     78
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-51",
+  "name": "Teo Vilar",
+  "title": "Vecino/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 2.09,
+   "personal": "Por aquí distingo quién vuelve de trabajar por cómo camina. Soy Teo, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#d5c6bc",
+   "jacket": "#3b496b",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "camiseta",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     8,
+     73
+    ],
+    "state": "work",
+    "label": "Espera en la avenida",
+    "stops": [
+     [
+      9,
+      80
+     ],
+     [
+      14,
+      76
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 4,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     4,
+     75
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 7,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     1,
+     73
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-52",
+  "name": "Mai Kaur",
+  "title": "Vecino/a",
+  "essential": true,
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 2.19,
+   "personal": "Mi hermana compraba allí antes de que cambiaran el letrero. Por cierto, me llamo Mai."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#2a1d17",
+   "jacket": "#5f4e74",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "gabardina",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 11,
+    "to": 19,
+    "zone": "vertice",
+    "at": [
+     75,
+     280
+    ],
+    "state": "work",
+    "label": "Pasea por el barrio",
+    "stops": [
+     [
+      79,
+      286
+     ],
+     [
+      86,
+      281
+     ],
+     [
+      79,
+      290
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 19,
+    "to": 22,
+    "zone": "vertice",
+    "at": [
+     68,
+     290
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 22,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     65,
+     288
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-53",
+  "name": "Unai Mena",
+  "title": "Repartidor/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "reparto",
+   "temper": "nervioso",
+   "speed": 2.53,
+   "personal": "He cambiado dos veces la batería de la bolsa esta semana. Si necesitas algo, pregunta por Mena."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#865338",
+   "jacket": "#3f615d",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "chaqueta",
+   "build": "alto",
+   "accessory": "auriculares",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 18,
+    "to": 2,
+    "zone": "vertice",
+    "at": [
+     70,
+     283
+    ],
+    "state": "work",
+    "label": "Consulta la siguiente dirección",
+    "stops": [
+     [
+      71,
+      290
+     ],
+     [
+      76,
+      286
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     64,
+     287
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 5,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     61,
+     285
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-54",
+  "name": "Mar Ferrer",
+  "title": "Técnico/a de red",
+  "essential": true,
+  "resident": {
+   "job": "tecnico",
+   "temper": "metodico",
+   "speed": 2.4,
+   "personal": "Marco los tornillos con pintura. Así sé si alguien abrió el panel. Soy Mar, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#1f171d",
+   "jacket": "#644e4e",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "camisa",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 6,
+    "to": 14,
+    "zone": "vertice",
+    "at": [
+     377,
+     58
+    ],
+    "state": "work",
+    "label": "Anota el contador del barrio",
+    "stops": [
+     [
+      381,
+      60
+     ],
+     [
+      385,
+      58
+     ],
+     [
+      379,
+      66
+     ]
+    ],
+    "pose": "abrir"
+   },
+   {
+    "from": 14,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     368,
+     66
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 17,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     365,
+     64
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-55",
+  "name": "Elías Khan",
+  "title": "Vecino/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "vecino",
+   "temper": "seco",
+   "speed": 2.51,
+   "personal": "Cada semana encuentro un sitio nuevo donde esperar al autobús. Por cierto, me llamo Elías."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#d5c6bc",
+   "jacket": "#3b496b",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "camiseta",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     370,
+     59
+    ],
+    "state": "work",
+    "label": "Pasea por el barrio",
+    "stops": [
+     [
+      371,
+      66
+     ],
+     [
+      376,
+      62
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 4,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     364,
+     63
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 7,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     361,
+     61
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-56",
+  "name": "Luz Reyes",
+  "title": "Repartidor/a",
+  "essential": true,
+  "resident": {
+   "job": "reparto",
+   "temper": "cordial",
+   "speed": 1.69,
+   "personal": "He cambiado dos veces la batería de la bolsa esta semana. Si necesitas algo, pregunta por Reyes."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#2a1d17",
+   "jacket": "#5f4e74",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "gabardina",
+   "build": "esbelto",
+   "accessory": "auriculares",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 1,
+    "zone": "vertice",
+    "at": [
+     286,
+     158
+    ],
+    "state": "work",
+    "label": "Consulta la siguiente dirección",
+    "stops": [
+     [
+      290,
+      160
+     ],
+     [
+      294,
+      158
+     ],
+     [
+      288,
+      166
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 1,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     277,
+     166
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 4,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     274,
+     164
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-57",
+  "name": "Damián Cruz",
+  "title": "Repartidor/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "reparto",
+   "temper": "curioso",
+   "speed": 1.79,
+   "personal": "Por la noche reparto mirando los rótulos. Los números no se ven. Soy Damián, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#865338",
+   "jacket": "#3f615d",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaqueta",
+   "build": "atletico",
+   "accessory": "auriculares",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 18,
+    "to": 2,
+    "zone": "vertice",
+    "at": [
+     279,
+     159
+    ],
+    "state": "work",
+    "label": "Recoge una bolsa térmica",
+    "stops": [
+     [
+      280,
+      166
+     ],
+     [
+      285,
+      162
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     273,
+     163
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 5,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     270,
+     161
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-58",
+  "name": "Vega Gil",
+  "title": "Limpieza urbana",
+  "essential": true,
+  "resident": {
+   "job": "limpieza",
+   "temper": "cauto",
+   "speed": 1.67,
+   "personal": "La papelera de la esquina vuelve a llenarse antes del relevo. Por cierto, me llamo Vega."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#1f171d",
+   "jacket": "#644e4e",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "camisa",
+   "build": "robusto",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 11,
+    "to": 19,
+    "zone": "vertice",
+    "at": [
+     377,
+     170
+    ],
+    "state": "work",
+    "label": "Recoge el turno anterior",
+    "stops": [
+     [
+      381,
+      172
+     ],
+     [
+      385,
+      170
+     ],
+     [
+      379,
+      178
+     ]
+    ],
+    "pose": "abrir"
+   },
+   {
+    "from": 19,
+    "to": 22,
+    "zone": "vertice",
+    "at": [
+     368,
+     178
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 22,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     365,
+     176
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-59",
+  "name": "Biel Rivas",
+  "title": "Vecino/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "vecino",
+   "temper": "nervioso",
+   "speed": 1.77,
+   "personal": "Mi hermana compraba allí antes de que cambiaran el letrero. Si necesitas algo, pregunta por Rivas."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#d5c6bc",
+   "jacket": "#3b496b",
+   "accent": "#f6c86e",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "camiseta",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     370,
+     171
+    ],
+    "state": "work",
+    "label": "Hace un recado",
+    "stops": [
+     [
+      371,
+      178
+     ],
+     [
+      376,
+      174
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 4,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     364,
+     175
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 7,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     361,
+     173
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-60",
+  "name": "Aina Soler",
+  "title": "Vecino/a",
+  "essential": true,
+  "resident": {
+   "job": "vecino",
+   "temper": "metodico",
+   "speed": 1.88,
+   "personal": "Cada semana encuentro un sitio nuevo donde esperar al autobús. Soy Aina, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#2a1d17",
+   "jacket": "#5f4e74",
+   "accent": "#78f2e0",
+   "body": "masculino",
+   "hairStyle": "coleta",
+   "top": "gabardina",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 6,
+    "to": 14,
+    "zone": "vertice",
+    "at": [
+     163,
+     294
+    ],
+    "state": "work",
+    "label": "Espera en la avenida",
+    "stops": [
+     [
+      164,
+      303
+     ],
+     [
+      169,
+      292
+     ],
+     [
+      167,
+      304
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 14,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     156,
+     304
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 17,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     153,
+     302
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-61",
+  "name": "Said Navas",
+  "title": "Repartidor/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "reparto",
+   "temper": "seco",
+   "speed": 2.21,
+   "personal": "Mi pedido favorito es el que tiene portal y timbre funcionando. Por cierto, me llamo Said."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#865338",
+   "jacket": "#3f615d",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "afro",
+   "top": "chaqueta",
+   "build": "medio",
+   "accessory": "auriculares",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 18,
+    "to": 2,
+    "zone": "vertice",
+    "at": [
+     158,
+     297
+    ],
+    "state": "work",
+    "label": "Entrega un pedido",
+    "stops": [
+     [
+      159,
+      304
+     ],
+     [
+      163,
+      299
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 2,
+    "to": 5,
+    "zone": "vertice",
+    "at": [
+     152,
+     301
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 5,
+    "to": 18,
+    "zone": "vertice",
+    "at": [
+     149,
+     299
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-62",
+  "name": "Alba Acosta",
+  "title": "Técnico/a de red",
+  "essential": true,
+  "resident": {
+   "job": "tecnico",
+   "temper": "cordial",
+   "speed": 2.09,
+   "personal": "La humedad del barrio cambia la lectura del contador. Si necesitas algo, pregunta por Acosta."
+  },
+  "appearance": {
+   "skin": "#704333",
+   "hair": "#1f171d",
+   "jacket": "#644e4e",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "moño",
+   "top": "camisa",
+   "build": "esbelto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 1,
+    "zone": "vertice",
+    "at": [
+     465,
+     72
+    ],
+    "state": "work",
+    "label": "Comprueba un panel de fibra",
+    "stops": [
+     [
+      469,
+      74
+     ],
+     [
+      473,
+      72
+     ],
+     [
+      467,
+      80
+     ]
+    ],
+    "pose": "abrir"
+   },
+   {
+    "from": 1,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     456,
+     80
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 4,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     453,
+     78
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-63",
+  "name": "Daro Pardo",
+  "title": "Vecino/a nocturno/a",
+  "essential": true,
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 2.19,
+   "personal": "Por aquí distingo quién vuelve de trabajar por cómo camina. Soy Daro, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#d3a381",
+   "hair": "#d5c6bc",
+   "jacket": "#3b496b",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "cresta",
+   "top": "camiseta",
+   "build": "atletico",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 20,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     458,
+     73
+    ],
+    "state": "work",
+    "label": "Espera en la avenida",
+    "stops": [
+     [
+      459,
+      80
+     ],
+     [
+      464,
+      76
+     ]
+    ],
+    "pose": "gesto"
+   },
+   {
+    "from": 4,
+    "to": 7,
+    "zone": "vertice",
+    "at": [
+     452,
+     77
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 7,
+    "to": 20,
+    "zone": "vertice",
+    "at": [
+     449,
+     75
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-64",
+  "name": "Dalia Saya",
+  "title": "Repartidor/a",
+  "essential": true,
+  "resident": {
+   "job": "reparto",
+   "temper": "cauto",
+   "speed": 2.53,
+   "personal": "Mi pedido favorito es el que tiene portal y timbre funcionando. Por cierto, me llamo Dalia."
+  },
+  "appearance": {
+   "skin": "#f0c0a2",
+   "hair": "#2a1d17",
+   "jacket": "#5f4e74",
+   "accent": "#66d597",
+   "body": "masculino",
+   "hairStyle": "largo",
+   "top": "gabardina",
+   "build": "robusto",
+   "accessory": "auriculares",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 11,
+    "to": 19,
+    "zone": "vertice",
+    "at": [
+     227,
+     58
+    ],
+    "state": "work",
+    "label": "Entrega un pedido",
+    "stops": [
+     [
+      231,
+      60
+     ],
+     [
+      235,
+      58
+     ],
+     [
+      229,
+      66
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 19,
+    "to": 22,
+    "zone": "vertice",
+    "at": [
+     218,
+     66
+    ],
+    "state": "talk",
+    "label": "Se toma un café",
+    "pose": "fumar"
+   },
+   {
+    "from": 22,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     215,
+     64
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-65",
+  "name": "Nerea Bravo",
+  "title": "Limpieza urbana",
+  "essential": true,
+  "resident": {
+   "job": "limpieza",
+   "temper": "metodico",
+   "speed": 2.4,
+   "personal": "La papelera de la esquina vuelve a llenarse antes del relevo. Si necesitas algo, pregunta por Bravo."
+  },
+  "appearance": {
+   "skin": "#b08357",
+   "hair": "#1f171d",
+   "jacket": "#3f615d",
+   "accent": "#dc84fa",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "chaqueta",
+   "build": "alto",
+   "accessory": "ninguno",
+   "pants": "#2e292a"
+  },
+  "schedule": [
+   {
+    "from": 6,
+    "to": 14,
+    "zone": "vertice",
+    "at": [
+     494,
+     168
+    ],
+    "state": "work",
+    "label": "Revisa las papeleras",
+    "stops": [
+     [
+      498,
+      170
+     ],
+     [
+      502,
+      168
+     ],
+     [
+      496,
+      176
+     ]
+    ],
+    "pose": "abrir"
+   },
+   {
+    "from": 14,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     485,
+     176
+    ],
+    "state": "talk",
+    "label": "Hace una pausa",
+    "pose": "telefono"
+   },
+   {
+    "from": 17,
+    "to": 6,
+    "zone": "vertice",
+    "at": [
+     482,
+     174
+    ],
+    "state": "rest",
+    "label": "Se sienta tras el turno",
+    "pose": "telefono"
+   }
+  ]
+ },
+ {
+  "id": "turno-66",
+  "name": "Ciro Iborra",
+  "title": "Vecino/a",
+  "essential": true,
+  "resident": {
+   "job": "vecino",
+   "temper": "seco",
+   "speed": 2.51,
+   "personal": "Mi hermana compraba allí antes de que cambiaran el letrero. Soy Ciro, por si nos volvemos a cruzar."
+  },
+  "appearance": {
+   "skin": "#8e6248",
+   "hair": "#d5c6bc",
+   "jacket": "#644e4e",
+   "accent": "#83b2fb",
+   "body": "masculino",
+   "hairStyle": "rapado",
+   "top": "camisa",
+   "build": "bajo",
+   "accessory": "ninguno",
+   "pants": "#2a3337"
+  },
+  "schedule": [
+   {
+    "from": 17,
+    "to": 1,
+    "zone": "vertice",
+    "at": [
+     315,
+     296
+    ],
+    "state": "work",
+    "label": "Espera en la avenida",
+    "stops": [
+     [
+      319,
+      298
+     ],
+     [
+      323,
+      296
+     ],
+     [
+      317,
+      304
+     ]
+    ],
+    "pose": "telefono"
+   },
+   {
+    "from": 1,
+    "to": 4,
+    "zone": "vertice",
+    "at": [
+     306,
+     304
+    ],
+    "state": "talk",
+    "label": "Busca algo de comer",
+    "pose": "gesto"
+   },
+   {
+    "from": 4,
+    "to": 17,
+    "zone": "vertice",
+    "at": [
+     303,
+     302
+    ],
+    "state": "rest",
+    "label": "Espera el siguiente turno",
+    "pose": "sentado"
+   }
+  ]
+ },
+ {
+  "id": "turno-67",
+  "name": "Samira Ríos",
+  "title": "Técnico/a de red",
+  "essential": true,
+  "resident": {
+   "job": "tecnico",
+   "temper": "cordial",
+   "speed": 1.46,
+   "personal": "La humedad del barrio cambia la lectura del contador. Por cierto, me llamo Samira."
+  },
+  "appearance": {
+   "skin": "#ae7259",
+   "hair": "#2a1d17",
+   "jacket": "#3b496b",
+   "accent": "#e99470",
+   "body": "femenino",
+   "hairStyle": "ondas",
+   "top": "camiseta",
+   "build": "medio",
+   "accessory": "gafas",
+   "pants": "#212633"
+  },
+  "schedule": [
+   {
+    "from": 11,
+    "to": 19,
+    "zone": "vertice",
+    "at": [
+     465,
+     296
+    ],
+    "state": "work",
+    "label": "Revisa el alumbrado",
+    "stops": [
+     [
+      469,
+      298
+     ],
+     [
+      473,
+      296
+     ],
+     [
+      467,
+      304
+     ]
+    ],
+    "pose": "abrir"
+   },
+   {
+    "from": 19,
+    "to": 22,
+    "zone": "vertice",
+    "at": [
+     456,
+     304
+    ],
+    "state": "talk",
+    "label": "Termina su turno",
+    "pose": "brazos"
+   },
+   {
+    "from": 22,
+    "to": 11,
+    "zone": "vertice",
+    "at": [
+     453,
+     302
+    ],
+    "state": "rest",
+    "label": "Descansa fuera de turno",
+    "pose": "telefono"
+   }
+  ]
+ }
+]

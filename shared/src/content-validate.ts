@@ -10,7 +10,7 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
   const zones = Object.keys(files).filter((k) => k.startsWith('zones/')).sort().map((k) => files[k]);
   const raw = {
     manifest: get('manifest.json'), attributes: get('attributes.json'), skills: get('skills.json'), roles: get('roles.json'),
-    origins: get('origins.json'), factions: get('factions.json'), npcs: get('npcs.json'),
+    origins: get('origins.json'), factions: get('factions.json'), npcs: [get('npcs.json'), ...Object.keys(files).filter(k=>k.startsWith('npcs/')).sort().map(k=>files[k])].flat(),
     items: [get('items.json'), ...Object.keys(files).filter((k) => k.startsWith('items/')).sort().map((k) => files[k])].flat(),
     zones, dialogs: get('dialogs.json'), tasks: get('tasks.json'), contracts: get('contracts.json'), locale: get('locale/es.json'),
     needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: get('cyberware.json'), ripperdocs: get('ripperdocs.json'),
@@ -90,12 +90,17 @@ export function validateContent(c: Content): string[] {
   for (const item of c.items.filter((i) => i.substance)) {
     if (!item.consumable || (item.substance?.kind === 'drug' ? item.category !== 'contrabando' || !item.price : item.category !== 'bebida')) errs.push(`Consumible inválido: ${item.id}`);
   }
+  if (new Set(c.npcs.map(n=>n.id)).size!==c.npcs.length)errs.push('NPC: identificadores duplicados');
   for (const n of c.npcs) {
     if (n.dialog && !(n.dialog in c.dialogs)) errs.push(`npc ${n.id}: diálogo desconocido`);
-    for (const s of n.schedule) walk(s.zone, s.at, `npc ${n.id} horario ${s.from}-${s.to}`);
-    const hours = new Array(24).fill(0);
-    for (const s of n.schedule) for (let h = 0; h < 24; h++) if (s.from <= s.to ? h >= s.from && h < s.to : h >= s.from || h < s.to) hours[h]++;
-    if (hours.some((v) => v !== 1)) errs.push(`npc ${n.id}: el horario debe cubrir cada hora exactamente una vez`);
+    if(n.resident && n.shop && !c.shops.some(s=>s.id===n.shop))errs.push(`npc ${n.id}: tienda desconocida`);
+    for (const s of n.schedule) {
+      walk(s.zone,s.at,`npc ${n.id} horario ${s.from}-${s.to}`);
+      for(const at of s.stops??[])walk(s.zone,at,`npc ${n.id} parada`);
+    }
+    const hours=[...new Set([0,...n.schedule.flatMap(s=>[s.from,s.to]).filter(h=>h<24)])].sort((a,b)=>a-b);
+    if(hours.some(h=>n.schedule.filter(s=>s.from<=s.to?h>=s.from&&h<s.to:h>=s.from||h<s.to).length!==1))
+      errs.push(`npc ${n.id}: los horarios deben cubrir la jornada sin solaparse`);
   }
   const checkCond = (cond: Condition, where: string) => {
     if ('role' in cond && !roleIds.has(cond.role)) errs.push(`${where}: rol ${cond.role}`);

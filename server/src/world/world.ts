@@ -2,13 +2,14 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db } from '../db/db.js';
 import type { Metrics } from '../metrics.js';
 import { Zone } from './zone.js';
 import { spawnOf, type Entity } from './entity.js';
+import { CityPeople, shiftAt } from './city-people.js';
 import { ambientBrain, scheduledBrain, thinkNpc } from './npc.js';
 import { activeCharacterId, buildJournal, buildSheet, chromeParts, loadPlayer, objectiveStatus, savePlayerVitals, sheetHooks, wornAppearance, type PlayerState } from '../game/player.js';
 import { applyMapKeys, mapKeys, rememberMap, mapKnowledge, unlockMap, writeMapKeys } from '../game/exploration.js';
@@ -86,6 +87,7 @@ export class World {
   readonly stealth: Stealth;
   readonly corpses: Corpses;
   readonly street: Street;
+  readonly cityPeople: CityPeople;
   readonly admin: Admin;
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
@@ -110,6 +112,7 @@ export class World {
     this.stealth = new Stealth(this);
     this.corpses = new Corpses(this);
     this.street = new Street(this);
+    this.cityPeople = new CityPeople(this);
     this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
@@ -125,15 +128,8 @@ export class World {
     // Las plantillas de vivienda no son zonas jugables: cada casa es una instancia que se crea al entrar.
     for (const def of this.c.zones) if (!def.id.startsWith('casa-')) this.zones.set(def.id, new Zone(def));
     for (const z of this.zones.values()) this.populateZone(z);
-    const h = this.cityHour();
-    const rng0 = seededRng(this.cfg.seed + 99);
-    for (const n of this.c.npcs) {
-      const entry = n.schedule.find((s) => (s.from <= s.to ? h >= s.from && h < s.to : h >= s.from || h < s.to))!;
-      const e = this.addEntity(this.zones.get(entry.zone)!, { kind: 'npc', name: n.name, title: n.title, x: entry.at[0] + 0.5, y: entry.at[1] + 0.5, interactive: true, dialog: n.dialog, appearance: n.appearance, label: entry.label, speed: 2.2, npcShop: n.shop });
-      e.npc = scheduledBrain(n, this.cfg.seed + e.id);
-      e.npcType = n.essential === false ? 'civil' : 'essential'; e.faction = n.faction; e.level = 6 + Math.floor(rng0() * 10);
-      if (n.id.startsWith('leyenda-')) { e.legendId = n.id; e.level = 25; }
-    }
+    const initialNpcLevel=seededRng(this.cfg.seed+99);
+    for(const n of this.c.npcs)if(!n.resident)this.spawnScheduled(n,6+Math.floor(initialNpcLevel()*10));
     const rng = seededRng(this.cfg.seed);
     const pick = <T,>(a: T[]) => a[Math.floor(rng() * a.length)];
     const exteriors = [...this.zones.values()].filter((z) => z.def.kind === 'exterior' && z.def.ambient > 0);
@@ -187,8 +183,29 @@ export class World {
     this.nightlife.populate();
     this.underworld.populate();
     if (this.cfg.threats !== false) await this.threats.init(); else this.threats.enabled = false;
+    for(const n of this.c.npcs)if(n.resident)this.spawnScheduled(n);
   }
 
+  spawnScheduled(n:Content['npcs'][number],level?:number){
+    const entry=shiftAt(n,this.cityHour()),zone=this.zones.get(entry.zone);
+    if(!zone)return;
+    const e=this.addEntity(zone,{kind:'npc',name:n.name,title:n.title,x:entry.at[0]+.5,y:entry.at[1]+.5,
+      interactive:true,dialog:n.dialog,appearance:n.appearance,label:entry.label,speed:n.resident?.speed??2.2,npcShop:n.shop});
+    const seed=n.resident?(hashString(n.id)^this.cfg.seed):this.cfg.seed+e.id;
+    e.npc=scheduledBrain(n,seed);
+    e.npcType=n.essential?'essential':'civil';e.faction=n.faction;e.level=level??6+((seed>>>0)%10);
+    if(n.id.startsWith('leyenda-')){e.legendId=n.id;e.level=25;}
+    if(n.resident){
+      e.npc.nextThink=this.tick+e.id%12;
+      if(n.resident.job==='policia'){
+        const f=this.c.factions.find(f=>f.id==='pcv')!;
+        Object.assign(e,{npcType:'police',faction:'pcv',npcMax:f.hp,npcHp:f.hp,defense:f.defense,weaponId:f.weapon,chrome:[...f.chrome],
+          respawn:{zone:entry.zone,template:{resident:n.id}}});
+      }
+      this.cityPeople.add(e,n);
+    }
+    return e;
+  }
   private populateZone(z: Zone) {
     for (const d of z.def.doors) {
       const target = this.zones.get(d.to.zone);
@@ -239,7 +256,7 @@ export class World {
   spawnNpc(z: Zone, o: { name: string; title: string; x: number; y: number; appearance: Entity['appearance']; label: string; speed: number }): Entity {
     return this.addEntity(z, { kind: 'npc', interactive: true, ...o });
   }
-  removeEntity(e: Entity) { e.zone.remove(e); this.entities.delete(e.id); }
+  removeEntity(e: Entity) { this.cityPeople.remove(e);e.zone.remove(e); this.entities.delete(e.id); }
   spawnAmbient(z: Zone, near?: { x: number; y: number }) { return this.spawnAmbientFn(z, near); }
   /** Mueve una entidad a otra zona sin puerta (cuerpos cargados). */
   moveEntityTo(e: Entity, to: Zone, x: number, y: number) { e.zone.remove(e); e.x = x; e.y = y; to.add(e); e.lastMoveTick = this.tick; }
@@ -315,10 +332,13 @@ export class World {
     const catchUp = this.catchUpDt; this.catchUpDt = 0;
     if (this.tick % 10 === 1) for (const z of this.zones.values()) if (z.def.districts.length) z.refreshActive();
     this.relics.dilation();
+    if(this.tick%20===1)this.cityPeople.everySecond();
     for (const z of this.zones.values()) {
       // Nivel de detalle: lejos de cualquier jugador, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
       const anyone = z.players.size > 0;
       for (const e of z.entities) {
+        const resident=!!e.npc?.def?.resident;
+        if(resident&&!z.isActive(e)&&e.aggro===undefined)continue;
         if (e.npc && e.npcType !== 'essential' && e.aggro === undefined && (!anyone || !z.isActive(e))) continue;
         const edt = e.conn ? dt + catchUp : dt;
         if (e.path.length) this.moveEntity(e, edt);
@@ -329,7 +349,7 @@ export class World {
         if (e.npc && e.npc.nextThink <= this.tick) {
           if (this.pathBudget > 0) {
             thinkNpc(this, e);
-            e.npc.nextThink = this.tick + (z.players.size > 0 ? 5 : 20) + (e.id % 3);
+            e.npc.nextThink = this.tick + (resident&&e.aggro===undefined?(e.moving?7:14):z.players.size>0?5:20)+(e.id%3);
           } else e.npc.nextThink = this.tick + 1;
         }
       }
@@ -910,13 +930,13 @@ export class World {
       const d = Math.hypot(target.x - e.x, target.y - e.y);
       const max = target.kind === 'door' ? REMOTE_DOOR_RANGE : REMOTE_RANGE;
       if (d > max) return this.send(c, { t: 'ack', seq, ok: false, reason: target.kind === 'door' ? `Acércate a la puerta (WASD): estás a ${d.toFixed(0)} m.` : `Demasiado lejos (${d.toFixed(0)} m de ${REMOTE_RANGE} m). Acércate con WASD.` });
-      if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil')) { this.send(c, { t: 'targetMenu', view: this.combat.menu(c, target) }); return this.send(c, { t: 'ack', seq, ok: true }); }
+      if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil' && !this.cityPeople.has(target))) { this.send(c, { t: 'targetMenu', view: this.combat.menu(c, target) }); return this.send(c, { t: 'ack', seq, ok: true }); }
       this.closeDialog(c);
       if (target.kind === 'door') { void this.transferPlayer(c, target); return this.send(c, { t: 'ack', seq, ok: true }); }
       this.tryInteract(c, target, 0, REMOTE_RANGE);
       return this.send(c, { t: 'ack', seq, ok: true });
     }
-    if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil')) {
+    if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil' && !this.cityPeople.has(target))) {
       // Menú de acciones sobre personas: se calcula en el servidor con probabilidades y bloqueos.
       if (Math.hypot(target.x - e.x, target.y - e.y) > 2.6) {
         const r = this.playerPath(e, target.x, target.y);
@@ -961,6 +981,7 @@ export class World {
     if (target.marketSite) { this.underworld.open(c, target); return true; }
     if (target.legendId) { this.legends.open(c, target.legendId); return true; }
     if (target.kind === 'object' && target.objKind && !target.dialog) { this.objectAction(c, target); return true; }
+    if(target.kind==='npc' && this.cityPeople.interact(c,target))return true;
     if (target.kind === 'npc' && !target.dialog && target.npcShop) { this.survival.openShop(c, target.npcShop, target); return true; }
     this.openDialog(c, target);
     return true;

@@ -28,6 +28,7 @@ export interface StealthState {
 export class Stealth {
   constructor(private readonly w: World) {}
 
+  private onWatch(e:Entity){return WATCHERS.has(e.npcType??'')&&(!e.npc?.def?.resident||this.w.cityPeople.isWorking(e));}
   st(c: PlayerConn): StealthState { return ((c as any).stealth ??= { suspicion: 0, state: 'oculto', observers: [], alertUntil: 0 }); }
   /** Huella de la ropa que llevas puesta (lo que recuerdan los testigos). */
   outfit(p: PlayerState) { return Object.entries(p.wear).filter(([, v]) => v).map(([k, v]) => `${k}:${v}`).sort().join('|') || `piel:${p.appearance.jacket}:${p.appearance.top}`; }
@@ -70,7 +71,7 @@ export class Stealth {
       if (this.sees(o, e)) seen.push(o);
       else if (Math.hypot(o.x - e.x, o.y - e.y) <= noise) heard.push(o);
     }
-    const isCop = (o: Entity) => WATCHERS.has(o.npcType ?? '');
+    const isCop = (o: Entity) => this.onWatch(o);
     return { seen, heard, cops: [...seen, ...heard].filter(isCop), civs: [...seen, ...heard].filter((o) => o.npcType === 'civil'), any: seen.length + heard.length > 0 };
   }
 
@@ -79,9 +80,10 @@ export class Stealth {
     if (radius <= 0) return;
     for (const o of e.zone.query(e.x, e.y, radius)) {
       if (o === e || o.kind !== 'npc' || o.state === 'downed' || o.dead) continue;
+      if(this.w.cityPeople.noise(o,e,radius))continue;
       const dx = e.x - o.x, dy = e.y - o.y;
       o.facing = this.facingIdx(dx, dy); o.lastMoveTick = this.w.tick;
-      if (WATCHERS.has(o.npcType ?? '') && o.aggro === undefined && !this.sees(o, e) && o.npc) {
+      if (this.onWatch(o) && o.aggro === undefined && !this.sees(o, e) && o.npc) {
         o.npc.pauseUntil = 0;
         if (this.w.npcPath(o, e.x + (Math.random() - 0.5) * 2, e.y + (Math.random() - 0.5) * 2)) { o.label = 'Investigando un ruido'; o.labelVer++; }
       }
@@ -154,7 +156,7 @@ export class Stealth {
       for (const o of zone.query(e.x, e.y, 16)) {
         if (o.kind !== 'npc' || !this.sees(o, e)) continue;
         anyone = true;
-        const cop = WATCHERS.has(o.npcType ?? '');
+        const cop = this.onWatch(o);
         const guard = cop || (restricted && o.npcType !== 'civil');
         const gangHere = o.npcType === 'gang' && !!zone.def.gangBase && zone.def.gangBase.faction === o.faction && (p.rep.get(o.faction!) ?? 0) < 40;
         const d = Math.hypot(o.x - e.x, o.y - e.y);
@@ -206,9 +208,9 @@ export class Stealth {
     st.description = { outfit: this.outfit(p), until: Date.now() + 10 * 60_000, crime: 'comportamiento sospechoso' };
     const lethal = p.wanted >= 3 || e.zone.def.kind === 'interior' && restricted === 'carcel';
     let n = 0;
-    for (const id of observers) { const o = this.w.entities.get(id); if (!o || o.state === 'downed') continue; if (WATCHERS.has(o.npcType ?? '') || restricted || o.npcType === 'gang') { o.aggro = e.id; o.aggroLethal = lethal || o.npcType === 'gang'; n++; } }
+    for (const id of observers) { const o = this.w.entities.get(id); if (!o || o.state === 'downed') continue; if (this.onWatch(o) || (restricted&&!o.npc?.def?.resident) || o.npcType === 'gang') { o.aggro = e.id; o.aggroLethal = lethal || o.npcType === 'gang'; n++; } }
     // También los que vigilan el resto del local restringido.
-    if (restricted || (c as any).pendingAlarm) for (const o of e.zone.entities) if (WATCHERS.has(o.npcType ?? '') && o.state !== 'downed' && o.aggro === undefined) { o.aggro = e.id; o.aggroLethal = lethal; n++; }
+    if (restricted || (c as any).pendingAlarm) for (const o of e.zone.entities) if (this.onWatch(o) && o.state !== 'downed' && o.aggro === undefined) { o.aggro = e.id; o.aggroLethal = lethal; n++; }
     (c as any).pendingAlarm = undefined;
     if (p.wanted < 1 && (restricted || n)) void this.w.survival.addWanted(c, 1, restricted ? 'intrusión en zona restringida' : 'comportamiento sospechoso');
     this.w.send(c, { t: 'notice', kind: 'bad', text: `⚠ ¡DESCUBIERTO! ${n ? `${n} ${n === 1 ? 'persona va' : 'personas van'} a por ti.` : ''} Cámbiate de ropa y escóndete para que pierdan tu descripción.` });

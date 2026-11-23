@@ -12,6 +12,7 @@ export interface NpcBrain {
   def?: NpcDef;
   rng: () => number;
   pauseUntil: number;
+  temperament?: 'cauto'|'curioso'|'cordial'|'seco'|'metodico'|'nervioso';
   home?: [number, number]; radius?: number; // multitud: zona de interés acotada
 }
 
@@ -46,9 +47,11 @@ const NIGHT_ROUTINES: Routine[] = [
   { label: 'Trapicheando', len: [100, 220], lines: ['Psst. Neblina, de la buena.', 'Chips sin licencia, baratos.'] },
 ];
 export function ambientBrain(seed: number, home?: [number, number], radius?: number): NpcBrain {
-  return { type: 'ambient', state: 'travel', nextThink: 0, rng: seededRng(seed), pauseUntil: 0, home, radius };
+  const temperament=(['cauto','curioso','cordial','seco','metodico','nervioso'] as const)[(seed>>>0)%6];
+  return { type:'ambient', state:'travel',nextThink:0,rng:seededRng(seed),pauseUntil:0,home,radius,temperament };
 }
 
+const ROUTINES=new Map([...DAY_ROUTINES,...NIGHT_ROUTINES].map(r=>[r.label,r]));
 function setState(w: World, e: Entity, s: NpcState, label?: string) {
   const b = e.npc!;
   const l = label ?? STATE_LABEL[s];
@@ -62,6 +65,7 @@ export function thinkNpc(w: World, e: Entity) {
   // Prioridad: derribo > huida > peligro inmediato (combate) > orden válida > rutina.
   if (w.combat.npcThink(e)) return;
   if (e.talkingUntil && e.talkingUntil > w.tick) { if (e.path.length) { e.path = []; } setState(w, e, 'talk', 'Conversando'); return; }
+  if(w.cityPeople.think(e))return;
   if (b.type === 'scheduled') return thinkScheduled(w, e);
   return thinkAmbient(w, e);
 }
@@ -101,14 +105,16 @@ function thinkAmbient(w: World, e: Entity) {
   if (e.emote && e.emote.move !== 'nausea') { e.emote = undefined; e.labelVer++; }
   // v0.13 · A veces usa el mobiliario de alrededor (sentarse, la máquina, la basura, la parada, fumar junto a la farola).
   if (b.state === 'travel' && b.rng() < 0.22 && w.street.pickEnvironment(e)) return;
-  if (b.state === 'travel' && b.rng() < 0.5) {
+  const temper=e.npcType==='civil'?b.temperament:undefined;
+  const social=temper==='cordial'||temper==='curioso',careful=temper==='cauto'||temper==='nervioso';
+  if (b.state === 'travel' && b.rng() < (social?.59:careful?.41:.5)) {
     const night = (() => { const h = w.cityHour(); return h >= 21 || h < 6; })();
     const pool = night ? NIGHT_ROUTINES : DAY_ROUTINES;
-    const r = b.rng();
+    const r = social?.25+b.rng()*.75:b.rng();
     const [len, label] = r < 0.25 ? [10 + b.rng() * 25, 'Paseando'] : r < 0.4 ? [40 + b.rng() * 80, 'Mirando el móvil'] : r < 0.5 ? [60 + b.rng() * 100, 'Mirando escaparates'] : r < 0.62 ? [60 + b.rng() * 140, 'Charlando'] : r < 0.7 ? [80 + b.rng() * 120, 'Fumando']
       : (() => { const x = pool[Math.floor(b.rng() * pool.length)]; return [x.len[0] + b.rng() * (x.len[1] - x.len[0]), x.label] as [number, string]; })();
     b.pauseUntil = w.tick + Math.floor(len);
-    const routine = [...DAY_ROUTINES, ...NIGHT_ROUTINES].find((x) => x.label === label);
+    const routine = ROUTINES.get(label);
     if (routine?.dance) { e.emote = { move: routine.dance as any, at: Date.now() }; e.labelVer++; }
     if (routine?.lines && b.rng() < 0.6) { const line = routine.lines[Math.floor(b.rng() * routine.lines.length)]; for (const o of e.zone.query(e.x, e.y, 18)) if (o.kind === 'player' && o.conn) w.send(o.conn, { t: 'speech', id: e.id, text: line }); }
     // Busca alguien cerca con quien charlar: se giran el uno hacia el otro.

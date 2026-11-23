@@ -104,7 +104,7 @@ export class Street {
     return Math.floor(g.len[0] + this.rng() * (g.len[1] - g.len[0]));
   }
   private dayPart() { const h=this.w.cityHour(); return h>=21||h<6?'noche':'dia'; }
-  private temperament(e:Entity) { return e.id%2?'caracter:cauto':'caracter:curioso'; }
+  private temperament(e:Entity) {const t=e.npc?.temperament;return t?(t==='cauto'||t==='nervioso'||t==='metodico'?'caracter:cauto':'caracter:curioso'):e.id%2?'caracter:cauto':'caracter:curioso'; }
   private nearbyTags(e:Entity) {
     const z=e.zone, tags=new Set([this.dayPart(),this.temperament(e),'barrio:'+(z.districtAt(e.x,e.y)?.id??z.id)]);
     for(const p of this.propsNear(z,e.x,e.y,7)) tags.add('cerca:'+p.type);
@@ -133,6 +133,20 @@ export class Street {
     this.face(a, b.x, b.y); this.face(b, a.x, a.y);
     this.emote(a, 'gesto'); this.emote(b, 'gesto');
     c.forEach((text, i) => this.say(i % 2 ? b : a, text, 800 + i * 3200, i % 2 ? a : b));
+  }
+
+  speak(e:Entity,text:string){this.say(e,text);}
+  exchange(a:Entity,b:Entity,text:string[]){
+    const now=Date.now(),until=now+5400;
+    if(!this.calm(a)||!this.calm(b)||!a.npc||!b.npc||(this.chatUntil.get(a)??0)>now||(this.chatUntil.get(b)??0)>now)return false;
+    for(const e of [a,b]){
+      this.chatUntil.set(e,until);
+      e.npc!.pauseUntil=this.w.tick+Math.ceil((until-now)*RULES.tickRate/1000);
+      this.emote(e,'gesto');
+    }
+    this.face(a,b.x,b.y);this.face(b,a.x,a.y);
+    text.forEach((line,i)=>this.say(i%2?b:a,line,600+i*2600,i%2?a:b));
+    return true;
   }
 
   // ================================================================ cada segundo
@@ -172,6 +186,11 @@ export class Street {
     const ranged=shown?.weapon?.kind==='ranged',strong=powerful(shown);
     const dir = (pe.facing * Math.PI) / 4, fx = Math.cos(dir), fy = Math.sin(dir);
     for (const o of z.query(pe.x, pe.y, 10)) {
+      if(o.npc?.def?.resident){
+        const dx=o.x-pe.x,dy=o.y-pe.y,d=Math.hypot(dx,dy)||.01;
+        this.w.cityPeople.nearPlayer(o,pe,!!pe.guard&&ranged&&d<9&&(dx*fx+dy*fy)/d>.82,strong&&d<6);
+        continue;
+      }
       if (o.kind !== 'npc' || !this.calm(o) || o.npcType === 'gang' || o.npcType === 'police' || o.npcType === 'hierro' || o.npcType === 'essential' || o.predator) continue;
       const dx = o.x - pe.x, dy = o.y - pe.y, d = Math.hypot(dx, dy) || 0.01;
       // Le apuntas con un arma de fuego: manos arriba (y en cuanto bajas el arma, sale corriendo).
