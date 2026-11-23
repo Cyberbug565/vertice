@@ -1,0 +1,227 @@
+id: yermo
+requiere: clase:yermo
+registro: Nómadas y saqueadores del desierto. Frases secas, refranes inventados, el agua como moneda, el polvo, los motores, la muerte como vecina. Desprecio por la ciudad («la jaula», «los de las torres»). Lealtad de clan y humor de cementerio sin cementerio.
+
+# ---------------------------------------------------------------- escenas
+> ¿Cuánta agua te queda?
+- La justa para no tener que matar a nadie hoy.
+- Dos tragos y un recuerdo.
+- Menos que ayer y más que mañana.
+> Se acerca una tormenta de arena.
+- Bien. Así no se nos ven las caras de hambre.
+- Ponte el pañuelo. El último que no se lo puso aún escupe arena en la tumba.
+- La tormenta es la única cosa honrada del Yermo: te lo quita todo por igual.
+> Han encontrado otro cuerpo en la carretera vieja.
+- ¿Conocido?
+- Todos lo son, al final. El desierto nos hace parientes.
+- Ya no tenía botas. Las botas van con el siguiente.
+> ¿Has visto los drones de Okami sobre las dunas?
+- Buscan agua. O a nosotros, que somos agua con piernas.
+- Si te miran, no corras. Los drones disparan mejor a lo que corre.
+- Les he puesto nombres. Al que cayó ayer lo llamaba «cena».
+> El motor ha vuelto a fallar.
+- Háblale bonito. Los motores son como los hombres: arrancan con mentiras.
+- Dale una patada. Es el lenguaje que entienden todos aquí.
+- Desmonta el carburador del muerto de ayer. A él ya no le hace falta.
+> Los saqueadores han robado el pozo del este.
+- ¿Cómo se roba un pozo?
+- Con tiros y una puerta con candado.
+- Mañana se lo robamos nosotros. Así funciona la propiedad aquí.
+> ¿Qué tal la ciudad?
+- Mucha luz y poca gente que mire a los ojos.
+- Te venden agua en botella y te cobran por el aire. Prefiero la arena.
+- Fui y me robaron. Volví y me robaron menos. El Yermo al menos es sincero.
+> El clan de los Polvo ha cambiado de jefe.
+- ¿Por elección?
+- Por elección del que disparó primero.
+- El anterior se retiró. Está debajo de una duna, retirado del todo.
+> He cazado un lagarto.
+- ¿De los que tienen dos cabezas?
+- Comemos las dos. Una para cada uno.
+- Esos lagartos brillan de noche. Mejor cenarlos de día.
+> ¿Has bebido del charco del barranco?
+- Una vez. Desde entonces hablo con los coyotes.
+- Ese charco es del cuervo. Nadie le discute el agua al cuervo.
+- Sabe a óxido y a cosas que no quiero saber.
+> La radio dice que en Cénit sube la bolsa.
+- Que suba. Aquí lo que sube es la temperatura.
+- ¿Y la bolsa es de agua?
+- Siempre sube cuando aquí se seca otro pozo. Casualidad.
+> Mi hijo quiere irse a la ciudad.
+- Déjalo ir. Volverá cuando le roben el primer sueño.
+- Allí aprenderá a pagar por respirar. Aquí respiramos arena, pero gratis.
+- Que se lleve el cuchillo. La ciudad es otro desierto, pero con ascensor.
+> ¿Cuántos kilómetros hasta el próximo puesto?
+- Los que aguante el depósito.
+- Tres dunas, dos tumbas y un cartel de «cuidado» lleno de agujeros.
+- Más de los que quieres andar y menos de los que vas a sufrir.
+> Ha caído un satélite al norte.
+- ¿Valía algo?
+- Chatarra de primera. Los Engranajes ya van para allá.
+- Lo he oído caer. Sonaba a dinero de Cénit cayendo del cielo.
+> El viejo Tomás dice que antes aquí había un lago.
+- Y gente rica pescando.
+- Lo vendieron por litros a los de Colinas.
+- Ahora solo hay sal y la mentira de que volverá a llover.
+> {noche} Hace frío como en una tumba.
+- Las tumbas son más calentitas. Están bajo tierra.
+- Junta las cabras. Ellas no se quejan del frío; se mueren calladas.
+- Enciende el fuego y vigila. El frío y los saqueadores llegan juntos.
+> {noche} Mira cuántas estrellas.
+- En la ciudad no se ven. Las tienen alquiladas.
+- Cada una es un nómada muerto, dice mi abuela. Hay muchos.
+- Son lo único que la corpo no ha podido vender. Todavía.
+> {dia} Este sol te cuece los sesos.
+- Así piensas menos. Ayuda a vivir aquí.
+- Mójate el pañuelo. Si tienes agua. Si no, sufre con dignidad.
+- Ayer un forastero se quitó el casco para hacerse una foto. Ahora es parte del paisaje.
+> {aspecto:caro} ¿Has visto a ese con ropa de ciudad?
+- Le dura la ropa lo que le dure el agua.
+- Será de una corpo buscando tierras. Que busque bajo la arena.
+- Va limpio. En el Yermo eso es una provocación.
+> {aspecto:caro} Ese viene de las torres.
+- Que no se acerque al pozo, que lo compra.
+- Los de las torres traen sonrisas y se llevan el agua.
+- Le doy tres días. Dos si se quita las gafas de sol.
+> {jugador:armado} Ese lleva un arma buena.
+- Aquí eso es un pasaporte.
+- Que no apunte a la cisterna, o le enterramos con ella.
+- Buen hierro. Si muere, me lo pido.
+> {jugador:sangra} Ese está perdiendo sangre.
+- Sangre es agua con prisa. Que no la desperdicie.
+- Que se ate el brazo. Aquí no viene ninguna ambulancia, solo los buitres.
+- Los coyotes ya le han olido. Habrá que vigilar esta noche.
+> {jugador:cromado} Lleva cromo de la ciudad.
+- El cromo se calienta al sol. Le va a hervir el brazo.
+- Aquí lo que vale es la carne que aguanta la sed.
+- Si se le estropea, aquí no hay matasanos. Hay alicates.
+> ¿Por qué nos llaman salvajes en la ciudad?
+- Porque no tenemos jefe que nos robe con corbata.
+- Porque comemos lo que cazamos y no lo que nos venden.
+- Ellos tienen ascensores. Nosotros tenemos libertad y diarrea.
+> ¿Has visto la caravana de Teselia?
+- Diez camiones y treinta guardias para llevar agua a su torre.
+- Pasan sin mirar. Como si fuéramos parte del desierto.
+- Un día pasará sin guardias. Ese día beberemos bien.
+> El chamán dice que viene una época de lluvias.
+- Lo dice cada año.
+- Cobra en agua por decirlo. Ya es rico.
+- Si llueve, que llueva ácido. Al menos lavará los coches.
+> Se me ha muerto la cabra.
+- ¿De qué?
+- De vieja. Tenía cuatro años. Aquí eso es ser abuela.
+- La comemos esta noche. Le daremos las gracias con la boca llena.
+> ¿Sabes reparar una bomba de agua?
+- Sé romperla de formas muy creativas.
+- La última que reparé explotó. Al menos ahora el agua sale por todos lados.
+- Se le habla, se le pega y se reza. En ese orden.
+> {madrugada} No puedo dormir.
+- Escucha el viento. Te cuenta cómo murieron los que no durmieron.
+- Haz guardia entonces. Si no duermes, al menos sirve.
+- Los coyotes tampoco. Hacedos compañía.
+
+# ---------------------------------------------------------------- secuencias
+= ¿Sabes cuál es la diferencia entre el Yermo y la ciudad? | ¿Cuál? | Aquí te mata el sol. Allí, el alquiler. | ¿Y cuál es peor? | El sol al menos no cobra.
+= ¿Cuánto vale un litro de agua? | Lo que vale tu vida. | ¿Y si no tengo agua? | Entonces tu vida no vale nada. Así de fácil.
+= Ayer vi un oasis. | ¿De verdad? | Era un anuncio holográfico de Okami. | ¿Y qué anunciaba? | Agua embotellada.
+= ¿Tú crees en algo? | En el depósito lleno. | ¿Y en dios? | Dios no te lleva a cien por hora.
+= He cambiado mi moto por agua. | ¿Y ahora cómo te mueves? | Despacio. Pero hidratado.
+= El jefe dice que mañana atacamos la caravana. | ¿Cuántos guardias? | Treinta. | ¿Y nosotros? | Doce y mucha sed.
+= ¿Por qué no vuelves a la ciudad? | Allí me deben dinero. | ¿Y? | Aquí solo me deben agua. Es más fácil de cobrar.
+= {noche} ¿Has oído eso? | ¿Un coyote? | Un motor. | Entonces escóndete. Los coyotes no disparan.
+= Mi abuelo enterró aquí un tesoro. | ¿Qué tesoro? | Una botella de agua de antes de la guerra. | Eso vale más que una torre.
+= Encontré una ciudad enterrada bajo la arena. | ¿Con gente? | Con anuncios. Los anuncios sobreviven a todo.
+= ¿Por qué los saqueadores llevan máscaras? | Para no tragar arena. | ¿Y por qué sonríen? | Las máscaras sonríen. Ellos, no.
+= El viejo Lobo ha muerto. | ¿Cómo? | Bebió agua de la ciudad. | El veneno con etiqueta es el peor.
+= ¿Qué hay después del Barranco Seco? | Más barranco. | ¿Y después? | Más seco.
+= Un ejecutivo vino a comprar tierras. | ¿Se las vendiste? | Le vendí la duna grande. | ¿Y qué hará con ella? | Lo que hace todo el mundo aquí: enterrarse.
+
+# ---------------------------------------------------------------- burlas
+! {aspecto:caro} Eh, señorito de las torres, ¿te has perdido o te ha tirado tu chófer?
+! {aspecto:caro} Con esa ropa de ciudad, el sol te va a cocinar como un pollo de Cénit.
+! {aspecto:caro} ¿Vienes a comprar el desierto? Llévate la arena que quieras, que lo demás es nuestro.
+! {aspecto:caro} Bonitas botas. Las de un muerto, mañana. Nada personal: el Yermo es así.
+! {aspecto:pobre} Pareces de aquí. Eso no es un cumplido, es un pésame.
+! {aspecto:desnudo} ¿Sin ropa en el Yermo? El sol te va a enseñar más que tu madre.
+! {jugador:armado} Bonito hierro. Aquí lo enterraremos contigo si lo usas mal.
+! {jugador:armado} ¿Vienes a cazar? Aquí también somos cazadores, y tú tienes buena carne.
+! {jugador:sangra} Estás regando la arena con sangre. Las plantas te lo agradecen, si alguna queda.
+! {jugador:sangra} Átate eso, que los coyotes ya están haciendo cola.
+! {jugador:cromado} Ese cromo se va a calentar como un fogón. Avísame cuando huelas a asado.
+! {jugador:muy-cromado} Tanto metal y tan poca agua. La ciudad te ha vendido bien.
+! {jugador:buscado} Tu cabeza vale agua en la ciudad. Aquí vale lo mismo, pero sin preguntas.
+! {jugador:conduce} Buen motor. Cuídalo, que aquí los motores se heredan a tiros.
+! {rol:nomad} Hermano del polvo. ¿Qué clan? Aquí te dejamos agua si dices el correcto.
+! {rol:nomad} Se te ve el polvo en los ojos. Bienvenido a casa.
+! {rol:exec} Un corpo en el Yermo. ¿Vienes a ver cuánto vale nuestra sed?
+! {rol:lawman} La ley de la ciudad aquí no llega. Aquí la ley la escribe quien tiene más balas.
+! {rol:tech} Técnico, ¿sabes arreglar bombas de agua? Te pagamos en vida.
+! {noche} De noche el Yermo no perdona. Si te quedas, quédate cerca del fuego y lejos de nosotros.
+! {dia} Ponte algo en la cabeza, forastero, que aquí el sol tiene más balas que nadie.
+! Bebe despacio. El que bebe deprisa aquí no bebe dos veces.
+! El desierto no se acuerda de nadie. Tú tampoco te acordarás de nosotros.
+! Si te pierdes, sigue a los buitres. Ellos siempre saben dónde acaban las cosas.
+
+* El viento trae arena y malas noticias.
+* Otro día sin lluvia. Otro día de buenos negocios para Okami.
+* Si oyes motores, escóndete. Si no oyes nada, escóndete más.
+
+# ---------------------------------------------------------------- más (v0.37)
+> ¿Has visto pasar la caravana de los Polvo?
+- Pasó al amanecer. Llevaban más rifles que agua.
+- Iban cantando. Mala señal: cantan antes de una pelea.
+- Dejaron un perro atado al poste. Ahora es nuestro. O nosotros suyos.
+> El pozo del oeste sabe a gasolina.
+- Mejor. Así arrancas por dentro.
+- Es que alguien enterró un camión ahí. Con el conductor.
+- Bébela fría. Caliente sabe a funeral.
+> ¿Cuánto pides por la moto?
+- Veinte litros y tu silencio.
+- No se vende. Es la tumba de mi hermano, con ruedas.
+- Lo que valga tu vida si me la intentas robar.
+> Los de Okami han puesto una valla en el lago seco.
+- ¿Para qué? No hay agua.
+- Para cuando la haya. Las corpos compran el futuro.
+- La valla ya tiene un agujero. Lo hicimos anoche, por tradición.
+> Mi abuela dice que antes aquí había árboles.
+- ¿Qué son árboles?
+- Unos postes verdes que daban sombra gratis. Por eso los quitaron.
+- Los vendieron a Colinas. Allí los tienen en macetas con nombre.
+> ¿Sabes leer las dunas?
+- Sí. Dicen «vete».
+- Las dunas mienten. Las huellas no.
+- Mi padre las leía. Una le contestó y se lo tragó.
+> Ha llegado un predicador al campamento.
+- ¿Qué vende?
+- La salvación, a cambio de agua. La salvación pesa poco.
+- Dice que el fin del mundo ya pasó y no nos enteramos. Puede ser.
+> Esta noche hay carreras en el barranco.
+- ¿Premio?
+- El ganador se queda con el coche del que se mata.
+- Apuesto por el que tenga menos que perder. Siempre gana ese.
+> ¿Tienes munición del calibre doce?
+- Tengo del calibre «lo que encuentres».
+- Te la cambio por noticias de la ciudad. Aquí las noticias valen balas.
+- Tengo tres. Una para el lobo, una para el saqueador y una por si acaso.
+> {noche} ¿Quién vigila esta noche?
+- Yo y el miedo. Somos buen equipo.
+- El perro. Ladra a todo, hasta a las estrellas.
+- Nadie. Esta noche toca confiar en la suerte. Y en la escopeta.
+> {dia} El horizonte tiembla.
+- Es el calor. O una caravana. O el calor de una caravana.
+- Mira con los prismáticos. Si tiembla y brilla, son drones.
+- El horizonte tiembla de miedo. Ha visto lo que viene de la ciudad.
+> El médico del campamento se ha ido.
+- ¿Adónde?
+- A la ciudad. Dice que allí al menos le pagan por ver morir gente.
+- Ahora curamos con alcohol. Por dentro y por fuera.
+= ¿Por qué el agua de la ciudad es tan cara? | Porque es nuestra. | ¿Y cómo llegó allí? | En camiones con guardias. | ¿Y nosotros? | Nosotros miramos pasar los camiones.
+= ¿Tienes miedo a morir? | Aquí ya lo hice dos veces. | ¿Y? | La tercera es la vencida.
+= Un forastero quiere unirse al clan. | ¿Qué sabe hacer? | Nada. | Perfecto, que haga guardia.
+= ¿Cómo se llama tu moto? | Viuda. | ¿Por qué? | Porque ya ha enterrado a tres jinetes.
+= {noche} Escucha. | ¿Qué? | Nada. | ¿Y eso es malo? | Aquí, el silencio siempre trae compañía.
+! {aspecto:caro} Esas gafas de sol cuestan lo que un pozo. Cuídalas, que aquí el sol es celoso.
+! {jugador:armado} Con ese arma podrías comprar agua para un mes. O quitársela a quien la tenga.
+! {rol:netrunner} Aquí no hay red, cerebrito. Aquí la única conexión es la sed.
+! {rol:media} ¿Vienes a hacer un reportaje? Escribe que aquí hace calor y la gente se muere. Exclusiva.
+! Si el viento cambia, cambia tú también de sitio.

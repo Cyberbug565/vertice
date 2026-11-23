@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.36)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.37)
+
+La v0.37 añade 1.006 diálogos nuevos según la zona: cada barrio habla con su registro (pijo, corporativo, de fiesta, obrero, marginal o del desierto) y los casinos, comisarías, bares, tiendas y clínicas tienen sus propias frases. Hay sátira, humor negro y burlas según la pinta del jugador. Funciona como el sistema de respuestas por reglas de Valve: primero se mira el contexto y luego gana la frase más específica. [Novedades](docs/NOVEDADES-v0.37.md) · [cómo funciona y cómo escribir más](docs/DIALOGOS_ZONA.md).
 
 La v0.36 pone puertas de verdad en las fachadas: las del kit de edificios de Kenney (un portal y una puerta doble de cristal), encajadas en el muro de cada edificio, con hojas que se abren hacia dentro al acercarse alguien. Además, 32 portales que estaban sueltos en la acera quedan pegados a su edificio. [Novedades y capturas](docs/NOVEDADES-v0.36.md).
 

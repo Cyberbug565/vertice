@@ -1,0 +1,112 @@
+id: tiendas
+requiere: lugar:tienda
+registro: Dependientes y clientes de tiendas, súper, armerías y electrónica. Precios absurdos, suscripciones, garantías que no cubren nada, robos, ofertas trampa. Sátira del consumo.
+
+> ¿Tienen esto en otra talla?
+- En la talla «pagas más».
+- Tenemos la talla única. Única porque solo le vale al modelo del anuncio.
+- Se ajusta solo. Si no se ajusta, el problema es su cuerpo.
+> ¿Esto tiene garantía?
+- Tres meses, o hasta que lo use. Lo que ocurra primero.
+- La garantía cubre todo menos los fallos.
+- Garantía de por vida. De la vida del producto, que es corta.
+> ¿Por qué cuesta el doble que ayer?
+- Precio dinámico. Ayer usted no lo necesitaba tanto.
+- Ha subido el índice de deseo. Lo calcula una IA mirándole a usted.
+- Ayer era martes. Los miércoles el algoritmo se pone triste.
+> El pan cuesta lo mismo que un implante.
+- Es pan premium. Contiene harina.
+- El implante te deja comer menos. Es una inversión.
+- Por eso vendemos el pan a plazos.
+> ¿Aceptan efectivo?
+- Aceptamos datos, huellas, retinas y almas.
+- El efectivo es de pobres. Le cobramos una tasa por usarlo.
+- Aceptamos todo menos devoluciones.
+> Me han vendido un móvil que se apaga solo.
+- Es para que descanse. Es un móvil con conciencia de clase.
+- Tiene que pagar la suscripción para que se quede encendido.
+- Se apaga cuando detecta que está pobre. Es para ahorrar batería.
+> ¿Cuánto cuesta arreglarlo?
+- Más que uno nuevo. Esa es la idea.
+- No se arregla. Está diseñado para morir con elegancia.
+- Le cobro por mirarlo. Lo de arreglarlo es otra tarifa.
+> Busco algo barato.
+- La puerta está gratis.
+- Tenemos la sección de lo caducado. Es muy popular en Ferro.
+- Barato es una palabra que el sistema de caja no reconoce.
+> ¿Esto es de verdad o de imitación?
+- Es una imitación de verdad.
+- Es original pirata. Lo más auténtico que hay.
+- Si lo paga, es de verdad. Si lo devuelve, era imitación.
+> La máquina de autopago me ha insultado.
+- Es por su historial de crédito. Es sincera.
+- Se le ha olvidado escanear la dignidad.
+- Le pasa a todo el mundo. Se le ha programado con datos de clientes reales.
+> ¿Tenéis cargadores para este modelo?
+- Ese modelo está descatalogado desde ayer.
+- Tenemos el adaptador del adaptador del adaptador.
+- Solo con suscripción. El cargador gratis no carga, pero es bonito.
+> {lugar:tienda} ¿Esto lleva químicos?
+- Lleva de todo. Lo raro sería que llevara comida.
+- Solo los necesarios para que no se pudra hasta que usted se muera.
+- Pone «natural» en la etiqueta. La etiqueta es lo natural.
+> Me han robado en la puerta de la tienda.
+- Era nuestro servicio de seguridad. Comprobaba que había pagado.
+- ¿Ha comprado el seguro de robo en tienda?
+- Pase por atención al cliente. Le darán un vale de descuento para volver a comprarlo.
+> ¿Cuándo llega el nuevo modelo?
+- Mañana. Y pasado mañana el siguiente, que deja obsoleto al de mañana.
+- Llega cuando el suyo se rompa. Están sincronizados.
+- Ya está a la venta. Solo para los que no lo pueden pagar con miradas tristes.
+> En la armería tienen ofertas.
+- Por cada pistola, una caja de munición gratis. Por si acaso.
+- Hay descuento familiar: compras tres armas y la cuarta para el niño.
+- Es la semana del ciudadano responsable. Vale todo con descuento.
+> ¿Me recomiendas un arma para defensa personal?
+- La más grande que pueda pagar.
+- Depende del barrio. Para Colinas, abogado; para Ferro, escopeta.
+- La de defensa personal es la que dispara primero.
+> En electrónica tienen un dron que pasea al perro.
+- ¿Y quién pasea al dron?
+- Mejor el que te pasea a ti. Ese sale más caro.
+- El mío se escapó con el perro. Ahora viven juntos en Neón Rojo.
+> El súper ha puesto cámaras que miden el hambre.
+- ¿Y para qué?
+- Para subir los precios a los que más hambre tienen.
+- Si sonríes mucho mirando el pan, te sale más caro.
+> ¿Hay rebajas?
+- Hay rebajas de lo que nadie quiere.
+- Los precios están rebajados un 10 % después de subirlos un 30 %.
+- Las rebajas son para los que tienen tarjeta oro. Las tarjetas oro no necesitan rebajas.
+> Esta comida caduca mañana.
+- La de mañana caduca hoy. Llévese la de ayer, que dura más.
+- Comida de oferta. Se come o te come.
+- Pone «consumir preferentemente antes de que pierda la esperanza».
+> El de seguridad me ha registrado la mochila.
+- Busca lo que se ha llevado otro.
+- Es aleatorio. Bueno, es aleatorio entre los que no llevan traje.
+- Tienes suerte, a mí me registró el estómago.
+
+= ¿Tiene algo para el dolor? | ¿De qué dolor? | Del precio. | Eso no tiene cura, solo plazos.
+= Quiero devolver esto. | ¿Por qué? | No funciona. | ¿Lo ha probado? | Sí. | Ahí está el problema: no se prueba, se admira.
+= ¿Cuánto vale? | ¿Para usted o para un cliente? | Soy un cliente. | Entonces vale más.
+= Esto lo vi más barato en otra tienda. | ¿En cuál? | En la de enfrente. | Esa también es nuestra.
+= Necesito una batería. | ¿Para qué? | Para el implante del corazón. | Tenemos la económica. | ¿Y cuánto dura? | Lo que dure usted.
+= ¿Por qué hay tanta gente? | Han rebajado el agua. | ¿Mucho? | Un céntimo. Hay peleas.
+= Llevo una hora en la cola. | Es la cola de la cola. | ¿Y la de pagar? | Esa empieza mañana.
+= ¿Tiene tarjeta de cliente? | No. | ¿Quiere una? | ¿Qué me da? | Le da la sensación de pertenecer a algo.
+
+! {aspecto:pobre} ¿Va a comprar algo o viene a calentarse? Calentarse también se cobra.
+! {aspecto:pobre} La sección de saldos está al fondo, al lado de la salida. Muy práctico.
+! {aspecto:caro} Bienvenido, señor. Lo más caro está a su derecha. Lo más inútil, a su izquierda. Y es más caro.
+! {jugador:armado} Las armas se guardan en la funda. Aquí la única que dispara es la caja registradora.
+! {jugador:sangra} Está manchando el suelo. ¿Le vendo un botiquín? Tenemos oferta de vendas.
+! {jugador:cromado} Tenemos repuestos para su modelo de brazo. Bueno, para el anterior.
+! {jugador:buscado} Su cara sale en el sistema de seguridad. Pague en efectivo y no pregunto.
+! ¿Le puedo ayudar? Bueno, a gastar sí.
+! Hoy tenemos dos por uno en cosas que no necesita.
+! Si no encuentra algo, no lo necesita. Si lo encuentra, lo necesita.
+
+* Precio especial para usted: el mismo que para todos, pero con sonrisa.
+* Otra devolución. Otro cliente que creía en la garantía.
+* Las ofertas de hoy caducan cuando usted salga por la puerta.

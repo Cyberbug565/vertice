@@ -1,0 +1,286 @@
+id: obrera
+requiere: clase:obrera
+registro: Obrero de turno, directo y castizo. «Tío», «chaval», «currar», «la fábrica», «el capataz», «la mutua». Humor negro de accidentes laborales, desconfianza de corpos y de la PCV, orgullo del oficio, cansancio, solidaridad con mala leche.
+
+# ---------------------------------------------------------------- escenas
+> ¿Has fichado ya?
+- Dos veces. Una con el dedo y otra con el alma.
+- Fiché ayer y todavía no me han dejado salir.
+- El fichaje nuevo te escanea la retina. Si estás cansado, te descuentan.
+> A Paco le ha pillado la prensa hidráulica.
+- ¿Y cómo está?
+- Más planito, pero contento: le han dado el día libre.
+- La mutua dice que fue culpa suya por tener mano.
+> El capataz nuevo es de Cénit.
+- Se nota. Cree que el sudor es un fallo de diseño.
+- Ha preguntado qué es una huelga. Le hemos dado una demostración.
+- Lleva guantes blancos. A la semana vuelve gris o vuelve a Cénit.
+> ¿Cobras el plus de peligrosidad?
+- Lo cobra mi viuda por adelantado.
+- Me lo quitaron. Dicen que ya estoy acostumbrado al peligro.
+- Diez eurodólares al mes por respirar humo. Una ganga.
+> En la fundición han puesto robots nuevos.
+- ¿Nos echan?
+- No. Ahora vigilamos a los robots para que no se cansen.
+- Los robots tienen seguro médico. Nosotros, el bocadillo.
+> Ayer se cayó el andamio del bloque siete.
+- ¿Algún herido?
+- Solo los que estaban encima. Los de abajo, aplastados pero sin heridas.
+- La constructora ha dicho que era un andamio «experimental».
+> El sindicato convoca huelga el jueves.
+- ¿El jueves? Ese día cobro el adelanto.
+- Iré. A ver si esta vez nos pegan los de la PCV o los de seguridad privada.
+- El último delegado sindical sigue «de vacaciones» desde hace dos años.
+> Me ha subido el alquiler por tercera vez.
+- ¿Y el sueldo?
+- El sueldo está en huelga desde 2071.
+- Mi casero dice que es la inflación. Su yate nuevo opina lo mismo.
+> ¿Has visto el humo verde de la Forja?
+- Es nuevo. Huele a fresa química.
+- Dicen que no es tóxico. Lo dicen desde Colinas, con mascarilla.
+- Mi perro ya brilla de noche. Ahorro en linterna.
+> Mi hijo quiere ser ingeniero.
+- ¿En qué empresa?
+- En una que no explote, le he dicho. No le quedan muchas.
+- Que estudie. Que acabe como el de arriba, mandando a los de abajo.
+> El bocata de hoy lleva algo verde.
+- Es lechuga.
+- Es moho. Pero moho de calidad, que lo cultivo yo.
+- Si es verde y se mueve, es proteína.
+> ¿A qué hora sales?
+- Cuando el turno de noche llegue. Si llega.
+- A las diez. Llego a casa justo para ver dormir a mis hijos.
+- No salgo. Me he mudado a la taquilla, que tiene calefacción.
+> La mutua me ha dado el alta con el brazo roto.
+- ¿Por qué?
+- Porque con el otro brazo puedes trabajar, dicen.
+- Te pagan la escayola si la decoras con el logo de la empresa.
+> Han cerrado el bar de Lola.
+- ¿Por qué?
+- Le compró el local una cadena de bares «auténticos de barrio».
+- Ahora es «La Taberna Obrera». Una caña cuesta medio jornal.
+> ¿Sabes algo del accidente del astillero?
+- Tres compañeros. Dicen que fue la grúa. La grúa no ha dicho nada.
+- La empresa ha mandado flores. De plástico, que duran más.
+- Han parado media hora. Luego, a recuperar la media hora.
+> En Ferro han puesto una cámara en cada esquina.
+- Para nuestra seguridad.
+- La de mi esquina mira hacia mi ventana. Muy segura.
+- Las roban cada semana. Es el negocio más estable del barrio.
+> ¿Has visto los precios del matasanos?
+- Me miró una muela y me pidió el riñón de entrada.
+- El matasanos de Ferro te cose gratis si le dejas una pieza.
+- Por eso me la arranqué yo con unos alicates. Ahorro y orgullo.
+> El encargado dice que somos una familia.
+- Familia es la que no te despide por toser.
+- Una familia donde papá se queda con el sueldo de todos.
+- Si somos familia, que me deje heredar el coche.
+> Mi mujer trabaja en el turno contrario.
+- ¿Y cuándo os veis?
+- En el autobús, cuando nos cruzamos. Nos saludamos por la ventanilla.
+- Nos dejamos notas en la nevera. La última decía «hay que pagar».
+> ¿Te vienes a la asamblea?
+- Si hay café gratis, sí.
+- La última acabó con dos detenidos y una paella.
+- Iré, pero me pongo al fondo, que el de seguridad privada graba las caras.
+> Han subido el precio del transporte.
+- Para llegar a trabajar hay que trabajar más.
+- Iré andando. Llegaré para el turno de pasado mañana.
+- El abono mensual cuesta lo que una semana. El que tenga semana.
+> La empresa ha puesto un psicólogo en planta.
+- ¿Y qué te ha dicho?
+- Que el estrés es una actitud. Luego le dio un ataque de ansiedad viendo la nómina.
+- Te pone en una lista si lloras más de dos veces al mes.
+> {noche} ¿Vienes del turno de noche?
+- Vengo del turno de siempre. El de noche es el de siempre, pero a oscuras.
+- Sí. Ahora me espera el turno de casa.
+- Ni sé ya si es de noche o de día. Mi reloj solo marca deudas.
+> {noche} ¿Has oído los disparos?
+- Serán los de las Hojas Rojas cobrando.
+- O la PCV practicando con alguien.
+- Yo ya no me levanto. Si es para mí, ya vendrán.
+> {dia} Hoy hace sol.
+- Se ve el sol entre el humo. Qué día tan raro.
+- Aprovecha. Mañana vuelve la lluvia ácida y te come la chaqueta.
+- Sol de mediodía, y yo en la nave sin ventanas. Lo veo por la cámara de seguridad.
+> {policia:visible} Mira, la PCV.
+- Vienen a cobrar la cuota o a llevarse a alguien. Elige.
+- Ni miro. Si les miras, te piden la documentación del alma.
+- Seguro que vienen al desahucio de la calle de abajo.
+> {aspecto:caro} ¿Qué hace ese pijo por aquí?
+- Se habrá perdido el coche. O el coche lo ha perdido a él.
+- Viene a comprar pisos para alquilárnoslos más caros.
+- Será inspector. Esconde el bocadillo.
+> {jugador:armado} Ese va armado.
+- Aquí todos llevamos algo. Yo, una llave inglesa y mala leche.
+- Si es de las Hojas Rojas, saluda. Si es de la PCV, también.
+- Que no se acerque a la fábrica. Ya tenemos suficientes explosiones.
+> {jugador:cromado} Mira ese brazo de metal.
+- Bonito. ¿Accidente laboral o capricho?
+- En la Forja los brazos se pierden gratis. Los de metal se pagan a plazos.
+- Con ese brazo levantaría el turno entero.
+> {jugador:sangra} Ese va sangrando.
+- Pásale un trapo. Aquí sangrar es lo normal; lo raro es dejarlo en la acera.
+- Será de la fábrica. La sangre de la fábrica se reconoce: va con prisa.
+- El matasanos de Ferro abre hasta las doce. Si llega.
+> Mi padre trabajó cuarenta años en la misma fábrica.
+- ¿Y le dieron algo?
+- Un reloj. Y luego le quitaron la pensión por llegar tarde a morir.
+- La fábrica sigue en pie. Él no. Así es la jerarquía.
+> Dicen que el agua del grifo tiene metales pesados.
+- Por eso estamos tan fuertes.
+- Yo la hiervo. Sigue teniendo metales, pero calientes.
+- Me echo el cromo por dentro y me ahorro el implante.
+> Han abierto una tienda de implantes baratos al lado de la fundición.
+- ¿Para qué?
+- Para cuando la fundición te quita la mano. Negocio redondo.
+- Tienen oferta: dos dedos por el precio de uno.
+> Me ha llamado mi madre preguntando si como bien.
+- ¿Y qué le has dicho?
+- Que sí. No le he dicho que «bien» es una lata de krill al día.
+- Le he mentido con la boca llena de pan duro.
+> ¿Vas al partido el domingo?
+- Si no me toca turno. Siempre me toca turno.
+- El estadio es de Okami. Hasta los goles cotizan.
+- Lo veo en el bar. Allí al menos se pelean con gracia.
+> La empresa ha regalado una camiseta a cada empleado.
+- Qué detalle.
+- Pone «Juntos somos más». Somos menos que el año pasado.
+- Es talla única. La única talla es la del director.
+> Mi vecino se ha ido a trabajar al Yermo.
+- ¿Con los nómadas?
+- Con las minas. Dice que allí al menos el aire es honrado.
+- Dice que el polvo es mejor que el humo. Dos de dos pulmones lo confirman.
+> En la nave seis se ha ido la luz.
+- Y siguen trabajando.
+- Les han dado linternas a cuenta del sueldo.
+- La producción no ha bajado. Por eso no la arreglan.
+> ¿Te han pagado las horas extra?
+- Me han pagado en «agradecimiento». No acepta la panadería.
+- A mitad. La otra mitad me la pagan cuando me muera.
+- Me han pagado con un vale de comida del comedor. Que también es de la empresa.
+> Mi hija quiere ir a la manifestación.
+- Que lleve casco.
+- Que lleve el casco y un bocadillo. Las detenciones son largas.
+- Es lo que hacíamos nosotros. Lo que conseguimos fue esto.
+> {lugar:portal} Se ha roto el ascensor otra vez.
+- Mejor. Las escaleras son el único gimnasio que pagamos.
+- El casero dice que lo arregla cuando subamos el alquiler.
+- El ascensor lleva roto desde que lo instalaron. Es decorativo.
+> {lugar:portal} El vecino del quinto escucha música a todo volumen.
+- Es para no oír a su suegra.
+- Es el único que sabe disfrutar en este edificio.
+- A mí me ayuda a dormir. Los gritos de abajo los tapa.
+> ¿Sabes de algún sitio barato para cenar?
+- El puesto de fideos de la esquina. No preguntes por la carne.
+- En casa de mi madre. Gratis, pero te cuenta tu vida.
+- La máquina de la estación. Cena y te roba la moneda, todo en uno.
+> Me han dado de baja tres días por el humo.
+- Tres días. Qué lujo.
+- ¿Y vas a descansar?
+- Voy a hacer chapuzas para pagar los tres días que no cobro.
+> El encargado me ha pillado sentado.
+- ¿Y?
+- Me ha descontado la silla.
+- Dice que estar sentado es un derecho de Colinas.
+> {madrugada} Otra vez despierto a estas horas.
+- La fábrica no duerme y nosotros tampoco.
+- Ya ni me acuerdo de qué es dormir. Creo que es eso que hacen los ricos.
+- Voy a fichar. El sol sale después de que yo llegue.
+> ¿Te acuerdas cuando esto era una fábrica de juguetes?
+- Ahora fabrica piezas de dron militar. Juguetes para mayores.
+- Mi abuelo pintaba caballitos aquí. Ahora pinto torretas.
+- Al menos los niños de ahora juegan a la guerra con piezas de verdad.
+
+# ---------------------------------------------------------------- secuencias
+= ¿Sabes por qué la fábrica no tiene ventanas? | ¿Por qué? | Para que no veamos que fuera también es de ellos.
+= Me han ascendido a encargado. | ¿Y el sueldo? | Igual. Pero ahora me odian todos. | Eso es un ascenso de verdad.
+= ¿Te has enterado? Cierran la nave tres. | ¿Y los compañeros? | Recolocados. | ¿Dónde? | En la cola del paro, que es una nave muy grande.
+= Hoy me he cortado un dedo. | ¡Joder! ¿Y qué has hecho? | Lo he metido en hielo y he seguido. | ¿Y el encargado? | Me ha felicitado por no parar la línea.
+= ¿Sabes cuál es la diferencia entre un robot y yo? | ¿Cuál? | Al robot le hacen mantenimiento.
+= ¿Por qué brindamos? | Por la jubilación. | ¿La de quién? | La de nadie. Por eso brindamos, por la esperanza.
+= Me ha llegado la carta del casero. | ¿Qué dice? | «Querido inquilino». | Ya empieza mal.
+= ¿Has visto la nómina de este mes? | Tiene más descuentos que una tienda en rebajas. | Y menos valor que una.
+= {noche} ¿Una última en el bar? | Una. | Siempre dices una. | Y siempre es una. Lo que cambia es el tamaño.
+= Mi médico me ha dicho que deje de trabajar. | ¿Y lo vas a hacer? | Me ha cobrado la consulta. Tengo que trabajar para pagarle.
+= ¿Por qué los de Cénit nunca vienen a Ferro? | Porque aquí se ve lo que hacen. | Y huele.
+= Dicen que la empresa va a repartir beneficios. | ¿En serio? | Sí, entre los que ya tienen beneficios.
+= He dejado de fumar. | ¿Y eso? | La fábrica ya me da el humo gratis.
+= ¿Te acuerdas de Ramón? | ¿El de la grúa? | Sí. | ¿Qué le pasó? | La grúa.
+= El sindicato ha conseguido diez minutos más de descanso. | ¡Bien! | Al año. | Bueno, algo es algo.
+= ¿Sabes qué es lo mejor de la Forja? | ¿Qué? | Que cuando te despiden, al menos respiras aire limpio en la cola del paro.
+= Mi chaval ha sacado buenas notas. | ¡Enhorabuena! | Le han ofrecido una beca en Cénit. | ¿Y? | Para limpiar.
+= {policia:visible} Disimula, que viene la PCV. | Si no he hecho nada. | Por eso. Te van a encontrar algo.
+= ¿Cómo está tu espalda? | Como la empresa: aguanta por inercia.
+= Ayer vi a un ejecutivo de Okami en la calle. | ¿Qué hacía? | Fotos. Para su campaña de responsabilidad social.
+
+# ---------------------------------------------------------------- burlas
+! {aspecto:caro} Eh, Cénit, ¿te has perdido? El ascensor a tu mundo está por allí.
+! {aspecto:caro} Con lo que vale tu abrigo pago tres alquileres y el entierro de mi abuela.
+! {aspecto:caro} ¿Vienes a ver cómo vive el ganado? Pon la foto bonita.
+! {aspecto:caro} Cuidado con los charcos, que aquí el agua mancha más que tu conciencia.
+! {aspecto:caro} Si vienes a comprar el barrio, llegas tarde: ya es de tu primo.
+! {aspecto:pobre} Pues sí que vas apañado, chaval. Pásate por la nave, que siempre falta alguien.
+! {aspecto:pobre} ¿Tú también has pasado por la mutua? Se nota en la ropa.
+! {aspecto:desnudo} ¿Te ha pillado el embargo hasta la camiseta? Toma, que tengo una de la empresa.
+! {aspecto:desnudo} Tápate, hombre, que aquí el humo se te mete por todos sitios.
+! {jugador:armado} Guarda eso, que aquí ya tenemos bastante con la prensa hidráulica.
+! {jugador:armado} Si vas a disparar, apunta a Cénit. Te ahorro el viaje.
+! {jugador:sangra} Estás sangrando más que mi nómina, compañero.
+! {jugador:sangra} ¿Accidente laboral? Ni lo denuncies, que te despiden por herido.
+! {jugador:cromado} Bonito brazo. ¿De la fundición o de la financiera?
+! {jugador:muy-cromado} Tanto cromo… ¿Trabajas en la fábrica o eres la fábrica?
+! {jugador:buscado} Tu cara sale en la tele del bar. Aquí nadie te ha visto, tranquilo.
+! {rol:exec} Un traje de corpo en Ferro. ¿Vienes a despedirnos en persona?
+! {rol:lawman} La PCV. ¿Vienes por el desahucio o por el atraco que no investigasteis?
+! {rol:nomad} Eh, nómada, ¿cuánto pagan en el Yermo? Aquí ya lo hemos dejado de preguntar.
+! {rol:tech} Técnica, ¿me miras la tostadora? Llevo un año comiendo pan crudo.
+! {rol:medtech} ¿Eres de la mutua? Pues mi espalda tiene muchas cosas que decirte.
+! {rol:rocker} Toca algo con rabia, que aquí lo necesitamos.
+! {noche} A estas horas solo andan por aquí los del turno de noche y los que buscan problemas. ¿Tú de cuáles?
+! {dia} Buenos días. Bueno, días. Lo de buenos ya se verá.
+! Mira por dónde pisas, que aquí el suelo también es de la empresa.
+! ¿Buscas curro? La fábrica siempre contrata. Sobre todo después de los accidentes.
+! Aquí se saluda, eh. Que somos pobres, pero no maleducados.
+! Si te quedas quieto mucho rato, te ficha el capataz.
+
+* Huele a fundición y a jornada de doce horas.
+* Otro turno, otro día más cerca de la jubilación que no existe.
+* Esa sirena es de la fábrica. O de una ambulancia. Da igual, suena igual de caro.
+
+# ---------------------------------------------------------------- más (v0.37)
+> Han puesto un comedor automático en la fábrica.
+- Te sirve la comida en tres segundos y te descuenta el tiempo de comer.
+- La máquina sabe qué comes y te lo resta del plus de salud.
+- El puré es gris. El jueves es gris claro. Es el plato especial.
+> El turno de noche se ha quedado dormido.
+- ¿Todos?
+- Todos. Y la producción no ha bajado. Ahora quieren despedirlos.
+- Los robots han hecho el trabajo y luego se han quejado al sindicato.
+> En la Forja ha explotado un horno.
+- ¿Heridos?
+- Tres. La empresa dice que el horno estaba «cansado».
+- Lo peor es que han tardado una hora en parar la línea. Por los objetivos.
+> Mi hija ha entrado de aprendiz en el taller.
+- ¿Y qué tal?
+- Ya sabe soldar, maldecir y esconderse del encargado.
+- El primer día perdió la vergüenza. El segundo, una uña.
+> ¿Has visto el nuevo cartel de la empresa?
+- «Somos una gran familia». Al lado del de «prohibido sentarse».
+- Lo han puesto encima del de «accidentes sin baja: 3 días».
+- Ya ni lo leo. Lo cambian cada vez que despiden a alguien.
+> {noche} ¿Oyes la sirena de la fundición?
+- Cambio de turno. O incendio. Sale la misma gente corriendo.
+- Esa sirena me despierta hasta en vacaciones. Que no tengo.
+- Mi hijo cree que es el canto de un pájaro. No ha visto nunca un pájaro.
+> {dia} Hoy cobramos.
+- Hoy cobramos y mañana pagamos todo lo que debíamos ayer.
+- Cobramos el jueves; el viernes ya somos pobres otra vez.
+- Vamos a celebrarlo. Con una caña. Una sola, que no da para más.
+= ¿Te acuerdas cuando teníamos vacaciones? | ¿Cuándo? | En el 2061. | Ah, sí. Fue un buen día.
+= ¿Qué haces con el casco en casa? | Por si se cae el techo. | ¿Tan mal está? | Lo construyó la misma empresa que la fábrica.
+= El encargado dice que vamos a batir récords. | ¿De qué? | De horas sin descanso. | Pues ya lo batimos el año pasado.
+= Me han dado una medalla por veinte años en la empresa. | ¿Y el aumento? | La medalla es de plástico. | Como el aumento.
+! {aspecto:caro} ¿Vienes de inspección o de excursión? Para las dos cosas se trae casco.
+! {jugador:conduce} Bonito coche. Lo han hecho mis compañeros. Ellos van en bus.
+! {rol:fixer} ¿Buscas mano de obra? Aquí sobra mano y falta obra pagada.

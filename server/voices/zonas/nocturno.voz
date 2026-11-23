@@ -1,0 +1,116 @@
+id: nocturno
+requiere: ?lugar:bar ?lugar:club
+registro: Barra y pista. Camareros cínicos, borrachos filósofos, clientes de siempre, porteros, gente que liga mal. Humor negro de resaca, confesiones a deshoras, bebidas dudosas.
+
+> Ponme lo de siempre.
+- ¿Lo de siempre o lo que te puedes permitir?
+- Lo de siempre se ha acabado. Te pongo lo de nunca.
+- Te pongo agua. Lo de siempre ya lo debes.
+> ¿Qué lleva esta copa?
+- Alcohol, colorante y un poco de olvido.
+- No preguntes. El último que preguntó se quedó ciego de curiosidad.
+- Es la receta de la casa. La casa no la sabe.
+> Mi pareja me ha dejado.
+- Brindemos. Por la libertad o por la soledad, según la copa.
+- ¿Por otra persona?
+- Por una IA de cocina. Hacía mejores tortillas.
+> Este garito antes era una iglesia.
+- Y sigue siéndolo. Aquí también se reza para que pase la noche.
+- Ahora se confiesan los clientes al camarero. Y él cobra.
+- El altar es la barra. El sacramento, el chupito.
+> El portero no me deja entrar en el club.
+- ¿Por la ropa?
+- Por la cara. Dice que mi cara es de pagar a plazos.
+- Dale cincuenta. Su cara también cambia con cincuenta.
+> ¿Bailamos o qué?
+- Bailo para no llorar. Llorar en la pista queda raro.
+- Solo si suena algo de antes de la guerra.
+- No. Mi rodilla es de un modelo antiguo y cruje con los graves.
+> Esta música me está reventando los tímpanos.
+- Mejor. Así no oyes lo que te dice tu novia.
+- Pide el implante de filtro auditivo. Lo venden en la barra.
+- Los tímpanos son de serie. Los de titanio, de pago.
+> ¿Me invitas a algo?
+- Te invito a irte.
+- Te invito a contarme tu vida. La copa la pagas tú.
+- Solo si me cuentas un secreto de Cénit.
+> El camarero tiene un brazo robótico.
+- Sirve doce copas a la vez y cobra veinticuatro.
+- Antes tenía dos de carne. Uno lo perdió en una pelea con un cliente que no pagaba.
+- Lo programaron para echar menos licor. Es lo único que funciona bien.
+> Hoy es noche de karaoke.
+- Corre, que canta el cobrador de las Kitsune.
+- Mi cumpleaños. Voy a cantar mis deudas.
+- El último que cantó mal se fue en ambulancia. El público es exigente.
+> Ese tipo lleva tres horas mirando su vaso.
+- Está meditando.
+- Está esperando a que el vaso le diga que todo irá bien.
+- Es un ejecutivo despedido. Es su primer día libre en veinte años.
+> ¿Hay algo sin alcohol?
+- El agua. Pero no te la recomiendo.
+- Las lágrimas del de la esquina. Gratis.
+- Sin alcohol, sin gracia. Te pongo un refresco de algas.
+> Me han robado el abrigo en el guardarropa.
+- Es el servicio de guardarropa: te lo guardan para siempre.
+- Habrá sido el del guardarropa. Lleva un abrigo nuevo cada semana.
+- Pide un ticket de reclamación. Lo tiramos al final de la noche.
+> El DJ lleva puesto un casco de realidad virtual.
+- Pincha en otro universo. Ahí sí que hay público.
+- Así no ve la cara de los clientes. Muy sano.
+- Lleva tres semanas sin quitárselo. Creo que ya vive allí.
+> ¿Has visto la pelea en la pista?
+- Dos ejecutivos por un cóctel. Han acabado en el suelo con corbata y todo.
+- Lo normal. Aquí bailamos a puñetazos.
+- La ha empezado el portero. Se aburría.
+> {noche} Una última y me voy.
+- Eso dijiste hace cuatro últimas.
+- La última siempre es la primera de la siguiente noche.
+- Ve. La puerta es esa, la que da vueltas.
+> {madrugada} Ya cerramos.
+- ¿Ya? Si acabo de llegar a la fase de abrazar a desconocidos.
+- Cierro yo, que soy el último de mi casa.
+- Pues sírveme el cierre. Doble.
+> {aspecto:caro} Mira ese, pidiendo la botella más cara.
+- Para invitar a gente que no conoce. El dinero da amigos por horas.
+- La botella cuesta más que este bar.
+- La pagará con la tarjeta de la empresa. Así bebemos todos un poco.
+> {aspecto:pobre} El de la barra pide agua del grifo.
+- Valiente.
+- Es lo único gratis. Y lo cobran como servicio.
+- Respeto. Aquí el agua del grifo es el licor más fuerte.
+> {jugador:armado} Ese ha entrado armado.
+- El portero no ha dicho nada. O es poli o es de los que pagan al portero.
+- Si dispara, que sea al DJ.
+- Aquí todos van armados. Él es el único que lo enseña.
+> El barman me ha contado su vida.
+- ¿Al revés?
+- Sí. Ahora le debo una copa y una sesión de terapia.
+- Su vida es más triste que la mía. Me ha subido el ánimo.
+
+= ¿Por qué bebes? | Para olvidar. | ¿Olvidar qué? | No me acuerdo. Funciona.
+= Ponme algo fuerte. | ¿Cómo de fuerte? | Que me haga olvidar el alquiler. | Eso no existe. Te pongo algo que te haga olvidar el nombre.
+= ¿Eres de los fijos de la barra? | Cada noche. | ¿Por qué? | Porque en casa no hay música y aquí no hay facturas.
+= Me he enamorado de la camarera. | ¿Y ella? | Me ha cobrado la mirada. | Es una profesional.
+= He decidido dejar de beber. | ¿Cuándo? | Mañana. | Pues hoy, doble.
+= ¿Ese es el baño? | Es el baño, el almacén y la oficina del dueño. | ¿Todo junto? | Aquí hay crisis de espacio.
+= El dueño del bar es de las Kitsune. | ¿Y? | Por eso no viene la PCV. | ¿Y si viene? | Por eso no viene.
+= {noche} ¿Otra? | Otra. | ¿Seguro? | No, pero otra.
+= Mi exnovia está en la pista. | ¿Con quién? | Con mi mejor amigo. | ¿Y qué vas a hacer? | Pedir otra y aplaudir.
+= Me he gastado todo. | ¿En qué? | En invitar a gente. | ¿Y dónde está la gente? | Invitando a otro.
+
+! {aspecto:pobre} Aquí se consume o se sale. El aire también se cobra.
+! {aspecto:pobre} La cerveza más barata cuesta más que tus zapatos. Te aviso por cariño.
+! {aspecto:caro} ¿Una botella para usted y sus amigos? Ah, que no tiene amigos. Le buscamos unos.
+! {aspecto:desnudo} Así no se entra. Bueno, entra, pero en otro tipo de local.
+! {jugador:armado} Las armas en la barra. Si se dispara una, la invitas a una copa.
+! {jugador:sangra} Estás sangrando en mi barra. Te cobro la limpieza y el susto.
+! {jugador:buscado} Tu cara sale en la tele de la barra. Hoy invitas tú a la ronda del silencio.
+! {rol:lawman} Un agente. Rápido, que todos parezcan clientes.
+! {rol:rocker} ¡El músico! Hoy invita la casa si tocas. Si tocas bien, invitas tú.
+! ¿Qué te pongo? Algo para olvidar o algo para recordar. Lo segundo es más caro.
+! La pista está libre. Bueno, libre de gente sobria.
+! Pide algo o baila. Mirar sin consumir es de Colinas.
+
+* Otro brindis por los que no llegaron a fin de mes.
+* El bajo me ha reorganizado los recuerdos.
+* La barra conoce más secretos que la PCV.

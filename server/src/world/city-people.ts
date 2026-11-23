@@ -1,6 +1,8 @@
 import {facingToIdx,nearestWalkable,pedestrianGrid,RULES,type NpcDef,type ZoneDef} from '@vertice/shared';
 import type {Entity} from './entity.js';
 import type {PlayerConn,World} from './world.js';
+import {voices} from '../game/voices.js';
+import {lookTags} from './context.js';
 
 type Shift=NpcDef['schedule'][number];
 type Door=ZoneDef['doors'][number];
@@ -237,7 +239,9 @@ export class CityPeople {
       });
       if(other&&this.world.combat.lineClear(e,other)){
         const next=this.roster.get(other)!;
-        if(this.world.street.exchange(e,other,[staffVoice[life.def.resident!.job][1],tone[next.def.resident!.temper]])){
+        // v0.37 · Si el sitio tiene diálogos propios (casino, bar, clínica, comisaría, torre, portal o la clase del barrio), van esos.
+        const local=this.world.street.context(e).has('interior')||e.npc!.rng()<.6?voices.conversation(e,this.world.street.context(e),m=>m.requiere.all.some(t=>t.startsWith('lugar:')||t.startsWith('clase:'))):undefined;
+        if(this.world.street.exchange(e,other,local?.slice(0,2)??[staffVoice[life.def.resident!.job][1],tone[next.def.resident!.temper]])){
           next.nextTalk=life.nextTalk;
           this.world.metrics.inc('residentExchanges');
         }
@@ -262,6 +266,8 @@ export class CityPeople {
       life.nextWarn=this.world.tick+ticks(6);
       const now=this.world.tick,character=c.p?.charId,opt=e.npc!.rng();
       const recognized=character&&life.recent?.character===character&&life.recent.until>now;
+      // v0.37 · A veces te dice lo que el sitio piensa de tu pinta.
+      if(!recognized&&opt>.62){const tags=this.world.street.context(e);lookTags(this.world,me,tags);tags.add('saludo');const t=voices.taunt(e,tags);if(t){if(character)life.recent={character,until:now+ticks(110)};this.world.street.speak(e,t);if(e.npcShop&&this.isWorking(e))this.world.survival.openShop(c,e.npcShop,e);return true;}}
       const line=recognized&&opt<.42?'Nos hemos cruzado antes. '+tone[res.temper]:
         opt<.42?res.personal:opt<.8?staffVoice[res.job][this.isWorking(e)?0:1]:tone[res.temper];
       if(character)life.recent={character,until:now+ticks(110)};

@@ -1,0 +1,56 @@
+id: aspecto
+requiere: ?jugador:cerca
+registro: Comentarios sobre la pinta del jugador que sirven en cualquier barrio (cuando no hay una frase más específica de la zona). Burlas, advertencias y algún piropo envenenado. El motor prefiere siempre la del barrio si existe.
+
+! {aspecto:desnudo} ¿Te has dejado la ropa en casa o te la ha quitado el casero?
+! {aspecto:desnudo} Vas más ligero que mi cuenta corriente.
+! {aspecto:desnudo} Con este aire, ir así es un tratamiento exfoliante gratis.
+! {aspecto:desnudo} Tápate algo, que las cámaras de la PCV también tienen ojos.
+! {aspecto:desnudo} Tranquilo, nadie mira. Bueno, todos miran, pero con disimulo.
+! {aspecto:pobre} Llevas la ropa de alguien que la llevó antes que alguien que la llevó antes.
+! {aspecto:pobre} Esa chaqueta tiene más remiendos que la red eléctrica.
+! {aspecto:pobre} Con esa pinta te van a dar limosna sin pedirla.
+! {aspecto:pobre} Pareces el antes de un anuncio de préstamos.
+! {aspecto:pobre} Al menos tu ropa no tiene publicidad. Ni color. Ni forma.
+! {aspecto:caro} Ese abrigo cuesta lo que mi barrio gana en un año. Bonito.
+! {aspecto:caro} Huele a dinero. Y a perfume que huele a dinero.
+! {aspecto:caro} ¿Te has perdido o vienes a ver cómo vive la gente de verdad?
+! {aspecto:caro} Cuidado, que con esa ropa hasta las palomas te piden la cartera.
+! {aspecto:caro} Bonita ropa. ¿Herencia, fraude o las dos cosas?
+! {jugador:armado} Bonito juguete. ¿Te lo compraron con el carné de miedo?
+! {jugador:armado} Con eso en la mano, hasta las cámaras se apartan.
+! {jugador:armado} Ten cuidado, que ese cacharro se dispara solo cuando lo enseñas mucho.
+! {jugador:armado} Vas armado como si la ciudad te debiera algo. Bueno, nos debe a todos.
+! {jugador:sangra} Vas dejando un rastro como un caracol con problemas.
+! {jugador:sangra} Si sigues sangrando así, te van a cobrar la limpieza de la acera.
+! {jugador:sangra} ¿Pelea o accidente laboral? En esta ciudad es lo mismo.
+! {jugador:sangra} Ve a un matasanos antes de que la sangre se canse de ti.
+! {jugador:cromado} Bonito brazo. ¿Lo pagas a plazos o lo pagas con el otro?
+! {jugador:cromado} Brillas como un anuncio. Espero que no me vendas nada.
+! {jugador:cromado} Ese cromo no es de serie. ¿De quién era antes?
+! {jugador:muy-cromado} ¿Queda algo de carne ahí dentro o eres todo garantía?
+! {jugador:muy-cromado} Con tanto metal, cuando llueve ácido debes de oler a batería quemada.
+! {jugador:muy-cromado} Te queda poca humanidad. La que queda, que la cuide un buen psicólogo.
+! {jugador:buscado} Eh, tú sales en las pantallas. ¿Firmas autógrafos antes de que te pillen?
+! {jugador:buscado} Tu cara vale una recompensa. La mía, ni el precio del espejo.
+! {jugador:buscado} No te preocupes, yo no he visto nada. Bueno, he visto la recompensa.
+! {jugador:conduce} Bonito coche. A ver cuánto tarda en volver sin ruedas.
+! {jugador:veterano} Tienes cara de haber sobrevivido a cosas que no se cuentan en el bar.
+! {jugador:veterano} Esa mirada es de quien ha enterrado a muchos amigos. O a muchos enemigos.
+! {rol:netrunner} Tienes ojeras de pasar la noche en la red. ¿Has visto algo bonito ahí dentro?
+! {rol:netrunner} No me hackees, que mi vida privada no está a la altura de tu esfuerzo.
+! {rol:medtech} ¿Eres médica? Pues aquí todos tenemos algo. Sobre todo deudas.
+! {rol:tech} Técnica, ¿me miras la cafetera? Lleva tres años echando humo de colores.
+! {rol:media} ¿Periodista? Cuéntales que aquí estamos bien. Que no se note.
+! {rol:fixer} Tú tienes cara de saber dónde se consigue todo. ¿Tienes un futuro de segunda mano?
+! {rol:rocker} ¿Músico? Toca algo que no sea un anuncio, que ya no me acuerdo de cómo suena.
+! {rol:solo} Tienes cara de cobrar por hacer lo que otros no se atreven.
+! {rol:nomad} Hueles a carretera y a polvo. Es el mejor perfume de esta ciudad.
+! {rol:exec} Tienes cara de despedir a gente un viernes por la tarde.
+! {rol:lawman} Una placa. ¿Vienes a proteger o a cobrar? Por saber cómo saludar.
+! {noche} A estas horas, solo salen los valientes, los borrachos y los que no tienen casa. ¿Tú qué eres?
+! {madrugada} ¿Qué haces despierto a estas horas? Ah, lo mismo que yo: sobrevivir.
+! {dia} Buenos días. Que el día te dure más que la batería.
+! {saludo} Eh, cuidado por dónde vas, que la ciudad no avisa.
+! {saludo} ¿Qué tal? No contestes, que aquí nadie está bien.
+! {saludo} Buenas. Si buscas algo, pregunta. Si buscas a alguien, mejor no.

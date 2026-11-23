@@ -1,0 +1,175 @@
+id: casino
+requiere: lugar:casino
+registro: Casino: jugadores, crupieres y seguridad. Ludopatía, supersticiones, la casa siempre gana, deudas con mafias, glamour de cartón piedra. Humor negro de quien ha apostado el piso y la dentadura.
+
+> ¿Cómo va la noche?
+- Voy ganando. Bueno, voy perdiendo menos que ayer.
+- He ganado tres veces y perdido veinte. Estadísticamente soy un milagro.
+- La noche va bien. Yo no tanto.
+> La ruleta está caliente.
+- Lo que está caliente es mi tarjeta. A punto de fundirse.
+- Dicen que en el siete cae siempre. Llevo cuarenta minutos esperando al siete.
+- La ruleta solo está caliente para la casa. Para nosotros es una nevera.
+> Me he jugado el sueldo del mes.
+- ¿Y?
+- Ahora me juego el del mes que viene. Hay que recuperar.
+- Tranquilo, el mes que viene también tiene sueldo. Ah, que también te lo has jugado.
+> Ese crupier tiene buena mano.
+- Para él. Para nosotros tiene una mano que reparte desgracias.
+- Dicen que se ha implantado un contador de cartas. Para la casa.
+- Lleva guantes. Seguro que esconde las uñas de los que no pagaron.
+> He visto a un hombre apostar su ojo.
+- ¿Y ganó?
+- Perdió. Ahora la casa ve dos veces mejor.
+- En la mesa VIP se apuestan órganos. En la de abajo, la dignidad.
+> ¿Sabes cuál es la mesa con más suerte?
+- La de la salida. Ahí es donde se gana: dejando de jugar.
+- La del fondo. Dicen que allí ganó alguien en 2068.
+- La que acabas de dejar. Siempre es la que acabas de dejar.
+> Mi mujer cree que estoy en una reunión.
+- Y lo estás: con la ruina.
+- Dile que es una reunión de inversión. Técnicamente, lo es.
+- Si pierdes, mañana tendrás que reunirte con su abogado.
+> El casino da copas gratis.
+- Las copas son gratis. La resaca la pagas en fichas.
+- Para que no cuentes. Ni las fichas ni los años.
+- Cuanto más bebes, más apuestas. Es su modelo de negocio.
+> ¿Has visto la máquina tragaperras nueva?
+- Se llama «Esperanza». Te la traga entera.
+- Tiene una IA que te habla cuando pierdes. Te consuela para que sigas.
+- Ha pagado una vez. Hicieron un comunicado de prensa.
+> El de la mesa tres ha ganado mucho.
+- Mira, ya le acompañan los de seguridad.
+- Le van a ofrecer una suite gratis. Para que lo pierda todo mañana.
+- La casa le deja ganar. Es publicidad.
+> Me han dado un crédito en la casa.
+- Generosos.
+- El interés lo cobra un señor muy grande con un bate.
+- El crédito de la casa se paga con la casa. La tuya.
+> Hoy siento que es mi día.
+- Eso dijiste ayer.
+- Todos los días son el día de alguien. Hoy es el de la casa, como ayer.
+- Pues apuéstalo todo. Así mañana sabrás si lo era.
+> ¿Has probado la ruleta de órganos?
+- Es ilegal.
+- Solo en las plantas de abajo. Arriba se llama «inversión biológica».
+- Mi primo la probó. Ahora tiene un riñón de la casa y una deuda con forma de hígado.
+> La música no para nunca aquí.
+- Para que no oigas tus pensamientos. Ni los de tu cuenta.
+- No hay relojes ni ventanas. Aquí el tiempo es otra ficha que pierdes.
+- La música es para que no se oigan los llantos de los baños.
+> ¿Quién es ese que nunca pierde?
+- El dueño. Juega contra sí mismo.
+- Un contador de cartas. Mañana estará en una cuneta contando estrellas.
+- Un ciborg con calculadora en el ojo. Le dejan porque atrae clientes.
+> Me he quedado sin fichas.
+- Hay un cajero al lado de cada mesa. Y un prestamista al lado de cada cajero.
+- Te quedan los zapatos.
+- Ya te quedas sin fichas. Pronto te quedarás sin excusas.
+> El crupier me ha guiñado un ojo.
+- Es un implante defectuoso.
+- Te ha marcado como cliente de alto rendimiento.
+- Eso significa que te va a desplumar con cariño.
+> Aquí hay más cámaras que clientes.
+- Una por ficha.
+- Las cámaras no apuestan. Por eso están tan contentas.
+- Nos graban para estudiar cómo perdemos. Y mejorar.
+> ¿Vienes a apostar o a mirar?
+- A mirar. Es más barato y se sufre igual.
+- A perder. Lo de apostar es solo el trámite.
+- A ver si encuentro a mi padre. Lleva aquí desde 2070.
+> {lugar:casino} El de seguridad me sigue desde la entrada.
+- Te sigue porque eres pobre o porque ganas. En los dos casos, cuidado.
+- Les gusta seguir a los que entran con esperanza. Es la droga más cara.
+- Seguro que ha visto tu historial de crédito.
+> He visto a un concejal en la mesa VIP.
+- Apostando el presupuesto de los parques.
+- Allí arriba se juegan las licitaciones públicas.
+- No le has visto. Nadie le ha visto. Es lo que vas a decir.
+> En el Hipódromo han dopado al caballo favorito.
+- ¿Y a los jockeys?
+- A todos. Incluido el público.
+- El caballo es un robot. Lo han dopado con una actualización.
+> Mi abuela juega a las tragaperras desde los ochenta.
+- ¿Y ha ganado algo?
+- Una cadera de titanio y amigos que no se acuerdan de su nombre.
+- La casa la quiere mucho. Le manda flores por su cumpleaños.
+> ¿Cuál es el truco para ganar?
+- Ser el dueño.
+- Irte cuando ganas. Nadie lo ha conseguido nunca.
+- Apostar a que la casa gana. No te dejan.
+> He apostado el coche.
+- ¿Y?
+- Ahora vuelvo andando. Pero con mucha historia que contar.
+- Lo gané hace un mes en esta misma mesa. Ha vuelto a casa.
+> Dicen que hay un fantasma en la sala de cartas.
+- Es un jugador que nunca se fue. Se quedó sin dinero para el taxi.
+- Lleva ocho años sentado en la misma silla.
+- Le dejan porque sigue apostando. Con fichas imaginarias.
+> {noche} ¿A qué hora cierran?
+- Nunca. Los casinos no cierran, solo tú te arruinas.
+- Cierran cuando no quede nadie con tarjeta.
+- Cuando sale el sol, pero aquí no hay ventanas para saberlo.
+> {jugador:armado} Ese lleva un arma en el casino.
+- Será cobrador de deudas.
+- O un perdedor con un plan.
+- Que no se acerque a mi mesa. Ya bastante me dispara la mala suerte.
+> {aspecto:caro} Mira cómo apuesta ese.
+- Sin mirar. El dinero no le duele, como a nosotros los dientes.
+- Pierde un piso por jugada y sonríe. Debe de tener muchos pisos.
+- La casa le adora. Es su cliente favorito: pierde con estilo.
+> {aspecto:pobre} ¿Ese ha entrado con esa ropa?
+- Habrá perdido el traje en la mesa de al lado.
+- Los porteros dejan entrar a los pobres los jueves. Para que se vea gente.
+- Mira cómo agarra la ficha. Es su última y lo sabe.
+
+= ¿Sabes por qué el casino no tiene relojes? | ¿Por qué? | Para que no sepas que has perdido toda la noche. | ¿Y el calendario? | Tampoco. Llevo aquí desde marzo.
+= He tenido un sistema infalible. | ¿Tenido? | Ha fallado. | Como todos.
+= ¿Me prestas cien? | ¿Para qué? | Para recuperar lo que perdí. | ¿Cuánto perdiste? | Lo que me prestaste ayer.
+= Mi psicólogo dice que tengo un problema con el juego. | ¿Y qué le has dicho? | Le he apostado a que no. | ¿Y? | Ha ganado.
+= He ganado el bote. | ¡Enhorabuena! | La casa dice que fue un error técnico. | ¿Y el dinero? | Ya lo están recuperando con cariño.
+= ¿Vienes mucho por aquí? | Desde que perdí la casa. | ¿Vives aquí? | Más o menos. Duermo en la sala de espera del cajero.
+= El crupier me odia. | ¿Por qué? | Gané una vez. | Eso no se perdona aquí.
+= ¿Cuánto llevas perdido? | No lo cuento. | ¿Por qué? | Porque si lo cuento, me tiro desde la azotea. Y la azotea es VIP.
+= Mi padre perdió aquí la empresa. | ¿Y tú? | Yo vengo a recuperarla. | ¿Ganando? | Perdiendo más despacio.
+= La casa siempre gana. | ¿Y nosotros? | Nosotros siempre volvemos.
+= {aspecto:caro} Ese ha apostado un millón. | ¿Y? | Lo ha perdido. | ¿Y qué ha hecho? | Ha pedido otro cóctel.
+= ¿Por qué hay tanta moqueta? | Para que no se oigan las rodillas cuando caes de rodillas.
+
+! {aspecto:pobre} ¿Viene a apostar o a recoger las fichas del suelo? Las del suelo también son de la casa.
+! {aspecto:pobre} La mesa de mínimos está al fondo. Muy al fondo. Casi en la calle.
+! {aspecto:pobre} Si se queda sin fichas, la salida está detrás de usted. Cómoda.
+! {aspecto:caro} Bienvenido, señor. Su mesa le espera. Y su ruina, con champán.
+! {aspecto:caro} ¿Copa de cortesía? La casa invita a los que vienen a perder a lo grande.
+! {jugador:armado} Las armas, en el guardarropa. Aquí solo disparan las tragaperras.
+! {jugador:sangra} Señor, está sangrando sobre la moqueta. ¿Ha perdido o ha cobrado?
+! {jugador:cromado} Los implantes de cálculo están prohibidos en las mesas. Lo sabemos todo.
+! {jugador:buscado} Su cara está en la pantalla de seguridad. Le damos una hora para perder lo que lleve.
+! {rol:exec} Señor ejecutivo, la mesa VIP tiene vistas a su próxima reestructuración.
+! {rol:lawman} ¿Un agente? ¿De servicio o de excedencia por deudas?
+! Haga juego, por favor. Aquí se cobra hasta por mirar la ruleta.
+! Sonría. Las cámaras del casino premian el optimismo con más crédito.
+! La suerte cambia, dicen. Pero siempre para el mismo lado.
+! Juegue con responsabilidad. Bueno, juegue.
+
+* Bola en el negro. Como mi futuro.
+* Hagan juego, señores. Y pierdan con elegancia.
+* Otra ficha, otro sueño que se va por el desagüe de la ruleta.
+
+# ---------------------------------------------------------------- más (v0.37)
+> La crupier nueva reparte demasiado rápido.
+- Está entrenada para que no pienses. Solo para que pierdas.
+- Viene de un casino orbital. Allí las cartas flotan y tú también.
+- Reparte rápido porque cobra por mano jugada.
+> El del sombrero lleva doce horas en la misma tragaperras.
+- Dicen que está a punto de salir el premio. Lleva doce horas a punto.
+- Le han puesto un cojín. El casino cuida a sus mascotas.
+- Si se levanta, se la quita otro. Es como un trono, pero triste.
+> ¿Has visto el espectáculo del escenario?
+- Una cantante holográfica. Canta sobre el amor mientras pierdes la casa.
+- Han traído un mago. Hace desaparecer las fichas. Nada nuevo.
+- Es el mismo número desde 2069. Como mis deudas.
+= ¿Por qué sonríes? | He ganado. | ¿Cuánto? | Lo que perdí ayer. | Entonces estás igual. | Pero sonriendo.
+= Voy al baño. | ¿A llorar? | A llorar y a calcular. | Aquí los baños tienen calculadora.
+! {rol:fixer} Usted tiene cara de saber quién debe a quién en esta sala. Vale más que una ficha.
+! {aspecto:desnudo} Señor, en el casino hasta perder se hace con ropa. Fuera, por favor.

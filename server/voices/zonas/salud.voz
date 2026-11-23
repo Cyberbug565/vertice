@@ -1,0 +1,101 @@
+id: salud
+requiere: ?lugar:clinica ?lugar:farmacia ?servicio:clinica
+registro: Farmacéuticos, matasanos, pacientes en espera. Medicina privatizada, implantes, órganos de segunda mano, seguros que no cubren nada. Humor negro médico.
+
+> ¿Cuánto falta para que me atiendan?
+- Depende de su seguro. Si es básico, póngase cómodo y envejezca.
+- Su número es el 412. Vamos por el 18. Pero el 18 ya ha muerto, así que avanzamos.
+- Le atienden en cuanto pase la tarjeta. Lo de la herida es secundario.
+> El seguro no me cubre la operación.
+- ¿Qué cubre?
+- La sala de espera. Y la factura.
+- Cubre la anestesia, pero no despertarse.
+> ¿Esto es grave, doctor?
+- Grave es su saldo.
+- Es curable. Pero cuesta un riñón. El otro riñón.
+- Nada que no arregle un implante de catálogo y tres años de deuda.
+> Me han puesto un riñón de segunda mano.
+- ¿Y qué tal?
+- Funciona, pero de vez en cuando me pide ir a bares de Ferro.
+- Venía con historia. Ahora me apetece pescado frito a las tres de la mañana.
+> La farmacéutica me ha recetado otra farmacéutica.
+- Es la especialista en recetar.
+- Te mandan a la de su primo. Cobran comisión por receta.
+- La segunda te receta que vuelvas a la primera.
+> ¿Hay pastillas para la tristeza?
+- Hay pastillas para que la tristeza sea rentable.
+- Las de Okami. Te quitan la tristeza y la voluntad, que son de la misma marca.
+- Sí, pero no las cubre el seguro. La tristeza la pagas tú.
+> ¿El implante duele?
+- Solo cuando lo pagas.
+- Un poco al ponerlo. Mucho al quitarlo por impago.
+- Duele lo justo para que valores tener un brazo.
+> En el matasanos de Ferro cosen con hilo de pescar.
+- Pero no te piden seguro.
+- El de los túneles cose con grapas. Las de oficina.
+- Es más fino que el hospital: te cosen con cariño y sin anestesia.
+> El hospital ha cerrado urgencias por beneficios.
+- ¿Por falta de beneficios?
+- Por exceso de pacientes sin beneficios.
+- Ahora es un hotel de recuperación para ejecutivos con estrés.
+> Me han dado cita para dentro de un año.
+- ¿Y qué tienes?
+- Una herida de bala.
+- Aguanta. Si en un año sigues vivo, ya no te hará falta.
+> {jugador:sangra} Esa persona está sangrando en la puerta.
+- Que coja número.
+- Primero el seguro. La sangre espera, el sistema no.
+- Si se desmaya dentro, le cobramos la camilla.
+> {jugador:cromado} Mira el cromo de ese.
+- Mantenimiento mensual: medio sueldo.
+- Ese pasa por aquí cada semana a que le aprieten los tornillos.
+- Algún día le dará una psicosis. Y aquí estaremos, con la factura.
+> ¿Vendéis órganos?
+- No. Los alquilamos.
+- Tenemos ofertas de hígado. Solo un dueño anterior.
+- Pregunte en la trastienda. Pero no pregunte de dónde vienen.
+> He donado sangre.
+- ¿Y qué te han dado?
+- Una galleta y una factura por la galleta.
+- La han vendido a Colinas al triple. Dicen que es sangre «con carácter».
+> El doctor me ha dicho que deje de estresarme.
+- ¿Y cómo?
+- Que deje de trabajar. Y de pagar el alquiler. Y de vivir aquí.
+- Me ha recetado unas vacaciones. Las farmacias no las venden.
+
+= ¿Qué tengo, doctor? | Una deuda. | ¿Y de salud? | Eso lo vemos cuando pague la primera.
+= Me duele aquí. | ¿Dónde? | Aquí. | Eso es la cartera. Es normal.
+= ¿Me va a doler? | Sí. | ¿Mucho? | Depende de la tarifa. La básica, mucho.
+= Doctor, veo doble. | ¿Desde cuándo? | Desde el implante. | Es una función premium. Le estamos cobrando por los dos.
+= ¿Cuánto me queda de vida? | Depende. | ¿De qué? | De su plan de pagos.
+= Tengo fiebre. | ¿Cuánto? | Treinta y nueve. | Le cobramos treinta y nueve.
+= Me han robado el riñón. | ¿Aquí? | En la sala de espera. | Ya me parecía que tardaba mucho en atenderle.
+= ¿Hay algo natural? | Sí. | ¿Qué? | La muerte. Pero esa no se vende aquí.
+
+! {jugador:sangra} Coja número y siéntese. La sangre, en el suelo de la izquierda, que es más fácil de limpiar.
+! {jugador:sangra} Si se desmaya, hágalo dentro. Fuera no cobramos el servicio.
+! {aspecto:pobre} ¿Viene a la consulta gratuita? Es el martes de cada año bisiesto.
+! {aspecto:caro} Pase, pase. Para usted no hay sala de espera. Para usted hay sala de pago.
+! {jugador:cromado} Su implante está pidiendo una revisión. Se le oye desde aquí.
+! {jugador:muy-cromado} Más cromo que paciente. ¿Viene a revisión o a desguace?
+! {jugador:armado} Las armas fuera. Aquí ya morimos lo suficiente sin ayuda.
+! Rellene el cuestionario. La pregunta tres es «¿cuánto puede pagar?».
+! El doctor le atenderá en cuanto termine de atender al que paga más.
+! Si es urgente, pague urgente.
+
+* La salud no tiene precio. Tiene tarifa.
+* Otro paciente, otra pieza de repuesto.
+* Aquí curamos todo menos la pobreza. Esa se contagia.
+
+# ---------------------------------------------------------------- más (v0.37)
+> El matasanos me ha puesto un ojo de segunda mano.
+- ¿Y qué ves?
+- Cosas que vio el dueño anterior. Anoche soñé con un casino.
+- Ve bien, pero llora cuando pasa por delante de cierta casa de Ferro.
+> En la farmacia venden pastillas para dormir con anuncios.
+- Duermes, pero sueñas con ofertas.
+- Las premium te dejan soñar sin publicidad.
+- Me desperté queriendo comprar un coche.
+= ¿Esto es contagioso? | Sí. | ¿Cuánto? | Lo justo para que vuelvan todos sus vecinos a la consulta.
+= ¿Me pongo la vacuna? | ¿Cuál? | La de este año. | Tiene publicidad incorporada. Te sale gratis si ves los anuncios.
+! {rol:medtech} Una colega. ¿Vienes a trabajar o a que te curen el agotamiento? Las dos cosas tienen lista de espera.

@@ -7,6 +7,7 @@ import type { Entity } from './entity.js';
 import { powerful, voices } from '../game/voices.js';
 import type { World } from './world.js';
 import type { Zone } from './zone.js';
+import { lookTags, placeTags } from './context.js';
 
 type Emote = 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos' | 'abrir' | 'lanzar';
 interface Line { at: number; id: number; text: string; partner?: number }
@@ -103,19 +104,26 @@ export class Street {
   }
   private dayPart() { const h=this.w.cityHour(); return h>=21||h<6?'noche':'dia'; }
   private temperament(e:Entity) {const t=e.npc?.temperament;return t?(t==='cauto'||t==='nervioso'||t==='metodico'?'caracter:cauto':'caracter:curioso'):e.id%2?'caracter:cauto':'caracter:curioso'; }
+  /** v0.37 · Secuencia de contextualización (ver context.ts): lugar, clase, peligro, hora, entorno y jugador a la vista. */
+  context(e:Entity){return this.nearbyTags(e);}
   private nearbyTags(e:Entity) {
-    const z=e.zone, tags=new Set([this.dayPart(),this.temperament(e),'barrio:'+(z.districtAt(e.x,e.y)?.id??z.id)]);
+    const z=e.zone, tags=placeTags(this.w,z,e.x,e.y,new Set([this.dayPart(),this.temperament(e)]));
+    let seen:Entity|undefined,best=9;
     for(const p of this.propsNear(z,e.x,e.y,7)) tags.add('cerca:'+p.type);
     if(this.w.c.ripperdocs.some(d=>d.zone===z.id))tags.add('servicio:clinica');
     for(const o of z.query(e.x,e.y,8)){
       if(o===e || o.hiddenIn || o.dead || o.state==='downed' || (o.buffs?.invisible??0)>Date.now())continue;
       const shown=o.kind==='player' && o.weaponId && powerful(this.w.c.items.find(i=>i.id===o.weaponId));
       const cop=o.npcType==='police',chrome=!!o.chrome?.length;
+      if(o.objKind==='housing'&&Math.hypot(o.x-e.x,o.y-e.y)<7)tags.add('cerca:portal');
+      if(o.kind==='player'&&o.conn&&!o.ghostOf){const d=Math.hypot(o.x-e.x,o.y-e.y);if(d<best&&this.w.combat.lineClear(e,o)){best=d;seen=o;}}
       if(!(shown||cop||chrome)||Math.hypot(o.x-e.x,o.y-e.y)>8||!this.w.combat.lineClear(e,o))continue;
       if(shown)tags.add('arma:potente');
       if(cop)tags.add('policia:visible');
       if(chrome)tags.add('cromo:visible');
     }
+    // 6 · El jugador más cercano que se ve: los transeúntes comentan su pinta.
+    if(seen)lookTags(this.w,seen,tags);
     return tags;
   }
   /** Conversación de verdad entre dos transeúntes que se han parado a charlar. */
@@ -209,11 +217,13 @@ export class Street {
           continue;
         }
       }
-      if (d < 3 && !o.path.length && this.rng() < 0.025) {
+      if (d < 3.5 && !o.path.length && this.rng() < 0.035) {
         this.said.set(o.id, now + 120000); this.face(o, pe.x, pe.y);
         const tags=this.nearbyTags(o);tags.add('saludo');
+        lookTags(this.w,pe,tags);
         if(p.wanted>=2)tags.add('buscado');
-        const line=tags.has('buscado')?voices.comment(o,'buscado',tags):voices.reaction(o,tags);
+        // v0.37 · Primero lo que el barrio piensa de tu pinta (burla, advertencia o piropo envenenado); si no, el saludo.
+        const line=(this.rng()<.75?voices.taunt(o,tags):undefined)??(tags.has('buscado')?voices.comment(o,'buscado',tags):voices.reaction(o,tags));
         if(line)this.say(o,line);
       }
     }

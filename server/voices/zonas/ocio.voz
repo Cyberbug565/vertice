@@ -1,0 +1,294 @@
+id: ocio
+requiere: clase:ocio
+registro: Calle comercial y de fiesta: vendedores, influencers, viajeros, gente de noche. Jerga rápida, «bro», «tía», «flipas», «literal», ofertas, cripto, implantes de moda. Sátira del consumismo, las redes y la resaca; humor negro de discoteca y de estación.
+
+# ---------------------------------------------------------------- escenas
+> ¿Has visto el implante nuevo de pestañas con anuncios?
+- Literal te parpadean ofertas. Mi novio me ha comprado un sofá sin querer.
+- Lo tengo. Cuando lloro, me sale publicidad de pañuelos.
+- Si pagas el premium, solo te enseña anuncios cuando duermes.
+> Esta noche en el Circuito pinchan los de siempre.
+- ¿Los que pinchan el mismo tema durante cuatro horas?
+- Va a ir todo Neón Rojo. Y medio hospital mañana.
+- Entrada gratis si dejas el riñón en el guardarropa.
+> Me han timado con unos cristales de memoria.
+- ¿Qué tenían?
+- Recuerdos de vacaciones de otra persona. Muy bonitos, pero no eran míos.
+- A mí me vendieron uno de un tipo pagando impuestos. Lloré tres días.
+> ¿A cuánto está el trayecto a la Terminal?
+- Ha subido. Ahora te cobran también por mirar por la ventana.
+- Depende. Si vas de pie, barato; si vas vivo, caro.
+- Ve andando. Te atracan igual, pero haces ejercicio.
+> He llegado a la ciudad esta mañana.
+- Bienvenido. Agarra la cartera y despídete de ella.
+- ¿Y qué te parece?
+- Huele a neón, a frito y a promesas incumplidas. Te acostumbrarás.
+> El puesto de fideos tiene una estrella en una guía.
+- ¿En qué guía?
+- En la de los que se intoxicaron y sobrevivieron.
+- La estrella es por el cocinero, que tiene tres brazos. Muy productivo.
+> Mi influencer favorita se ha muerto en directo.
+- ¿Y qué ha pasado con el canal?
+- Ha ganado tres millones de seguidores. Su madre lo lleva ahora.
+- Lo están vendiendo como experiencia inmersiva.
+> ¿Me haces una foto con el neón de fondo?
+- Ponte de perfil, que tienes cara de alquiler caro.
+- ¿Con filtro de felicidad o de verdad?
+- Rápido, que a esta luz se te ven las deudas.
+> En la estación han puesto un detector de malas intenciones.
+- ¿Y funciona?
+- Pita con todos los que no llevan billete de primera.
+- Lo apagan cuando pasan los de Cénit. Por educación.
+> Han cerrado el bar de la esquina.
+- ¿Por qué?
+- Porque el dueño se ha hecho influencer de bares cerrados.
+- Abrieron uno de cócteles con humo de fábrica. Muy auténtico.
+> ¿Sabes de algún sitio para dormir barato?
+- El hotel cápsula. Te cabe la cabeza o los pies, eliges.
+- El banco de la estación. Te despierta la PCV gratis a las seis.
+- En el Circuito, en la pista. Nadie se da cuenta hasta las ocho.
+> El taxista me ha cobrado el doble por ser de fuera.
+- Y el triple por hablar.
+- Aquí eso es ser simpático con el turista.
+- Pues a mí me cobró por ser de dentro. Dijo que ya lo sabía.
+> ¿Has probado el cóctel «Lluvia Ácida»?
+- Literal te corroe por dentro. Muy honesto.
+- Lo pedí y me dieron un vaso vacío con una disculpa.
+- Lleva tres licores, dos estimulantes y un aviso legal.
+> Han subido el precio de la entrada a las pasarelas.
+- Para ver la ciudad desde arriba hay que pagar como los de arriba.
+- Antes el aire era gratis. Ahora es experiencia premium.
+- Ahí arriba se ve todo. Hasta las colas del comedor social, en panorámica.
+> ¿Has visto el nuevo holograma gigante?
+- Una cara sonriendo vendiendo seguros de vida.
+- Se ve desde el Arrabal. Para que sepan lo que no pueden comprar.
+- Lleva tres días roto, diciendo «compra» en bucle. Más sincero que nunca.
+> Mi tren lleva tres horas de retraso.
+- Lo normal. Lo raro es que haya tren.
+- Dicen que hay un saboteador en la vía. Es un trabajador al que no pagaron.
+- Te compensan con un vale para el siguiente retraso.
+> {noche} ¿Dónde está la fiesta?
+- Donde suene más alto y la PCV no haya llegado todavía.
+- En el Kitsune. Pero la entrada es solo para cuerpos con garantía.
+- En tu cabeza, bro. Con lo que te has metido, la llevas puesta.
+> {noche} Creo que me han puesto algo en la bebida.
+- ¿Y cómo te sientes?
+- Pues disfrútalo, que lo has pagado tú sin saberlo.
+- Bebe agua. Del grifo no, que es peor.
+> {noche} Vaya resaca llevo encima de antes.
+- Si te duele es que sigues vivo. Felicidades.
+- Hay un puesto de sueros a dos calles. Te quitan la resaca y el sueldo.
+- Ponte el implante de olvido. Si no te acuerdas, no pasó.
+> {dia} Qué cola hay en la estación.
+- Es la cola para la cola de billetes.
+- Están todos esperando el tren a Cénit. El de vuelta va vacío.
+- En la cola te venden comida, abrazos y préstamos.
+> {dia} ¿Abren ya las tiendas?
+- Abren veinticuatro horas, como nuestras deudas.
+- Abren cuando llegan los de Colinas. Antes, solo se ve el escaparate.
+- Las de implantes no cierran nunca. La avaricia no duerme.
+> {policia:visible} Hay PCV en la entrada del club.
+- Están cobrando la mordida del sábado.
+- Si te piden la documentación, enséñales una sonrisa y un billete.
+- Vienen a vigilar a los camareros. Los clientes que paguen no les importan.
+> {aspecto:caro} ¿Has visto a ese con el abrigo de piel sintética de verdad?
+- Ese tiene acceso VIP a todo. Incluido a mi mala leche.
+- Seguro que va al casino. O al casino va a por él.
+- Los guapos de verdad no pagan entrada. Pagan los demás por verles.
+> {aspecto:pobre} Ese de ahí no tiene pinta de comprar.
+- Ni de comer.
+- Los vigilantes le seguirán hasta la salida. Es un servicio gratuito.
+- Bueno, aquí venimos todos a mirar escaparates y a llorar un poco.
+> {jugador:armado} Ese va armado por la calle de las tiendas.
+- Será un comprador exigente.
+- O un cobrador. En Neón Rojo es lo mismo.
+- No pasa nada. Es el complemento de moda de esta temporada.
+> {jugador:cromado} Me encantan sus implantes.
+- Seguro que son de la tienda de Okami. Los de catálogo caro.
+- Yo tengo la versión pirata. Se me reinicia la mano al saludar.
+- Con ese brazo podría abrir una botella sin tocarla. Qué envidia.
+> Me han hecho una oferta para vender mis datos.
+- ¿Cuánto?
+- Un cupón de descuento en implantes. Mis datos valen un 10 %.
+- Ya los tenían. Solo querían tu firma para que fuera legal.
+> En la tienda de implantes hacen dos por uno los martes.
+- Vas con dos brazos y sales con cuatro.
+- El segundo implante es para que te puedas pagar el primero trabajando.
+- Mi prima fue y volvió con un ojo extra. Ahora ve venir las deudas.
+> ¿Sabes cuánto me cobran por el móvil nuevo?
+- Un riñón.
+- Lo pagas en cómodos plazos durante el resto de tu vida.
+- Viene con una IA que te dice que eres guapo. Vale la pena.
+> He pedido comida y ha llegado un dron vacío.
+- El repartidor se la ha comido por el camino.
+- Te cobran la comida y la decepción por separado.
+- Ha llegado lleno de agujeros. La comida ha sido víctima de un tiroteo.
+> El Kitsune ha contratado DJs con implantes de ritmo.
+- Pinchan con el corazón. Literal: van conectados al pulso.
+- El último se pasó de vueltas y se quedó en el sitio.
+- Si muere en el escenario, el set es gratis.
+> ¿Has visto el mercado nocturno?
+- Venden de todo. Hasta cosas que todavía tienen dueño.
+- Me han ofrecido un gato con chip. Hablaba mejor que yo.
+- Venden comida de Cénit caducada. Más fresca que la de aquí.
+> Han abierto una tienda que vende aire embotellado.
+- ¿Y quién lo compra?
+- Los turistas, para llevarse un recuerdo de la contaminación.
+- Tienen sabores: lluvia, bosque y «antes de la guerra».
+> Me he gastado el sueldo en una noche.
+- ¿En qué?
+- No me acuerdo. Por la factura, fue una gran noche.
+- Lo has hecho bien. Mañana el sueldo valdría menos.
+> {lugar:club} Este bajo me está reordenando los órganos.
+- Gratis. En el matasanos te cobran por eso.
+- Ponte delante del altavoz, que te sacude las deudas.
+- Mi riñón ya va a otro ritmo. Creo que se ha enamorado.
+> {lugar:club} ¿Quién es ese que baila solo?
+- El dueño. Baila solo porque nadie le soporta sobrio.
+- Un ejecutivo de Okami de juerga. Está desbloqueando su lado humano.
+- Un ciberpsicópata en fase tranquila. No le hagas sombra.
+> {lugar:bar} ¿Qué me recomiendas?
+- Algo que no te deje ciego. Aunque eso cuesta más.
+- La cerveza de algas. Sabe a mar contaminado, pero con espuma.
+- El chupito de la casa. Es la casa la que paga el entierro.
+> {lugar:bar} El camarero me ha cobrado de más.
+- Es la tasa de mirarle a los ojos.
+- Te cobra según la cara. La tuya es de dos copas extra.
+- Es su forma de decirte que vuelvas. O que no.
+> ¿Sabes dónde comprar un billete al Yermo?
+- En la Terminal. Te venden el de ida. El de vuelta lo regalan, porque nadie lo usa.
+- ¿Al Yermo? ¿Por gusto?
+- Pregunta a los nómadas de la Dársena. Te llevan si les pagas en agua.
+> Mi pareja me ha dejado por una IA.
+- ¿Mejor que tú?
+- Lo escucha. Lo recuerda todo. No ronca.
+- Dale tiempo. Las IA también se aburren, luego vuelven las personas.
+> En la Dársena ha llegado un barco lleno de contenedores.
+- ¿De qué?
+- De cosas que no sabremos qué son hasta que alguien muera por ellas.
+- La PCV ya está allí. Para cobrar la parte.
+> El metro ha vuelto a inundarse.
+- ¿Con agua?
+- Con algo parecido. Pero con olor a historia industrial.
+- Han puesto barcas. Te cobran el billete y el remo aparte.
+> ¿Tienes cambio para el aparcamiento?
+- El aparcamiento solo acepta datos biométricos y tu alma.
+- Te lo cambio, pero me quedo con la mitad. Comisión de calle.
+- Aparca en la acera. Total, la grúa también está en huelga.
+> He ganado una rifa en el centro comercial.
+- ¿Qué te ha tocado?
+- Un año de suscripción a otra suscripción.
+- Un implante gratis. La operación, eso sí, se paga.
+> {madrugada} ¿Sigues de fiesta?
+- Ya no sé si es fiesta o una crisis existencial con música.
+- El club no cierra. Yo tampoco.
+- Mi implante dice que llevo 30 horas despierto. Le he dicho que se calle.
+> {madrugada} ¿Dónde se come a estas horas?
+- En el puesto de la estación. Lo que sea que sirvan.
+- En la máquina, si no te la han robado.
+- Donde se esté calentito y no te pregunten nada.
+
+# ---------------------------------------------------------------- secuencias
+= ¿Has visto mi publicación? | ¿La de tu comida? | La de mi comida, mi cara y mi tristeza. | Me gustó la tristeza.
+= Me he hecho un implante de felicidad. | ¿Y qué tal? | Feliz. | ¿Y lo demás? | Eso no lo cubre la garantía.
+= ¿Bailas? | No sé bailar. | Aquí nadie sabe. Solo nos movemos para no pensar.
+= ¿Cuánto cuesta ese cóctel? | Treinta. | ¿Treinta eurodólares? | Treinta minutos de vida, según la etiqueta.
+= Esta ciudad nunca duerme. | ¿Por qué? | Porque no puede pagar el alquiler de la cama.
+= Me han cancelado el tren. | ¿Por qué? | Por falta de pasajeros. | Si hay doscientos esperando. | Por falta de pasajeros que paguen bien.
+= Mi novia es de Colinas. | ¿Y la ves mucho? | Cada vez que me deja pasar el control de su urbanización.
+= {noche} ¿Viene la PCV? | Viene. | ¿A ayudar? | A bailar. Hoy la paga el dueño del club.
+= ¿Por qué todos los anuncios sonríen? | Porque cobran por sonreír. | ¿Y nosotros? | Nosotros pagamos para verles.
+= He vendido mis recuerdos de la infancia. | ¿Por qué? | Necesitaba pagar el alquiler. | ¿Y ahora? | Ahora no sé por qué estoy triste.
+= Mira ese DJ. | ¿Qué le pasa? | Lleva tres días pinchando. | ¿Y no duerme? | Su implante sí. Él ya no.
+= ¿Te vas de vacaciones? | Sí, a la Terminal. | ¿A dónde vas? | A ver los trenes irse. Es lo más cerca que estaré de viajar.
+= Me han hackeado la cuenta. | ¿Qué se han llevado? | Mis deudas. | Ojalá fuera eso.
+= ¿Por qué hay tantos turistas? | Vienen a ver la decadencia. | ¿Y les gusta? | Pagan por ella. Es nuestra mayor exportación.
+= {dia} He comprado algo sin saber qué es. | ¿Y qué es? | No lo sé, pero tenía descuento. | Entonces es un buen negocio.
+= ¿Sabes qué es lo que más se vende en Neón Rojo? | ¿Qué? | El olvido. | ¿En pastillas? | En pastillas, en copas y en implantes.
+= Mi abuela dice que antes la gente se hablaba en la calle. | ¿Y qué se decían? | No lo sé. No había anuncios para interrumpirles.
+= He dejado las redes. | ¡Bien! | Ahora vivo de verdad. | ¿Y qué tal? | Mucho peor. No me ve nadie.
+
+# ---------------------------------------------------------------- burlas
+! {aspecto:caro} Eh, guapo, ¿VIP? Te cobro solo por mirarte. Mi tarifa es alta.
+! {aspecto:caro} Con esa pinta te dejan entrar hasta en los sitios que no existen.
+! {aspecto:caro} ¿Vienes a gastar o a que te vean gastar? Aquí las dos cosas tienen precio.
+! {aspecto:caro} Bonitos zapatos. ¿Los paga tu empresa o tu conciencia?
+! {aspecto:pobre} Eh, sin dinero no se mira el escaparate, que se gasta.
+! {aspecto:pobre} El albergue está por la salida 4. El club, para ti, por la salida 5, que es la misma.
+! {aspecto:pobre} ¿Vienes de fiesta o vienes de la fiesta de anoche? No se nota la diferencia.
+! {aspecto:desnudo} Así no entras en ningún club. Bueno, en uno sí, pero no quieres saber cuál.
+! {aspecto:desnudo} ¿Promoción de una marca de gimnasios o una noche muy mala?
+! {jugador:armado} Guarda eso, que en el club no te dejan entrar ni con mala cara.
+! {jugador:armado} Bonita pistola. ¿Es de colección o de uso diario?
+! {jugador:sangra} Estás sangrando sobre la alfombra roja. Bueno, ahora es más roja.
+! {jugador:sangra} ¿Pelea en el club? Ponte hielo y una sonrisa, que te hacen descuento.
+! {jugador:cromado} Bonito cromo. ¿Es de la colección de este año o del anterior? Porque se nota.
+! {jugador:muy-cromado} Con tanto metal, el detector del club te va a cobrar entrada doble.
+! {jugador:buscado} Tú sales en las noticias. ¿Me haces una foto contigo antes de que te pillen?
+! {rol:rocker} ¡Eh, músico! ¿Tocas esta noche? Avísame para no ir.
+! {rol:media} ¿Periodista? Aquí la única noticia es que alguien pagó una copa con dinero de verdad.
+! {rol:lawman} ¿Inspección o fiesta? Por la cara, inspección. Por el sueldo, fiesta.
+! {rol:exec} Un corpo de juerga. Pásalo bien, que mañana despides a alguien con resaca.
+! {rol:nomad} ¿Nómada? La parada de buses de larga distancia está por allí. Y lleva agua.
+! {noche} ¿Primera vez en Neón Rojo? Se nota: aún tienes la cartera.
+! {noche} Esta noche hay barra libre de malas decisiones. Aprovecha.
+! {dia} De día esto es solo un centro comercial muy triste. Vuelve de noche.
+! Oferta especial: dos implantes por el precio de un riñón. Pregunte sin compromiso.
+! ¿Una foto con el neón? Cinco eurodólares. Sonrisa incluida.
+! Ojo con el bolsillo, que aquí hasta los semáforos tienen mano larga.
+! ¿Billete? ¿Recuerdo? ¿Deuda? Aquí tenemos de todo.
+
+* Música, humo y deudas. La santísima trinidad de Neón Rojo.
+* Otra noche, otro anuncio que me conoce mejor que mi madre.
+* Si te pierdes, sigue el olor a frito y a cóctel barato.
+
+# ---------------------------------------------------------------- más (v0.37)
+> En la estación venden tickets para ver el amanecer desde las pasarelas.
+- Pagas por ver el sol que antes era gratis.
+- Viene con un café y una foto. El sol, sin garantía.
+- Si hay niebla, te devuelven el café, no el dinero.
+> Ese músico callejero toca con un brazo robótico.
+- El brazo toca mejor que él. Él solo cobra.
+- Lo programó con las canciones de su abuela. Llora entre tema y tema.
+- La PCV le multa por ruido. A los anuncios no.
+> Me han ofrecido un trabajo de «embajador de marca».
+- ¿Qué haces?
+- Llevo un logo en la frente y sonrío en las colas.
+- Pagan en producto. Ahora tengo cuarenta botellas de refresco y ninguna nevera.
+> En la Terminal han puesto sillas que te expulsan a los diez minutos.
+- Para que no se duerma nadie.
+- A mí me ha lanzado contra un quiosco. Al menos he comprado chicles.
+- La de primera clase te deja dormir y te arropa.
+> El holograma del centro comercial me ha llamado por mi nombre.
+- Te ha reconocido por la cara.
+- Por la deuda. La cara es lo de menos.
+- A mí me ha llamado «cliente perdido». Se quedó corto.
+> ¿Hay algo gratis en esta calle?
+- El ruido.
+- Las muestras de perfume. Huelen a ganas de vender.
+- La mirada de desprecio del portero del Kitsune.
+> {noche} Esa del vestido de luces es una actriz famosa.
+- ¿De qué?
+- De anuncios. Ha vendido tres coches y una guerra.
+- Está de incógnito. Por eso brilla tanto.
+> {dia} La plaza está llena de turistas.
+- Hacen fotos de las ratas. Les parecen exóticas.
+- Pagan por el tour de los tiroteos famosos.
+- Mira cómo se agarran el bolso. Los carteristas están de enhorabuena.
+> El parque de atracciones ha reabierto.
+- ¿El de la noria que se cayó?
+- Ahora la noria es «experiencia extrema». Cobran el doble.
+- Han cambiado el nombre. El accidente queda fatal en los folletos.
+> Mi app de citas me ha emparejado con mi casero.
+- ¿Y qué tal?
+- Me ha propuesto cenar a cambio de un mes de alquiler.
+- Al menos ya sabéis que tenéis un tema de conversación.
+= ¿Por qué hay tantos repartidores? | Porque nadie quiere salir de casa. | ¿Y ellos? | Ellos no tienen casa a la que volver.
+= ¿Te gusta la ciudad? | De noche. | ¿Y de día? | De día se ve.
+= He ganado un concurso de influencers. | ¿Qué te han dado? | Más seguidores. | ¿Y dinero? | Eso es para los que no lo necesitan.
+= ¿Has comido ya? | He comido un anuncio de hamburguesas. | ¿Y qué tal? | Me ha dejado con hambre y con deuda.
+! {aspecto:caro} Bonito reloj. ¿Te dice la hora o te dice lo rico que eres?
+! {aspecto:pobre} Si vienes a mirar, mira rápido, que los escaparates cobran por minuto.
+! {jugador:cromado} Esos implantes son de la colección del año pasado. Aún brillan, pero ya no impresionan.
+! {rol:media} ¿Grabando? Sácame del lado bueno. El que no tiene deudas.
+! ¿Una sonrisa para la cámara? Aquí todas las sonrisas son publicidad.

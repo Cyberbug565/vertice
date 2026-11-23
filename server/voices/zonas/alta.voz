@@ -1,0 +1,348 @@
+id: alta
+requiere: clase:alta
+registro: Pijo de urbanización. Eufemismos para todo lo feo («personas en situación de calle», «reajuste»), anglicismos de bienestar, caridad de escaparate, miedo a «los de abajo» disfrazado de preocupación. Nunca dicen «pobre»: dicen «gente con otro recorrido».
+
+# ---------------------------------------------------------------- escenas
+> ¿Has visto que han puesto pinchos nuevos en los bancos del parque?
+- Antiestrés, los llaman. Para que nadie se estrese durmiendo ahí.
+- Diseño inclusivo: incluye a todos menos a los que lo necesitan.
+- Los ha diseñado un artista. Han ganado un premio de urbanismo amable.
+> Mi hijo quiere estudiar algo que no sea finanzas.
+- Ay, qué fase. A mi sobrino le pasó y ahora es director financiero de una ONG.
+- Déjale un verano en Ferro. Vuelve sabiendo lo que vale un sueldo.
+- No pasa nada. Le compras una galería y que juegue a artista.
+> He despedido al jardinero. Hablaba con las plantas.
+- ¿Y qué les decía?
+- Lo grave es que las plantas le respondían mejor que a ti.
+- Los nuevos son drones. No hablan, no piden aguinaldo, no tienen hijos enfermos.
+> ¿Vas a la gala benéfica del sábado?
+- Claro. Cena de 3.000 €$ el cubierto para luchar contra el hambre.
+- Este año es contra la desigualdad. El dress code es oro.
+- Voy, pero me salto la parte de los vídeos tristes. Me cortan la digestión.
+> Han abierto un comedor social a tres manzanas.
+- ¡Tres manzanas! Eso ya es prácticamente mi jardín.
+- He firmado la petición para que lo trasladen. Por el bien de ellos, que aquí no pegan.
+- Dicen que dan sopa de verdad. Qué desperdicio de ingredientes.
+> ¿Tu terapeuta te sigue cobrando por respirar?
+- Ahora me cobra también por exhalar. Es un plan premium.
+- Hemos avanzado mucho. Ya sé decir «no» al servicio sin sentir nada.
+- Me ha recetado gratitud. La compro por suscripción.
+> El agua del grifo sabe a… agua.
+- Qué vulgaridad. Yo solo bebo agua de glaciar embotellada en la luna.
+- Llama a la comunidad. Pagamos para que sepa a manantial con notas de vainilla.
+- En el Arrabal la matarían por ese sabor. Exagerados.
+> Han detectado un gato callejero en la urbanización.
+- Que lo adopte alguien con pedigrí o que lo reubiquen en Ferro.
+- He visto el aviso. Seguridad dice que no tenía chip de residencia.
+- Lo más preocupante es cómo ha pasado el control biométrico.
+> Me he hecho un retiro de silencio de diez días.
+- ¿Y qué has aprendido?
+- Que los demás hablan demasiado. Sobre todo el servicio.
+- Pagué 40.000 €$ por no hablar. Mi marido lo hace gratis desde hace años.
+> ¿Has probado la nueva carne cultivada con nombre propio?
+- Sí, la mía se llamaba Bruno. Tenía notas de avellana y un pasado difícil.
+- No como nada que no haya tenido una vida mejor que la de mi chófer.
+- La de Ferro la cultivan en cubos. La nuestra, con música clásica.
+> Mi hija quiere un implante de cola.
+- Es lo que llevan ahora en el internado. Mejor eso que un novio de la Forja.
+- Que sea de diseñador al menos. Las colas genéricas son de clase media.
+- Déjala. A su edad yo me puse alas y aquí sigo, aterrizada.
+> Hoy he visto a un pobre de cerca.
+- ¿Y qué tal? ¿Muerden?
+- Yo vi uno en una exposición. Muy auténtico todo.
+- Qué valiente. Yo solo los veo por la ventanilla blindada.
+> Han subido el precio de la membresía del club.
+- Perfecto. Así filtramos.
+- Era eso o dejar entrar a gente que trabaja.
+- Lo pagaré con lo que me ahorro en sueldos este trimestre.
+> ¿Votarás a Ruiz-Okami en las municipales?
+- Votaré a quien baje los impuestos a los que pagamos menos impuestos.
+- Ya lo he votado. Mi asistente votó por mí tres veces.
+- Da igual quién gane. Las empresas ya han firmado la victoria.
+> El vecino ha puesto un muro de cinco metros.
+- Para protegerse de la mirada de los pobres. Muy sensato.
+- El nuestro es de seis. Y holográfico: proyecta un bosque que no existe.
+- Ahora el sol solo le da al muro. El sol también sabe dónde vive la gente bien.
+> Me han robado la bicicleta eléctrica.
+- ¡Aquí! Esto ya parece Cénit.
+- Habrá sido algún repartidor. Huelen la oportunidad.
+- Pide a seguridad que revise los muros. Y a los del muro, que revisen a seguridad.
+> La niñera nueva no habla nuestro idioma.
+- Mejor. Así no cuenta nada en su barrio.
+- Ni el suyo, pobre. Lo importante es que la niña le tiene miedo justo.
+- Le pagamos en experiencias. Ya ha visto un jardín de verdad.
+> ¿Sabes de algún buen matasanos discreto?
+- El doctor Vidal. Te pone un riñón nuevo y ni pregunta de dónde vino el viejo.
+- Aquí no se dice matasanos. Se dice clínica boutique de reconfiguración.
+- El mío ofrece puntos por cada órgano que renuevas.
+> Dicen que la gente de abajo se está organizando.
+- Que se organicen. Nosotros ya nos organizamos hace tres siglos.
+- He donado a la policía privada. Por la paz.
+- Mientras no se organicen en mi jardín, que hagan lo que quieran.
+> He comprado un apartamento en Ferro para invertir.
+- ¿Lo vas a visitar?
+- Ni loca. Lo veo en el mapa y sube de precio solo.
+- Cuatro familias por habitación. El rendimiento es espectacular.
+> Mi nutricionista dice que la ansiedad engorda.
+- La mía dice que la culpa adelgaza. Por eso no siento ninguna.
+- Yo me la quito con compras. Es cardio emocional.
+- Cámbiala. Las nutricionistas que dicen cosas reales son caras por error.
+> El dron de reparto ha aterrizado en el jardín equivocado.
+- ¿El del vecino? Qué humillación tener sus paquetes en tu césped.
+- Que lo devuelvan. Y que desinfecten el césped.
+- Llevaba comida de Ferro. Se notaba por el olor a esperanza.
+> ¿Tu chófer sigue durmiendo en el coche?
+- Sí, así siempre está disponible. Lo llamo «flexibilidad».
+- Le he puesto un cojín. Somos de las familias más humanas del barrio.
+- El coche tiene más metros que su piso. Sale ganando.
+> {noche} ¿Oyes las sirenas de abajo?
+- Música de fondo. Ayuda a dormir sabiendo que no son para nosotros.
+- He puesto los cristales insonorizados. Ahora solo oigo mi propia superioridad.
+- Esta noche suenan muchas. Debe de haber rebajas en algo.
+> {noche} El vigilante nocturno me ha sonreído.
+- Mal. Eso es que sabe dónde guardas las joyas.
+- Despídelo. Los vigilantes buenos no tienen cara.
+- Es su forma de pedir aumento. Ignóralo hasta que se canse.
+> {dia} Qué día tan limpio hace hoy.
+- Han subido los filtros del barrio y bajado los del Arrabal. Equilibrio.
+- El cielo azul nos sale por 200 €$ al mes en la cuota de la comunidad.
+- Abajo dicen que está amarillo. Será su perspectiva.
+> {dia} Voy a pasear al perro clonado.
+- ¿Ya va por la tercera versión?
+- El original murió de viejo, pero la suscripción no.
+- Ten cuidado, que ayer uno de Ferro le dio una caricia sin permiso.
+> {aspecto:pobre} ¿Has visto a esa persona de ahí?
+- Seguro que es del servicio de alguna casa. O de mantenimiento. Ojalá.
+- No la mires directamente. Se acostumbran.
+- He llamado a seguridad, pero con cariño.
+> {aspecto:desnudo} ¿Eso que pasea es arte o es un problema?
+- Si lo hubiera hecho un artista de Cénit, sería una performance.
+- Seguridad ya viene. Pobre, parecía tan libre.
+- Mi coach dice que el cuerpo es un templo. Ese templo está en obras.
+> {jugador:armado} ¿Esa persona lleva un arma aquí?
+- Será escolta de alguien. Los escoltas también son personas, casi.
+- En nuestro barrio las armas las lleva la seguridad, no los transeúntes.
+- No llames a la PCV, que tardan. Llama a la seguridad privada, que dispara antes.
+> {aspecto:caro} Mira qué abrigo lleva ese.
+- Por fin alguien con quien se puede hablar.
+- Es de la temporada pasada. Se le ve el esfuerzo.
+- O es muy rico o es de una banda. Aquí da igual: los dos pagan comunidad.
+> {jugador:sangra} Esa persona está dejando un rastro de sangre en la acera.
+- Que alguien avise a limpieza. Luego, si eso, a una ambulancia.
+- La acera es de piedra natural. Eso no sale.
+- Con lo que cuesta el pavimento drenante.
+> ¿Has leído el informe de pobreza de este año?
+- Por encima. Los gráficos eran muy bonitos.
+- La pobreza ha bajado: hemos cambiado la definición.
+- Lo leí en el spa. Me ayudó a valorar el spa.
+> El colegio de mis hijos ha introducido la asignatura de empatía.
+- ¿Y cómo la evalúan?
+- Los llevan de excursión a Ferro, con escolta.
+- Mi hijo ha sacado un sobresaliente. Ya imita muy bien a la gente triste.
+> Me han invitado a un safari urbano por el Arrabal.
+- ¿Con vehículo blindado?
+- Dicen que es muy auténtico. Te atracan con moderación.
+- Yo fui el año pasado. Les compré artesanía y me la robaron al volver.
+> ¿Sabías que el mayordomo tiene un hijo?
+- ¿Desde cuándo?
+- Qué sorpresa. Pensaba que venía de fábrica.
+- Que no lo traiga. El seguro no cubre niños de otros códigos postales.
+> He puesto un sistema que me avisa si alguien triste pasa por la acera.
+- ¿Y qué haces cuando suena?
+- Cierro las cortinas. Es mi forma de respetar su intimidad.
+- El mío además les pone música alegre. Para animarles a seguir andando.
+> Las criadas de la casa de al lado se han sindicado.
+- Contagioso. Ventila bien la casa.
+- Que se sindiquen. Yo me he asociado con la empresa de robots.
+- He llamado a su señora para darle el pésame.
+> ¿Vas a comprar el pase anual de aire puro?
+- Ya lo tengo. Respiro antes que nadie, que es lo que importa.
+- El premium te deja respirar también en Cénit sin mascarilla.
+- Lo regalo a mis empleados por Navidad. Una semana, que no se acostumbren.
+> Mi exmarido se ha ido a vivir a Ferro.
+- ¿Por amor?
+- Por rebeldía. Dice que allí la gente es real. Le han robado el reloj real.
+- Qué cuento. Volverá cuando necesite un dentista.
+> El club de golf ha recuperado los antiguos pantanos.
+- ¿Y la gente que vivía allí?
+- Recuperados también. Ahora son caddies.
+- Han dejado un cartel conmemorativo. Muy sentido.
+> He invertido en una empresa que vende agua a los del Yermo.
+- ¿Ética?
+- Rentable, que es la ética de verdad.
+- La embotellan en Colinas. Ellos al menos saben de dónde viene lo bueno.
+> Han cerrado la biblioteca pública de abajo.
+- Ya nadie lee. Bueno, los de abajo no.
+- La han convertido en un club privado de lectura. Ahora sí que lee gente.
+- Era un foco de reuniones. Por la convivencia.
+> {peligro:protected} Qué tranquilidad, ¿verdad?
+- La paz se compra. A plazos, pero se compra.
+- Hay doce cámaras por farola. Ni los pájaros se atreven.
+- La tranquilidad de aquí la pagan los ruidos de allí.
+> El ascensor de la torre de mi madre se averió con ella dentro.
+- ¿Y?
+- Tardaron diez minutos en sacarla. Ha demandado a la ciudad por trauma.
+- Tres horas, si cuentas el masaje de recuperación.
+> ¿Te has hecho el tratamiento de juventud con células de donante?
+- Sí. El donante era joven y no tenía otra cosa que dar.
+- Dicen que te quita diez años. A mí me quitó también los escrúpulos.
+- Lo mejor es que el donante firma que lo hace por vocación.
+> Mi hijo ha ganado el concurso de debate defendiendo los derechos de los trabajadores.
+- ¿En serio?
+- Le tocó por sorteo. Lloró al aceptarlo.
+- Muy bien. Así conoce al enemigo.
+> La jardinera me pidió el día libre por un entierro.
+- ¿De quién?
+- De su hermano. Le dije que mejor el domingo, que no hay visitas.
+- Le he enviado flores. De mi jardín, que ella cuida.
+> El precio de la vivienda en Colinas sube otra vez.
+- Excelente noticia para todos los que ya tenemos.
+- Mi casa vale más que la gente que la construyó.
+- Así se queda fuera quien tiene que quedarse fuera.
+> {lugar:portal} ¿El conserje nuevo es de fiar?
+- Viene recomendado por una agencia que recomienda a los recomendados.
+- Tiene cara de saber demasiado. Eso es bueno en un conserje.
+- Dice buenos días con acento de Ferro. Pero los dice bien.
+> {lugar:portal} Han dejado una bolsa de basura en el rellano.
+- Huele a plástico de oferta. No es de esta planta.
+- Revisa las cámaras. Seguro que es la del cuarto, que recicla para aparentar.
+- La comunidad ya ha convocado reunión de urgencia. Habrá canapés.
+> ¿Has probado el yoga con drones?
+- Te corrigen la postura con descargas suaves. Muy motivador.
+- Prefiero el yoga con empleados. Son más baratos que los drones.
+- Lo dejé. El dron me juzgaba en silencio.
+> Han puesto un mendigo holográfico en la plaza.
+- ¿Para qué?
+- Arte crítico. Puedes darle dinero y va a una fundación de arte crítico.
+- Es más limpio que los de verdad, y no se mueve del sitio.
+> Mi asesor dice que done para desgravar.
+- Mi asesor dice que desgrave para no tener que donar.
+- Yo dono a mi propia fundación. Es la caridad más eficaz.
+- Lo mejor es donar algo que ya no quieres. Como los principios.
+> La nueva clínica ofrece riñones con garantía de origen.
+- ¿Origen dónde?
+- De una persona feliz, dicen. Que vendió el riñón muy feliz.
+- Lo importante es que vienen en una caja muy bonita.
+> ¿Has visto la nueva serie sobre una familia pobre?
+- Lloré. Luego llamé al servicio para que me trajera un pañuelo.
+- Muy realista. Los actores estuvieron dos semanas sin piscina.
+- La vi por los paisajes. Ferro tiene una fotogenia brutal.
+> Se ha colado un repartidor en la urbanización sin cita.
+- ¿Y qué traía?
+- Comida. Dice que alguien la pidió. Nadie admite haber pedido comida barata.
+- Seguridad le ha requisado la moto. Por si acaso.
+> Mi coche se aparca solo y además me juzga.
+- El mío me pone música motivacional cuando adelanto a un autobús.
+- Tengo uno que se niega a entrar en Ferro. Muy listo.
+- Pues apágale el módulo moral. Es una opción de pago.
+> En el internado de mi hija hay una alumna becada.
+- Qué bonito. ¿Se nota?
+- Se nota en que estudia.
+- La han puesto en la residencia del jardinero. Para que no se sienta fuera.
+> {noche} ¿Pedimos comida al restaurante de la estrella?
+- Me apetece algo auténtico. Pide el menú inspirado en la pobreza.
+- Su plato estrella es un caldo del Arrabal a 900 €$.
+- No, que el repartidor tarda. Los manda en patinete por solidaridad.
+> Mi psicólogo dice que tengo síndrome de culpa del privilegiado.
+- ¿Y es grave?
+- Se cura con un viaje de diez días a un sitio donde nadie me lo recuerde.
+- El seguro lo cubre. Lo de los demás, no.
+> La asociación de vecinos quiere prohibir los autobuses.
+- Traen gente.
+- Y sin bus, ¿cómo llega el servicio? Que vengan andando, que es sano.
+- Hemos propuesto un bus exclusivo. Solo para personal con chip verificado.
+> ¿Has oído lo del ciberpsicópata del Arrabal?
+- Lo vi en las noticias. Qué estética tan cruda.
+- Eso aquí no pasa. Aquí la psicosis la tenemos en terapia de pago.
+- Lo grave es que bajan los precios de la zona. Ah, y los muertos.
+> Mi marido se ha comprado un tanque.
+- ¿Para qué?
+- Para ir al centro. Dice que hay mucho tráfico de gente.
+- Al menos es eléctrico. Mata con conciencia ecológica.
+> El hotel de la playa privada ha cerrado la playa pública de al lado.
+- Por fin.
+- Han puesto arena importada. La de aquí tenía historia.
+- La gente de Ferro puede verla desde la carretera. Es casi como bañarse.
+> Me he apuntado a un curso de supervivencia.
+- ¿En el Yermo?
+- En un hotel de cinco estrellas con el aire acondicionado al mínimo.
+- Te enseñan a vivir con un solo mayordomo.
+> {madrugada} ¿Qué haces despierta a estas horas?
+- Esperando a que acabe la fiesta de los de seguridad.
+- Insomnio de rica. Pienso en los impuestos y no duermo.
+- Mi dron de compañía me ha despertado para recordarme que soy feliz.
+
+# ---------------------------------------------------------------- secuencias
+= ¿Sabes qué es lo peor de ser rico? | ¿Qué? | Que te tienes que juntar con otros ricos. | Bueno, peor es lo otro.
+= Han ingresado a mi suegra en la UCI de lujo. | ¿Está bien? | Tiene vistas al lago. Eso ya es estar bien.
+= He donado un millón para la gente sin hogar. | Qué generosa. | A cambio, ponen mi nombre en el albergue. | ¿Y cómo se llama? | Colinas Doradas II.
+= ¿Por qué tienes tres coches? | Uno para cada estado de ánimo. | ¿Y si estás triste? | Me compro el cuarto.
+= Mi hija dice que soy una opresora. | ¿Y qué le has contestado? | Que se vaya a su cuarto. El ala este.
+= ¿Has visto el anuncio de la nueva torre de lujo? | «Vivir por encima de todo». | Literalmente. Tapa el sol a medio Ferro.
+= El servicio se queja de que no puede comer en la cocina. | ¿Por qué? | Porque la cocina es de diseño. Tiene que quedar bonita, no usada.
+= Voy a hacer un ayuno de agua de tres días. | Valiente. | Bueno, de agua no. De agua corriente. Me traen agua de glaciar.
+= ¿Me prestas tu jardinero el sábado? | ¿Para qué? | Quiero que me vean regando. Queda humano.
+= Ayer bajé a Cénit. | ¿Sola? | Con dos escoltas y una sensación de aventura brutal.
+= He leído que en el Arrabal se comparten las cosas. | Qué asco. | Eso dije yo. Los cepillos de dientes también, seguro.
+= La crisis no nos ha afectado. | Ni la anterior. | Ni la siguiente. Es que somos la crisis, cariño.
+= ¿Cuánto pagas a tu asistenta? | Lo justo. | ¿Justo para quién? | Para que vuelva mañana.
+= Me he hecho un análisis de sangre. | ¿Y? | Sale azul. Bueno, sale caro, que es lo mismo.
+= He donado mi coche viejo a una familia de Ferro. | ¡Qué detalle! | Ahora pagan el seguro, la gasolina y la multa que tenía.
+= Mi madre dice que antes Colinas era un barrio obrero. | ¿Y qué pasó? | Que los obreros se volvieron más caros que el suelo.
+= ¿Por qué no sales a correr por la calle? | Porque la calle es de todos. | ¿Y eso es malo? | Eso es justamente lo malo.
+= {noche} ¿Has cerrado bien la verja? | Sí, la de oro. | ¿Y la de seguridad? | Esa se cierra sola cuando detecta tristeza.
+= Mi hijo se ha ido de voluntario al Arrabal. | ¿Cuánto tiempo? | Lo justo para hacerse fotos. Ya está en casa.
+= El gobierno quiere subir los impuestos a los ricos. | ¿A cuáles? | A los que no tienen asesor. Es decir, a ninguno.
+= ¿Cómo se llama tu chófer? | No sé. | ¿Cuánto lleva contigo? | Doce años. Le llamo «tú».
+= He puesto un comedero para pájaros. | Qué tierno. | Con lector biométrico. Solo pájaros de raza.
+= Han detenido al banquero que estafó a medio Ferro. | ¡Por fin justicia! | Le han puesto la tobillera más cara del catálogo. | Así me gusta, con clase.
+= Hoy he hablado con un camarero como si fuera una persona. | ¿Y? | Se le cayó la bandeja de la emoción.
+
+# ---------------------------------------------------------------- burlas al jugador que pasa
+! {aspecto:pobre} ¿Se ha perdido? La salida al mundo real está por allí.
+! {aspecto:pobre} Si viene por la oferta de empleo, la puerta del servicio es la de atrás.
+! {aspecto:pobre} Qué estilismo tan… valiente. Muy de documental.
+! {aspecto:pobre} Disculpe, este barrio tiene derecho de admisión hasta en la acera.
+! {aspecto:pobre} ¿Viene a recoger algo? Los envíos se dejan en la garita.
+! {aspecto:pobre} Le doy cinco eurodólares si se va antes de que llegue mi suegra.
+! {aspecto:desnudo} ¿La ropa se la ha quitado usted o se la ha quitado la vida?
+! {aspecto:desnudo} Póngase algo, por favor. Aquí solo enseñan piel los anuncios de cremas.
+! {aspecto:caro} Bonito abrigo. ¿Herencia o fraude? Aquí no juzgamos, solo preguntamos.
+! {aspecto:caro} Por fin alguien vestido para este código postal.
+! {aspecto:caro} ¿Usted también es de la junta del club? Tiene cara de votar en contra de algo.
+! {jugador:armado} Las armas, en la funda. Aquí matamos con abogados.
+! {jugador:armado} ¿Viene a proteger a alguien o a quitarle algo? Por saber a quién llamar.
+! {jugador:sangra} Está manchando de sangre una acera de piedra importada. Eso no se paga con disculpas.
+! {jugador:sangra} Hay una clínica boutique a dos calles. No aceptan sangre de su categoría, pero pruebe.
+! {jugador:cromado} Uy, cuánto metal. ¿Es usted una persona o un electrodoméstico de gama media?
+! {jugador:muy-cromado} Con tanto cromo debe de doler sentarse. Y pensar.
+! {jugador:buscado} Su cara sale en el informativo. Qué ilusión, nunca había visto a un famoso de los malos.
+! {rol:nomad} Huele a carretera. Aquí las carreteras las pisamos con ruedas, no con botas.
+! {rol:exec} Usted es de los nuestros. Se le nota la calma de no pagar nunca nada.
+! {rol:lawman} Ay, un agente. ¿Viene a cobrar el aguinaldo o a cumplir horario?
+! {rol:rocker} ¿Usted es el músico que contrataron para la fiesta? Por la puerta de atrás.
+! {jugador:conduce} Ese coche no tiene la pegatina de residente. El cepo es gratis.
+! {noche} ¿Sabe qué hora es? La hora en que los de fuera ya deberían estar fuera.
+! {dia} Buenos días. Bueno, para algunos.
+! Sonría, que le graban doce cámaras. Y las doce le pagamos nosotros.
+! Si se queda mucho rato quieto, la seguridad le tomará por decoración.
+! ¿Busca a alguien? Aquí todo el mundo tiene cita, hasta los perros.
+! Camine con naturalidad. La seguridad dispara antes a los que parecen nerviosos.
+! Qué curioso. La gente como usted siempre camina mirando para arriba.
+
+# ---------------------------------------------------------------- comentarios
+* Qué ruido. Seguro que es alguien trabajando.
+* Si llueve ácido, que llueva en el otro lado del muro.
+* Hoy el aire huele a dinero. Será el filtro nuevo.
+
+# ---------------------------------------------------------------- más (v0.37)
+> Mi hijo ha suspendido. Vamos a comprar el colegio.
+- Más rápido que estudiar.
+- Que pongan su nombre en el gimnasio. Así aprueba por prestigio.
+- Ya lo hicimos con la universidad. El profesor ahora es nuestro jardinero.
+> He contratado a alguien para que me escuche.
+- ¿Un terapeuta?
+- Un oyente. Más barato. No opina.
+- El mío asiente cada siete segundos. Es un modelo muy logrado.
+= ¿Te has enterado? El vecino se ha arruinado. | ¡Qué horror! | Ahora solo tiene dos casas. | Pobre. Habrá que organizar una colecta.
+! {rol:fixer} Usted tiene cara de saber conseguir cosas. Mi marido necesita una coartada para el jueves.

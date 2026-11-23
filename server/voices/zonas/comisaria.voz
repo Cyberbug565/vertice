@@ -1,0 +1,118 @@
+id: comisaria
+requiere: lugar:comisaria
+registro: Agentes de la PCV en la comisaría: cinismo, cuotas de detenciones, corrupción asumida, papeleo, café malo y humor negro de depósito de cadáveres. Hablan de los ciudadanos como «clientes» o «expedientes».
+
+> ¿Cuántos llevas este mes?
+- Doce detenidos. Me faltan tres para el bonus.
+- Ninguno. Me he dedicado a hacer papeleo de los de mi compañero.
+- Los suficientes para que no me manden al Arrabal.
+> El café de la máquina sabe a pruebas.
+- Es que lo hacen con agua de la sala de pruebas.
+- Mejor que el del calabozo. Ese sabe a confesión.
+- La máquina la confiscamos a un traficante. El café venía incluido.
+> El comisario quiere más detenciones en Ferro.
+- ¿Por qué Ferro?
+- Porque allí la gente no tiene abogado. Es más rentable.
+- Iré a la parada del bus. Siempre hay alguien con cara de culpable.
+> Han presentado una denuncia contra mí.
+- ¿Por qué?
+- Por no hacer nada mientras robaban una tienda.
+- No te preocupes. Asuntos Internos está de vacaciones permanentes.
+> Okami ha llamado preguntando por el expediente del almacén.
+- ¿Y qué le has dicho?
+- Que se ha perdido. Ellos ya lo sabían; lo perdieron ellos.
+- Que sí, señor. Que ya está archivado. Con sus fondos.
+> He encontrado un cadáver en el Salobre.
+- ¿Identificado?
+- Sin cara y sin dedos. Lo archivamos como «persona perdida». Perdidísima.
+- Ponlo en la lista de suicidios. Es la que menos papeleo tiene.
+> El chaleco antibalas nuevo tiene publicidad.
+- Ahora si me disparan en el pecho, le dan a una marca de refrescos.
+- La empresa paga el chaleco a cambio de que salga en las noticias.
+- Es más barato si te dejas disparar en directo.
+> ¿Has visto al nuevo?
+- Viene de la academia. Todavía cree en la ley.
+- Le doy dos semanas antes de pedir su primer sobre.
+- Ha detenido a un ejecutivo. Ya le han trasladado al Yermo.
+> En el calabozo hay un tipo que dice que es inocente.
+- Todos dicen lo mismo.
+- Este puede que lo sea. Lo detuvimos por otro.
+- Que siga diciéndolo. Es bonito oír cosas nuevas aquí.
+> La patrulla del Arrabal ha vuelto sin coche.
+- ¿Se lo robaron?
+- Se lo vendieron. Al mismo que se lo robó la semana pasada.
+- Volvieron sin coche, sin radio y sin un compañero. Pero con dos detenidos.
+> Han subido el presupuesto de la PCV.
+- ¿Para más agentes?
+- Para drones y para el coche nuevo del comisario.
+- Para relaciones públicas. Hay que vender lo bien que lo hacemos.
+> Me ha pegado un ciborg en la Forja.
+- ¿Y qué has hecho?
+- He pedido refuerzos. Llegaron cuando él ya se había ido a casa a cenar.
+- Lo he anotado como «resistencia leve». Hay que mantener las estadísticas.
+> ¿A quién protegemos exactamente?
+- A los que pagan impuestos que nosotros no cobramos.
+- Al patrimonio. Las personas son un riesgo para el patrimonio.
+- A nosotros mismos, que nadie más lo hace.
+> El juez ha soltado al que detuvimos ayer.
+- ¿Por qué?
+- Tenía un buen abogado. Su padre era el juez.
+- Falta de pruebas. Las pruebas las perdimos nosotros, previo pago.
+> {noche} El turno de noche es tranquilo.
+- Porque no salimos.
+- Hasta que alguien llama. Entonces desconectamos el teléfono.
+- Tranquilo para nosotros. Para los del Arrabal, una fiesta de tiros.
+> {dia} ¿Hay algo que hacer hoy?
+- Rellenar formularios de lo que no hicimos ayer.
+- Una manifestación en Ferro. Llevamos porras, cascos y un fotógrafo amigo.
+- Desalojar a una familia. Por orden de un banco. Es lo de todos los días.
+> {jugador:armado} Ese ha entrado armado en la comisaría.
+- Será un cazarrecompensas. Viene a cobrar lo que nosotros no pudimos.
+- O un ciudadano muy valiente. O muy idiota.
+- No te muevas. A lo mejor es de Asuntos Internos.
+
+= ¿Sabes cuál es la diferencia entre un criminal y un agente? | ¿Cuál? | El uniforme. | ¿Y el sueldo? | El criminal cobra más.
+= He detenido a un ejecutivo. | ¿Y? | Ya está fuera. | ¿Y tú? | Yo estoy en el Yermo desde mañana.
+= ¿Por qué no hay detenidos de Colinas? | Porque no cometen delitos. | ¿En serio? | Los cometen sus abogados.
+= El comisario quiere que sonriamos más. | ¿Por qué? | Encuesta de satisfacción ciudadana. | ¿Y quién la responde? | Los de Colinas.
+= Hoy he salvado una vida. | ¿La de quién? | La mía. Me escondí a tiempo.
+= ¿Has visto mi porra? | La tiene el detenido. | ¿Y qué hace con ella? | Me la quiere devolver. Cuidado.
+= {noche} ¿Patrullamos? | ¿Por dónde? | Por la máquina de café. | Es la zona más segura de la ciudad.
+= Me han ofrecido trabajo en seguridad privada. | ¿Y vas a ir? | Pagan el doble. | ¿Y qué harías? | Lo mismo, pero sin pretender que es por la ley.
+= ¿Cuál es el delito más común? | Ser pobre. | ¿Y el más rentable? | Ser rico.
+= He visto un ciberpsicópata. | ¿Y qué has hecho? | He llamado a la PCV. | Somos la PCV. | Por eso no ha venido nadie.
+
+! {aspecto:pobre} ¿Viene a denunciar? Coja número. El número es 4.732.
+! {aspecto:pobre} Si viene por la sopa, esto es la comisaría. Aunque aquí también se sirve caliente.
+! {aspecto:caro} Bienvenido, señor. ¿Viene a pagar una fianza o a hacer una donación?
+! {jugador:armado} Deje el arma en el mostrador. Le daremos un recibo. Probablemente.
+! {jugador:sangra} Está sangrando. ¿Viene a denunciar o a confesar?
+! {jugador:buscado} ¿Usted? ¿Aquí? Valiente. O no sabe leer los carteles.
+! {jugador:buscado} Su cara está en ese corcho. Siéntese, que el comisario querrá una foto.
+! {rol:lawman} Compañero, ¿también vienes a esconderte del turno?
+! {rol:media} ¿Prensa? El comunicado ya está escrito. Lo escribimos antes del suceso.
+! Rellene el formulario. Los tres. En triplicado. Y luego espere.
+! La denuncia tardará en tramitarse lo que tarde usted en olvidarse de ella.
+! Hable con el agente de la ventanilla. Está de descanso hasta las ocho. Del año que viene.
+
+* Otro expediente al cajón de los que no van a ningún sitio.
+* El café está frío, como el caso del Canal.
+* En la PCV no se resuelven casos: se archivan con estilo.
+
+# ---------------------------------------------------------------- más (v0.37)
+> ¿Quién ha dejado este expediente en mi mesa?
+- El de Okami. Quieren que lo pierdas con cariño.
+- Es el del atraco del Canal. Lleva cinco años de mesa en mesa.
+- El comisario. Quiere que firmes que no lo has visto.
+> El calabozo está lleno.
+- Pues soltad a los que tengan abogado.
+- Mete a los nuevos en la sala de interrogatorios. Allí hablan más rápido.
+- Siempre está lleno los viernes. La gente se divierte y nosotros la contamos.
+> Ha llamado una señora de Colinas.
+- ¿Qué quiere?
+- Que retiremos a un pobre que duerme frente a su verja.
+- Mandad dos patrullas. Las de Colinas siempre son prioridad.
+= ¿Quién es el detenido de la celda tres? | Un periodista. | ¿Qué hizo? | Preguntar. | Grave.
+= ¿Has resuelto el caso? | Lo he cerrado. | ¿No es lo mismo? | En la PCV, sí.
+! {aspecto:desnudo} ¿Viene a denunciar un robo? Por lo que veo, se lo han llevado todo.
+! {rol:netrunner} Un netrunner en la comisaría. O viene a entregarse o a borrarse el expediente.

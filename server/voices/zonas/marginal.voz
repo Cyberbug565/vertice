@@ -1,0 +1,281 @@
+id: marginal
+requiere: clase:marginal
+registro: Jerga de calle y supervivencia. «Pana», «tronco», «primo», «colega», «pavos» (eurodólares), «la pasma» (PCV), «los de arriba». Humor muy negro sobre la muerte, el hambre, el trapicheo y los órganos. Desconfianza absoluta, ironía y una ternura que no se admite.
+
+# ---------------------------------------------------------------- escenas
+> ¿Tienes algo para comer, primo?
+- Tengo hambre. Te la presto.
+- Una lata sin etiqueta. Es una aventura.
+- Ratas no, que ya se han ido a Cénit buscando oportunidades.
+> Al Gafas le han quitado un riñón.
+- ¿Se lo robaron o lo vendió?
+- Las dos cosas. Lo vendió y luego se lo robaron al comprador.
+- Dice que con el otro le sobra. Siempre fue optimista.
+> ¿Has visto a la pasma por aquí?
+- Aquí la pasma solo baja a recoger cadáveres o mordidas.
+- Ayer vinieron. Se llevaron a uno, al equivocado, como siempre.
+- Aparecen cuando ya no queda nadie a quien salvar. Muy puntuales.
+> He encontrado un móvil en el vertedero.
+- ¿Funciona?
+- Funciona. Y todavía tiene la cuenta de un ejecutivo abierta.
+- Llama a la última persona que llamó. Igual te da recompensa o te da un tiro.
+> Ha muerto el Rata.
+- ¿De qué?
+- De viejo. A los treinta y dos. Aquí eso es la tercera edad.
+- Mañana alguien llevará su chaqueta. Así sigue con nosotros.
+> ¿Cuánto pagan por cobre?
+- Menos que por cable de fibra. Más que por dignidad.
+- Lo justo para que te pille la pasma con una bobina.
+- Depende de si el cobre sigue enchufado.
+> La Hermandad del Sol reparte sopa los jueves.
+- Buena sopa. Después te dan un sermón de dos horas.
+- La sopa la pagan los de las drogas. Así es la caridad aquí.
+- Voy por la sopa y me quedo por el fuego.
+> Esta noche hay subasta en el Cementerio de Trenes.
+- ¿Qué subastan?
+- Piezas de cromo. Algunas aún calientes del dueño.
+- Lo de siempre. Lo que se cayó de un camión y del camionero.
+> ¿Has dormido algo?
+- Dos horas, con un ojo abierto y el otro vigilando el ojo.
+- En el vagón del fondo. Hasta que llegó el dueño, que es un perro.
+- Dormir es para los que tienen puerta.
+> Me han ofrecido un curro en Cénit.
+- ¿De qué?
+- De probar implantes experimentales. Pagan bien si te despiertas.
+- Limpiando cristales en el piso 120. Sin arnés, que da mal aspecto.
+> El agua del Salobre está verde.
+- Es por las algas.
+- Es por el que tiraron ayer. Ya le salían algas.
+- No la bebas. Bueno, si la bebes, al menos dejarás de tener sed.
+> ¿Has visto el nuevo anuncio en la valla del puente?
+- «Tu futuro está en Cénit». Lo han puesto mirando al barranco.
+- Lo he tapado con mi manta. Ahora la manta tiene futuro.
+- Sale una familia sonriendo. Se nota que es mentira: tienen todos los dientes.
+> El matasanos del túnel abre hoy.
+- ¿El que cose con hilo de pescar?
+- Es bueno. Solo se le muere uno de cada tres. Mejor que el hospital.
+- Cobra en especies. Yo le pagué con un gallo.
+> Dicen que van a demoler el bloque catorce.
+- ¿Y la gente?
+- La van a «reubicar». En la calle, que es muy amplia.
+- Van a hacer pisos de lujo con vistas al vertedero. Es la tendencia.
+> ¿Me prestas cinco pavos?
+- Si me los devuelves en esta vida.
+- Tengo tres y una deuda con las Hojas Rojas. Te presto la deuda.
+- Cinco pavos aquí es una fortuna. ¿Qué vas a hacer, comprar un riñón de segunda?
+> La Marea ha subido la cuota de protección.
+- ¿Y de quién nos protegen?
+- De ellos mismos. Es el mejor servicio de seguridad del mundo.
+- Pagamos para que no nos peguen. Y nos pegan para que paguemos.
+> Mi crío ha encontrado un dedo en la basura.
+- ¿Con anillo?
+- Sin anillo. Ya se lo habían quitado. Esta ciudad no deja nada.
+- Que lo devuelva. O que lo venda, que hay quien colecciona.
+> ¿Vienes a la fiesta del descampado?
+- ¿Hay música?
+- Hay un altavoz robado y tres bidones ardiendo. La mejor discoteca del sur.
+- Iré si no viene la Voces del Vacío, que siempre acaban con alguien flotando.
+> Han puesto pinchos en el puente.
+- Para que no durmamos.
+- He dormido sobre ellos. Me ha salido el masaje gratis.
+- La próxima ponen minas, y lo llaman mobiliario urbano.
+> ¿Has oído hablar del ciberpsicópata?
+- Vive dos calles más allá. Le saludo por educación.
+- Mató a tres de los que vienen a desahuciar. Aquí es casi un santo.
+- Le dejo comida en la puerta. Así no viene a buscarla.
+> Mi vieja quiere volver al pueblo.
+- ¿Qué pueblo?
+- Uno que ya no existe. Lo compró una corpo para hacer agua embotellada.
+- Le digo que el pueblo está aquí: en el bidón número tres.
+> ¿Sabes quién ha robado la tapa de la alcantarilla?
+- Todo el barrio. Por turnos.
+- La pasma. Para venderla en el desguace de la comisaría.
+- Yo no, pero sé cuánto pagan por ella.
+> ¿Cómo va el negocio?
+- Vendo humo. Literalmente: aspiro el de la fábrica y lo embotello.
+- Bien. Hoy he vendido la misma bici tres veces.
+- Lento. La gente ya no tiene nada que robar, y yo no tengo nada que vender.
+> El tren de mercancías no ha parado esta noche.
+- Mala señal. Algún listo se ha tirado a cogerle algo.
+- Bien. La última vez que paró se llevó a un primo mío.
+- Ha pasado lleno de cosas de Cénit. Pasan por aquí para que las veamos.
+> ¿Has ido al hospital?
+- Me cobraron la sala de espera por horas.
+- Me miraron la cartera antes que la herida.
+- Me dieron cita para dentro de un año. Y una pegatina de «resiste».
+> {noche} Esta noche hace frío.
+- Quema algo. Lo que sea. Yo quemé las cartas de amor de mi ex.
+- Abrázate al perro. El perro es el único que no te pide nada.
+- Hay un bidón en la vía siete. Lo comparten tres familias y un loco.
+> {noche} ¿Oyes eso?
+- Son las Hojas Rojas cobrando.
+- Disparos. Ya ni me despiertan. Me arrullan.
+- Es el viento en los vagones. O alguien que ya no se queja.
+> {dia} ¿Ha salido el sol?
+- Ha salido, pero aquí no llega. Se queda en Colinas.
+- Algo se ve, entre la niebla del vertedero.
+- No lo mires mucho, que se cobra.
+> {madrugada} ¿Qué haces despierto?
+- Vigilo mis zapatos. Si me duermo, se van solos.
+- Esperando a que abra el comedor. Llevo aquí desde ayer.
+- Cuento las sirenas. Hoy van once. Es un récord flojo.
+> {policia:visible} Viene la pasma.
+- Esconde lo que tengas. Y lo que no tengas, también, que te lo inventan.
+- Que pase de largo. Siempre pasa de largo cuando necesitas ayuda.
+- Ya vienen a por alguien. Esperemos que sea uno de ellos.
+> {aspecto:caro} ¿Qué hace ese pavo tan bien vestido aquí?
+- Turismo de miseria. Ahora se lleva mucho.
+- Se habrá equivocado de salida de la autopista.
+- Mira cómo agarra la cartera. Como si se la fuéramos a quitar. Bueno.
+> {aspecto:caro} ¿Has visto los zapatos de ese?
+- Con eso comemos un mes. Y nos sobra para el entierro.
+- Son de piel de verdad. Un animal murió por esos zapatos, y ahora quizá él.
+- No los mires mucho, que te da ideas. A mí ya me han dado.
+> {jugador:armado} Ese lleva hierro.
+- Aquí todos llevamos. Pero el suyo brilla, es nuevo.
+- Será de las Hojas Rojas. O un cazarrecompensas. Mira para otro lado.
+- Mientras no me apunte a mí, que apunte a quien quiera.
+> {jugador:sangra} Ese va dejando sangre.
+- Que no se pare aquí, que luego viene la pasma a preguntar.
+- Le han pinchado. Aquí eso es un saludo un poco efusivo.
+- Pásale un trapo. Sucio, pero trapo.
+> {jugador:cromado} Mira cuánto cromo lleva.
+- Eso vale más que el barrio entero.
+- Que no se duerma aquí, que se despierta sin brazos.
+- Lo tiene todo de serie. O todo robado. Respeto en ambos casos.
+> Ayer vi a un niño con una pistola.
+- ¿De verdad?
+- De juguete. La de verdad la tenía su hermano pequeño.
+- Hay que empezar pronto. La infancia aquí dura lo que un cigarro.
+> La Voces del Vacío han pintado el puente.
+- Ponen «El fin ya ha empezado». Al menos son optimistas: hay un principio.
+- Han pintado ojos. Te miran de noche. Te miran más que la pasma.
+- Es arte. Lo dice el cartel que pusieron los de Colinas para venir a hacer fotos.
+> ¿Te acuerdas de cuando teníamos luz?
+- Hace dos inviernos.
+- Ahora la robamos de la farola. Es más nuestra que nunca.
+- Era un lujo. Ahora tenemos oscuridad gratis.
+> Me ha picado algo en el vertedero.
+- ¿Una rata?
+- Una jeringuilla. Ahora estoy contento sin motivo.
+- Un perro. Bueno, era casi un perro. Tenía más patas.
+> ¿Hay curro en los muelles?
+- Para descargar contenedores que no existen.
+- Hay, pero pagan en especias. Especias de contrabando.
+- La Marea contrata. El contrato es de por vida, o de por muerte.
+> El Rubio ha salido del penal.
+- ¿Cuánto le cayó?
+- Cinco años por robar pan. Al de la torre que robó millones le dieron un ascenso.
+- Ha vuelto con más tatuajes y menos dientes. El penal es una peluquería.
+> La comunidad ha juntado dinero para el funeral de la Chata.
+- ¿Cuánto?
+- Lo justo para una caja de cartón y un responso grabado.
+- Lo hemos invertido en una buena fiesta. Ella lo habría querido.
+> ¿Has comido hoy?
+- He comido ayer. Hoy estoy digiriendo el recuerdo.
+- Un sándwich de la basura de Cénit. Sabía a éxito, con un punto de moho.
+- Comí la sopa de la Hermandad. Venía con un rezo incluido.
+> En el vagón 12 vive una familia de siete.
+- ¿Y caben?
+- Caben. Duermen por turnos, como en las fábricas.
+- El casero viene cada mes a cobrar. Es dueño del tren, dice.
+> ¿Quién manda aquí?
+- Depende de la hora. De día los del Sol, de noche los del Vacío.
+- El que tenga más balas esa semana.
+- Mandamos los que quedamos vivos.
+
+# ---------------------------------------------------------------- secuencias
+= ¿Sabes cuál es el mejor plan de pensiones de aquí? | ¿Cuál? | Morirse antes de la jubilación. | Muy rentable.
+= Me han robado. | ¿Qué te han robado? | Lo que yo había robado. | Eso es justicia poética.
+= ¿Sabes por qué no hay pobres en Colinas? | ¿Por qué? | Porque los traen aquí en autobús.
+= El Gordo dice que se va a Cénit. | ¿A trabajar? | A pedir. Allí las sobras son de mejor calidad.
+= Hoy he visto a la pasma ayudar a alguien. | ¿En serio? | A cruzar la calle. Hasta la furgoneta.
+= Mi hermano ha vendido su ojo. | ¿Y qué ve ahora? | Lo mismo que antes, pero la mitad. | Así sufre la mitad.
+= ¿Sabes qué es lo bueno de no tener nada? | ¿Qué? | Que no te lo pueden quitar. | ¿Seguro? | Bueno, los órganos sí.
+= {noche} ¿Tienes fuego? | Tengo un bidón ardiendo. | Me vale. | Trae algo que quemar, que aquí se paga en leña.
+= Me he hecho un tatuaje. | ¿De qué? | De mi número de expediente. Así me encuentra la pasma sin preguntar.
+= ¿Por qué lloras? | Han desahuciado la chabola de mi madre. | ¿La chabola? | Sí. Hasta las chabolas tienen dueño.
+= He encontrado trabajo. | ¿De qué? | De pobre. En una campaña de publicidad de Colinas. | ¿Pagan? | En fotos.
+= ¿Te vas a apuntar a la lotería? | ¿Para qué? | Para ganar. | Aquí si te toca, te matan antes de cobrar.
+= Hoy han detenido al Pelos. | ¿Por qué? | Por estar en la calle. | ¿Y dónde iba a estar? | Esa era la pregunta de la multa.
+= Ayer me reí. | ¿De qué? | No me acuerdo. Pero fue bonito. | Eso aquí es un milagro.
+= ¿Sabes cuántos pisos vacíos hay en Cénit? | ¿Cuántos? | Más que gente aquí sin casa. | Y vigilados por drones.
+= Mi crío ha preguntado qué es el mar. | ¿Y qué le has dicho? | Que es el Salobre, pero sin cadáveres. | No te creyó.
+= {policia:visible} ¿Por qué nos miran así? | Porque somos pobres en un sitio donde se nos ve. | Pues que miren a otro sitio. | Ese es el plan de la ciudad.
+= Si me muero, quiero que me entierres en Colinas. | ¿Por qué? | Para que tengan que vigilar mi tumba.
+= ¿Cuánto vale un pulmón? | ¿Para comprar o para vender? | Para vender. | Menos que el que compras. Así funciona.
+= El Chino ha conseguido una beca. | ¿Para estudiar? | Para un ensayo clínico. | Bueno, es una forma de ir a la universidad.
+
+# ---------------------------------------------------------------- burlas
+! {aspecto:caro} Eh, pijo, ¿te has perdido o vienes a por fotos para tu red social?
+! {aspecto:caro} Bonitos zapatos. Si te los quitas tú, te ahorras el susto.
+! {aspecto:caro} ¿Vienes a comprar el barrio? Aquí la gente viene incluida en el precio.
+! {aspecto:caro} Cuidado con la cartera, que aquí hasta las ratas tienen hambre de marca.
+! {aspecto:caro} Mírale, como un turista en un safari. ¿Quieres que te ruja, guapo?
+! {aspecto:caro} Esa chaqueta pesa más que mi alquiler. Bueno, no tengo alquiler, pero me entiendes.
+! {aspecto:pobre} Bienvenido al club, primo. La cuota es tu dignidad, pero ya la has pagado.
+! {aspecto:pobre} Si buscas dónde dormir, el vagón ocho tiene sitio. Huele a pies, pero no gotea.
+! {aspecto:desnudo} ¿Ya te han robado hasta la camiseta? Bienvenido al Arrabal.
+! {aspecto:desnudo} Tápate, colega, que con el aire de aquí te salen pústulas en sitios raros.
+! {jugador:armado} Guarda eso, pana. Aquí el que saca el hierro primero suele enterrarse segundo.
+! {jugador:armado} Con eso no impresionas a nadie. Aquí los críos van más armados que tú.
+! {jugador:sangra} Estás sangrando, colega. Si te caes, no te robo nada. Bueno, casi nada.
+! {jugador:sangra} Aquí sangrar es gratis. Que te curen, eso ya se paga.
+! {jugador:cromado} Bonito cromo. Cuídalo, que aquí los brazos no se pierden: se cambian de dueño.
+! {jugador:muy-cromado} Con todo ese metal encima, te venderían por piezas en dos horas.
+! {jugador:buscado} Eh, tú sales en las pantallas. Aquí eres casi famoso. Y caro.
+! {jugador:buscado} Por tu cabeza dan más de lo que gana mi familia en un año. No me tientes.
+! {rol:lawman} La pasma. ¿Vienes a ayudar o a llevarte a alguien para cumplir la cuota?
+! {rol:lawman} Ni miréis, que viene a recoger su sobre.
+! {rol:exec} Un corpo por aquí. ¿Vienes a ver dónde acaban tus despedidos?
+! {rol:medtech} ¿Eres médica? Pues aquí tienes clientes hasta el infinito. Y sin seguro.
+! {rol:netrunner} Eh, cerebrito. ¿Me hackeas la nevera? Total, está vacía.
+! {rol:nomad} Nómada, ¿cuánto por llevarme al Yermo? Allí al menos el polvo es gratis.
+! {noche} A estas horas, aquí solo andan los que buscan y los que se esconden. ¿Tú de cuáles?
+! {dia} Qué madrugador. Aquí de día solo salen los que deben dinero a los de la noche.
+! Si buscas algo, pregunta. Si buscas a alguien, no preguntes.
+! Mira por dónde pisas. La mitad de la acera es de las Hojas Rojas, y la otra mitad, de nadie.
+! ¿Qué miras? Aquí mirar mucho se paga caro.
+! Tienes cara de no ser de aquí. Eso es bueno: aquí nadie quiere ser de aquí.
+
+* Huele a vertedero y a esperanza caducada.
+* Otro día, otra sirena que no viene a ayudar.
+* Si oyes un tren, apártate. Si no lo oyes, también.
+
+# ---------------------------------------------------------------- más (v0.37)
+> Los Chatarreros han montado un mercadillo en el puente.
+- Venden de todo lo que se cae de las torres.
+- Ayer vendían un brazo robótico que todavía saludaba.
+- Hay que regatear. Si no regateas, te miran como a un pijo.
+> Ha vuelto el del carrito de las lámparas.
+- ¿Las que funcionan?
+- Las que daban luz en Colinas. Ahora la dan aquí, sin enchufe.
+- Me cambió una por un abrazo. Dice que en Cénit escasean.
+> El crío de la Lola ha aprendido a leer.
+- ¿Con qué?
+- Con los carteles de «se busca». Ya se sabe los nombres de medio barrio.
+- Lee mejor que el concejal que vino a hacerse la foto.
+> Ha llovido ácido sobre el vertedero.
+- ¿Y?
+- Ahora huele a basura y a basura disuelta.
+- Por lo menos ha limpiado un poco. A su manera.
+> ¿Has visto las pintadas nuevas?
+- «Los ricos también se mueren». Muy optimista.
+- Pusieron «Comeos a los ricos» y alguien abajo escribió «con qué salsa».
+- Las borra la PCV y las vuelve a pintar el mismo chaval. Es su trabajo fijo.
+> {noche} El Loco está cantando otra vez.
+- Canta mejor que la radio de Okami.
+- Canta los nombres de los que se ha llevado la ciudad.
+- Que cante. Mientras canta, sabemos que está vivo.
+> {dia} Hoy viene la ONG de Colinas.
+- Traen mantas y cámaras.
+- Más cámaras que mantas.
+- Dan sopa durante quince minutos. Lo que dura la batería del dron de grabación.
+= ¿Qué es la libertad? | No tener casero. | ¿Y tú eres libre? | Duermo en la calle. Libre del todo.
+= ¿Por qué te ríes? | Me han desahuciado. | ¿Y eso te hace gracia? | Me han desahuciado de una chabola. Es lo más bajo que se puede caer.
+= ¿Tú votas? | ¿Para qué? | Para cambiar las cosas. | Las cosas cambian solas. A peor, pero solas.
+= He encontrado un billete de cien. | ¿Y qué vas a hacer? | Esconderlo. | ¿Por qué? | Porque si lo gasto aquí, me preguntan de dónde lo he sacado.
+! {aspecto:caro} ¿Vienes de turismo? El tour de la pobreza es gratis, pero la salida se paga.
+! {jugador:conduce} Bonito coche. Déjalo aparcado aquí y te lo devolvemos por piezas.
+! {rol:media} ¿Vienes a sacarnos en las noticias? Que salga mi lado bueno: el que no tiene hambre.
+! {rol:fixer} Tú sabes dónde hay curro de verdad. Del que no sale en ningún papel.

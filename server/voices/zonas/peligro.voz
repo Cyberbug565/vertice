@@ -1,0 +1,79 @@
+id: peligro
+requiere: ?peligro:disputed ?peligro:lawless exterior
+registro: Calles rojas y negras, en cualquier barrio: gente que vive con miedo, bandas que controlan la esquina, tiroteos como el tiempo. Frases cortas, de supervivencia, humor de trinchera.
+
+> ¿Has oído los disparos de anoche?
+- Tres ráfagas y un silencio. Ese silencio fue el peor.
+- Eran de las Hojas Rojas. Celebraban algo. O a alguien.
+- Ya no los distingo de la lluvia.
+> Esta esquina es de las Kitsune desde ayer.
+- ¿Y ayer de quién era?
+- De los muertos de las Furias.
+- Cambian más de dueño que mi casero.
+> No te pares aquí.
+- ¿Por qué?
+- Porque si te paras, te miran. Y si te miran, te cobran.
+- Aquí los que se paran se quedan para siempre.
+> ¿Hay alguna calle segura cerca?
+- La de detrás de la comisaría. Bueno, la de detrás de la PCV es la peor.
+- Ninguna. Pero la de la izquierda es menos insegura.
+- La que tienes debajo de los pies, mientras corras.
+> Han dejado un cuerpo en la parada del bus.
+- ¿Y el bus?
+- Pasa igual. No para, pero pasa.
+- La PCV vendrá cuando el cuerpo esté en edad de jubilarse.
+> Mi hijo quiere unirse a una banda.
+- ¿A cuál?
+- A la que le pague más por lo mismo que haría gratis.
+- Dile que estudie. Que estudie a qué banda le conviene.
+> ¿Llevas algo para defenderte?
+- Llevo las piernas. Son lo más rápido que tengo.
+- Una navaja y el número de mi abogado. Ninguna de las dos funciona.
+- Llevo miedo. Te hace correr más.
+> La PCV no entra en esta zona.
+- Entran a recoger lo que queda.
+- Entran en helicóptero, sacan fotos y se van.
+- Aquí la ley la escribe quien tiene más munición.
+> {noche} No me gusta esta calle de noche.
+- De día tampoco. De noche solo se nota menos.
+- Ve por el centro de la calzada. Las esquinas muerden.
+- Tranquilo. Si te pasa algo, no te enterarás.
+> {dia} Al menos de día hay gente.
+- La gente de día es la misma que de noche, pero con gafas de sol.
+- De día roban con más luz. Es más honesto.
+- De día se ve venir. De noche, solo se oye.
+> {jugador:armado} Ese va armado por aquí.
+- Aquí el que no va armado es el raro.
+- Si es de una banda, no le mires. Si no lo es, tampoco.
+- Mira cómo lo lleva: o sabe usarlo o pronto lo sabrá alguien.
+> {aspecto:caro} ¿Qué hace alguien así en esta calle?
+- Ha perdido una apuesta.
+- Viene a comprar algo que no se vende en Colinas.
+- Le doy cinco minutos antes de que vuelva sin abrigo.
+> {jugador:sangra} ¿Has visto cómo sangra ese?
+- Aquí es la forma de saludar.
+- Ha tenido suerte: aún anda.
+- Que siga andando. Si se para, le terminan el trabajo.
+
+= ¿Cuánto vale la vida aquí? | Lo que lleves encima. | ¿Y si no llevo nada? | Entonces la paliza es gratis.
+= Corre. | ¿Por qué? | No preguntes, corre. | ¿Qué pasa? | Que alguien ha empezado a correr. Aquí eso es suficiente.
+= ¿Has visto a mi hermano? | ¿El que se metió con las Furias? | Sí. | Mira en el río.
+= Me han atracado tres veces esta semana. | ¿Y qué te han quitado? | La primera vez, la cartera. La segunda, el móvil. La tercera, la paciencia.
+= {noche} Apaga el cigarro. | ¿Por qué? | La brasa se ve desde lejos. | ¿Y qué? | Los francotiradores también fuman, pero escondidos.
+= ¿Tú dónde te escondes cuando hay tiros? | Detrás de alguien más gordo. | Eso es egoísta. | Eso es estrategia.
+= Aquí todo el mundo tiene una cicatriz. | ¿Y tú? | Yo tengo tres. | ¿Y qué historia cuentan? | Que tengo mala suerte y buena piel.
+
+! Aquí no se pasea, forastero. Aquí se cruza rápido o se queda uno.
+! ¿Te has perdido? Pues piérdete más rápido, que aquí se cobra por estar perdido.
+! {aspecto:caro} Bonita ropa. Dura poco en esta calle. Disfrútala.
+! {aspecto:caro} Con esa pinta, aquí te secuestran por el abrigo y te devuelven sin él.
+! {aspecto:pobre} Tranquilo, con esa pinta aquí nadie te roba. Como mucho, te recluta.
+! {jugador:armado} Enseña el hierro, venga. Aquí todos tenemos uno más grande en casa.
+! {jugador:sangra} Sigue andando con esa herida y llegarás a la próxima esquina. A la siguiente, no.
+! {jugador:buscado} Por tu cabeza pagan bien. Aquí mucha gente necesita dinero. Piénsalo.
+! {rol:lawman} Un agente en zona roja. ¿Vienes de visita o de entierro?
+! {noche} De noche aquí solo hay dos tipos de gente: los que cazan y los que corren.
+
+* Aquí los semáforos están en rojo para siempre.
+* Otra esquina, otro dueño.
+* Si hay silencio, preocúpate.

@@ -1,0 +1,90 @@
+id: vecinos
+requiere: ?cerca:portal ?lugar:portal
+registro: Vecinos en el portal: cotilleo, comunidad de propietarios, caseros, ruidos, ascensores rotos, paquetes robados. Humor costumbrista con mala uva.
+
+> ¿Has visto al del tercero?
+- Desde que se puso el implante de oído oye hasta lo que piensas.
+- Ha vuelto a meter un dron en el ascensor. El dron vive mejor que él.
+- No sale desde hace un mes. O está de teletrabajo o está de cadáver.
+> El casero dice que sube el alquiler por las mejoras.
+- ¿Qué mejoras?
+- Ha pintado el número del portal. De gris a gris claro.
+- Ha puesto una cámara para vigilar que no nos quejemos.
+> Han robado otro paquete del buzón.
+- Seguro que fue el del cuarto. Siempre tiene paquetes que no ha pedido.
+- Los buzones nuevos se abren con la huella. Con cualquier huella.
+- Ya ni pido nada. Voy directamente a comprárselo al ladrón.
+> La reunión de la comunidad es el jueves.
+- ¿Qué se vota?
+- Si pagamos la derrama del ascensor o vivimos en las escaleras para siempre.
+- La del segundo traerá su lista de quejas. Ocupa tres folios y un holograma.
+> Los del quinto han tenido otro bebé.
+- ¿Cuántos van?
+- Cuatro, en un piso de cuarenta metros. Duermen en literas de seis alturas.
+- El bebé ya llora con acento del barrio.
+> ¿Oíste los gritos anoche?
+- Eran del cuarto. Estaban viendo la final de la liga.
+- No eran gritos, era el del sexto cantando. Peor.
+- Yo ya no oigo nada. Me puse el filtro de ruido y ahora no oigo ni el despertador.
+> La portera se ha jubilado.
+- ¿Y quién la sustituye?
+- Un robot que no sabe tu nombre pero sí tu deuda.
+- Nadie. Ahora el cotilleo lo hace el sistema de cámaras.
+> Huele a quemado en la escalera.
+- Es el del primero cocinando.
+- Es el cableado. Lleva así desde que nací.
+- No es nada. Si fuera algo, sonaría la alarma. Bueno, la alarma la robaron.
+> ¿Has pagado la cuota de la comunidad?
+- Pago la cuota y no hay comunidad. Solo cuota.
+- La pago con cuidado. El administrador vive en Colinas gracias a nosotros.
+- No. Yo soy la comunidad que no paga, también es una tradición.
+> El vecino nuevo es muy simpático.
+- Mala señal.
+- Será de una inmobiliaria. Los simpáticos vienen a comprar el edificio.
+- Dale una semana. El edificio quita la simpatía a todo el mundo.
+> {noche} ¿Quién llama al timbre a estas horas?
+- No abras. A estas horas solo llaman la PCV, los cobradores y los fantasmas.
+- Es el repartidor. Se ha equivocado de planta, de portal y de vida.
+- Es el del cuarto. Siempre se deja las llaves dentro de la borrachera.
+> {dia} Han venido a desahuciar a la del segundo.
+- ¿Con PCV?
+- Con PCV, un cerrajero y un fotógrafo del banco.
+- Le hemos subido sus cosas a mi casa. Por ahora vive en mi pasillo.
+> El ascensor huele a meado.
+- Es su perfume de serie.
+- Lo han renovado: ahora huele a meado con ambientador de lavanda.
+- Por eso subo andando. Llego cansado pero con la nariz entera.
+> ¿Sabes que van a vender el edificio?
+- ¿A quién?
+- A un fondo de Cénit. Nos van a llamar «inquilinos en transición».
+- Eso dicen cada año. Al final el edificio se vende solo, por partes.
+> La del primero tiene doce gatos.
+- Y un permiso para tres.
+- Los gatos tienen más chips que yo. Y mejor seguro.
+- Me encantan. Cazan las ratas que el casero no quiere ver.
+> El portero automático vuelve a fallar.
+- Ahora abre a todo el mundo menos a los vecinos.
+- Contesta con una voz de ultratumba. Muy de este edificio.
+- Lo arreglaron con cinta. La cinta aguanta más que la empresa que lo instaló.
+
+= ¿Has visto a la vecina del sexto? | ¿La de los implantes de ojos? | Sí. | Te ve a través de la pared. | Por eso no me cambio en el salón.
+= El casero ha venido a ver el piso. | ¿Para arreglar algo? | Para ver cuánto podría pedir por él. | Con nosotros dentro, menos.
+= ¿Quién ha dejado la bici en el rellano? | El del cuarto. | ¿Otra vez? | Dice que es arte urbano.
+= Esta noche no he dormido. | ¿Ruido? | El del quinto practicando con la batería. | ¿Sabe tocar? | No. Por eso practica.
+= Ha llegado una carta del banco. | ¿Para quién? | Para todos. | ¿Y qué dice? | «Querido inquilino». Ya sabes cómo acaba.
+= El edificio tiene cien años. | ¿Y aguanta? | Por miedo. Si se cae, el casero nos cobra el derribo.
+= Mi vecino me ha regalado un pastel. | ¿Y qué le has hecho? | Nada. | Entonces está envenenado o quiere algo.
+
+! {aspecto:pobre} ¿Busca piso? Hay uno libre en el cuarto. Libre porque el anterior no salió vivo.
+! {aspecto:caro} ¿Usted es de la inmobiliaria? Ya sabemos que viene a subirnos el alquiler.
+! {aspecto:caro} ¿Viene a comprar el edificio? Nosotros venimos incluidos, como los muebles.
+! {jugador:armado} Guarde eso, que aquí ya tenemos bastante con el casero.
+! {jugador:sangra} Está manchando el portal. La del segundo le va a denunciar en la reunión.
+! {jugador:buscado} Le he visto en la tele. Tranquilo, aquí nadie habla con la PCV. Bueno, la del segundo sí.
+! {noche} ¿Vive aquí? Porque a estas horas solo entran los vecinos y los problemas.
+! ¿Usted es el vecino nuevo? Bienvenido. La cuota se paga el uno. Los disgustos, a diario.
+! Cierre bien la puerta del portal, que se cuelan los de la calle. Y los de la comunidad.
+
+* Otra reunión de vecinos. Otra guerra civil por las plantas del rellano.
+* El ascensor ha vuelto a quedarse entre dos pisos. Como todos nosotros.
+* Huele a guiso de la del tercero y a desahucio del cuarto.

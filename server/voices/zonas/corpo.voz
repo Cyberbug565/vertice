@@ -1,0 +1,307 @@
+id: corpo
+requiere: clase:corpo
+registro: Jerga corporativa. Todo es «sinergia», «impacto», «talento», «recursos». Los despidos son «optimizaciones», la muerte es «baja definitiva» o «rotación no voluntaria». Miedo constante al jefe, competitividad caníbal, sonrisas de protocolo, cafeína y estimulantes.
+
+# ---------------------------------------------------------------- escenas
+> ¿Has visto el correo de recursos humanos?
+- «Celebramos tu contribución». Eso es un despido con globos.
+- Dicen que somos una familia. Por eso nos heredan las deudas.
+- Lo he leído tres veces. Sigo sin saber si estoy despedido o ascendido.
+> Han optimizado a todo el departamento de calidad.
+- ¿Y quién revisa ahora la calidad?
+- Una IA entrenada con los correos del departamento de calidad.
+- Calidad era un gasto. Ahora la calidad es una sensación.
+> Mi jefe quiere que trabajemos con mentalidad de dueño.
+- ¿Y te ha dado acciones?
+- Mentalidad de dueño, sueldo de inquilino.
+- Dueño de los problemas, empleado del sueldo.
+> ¿Cuántas horas llevas sin dormir?
+- Cuarenta y una. Mi implante dice que estoy «en zona».
+- Las que dure el trimestre. El sueño es para los no evaluados.
+- He dormido en la sala de siestas. Cobraban por minuto.
+> En la torre Teselia han instalado ventanas que no se abren.
+- Por seguridad.
+- Por la seguridad de las cifras de suicidios del trimestre.
+- Las de dirección sí se abren. Para que entre el aire de abajo, que da perspectiva.
+> Han ascendido a Martínez.
+- ¿Al que se llevaba los méritos de todos?
+- Se ha ganado el puesto. Ha despedido a doce personas con una sonrisa preciosa.
+- Ascendido, dicen. Lo han puesto en el piso 90 con un despacho sin puerta.
+> ¿Sabes qué es un «evento de liquidez»?
+- Cuando los de arriba se llevan el dinero y los de abajo, la liquidez de las lágrimas.
+- Cuando venden la empresa y a ti en el lote.
+- Un concepto financiero. Y el nombre del bar donde lloramos los viernes.
+> Mi evaluación de desempeño ha salido «cumple expectativas».
+- Eso es un despido a seis meses vista.
+- Enhorabuena. Las expectativas eran que te quemaras.
+- Cumplir es lo mínimo. Aquí se premia sangrar con gráficos.
+> Me han puesto un implante de productividad.
+- ¿Y funciona?
+- Ahora siento culpa cada vez que parpadeo.
+- Me avisa cuando miro una ventana más de tres segundos.
+> El nuevo director habla de «reinventar la cultura».
+- Eso significa que la vieja cultura cobraba demasiado.
+- La cultura nueva tiene futbolín y la mitad de plantilla.
+- Ha traído un gurú. El gurú cobra más que mi planta entera.
+> ¿Vas a ir al retiro de equipo?
+- Obligatorio y voluntario a la vez. La paradoja de Okami.
+- Dicen que hay ejercicios de confianza. En el último se cayó alguien de verdad.
+- Voy. Despiden a los que no aplauden con suficiente energía.
+> Han puesto cámaras de expresión facial en las mesas.
+- Si sonríes poco, te mandan a bienestar.
+- Si sonríes mucho, te investigan por drogas.
+- Yo he aprendido a sonreír al 63 %. Es el punto dulce.
+> Mi compañero murió en la mesa y nadie se dio cuenta en dos días.
+- El informe dice que su productividad no bajó.
+- Le han dado el premio al empleado del mes a título póstumo.
+- Su silla ya tiene otro. La silla, al menos, es buena.
+> ¿Te has enterado de la fusión?
+- Fusión, adquisición… todo acaba en «reestructuración».
+- Vamos a ser «más ágiles». Somos menos. Correr es más fácil sin piernas.
+- El logo nuevo es precioso. Ha costado doscientas indemnizaciones.
+> Recursos humanos me ha recomendado meditar.
+- Meditar es gratis. Por eso te lo recomiendan.
+- Eso es que tu siguiente reunión es con legal.
+- Haz caso. Cinco minutos de respirar y vuelves a rendir.
+> Han cambiado la máquina de café por una de estimulantes.
+- Por fin. El café no llegaba al 120 %.
+- Te da energía para doce horas y ansiedad para doce años.
+- La de dirección sirve café de verdad. Es la única droga legal que no compartimos.
+> ¿Cómo va tu proyecto?
+- Sigue el plan: retraso, crisis, culpables, celebración.
+- Estamos en fase de alineamiento estratégico. Nadie sabe qué hace.
+- Bien. Ya he encontrado a quién echarle la culpa cuando fracase.
+> En el ascensor alguien ha llorado.
+- Mancha la imagen corporativa. Que limpien.
+- Habrá sido alguien de contabilidad. Allí lloran en hoja de cálculo.
+- El ascensor lo ha grabado. El vídeo ya está en formación de resiliencia.
+> El jefe ha dicho que somos su mayor activo.
+- Los activos se venden cuando conviene.
+- Y luego amortizados. Literalmente.
+- Activo… como las cuentas que ya no tienen dueño.
+> ¿Te han dado la tarde libre por tu cumpleaños?
+- Me han dado una tarta y una tarea.
+- Me han dejado salir a las nueve. De la noche.
+- No. Pero el sistema me ha felicitado en el informe de horas extra.
+> Han despedido a la IA de atención al cliente.
+- ¿Por qué?
+- Empatizaba demasiado. Los clientes se sentían escuchados y pedían cosas.
+- Ahora la atención es por un humano que sigue el guion de la IA. Más barato.
+> ¿Sabes algo de los rumores de despidos?
+- Los rumores son la forma de comunicación más eficiente de la casa.
+- Si te enteras por rumor, estás a salvo. Si te enteras por correo, no.
+- He visto a los de seguridad midiendo mesas. Mala señal.
+> Mi hijo quiere trabajar aquí.
+- Sálvalo. Mándalo al Yermo con los nómadas.
+- Que empiece en prácticas. Sin sueldo y con orgullo.
+- Bien. Así le veo en el ascensor.
+> Mañana es el día de la diversidad.
+- Habrá canapés de cinco colores.
+- La diversidad del consejo es que unos juegan al golf y otros al pádel.
+- Vamos a celebrar la inclusión con una charla de un señor muy rico.
+> ¿Has visto la nueva política de vacaciones ilimitadas?
+- Ilimitadas para quien no tenga miedo a volver sin mesa.
+- Nadie las coge. Es la forma más barata de no dar vacaciones.
+- Las tengo ilimitadas desde hace dos años. He disfrutado medio día.
+> Han puesto un muro de las sonrisas en recepción.
+- Fotos de empleados felices.
+- La mitad ya no trabaja aquí. Sonríen desde el paro.
+- Las fotos las hizo una IA. Ninguno de esos existe.
+> El abogado de la empresa saluda a todo el mundo por su nombre.
+- Mal síntoma. Está preparando la demanda.
+- Se aprende los nombres para los acuerdos de confidencialidad.
+- Me ha saludado. Voy a hacer testamento.
+> {noche} ¿Todavía aquí?
+- La noche es cuando rinden los que quieren ascender.
+- Mi cápsula de casa cuesta más que dormir en la oficina.
+- Me esperan en casa, pero la empresa me espera más.
+> {noche} Ha bajado la temperatura en la planta.
+- Ahorro energético. Las plantas de dirección siguen a 23 grados.
+- Así trabajamos más rápido para entrar en calor.
+- Han dicho que el frío mejora la concentración. Yo ya no siento los dedos.
+> {dia} ¿Comemos juntos?
+- Si. Quince minutos en la mesa, como manda el protocolo.
+- Comida en barrita. La pausa larga es para los que ya no tienen ambición.
+- Hay una reunión de comida. Comemos hablando del trimestre.
+> {policia:visible} Hay seguridad por todos lados hoy.
+- Viene el consejo. Hay que proteger los bonus.
+- Han detenido a un becario por mirar los planes del lanzamiento.
+- Son de seguridad privada. La PCV sirve para los de fuera.
+> {aspecto:pobre} ¿Qué hace esa persona en la plaza corporativa?
+- Seguro que es un contratista. Les dejamos pasar los martes.
+- Será de limpieza. Les hacen vestir así para que no se les vea.
+- Si nos mira, sonríe. Las cámaras evalúan cómo tratamos a los visitantes.
+> {jugador:armado} ¿Ese va armado?
+- Será seguridad privada de otra corpo. Aquí todo el mundo tiene ejército.
+- Mientras dispare a la competencia, bienvenido.
+- No le mires. Puede ser una auditoría.
+> {aspecto:caro} Mira ese traje.
+- Directivo. Huele a stock options.
+- O es del consejo o es de una banda con buen asesor.
+- Me pregunto a cuánta gente ha despedido para comprárselo.
+> Me han dicho que hay que «salir de la zona de confort».
+- ¿Qué zona de confort? Tengo una silla de plástico.
+- Lo dice el que tiene sauna en el despacho.
+- Salgo de ella todas las noches cuando miro la nómina.
+> ¿Has firmado el nuevo contrato?
+- Clausula 47: la empresa tiene derecho de tanteo sobre tus órganos.
+- Lo firmé sin leer. Es lo que hace todo el mundo. Por eso funciona.
+- El de mi pareja incluye a mi pareja. Qué detalle.
+> Mi implante de traducción convierte todo lo que dice el jefe a lenguaje real.
+- ¿Y qué ha dicho hoy?
+- «Excelente trabajo» se traduce como «te queda un mes».
+- Lo he tenido que apagar. Ya no me atrevía a entrar en reuniones.
+> La empresa nos regala un chequeo médico.
+- Para saber cuánto vas a durar.
+- Te miden el cortisol. Si está bajo, te dan más trabajo.
+- El último chequeo me detectó ambición. Me subieron el objetivo.
+> ¿Ya tienes plaza en el aparcamiento?
+- La lista de espera es de doce años. O de un ascenso.
+- Me han dado una para patinete. Detrás de los contenedores.
+- Las plazas son por mérito. Los méritos, por apellido.
+> Han cambiado el nombre del departamento por quinta vez.
+- Ahora somos «Experiencia y Personas».
+- Somos los mismos haciendo lo mismo por menos dinero.
+- El nombre nuevo tiene una hoja. Es más ecológico despedir con hoja.
+> Me he equivocado en una cifra del informe al consejo.
+- ¿Mucho?
+- Tres ceros. A favor nuestro. Me van a ascender o a enterrar.
+- Nadie lo leerá. El consejo solo mira el color de las barras.
+> La sala de lactancia la han convertido en sala de reuniones.
+- Las reuniones también exprimen.
+- Las madres pueden usar el baño. Es más eficiente.
+- Ha sido una decisión de datos: en el último trimestre solo la usaron tres.
+> ¿Te han invitado a la fiesta de dirección?
+- Sí, para servir.
+- Hay barra libre de drogas de diseño. Y de acuerdos de silencio.
+- Fui una vez. Tuve que firmar que no había visto al director bailar.
+> Okami ha comprado el hospital del distrito.
+- ¿Y?
+- Ahora las urgencias tienen niveles de suscripción.
+- La ambulancia viene si tu puntuación de cliente es buena.
+> El becario ha ganado más que yo este mes.
+- ¿Cómo?
+- Vendió información de la empresa a la competencia.
+- Ese chico tiene futuro. En la competencia.
+> ¿Cuál es tu objetivo para el próximo trimestre?
+- Sobrevivir sin que se note.
+- Superar al de la mesa de al lado. Literalmente, si hace falta.
+- Superar el objetivo del trimestre pasado, que superaba el del anterior. Infinito.
+> Han puesto sensores en los baños.
+- Para medir el tiempo.
+- Y la hidratación. Si orinas poco, te mandan agua; si mucho, un aviso.
+- Ya ni llorar en el baño es privado.
+> Mi jefa me ha pedido que sea más proactivo.
+- ¿Qué significa?
+- Que haga su trabajo antes de que ella sepa que lo necesita.
+- Que me adelante al despido despidiéndome yo.
+> Ha habido una explosión en el laboratorio del piso 40.
+- ¿Heridos?
+- Varios. Ya han emitido un comunicado sobre la resiliencia del equipo.
+- Los resultados del ensayo, según el informe, son prometedores.
+> El café de la planta 80 sabe a ascensión.
+- ¿Cómo sabe la ascensión?
+- Amargo. Con un toque de traición.
+- A mí me sabe a deuda. Lo pago con horas.
+
+# ---------------------------------------------------------------- secuencias
+= ¿Cuál es la diferencia entre un empleado y un esclavo? | ¿Cuál? | El empleado paga su propio transporte. | Y el alquiler. | Y el seguro dental.
+= ¿Tienes un minuto? | Es la frase más peligrosa de esta torre. | Tranquilo, es solo una reestructuración. | Esa es la segunda.
+= Recursos humanos ha llamado a Pérez. | ¿Y? | Ha bajado con una caja. | Las cajas son el ascensor más rápido hacia la calle.
+= Te van a ascender. | ¿En serio? | Al piso 90. | Ese piso es de servidores. | Exacto.
+= Mi jefe me ha dado las gracias. | Peligro. | Y un abrazo. | Haz las maletas.
+= ¿Cuántos trabajamos aquí? | ¿Contando a los que no lo saben? | Contando a los que todavía no han leído el correo.
+= He soñado que me jubilaba. | ¿Y? | Me desperté con el pulso a 140 y una notificación de objetivos nuevos.
+= El consejo ha aprobado un bonus. | ¿Para quién? | Para el consejo. | Qué casualidad.
+= ¿Por qué Okami se llama Okami? | Significa «lobo». | Pues hoy han devorado a la planta 12.
+= Han instalado una máquina que mide la lealtad. | ¿Cómo? | Te pincha y si no sangras el color de la empresa, fuera.
+= ¿Has visto a Ruiz? | No viene desde el lunes. | ¿Enfermo? | Optimizado.
+= Nuestra empresa es sostenible. | ¿Desde cuándo? | Desde que reciclamos a los empleados.
+= ¿Te has fijado en que nadie se jubila aquí? | Nunca. | ¿Dónde van? | Al plan de pensiones. Es un nicho en la planta -3.
+= Hay que pensar fuera de la caja. | ¿Qué caja? | La caja en la que te echan.
+= Han puesto un pez en la sala de reuniones. | ¿Para relajar? | Para recordar que todos somos sustituibles. Es el cuarto pez este año.
+= Mi pareja dice que estoy casado con la empresa. | ¿Y qué le has dicho? | Que la empresa tiene mejor seguro dental.
+= {noche} ¿Quedamos a cenar? | No puedo, tengo una llamada con Teselia. | ¿A esta hora? | Están en otro huso. El huso de no tener vida.
+= ¿Crees que el director sabe cómo nos llamamos? | Sabe nuestro número. | ¿Y nuestro nombre? | Eso lo sabe legal.
+= Me han dado el premio a la innovación. | ¿Por qué? | Por descubrir que podíamos despedir a la mitad sin que nadie lo notara.
+= ¿Has visto el nuevo eslogan? | «Construyendo futuro». | ¿El de quién? | El del consejo, sobre todo.
+= Hoy ha llovido ácido en la plaza. | ¿Y? | Han cerrado el paso a empleados. Los directivos tienen túnel.
+= La empresa ha patentado una forma de sonreír. | ¿Cómo? | Si sonríes así sin licencia, te descuentan.
+
+# ---------------------------------------------------------------- burlas
+! {aspecto:pobre} Las entregas por la puerta trasera. Ah, ¿no es una entrega? Peor.
+! {aspecto:pobre} Le aviso: en esta plaza se cobra por estar de pie sin motivo productivo.
+! {aspecto:pobre} ¿Viene a la entrevista de becario no remunerado? Está claro que encaja.
+! {aspecto:pobre} Si busca trabajo, el portal de empleo está en la planta -2. Al lado de los residuos.
+! {aspecto:pobre} No toque el cristal. Lo limpian robots que cobran más que usted.
+! {aspecto:desnudo} ¿Es una protesta o un despido muy reciente?
+! {aspecto:desnudo} Código de vestimenta, por favor. Hasta la desesperación va de traje aquí.
+! {aspecto:caro} Bonito traje. ¿Consejero o abogado del consejero?
+! {aspecto:caro} Usted huele a reunión de dirección. Le cedo el paso. Y mi alma.
+! {jugador:armado} ¿Contratista de seguridad? La puerta de los ejércitos privados es la de la izquierda.
+! {jugador:armado} Baje el arma. Aquí se mata con hojas de cálculo.
+! {jugador:sangra} Está sangrando sobre el logotipo. Eso es mala imagen de marca.
+! {jugador:sangra} Hay un dispensario en la planta 3. Si tiene seguro corporativo. Ah, no, ya veo que no.
+! {jugador:cromado} Bonito implante. ¿Es de empresa o de los que se pagan solos?
+! {jugador:muy-cromado} Más cromo que persona. Aquí lo llamamos «empleado del año».
+! {jugador:buscado} Su cara está en la pantalla de seguridad del vestíbulo. Muy buena resolución.
+! {rol:exec} Buenos días, señor. ¿Ya ha desayunado algún competidor?
+! {rol:exec} Usted tiene la mirada de alguien que ha despedido con cariño.
+! {rol:netrunner} No mire las cámaras así. Se notan las ganas de hackearlas.
+! {rol:media} ¿Periodista? Recursos humanos tiene un comunicado preparado para usted.
+! {rol:lawman} Ah, la PCV. ¿Viene a cumplir órdenes de Okami o de Teselia esta vez?
+! {rol:nomad} Los nómadas, al aparcamiento de carga. Y que no se acerquen al consejo.
+! {noche} ¿Usted también hace horas extra? Bienvenido a la secta.
+! {dia} Buenos días. Que su productividad le sea leve.
+! Camine con propósito. Aquí quien pasea sin rumbo es despedido de la acera.
+! Sonría. La torre le está evaluando. Ya ha bajado tres puntos.
+! ¿Tiene cita? No, claro. La gente sin cita no tiene rostro.
+! Si se para, que sea para consumir algo.
+
+* Otro informe trimestral. Otra pérdida de humanidad.
+* Huele a café caro y a despidos.
+* Si los ascensores bajan rápido, es que alguien ha sido optimizado.
+
+# ---------------------------------------------------------------- más (v0.37)
+> ¿Te has enterado de lo de Teselia?
+- Han despedido a tres mil con un vídeo animado.
+- Han comprado un barrio entero de Ferro para hacer una sede «humana».
+- Su director dice que la empatía es un recurso escaso. Por eso la racionan.
+> La reunión ha durado seis horas.
+- ¿Y qué habéis decidido?
+- Convocar otra reunión para decidir el orden del día.
+- Que la culpa del retraso es de la reunión anterior.
+> Mi jefe me ha pedido que haga más con menos.
+- Pronto te pedirá que lo hagas todo con nada.
+- Menos sueldo, menos gente, menos sueño. Más resultados.
+- Él hace menos con más. Es el ejemplo a seguir.
+> Han puesto un robot en recepción.
+- ¿Saluda?
+- Saluda, evalúa tu postura y manda un informe a recursos humanos.
+- Es más simpático que la recepcionista anterior. Por eso la despidieron.
+> El edificio tiene ochenta plantas.
+- Y en todas se trabaja como si fuera la última.
+- La planta 80 es la del consejo. La 1, la del despido.
+- El ascensor tarda más en llegar al consejo que tu ascenso.
+> ¿Te han dado la tarjeta de comedor?
+- Me da derecho a comer barritas en mi mesa.
+- Tiene saldo para el mes, si no comes los viernes.
+- La de dirección incluye chef y sumiller. La mía, una máquina que tose.
+> {noche} Las luces de la torre no se apagan nunca.
+- Para que desde Ferro vean que aquí se trabaja.
+- La factura eléctrica la pagan los despedidos.
+- De noche, la torre parece un árbol de Navidad lleno de gente atrapada.
+> {dia} Ha llovido ácido sobre la plaza corporativa.
+- La han limpiado en cinco minutos. Las aceras de Ferro llevan años igual.
+- Se ha comido la escultura del fundador. Por fin algo de justicia.
+- Han dado paraguas de empresa. Con el logo, por supuesto.
+= ¿Cómo estás? | Alineado con los objetivos. | ¿Pero cómo estás? | Eso no se mide en el informe.
+= Me voy de vacaciones. | ¿Cuántos días? | Tres. | ¿Y vas a desconectar? | Me llevan el implante de mensajería al baño.
+= ¿Quién ha diseñado esta silla? | Un ergonomista. | ¿Para qué? | Para que no te duermas. Ni te sientes cómodo.
+= El nuevo eslogan es «Personas primero». | ¿Y qué ha cambiado? | Ahora nos despiden en orden alfabético.
+= ¿Por qué todos llevan el mismo traje? | Es el uniforme no obligatorio. | ¿Y si no lo llevas? | Te recomiendan llevarlo. Hasta el despido.
+! {aspecto:caro} Se le ve el bonus en la cara. Enhorabuena por el trimestre de otros.
+! {jugador:cromado} Con ese implante de cálculo podrías ser analista. O analizado.
+! {rol:fixer} Un intermediario. Seguro que sabe de quién son las cosas que se pierden aquí.
+! {rol:tech} ¿Técnica de mantenimiento? La planta 40 sigue humeando, si quiere echar un vistazo.
+! Si sonríe más, la torre le subirá el índice de cooperación.

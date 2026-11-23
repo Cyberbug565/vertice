@@ -16,6 +16,8 @@ En [ciclos.json](../client/src/render/motion/ciclos.json), cada fila contiene ca
 
 En [server/voices/calle](../server/voices/calle) cada archivo agrupa un tema o una reacción. Esta versión contiene 200 aperturas con cinco contestaciones escritas para cada una, repartidas entre 20 temas. Hay módulos de comentarios para sobresaltos, curiosidad, empujones, saludos y para el momento en que alguien apunta. Los dos hablantes se turnan. El servidor comprueba el entorno y guarda un historial corto por hablante.
 
+Desde la v0.37 hay además diálogos por zona en [server/voices/zonas](../server/voices/zonas), en formato `.voz`: ver [DIALOGOS_ZONA.md](DIALOGOS_ZONA.md).
+
 Para añadir una exclamación cuando un PNJ cauto ve un arma potente, abre [susto.json](../server/voices/calle/susto.json) y añade una cadena al array **comentarios**. Para añadir una conversación de ese mismo tema, añade una entrada como esta a **escenas**.
 
 ```json
