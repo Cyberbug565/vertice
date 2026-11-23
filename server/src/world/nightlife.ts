@@ -1,4 +1,4 @@
-import { DANCES, DANCE_IDS, type DanceId } from '@vertice/shared';
+import { DANCES, CLUB_DANCES, type DanceId } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
 import { isSick } from '../game/substances.js';
 import type { PlayerState } from '../game/player.js';
@@ -29,7 +29,7 @@ export class Nightlife {
         const [dx, dy] = positions[i];
         const e = this.w.addEntity(z, { kind: 'npc', name, title: 'En la pista', label: '', interactive: false,
           x: x + dx + 0.5, y: y + dy + 0.5, appearance, npcType: 'essential' });
-        e.emote = { move: DANCE_IDS[(venue + i) % DANCE_IDS.length], at: Date.now() - 260 * i };
+        e.emote = { move: CLUB_DANCES[(venue + i) % CLUB_DANCES.length], at: Date.now() - 260 * i };
       }
       venue++;
     }
@@ -45,7 +45,7 @@ export class Nightlife {
     e.lastMoveTick = this.w.tick + 1;
     e.emote = { move, at: Date.now() };
     e.labelVer++;
-    this.w.send(c, { t: 'notice', kind: 'info', text: `Bailas ${DANCES[move].name}. Camina o pulsa «Dejar de bailar» para parar.` });
+    this.w.send(c, { t: 'notice', kind: 'info', text: `${DANCES[move].name}. Camina para parar.` });
   }
 
   stop(e: Entity) {

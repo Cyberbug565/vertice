@@ -1,5 +1,6 @@
 // Vista isométrica: bloques de suelo bajo demanda, orden por profundidad topológica, atenuación de edificios,
 // interpolación de entidades remotas y predicción del personaje propio.
+import { capturedLegs, gaitCapture, loadCapture } from './captured-motion';
 import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
 import { Traffic } from './traffic';
 import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
@@ -24,7 +25,7 @@ export interface CEnt {
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
   kneeL?:Container; kneeR?:Container; footL?:Container; footR?:Container;
   legL?: Container; legR?: Container; armB?: Container; armF?: Container; hand?: Container; bodyY?: number;
-  weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit' | 'heavy'; dropAt?: number; faceSign?: number; rollAt?: number; kickAt?: number; poolAt?: number; poolSize?: number;
+  weaponKind?: 'ranged' | 'melee'; weaponBig?: boolean; attackAt?: number; attackKind?: 'shot' | 'hit' | 'heavy'; dropAt?: number; faceSign?: number; rollAt?: number; sideRoll?: number; jumpAt?: number; headHitAt?: number; cue?:{id:import('@vertice/shared').MotionCue;at:number}; drawAt?: number; lookAt?: { x:number; y:number; until:number }; kickAt?: number; poolAt?: number; poolSize?: number;
 }
 
 const INTERP_DELAY = 110;
@@ -404,6 +405,7 @@ export class GameView {
     if (old) this.destroyEnt(old);
     const view = new Container();
     const ent: CEnt = { s, x: s.x, y: s.y, samples: [{ t: performance.now(), x: s.x, y: s.y }], flags: 0, moving: false, view, obj: null as any, phase: Math.random() * 6 };
+    if(old && s.weapon!==old.s.weapon && /katana|espada|cuchilla-serrada/.test(s.weapon??''))ent.drawAt=performance.now();
     if (s.kind === 'npc' && s.faction?.startsWith('ias-')) {
       // IAs del ciberespacio: geometría que flota y parpadea, no personas.
       const big = s.faction === 'ias-velo' || s.name === 'CARMÍN';
@@ -774,14 +776,24 @@ export class GameView {
     (me as any).lookAt = { x: this.cursor.x, y: this.cursor.y, until: now + 700 };
     return true;
   }
-  fx(kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave', from: number, to: number, extra: { part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean } = {}) {
+  fx(kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave', from: number, to: number, extra: { jump?:boolean; dx?:number; dy?:number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean } = {}) {
     if (kind === 'wave') { this.flash(extra.x ?? this.me.x, extra.y ?? this.me.y, (extra.r ?? 11) * 1.1, 1, 800); this.wave(extra.x ?? this.me.x, extra.y ?? this.me.y, extra.r ?? 11, !!extra.ko, from === this.meId); return; }
     const a = this.ents.get(from), b = this.ents.get(to);
     if (!a || !b) return;
     const now0 = performance.now();
     if (kind === 'dodge') {
       // Rodar: estela de siluetas desde donde estaba.
-      if (!a.rollAt || now0 - a.rollAt > 450) a.rollAt = now0; // una voltereta no se reinicia a medias
+      if(extra.jump)a.jumpAt=now0;
+      else if(!a.rollAt || now0-a.rollAt>450){
+        a.rollAt=now0;
+        const netFace=((a.flags>>1)&7)*Math.PI/4;
+        const sight=a.lookAt??(a.s.buffs?.includes('guardia')?{x:a.x+Math.cos(netFace),y:a.y+Math.sin(netFace),until:now0}:undefined);
+        const vx=extra.dx??(a.x-(extra.x??a.x)),vy=extra.dy??(a.y-(extra.y??a.y));
+        if(sight && sight.until>=now0 && Math.hypot(vx,vy)>.02){
+          const angle=Math.atan2(vx,vy)-Math.atan2(sight.x-a.x,sight.y-a.y);
+          a.sideRoll=Math.abs(Math.sin(angle))>.65?Math.sign(Math.sin(angle)):0;
+        }else a.sideRoll=0;
+      } // una voltereta no se reinicia a medias
       const fx0 = extra.x ?? a.x, fy0 = extra.y ?? a.y;
       const g = new Graphics();
       for (let i = 0; i < 5; i++) { const k = i / 5; const p = worldToScreen(fx0 + (a.x - fx0) * k, fy0 + (a.y - fy0) * k, 0.6); g.ellipse(p.x, p.y, 7, 13).fill({ color: 0x43f3ff, alpha: 0.08 + k * 0.12 }); }
@@ -806,6 +818,7 @@ export class GameView {
     if (a === b && extra.x !== undefined) (a as any).lookAt = { x: extra.x, y: extra.y ?? a.y, until: now0 + 700 };
     // v0.21 · Quien recibe el golpe o el disparo se encoge (animación de impacto).
     if (a !== b && extra.hit !== false && (kind === 'hit' || kind === 'heavy' || kind === 'shot')) (b as any).hurtAt = now0 + (kind === 'shot' ? 120 : 160);
+    if(a!==b && extra.hit!==false && (kind==='hit'||kind==='heavy') && !a.s.weapon && extra.part==='cabeza')b.headHitAt=now0+160;
     if (kind === 'heavy') kind = 'hit';
     if (a !== b && a.body) a.body.scale.x = (b.x - a.x) - (b.y - a.y) >= 0 ? 1 : -1;
     const partZ = extra.part === 'cabeza' ? 1.55 : extra.part?.startsWith('pierna') ? 0.45 : 1.1;
@@ -1173,7 +1186,10 @@ export class GameView {
       if (e.s.id === this.meId) {
         const dx = me.x - e.x, dy = me.y - e.y;
         e.moving = Math.hypot(dx, dy) > 0.002;
-        if (this.guarding) this.face(e, this.cursor.x - me.x, this.cursor.y - me.y);
+        if (this.guarding) {
+          this.face(e,this.cursor.x-me.x,this.cursor.y-me.y);
+          e.lookAt={x:this.cursor.x,y:this.cursor.y,until:now+150};
+        }
         else if (e.moving) this.face(e, dx, dy);
         e.x = me.x; e.y = me.y;
       } else if (e.s.kind === 'player' || e.s.kind === 'npc') {
@@ -1277,6 +1293,7 @@ export class GameView {
   private legFrameL=new Float64Array(6);
   private legFrameR=new Float64Array(6);
   private animateBody(e: CEnt, dt: number, now: number, serverNow: number) {
+    loadCapture();
     const rm = settings.reduceMotion;
     const first=e.samples[0],last=e.samples[e.samples.length-1],flags=e.s.buffs??[];
     const speed=first && last && last.t>first.t?Math.hypot(last.x-first.x,last.y-first.y)*1000/(last.t-first.t):2.4;
@@ -1290,6 +1307,7 @@ export class GameView {
     if(e.moving && !rm){
       sampleLeg(style==='cojera'&&!hurtL?'paseo':style,e.phase/(2*Math.PI),L);
       sampleLeg(style==='cojera'&&!hurtR?'paseo':style,e.phase/(2*Math.PI)+.5,R);
+      capturedLegs(gaitCapture(style,flags,speed,!!e.weaponBig&&e.weaponKind==='ranged'),e.phase/(2*Math.PI),L,R,style==='cojera'&&!!hurtR);
     }else{L.fill(0);R.fill(0);}
     const sw=e.moving&&!rm?Math.cos(e.phase):0;
     const bob=rm?0:e.moving?Math.sin(2*e.phase-Math.PI/2)*(run?1.6:.65):Math.sin(e.phase)*.35;

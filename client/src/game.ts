@@ -1,5 +1,5 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
-import { Atlas, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
+import { Atlas, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
@@ -503,8 +503,11 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   // Clic derecho mantenido: apuntar (armas a distancia) o bloquear (cuerpo a cuerpo). Se ve una retícula junto al cursor.
   const reticle = h('div', { class: 'reticle', style: { display: 'none' } }, h('i'));
   $ui().append(reticle);
+  const aimFacing=()=>facingToIdx(view.cursor.x-view.me.x,view.cursor.y-view.me.y);
+  let guardFacing=-1, lastFacingAt=0;
   view.onGuard = (on) => {
-    net.send({ t: 'guard', on } as any);
+    guardFacing=on?aimFacing():-1;
+    net.send({t:'guard',on,facing:on?guardFacing:undefined} as any);
     guardSince = on ? performance.now() : 0;
     reticle.style.display = on ? '' : 'none';
     if (on) document.getElementById('target-menu')?.remove();
@@ -512,6 +515,10 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   let guardSince = 0;
   timers.push(window.setInterval(() => {
     if (!view.guarding) return;
+    const facing=aimFacing();
+    if(facing!==guardFacing && performance.now()-lastFacingAt>=125){
+      guardFacing=facing;lastFacingAt=performance.now();net.send({t:'guard',on:true,facing} as any);
+    }
     const ranged = st.sheet?.weapon?.kind === 'ranged';
     const aimT = (st.sheet?.aim.time ?? 1.5) * 1000;
     const k = Math.min(1, (performance.now() - guardSince) / aimT);
@@ -780,6 +787,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         break;
       }
       case 'blood': view.setBlood(m.spots, !!m.reset); break;
+      case 'motion': {const e=view.ents.get(m.id);if(e)e.cue={id:m.cue,at:performance.now()};break;}
       case 'speech': { view.say(m.id, m.text); const e = view.ents.get(m.id); if (e) chatLog.append(h('div', {}, h('span', { class: 'who' }, e.s.name), `: ${m.text}`)); chatLog.scrollTop = chatLog.scrollHeight; break; }
       case 'stealth': sbar.render(m.view); view.setObservers(m.view.observers, m.view.suspicion); break;
       case 'noise': view.noiseRing(m.x, m.y, m.r); break;
@@ -799,7 +807,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         else if (m.kind === 'wave') sfx.wave(!!m.ko, src.d, src.p);
         else if (m.kind === 'hack') sfx.hackChirp(src.d, src.p);
         else if (m.kind === 'ko' && person) sfx.voice('grito', high(m.to), dst.d, dst.p);
-        view.fx(m.kind, m.from, m.to, { part: m.part, weapon: m.weapon, hit: m.hit, sever: m.sever, crit: m.crit, burst: m.burst, x: m.x, y: m.y, r: m.r, ko: m.ko });
+        view.fx(m.kind, m.from, m.to, { jump:m.jump, dx:m.dx, dy:m.dy, part: m.part, weapon: m.weapon, hit: m.hit, sever: m.sever, crit: m.crit, burst: m.burst, x: m.x, y: m.y, r: m.r, ko: m.ko });
         if (m.from === view.meId || m.to === view.meId) { combatMusicUntil = Date.now() + 11_000; refreshScore(); }
         break;
       }

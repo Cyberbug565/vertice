@@ -1,10 +1,18 @@
+import { captureLength, capturedLegs } from './captured-motion';
 import type { EmoteState } from '@vertice/shared';
 
 export interface DancePose {
   sway: number; lift: number; lean: number; left: number; right: number; front: number; back: number; turn?: number;
 }
 
+const moves:Record<string,string>={uprock:'uprock',entrenar:'saco',provocar:'provocar',abrir:'abrir',lanzar:'lanzar'};
+const left=new Float64Array(6),right=new Float64Array(6);
 export function dancePose(move: EmoteState['move'], secs: number): DancePose {
+  const motion=moves[move],length=motion?captureLength(motion):0;
+  if(length && (move==='entrenar'||move==='uprock'||secs<length) && capturedLegs(motion,secs/length,left,right)){
+    return {sway:1.8*(left[0]-right[0]),lift:(left[1]+right[1])*.9,lean:(left[4]+right[4])*.06,
+      left:-left[0],right:-right[0],front:right[4]+right[5]*.42,back:left[4]+left[5]*.42};
+  }
   const t = secs * Math.PI * 2;
   const s = Math.sin(t), c = Math.cos(t);
   switch (move) {

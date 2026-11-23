@@ -414,7 +414,7 @@ export class World {
     let nx = e.x + s.dx * step, ny = e.y + s.dy * step;
     if (!free(nx, ny)) { if (free(nx, e.y)) ny = e.y; else if (free(e.x, ny)) nx = e.x; else { nx = e.x; ny = e.y; } }
     const moved = nx !== e.x || ny !== e.y;
-    if (moved) { e.facing = facingToIdx(nx - e.x, ny - e.y); e.x = nx; e.y = ny; e.zone.moved(e); }
+    if (moved) { e.facing = e.guard && e.guardFacing!==undefined ? e.guardFacing : facingToIdx(nx-e.x,ny-e.y); e.x = nx; e.y = ny; e.zone.moved(e); }
     e.moving = moved;
     e.lastMoveTick = this.tick;
     if (e.kind === 'player' && e.conn) this.sectorCheck(e);
@@ -491,6 +491,12 @@ export class World {
     c.ws.send(s);
     c.bytesOut += s.length;
     this.metrics.inc('bytesOut', s.length); this.metrics.inc('bytesOutJson', s.length);
+  }
+
+  motion(e:Entity,cue:import('@vertice/shared').MotionCue) {
+    for(const viewer of e.zone.query(e.x,e.y,28)){
+      if(viewer.conn && (viewer===e || viewer.conn.known.has(e.id)))this.send(viewer.conn,{t:'motion',id:e.id,cue});
+    }
   }
 
   private snapshot(c: PlayerConn) {
@@ -739,7 +745,9 @@ export class World {
       case 'dodge': return guarded(m.seq, async () => this.combat.dodge(c, m.dx, m.dy));
       case 'swing': return guarded(m.seq, async () => this.combat.swing(c, m.dx, m.dy, !!m.heavy, m.opId));
       case 'guard': {
-        e.guard = m.on; e.guardSince = m.on ? Date.now() : undefined; e.labelVer++;
+        if(!!e.guard!==m.on){e.guard=m.on;e.guardSince=m.on?Date.now():undefined;e.labelVer++;}
+        e.guardFacing=m.on?m.facing:undefined;
+        if(m.on && m.facing!==undefined && e.facing!==m.facing){e.facing=m.facing;e.lastMoveTick=this.tick+1;}
         this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       }
       case 'stop': this.cancelActivity(e); this.closeDialog(c); this.send(c, { t: 'ack', seq: m.seq, ok: true, info: 'Orden cancelada' }); return;

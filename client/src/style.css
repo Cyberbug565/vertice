@@ -407,10 +407,7 @@ button.chip { cursor: pointer; }
   aspect-ratio: 1;
   border: 1px solid #8172dd;
   border-radius: 50%;
-  background: conic-gradient(from -30deg, #423769 0deg, #1e2440 59deg, #625296 59deg 60deg,
-    #3b305d 60deg, #1b223c 119deg, #625296 119deg 120deg, #423769 120deg, #1e2440 179deg, #625296 179deg 180deg,
-    #3b305d 180deg, #1b223c 239deg, #625296 239deg 240deg, #423769 240deg, #1e2440 299deg, #625296 299deg 300deg,
-    #3b305d 300deg, #1b223c 359deg, #625296 359deg);
+  background: repeating-conic-gradient(from -25.714deg, #423769 0deg, #1e2440 50.8deg, #625296 51.43deg);
   box-shadow: 0 24px 80px #000a, 0 0 34px #775efa44;
 }
 .dance-center {
@@ -732,3 +729,7 @@ body.hack-mode canvas { cursor: crosshair !important; filter: hue-rotate(-12deg)
 .atlas-view:active {cursor:grabbing;}
 .atlas-view:focus-visible {outline:2px solid #69e8ce;}
 .atlas-foot {justify-content:space-between;font-size:.85em;}
+
+.dance-overlay { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }
+.dance-gestures { display:flex; gap:.7rem; justify-content:center; z-index:1; }
+.dance-gestures span { margin-right:.35em; }

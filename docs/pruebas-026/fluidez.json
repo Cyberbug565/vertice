@@ -1,0 +1,42 @@
+{
+  "0.25": {
+    "marcha": {
+      "muestras": 480,
+      "p95": 3.23,
+      "maximo": 4.5,
+      "cambioVelocidadP95": 0.59
+    },
+    "carrera": {
+      "muestras": 490,
+      "p95": 4.66,
+      "maximo": 5.95,
+      "cambioVelocidadP95": 1.29
+    },
+    "transiciones": {
+      "muestras": 290,
+      "p95": 7.08,
+      "maximo": 13.22,
+      "cambioVelocidadP95": 2.73
+    }
+  },
+  "0.26": {
+    "marcha": {
+      "muestras": 480,
+      "p95": 4.05,
+      "maximo": 6.37,
+      "cambioVelocidadP95": 1.02
+    },
+    "carrera": {
+      "muestras": 490,
+      "p95": 8.26,
+      "maximo": 10.03,
+      "cambioVelocidadP95": 1.89
+    },
+    "transiciones": {
+      "muestras": 290,
+      "p95": 6.21,
+      "maximo": 10.03,
+      "cambioVelocidadP95": 3.61
+    }
+  }
+}

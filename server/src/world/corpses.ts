@@ -198,8 +198,9 @@ export class Corpses {
     }
     if (action === 'search') {
       if (!def.junk) throw new GameError(`En ${def.name} no hay nada que rebuscar.`);
-      if (st.bodies.length) { this.w.send(c, { t: 'notice', kind: 'warn', text: `Levantas la tapa… y hay un cadáver dentro (${st.bodies.join(', ')}). Mejor cerrarla.` }); return; }
+      if (st.bodies.length) { this.w.motion(e,'abrir'); this.w.send(c, { t: 'notice', kind: 'warn', text: `Levantas la tapa… y hay un cadáver dentro (${st.bodies.join(', ')}). Mejor cerrarla.` }); return; }
       if (st.searchedAt && Date.now() - st.searchedAt < 10 * 60 * 1000) throw new GameError('Ya lo has revuelto hace poco: solo quedan bolsas vacías.');
+      this.w.motion(e,'abrir');
       st.searchedAt = Date.now();
       const table: [string, number, number][] = [['chatarra', 0.45, 3], ['fideos-krill', 0.15, 1], ['refresco-neon', 0.15, 1], ['bala-pistola', 0.12, 8], ['venda', 0.1, 1], ['neblina', 0.04, 1], ['ganzua-electronica', 0.03, 1]];
       const found: string[] = [];

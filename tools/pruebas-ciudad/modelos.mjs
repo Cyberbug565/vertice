@@ -91,7 +91,7 @@ export async function mannequin(kind,clothes,implant,canvas){
 }
 
 // Proyección ortográfica con z-buffer y texturas de color de los propios glTF.
-export function renderPose(model,canvas,width,height,yaw=.98){
+export function renderPose(model,canvas,width,height,yaw=.98,track=0){
   model.scene.updateMatrixWorld(true);
   const surface=canvas.createCanvas(width,height),ctx=surface.getContext('2d');
   const img=ctx.createImageData(width,height),depth=new Float32Array(width*height).fill(-Infinity);
@@ -99,12 +99,14 @@ export function renderPose(model,canvas,width,height,yaw=.98){
   const v=new T.Vector3(), n=new T.Vector3(), l=new T.Vector3(-.4,.8,.55).normalize();
   for(const part of model.meshes){
     const {mesh,tex,hidden,metal}=part,g=mesh.geometry, pos=g.getAttribute('position'),uv=g.getAttribute('uv'),col=g.getAttribute('color');
-    mesh.skeleton.update();
+    if(!mesh.visible || !mesh.parent?.visible)continue;
+    mesh.skeleton?.update();
     const points=new Float32Array(pos.count*6);
     for(let i=0;i<pos.count;i++){
-      mesh.getVertexPosition(i,v);v.applyMatrix4(mesh.matrixWorld);
+      if(mesh.isSkinnedMesh)mesh.getVertexPosition(i,v);else v.fromBufferAttribute(pos,i);
+      v.applyMatrix4(mesh.matrixWorld);
       const a=i*6,forward=si*v.x+co*v.z;
-      points[a]=width*.5+(co*v.x-si*v.z)*scale;
+      points[a]=width*.5+(co*v.x-si*v.z-track)*scale;
       points[a+1]=height*.94-(v.y*.993-forward*.115)*scale;
       points[a+2]=forward*.993+v.y*.115;
       points[a+3]=v.x;points[a+4]=v.y;points[a+5]=v.z;

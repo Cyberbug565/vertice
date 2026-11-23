@@ -1,0 +1,265 @@
+{
+  "release": "https://github.com/Cyberbug565/vertice/releases/tag/moveset",
+  "tag": "moveset",
+  "bytes": 426254900,
+  "archivos": [
+    {
+      "archivo": "Boxing.fbx",
+      "bytes": 1876176,
+      "sha256": "718f0870aec35e75a1ed68e3c9c2b467aec50a557349f313f06e8ddc3ce91008",
+      "fotogramas_30_Hz": 53,
+      "duración_s": 1.7333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Brooklyn.Uprock.fbx",
+      "bytes": 2177408,
+      "sha256": "b381436a999e15d66ffe9314d89793f7e375cfad0ab8414c247d615422d57e04",
+      "fotogramas_30_Hz": 147,
+      "duración_s": 4.8667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Catwalk.Walk.Start.Turn.180.Right.fbx",
+      "bytes": 2106224,
+      "sha256": "442d3437769d0146f59a81bf02f7c910215af3bdd3734be7d08bf91a3f57aa37",
+      "fotogramas_30_Hz": 99,
+      "duración_s": 3.2667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Change.Direction.fbx",
+      "bytes": 1981488,
+      "sha256": "7630e52afaa637016a2c9761921ee28baed7d07c5261119d9c2a686f4313fd88",
+      "fotogramas_30_Hz": 66,
+      "duración_s": 2.1667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Draw.Sword.1.fbx",
+      "bytes": 1905888,
+      "sha256": "872665bdf9a0035d32fef132e11be853a0d55cbf066ffbe2610398ba3b9d4979",
+      "fotogramas_30_Hz": 16,
+      "duración_s": 0.5,
+      "huesos": 65
+    },
+    {
+      "archivo": "Drunk.Walk.fbx",
+      "bytes": 2075984,
+      "sha256": "055a6af4193ea5607777076b48b5cef417111392839a21bd1f4063d53774f44f",
+      "fotogramas_30_Hz": 91,
+      "duración_s": 3.0,
+      "huesos": 65
+    },
+    {
+      "archivo": "Free.Medieval.3D.People.Low.Poly.Pack.zip",
+      "bytes": 4104075,
+      "sha256": "64ff3eda88411da2f0c14d24c0d5ef8c05b421ee40ad8ff3a75cf8c2593ee7aa",
+      "ficherosInternos": 32
+    },
+    {
+      "archivo": "Great.Sword.Jump.Attack.fbx",
+      "bytes": 1988224,
+      "sha256": "d6dd272de1a30fff30ae098b72aa07fa7c8c6b35005b851b580d5a09a792f826",
+      "fotogramas_30_Hz": 66,
+      "duración_s": 2.1667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Injured.Run.fbx",
+      "bytes": 1804176,
+      "sha256": "c66f1eb6cf5b8b1a11f4c4715ba86e00af8d8450362062d5024878f6af046ee4",
+      "fotogramas_30_Hz": 20,
+      "duración_s": 0.6333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Jumping.Down.fbx",
+      "bytes": 2129088,
+      "sha256": "b0fde0de9b1d74314f7ae6507d7a3676757195574c5506947258668414a415f4",
+      "fotogramas_30_Hz": 116,
+      "duración_s": 3.8333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Lead.Jab.fbx",
+      "bytes": 1884288,
+      "sha256": "720df633630c6c7bdcc38586caae1601ee588a39522e9e3ef62117378e854452",
+      "fotogramas_30_Hz": 56,
+      "duración_s": 1.8333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Modular.Character.Outfits.-.Fantasy.Standard.zip",
+      "bytes": 294347394,
+      "sha256": "c3468b18871cc8c8f05ab14df7712baf22cb9f389cbd870babf130e595187f70",
+      "ficherosInternos": 121
+    },
+    {
+      "archivo": "Opening.fbx",
+      "bytes": 2654064,
+      "sha256": "995958efcd37dee3308df6cde1b2a5106d0616ab694ffe7b0c5c9baa582afe13",
+      "fotogramas_30_Hz": 330,
+      "duración_s": 10.9667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Punching.Bag.fbx",
+      "bytes": 1997680,
+      "sha256": "d9f092d2a3eafbbd37c18487205e8d239f09f1bb3a42ea9dbbbc48eca4de7da2",
+      "fotogramas_30_Hz": 98,
+      "duración_s": 3.2333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Receive.Uppercut.To.The.Face.fbx",
+      "bytes": 1872976,
+      "sha256": "823988e5d725c90142bfbca63965cb6c532f610e7c8fc3c318c7aba1dfdcb541",
+      "fotogramas_30_Hz": 38,
+      "duración_s": 1.2333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Run.Backwards.fbx",
+      "bytes": 1905888,
+      "sha256": "da53841e62984190f8c3a272d9ffba0f166119949d72e0fe30413c55347e94f6",
+      "fotogramas_30_Hz": 46,
+      "duración_s": 1.5,
+      "huesos": 65
+    },
+    {
+      "archivo": "Run.Forward.Arc.Left.fbx",
+      "bytes": 1817360,
+      "sha256": "91fbcc8a2aa7e0adb35203bdfb3cf06902292dac5db193c5fd9e50db7000ff3e",
+      "fotogramas_30_Hz": 23,
+      "duración_s": 0.7333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Run.To.Rolling.fbx",
+      "bytes": 2012736,
+      "sha256": "a49e119c8c099b997fea744a007518f8d32677f4920ed01ff256b5669132a855",
+      "fotogramas_30_Hz": 74,
+      "duración_s": 2.4333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Running.fbx",
+      "bytes": 1998784,
+      "sha256": "52b8190fdd9e21bc8c285854ee0954a7496b2178c9855398cf51212447c74e0b",
+      "fotogramas_30_Hz": 77,
+      "duración_s": 2.5333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Standard.Walk.fbx",
+      "bytes": 1865568,
+      "sha256": "37c211a27d4fbbf769164580e2cf4ea8cff61e46276325177e283632a720f155",
+      "fotogramas_30_Hz": 36,
+      "duración_s": 1.1667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Standing.Up.fbx",
+      "bytes": 2227440,
+      "sha256": "c53a95cba8e3157eada53180a895a317ba7a4f715f3f9ce0af4c1c141e0c0b43",
+      "fotogramas_30_Hz": 183,
+      "duración_s": 6.0667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Strafing.1.fbx",
+      "bytes": 1832544,
+      "sha256": "e7cb56ea53c4150248df108131d80b2669319571948a9a7f6929b9e54a86ae65",
+      "fotogramas_30_Hz": 33,
+      "duración_s": 1.0667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Strafing.fbx",
+      "bytes": 1917216,
+      "sha256": "4a11795e098de3457f8939b9d387b335b17687348ce02c269852aab836bbc17b",
+      "fotogramas_30_Hz": 54,
+      "duración_s": 1.7667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Sword.And.Shield.Block.fbx",
+      "bytes": 1782288,
+      "sha256": "ab95548544b0bb616956c9974ccb7a2dd3398da7f3d68de63f195aeb6afa9694",
+      "fotogramas_30_Hz": 18,
+      "duración_s": 0.5667,
+      "huesos": 65
+    },
+    {
+      "archivo": "Taunt.fbx",
+      "bytes": 2057088,
+      "sha256": "2fcfcb44a21a9d33471adc79b1d08978e9ddb0924527c31bc5d8ffeda9052b26",
+      "fotogramas_30_Hz": 86,
+      "duración_s": 2.8333,
+      "huesos": 65
+    },
+    {
+      "archivo": "Throw.fbx",
+      "bytes": 1985264,
+      "sha256": "feb35046ba6b7b5034e405edee4c1ba84bd1dd77ca60b46fa89001b10ea7c5c9",
+      "fotogramas_30_Hz": 67,
+      "duración_s": 2.2,
+      "huesos": 65
+    },
+    {
+      "archivo": "Universal.Animation.Library.2.Standard.zip",
+      "bytes": 18735003,
+      "sha256": "4008ea208a604773a2b2177d965f0f5d3195498b5bf838c3f5785d68e95f2a68",
+      "ficherosInternos": 13
+    },
+    {
+      "archivo": "Vocations-and-Uniforms-Free-2026-11-17.zip",
+      "bytes": 2535410,
+      "sha256": "16e97e0523a4d62d866b02b8aafda874c9cafa7f393bac133df69472dcecb9bd",
+      "ficherosInternos": 3
+    },
+    {
+      "archivo": "Vocations.and.Uniforms.blend",
+      "bytes": 12007884,
+      "sha256": "d8c1dd63c9c39200854af9973205caf32b63cb59f3d8d4852ce3701985906d18"
+    },
+    {
+      "archivo": "Walk.With.Rifle.fbx",
+      "bytes": 1878192,
+      "sha256": "36ae36273a23c0e34390eb416b8d4484ab0aad876c3368a5feb3dc18ec911897",
+      "fotogramas_30_Hz": 44,
+      "duración_s": 1.4333,
+      "huesos": 65
+    },
+    {
+      "archivo": "x320p_Spritesheets.zip",
+      "bytes": 44791102,
+      "sha256": "bbf09914717082053c1eee6795ca4d0e5572a04342a5e602c6e154e94b093cfb",
+      "ficherosInternos": 672,
+      "acciones": [
+        "Attack_01",
+        "Attack_02",
+        "Attack_03",
+        "Death_Armed",
+        "Death_Unarmed",
+        "Hit_Armed",
+        "Hit_Block",
+        "Hit_Block_To_Idle",
+        "Hit_Unarmed",
+        "Idle_Armed",
+        "Idle_Block",
+        "Idle_Get_Weapon",
+        "Idle_Transition_To_Block",
+        "Idle_Unarmed",
+        "Jump_Armed",
+        "Jump_Unarmed",
+        "Roar",
+        "Run_Armed",
+        "Run_Unarmed",
+        "Walk_Armed",
+        "Walk_Unarmed"
+      ]
+    }
+  ]
+}

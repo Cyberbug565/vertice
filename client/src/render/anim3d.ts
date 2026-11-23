@@ -9,16 +9,26 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 interface Track { bone: string; interp: THREE.Interpolant; upper: boolean }
 interface Clip { dur: number; tracks: Track[] }
 let clips: Map<string, Clip> | null = null;
-let loading = false;
+let loading=false,extraLoading=false,hasBase=false,extraRetry=0;
 const UPPER = /^(spine_0[123]|neck_01|Head|clavicle_|upperarm_|lowerarm_|hand_|index_|middle_|ring_|pinky_|thumb_)/;
 
 /** Carga las animaciones (una vez, en segundo plano). Mientras no estén, el juego usa solo el movimiento procedural. */
 export function loadAnims() {
-  if (clips || loading) return;
+  if (hasBase || loading || typeof window==='undefined') return;
   loading = true;
   new GLTFLoader().loadAsync('/models/anim/ual2.glb').then((g) => {
-    const m = new Map<string, Clip>();
-    for (const c of g.animations) {
+    registerUniversal(g.animations);hasBase=true;
+  }).catch((err) => console.warn('[animaciones] no se pudieron cargar', err));
+}
+export function loadExtraAnims(){
+  if(extraLoading || clips?.has('Shield_Dash') || Date.now()<extraRetry || typeof window==='undefined')return;
+  extraLoading=true;
+  void new GLTFLoader().loadAsync('/models/anim/ual2-extra.glb').then(g=>registerUniversal(g.animations))
+    .catch(err=>{extraRetry=Date.now()+30000;console.warn('[gestos UBC]',err);}).finally(()=>{extraLoading=false;});
+}
+export function registerUniversal(animations: THREE.AnimationClip[]) {
+    const m = clips??new Map<string,Clip>();
+    for (const c of animations) {
       const tracks: Track[] = [];
       for (const t of c.tracks) {
         const [bone, prop] = t.name.split('.');
@@ -28,7 +38,6 @@ export function loadAnims() {
       m.set(c.name, { dur: c.duration, tracks });
     }
     clips = m;
-  }).catch((err) => console.warn('[animaciones] no se pudieron cargar', err));
 }
 export const animsReady = () => !!clips;
 export const clipDur = (name: string) => clips?.get(name)?.dur ?? 0;

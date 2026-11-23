@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.25)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.26)
+
+La v0.26 integra las capturas de la release de movimiento para jugadores y NPC. Incluye marcha, carrera, esquivas, guardias, gestos y Brooklyn Uprock. [Ver las fotos, la comparación y las animaciones pendientes](docs/ANIMACIONES_026.md).
 
 La v0.25 añade exploración persistente, mapa desplazable, siete estilos de movimiento y voces de calle y de misiones. [Controles, muestras y guía para añadir diálogos](docs/CIUDAD_VIVA.md).
 

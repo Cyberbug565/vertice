@@ -8,7 +8,7 @@ import { powerful, voices } from '../game/voices.js';
 import type { World } from './world.js';
 import type { Zone } from './zone.js';
 
-type Emote = 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos';
+type Emote = 'sentado' | 'manos-arriba' | 'telefono' | 'fumar' | 'gesto' | 'brazos' | 'abrir' | 'lanzar';
 interface Line { at: number; id: number; text: string; partner?: number }
 interface Goal { kind: string; x: number; y: number; face: [number, number]; label: string; emote?: Emote; line?: string; len: [number, number] }
 interface StreetEvent { kind: 'atraco' | 'control' | 'pelea'; a: number; b: number; step: number; next: number }
@@ -30,10 +30,10 @@ const CONVOS: string[][] = [
 ];
 const PROPS: Record<string, Omit<Goal, 'x' | 'y' | 'face'>[]> = {
   bench: [{ kind: 'bench', label: 'Sentado en el banco', emote: 'sentado', len: [120, 300] }],
-  vending: [{ kind: 'vending', label: 'Sacando algo de la máquina', line: '*clonc* …Otra vez se ha tragado la moneda.', len: [30, 60] }],
+  vending: [{ kind: 'vending', label: 'Sacando algo de la máquina', emote: 'abrir', line: '*clonc* …Otra vez se ha tragado la moneda.', len: [30, 60] }],
   atm: [{ kind: 'atm', label: 'Sacando dinero', line: 'Saldo… insuficiente. Genial.', len: [30, 60] }],
   kiosk: [{ kind: 'kiosk', label: 'Comprando en el quiosco', line: 'Uno de algas y un refresco, por favor.', len: [40, 80] }],
-  dumpster: [{ kind: 'dumpster', label: 'Tirando la basura', line: 'Puaj, qué peste.', len: [20, 40] }],
+  dumpster: [{ kind: 'dumpster', label: 'Tirando la basura', emote: 'lanzar', line: 'Puaj, qué peste.', len: [20, 40] }],
   busstop: [{ kind: 'busstop', label: 'Esperando el bus', emote: 'telefono', len: [120, 260] }, { kind: 'busstop', label: 'Esperando el bus', emote: 'brazos', len: [120, 260] }],
   lamp: [{ kind: 'lamp', label: 'Fumando junto a la farola', emote: 'fumar', len: [80, 180] }],
   billboard: [{ kind: 'billboard', label: 'Mirando un anuncio', line: '¿Implantes a plazos? Ni de broma.', emote: 'brazos', len: [40, 90] }],
