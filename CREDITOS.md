@@ -15,6 +15,12 @@ Vértice es un proyecto original. Aquí figuran los recursos de terceros y su pr
 
 La [release «new york»](https://github.com/Cyberbug565/vertice/releases/tag/newyork) del proyecto aporta el archivo `nylowermanhattan.blend`. El catálogo usa los volúmenes de `Areas:building` y un recorte de las calles de `Ways:highway`. Cartografía © [colaboradores de OpenStreetMap](https://www.openstreetmap.org/copyright). Los materiales, el deterioro y la iluminación son adaptaciones para Vértice.
 
+### Ampliación de la ciudad (v0.32)
+
+- Las torres y el podio de Cénit se extrajeron de `Cyberpunk_Building_blend.1.blend`. Los contenedores usan la geometría de `Cyberpunk+Container.obj` y colores extraídos de `Textures.rar`. [Release «new york»](https://github.com/Cyberbug565/vertice/releases/tag/newyork)
+- Las variantes Pasaje Eléctrico, Aurora Neón y Torre Cableada adaptan edificios de John Doe (@born2012), bajo CC BY 4.0. [Cyberpunk City #1](https://sketchfab.com/3d-models/cyberpunk-city-1-14d2eaa145ee42938e004115871adf6c)
+- El Saeta Vector adapta el modelo Cyberpunk Flying Car DeLorean de Chaosmonger Studio. Se redujeron las mallas, se sustituyeron los materiales de cámara y se ajustó la escala al juego. [Ficha del autor](https://www.cgtrader.com/free-3d-models/car/concept-car/cyberpunk-flying-car-delorean)
+
 ### Ropa 3D (v0.22)
 
 Prendas de Sketchfab que aportó el dueño del proyecto (release «ropa»), ajustadas a los dos cuerpos del juego con Blender: escaladas, puestas en la postura del cuerpo, con los pesos de los huesos del kit y separadas de la piel. Texturas reducidas a 1024 px como máximo. Los archivos derivados están en `client/public/models/prendas/`.

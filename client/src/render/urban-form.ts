@@ -1,12 +1,19 @@
 import type { ZoneDef } from '@vertice/shared';
 import catalogue from './nueva-york.json';
+import extension from './modelos-ensanche.json';
 
 export type UrbanBuilding = ZoneDef['buildings'][number];
 export type UrbanLook = NonNullable<UrbanBuilding['urban']>;
-export interface UrbanForm { points: number[]; faces: number[]; cornices: number[][]; fins: number[][] }
+export interface UrbanForm {
+  points: number[];
+  faces: number[];
+  cornices: number[][];
+  fins: number[][];
+  surface?: { palette: { color: string; light: number }[]; face: number[] };
+}
 type Point = [number, number, number];
 
-export const URBAN_FORMS: Readonly<Record<string, UrbanForm>> = catalogue.buildings;
+export const URBAN_FORMS: Readonly<Record<string, UrbanForm>> = { ...catalogue.buildings, ...extension };
 
 export const FACADES = {
   corporativa: { led: '#33cfff', glass: '#167ba3', lit: '#83ddff', rough: 0.29, metal: 0.43, pitch: [0.96, 1.31, 0.79, 0.68], wear: 0.06, occupancy: 0.76 },

@@ -146,11 +146,12 @@ export class City3D {
       this.owned.push(ghost);
       return palette;
     };
-    const urbanPalette = (facade: UrbanLook['facade']) => {
-      const existing = materials.get(facade);
+    const urbanPalette = (facade: UrbanLook['facade'], detailed: boolean) => {
+      const key = `${facade}:${detailed}`;
+      const existing = materials.get(key);
       if (existing) return existing;
-      const palette = { solid: urbanFacade(facade), ghost: urbanFacade(facade, true) };
-      materials.set(facade, palette);
+      const palette = { solid: urbanFacade(facade, false, detailed), ghost: urbanFacade(facade, true, detailed) };
+      materials.set(key, palette);
       this.owned.push(palette.solid, palette.ghost);
       return palette;
     };
@@ -181,8 +182,8 @@ export class City3D {
       const form = urbanForm(b);
       if (form && b.urban) {
         const { facade, model } = b.urban;
-        addInstance(`${model}|${facade}`, x0 + w / 2, y0 + h / 2, urbanGeometry(form), urbanPalette(facade), { m: urbanTransform(b, H), c: base, b: bi });
-        urbanLighting(nb, b, form, H, bi);
+        addInstance(`${model}|${facade}`, x0 + w / 2, y0 + h / 2, urbanGeometry(form), urbanPalette(facade, !!form.surface), { m: urbanTransform(b, H), c: base, b: bi });
+        if (form.cornices.length || form.fins.length) urbanLighting(nb, b, form, H, bi);
         return;
       }
       const tint = base.clone().lerp(white, 0.22 + rng() * 0.14);

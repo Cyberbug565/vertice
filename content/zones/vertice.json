@@ -2,8 +2,8 @@
  "id": "vertice",
  "name": "Ciudad Vértice",
  "kind": "exterior",
- "width": 608,
- "height": 344,
+ "width": 744,
+ "height": 432,
  "chunkSize": 32,
  "danger": "public",
  "base": "sidewalk",
@@ -7201,6 +7201,2378 @@
     10,
     2
    ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    608,
+    8,
+    128,
+    104
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    610,
+    10,
+    56,
+    56
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    8,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    66,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    636,
+    10,
+    2,
+    56
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    40,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    610,
+    76,
+    56,
+    34
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    74,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    110,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    637,
+    76,
+    2,
+    34
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    91,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    676,
+    10,
+    29,
+    56
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    8,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    66,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    690,
+    10,
+    2,
+    56
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    40,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    676,
+    76,
+    29,
+    34
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    74,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    110,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    688,
+    76,
+    2,
+    34
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    91,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    714,
+    10,
+    20,
+    56
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    8,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    66,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    723,
+    10,
+    2,
+    56
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    40,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    714,
+    76,
+    20,
+    34
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    74,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    110,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    724,
+    76,
+    2,
+    34
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    91,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    608,
+    120,
+    128,
+    104
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    610,
+    122,
+    56,
+    44
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    120,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    166,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    636,
+    122,
+    2,
+    44
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    145,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    610,
+    178,
+    56,
+    44
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    176,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    222,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    637,
+    178,
+    2,
+    44
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    198,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    676,
+    122,
+    29,
+    44
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    120,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    166,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    690,
+    122,
+    2,
+    44
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    145,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    676,
+    178,
+    29,
+    44
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    176,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    222,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    688,
+    178,
+    2,
+    44
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    198,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    714,
+    122,
+    20,
+    44
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    120,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    166,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    723,
+    122,
+    2,
+    44
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    145,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    714,
+    178,
+    20,
+    44
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    176,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    222,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    724,
+    178,
+    2,
+    44
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    198,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    608,
+    232,
+    128,
+    104
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    610,
+    234,
+    56,
+    56
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    232,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    290,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    636,
+    234,
+    2,
+    56
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    264,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    610,
+    300,
+    56,
+    34
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    298,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    334,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    637,
+    300,
+    2,
+    34
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    315,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    676,
+    234,
+    29,
+    56
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    232,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    290,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    690,
+    234,
+    2,
+    56
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    264,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    676,
+    300,
+    29,
+    34
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    298,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    334,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    688,
+    300,
+    2,
+    34
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    315,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    714,
+    234,
+    20,
+    56
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    232,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    290,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    723,
+    234,
+    2,
+    56
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    264,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    714,
+    300,
+    20,
+    34
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    298,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    334,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    724,
+    300,
+    2,
+    34
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    315,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    8,
+    344,
+    142,
+    80
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    10,
+    346,
+    62,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    8,
+    344,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    8,
+    382,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    39,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    10,
+    365,
+    62,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    10,
+    393,
+    62,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    8,
+    391,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    8,
+    422,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    40,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    10,
+    406,
+    62,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    81,
+    346,
+    67,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    79,
+    344,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    79,
+    382,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    114,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    81,
+    365,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    81,
+    393,
+    67,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    79,
+    391,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    79,
+    422,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    112,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    81,
+    406,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    344,
+    142,
+    80
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    160,
+    346,
+    61,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    344,
+    65,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    382,
+    65,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    189,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    160,
+    365,
+    61,
+    2
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    160,
+    393,
+    61,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    391,
+    65,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    422,
+    65,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    190,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    160,
+    406,
+    61,
+    2
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    231,
+    346,
+    67,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    229,
+    344,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    229,
+    382,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    262,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    231,
+    365,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    231,
+    393,
+    67,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    229,
+    391,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    229,
+    422,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    263,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    231,
+    406,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    308,
+    344,
+    142,
+    80
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    310,
+    346,
+    62,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    308,
+    344,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    308,
+    382,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    341,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    310,
+    365,
+    62,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    310,
+    393,
+    62,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    308,
+    391,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    308,
+    422,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    339,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    310,
+    406,
+    62,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    382,
+    346,
+    66,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    380,
+    344,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    380,
+    382,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    414,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    382,
+    365,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    382,
+    393,
+    66,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    380,
+    391,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    380,
+    422,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    415,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    382,
+    406,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    458,
+    344,
+    142,
+    80
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    460,
+    346,
+    63,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    458,
+    344,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    458,
+    382,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    489,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    460,
+    365,
+    63,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    460,
+    393,
+    63,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    458,
+    391,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    458,
+    422,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    490,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    460,
+    406,
+    63,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    532,
+    346,
+    66,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    530,
+    344,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    530,
+    382,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    565,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    532,
+    365,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    532,
+    393,
+    66,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    530,
+    391,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    530,
+    422,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    563,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    532,
+    406,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    608,
+    344,
+    128,
+    80
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    610,
+    346,
+    56,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    344,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    382,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    637,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    365,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    610,
+    393,
+    56,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    391,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    422,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    638,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    610,
+    406,
+    56,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    676,
+    346,
+    29,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    344,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    382,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    688,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    365,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    676,
+    393,
+    29,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    391,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    422,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    689,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    676,
+    406,
+    29,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    714,
+    346,
+    20,
+    36
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    344,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    382,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    724,
+    346,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    365,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    714,
+    393,
+    20,
+    29
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    391,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    422,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    722,
+    393,
+    2,
+    29
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    714,
+    406,
+    20,
+    2
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    608,
+    0,
+    136,
+    8
+   ],
+   "street": "ensanche-oriente-0"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    608,
+    68,
+    136,
+    6
+   ],
+   "street": "ensanche-oriente-1"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    608,
+    112,
+    136,
+    8
+   ],
+   "street": "ensanche-oriente-2"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    608,
+    168,
+    136,
+    8
+   ],
+   "street": "ensanche-oriente-3"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    608,
+    224,
+    136,
+    8
+   ],
+   "street": "ensanche-oriente-4"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    608,
+    292,
+    136,
+    6
+   ],
+   "street": "ensanche-oriente-5"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    608,
+    336,
+    136,
+    8
+   ],
+   "street": "ensanche-oriente-6"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    424,
+    744,
+    8
+   ],
+   "street": "ensanche-ronda-sur"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    384,
+    744,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    668,
+    0,
+    6,
+    432
+   ],
+   "street": "ensanche-eje-oriental-0"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    707,
+    0,
+    5,
+    432
+   ],
+   "street": "ensanche-eje-oriental-1"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    736,
+    0,
+    8,
+    432
+   ],
+   "street": "ensanche-eje-oriental-2"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    344,
+    8,
+    88
+   ],
+   "street": "ensanche-enlace-sur-0"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    74,
+    344,
+    5,
+    88
+   ],
+   "street": "ensanche-enlace-sur-1"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    150,
+    344,
+    8,
+    88
+   ],
+   "street": "ensanche-enlace-sur-2"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    223,
+    344,
+    6,
+    88
+   ],
+   "street": "ensanche-enlace-sur-3"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    300,
+    344,
+    8,
+    88
+   ],
+   "street": "ensanche-enlace-sur-4"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    374,
+    344,
+    6,
+    88
+   ],
+   "street": "ensanche-enlace-sur-5"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    450,
+    344,
+    8,
+    88
+   ],
+   "street": "ensanche-enlace-sur-6"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    525,
+    344,
+    5,
+    88
+   ],
+   "street": "ensanche-enlace-sur-7"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    600,
+    344,
+    8,
+    88
+   ],
+   "street": "ensanche-enlace-sur-8"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    68,
+    2,
+    6
+   ],
+   "street": "ensanche-oriente-1"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    68,
+    2,
+    6
+   ],
+   "street": "ensanche-oriente-1"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    68,
+    2,
+    6
+   ],
+   "street": "ensanche-oriente-1"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    112,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-2"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    112,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-2"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    112,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-2"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    168,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-3"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    168,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-3"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    168,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-3"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    224,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-4"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    224,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-4"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    224,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-4"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    292,
+    2,
+    6
+   ],
+   "street": "ensanche-oriente-5"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    292,
+    2,
+    6
+   ],
+   "street": "ensanche-oriente-5"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    292,
+    2,
+    6
+   ],
+   "street": "ensanche-oriente-5"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    336,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-6"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    336,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-6"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    336,
+    2,
+    8
+   ],
+   "street": "ensanche-oriente-6"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    11,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    82,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    161,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    232,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    311,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    383,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    461,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    533,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    384,
+    2,
+    7
+   ],
+   "street": "ensanche-paseo-del-arco"
   }
  ],
  "blocks": [
@@ -12868,13 +15240,13 @@
     7,
     5
    ],
-   "height": 71,
+   "height": 72,
    "style": "glass",
-   "color": "#686780",
+   "color": "#d2d9e2",
    "sign": "AURORA",
    "signColor": "#7dff7a",
    "urban": {
-    "model": "quiebro",
+    "model": "torre-secuencia",
     "facade": "corporativa",
     "turn": 2
    }
@@ -12923,12 +15295,12 @@
     13,
     5
    ],
-   "height": 24,
+   "height": 19,
    "style": "glass",
-   "color": "#686780",
+   "color": "#d2d9e2",
    "signColor": "#7dff7a",
    "urban": {
-    "model": "curva",
+    "model": "pasaje-electrico",
     "facade": "corporativa",
     "turn": 2
    }
@@ -12942,13 +15314,13 @@
     8,
     5
    ],
-   "height": 82,
+   "height": 86,
    "style": "spire",
-   "color": "#31506d",
+   "color": "#d2d9e2",
    "sign": "OKAMI",
    "signColor": "#ff3fa4",
    "urban": {
-    "model": "terraza",
+    "model": "torre-prisma",
     "facade": "corporativa",
     "turn": 3
    }
@@ -13016,13 +15388,13 @@
     8,
     5
    ],
-   "height": 94,
+   "height": 97,
    "style": "arcology",
-   "color": "#31506d",
+   "color": "#d2d9e2",
    "sign": "HALCÓN DYNAMICS",
    "signColor": "#43f3ff",
    "urban": {
-    "model": "bisel",
+    "model": "torre-secuencia",
     "facade": "corporativa",
     "turn": 1
    }
@@ -13184,13 +15556,13 @@
     12,
     16
    ],
-   "height": 10,
+   "height": 12,
    "style": "shop",
-   "color": "#585570",
+   "color": "#d2d9e2",
    "sign": "OKAMI MARKET",
    "signColor": "#ff3fa4",
    "urban": {
-    "model": "balcones",
+    "model": "podio-terminal",
     "facade": "comercial",
     "turn": 0
    }
@@ -13204,13 +15576,13 @@
     12,
     16
    ],
-   "height": 18,
+   "height": 20,
    "style": "clinic",
-   "color": "#625169",
+   "color": "#d2d9e2",
    "sign": "OKAMI MED",
    "signColor": "#5affc8",
    "urban": {
-    "model": "esquina",
+    "model": "podio-terminal",
     "facade": "comercial",
     "turn": 0
    }
@@ -13284,13 +15656,13 @@
     26,
     17
    ],
-   "height": 65,
+   "height": 69,
    "style": "glass",
-   "color": "#465474",
+   "color": "#d2d9e2",
    "sign": "TESELIA DATA",
    "signColor": "#b46cff",
    "urban": {
-    "model": "curva",
+    "model": "torre-prisma",
     "facade": "corporativa",
     "turn": 1
    }
@@ -13343,12 +15715,12 @@
     8,
     8
    ],
-   "height": 36,
+   "height": 43,
    "style": "arcology",
-   "color": "#686780",
+   "color": "#d2d9e2",
    "signColor": "#ff8a3d",
    "urban": {
-    "model": "quiebro",
+    "model": "torre-aurora-neon",
     "facade": "corporativa",
     "turn": 2
    }
@@ -13491,13 +15863,13 @@
     24,
     13
    ],
-   "height": 13,
+   "height": 16,
    "style": "industrial",
-   "color": "#526672",
+   "color": "#d2d9e2",
    "sign": "AURORA LOG",
    "signColor": "#7dff7a",
    "urban": {
-    "model": "patio",
+    "model": "podio-terminal",
     "facade": "comercial",
     "turn": 2
    }
@@ -13510,11 +15882,11 @@
     8,
     5
    ],
-   "height": 54,
+   "height": 58,
    "style": "mega",
-   "color": "#465474",
+   "color": "#d2d9e2",
    "urban": {
-    "model": "oblicua",
+    "model": "torre-secuencia",
     "facade": "corporativa",
     "turn": 1
    }
@@ -13527,11 +15899,11 @@
     14,
     5
    ],
-   "height": 18,
+   "height": 38,
    "style": "mega",
-   "color": "#465474",
+   "color": "#d2d9e2",
    "urban": {
-    "model": "tridente",
+    "model": "torre-cableada",
     "facade": "corporativa",
     "turn": 2
    }
@@ -15935,6 +18307,3024 @@
     "model": "terminal-rota",
     "facade": "ruina",
     "turn": 3
+   }
+  },
+  {
+   "id": "torre-reflejos",
+   "name": "Reflejos",
+   "rect": [
+    275,
+    146,
+    6,
+    5
+   ],
+   "height": 47,
+   "style": "tower",
+   "color": "#b8c6d7",
+   "sign": "REFLEJOS",
+   "signColor": "#48daee",
+   "urban": {
+    "model": "torre-prisma",
+    "facade": "corporativa",
+    "turn": 0
+   }
+  },
+  {
+   "id": "torre-interfaz",
+   "name": "Interfaz",
+   "rect": [
+    287,
+    146,
+    6,
+    5
+   ],
+   "height": 55,
+   "style": "tower",
+   "color": "#b8c6d7",
+   "sign": "INTERFAZ",
+   "signColor": "#dd66ff",
+   "urban": {
+    "model": "torre-secuencia",
+    "facade": "corporativa",
+    "turn": 1
+   }
+  },
+  {
+   "id": "pabellon-travesia",
+   "name": "Pabellón Travesía",
+   "rect": [
+    277,
+    154,
+    6,
+    5
+   ],
+   "height": 11,
+   "style": "shop",
+   "color": "#b8c6d7",
+   "sign": "PABELLÓN TRAVESÍA",
+   "signColor": "#48daee",
+   "urban": {
+    "model": "podio-terminal",
+    "facade": "corporativa",
+    "turn": 2
+   }
+  },
+  {
+   "id": "llanos-orientales-edificio-0-0",
+   "rect": [
+    612,
+    13,
+    22,
+    25
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#7f6f57",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "llanos-orientales-edificio-1-1",
+   "rect": [
+    641,
+    79,
+    21,
+    7
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#767077",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "llanos-orientales-edificio-2-2",
+   "rect": [
+    678,
+    44,
+    10,
+    18
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#7f6f57",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "llanos-orientales-edificio-3-3",
+   "rect": [
+    692,
+    95,
+    9,
+    12
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#767077",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "llanos-orientales-edificio-4-0",
+   "rect": [
+    716,
+    13,
+    5,
+    24
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#7f6f57",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-edificio-6-0",
+   "rect": [
+    612,
+    125,
+    20,
+    15
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#545b69",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-edificio-6-1",
+   "rect": [
+    640,
+    125,
+    21,
+    15
+   ],
+   "height": 11,
+   "style": "industrial",
+   "color": "#8a7565",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-2-0",
+   "rect": [
+    613,
+    150,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-2-1",
+   "rect": [
+    613,
+    154,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-2-2",
+   "rect": [
+    613,
+    158,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-2-3",
+   "rect": [
+    613,
+    162,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-3-0",
+   "rect": [
+    641,
+    150,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-3-1",
+   "rect": [
+    641,
+    154,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-3-2",
+   "rect": [
+    641,
+    158,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-carga-6-3-3",
+   "rect": [
+    641,
+    162,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "darsena-este-edificio-7-0",
+   "rect": [
+    612,
+    181,
+    20,
+    13
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#8a7565",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-edificio-7-1",
+   "rect": [
+    641,
+    181,
+    23,
+    12
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#59697b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-2-0",
+   "rect": [
+    613,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-2-1",
+   "rect": [
+    617,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-2-2",
+   "rect": [
+    621,
+    203,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-2-3",
+   "rect": [
+    625,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-3-0",
+   "rect": [
+    642,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-3-1",
+   "rect": [
+    646,
+    203,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-3-2",
+   "rect": [
+    650,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-7-3-3",
+   "rect": [
+    654,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-edificio-8-0",
+   "rect": [
+    678,
+    125,
+    10,
+    16
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#59697b",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-edificio-8-1",
+   "rect": [
+    694,
+    125,
+    8,
+    16
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#776958",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "darsena-este-carga-8-2-0",
+   "rect": [
+    679,
+    150,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-8-2-1",
+   "rect": [
+    683,
+    150,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-carga-8-3-0",
+   "rect": [
+    695,
+    150,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-carga-8-3-1",
+   "rect": [
+    699,
+    150,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-edificio-9-0",
+   "rect": [
+    678,
+    181,
+    7,
+    14
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#776958",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "darsena-este-edificio-9-1",
+   "rect": [
+    692,
+    181,
+    9,
+    14
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#545b69",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-carga-9-2-0",
+   "rect": [
+    679,
+    203,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-carga-9-2-1",
+   "rect": [
+    683,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-9-3-0",
+   "rect": [
+    693,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-9-3-1",
+   "rect": [
+    697,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-edificio-10-0",
+   "rect": [
+    716,
+    125,
+    5,
+    18
+   ],
+   "height": 11,
+   "style": "industrial",
+   "color": "#545b69",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-edificio-10-1",
+   "rect": [
+    727,
+    125,
+    5,
+    18
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#8a7565",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-carga-10-2-0",
+   "rect": [
+    717,
+    150,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "darsena-este-carga-10-3-0",
+   "rect": [
+    728,
+    150,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "darsena-este-edificio-11-0",
+   "rect": [
+    716,
+    181,
+    5,
+    12
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#8a7565",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "darsena-este-carga-11-2-0",
+   "rect": [
+    717,
+    203,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-12-0-0",
+   "rect": [
+    613,
+    238,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-carga-12-0-1",
+   "rect": [
+    617,
+    238,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-12-0-2",
+   "rect": [
+    621,
+    238,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-carga-12-0-3",
+   "rect": [
+    625,
+    238,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-edificio-12-1",
+   "rect": [
+    640,
+    237,
+    23,
+    22
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "deposito",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "salobre-edificio-12-2",
+   "rect": [
+    612,
+    268,
+    20,
+    18
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#716556",
+   "urban": {
+    "model": "laminador",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-12-3-0",
+   "rect": [
+    641,
+    269,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-12-3-1",
+   "rect": [
+    645,
+    269,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-carga-12-3-2",
+   "rect": [
+    649,
+    269,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-12-3-3",
+   "rect": [
+    653,
+    269,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-13-0",
+   "rect": [
+    612,
+    303,
+    22,
+    8
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "salobre-edificio-13-1",
+   "rect": [
+    641,
+    303,
+    21,
+    8
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#716556",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-13-2-0",
+   "rect": [
+    613,
+    320,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "salobre-carga-13-2-1",
+   "rect": [
+    613,
+    324,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "salobre-carga-13-2-2",
+   "rect": [
+    613,
+    328,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "salobre-edificio-13-3",
+   "rect": [
+    641,
+    319,
+    23,
+    11
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "laminador",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-14-0",
+   "rect": [
+    678,
+    237,
+    8,
+    24
+   ],
+   "height": 3,
+   "style": "industrial",
+   "color": "#716556",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-14-1-0",
+   "rect": [
+    695,
+    238,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-14-1-1",
+   "rect": [
+    699,
+    238,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-14-2",
+   "rect": [
+    678,
+    268,
+    10,
+    19
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-14-3",
+   "rect": [
+    694,
+    268,
+    8,
+    19
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "deposito",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "salobre-carga-15-0-0",
+   "rect": [
+    679,
+    304,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-carga-15-0-1",
+   "rect": [
+    683,
+    304,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-15-1",
+   "rect": [
+    692,
+    303,
+    11,
+    9
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-15-2",
+   "rect": [
+    678,
+    319,
+    7,
+    13
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "salobre-carga-15-3-0",
+   "rect": [
+    693,
+    320,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-carga-15-3-1",
+   "rect": [
+    697,
+    320,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "salobre-edificio-16-0",
+   "rect": [
+    716,
+    237,
+    5,
+    25
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "laminador",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-16-1",
+   "rect": [
+    727,
+    237,
+    5,
+    25
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "hangar",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "salobre-carga-16-2-0",
+   "rect": [
+    717,
+    269,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "salobre-edificio-16-3",
+   "rect": [
+    727,
+    268,
+    5,
+    21
+   ],
+   "height": 3,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "salobre-edificio-17-0",
+   "rect": [
+    716,
+    303,
+    5,
+    7
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "deposito",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "salobre-edificio-17-2",
+   "rect": [
+    716,
+    319,
+    5,
+    11
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "hangar",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "ronda-del-rio-edificio-18-2",
+   "rect": [
+    12,
+    369,
+    25,
+    9
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#7f6f57",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "ronda-del-rio-edificio-19-3",
+   "rect": [
+    44,
+    410,
+    24,
+    9
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#767077",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "ronda-del-rio-edificio-20-0",
+   "rect": [
+    83,
+    349,
+    29,
+    13
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#7f6f57",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "ronda-del-rio-edificio-21-1",
+   "rect": [
+    116,
+    396,
+    28,
+    8
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#767077",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "arco-sur-edificio-22-0",
+   "rect": [
+    162,
+    349,
+    23,
+    11
+   ],
+   "height": 8,
+   "style": "block",
+   "color": "#555e70",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "arco-sur-edificio-22-1",
+   "rect": [
+    193,
+    349,
+    23,
+    11
+   ],
+   "height": 15,
+   "style": "block",
+   "color": "#746473",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "arco-sur-edificio-22-2",
+   "rect": [
+    162,
+    369,
+    25,
+    12
+   ],
+   "height": 9,
+   "style": "block",
+   "color": "#586075",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "arco-sur-edificio-22-3",
+   "rect": [
+    193,
+    369,
+    25,
+    12
+   ],
+   "height": 16,
+   "style": "block",
+   "color": "#635776",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "arco-sur-edificio-23-0",
+   "rect": [
+    162,
+    396,
+    23,
+    6
+   ],
+   "height": 8,
+   "style": "block",
+   "color": "#746473",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "arco-sur-edificio-23-1",
+   "rect": [
+    194,
+    396,
+    25,
+    5
+   ],
+   "height": 15,
+   "style": "block",
+   "color": "#586075",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "arco-sur-edificio-23-2",
+   "rect": [
+    162,
+    410,
+    25,
+    8
+   ],
+   "height": 9,
+   "style": "block",
+   "color": "#635776",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "arco-sur-edificio-23-3",
+   "rect": [
+    194,
+    410,
+    23,
+    8
+   ],
+   "height": 16,
+   "style": "block",
+   "color": "#555e70",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "arco-sur-edificio-24-0",
+   "rect": [
+    233,
+    349,
+    27,
+    12
+   ],
+   "height": 8,
+   "style": "block",
+   "color": "#586075",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "arco-sur-edificio-24-1",
+   "rect": [
+    266,
+    349,
+    29,
+    12
+   ],
+   "height": 15,
+   "style": "block",
+   "color": "#635776",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "arco-sur-edificio-24-2",
+   "rect": [
+    233,
+    369,
+    25,
+    10
+   ],
+   "height": 9,
+   "style": "block",
+   "color": "#555e70",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "arco-sur-edificio-24-3",
+   "rect": [
+    266,
+    369,
+    27,
+    10
+   ],
+   "height": 16,
+   "style": "block",
+   "color": "#746473",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "arco-sur-edificio-25-0",
+   "rect": [
+    233,
+    396,
+    27,
+    7
+   ],
+   "height": 8,
+   "style": "block",
+   "color": "#635776",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "arco-sur-edificio-25-1",
+   "rect": [
+    267,
+    396,
+    27,
+    7
+   ],
+   "height": 15,
+   "style": "block",
+   "color": "#555e70",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "arco-sur-edificio-25-2",
+   "rect": [
+    233,
+    410,
+    25,
+    10
+   ],
+   "height": 9,
+   "style": "block",
+   "color": "#746473",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "arco-sur-edificio-25-3",
+   "rect": [
+    267,
+    410,
+    29,
+    9
+   ],
+   "height": 16,
+   "style": "block",
+   "color": "#586075",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-26-0",
+   "rect": [
+    312,
+    349,
+    25,
+    14
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#716556",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-26-1-0",
+   "rect": [
+    346,
+    350,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-26-1-1",
+   "rect": [
+    346,
+    354,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-26-1-2",
+   "rect": [
+    346,
+    358,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-26-2",
+   "rect": [
+    312,
+    369,
+    27,
+    11
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-26-3",
+   "rect": [
+    345,
+    369,
+    24,
+    11
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "deposito",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-27-0-0",
+   "rect": [
+    313,
+    397,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-27-0-1",
+   "rect": [
+    313,
+    401,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-27-1",
+   "rect": [
+    343,
+    396,
+    27,
+    8
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-27-2",
+   "rect": [
+    312,
+    410,
+    24,
+    11
+   ],
+   "height": 3,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-27-3-0",
+   "rect": [
+    344,
+    411,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-27-3-1",
+   "rect": [
+    344,
+    415,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-28-0",
+   "rect": [
+    384,
+    349,
+    28,
+    11
+   ],
+   "height": 3,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "laminador",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-28-1",
+   "rect": [
+    418,
+    349,
+    27,
+    11
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "hangar",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-28-2-0",
+   "rect": [
+    385,
+    370,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-28-2-1",
+   "rect": [
+    385,
+    374,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-28-2-2",
+   "rect": [
+    385,
+    378,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-28-3",
+   "rect": [
+    418,
+    369,
+    25,
+    9
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-29-0",
+   "rect": [
+    384,
+    396,
+    28,
+    6
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#60656b",
+   "urban": {
+    "model": "deposito",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-29-1-0",
+   "rect": [
+    420,
+    397,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "fundicion-sur-carga-29-1-1",
+   "rect": [
+    420,
+    401,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-29-2",
+   "rect": [
+    384,
+    410,
+    26,
+    9
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "hangar",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "fundicion-sur-edificio-29-3",
+   "rect": [
+    419,
+    410,
+    27,
+    8
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-30-0-0",
+   "rect": [
+    463,
+    350,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-30-0-1",
+   "rect": [
+    463,
+    354,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-30-0-2",
+   "rect": [
+    463,
+    358,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-30-1",
+   "rect": [
+    493,
+    349,
+    25,
+    13
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "deposito",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-30-2",
+   "rect": [
+    462,
+    369,
+    25,
+    10
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "laminador",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-30-3-0",
+   "rect": [
+    494,
+    370,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-30-3-1",
+   "rect": [
+    494,
+    374,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-30-3-2",
+   "rect": [
+    494,
+    378,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-31-0",
+   "rect": [
+    462,
+    396,
+    23,
+    8
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-31-1",
+   "rect": [
+    494,
+    396,
+    27,
+    7
+   ],
+   "height": 3,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-31-2-0",
+   "rect": [
+    463,
+    411,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-31-2-1",
+   "rect": [
+    463,
+    415,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-31-3",
+   "rect": [
+    494,
+    410,
+    25,
+    10
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#716556",
+   "urban": {
+    "model": "laminador",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-32-0",
+   "rect": [
+    534,
+    349,
+    29,
+    14
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#69584e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-32-1-0",
+   "rect": [
+    570,
+    350,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-32-1-1",
+   "rect": [
+    570,
+    354,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-32-1-2",
+   "rect": [
+    570,
+    358,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-32-2",
+   "rect": [
+    534,
+    369,
+    27,
+    12
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#716556",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-32-3",
+   "rect": [
+    569,
+    369,
+    24,
+    12
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "deposito",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-33-0-0",
+   "rect": [
+    535,
+    397,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-33-0-1",
+   "rect": [
+    535,
+    401,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-33-1",
+   "rect": [
+    567,
+    396,
+    27,
+    5
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#716556",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "patio-de-vias-edificio-33-2",
+   "rect": [
+    534,
+    410,
+    24,
+    8
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#626971",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-33-3-0",
+   "rect": [
+    568,
+    411,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "patio-de-vias-carga-33-3-1",
+   "rect": [
+    568,
+    415,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-34-0",
+   "rect": [
+    612,
+    349,
+    21,
+    12
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#545b69",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-34-1",
+   "rect": [
+    641,
+    349,
+    20,
+    12
+   ],
+   "height": 11,
+   "style": "industrial",
+   "color": "#8a7565",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-34-2-0",
+   "rect": [
+    613,
+    370,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-34-2-1",
+   "rect": [
+    613,
+    374,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-34-2-2",
+   "rect": [
+    613,
+    378,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-34-3-0",
+   "rect": [
+    642,
+    370,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-34-3-1",
+   "rect": [
+    642,
+    374,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-34-3-2",
+   "rect": [
+    642,
+    378,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-35-0",
+   "rect": [
+    612,
+    396,
+    21,
+    7
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#8a7565",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-35-1",
+   "rect": [
+    642,
+    396,
+    22,
+    6
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#59697b",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-35-2-0",
+   "rect": [
+    613,
+    411,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-35-2-1",
+   "rect": [
+    613,
+    415,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-35-3-0",
+   "rect": [
+    643,
+    411,
+    7,
+    2
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-35-3-1",
+   "rect": [
+    643,
+    415,
+    7,
+    2
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-36-0",
+   "rect": [
+    678,
+    349,
+    8,
+    13
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#59697b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-36-1",
+   "rect": [
+    692,
+    349,
+    10,
+    13
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#776958",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-36-2-0",
+   "rect": [
+    679,
+    370,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-36-2-1",
+   "rect": [
+    683,
+    370,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-36-3-0",
+   "rect": [
+    693,
+    370,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-36-3-1",
+   "rect": [
+    697,
+    370,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-37-0",
+   "rect": [
+    678,
+    396,
+    8,
+    8
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#776958",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-37-1",
+   "rect": [
+    693,
+    396,
+    8,
+    8
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#545b69",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-37-2-0",
+   "rect": [
+    679,
+    411,
+    2,
+    7
+   ],
+   "height": 2.9,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-apilado",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-37-2-1",
+   "rect": [
+    683,
+    411,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-37-3-0",
+   "rect": [
+    694,
+    411,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-37-3-1",
+   "rect": [
+    698,
+    411,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-verde",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-38-0",
+   "rect": [
+    716,
+    349,
+    5,
+    11
+   ],
+   "height": 11,
+   "style": "industrial",
+   "color": "#545b69",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-38-2-0",
+   "rect": [
+    717,
+    370,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-oxido",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-edificio-39-1",
+   "rect": [
+    726,
+    396,
+    6,
+    5
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#59697b",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "terminal-intermodal-carga-39-3-0",
+   "rect": [
+    727,
+    411,
+    2,
+    7
+   ],
+   "height": 1.55,
+   "style": "industrial",
+   "color": "#c9c6c4",
+   "urban": {
+    "model": "contenedor-cobalto",
+    "facade": "industrial",
+    "turn": 0
    }
   }
  ],
@@ -44291,6 +49681,1112 @@
    ],
    "blocking": false,
    "color": "#67613e"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    9
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    666,
+    65
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    75
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    666,
+    109
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    609,
+    93
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    9
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    705,
+    65
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    75
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    705,
+    109
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    675,
+    93
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    9
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    734,
+    65
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    75
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    734,
+    109
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    713,
+    93
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    637,
+    40
+   ],
+   "blocking": false,
+   "text": "LLANOS ORIENTALES",
+   "color": "#d4ae76"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    610,
+    75
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    665,
+    110
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    121
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "crane",
+   "at": [
+    666,
+    146
+   ],
+   "blocking": false,
+   "color": "#be8d49"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    666,
+    121
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    177
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    666,
+    177
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    121
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "crane",
+   "at": [
+    705,
+    146
+   ],
+   "blocking": false,
+   "color": "#be8d49"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    705,
+    121
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    177
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    705,
+    177
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    121
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "crane",
+   "at": [
+    734,
+    146
+   ],
+   "blocking": false,
+   "color": "#be8d49"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    734,
+    121
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    177
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    734,
+    177
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    637,
+    145
+   ],
+   "blocking": false,
+   "text": "DÁRSENA ESTE",
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    638,
+    198
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    676,
+    121
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    233
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    666,
+    289
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    299
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    666,
+    333
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    609,
+    317
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    233
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    705,
+    289
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    299
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    705,
+    333
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    675,
+    317
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    233
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    734,
+    289
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    299
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    734,
+    333
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    713,
+    317
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    637,
+    264
+   ],
+   "blocking": false,
+   "text": "POLÍGONO SALOBRE",
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    610,
+    299
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    665,
+    334
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    11,
+    345
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    72,
+    381
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    11,
+    392
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    72,
+    421
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    9,
+    408
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    82,
+    345
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    148,
+    381
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    82,
+    392
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    148,
+    421
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    80,
+    408
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    40,
+    365
+   ],
+   "blocking": false,
+   "text": "RONDA DEL RÍO",
+   "color": "#d4ae76"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    41,
+    406
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    81,
+    345
+   ],
+   "blocking": false,
+   "color": "#d4ae76"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    161,
+    345
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "planter",
+   "at": [
+    221,
+    345
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    161,
+    392
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "planter",
+   "at": [
+    221,
+    392
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    232,
+    345
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "planter",
+   "at": [
+    298,
+    345
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    232,
+    392
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "planter",
+   "at": [
+    298,
+    392
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    190,
+    365
+   ],
+   "blocking": false,
+   "text": "ARCO SUR",
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    160,
+    392
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    220,
+    422
+   ],
+   "blocking": false,
+   "color": "#fa8ae5"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    311,
+    345
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    372,
+    381
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    311,
+    392
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    372,
+    421
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    309,
+    408
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    383,
+    345
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    448,
+    381
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    383,
+    392
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    448,
+    421
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    381,
+    408
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    342,
+    365
+   ],
+   "blocking": false,
+   "text": "FUNDICIÓN SUR",
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    340,
+    406
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    382,
+    345
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    461,
+    345
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    523,
+    381
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    461,
+    392
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    523,
+    421
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    459,
+    408
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    533,
+    345
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    598,
+    381
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    533,
+    392
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    598,
+    421
+   ],
+   "blocking": false,
+   "color": "#756457"
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    531,
+    408
+   ],
+   "blocking": false,
+   "color": "#635a51"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    490,
+    365
+   ],
+   "blocking": false,
+   "text": "PATIO DE VÍAS",
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    460,
+    392
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    522,
+    422
+   ],
+   "blocking": false,
+   "color": "#d49a60"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    345
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "crane",
+   "at": [
+    666,
+    366
+   ],
+   "blocking": false,
+   "color": "#be8d49"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    666,
+    345
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    611,
+    392
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    666,
+    392
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    345
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "crane",
+   "at": [
+    705,
+    366
+   ],
+   "blocking": false,
+   "color": "#be8d49"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    705,
+    345
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    677,
+    392
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    705,
+    392
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    345
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "crane",
+   "at": [
+    734,
+    366
+   ],
+   "blocking": false,
+   "color": "#be8d49"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    734,
+    345
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    715,
+    392
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "kiosk",
+   "at": [
+    734,
+    392
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "billboard",
+   "at": [
+    638,
+    365
+   ],
+   "blocking": false,
+   "text": "TERMINAL INTERMODAL",
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    639,
+    406
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    676,
+    345
+   ],
+   "blocking": false,
+   "color": "#4cdde9"
   }
  ],
  "doors": [
@@ -53997,6 +60493,42 @@
     8
    ],
    "level": "disputed"
+  },
+  {
+   "rect": [
+    608,
+    8,
+    128,
+    104
+   ],
+   "level": "lawless"
+  },
+  {
+   "rect": [
+    608,
+    232,
+    128,
+    104
+   ],
+   "level": "lawless"
+  },
+  {
+   "rect": [
+    308,
+    344,
+    142,
+    80
+   ],
+   "level": "disputed"
+  },
+  {
+   "rect": [
+    458,
+    344,
+    142,
+    80
+   ],
+   "level": "lawless"
   }
  ],
  "sectors": [
@@ -55462,6 +61994,895 @@
     10
    ],
    "name": "Ciudad Vértice · Circunvalación"
+  },
+  {
+   "chunk": [
+    19,
+    0
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    20,
+    0
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    21,
+    0
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    22,
+    0
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    23,
+    0
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    1
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    20,
+    1
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    21,
+    1
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    22,
+    1
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    23,
+    1
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    2
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    20,
+    2
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    21,
+    2
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    22,
+    2
+   ],
+   "name": "Llanos Orientales"
+  },
+  {
+   "chunk": [
+    23,
+    2
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    3
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    20,
+    3
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    21,
+    3
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    22,
+    3
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    23,
+    3
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    4
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    20,
+    4
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    21,
+    4
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    22,
+    4
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    23,
+    4
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    5
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    20,
+    5
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    21,
+    5
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    22,
+    5
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    23,
+    5
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    6
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    20,
+    6
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    21,
+    6
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    22,
+    6
+   ],
+   "name": "Dársena Este"
+  },
+  {
+   "chunk": [
+    23,
+    6
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    7
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    20,
+    7
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    21,
+    7
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    22,
+    7
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    23,
+    7
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    8
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    20,
+    8
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    21,
+    8
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    22,
+    8
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    23,
+    8
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    9
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    20,
+    9
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    21,
+    9
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    22,
+    9
+   ],
+   "name": "Polígono Salobre"
+  },
+  {
+   "chunk": [
+    23,
+    9
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    10
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    20,
+    10
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    21,
+    10
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    22,
+    10
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    23,
+    10
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    0,
+    11
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    1,
+    11
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    2,
+    11
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    3,
+    11
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    4,
+    11
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    5,
+    11
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    6,
+    11
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    7,
+    11
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    8,
+    11
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    9,
+    11
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    10,
+    11
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    11,
+    11
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    12,
+    11
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    13,
+    11
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    14,
+    11
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    15,
+    11
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    16,
+    11
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    17,
+    11
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    18,
+    11
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    19,
+    11
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    20,
+    11
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    21,
+    11
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    22,
+    11
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    23,
+    11
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    0,
+    12
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    1,
+    12
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    2,
+    12
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    3,
+    12
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    4,
+    12
+   ],
+   "name": "Ronda del Río"
+  },
+  {
+   "chunk": [
+    5,
+    12
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    6,
+    12
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    7,
+    12
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    8,
+    12
+   ],
+   "name": "Arco Sur"
+  },
+  {
+   "chunk": [
+    9,
+    12
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    10,
+    12
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    11,
+    12
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    12,
+    12
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    13,
+    12
+   ],
+   "name": "Fundición Sur"
+  },
+  {
+   "chunk": [
+    14,
+    12
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    15,
+    12
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    16,
+    12
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    17,
+    12
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    18,
+    12
+   ],
+   "name": "Patio de Vías"
+  },
+  {
+   "chunk": [
+    19,
+    12
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    20,
+    12
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    21,
+    12
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    22,
+    12
+   ],
+   "name": "Terminal Intermodal"
+  },
+  {
+   "chunk": [
+    23,
+    12
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    0,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    1,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    2,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    3,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    4,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    5,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    6,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    7,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    8,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    9,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    10,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    11,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    12,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    13,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    14,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    15,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    16,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    17,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    18,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    19,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    20,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    21,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    22,
+    13
+   ],
+   "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    23,
+    13
+   ],
+   "name": "Ronda de Vértice"
   }
  ],
  "waypoints": [
@@ -57702,6 +65123,694 @@
     ]
    ],
    "danger": "lawless"
+  },
+  {
+   "id": "llanos-orientales",
+   "name": "Llanos Orientales",
+   "rect": [
+    608,
+    8,
+    128,
+    104
+   ],
+   "police": 0,
+   "ambient": 3,
+   "danger": "lawless",
+   "sleepQuality": 0.22,
+   "safePoint": [
+    610,
+    9
+   ],
+   "waypoints": [
+    [
+     610,
+     9
+    ],
+    [
+     637,
+     40
+    ],
+    [
+     665,
+     66
+    ],
+    [
+     610,
+     75
+    ],
+    [
+     638,
+     91
+    ],
+    [
+     665,
+     110
+    ],
+    [
+     676,
+     9
+    ],
+    [
+     691,
+     40
+    ],
+    [
+     704,
+     66
+    ],
+    [
+     676,
+     75
+    ],
+    [
+     689,
+     91
+    ],
+    [
+     704,
+     110
+    ],
+    [
+     714,
+     9
+    ],
+    [
+     724,
+     40
+    ],
+    [
+     733,
+     66
+    ],
+    [
+     714,
+     75
+    ],
+    [
+     725,
+     91
+    ],
+    [
+     733,
+     110
+    ]
+   ],
+   "gangs": [
+    {
+     "faction": "saqueadores",
+     "count": 2,
+     "area": [
+      638,
+      91,
+      13
+     ]
+    }
+   ]
+  },
+  {
+   "id": "darsena-este",
+   "name": "Dársena Este",
+   "rect": [
+    608,
+    120,
+    128,
+    104
+   ],
+   "police": 1,
+   "ambient": 9,
+   "danger": "public",
+   "sleepQuality": 0.34,
+   "safePoint": [
+    610,
+    121
+   ],
+   "waypoints": [
+    [
+     610,
+     121
+    ],
+    [
+     637,
+     145
+    ],
+    [
+     665,
+     166
+    ],
+    [
+     610,
+     177
+    ],
+    [
+     638,
+     198
+    ],
+    [
+     665,
+     222
+    ],
+    [
+     676,
+     121
+    ],
+    [
+     691,
+     145
+    ],
+    [
+     704,
+     166
+    ],
+    [
+     676,
+     177
+    ],
+    [
+     689,
+     198
+    ],
+    [
+     704,
+     222
+    ],
+    [
+     714,
+     121
+    ],
+    [
+     724,
+     145
+    ],
+    [
+     733,
+     166
+    ],
+    [
+     714,
+     177
+    ],
+    [
+     725,
+     198
+    ],
+    [
+     733,
+     222
+    ]
+   ],
+   "gangs": []
+  },
+  {
+   "id": "salobre",
+   "name": "Polígono Salobre",
+   "rect": [
+    608,
+    232,
+    128,
+    104
+   ],
+   "police": 0,
+   "ambient": 5,
+   "danger": "lawless",
+   "sleepQuality": 0.22,
+   "safePoint": [
+    610,
+    233
+   ],
+   "waypoints": [
+    [
+     610,
+     233
+    ],
+    [
+     637,
+     264
+    ],
+    [
+     665,
+     290
+    ],
+    [
+     610,
+     299
+    ],
+    [
+     638,
+     315
+    ],
+    [
+     665,
+     334
+    ],
+    [
+     676,
+     233
+    ],
+    [
+     691,
+     264
+    ],
+    [
+     704,
+     290
+    ],
+    [
+     676,
+     299
+    ],
+    [
+     689,
+     315
+    ],
+    [
+     704,
+     334
+    ],
+    [
+     714,
+     233
+    ],
+    [
+     724,
+     264
+    ],
+    [
+     733,
+     290
+    ],
+    [
+     714,
+     299
+    ],
+    [
+     725,
+     315
+    ],
+    [
+     733,
+     334
+    ]
+   ],
+   "gangs": [
+    {
+     "faction": "engranajes",
+     "count": 3,
+     "area": [
+      638,
+      315,
+      13
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ronda-del-rio",
+   "name": "Ronda del Río",
+   "rect": [
+    8,
+    344,
+    142,
+    80
+   ],
+   "police": 0,
+   "ambient": 5,
+   "danger": "public",
+   "sleepQuality": 0.34,
+   "safePoint": [
+    10,
+    345
+   ],
+   "waypoints": [
+    [
+     10,
+     345
+    ],
+    [
+     40,
+     365
+    ],
+    [
+     71,
+     382
+    ],
+    [
+     10,
+     392
+    ],
+    [
+     41,
+     406
+    ],
+    [
+     71,
+     422
+    ],
+    [
+     81,
+     345
+    ],
+    [
+     115,
+     365
+    ],
+    [
+     147,
+     382
+    ],
+    [
+     81,
+     392
+    ],
+    [
+     113,
+     406
+    ],
+    [
+     147,
+     422
+    ]
+   ],
+   "gangs": []
+  },
+  {
+   "id": "arco-sur",
+   "name": "Arco Sur",
+   "rect": [
+    158,
+    344,
+    142,
+    80
+   ],
+   "police": 1,
+   "ambient": 11,
+   "danger": "public",
+   "sleepQuality": 0.34,
+   "safePoint": [
+    160,
+    345
+   ],
+   "waypoints": [
+    [
+     160,
+     345
+    ],
+    [
+     190,
+     365
+    ],
+    [
+     220,
+     382
+    ],
+    [
+     160,
+     392
+    ],
+    [
+     191,
+     406
+    ],
+    [
+     220,
+     422
+    ],
+    [
+     231,
+     345
+    ],
+    [
+     263,
+     365
+    ],
+    [
+     297,
+     382
+    ],
+    [
+     231,
+     392
+    ],
+    [
+     264,
+     406
+    ],
+    [
+     297,
+     422
+    ]
+   ],
+   "gangs": []
+  },
+  {
+   "id": "fundicion-sur",
+   "name": "Fundición Sur",
+   "rect": [
+    308,
+    344,
+    142,
+    80
+   ],
+   "police": 0,
+   "ambient": 7,
+   "danger": "disputed",
+   "sleepQuality": 0.22,
+   "safePoint": [
+    310,
+    345
+   ],
+   "waypoints": [
+    [
+     310,
+     345
+    ],
+    [
+     342,
+     365
+    ],
+    [
+     371,
+     382
+    ],
+    [
+     310,
+     392
+    ],
+    [
+     340,
+     406
+    ],
+    [
+     371,
+     422
+    ],
+    [
+     382,
+     345
+    ],
+    [
+     415,
+     365
+    ],
+    [
+     447,
+     382
+    ],
+    [
+     382,
+     392
+    ],
+    [
+     416,
+     406
+    ],
+    [
+     447,
+     422
+    ]
+   ],
+   "gangs": [
+    {
+     "faction": "engranajes",
+     "count": 3,
+     "area": [
+      340,
+      406,
+      13
+     ]
+    }
+   ]
+  },
+  {
+   "id": "patio-de-vias",
+   "name": "Patio de Vías",
+   "rect": [
+    458,
+    344,
+    142,
+    80
+   ],
+   "police": 0,
+   "ambient": 3,
+   "danger": "lawless",
+   "sleepQuality": 0.22,
+   "safePoint": [
+    460,
+    345
+   ],
+   "waypoints": [
+    [
+     460,
+     345
+    ],
+    [
+     490,
+     365
+    ],
+    [
+     522,
+     382
+    ],
+    [
+     460,
+     392
+    ],
+    [
+     491,
+     406
+    ],
+    [
+     522,
+     422
+    ],
+    [
+     532,
+     345
+    ],
+    [
+     566,
+     365
+    ],
+    [
+     597,
+     382
+    ],
+    [
+     532,
+     392
+    ],
+    [
+     564,
+     406
+    ],
+    [
+     597,
+     422
+    ]
+   ],
+   "gangs": [
+    {
+     "faction": "engranajes",
+     "count": 3,
+     "area": [
+      491,
+      406,
+      13
+     ]
+    }
+   ]
+  },
+  {
+   "id": "terminal-intermodal",
+   "name": "Terminal Intermodal",
+   "rect": [
+    608,
+    344,
+    128,
+    80
+   ],
+   "police": 1,
+   "ambient": 6,
+   "danger": "public",
+   "sleepQuality": 0.34,
+   "safePoint": [
+    610,
+    345
+   ],
+   "waypoints": [
+    [
+     610,
+     345
+    ],
+    [
+     638,
+     365
+    ],
+    [
+     665,
+     382
+    ],
+    [
+     610,
+     392
+    ],
+    [
+     639,
+     406
+    ],
+    [
+     665,
+     422
+    ],
+    [
+     676,
+     345
+    ],
+    [
+     689,
+     365
+    ],
+    [
+     704,
+     382
+    ],
+    [
+     676,
+     392
+    ],
+    [
+     690,
+     406
+    ],
+    [
+     704,
+     422
+    ],
+    [
+     714,
+     345
+    ],
+    [
+     725,
+     365
+    ],
+    [
+     733,
+     382
+    ],
+    [
+     714,
+     392
+    ],
+    [
+     723,
+     406
+    ],
+    [
+     733,
+     422
+    ]
+   ],
+   "gangs": []
   }
  ],
  "v19": true,

@@ -22,7 +22,7 @@ describe('Trama urbana de Nueva York', () => {
   it('utiliza el catálogo con distintas alturas y densidades según el barrio', () => {
     expect(zone.buildings.every(b => urbanForm(b))).toBe(true);
     expect(new Set(zone.buildings.map(b => b.urban?.model))).toEqual(new Set(Object.keys(URBAN_FORMS)));
-    expect(new Set(Object.values(catalogue.source.components)).size).toBe(Object.keys(URBAN_FORMS).length);
+    expect(new Set(Object.values(catalogue.source.components)).size).toBe(Object.keys(catalogue.buildings).length);
     for (const form of Object.values(URBAN_FORMS)) {
       expect(form.faces.length % 3).toBe(0);
       expect(form.faces.every(i => i >= 0 && i * 3 < form.points.length)).toBe(true);
@@ -38,7 +38,7 @@ describe('Trama urbana de Nueva York', () => {
 
   it('conecta las calzadas nuevas y coloca pasos transitables fuera de los edificios', () => {
     const grid = buildZoneGrid(zone), roads = roadMap(grid);
-    const newRoads = zone.ground.filter(g => g.type === 'asphalt' && g.street);
+    const newRoads = zone.ground.filter(g => g.type === 'asphalt' && g.street && !g.street.startsWith('ensanche-'));
     expect(newRoads).toHaveLength(7);
     for (const street of newRoads) {
       const cells = tiles(street.rect, grid.w);
