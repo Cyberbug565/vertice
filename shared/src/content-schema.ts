@@ -292,6 +292,7 @@ export const CyberwareSchema = z.object({
     needs: z.object({ hunger: z.number().default(1), thirst: z.number().default(1), fatigue: z.number().default(1) }).optional(),
     hpMax: z.number().default(0), confront: z.number().default(0), steal: z.number().default(0), surgery: z.number().default(0),
     carry: z.number().default(0), ram: z.number().default(0), armor: z.number().default(0), weapon: z.string().optional(),
+    sight: z.object({ range: z.number().positive().max(64), degrees: z.number().positive().max(360) }).optional(),
     meleeDmg: z.number().default(0), speed: z.number().default(0), carSpeed: z.number().default(0), dodge: z.number().default(0),
     /** v0.9 · RAM extra, ahorro de RAM, regeneración de salud por segundo y probabilidad de crítico. */
     ramPlus: z.number().optional(), ramSave: z.number().optional(), regen: z.number().optional(), crit: z.number().optional(),

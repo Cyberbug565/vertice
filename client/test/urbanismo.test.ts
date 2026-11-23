@@ -38,7 +38,7 @@ describe('Trama urbana de Nueva York', () => {
 
   it('conecta las calzadas nuevas y coloca pasos transitables fuera de los edificios', () => {
     const grid = buildZoneGrid(zone), roads = roadMap(grid);
-    const newRoads = zone.ground.filter(g => g.type === 'asphalt' && g.street && !g.street.startsWith('ensanche-'));
+    const newRoads = zone.ground.filter(g => g.type === 'asphalt' && g.street && !g.street.startsWith('ensanche-') && !g.street.startsWith('sur-'));
     expect(newRoads).toHaveLength(7);
     for (const street of newRoads) {
       const cells = tiles(street.rect, grid.w);

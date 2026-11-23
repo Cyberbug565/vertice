@@ -8,6 +8,7 @@ export interface ZoneGrid {
   ground: Uint8Array; // índice en GROUND_TYPES
   walk: Uint8Array; // 1 = transitable
   danger: Uint8Array; // 0 protegida, 1 pública, 2 disputada
+  opaque: Uint8Array; // Edificios y muros que cortan la línea de visión.
   buildingAt: Int16Array; // índice de edificio o -1
 }
 
@@ -43,7 +44,10 @@ export function buildZoneGrid(def: ZoneDef): ZoneGrid {
   for (const d of def.doors) walk[d.at[1] * w + d.at[0]] = 1;
   const danger = new Uint8Array(n).fill(DANGER_IDX[def.danger]);
   for (const a of def.dangerAreas) fillRect(danger, w, h, a.rect, DANGER_IDX[a.level]);
-  return { def, w, h, ground, walk, danger, buildingAt };
+  const opaque = Uint8Array.from(buildingAt, index => Number(index >= 0));
+  for (const b of def.blocks) if (b.type === 'wall' && b.height >= 0.8) fillRect(opaque, w, h, b.rect, 1);
+  for (const d of def.doors) opaque[d.at[1] * w + d.at[0]] = 0;
+  return { def, w, h, ground, walk, danger, buildingAt, opaque };
 }
 
 export function isWalkable(g: ZoneGrid, x: number, y: number): boolean {

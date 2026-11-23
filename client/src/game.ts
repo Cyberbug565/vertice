@@ -1,5 +1,5 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
-import { Atlas, prisonZone, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type PrisonView, type ServerMsg } from '@vertice/shared';
+import { installedSight, Atlas, prisonZone, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type PrisonView, type ServerMsg } from '@vertice/shared';
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
@@ -38,6 +38,7 @@ const STANCES = [
   { id: 'aggressive', label: 'Agresiva', desc: 'Agresiva: ataca objetivos elegibles dentro de la orden seleccionada, gastando munición y cromo autorizados.' },
 ] as const;
 
+const opticalDefs = new Map(content.cyberware.filter(d => d.effects.sight).map(d => [d.id,d]));
 const ABIL_ICON: Record<string, string> = { kairos: '⏩', onda: '🌊', proyeccion: '👻', 'tiempo-bala': '⏱', invisible: '👻', curar: '💉', pulso: '💥', esprint: '💨', carga: '🚀', senuelo: '🎭', torbellino: '🌀', 'disparo-cargado': '🎯', 'pico-ram': '🧠', 'onda-ko': '⚡', marcar: '📡', escudo: '🛡', salto: '🦘' };
 const BUFF_NAME: Record<string, string> = { 'tiempo-bala': '⏱ Tiempo bala', invisible: '👻 Invisible', curar: '💉 Curando', esprint: '💨 Esprint', senuelo: '🎭 Señuelo', carga: '🚀 Carga', 'disparo-cargado': '🎯 Cargado', marcar: '📡 Objetivos marcados', escudo: '🛡 Escudo' };
 
@@ -217,6 +218,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     nameEl.replaceChildren(h('b', {}, s.name), ` · ${roleById(s.role)?.name ?? s.role} · `, h('span', { class: 'lvchip' }, `Nv ${s.level}`), s.skillPoints + s.perkPoints ? h('span', { class: 'ptschip', title: 'Puntos sin gastar (H)' }, `+${s.skillPoints + s.perkPoints}`) : '');
     const xi = s.xp - s.xpLevelStart, xn = Math.max(1, s.xpNext - s.xpLevelStart);
     xpFill.style.width = `${Math.min(100, (100 * xi) / xn)}%`; xpTxt.textContent = `${xi}/${xn} XP`;
+    view.sight = installedSight(s.cyber, opticalDefs);
     view.showLevels = s.uniques.includes('lector');
     renderAbilities(s);
     refreshCharScreen(s);
@@ -930,7 +932,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     netEl.className = `mono ${cls}`;
     netEl.textContent = net.status === 'online' ? `${Math.round(net.rtt)} ms · ${kbs.toFixed(1)} KiB/s · ${Math.round(view.app.ticker.FPS)} FPS · CPU ${view.frameMs.toFixed(1)} ms` : net.status;
   }, 1000));
-  timers.push(window.setInterval(() => minimap.draw(view.me, [...view.ents.values()].filter((e) => e.s.id !== view.meId).map((e) => ({ x: e.x, y: e.y, kind: e.s.kind }))), 250));
+  timers.push(window.setInterval(() => minimap.draw(view.me, [...view.ents.values()].filter((e) => e.s.id !== view.meId && e.view.visible).map((e) => ({ x: e.x, y: e.y, kind: e.s.kind }))), 250));
   document.addEventListener('visibilitychange', () => setAmbientActive(!document.hidden), { signal: eventScope.signal });
 
   // Ganchos de depuración para pruebas automatizadas en navegador.

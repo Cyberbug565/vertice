@@ -26,7 +26,7 @@ afterAll(async () => {
 it('cada modelo tiene estadísticas activas, un color oficial y se vende en una clínica compatible', () => {
   const c = app.world.c,
     catalog = c.cyberware.filter((d) => d.model);
-  expect(catalog.map((d) => d.model).sort()).toEqual(Object.keys(CYBER_MODELS).sort());
+  expect([...new Set(catalog.map((d) => d.model))].sort()).toEqual(Object.keys(CYBER_MODELS).sort());
   for (const d of catalog) {
     expect(d.visible).toBe(CYBER_MODELS[d.model!]);
     expect(RARITY_COLOR[d.rarity!]).toMatch(/^#/);
@@ -37,7 +37,7 @@ it('cada modelo tiene estadísticas activas, un color oficial y se vende en una 
       .filter((d) => d.rarity === 'legendario')
       .map((d) => d.model)
       .sort(),
-  ).toEqual(['asedio', 'coloso', 'titan']);
+  ).toEqual(['asedio', 'coloso', 'optico', 'titan']);
 });
 
 it('el lado, el modelo y sus bonificaciones sobreviven a la instalación, retirada, guardado y reimplante', async () => {

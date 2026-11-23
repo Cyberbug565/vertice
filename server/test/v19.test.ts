@@ -48,7 +48,7 @@ describe('v0.19', () => {
 
   it('un transeúnte espera en la acera con el semáforo de peatones en rojo', () => {
     const z = city(), g = z.grid;
-    const cw = g.def.ground.find((c) => c.type === 'crosswalk' && c.rect[1] === 112 && c.rect[3] === 8)!;
+    const cw = g.def.ground.find(c => c.type === 'crosswalk' && c.rect[1] === 112 && c.rect[3] === 8 && g.walk[111 * g.w + c.rect[0]])!;
     const w = app.world as any;
     const e = w.addEntity(z, { kind: 'npc', name: 'Peatón', x: cw.rect[0] + 0.5, y: 111.4, interactive: false, speed: 2 });
     e.npc = { nextThink: 1e12 } as any; e.npcType = 'civil';

@@ -37,6 +37,7 @@ export function urbanFacade(kind: UrbanLook['facade'], ghost = false, detailed =
   const style = FACADES[kind];
   const material = new THREE.MeshStandardMaterial({
     roughness: style.rough, metalness: style.metal,
+    side: detailed ? THREE.DoubleSide : THREE.FrontSide, depthWrite: !ghost, forceSinglePass: ghost,
     transparent: ghost, opacity: ghost ? 0.2 : 1, vertexColors: detailed,
   });
   if (detailed) {

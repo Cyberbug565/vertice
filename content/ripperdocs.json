@@ -125,7 +125,8 @@
    "cromo-modulo",
    "cromo-atlas",
    "cromo-bastion",
-   "cromo-yelmo"
+   "cromo-yelmo",
+   "ojo-horizonte"
   ],
   "desc": "Buena cirujana y honrada: nunca instala cromo robado.",
   "hidden": false,
@@ -500,7 +501,8 @@
    "cromo-taller",
    "cromo-protesis",
    "cromo-circuito",
-   "cromo-pinza"
+   "cromo-pinza",
+   "ojo-horizonte"
   ],
   "desc": "Prótesis asequibles y cromo básico. Grado máximo II.",
   "hidden": true,
@@ -633,7 +635,9 @@
    "cromo-yelmo",
    "cromo-asedio",
    "cromo-coloso",
-   "cromo-titan"
+   "cromo-titan",
+   "ojo-horizonte",
+   "ojo-panorama"
   ],
   "desc": "La mejor y la más cara. Procedencia verificada.",
   "hidden": false,
@@ -916,7 +920,8 @@
    "optica-analisis",
    "cromo-asedio",
    "cromo-coloso",
-   "cromo-titan"
+   "cromo-titan",
+   "ojo-panorama"
   ],
   "stolenStock": [
    "camuflaje-optico",

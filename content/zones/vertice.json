@@ -3,7 +3,7 @@
  "name": "Ciudad Vértice",
  "kind": "exterior",
  "width": 744,
- "height": 432,
+ "height": 560,
  "chunkSize": 32,
  "danger": "public",
  "base": "sidewalk",
@@ -9573,6 +9573,2294 @@
     7
    ],
    "street": "ensanche-paseo-del-arco"
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    8,
+    432,
+    66,
+    36
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    10,
+    434,
+    62,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    42,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    8,
+    447,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    8,
+    474,
+    66,
+    35
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    10,
+    476,
+    62,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    37,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    8,
+    489,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    8,
+    515,
+    66,
+    37
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    10,
+    517,
+    62,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    42,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    8,
+    531,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    79,
+    432,
+    71,
+    36
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    81,
+    434,
+    67,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    110,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    79,
+    450,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    79,
+    474,
+    71,
+    35
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    81,
+    476,
+    67,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    116,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    79,
+    491,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    79,
+    515,
+    71,
+    37
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    81,
+    517,
+    67,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    110,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    79,
+    533,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    432,
+    65,
+    36
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    160,
+    434,
+    61,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    192,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    158,
+    447,
+    65,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    474,
+    65,
+    35
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    160,
+    476,
+    61,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    186,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    158,
+    489,
+    65,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    158,
+    515,
+    65,
+    37
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    160,
+    517,
+    61,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    192,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    158,
+    531,
+    65,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    229,
+    432,
+    71,
+    36
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    231,
+    434,
+    67,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    260,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    229,
+    450,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    229,
+    474,
+    71,
+    35
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    231,
+    476,
+    67,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    266,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    229,
+    491,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    229,
+    515,
+    71,
+    37
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    231,
+    517,
+    67,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    260,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    229,
+    533,
+    71,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    308,
+    432,
+    66,
+    36
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    310,
+    434,
+    62,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    342,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    308,
+    447,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    308,
+    474,
+    66,
+    35
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    310,
+    476,
+    62,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    337,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    308,
+    489,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    308,
+    515,
+    66,
+    37
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    310,
+    517,
+    62,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    342,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    308,
+    531,
+    66,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    380,
+    432,
+    70,
+    36
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    382,
+    434,
+    66,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    411,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    380,
+    450,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    380,
+    474,
+    70,
+    35
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    382,
+    476,
+    66,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    416,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    380,
+    491,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    380,
+    515,
+    70,
+    37
+   ]
+  },
+  {
+   "type": "plaza",
+   "rect": [
+    382,
+    517,
+    66,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    411,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    380,
+    533,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    458,
+    432,
+    67,
+    36
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    460,
+    434,
+    63,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    493,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    458,
+    447,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    458,
+    474,
+    67,
+    35
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    460,
+    476,
+    63,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    487,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    458,
+    489,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    458,
+    515,
+    67,
+    37
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    460,
+    517,
+    63,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    493,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    458,
+    531,
+    67,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    530,
+    432,
+    70,
+    36
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    532,
+    434,
+    66,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    561,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    530,
+    450,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    530,
+    474,
+    70,
+    35
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    532,
+    476,
+    66,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    566,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    530,
+    491,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    530,
+    515,
+    70,
+    37
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    532,
+    517,
+    66,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    561,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    530,
+    533,
+    70,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    432,
+    60,
+    36
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    610,
+    434,
+    56,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    639,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    608,
+    447,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    474,
+    60,
+    35
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    610,
+    476,
+    56,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    634,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    608,
+    489,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    608,
+    515,
+    60,
+    37
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    610,
+    517,
+    56,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    639,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    608,
+    531,
+    60,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    432,
+    33,
+    36
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    676,
+    434,
+    29,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    688,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    674,
+    450,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    474,
+    33,
+    35
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    676,
+    476,
+    29,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    690,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    674,
+    491,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    674,
+    515,
+    33,
+    37
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    676,
+    517,
+    29,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    688,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    674,
+    533,
+    33,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    432,
+    24,
+    36
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    714,
+    434,
+    20,
+    32
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    723,
+    432,
+    2,
+    36
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    712,
+    447,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    474,
+    24,
+    35
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    714,
+    476,
+    20,
+    31
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    722,
+    474,
+    2,
+    35
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    712,
+    489,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    712,
+    515,
+    24,
+    37
+   ]
+  },
+  {
+   "type": "sand",
+   "rect": [
+    714,
+    517,
+    20,
+    33
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    723,
+    515,
+    2,
+    37
+   ]
+  },
+  {
+   "type": "alley",
+   "rect": [
+    712,
+    531,
+    24,
+    2
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    432,
+    8,
+    128
+   ],
+   "street": "sur-eje-0"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    74,
+    432,
+    5,
+    128
+   ],
+   "street": "sur-eje-74"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    150,
+    432,
+    8,
+    128
+   ],
+   "street": "sur-eje-150"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    223,
+    432,
+    6,
+    128
+   ],
+   "street": "sur-eje-223"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    300,
+    432,
+    8,
+    128
+   ],
+   "street": "sur-eje-300"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    374,
+    432,
+    6,
+    128
+   ],
+   "street": "sur-eje-374"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    450,
+    432,
+    8,
+    128
+   ],
+   "street": "sur-eje-450"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    525,
+    432,
+    5,
+    128
+   ],
+   "street": "sur-eje-525"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    600,
+    432,
+    8,
+    128
+   ],
+   "street": "sur-eje-600"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    668,
+    432,
+    6,
+    128
+   ],
+   "street": "sur-eje-668"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    707,
+    432,
+    5,
+    128
+   ],
+   "street": "sur-eje-707"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    736,
+    432,
+    8,
+    128
+   ],
+   "street": "sur-eje-736"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    468,
+    744,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    509,
+    744,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    0,
+    552,
+    744,
+    8
+   ],
+   "street": "sur-ronda-552"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    11,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    11,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    11,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    82,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    74,
+    435,
+    5,
+    2
+   ],
+   "street": "sur-eje-74"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    82,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    74,
+    477,
+    5,
+    2
+   ],
+   "street": "sur-eje-74"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    82,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    74,
+    518,
+    5,
+    2
+   ],
+   "street": "sur-eje-74"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    161,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    150,
+    435,
+    8,
+    2
+   ],
+   "street": "sur-eje-150"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    161,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    150,
+    477,
+    8,
+    2
+   ],
+   "street": "sur-eje-150"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    161,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    150,
+    518,
+    8,
+    2
+   ],
+   "street": "sur-eje-150"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    232,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    223,
+    435,
+    6,
+    2
+   ],
+   "street": "sur-eje-223"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    232,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    223,
+    477,
+    6,
+    2
+   ],
+   "street": "sur-eje-223"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    232,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    223,
+    518,
+    6,
+    2
+   ],
+   "street": "sur-eje-223"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    311,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    300,
+    435,
+    8,
+    2
+   ],
+   "street": "sur-eje-300"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    311,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    300,
+    477,
+    8,
+    2
+   ],
+   "street": "sur-eje-300"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    311,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    300,
+    518,
+    8,
+    2
+   ],
+   "street": "sur-eje-300"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    383,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    374,
+    435,
+    6,
+    2
+   ],
+   "street": "sur-eje-374"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    383,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    374,
+    477,
+    6,
+    2
+   ],
+   "street": "sur-eje-374"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    383,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    374,
+    518,
+    6,
+    2
+   ],
+   "street": "sur-eje-374"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    461,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    450,
+    435,
+    8,
+    2
+   ],
+   "street": "sur-eje-450"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    461,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    450,
+    477,
+    8,
+    2
+   ],
+   "street": "sur-eje-450"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    461,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    450,
+    518,
+    8,
+    2
+   ],
+   "street": "sur-eje-450"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    533,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    525,
+    435,
+    5,
+    2
+   ],
+   "street": "sur-eje-525"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    533,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    525,
+    477,
+    5,
+    2
+   ],
+   "street": "sur-eje-525"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    533,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    525,
+    518,
+    5,
+    2
+   ],
+   "street": "sur-eje-525"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    600,
+    435,
+    8,
+    2
+   ],
+   "street": "sur-eje-600"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    600,
+    477,
+    8,
+    2
+   ],
+   "street": "sur-eje-600"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    611,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    600,
+    518,
+    8,
+    2
+   ],
+   "street": "sur-eje-600"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    435,
+    6,
+    2
+   ],
+   "street": "sur-eje-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    477,
+    6,
+    2
+   ],
+   "street": "sur-eje-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    677,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    518,
+    6,
+    2
+   ],
+   "street": "sur-eje-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    424,
+    2,
+    8
+   ],
+   "street": "sur-ronda-424"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    435,
+    5,
+    2
+   ],
+   "street": "sur-eje-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    468,
+    2,
+    6
+   ],
+   "street": "sur-ronda-468"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    477,
+    5,
+    2
+   ],
+   "street": "sur-eje-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    715,
+    509,
+    2,
+    6
+   ],
+   "street": "sur-ronda-509"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    518,
+    5,
+    2
+   ],
+   "street": "sur-eje-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    74,
+    358,
+    5,
+    2
+   ],
+   "street": "sur-enlace-74"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    74,
+    401,
+    5,
+    2
+   ],
+   "street": "sur-enlace-74"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    150,
+    358,
+    8,
+    2
+   ],
+   "street": "sur-enlace-150"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    150,
+    401,
+    8,
+    2
+   ],
+   "street": "sur-enlace-150"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    223,
+    358,
+    6,
+    2
+   ],
+   "street": "sur-enlace-223"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    223,
+    401,
+    6,
+    2
+   ],
+   "street": "sur-enlace-223"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    300,
+    358,
+    8,
+    2
+   ],
+   "street": "sur-enlace-300"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    300,
+    401,
+    8,
+    2
+   ],
+   "street": "sur-enlace-300"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    374,
+    358,
+    6,
+    2
+   ],
+   "street": "sur-enlace-374"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    374,
+    401,
+    6,
+    2
+   ],
+   "street": "sur-enlace-374"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    450,
+    358,
+    8,
+    2
+   ],
+   "street": "sur-enlace-450"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    450,
+    401,
+    8,
+    2
+   ],
+   "street": "sur-enlace-450"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    525,
+    358,
+    5,
+    2
+   ],
+   "street": "sur-enlace-525"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    525,
+    401,
+    5,
+    2
+   ],
+   "street": "sur-enlace-525"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    600,
+    358,
+    8,
+    2
+   ],
+   "street": "sur-enlace-600"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    600,
+    401,
+    8,
+    2
+   ],
+   "street": "sur-enlace-600"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    22,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    88,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    135,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    196,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    248,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    311,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    358,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    668,
+    401,
+    6,
+    2
+   ],
+   "street": "sur-enlace-668"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    22,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    88,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    135,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    196,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    248,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    311,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    358,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    707,
+    401,
+    5,
+    2
+   ],
+   "street": "sur-enlace-707"
   }
  ],
  "blocks": [
@@ -21324,6 +23612,1655 @@
    "urban": {
     "model": "contenedor-cobalto",
     "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "vega-0-1",
+   "rect": [
+    46,
+    436,
+    24,
+    8
+   ],
+   "height": 6,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "vega-0-2",
+   "rect": [
+    12,
+    451,
+    28,
+    13
+   ],
+   "height": 4,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "vega-0-3",
+   "rect": [
+    46,
+    451,
+    24,
+    12
+   ],
+   "height": 7,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "vega-1-0",
+   "rect": [
+    12,
+    478,
+    22,
+    9
+   ],
+   "height": 5,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "vega-1-2",
+   "rect": [
+    12,
+    493,
+    22,
+    12
+   ],
+   "height": 6,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "vega-1-3",
+   "rect": [
+    41,
+    493,
+    28,
+    10
+   ],
+   "height": 4,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "vega-2-0",
+   "rect": [
+    12,
+    519,
+    26,
+    9
+   ],
+   "height": 7,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "vega-2-1",
+   "rect": [
+    46,
+    519,
+    22,
+    8
+   ],
+   "height": 5,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "vega-2-3",
+   "rect": [
+    46,
+    535,
+    22,
+    11
+   ],
+   "height": 6,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "vega-3-0",
+   "rect": [
+    83,
+    436,
+    25,
+    11
+   ],
+   "height": 4,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "vega-3-1",
+   "rect": [
+    114,
+    436,
+    32,
+    12
+   ],
+   "height": 7,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "vega-3-2",
+   "rect": [
+    83,
+    454,
+    25,
+    9
+   ],
+   "height": 5,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "vega-4-1",
+   "rect": [
+    120,
+    478,
+    25,
+    11
+   ],
+   "height": 4,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "vega-4-2",
+   "rect": [
+    83,
+    495,
+    30,
+    8
+   ],
+   "height": 7,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "vega-4-3",
+   "rect": [
+    120,
+    495,
+    25,
+    10
+   ],
+   "height": 5,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "vega-5-0",
+   "rect": [
+    83,
+    519,
+    23,
+    10
+   ],
+   "height": 3,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "vega-5-2",
+   "rect": [
+    83,
+    537,
+    23,
+    9
+   ],
+   "height": 4,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "vega-5-3",
+   "rect": [
+    114,
+    537,
+    30,
+    10
+   ],
+   "height": 7,
+   "style": "block",
+   "color": "#9b8d84",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "alameda-6-0",
+   "rect": [
+    162,
+    436,
+    28,
+    9
+   ],
+   "height": 13,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "alameda-6-1",
+   "rect": [
+    196,
+    436,
+    23,
+    8
+   ],
+   "height": 16,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "balcones",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "alameda-6-2",
+   "rect": [
+    162,
+    451,
+    28,
+    13
+   ],
+   "height": 7,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "patio",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "alameda-6-3",
+   "rect": [
+    196,
+    451,
+    23,
+    12
+   ],
+   "height": 10,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "galeria",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "alameda-7-0",
+   "rect": [
+    162,
+    478,
+    21,
+    9
+   ],
+   "height": 8,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "balcones",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "alameda-7-1",
+   "rect": [
+    190,
+    478,
+    28,
+    7
+   ],
+   "height": 11,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "patio",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "alameda-7-2",
+   "rect": [
+    162,
+    493,
+    21,
+    12
+   ],
+   "height": 14,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "galeria",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "alameda-7-3",
+   "rect": [
+    190,
+    493,
+    28,
+    10
+   ],
+   "height": 17,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "medianera",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "alameda-8-0",
+   "rect": [
+    162,
+    519,
+    26,
+    9
+   ],
+   "height": 15,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "patio",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "alameda-8-1",
+   "rect": [
+    196,
+    519,
+    21,
+    8
+   ],
+   "height": 18,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "galeria",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "alameda-8-2",
+   "rect": [
+    162,
+    535,
+    26,
+    12
+   ],
+   "height": 9,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "medianera",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "alameda-8-3",
+   "rect": [
+    196,
+    535,
+    21,
+    11
+   ],
+   "height": 12,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "alameda-9-0",
+   "rect": [
+    233,
+    436,
+    25,
+    11
+   ],
+   "height": 10,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "galeria",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "alameda-9-1",
+   "rect": [
+    264,
+    436,
+    32,
+    12
+   ],
+   "height": 13,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "medianera",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "alameda-9-2",
+   "rect": [
+    233,
+    454,
+    25,
+    9
+   ],
+   "height": 16,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "alameda-9-3",
+   "rect": [
+    264,
+    454,
+    32,
+    10
+   ],
+   "height": 7,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "alameda-10-0",
+   "rect": [
+    233,
+    478,
+    30,
+    9
+   ],
+   "height": 17,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "medianera",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "alameda-10-1",
+   "rect": [
+    270,
+    478,
+    25,
+    11
+   ],
+   "height": 8,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "alameda-10-2",
+   "rect": [
+    233,
+    495,
+    30,
+    8
+   ],
+   "height": 11,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "alameda-10-3",
+   "rect": [
+    270,
+    495,
+    25,
+    10
+   ],
+   "height": 14,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "alameda-11-0",
+   "rect": [
+    233,
+    519,
+    23,
+    10
+   ],
+   "height": 12,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "alameda-11-1",
+   "rect": [
+    264,
+    519,
+    30,
+    11
+   ],
+   "height": 15,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "alameda-11-2",
+   "rect": [
+    233,
+    537,
+    23,
+    9
+   ],
+   "height": 18,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "alameda-11-3",
+   "rect": [
+    264,
+    537,
+    30,
+    10
+   ],
+   "height": 9,
+   "style": "block",
+   "color": "#858b9b",
+   "urban": {
+    "model": "balcones",
+    "facade": "residencial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "estacion-central-12-0",
+   "rect": [
+    312,
+    436,
+    28,
+    9
+   ],
+   "height": 12,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "pantalla",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "estacion-central-12-1",
+   "rect": [
+    346,
+    436,
+    24,
+    8
+   ],
+   "height": 15,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "estacion-central-12-2",
+   "rect": [
+    312,
+    451,
+    28,
+    13
+   ],
+   "height": 18,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "estacion-central-12-3",
+   "rect": [
+    346,
+    451,
+    24,
+    12
+   ],
+   "height": 21,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "estacion-central-13-0",
+   "rect": [
+    312,
+    478,
+    22,
+    9
+   ],
+   "height": 19,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "estacion-central-13-1",
+   "rect": [
+    341,
+    478,
+    28,
+    7
+   ],
+   "height": 22,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "estacion-central-13-3",
+   "rect": [
+    341,
+    493,
+    28,
+    10
+   ],
+   "height": 28,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "prisma",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "estacion-central-14-0",
+   "rect": [
+    312,
+    519,
+    26,
+    9
+   ],
+   "height": 26,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "estacion-central-14-1",
+   "rect": [
+    346,
+    519,
+    22,
+    8
+   ],
+   "height": 29,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "estacion-central-14-2",
+   "rect": [
+    312,
+    535,
+    26,
+    12
+   ],
+   "height": 32,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "prisma",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "estacion-central-14-3",
+   "rect": [
+    346,
+    535,
+    22,
+    11
+   ],
+   "height": 35,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "estacion-central-15-0",
+   "rect": [
+    384,
+    436,
+    25,
+    11
+   ],
+   "height": 33,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "estacion-central-15-1",
+   "rect": [
+    415,
+    436,
+    31,
+    12
+   ],
+   "height": 36,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "prisma",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "estacion-central-15-2",
+   "rect": [
+    384,
+    454,
+    25,
+    9
+   ],
+   "height": 39,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "estacion-central-15-3",
+   "rect": [
+    415,
+    454,
+    31,
+    10
+   ],
+   "height": 14,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "oblicua",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "estacion-central-16-0",
+   "rect": [
+    384,
+    478,
+    29,
+    9
+   ],
+   "height": 12,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "prisma",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "estacion-central-16-1",
+   "rect": [
+    420,
+    478,
+    25,
+    11
+   ],
+   "height": 15,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "estacion-central-16-3",
+   "rect": [
+    420,
+    495,
+    25,
+    10
+   ],
+   "height": 21,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "terraza",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "estacion-central-17-0",
+   "rect": [
+    384,
+    519,
+    23,
+    10
+   ],
+   "height": 19,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "estacion-central-17-1",
+   "rect": [
+    415,
+    519,
+    29,
+    11
+   ],
+   "height": 22,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "oblicua",
+    "facade": "comercial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "estacion-central-17-2",
+   "rect": [
+    384,
+    537,
+    23,
+    9
+   ],
+   "height": 25,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "terraza",
+    "facade": "comercial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "estacion-central-17-3",
+   "rect": [
+    415,
+    537,
+    29,
+    10
+   ],
+   "height": 28,
+   "style": "tower",
+   "color": "#65758b",
+   "urban": {
+    "model": "pantalla",
+    "facade": "comercial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "astilleros-18-0",
+   "rect": [
+    462,
+    436,
+    29,
+    9
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "astilleros-18-1",
+   "rect": [
+    497,
+    436,
+    24,
+    8
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "astilleros-18-2",
+   "rect": [
+    462,
+    451,
+    29,
+    13
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "astilleros-18-3",
+   "rect": [
+    497,
+    451,
+    24,
+    12
+   ],
+   "height": 11,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "astilleros-19-0",
+   "rect": [
+    462,
+    478,
+    22,
+    9
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "astilleros-19-1",
+   "rect": [
+    491,
+    478,
+    29,
+    7
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "astilleros-19-2",
+   "rect": [
+    462,
+    493,
+    22,
+    12
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "astilleros-19-3",
+   "rect": [
+    491,
+    493,
+    29,
+    10
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "astilleros-20-0",
+   "rect": [
+    462,
+    519,
+    27,
+    9
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "astilleros-20-1",
+   "rect": [
+    497,
+    519,
+    22,
+    8
+   ],
+   "height": 11,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "astilleros-20-2",
+   "rect": [
+    462,
+    535,
+    27,
+    12
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "astilleros-20-3",
+   "rect": [
+    497,
+    535,
+    22,
+    11
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "astilleros-21-0",
+   "rect": [
+    534,
+    436,
+    25,
+    11
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "astilleros-21-1",
+   "rect": [
+    565,
+    436,
+    31,
+    12
+   ],
+   "height": 10,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "astilleros-21-2",
+   "rect": [
+    534,
+    454,
+    25,
+    9
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "astilleros-21-3",
+   "rect": [
+    565,
+    454,
+    31,
+    10
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "astilleros-22-0",
+   "rect": [
+    534,
+    478,
+    29,
+    9
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "astilleros-22-1",
+   "rect": [
+    570,
+    478,
+    25,
+    11
+   ],
+   "height": 9,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "astilleros-22-2",
+   "rect": [
+    534,
+    495,
+    29,
+    8
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "astilleros-22-3",
+   "rect": [
+    570,
+    495,
+    25,
+    10
+   ],
+   "height": 7,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "astilleros-23-0",
+   "rect": [
+    534,
+    519,
+    23,
+    10
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
+  },
+  {
+   "id": "astilleros-23-1",
+   "rect": [
+    565,
+    519,
+    29,
+    11
+   ],
+   "height": 8,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 0
+   }
+  },
+  {
+   "id": "astilleros-23-2",
+   "rect": [
+    534,
+    537,
+    23,
+    9
+   ],
+   "height": 11,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 3
+   }
+  },
+  {
+   "id": "astilleros-23-3",
+   "rect": [
+    565,
+    537,
+    29,
+    10
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#7d736a",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "barranco-seco-24-0",
+   "rect": [
+    612,
+    436,
+    25,
+    9
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "barranco-seco-25-1",
+   "rect": [
+    638,
+    478,
+    25,
+    7
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "barranco-seco-26-2",
+   "rect": [
+    612,
+    535,
+    23,
+    12
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "barranco-seco-27-3",
+   "rect": [
+    692,
+    454,
+    11,
+    10
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "barranco-seco-28-0",
+   "rect": [
+    678,
+    478,
+    9,
+    9
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "barranco-seco-29-1",
+   "rect": [
+    692,
+    519,
+    9,
+    11
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "barranco-seco-30-2",
+   "rect": [
+    716,
+    451,
+    5,
+    13
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
+  },
+  {
+   "id": "barranco-seco-31-3",
+   "rect": [
+    726,
+    493,
+    5,
+    10
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
+  },
+  {
+   "id": "barranco-seco-32-0",
+   "rect": [
+    716,
+    519,
+    4,
+    9
+   ],
+   "height": 2,
+   "style": "industrial",
+   "color": "#796654",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
     "turn": 0
    }
   }
@@ -50787,6 +54724,534 @@
    ],
    "blocking": false,
    "color": "#4cdde9"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    10,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "plant",
+   "at": [
+    71,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    10,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "plant",
+   "at": [
+    71,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    10,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "plant",
+   "at": [
+    71,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    81,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "plant",
+   "at": [
+    147,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    81,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "plant",
+   "at": [
+    147,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    81,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "plant",
+   "at": [
+    147,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    160,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    220,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    160,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    220,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    160,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    220,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    231,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    297,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    231,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    297,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    231,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    297,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    310,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "busstop",
+   "at": [
+    371,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    310,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "busstop",
+   "at": [
+    371,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    310,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "busstop",
+   "at": [
+    371,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    382,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "busstop",
+   "at": [
+    447,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    382,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "busstop",
+   "at": [
+    447,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    382,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "busstop",
+   "at": [
+    447,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    460,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    522,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    460,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    522,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    460,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    522,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    532,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    597,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    532,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    597,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    532,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    597,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    610,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    665,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    610,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    665,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    610,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    665,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    676,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    704,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    676,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    704,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    676,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    704,
+    549
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    714,
+    433
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    733,
+    465
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    714,
+    475
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    733,
+    506
+   ],
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    714,
+    516
+   ],
+   "blocking": false
+  },
+  {
+   "type": "wreck",
+   "at": [
+    733,
+    549
+   ],
+   "blocking": false
   }
  ],
  "doors": [
@@ -60529,6 +64994,51 @@
     80
    ],
    "level": "lawless"
+  },
+  {
+   "level": "public",
+   "rect": [
+    8,
+    432,
+    142,
+    120
+   ]
+  },
+  {
+   "level": "public",
+   "rect": [
+    158,
+    432,
+    142,
+    120
+   ]
+  },
+  {
+   "level": "public",
+   "rect": [
+    308,
+    432,
+    142,
+    120
+   ]
+  },
+  {
+   "level": "disputed",
+   "rect": [
+    458,
+    432,
+    142,
+    120
+   ]
+  },
+  {
+   "level": "lawless",
+   "rect": [
+    608,
+    432,
+    128,
+    120
+   ]
   }
  ],
  "sectors": [
@@ -62721,63 +67231,63 @@
     0,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "La Vega"
   },
   {
    "chunk": [
     1,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "La Vega"
   },
   {
    "chunk": [
     2,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "La Vega"
   },
   {
    "chunk": [
     3,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "La Vega"
   },
   {
    "chunk": [
     4,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "La Vega"
   },
   {
    "chunk": [
     5,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Alameda del Sur"
   },
   {
    "chunk": [
     6,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Alameda del Sur"
   },
   {
    "chunk": [
     7,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Alameda del Sur"
   },
   {
    "chunk": [
     8,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Alameda del Sur"
   },
   {
    "chunk": [
@@ -62791,91 +67301,91 @@
     10,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Estación Central"
   },
   {
    "chunk": [
     11,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Estación Central"
   },
   {
    "chunk": [
     12,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Estación Central"
   },
   {
    "chunk": [
     13,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Estación Central"
   },
   {
    "chunk": [
     14,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Astilleros de Óxido"
   },
   {
    "chunk": [
     15,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Astilleros de Óxido"
   },
   {
    "chunk": [
     16,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Astilleros de Óxido"
   },
   {
    "chunk": [
     17,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Astilleros de Óxido"
   },
   {
    "chunk": [
     18,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Astilleros de Óxido"
   },
   {
    "chunk": [
     19,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Barranco Seco"
   },
   {
    "chunk": [
     20,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Barranco Seco"
   },
   {
    "chunk": [
     21,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Barranco Seco"
   },
   {
    "chunk": [
     22,
     13
    ],
-   "name": "Ronda de Vértice"
+   "name": "Barranco Seco"
   },
   {
    "chunk": [
@@ -62883,6 +67393,678 @@
     13
    ],
    "name": "Ronda de Vértice"
+  },
+  {
+   "chunk": [
+    0,
+    14
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    1,
+    14
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    2,
+    14
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    3,
+    14
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    4,
+    14
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    5,
+    14
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    6,
+    14
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    7,
+    14
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    8,
+    14
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    9,
+    14
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    10,
+    14
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    11,
+    14
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    12,
+    14
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    13,
+    14
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    14,
+    14
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    15,
+    14
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    16,
+    14
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    17,
+    14
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    18,
+    14
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    19,
+    14
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    20,
+    14
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    21,
+    14
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    22,
+    14
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    23,
+    14
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    0,
+    15
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    1,
+    15
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    2,
+    15
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    3,
+    15
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    4,
+    15
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    5,
+    15
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    6,
+    15
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    7,
+    15
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    8,
+    15
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    9,
+    15
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    10,
+    15
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    11,
+    15
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    12,
+    15
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    13,
+    15
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    14,
+    15
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    15,
+    15
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    16,
+    15
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    17,
+    15
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    18,
+    15
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    19,
+    15
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    20,
+    15
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    21,
+    15
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    22,
+    15
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    23,
+    15
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    0,
+    16
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    1,
+    16
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    2,
+    16
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    3,
+    16
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    4,
+    16
+   ],
+   "name": "La Vega"
+  },
+  {
+   "chunk": [
+    5,
+    16
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    6,
+    16
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    7,
+    16
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    8,
+    16
+   ],
+   "name": "Alameda del Sur"
+  },
+  {
+   "chunk": [
+    9,
+    16
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    10,
+    16
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    11,
+    16
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    12,
+    16
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    13,
+    16
+   ],
+   "name": "Estación Central"
+  },
+  {
+   "chunk": [
+    14,
+    16
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    15,
+    16
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    16,
+    16
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    17,
+    16
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    18,
+    16
+   ],
+   "name": "Astilleros de Óxido"
+  },
+  {
+   "chunk": [
+    19,
+    16
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    20,
+    16
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    21,
+    16
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    22,
+    16
+   ],
+   "name": "Barranco Seco"
+  },
+  {
+   "chunk": [
+    23,
+    16
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    0,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    1,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    2,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    3,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    4,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    5,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    6,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    7,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    8,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    9,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    10,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    11,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    12,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    13,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    14,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    15,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    16,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    17,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    18,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    19,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    20,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    21,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    22,
+    17
+   ],
+   "name": "Ronda del Sur"
+  },
+  {
+   "chunk": [
+    23,
+    17
+   ],
+   "name": "Ronda del Sur"
   }
  ],
  "waypoints": [
@@ -63849,6 +69031,74 @@
   [
    583,
    321
+  ],
+  [
+   9,
+   448
+  ],
+  [
+   9,
+   532
+  ],
+  [
+   80,
+   492
+  ],
+  [
+   159,
+   448
+  ],
+  [
+   159,
+   532
+  ],
+  [
+   230,
+   492
+  ],
+  [
+   309,
+   448
+  ],
+  [
+   309,
+   532
+  ],
+  [
+   381,
+   492
+  ],
+  [
+   459,
+   448
+  ],
+  [
+   459,
+   532
+  ],
+  [
+   531,
+   492
+  ],
+  [
+   609,
+   448
+  ],
+  [
+   609,
+   532
+  ],
+  [
+   675,
+   492
+  ],
+  [
+   713,
+   448
+  ],
+  [
+   713,
+   532
   ]
  ],
  "safePoint": [
@@ -63869,7 +69119,7 @@
     98
    ],
    "police": 3,
-   "ambient": 14,
+   "ambient": 20,
    "sleepQuality": 0.4,
    "gangs": [],
    "safePoint": [
@@ -63986,7 +69236,7 @@
     98
    ],
    "police": 1,
-   "ambient": 22,
+   "ambient": 46,
    "sleepQuality": 0.3,
    "gangs": [
     {
@@ -64249,7 +69499,7 @@
     98
    ],
    "police": 0,
-   "ambient": 26,
+   "ambient": 34,
    "sleepQuality": 0.3,
    "gangs": [
     {
@@ -64477,7 +69727,7 @@
     93
    ],
    "police": 2,
-   "ambient": 24,
+   "ambient": 38,
    "sleepQuality": 0.35,
    "gangs": [
     {
@@ -64686,7 +69936,7 @@
     98
    ],
    "police": 4,
-   "ambient": 18,
+   "ambient": 55,
    "sleepQuality": 0.3,
    "gangs": [],
    "safePoint": [
@@ -65237,7 +70487,7 @@
     104
    ],
    "police": 1,
-   "ambient": 9,
+   "ambient": 14,
    "danger": "public",
    "sleepQuality": 0.34,
    "safePoint": [
@@ -65502,7 +70752,7 @@
     80
    ],
    "police": 1,
-   "ambient": 11,
+   "ambient": 22,
    "danger": "public",
    "sleepQuality": 0.34,
    "safePoint": [
@@ -65810,6 +71060,639 @@
      422
     ]
    ],
+   "gangs": []
+  },
+  {
+   "id": "vega",
+   "name": "La Vega",
+   "rect": [
+    8,
+    432,
+    142,
+    120
+   ],
+   "ambient": 12,
+   "police": 1,
+   "danger": "public",
+   "waypoints": [
+    [
+     9,
+     448
+    ],
+    [
+     43,
+     433
+    ],
+    [
+     72,
+     448
+    ],
+    [
+     43,
+     466
+    ],
+    [
+     9,
+     490
+    ],
+    [
+     38,
+     475
+    ],
+    [
+     72,
+     490
+    ],
+    [
+     38,
+     507
+    ],
+    [
+     9,
+     532
+    ],
+    [
+     43,
+     516
+    ],
+    [
+     72,
+     532
+    ],
+    [
+     43,
+     550
+    ],
+    [
+     80,
+     451
+    ],
+    [
+     111,
+     433
+    ],
+    [
+     148,
+     451
+    ],
+    [
+     111,
+     466
+    ],
+    [
+     80,
+     492
+    ],
+    [
+     117,
+     475
+    ],
+    [
+     148,
+     492
+    ],
+    [
+     117,
+     507
+    ],
+    [
+     80,
+     534
+    ],
+    [
+     111,
+     516
+    ],
+    [
+     148,
+     534
+    ],
+    [
+     111,
+     550
+    ]
+   ],
+   "safePoint": [
+    9,
+    448
+   ],
+   "sleepQuality": 0.65,
+   "gangs": []
+  },
+  {
+   "id": "alameda",
+   "name": "Alameda del Sur",
+   "rect": [
+    158,
+    432,
+    142,
+    120
+   ],
+   "ambient": 29,
+   "police": 1,
+   "danger": "public",
+   "waypoints": [
+    [
+     159,
+     448
+    ],
+    [
+     193,
+     433
+    ],
+    [
+     221,
+     448
+    ],
+    [
+     193,
+     466
+    ],
+    [
+     159,
+     490
+    ],
+    [
+     187,
+     475
+    ],
+    [
+     221,
+     490
+    ],
+    [
+     187,
+     507
+    ],
+    [
+     159,
+     532
+    ],
+    [
+     193,
+     516
+    ],
+    [
+     221,
+     532
+    ],
+    [
+     193,
+     550
+    ],
+    [
+     230,
+     451
+    ],
+    [
+     261,
+     433
+    ],
+    [
+     298,
+     451
+    ],
+    [
+     261,
+     466
+    ],
+    [
+     230,
+     492
+    ],
+    [
+     267,
+     475
+    ],
+    [
+     298,
+     492
+    ],
+    [
+     267,
+     507
+    ],
+    [
+     230,
+     534
+    ],
+    [
+     261,
+     516
+    ],
+    [
+     298,
+     534
+    ],
+    [
+     261,
+     550
+    ]
+   ],
+   "safePoint": [
+    159,
+    448
+   ],
+   "sleepQuality": 0.65,
+   "gangs": []
+  },
+  {
+   "id": "estacion-central",
+   "name": "Estación Central",
+   "rect": [
+    308,
+    432,
+    142,
+    120
+   ],
+   "ambient": 40,
+   "police": 3,
+   "danger": "public",
+   "waypoints": [
+    [
+     309,
+     448
+    ],
+    [
+     343,
+     433
+    ],
+    [
+     372,
+     448
+    ],
+    [
+     343,
+     466
+    ],
+    [
+     309,
+     490
+    ],
+    [
+     338,
+     475
+    ],
+    [
+     372,
+     490
+    ],
+    [
+     338,
+     507
+    ],
+    [
+     309,
+     532
+    ],
+    [
+     343,
+     516
+    ],
+    [
+     372,
+     532
+    ],
+    [
+     343,
+     550
+    ],
+    [
+     381,
+     451
+    ],
+    [
+     412,
+     433
+    ],
+    [
+     448,
+     451
+    ],
+    [
+     412,
+     466
+    ],
+    [
+     381,
+     492
+    ],
+    [
+     417,
+     475
+    ],
+    [
+     448,
+     492
+    ],
+    [
+     417,
+     507
+    ],
+    [
+     381,
+     534
+    ],
+    [
+     412,
+     516
+    ],
+    [
+     448,
+     534
+    ],
+    [
+     412,
+     550
+    ]
+   ],
+   "safePoint": [
+    309,
+    448
+   ],
+   "sleepQuality": 0.3,
+   "gangs": []
+  },
+  {
+   "id": "astilleros",
+   "name": "Astilleros de Óxido",
+   "rect": [
+    458,
+    432,
+    142,
+    120
+   ],
+   "ambient": 10,
+   "police": 1,
+   "danger": "disputed",
+   "waypoints": [
+    [
+     459,
+     448
+    ],
+    [
+     494,
+     433
+    ],
+    [
+     523,
+     448
+    ],
+    [
+     494,
+     466
+    ],
+    [
+     459,
+     490
+    ],
+    [
+     488,
+     475
+    ],
+    [
+     523,
+     490
+    ],
+    [
+     488,
+     507
+    ],
+    [
+     459,
+     532
+    ],
+    [
+     494,
+     516
+    ],
+    [
+     523,
+     532
+    ],
+    [
+     494,
+     550
+    ],
+    [
+     531,
+     451
+    ],
+    [
+     562,
+     433
+    ],
+    [
+     598,
+     451
+    ],
+    [
+     562,
+     466
+    ],
+    [
+     531,
+     492
+    ],
+    [
+     567,
+     475
+    ],
+    [
+     598,
+     492
+    ],
+    [
+     567,
+     507
+    ],
+    [
+     531,
+     534
+    ],
+    [
+     562,
+     516
+    ],
+    [
+     598,
+     534
+    ],
+    [
+     562,
+     550
+    ]
+   ],
+   "safePoint": [
+    459,
+    448
+   ],
+   "sleepQuality": 0.3,
+   "gangs": []
+  },
+  {
+   "id": "barranco-seco",
+   "name": "Barranco Seco",
+   "rect": [
+    608,
+    432,
+    128,
+    120
+   ],
+   "ambient": 3,
+   "police": 0,
+   "danger": "lawless",
+   "waypoints": [
+    [
+     609,
+     448
+    ],
+    [
+     640,
+     433
+    ],
+    [
+     666,
+     448
+    ],
+    [
+     640,
+     466
+    ],
+    [
+     609,
+     490
+    ],
+    [
+     635,
+     475
+    ],
+    [
+     666,
+     490
+    ],
+    [
+     635,
+     507
+    ],
+    [
+     609,
+     532
+    ],
+    [
+     640,
+     516
+    ],
+    [
+     666,
+     532
+    ],
+    [
+     640,
+     550
+    ],
+    [
+     675,
+     451
+    ],
+    [
+     689,
+     433
+    ],
+    [
+     705,
+     451
+    ],
+    [
+     689,
+     466
+    ],
+    [
+     675,
+     492
+    ],
+    [
+     691,
+     475
+    ],
+    [
+     705,
+     492
+    ],
+    [
+     691,
+     507
+    ],
+    [
+     675,
+     534
+    ],
+    [
+     689,
+     516
+    ],
+    [
+     705,
+     534
+    ],
+    [
+     689,
+     550
+    ],
+    [
+     713,
+     448
+    ],
+    [
+     724,
+     433
+    ],
+    [
+     734,
+     448
+    ],
+    [
+     724,
+     466
+    ],
+    [
+     713,
+     490
+    ],
+    [
+     723,
+     475
+    ],
+    [
+     734,
+     490
+    ],
+    [
+     723,
+     507
+    ],
+    [
+     713,
+     532
+    ],
+    [
+     724,
+     516
+    ],
+    [
+     734,
+     532
+    ],
+    [
+     724,
+     550
+    ]
+   ],
+   "safePoint": [
+    609,
+    448
+   ],
+   "sleepQuality": 0.3,
    "gangs": []
   }
  ],

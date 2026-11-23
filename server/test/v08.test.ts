@@ -120,6 +120,7 @@ describe('v0.8 · implantes, matrices, leyendas y ciberespacio', () => {
     const [x, y] = await toLawless(b, 'medium');
     await app.world.teleport(conn('mirona'), 'vertice', [x + 2, y]);
     await o.until(() => E('mirona').zone.id === 'vertice', 5000, 'en la calle');
+    await o.cmd({ t: 'guard', on: true, facing: 4 });
     install('medium', 'zocalo-matrices');
     p.relics = { matrices: ['matriz-eco'], socketExtra: 0 };
     const body = E('medium');

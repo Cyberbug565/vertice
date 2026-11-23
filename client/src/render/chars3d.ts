@@ -245,7 +245,7 @@ export class Chars3D {
   setZone(z: ZoneDef): boolean {
     this.vehicles.clear();
     for (const r of this.rigs.values()) this.disposeRig(r);
-    this.rigs.clear(); this.born.clear(); this.leaving.clear();
+    this.rigs.clear(); this.born.clear();
     this.occl.clear(); this.bOccl = [];
     if (!this.city) { this.city = new City3D(); this.city.onReady = () => this.onCityReady?.(); this.world.add(this.city.group); }
     const city = this.city.build(z, this.quality);
@@ -887,7 +887,7 @@ export class Chars3D {
       if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) {
         if (s.vehicle) {
           const r = this.rigs.get(s.id);
-          if (r) { this.disposeRig(r); this.rigs.delete(s.id); this.born.delete(s.id); this.leaving.delete(s.id); }
+          if (r) { this.disposeRig(r); this.rigs.delete(s.id); this.born.delete(s.id); }
         }
         continue;
       }
@@ -900,7 +900,7 @@ export class Chars3D {
       const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0, s.appearance?.garments ? garmentsVersion() : 0, wearerImplantRevision(s), settings.nudity]);
       if (r) r.src = src;
       if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; r.src = src; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
-      this.leaving.delete(s.id);
+
       let born = this.born.get(s.id); if (born === undefined) { born = opts.now; this.born.set(s.id, born); }
       if (!e.ghost) this.fade(r, Math.min(1, (opts.now - born) / FADE_MS));
       r.root.scale.setScalar(RULES.actorScale);
@@ -921,12 +921,9 @@ export class Chars3D {
       const a = this.after[i], k = (tnow - a.t0) / a.life;
       if (k >= 1) { this.world.remove(a.g); a.mat.dispose(); this.after.splice(i, 1); } else a.mat.opacity = 0.5 * (1 - k);
     }
-    // v0.19 · Quien sale de la vista (o se aleja) se desvanece en vez de desaparecer de golpe.
-    for (const [id, r] of this.rigs) if (!seen.has(id)) {
-      let t = this.leaving.get(id); if (t === undefined) { t = opts.now; this.leaving.set(id, t); }
-      const k = (r.fadeK ?? 1) - (opts.now - t) / FADE_MS;
-      if (k <= 0.02 || r.ghostMats) { this.disposeRig(r); this.rigs.delete(id); this.leaving.delete(id); this.born.delete(id); }
-      else this.fade(r, k);
+    // Al perder contacto visual se retira el modelo en este fotograma.
+    for (const [id, rig] of this.rigs) if (!seen.has(id)) {
+      this.disposeRig(rig); this.rigs.delete(id); this.born.delete(id);
     }
     // Cámara: el centro de la pantalla corresponde al mismo punto del suelo que en la vista 2D.
     const z = opts.zoom;
@@ -967,7 +964,7 @@ export class Chars3D {
     if (e.lookAt && now < e.lookAt.until) want = Math.atan2(e.lookAt.x - e.x, e.lookAt.y - e.y);
     else if (remoteGuard) want=Math.atan2(Math.cos(netAngle),Math.sin(netAngle));
     else if (Math.hypot(dx, dy) > 0.0015) want = Math.atan2(dx, dy);
-    else if (e.flags !== undefined && s.id !== o.meId) { const a = ((e.flags >> 1) & 7) * Math.PI / 4; want = Math.atan2(Math.cos(a), Math.sin(a)); } // quieto: hacia donde dice el servidor
+    else if (e.flags !== undefined) { const a = ((e.flags >> 1) & 7) * Math.PI / 4; want = Math.atan2(Math.cos(a), Math.sin(a)); } // quieto: hacia donde dice el servidor
     let diff = want - r.heading; while (diff > Math.PI) diff -= Math.PI * 2; while (diff < -Math.PI) diff += Math.PI * 2;
     r.heading += diff * Math.min(1, dt * 12);
     r.root.rotation.y = r.heading;
@@ -1247,7 +1244,6 @@ export class Chars3D {
     else r.emoteAt = undefined;
   }
   private born = new Map<number, number>();
-  private leaving = new Map<number, number>();
   /** Opacidad de un modelo entero (0–1). Solo toca sus materiales propios; las piezas con materiales compartidos
    *  (armas) se ocultan a media transparencia. Al volver a 1 se deja todo como estaba. */
   private fade(r: Rig, k: number) {

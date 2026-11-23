@@ -5,7 +5,20 @@ import { roadMap } from './traffic.js';
 
 /** v0.19 · Peatones: la calzada cuesta mucho (se cruza por los pasos de peatones); el paso, casi nada. */
 export interface PathOpts { pedestrian?: boolean }
-const ROAD_COST = 7, CROSS_COST = 0.15;
+const pedestrianLayers = new WeakMap<ZoneGrid, { travel: ZoneGrid; stop: ZoneGrid }>();
+/** Las rutas a pie solo entran en calzada por pasos marcados. Los puntos de estancia quedan en la acera. */
+export function pedestrianGrid(grid: ZoneGrid, mode: 'travel' | 'stop' = 'travel'): ZoneGrid {
+  if (grid.def.kind !== 'exterior') return grid;
+  let layers = pedestrianLayers.get(grid);
+  if (!layers) {
+    const roads = roadMap(grid);
+    const stop = grid.walk.map((free, i) => roads.axis[i] ? 0 : free);
+    const travel = grid.walk.map((free, i) => roads.axis[i] && !roads.crossing[i] ? 0 : free);
+    layers = { stop: { ...grid, walk: stop }, travel: { ...grid, walk: travel } };
+    pedestrianLayers.set(grid, layers);
+  }
+  return layers[mode];
+}
 
 export interface PathResult { ok: boolean; path: [number, number][]; expanded: number; reason?: string }
 
@@ -40,10 +53,10 @@ function bufs(n: number) {
 }
 
 export function findPath(grid: ZoneGrid, sx: number, sy: number, tx: number, ty: number, maxExpand = 6000, opts: PathOpts = {}): PathResult {
-  const rm = opts.pedestrian ? roadMap(grid) : null;
+  if (opts.pedestrian) grid = pedestrianGrid(grid);
   const w = grid.w, h = grid.h, walk = grid.walk;
   const s = Math.floor(sy) * w + Math.floor(sx), t = Math.floor(ty) * w + Math.floor(tx);
-  if (!isWalkable(grid, tx, ty)) return { ok: false, path: [], expanded: 0, reason: 'destino_bloqueado' };
+  if (!isWalkable(grid, tx, ty) || (opts.pedestrian && !isWalkable(grid, sx, sy))) return { ok: false, path: [], expanded: 0, reason: 'destino_bloqueado' };
   if (s === t) return { ok: true, path: [[tx, ty]], expanded: 0 };
   const b = bufs(w * h), gen = b.gen;
   const heap = new MinHeap();
@@ -65,7 +78,7 @@ export function findPath(grid: ZoneGrid, sx: number, sy: number, tx: number, ty:
       const ni = ny * w + nx;
       if (!walk[ni] || b.closed[ni] === gen) continue;
       if (dx && dy && (!walk[cy * w + nx] || !walk[ny * w + cx])) continue; // sin cortar esquinas
-      const ng = cg + (dx && dy ? SQ2 : 1) + (rm && rm.axis[ni] ? (rm.crossing[ni] ? CROSS_COST : ROAD_COST) : 0);
+      const ng = cg + (dx && dy ? SQ2 : 1);
       if (b.stamp[ni] !== gen || ng < b.g[ni]) { b.stamp[ni] = gen; b.g[ni] = ng; b.from[ni] = cur; heap.push(ng + hfn(ni), ni); }
     }
   }
@@ -75,7 +88,7 @@ export function findPath(grid: ZoneGrid, sx: number, sy: number, tx: number, ty:
   tiles.reverse();
   const pts: [number, number][] = tiles.map((i) => [(i % w) + 0.5, ((i / w) | 0) + 0.5]);
   pts[pts.length - 1] = [tx, ty];
-  return { ok: true, path: smooth(grid, sx, sy, pts, rm), expanded };
+  return { ok: true, path: smooth(grid, sx, sy, pts), expanded };
 }
 
 /** ¿Se puede ir en línea recta? Muestrea el segmento con un margen lateral para no rozar esquinas. */
@@ -90,22 +103,13 @@ export function lineWalkable(grid: ZoneGrid, ax: number, ay: number, bx: number,
   return true;
 }
 
-function smooth(grid: ZoneGrid, sx: number, sy: number, pts: [number, number][], rm: ReturnType<typeof roadMap> | null = null): [number, number][] {
+function smooth(grid: ZoneGrid, sx: number, sy: number, pts: [number, number][]): [number, number][] {
   const out: [number, number][] = [];
   let ax = sx, ay = sy, i = 0;
   while (i < pts.length) {
     let j = pts.length - 1;
-    while (j > i && (!lineWalkable(grid, ax, ay, pts[j][0], pts[j][1]) || (rm && cutsRoad(grid, rm, ax, ay, pts[j][0], pts[j][1])))) j--;
+    while (j > i && !lineWalkable(grid, ax, ay, pts[j][0], pts[j][1])) j--;
     out.push(pts[j]); ax = pts[j][0]; ay = pts[j][1]; i = j + 1;
   }
   return out;
-}
-
-/** ¿El atajo en línea recta pisa calzada fuera de un paso de peatones (sin que el camino original lo hiciera)? */
-function cutsRoad(grid: ZoneGrid, rm: ReturnType<typeof roadMap>, ax: number, ay: number, bx: number, by: number) {
-  const d = Math.hypot(bx - ax, by - ay), steps = Math.max(1, Math.ceil(d / 0.4));
-  const on = (x: number, y: number) => { const i = Math.floor(y) * grid.w + Math.floor(x); return rm.axis[i] && !rm.crossing[i]; };
-  if (on(ax, ay) || on(bx, by)) return false;
-  for (let i = 1; i < steps; i++) if (on(ax + ((bx - ax) * i) / steps, ay + ((by - ay) * i) / steps)) return true;
-  return false;
 }

@@ -2,13 +2,14 @@
 // interpolación de entidades remotas y predicción del personaje propio.
 import { capturedLegs, gaitCapture, loadCapture } from './captured-motion';
 import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
+import { SightShade } from './sight-shade';
 import { Traffic } from './traffic';
 import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
 import { BUILDING_H, Chars3D } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
 import { urbanForm } from './urban-form';
 import {
-  GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
+  canSee, coversActor, facingToIdx, UNAIDED_SIGHT, GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
@@ -17,7 +18,7 @@ import { kairosOf, kairosScale, MATRICES } from '@vertice/shared';
 import { dancePose } from './dance';
 import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, drawUrbanBuilding, glowTexture, makeCharacter, makeHolo, makeSevered, makeSign, makeVehicle, makeWeapon, shade, type Occl } from './art';
 
-interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; ent?: CEnt; depth: number; mark: number }
+interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; height?: number; ent?: CEnt; depth: number; mark: number }
 export interface CEnt {
   s: EntitySpawn; x: number; y: number; samples: { t: number; x: number; y: number }[]; flags: number; moving: boolean;
   view: Container; legs?: Container; body?: Container; visor?: Graphics; hpBar?: Graphics; tag?: Graphics; bubble?: Container; bubbleUntil?: number; label?: Text; obj: SortObj; phase: number;
@@ -38,6 +39,10 @@ const CHUNK = 16;
 
 export class GameView {
   app = new Application();
+  sight = UNAIDED_SIGHT;
+  private sightShade = new SightShade();
+  private facing = 2;
+  private inSight = (x: number, y: number) => !!this.grid && canSee(this.grid, this.me.x, this.me.y, this.facing, this.sight, x, y);
   world = new Container();
   ground = new Container();
   backdrop = new Container();
@@ -130,7 +135,7 @@ export class GameView {
     // v0.11 · Tres pasadas por fotograma en el mismo contexto WebGL: el mundo (Pixi), los personajes 3D (Three.js) y,
     // encima, la noche, las luces y los textos (Pixi). Así la oscuridad y las farolas también afectan a los personajes.
     this.app.stage.addChild(this.world);
-    this.overStage.addChild(this.signsLayer, this.nightOverlay, this.darkness, this.lightsLayer, this.rain, this.labels);
+    this.overStage.addChild(this.signsLayer, this.nightOverlay, this.darkness, this.lightsLayer, this.rain, this.sightShade.layer, this.labels);
     const r = this.app.renderer as WebGLRenderer;
     if (settings.chars3d && (r as any).gl) {
       try { this.chars3d = new Chars3D(this.app.canvas, (r as any).gl); } catch (err) { console.warn('[3d] sin personajes 3D:', err); this.chars3d = undefined; }
@@ -232,7 +237,7 @@ export class GameView {
       for (const f of this.flashes) { const p = worldToScreen(f.x, f.y, 0); put(p.x, p.y, f.r, f.k * (1 - (now - f.t0) / (f.until - f.t0))); }
       // Un poco de luz alrededor de ti para que nunca te pierdas en un callejón (y la de las linternas/visores ajenos).
       const me = worldToScreen(this.me.x, this.me.y, 0); put(me.x, me.y, 3.4, 0.6);
-      for (const e of this.ents.values()) if (e.s.vehicle) { const p = worldToScreen(e.x, e.y, 0); put(p.x, p.y, 4, 0.8); }
+      for (const e of this.ents.values()) if (e.s.vehicle && e.view.visible) { const p = worldToScreen(e.x, e.y, 0); put(p.x, p.y, 4, 0.8); }
     } else this.darkRect.clear();
     for (let i = used; i < this.lightPool.length; i++) this.lightPool[i].visible = false;
   }
@@ -300,6 +305,7 @@ export class GameView {
         else if (form) drawUrbanBuilding(b, form, g, lights, occl);
         else this.beacons.push(...drawBuilding(b, g, lights, q, occl));
       }, true);
+      obj.height = b.height;
       (obj as any).lights = lights;
       (obj as any).bIdx = this.buildingObjs.length;
       this.buildingObjs.push(obj);
@@ -412,7 +418,7 @@ export class GameView {
     const old = this.ents.get(s.id);
     if (old) this.destroyEnt(old);
     const view = new Container();
-    const ent: CEnt = { s, x: s.x, y: s.y, samples: [{ t: performance.now(), x: s.x, y: s.y }], flags: 0, moving: false, view, obj: null as any, phase: Math.random() * 6 };
+    const ent: CEnt = { s, x: s.x, y: s.y, samples: [{ t: performance.now(), x: s.x, y: s.y }], flags: old?.flags ?? ((s.facing ?? 2) << 1), moving: false, view, obj: null as any, phase: Math.random() * 6 };
     if(old && s.weapon!==old.s.weapon && /katana|espada|cuchilla-serrada/.test(s.weapon??''))ent.drawAt=performance.now();
     if (s.kind === 'npc' && s.faction?.startsWith('ias-')) {
       // IAs del ciberespacio: geometría que flota y parpadea, no personas.
@@ -596,7 +602,7 @@ export class GameView {
   }
 
   remove(id: number) { const e = this.ents.get(id); if (e) { this.destroyEnt(e); this.ents.delete(id); } }
-  private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); if (this.hovered === e) this.hovered = null; }
+  private destroyEnt(e: CEnt) { e.view.destroy({ children: true }); e.label?.destroy(); e.bubble?.destroy({ children: true }); if (this.hovered === e) { this.hovered = null; this.onHover(null, 0, 0); } }
   setLabel(id: number, label: string, bounty?: number, state?: 'alive' | 'downed' | 'sleeping', chrome?: string[], hpPct?: number, carried?: boolean, extra?: { appearance?: EntitySpawn['appearance']; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EntitySpawn['emote'] | null; carry?: string[] }) {
     const e = this.ents.get(id);
     if (!e) return;
@@ -755,7 +761,7 @@ export class GameView {
     if (!this.thermal) return;
     const pulse = 0.6 + 0.4 * Math.sin(now / 180);
     for (const e of this.ents.values()) {
-      if (e.s.kind !== 'npc' || e.s.dead || e.s.state === 'downed' || !e.s.npcType || e.s.npcType === 'civil' || e.s.npcType === 'essential') continue;
+      if (!e.view.visible || e.s.kind !== 'npc' || e.s.dead || e.s.state === 'downed' || !e.s.npcType || e.s.npcType === 'civil' || e.s.npcType === 'essential') continue;
       if (Math.hypot(e.x - this.me.x, e.y - this.me.y) > 18) continue;
       const l = worldToScreen(e.x, e.y, 0);
       g.ellipse(l.x, l.y - 20, 10, 24).stroke({ width: 1.5, color: 0xff3040, alpha: 0.55 * pulse });
@@ -1059,7 +1065,7 @@ export class GameView {
     const l = this.world.toLocal({ x: gx, y: gy });
     let best: CEnt | null = null, bestDepth = -Infinity;
     for (const e of this.ents.values()) {
-      if (!e.s.interactive || (!includeSelf && e.s.id === this.meId)) continue;
+      if (!e.view.visible || !e.s.interactive || (!includeSelf && e.s.id === this.meId)) continue;
       const p = worldToScreen(e.x, e.y);
       const dx = l.x - p.x, dy = l.y - p.y;
       const hit = e.s.kind === 'door' ? Math.abs(dx) < 24 && dy > -36 && dy < 14 : e.s.kind === 'object' ? Math.abs(dx) < 22 && dy > -44 && dy < 14 : Math.abs(dx) < 13 && dy > -48 && dy < 8;
@@ -1081,12 +1087,13 @@ export class GameView {
   /** Charcos de sangre: se oscurecen al secarse y se borran al cumplir sus 50 minutos. */
   private drawBlood() {
     const now = Date.now();
-    if (now - this.bloodDrawn < 2000) return;
+    if (now - this.bloodDrawn < 160) return;
     this.bloodDrawn = now;
     const g = this.bloodG; g.clear();
     for (const [id, b] of this.pools) {
       const left = b.until - now;
       if (left <= 0) { this.pools.delete(id); continue; }
+      if (!this.inSight(b.x, b.y)) continue;
       const k = Math.min(1, left / (10 * 60 * 1000)); // los últimos 10 minutos se va desvaneciendo
       const p = worldToScreen(b.x, b.y);
       const col = left > 35 * 60 * 1000 ? 0x8a0a14 : 0x4a060c; // fresca → seca
@@ -1101,7 +1108,7 @@ export class GameView {
     const CT: Record<string, [string, boolean, boolean]> = { dumpster: ['el contenedor', true, true], trash: ['el cubo de basura', false, true], barrel: ['el bidón', false, true], crate: ['la caja', false, true], locker: ['la taquilla', true, false], fridge: ['la cámara frigorífica', false, false] };
     let best: { type: string; x: number; y: number; d: number; name: string; hide: boolean; junk: boolean } | null = null;
     const consider = (type: string, x: number, y: number) => {
-      const c = CT[type]; if (!c) return;
+      const c = CT[type]; if (!c || !this.inSight(x+.5, y+.5)) return;
       const d = Math.hypot(x + 0.5 - this.me.x, y + 0.5 - this.me.y);
       if (d <= max && (!best || d < best.d)) best = { type, x, y, d, name: c[0], hide: c[1], junk: c[2] };
     };
@@ -1114,7 +1121,7 @@ export class GameView {
   nearestInteractable(maxDist = 2.6): CEnt | null {
     let best: CEnt | null = null, bestScore = Infinity;
     for (const e of this.ents.values()) {
-      if (!e.s.interactive || e.s.id === this.meId || e.s.dead) continue;
+      if (!e.view.visible || !e.s.interactive || e.s.id === this.meId || e.s.dead) continue;
       const d = Math.hypot(e.x + (e.s.kind === 'door' || e.s.kind === 'object' ? 0.5 : 0) - this.me.x, e.y + (e.s.kind === 'door' || e.s.kind === 'object' ? 0.5 : 0) - this.me.y);
       if (d > (e.s.kind === 'door' ? Math.max(maxDist, 3) : maxDist)) continue;
       const score = d + (e.s.kind === 'door' ? 0 : e.s.kind === 'object' ? 0.2 : e.s.kind === 'npc' && (!e.s.npcType || e.s.npcType === 'essential') ? 0.4 : 1.2);
@@ -1200,6 +1207,10 @@ export class GameView {
     else if (!me.path.length && err > 0.25 && (!me.serverMoving || now - this.idleSince > 700)) { const k = Math.min(1, moveDt * 10); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
     else if (err > 1.2) { const k = Math.min(1, dt * 2); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
 
+    const actor = this.ents.get(this.meId);
+    if (this.guarding) this.facing = facingToIdx(this.cursor.x - me.x, this.cursor.y - me.y);
+    else if (this.steer.dx || this.steer.dy) this.facing = facingToIdx(this.steer.dx, this.steer.dy);
+    else if (actor) this.facing = (actor.flags >> 1) & 7;
     const renderT = now - INTERP_DELAY;
     const serverNow = this.serverTime();
     for (const e of this.ents.values()) {
@@ -1224,6 +1235,13 @@ export class GameView {
         if (Math.hypot(dx, dy) > 0.002) this.face(e, dx, dy);
         e.x = nx; e.y = ny;
       }
+      e.view.visible = e.s.id === this.meId || this.inSight(e.x, e.y);
+      if (e.bubble) e.bubble.visible = e.view.visible;
+      if (!e.view.visible) {
+        if (e.label) e.label.visible = false;
+        if (this.hovered === e) { this.hovered = null; this.onHover(null, 0, 0); }
+        continue;
+      }
       this.place(e);
       this.statusVisuals(e, now);
       // Animación corta: piernas alternas y balanceo; se desactiva con «reducir movimiento».
@@ -1247,12 +1265,13 @@ export class GameView {
     this.world.position.set(Math.round(W / 2 - c.x * this.zoom + (sh ? (Math.random() - 0.5) * sh * 2 : 0)), Math.round(H / 2 - c.y * this.zoom + (sh ? (Math.random() - 0.5) * sh * 2 : 0)));
     this.lightsLayer.position.copyFrom(this.world.position); this.lightsLayer.scale.copyFrom(this.world.scale);
     this.signsLayer.position.copyFrom(this.world.position); this.signsLayer.scale.copyFrom(this.world.scale);
-    for (const [sg, o] of this.signPairs) { sg.alpha = o.view.alpha; sg.visible = o.view.visible; }
     this.visibleRect = { x0: (-this.world.x) / this.zoom - 80, y0: (-this.world.y) / this.zoom - 120, x1: (W - this.world.x) / this.zoom + 80, y1: (H - this.world.y) / this.zoom + 400 };
     if ((this.sortCounter++ & 15) === 0) this.ensureChunks();
     for (const c of this.chunks.values()) c.visible = true;
 
+    this.sightShade.update(this.grid!, me.x, me.y, this.facing, this.sight, this.world, W, H);
     this.depthSort();
+    for (const [sg, o] of this.signPairs) { sg.alpha = o.view.alpha; sg.visible = o.view.visible; }
     this.drawKairos(now);
     this.updateCompanions(now, dt);
     this.updateHalluc(now);
@@ -1275,10 +1294,14 @@ export class GameView {
     }
     const res = this.app.renderer.resolution, key = `${W}x${H}@${res}`;
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
-    this.buildingObjs.forEach((o, i) => this.chars3d!.setBuildingFaded(i, o.view.alpha < 0.6 || !o.view.visible, o.view.visible ? o.view.alpha : 0));
+    this.buildingObjs.forEach((o, i) => {
+      const b = this.zone!.buildings[i];
+      const faded = coversActor(b.rect, o.height!, this.me.x, this.me.y);
+      this.chars3d!.setBuildingFaded(i, faded, faded ? .22 : 1);
+    });
     // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).
     this.pending3d = [[...this.ents.values(), ...this.companions.filter((c) => c.ent3d).map((c) => c.ent3d)] as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
-      hidden: (e: any) => !!e.s.vehicle || !!e.s.carried || !!e.vehX }];
+      hidden: (e: any) => e.view?.visible === false || !!e.s.vehicle || !!e.s.carried || !!e.vehX }];
   }
 
   /** Tráfico rodado: coches que circulan por las calzadas anchas del distrito. */
@@ -1295,7 +1318,7 @@ export class GameView {
     if (this.trafficSys) {
       const people: { x: number; y: number }[] = [];
       for (const e of this.ents.values()) if ((e.s.kind === 'player' || e.s.kind === 'npc') && Math.abs(e.x - this.cam.x) < 40 && Math.abs(e.y - this.cam.y) < 40) people.push(e);
-      this.trafficSys.update(dt, this.serverTime(), this.cam.x, this.cam.y, people, settings.reduceMotion ? 0.5 : 1);
+      this.trafficSys.update(dt, this.serverTime(), this.cam.x, this.cam.y, people, settings.reduceMotion ? 0.5 : 1, this.inSight);
     }
     const g = this.beaconG; g.clear();
     const on = settings.reduceFlashes ? true : Math.floor(now / 700) % 2 === 0;
@@ -1311,6 +1334,7 @@ export class GameView {
       const z = 16 + (c.lane % 4) * 5;
       const x = along ? c.t * W : lanePos, y = along ? lanePos : c.t * Hh;
       const p = worldToScreen(x, y, z);
+      c.g.visible = this.inSight(x, y);
       c.g.position.set(p.x, p.y);
       c.g.scale.x = along ? 1 : -1;
     }
@@ -1428,7 +1452,7 @@ export class GameView {
     const vr = this.visibleRect;
     const list: SortObj[] = [];
     for (const s of this.statics) { const vis = s.sx1 >= vr.x0 && s.sx0 <= vr.x1 && s.sy1 >= vr.y0 && s.sy0 <= vr.y1; s.view.visible = vis; if (vis) list.push(s); }
-    for (const e of this.ents.values()) list.push(e.obj);
+    for (const e of this.ents.values()) if (e.view.visible) list.push(e.obj);
     const n = list.length;
     const behind: number[][] = Array.from({ length: n }, () => []);
     for (let i = 0; i < n; i++) {
@@ -1459,15 +1483,9 @@ export class GameView {
     for (const o of list) {
       if (o.view.zIndex !== o.depth) o.view.zIndex = o.depth;
       if (o.building) {
-        // v0.11 · Los edificios de delante (los que tapan una zona alrededor del personaje) se vuelven translúcidos;
-        // con la cámara cerca desaparecen casi del todo. Los de detrás se ven nítidos.
-        let a = 1;
-        if (me) {
-          const m = me.obj, X = 70, Y = 90;
-          const overlaps = !(o.sx1 < m.sx0 - X || m.sx1 + X < o.sx0 || o.sy1 < m.sy0 - Y || m.sy1 + Y * 0.4 < o.sy0);
-          const inFront = o.depth > m.depth || o.x0 + o.y0 > me.x + me.y;
-          if (overlaps && inFront) a = this.zoom >= 1.7 ? 0.05 : this.zoom >= 1.25 ? 0.18 : 0.34;
-        }
+        // La fachada solo se atenúa cuando tapa al personaje en la proyección isométrica.
+        const covered = me && coversActor([o.x0, o.y0, o.x1 - o.x0, o.y1 - o.y0], o.height!, me.x, me.y);
+        const a = covered ? 0.22 : 1;
         o.view.alpha += (a - o.view.alpha) * 0.2;
         const lg = (o as any).lights as Graphics | undefined; if (lg) lg.alpha = o.view.alpha;
         this.outline(o);

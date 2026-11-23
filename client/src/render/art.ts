@@ -133,8 +133,9 @@ export function drawUrbanBuilding(b: UrbanBuilding, form: UrbanForm, body: Graph
     const [[ax, ay, az], [bx, by, bz], [cx, cy, cz]] = ids.map(j => points[j]);
     const u = [bx - ax, by - ay, bz - az], v = [cx - ax, cy - ay, cz - az];
     const nx = u[1] * v[2] - u[2] * v[1], nh = u[2] * v[0] - u[0] * v[2], nz = u[0] * v[1] - u[1] * v[0];
-    if (nx + nh + nz <= 0) continue;
-    const tint = (nx * 0.17 + nh * 0.42 - nz * 0.12) / (Math.hypot(nx, nh, nz) || 1);
+    if (!form.surface && nx + nh + nz <= 0) continue;
+    const direction = nx + nh + nz < 0 ? -1 : 1;
+    const tint = direction * (nx * 0.17 + nh * 0.42 - nz * 0.12) / (Math.hypot(nx, nh, nz) || 1);
     const surface = form.surface?.palette[form.surface.face[i / 3]];
     const pigment = surface ? HEX(surface.color) : col;
     faces.push({ ids, depth: ax + ay + az + bx + by + bz + cx + cy + cz, color: shade(pigment, 0.85 + tint + (surface?.light ?? 0) * 0.22) });

@@ -35,6 +35,7 @@ function loadKit(): Promise<Map<string, KModel>> {
     const m = mesh as THREE.Mesh;
     const geo = (m.geometry as THREE.BufferGeometry).clone().applyMatrix4(m.matrixWorld);
     geo.computeBoundingBox();
+    geo.translate(0, -geo.boundingBox!.min.y, 0);
     const bb = geo.boundingBox!;
     const mat = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.MeshStandardMaterial;
     if (mat.map) { mat.map.magFilter = THREE.NearestFilter; mat.map.anisotropy = 4; }
@@ -141,6 +142,7 @@ export class City3D {
       litWindows(ghost);
       ghost.transparent = true;
       ghost.opacity = 0.2;
+      ghost.depthWrite = false;
       const palette = { solid, ghost };
       materials.set(model, palette);
       this.owned.push(ghost);

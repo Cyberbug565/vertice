@@ -112,9 +112,20 @@ export class BotClient {
     while (!cond()) { if (Date.now() - t0 > timeoutMs) throw new Error(`[${this.name}] timeout: ${label}`); await new Promise((r) => setTimeout(r, 25)); }
   }
   findEntity(pred: (e: EntitySpawn) => boolean) { return [...this.entities.values()].find(pred); }
+  /** El bot gira sobre el sitio igual que un jugador que busca a alguien al entrar. */
+  async lookFor(pred: (e: EntitySpawn) => boolean) {
+    const existing = this.findEntity(pred);
+    if (existing) return existing;
+    for (const facing of [0, 3, 6]) {
+      await this.cmd({ t: 'guard', on: true, facing });
+      await this.until(() => !!this.findEntity(pred), 350, 'campo visual').catch(() => {});
+      const found = this.findEntity(pred);
+      if (found) { await this.cmd({ t: 'guard', on: false }); return found; }
+    }
+    await this.cmd({ t: 'guard', on: false });
+  }
   async interactAndDialog(name: string, timeoutMs = 60000): Promise<DialogView> {
-    await this.until(() => !!this.findEntity((e) => e.name.includes(name)), 4000, `ver a ${name}`).catch(() => {});
-    const ent = this.findEntity((e) => e.name.includes(name));
+    const ent = await this.lookFor(e => e.name.includes(name));
     if (!ent) throw new Error(`[${this.name}] no veo a ${name} en ${this.zone}`);
     this.dialog = undefined;
     const a = await this.cmd({ t: 'interact', target: ent.id });

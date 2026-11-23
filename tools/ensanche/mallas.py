@@ -89,6 +89,27 @@ def decimate(name, parts, budget):
     return result
 
 
+def foundation(form):
+    """Basamento de hormigón con chaflán para asentar las fachadas importadas."""
+    points, faces, colors = form['points'], form['faces'], form['surface']
+    offset = len(points) // 3
+    material = len(colors['palette'])
+    colors['palette'].append({'color': '#495160', 'light': 0})
+    for level, radius in ((0, .5), (.007, .5), (.011, .49)):
+        for x, z in ((-radius, -radius), (-radius, radius), (radius, radius), (radius, -radius)):
+            points.extend([x, level, z])
+    triangles = []
+    for row in (0, 4):
+        for i in range(4):
+            j = (i + 1) % 4
+            triangles.extend([(row+i, row+j, row+4+j), (row+i, row+4+j, row+4+i)])
+    triangles.extend([(8, 9, 10), (8, 10, 11)])
+    for face in triangles:
+        faces.extend(offset+i for i in face)
+        colors['face'].append(material)
+    return form
+
+
 def pack(name, parts, budget):
     points, faces, colors = decimate(name, parts, budget)
     spans = [(min(a), max(a)) for a in zip(*points)]
@@ -100,11 +121,12 @@ def pack(name, parts, budget):
     palette = list(dict.fromkeys(colors))
     indices = {c: i for i, c in enumerate(palette)}
     print(name, len(points), len(faces), len(palette))
-    return {'points': aligned, 'faces': [i for face in faces for i in face],
+    form = {'points': aligned, 'faces': [i for face in faces for i in face],
             'cornices': [], 'fins': [], 'surface': {
                 'palette': [{'color': col, 'light': power} for col, power in palette],
                 'face': [indices[c] for c in colors],
             }}
+    return form if name.startswith('contenedor') else foundation(form)
 
 
 def mat_name(o, face):
