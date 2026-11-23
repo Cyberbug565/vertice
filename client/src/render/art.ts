@@ -1,6 +1,7 @@
 // Arte procedural original: losetas, prismas de edificios, accesorios y personajes con capas de color.
 import { Container, Graphics, Text, Texture } from 'pixi.js';
 import { worldToScreen, hashString, seededRng, type Appearance, type GroundType, type ZoneDef } from '@vertice/shared';
+import { FACADES, urbanPoint, type UrbanBuilding, type UrbanForm } from './urban-form';
 
 export const HEX = (s: string) => parseInt(s.slice(1), 16);
 export function shade(c: number, f: number) {
@@ -21,6 +22,8 @@ function diamond(x: number, y: number) {
 /** Dibuja un bloque de losetas (chunk) en un único Graphics estático. */
 export function drawGroundChunk(g: Graphics, zone: ZoneDef, ground: Uint8Array, types: readonly GroundType[], cx0: number, cy0: number, size: number) {
   const w = zone.width;
+  const crossings = zone.ground.filter(({ type, rect: [x, y, rw, rh] }) =>
+    type === 'crosswalk' && x < cx0 + size && x + rw > cx0 && y < cy0 + size && y + rh > cy0);
   for (let y = cy0; y < Math.min(zone.height, cy0 + size); y++) for (let x = cx0; x < Math.min(zone.width, cx0 + size); x++) {
     const type = types[ground[y * w + x]];
     const h = hashString(`${x},${y}`);
@@ -30,8 +33,8 @@ export function drawGroundChunk(g: Graphics, zone: ZoneDef, ground: Uint8Array, 
     g.poly(diamond(x, y)).fill(col);
     if (type === 'crosswalk') {
       // Las franjas van paralelas a la calzada: si la calzada sigue en x, las franjas cortan en y.
-      const along = (xx: number, yy: number) => { const t = xx < 0 || yy < 0 || xx >= w || yy >= zone.height ? '' : types[ground[yy * w + xx]]; return t === 'crosswalk' || t === 'asphalt'; };
-      const roadInX = along(x - 1, y) || along(x + 1, y);
+      const crossing = crossings.findLast(({ rect: [xx, yy, rw, rh] }) => x >= xx && x < xx + rw && y >= yy && y < yy + rh);
+      const roadInX = crossing ? crossing.rect[3] >= crossing.rect[2] : true;
       for (let i = 0; i < 3; i++) { const t = 0.12 + i * 0.3; const p = roadInX ? diamondStripY(x, y, t, t + 0.16) : diamondStrip(x, y, t, t + 0.16); g.poly(p).fill({ color: 0xf0f0ff, alpha: 0.9 }); }
     } else if (type === 'water' && h % 7 === 0) {
       const a = worldToScreen(x + 0.3, y + 0.5), b = worldToScreen(x + 0.7, y + 0.5);
@@ -48,6 +51,10 @@ export function drawGroundChunk(g: Graphics, zone: ZoneDef, ground: Uint8Array, 
     } else if (type === 'asphalt' && h % 11 === 0) {
       const a = worldToScreen(x + 0.4, y + 0.4);
       g.circle(a.x, a.y + 4, 2).fill({ color: 0x000000, alpha: 0.3 });
+    } else if ((type === 'gravel' || type === 'dirt' || type === 'sand') && h % 4 === 0) {
+      const u = 0.16 + (h % 5) * 0.12, v = 0.28 + (h % 7) * 0.07;
+      const a = worldToScreen(x + u, y + v), b = worldToScreen(x + u + 0.16, y + v - 0.04);
+      g.moveTo(a.x, a.y).lineTo(b.x, b.y).stroke({ width: type === 'gravel' ? 2 : 1, color: shade(col, h % 3 ? 0.6 : 1.22), alpha: 0.45 });
     }
     const at = (xx: number, yy: number) => (xx < 0 || yy < 0 || xx >= w || yy >= zone.height ? 'void' : types[ground[yy * w + xx]]);
     const isRoad = (t: string) => t === 'asphalt' || t === 'crosswalk';
@@ -113,6 +120,33 @@ const WINDOW_COLORS = [0xfff1c0, 0xffe0a0, 0xfff1c0, 0xcfe8ff, 0x43f3ff, 0xffd23
 
 export type Occl = (sx: number, sy: number) => boolean;
 const NO_OCCL: Occl = () => false;
+
+/** Conserva los volúmenes del catálogo si el lienzo no está usando los edificios en Three. */
+export function drawUrbanBuilding(b: UrbanBuilding, form: UrbanForm, body: Graphics, lights: Graphics, occl: Occl) {
+  const point = (i: number) => urbanPoint(b, form, i);
+  const points = Array.from({ length: form.points.length / 3 }, (_, i) => point(i));
+  const screen = points.map(([x, h, y]) => worldToScreen(x, y, h));
+  const col = HEX(b.color), facade = b.urban!.facade;
+  const faces: { ids: number[]; depth: number; color: number }[] = [];
+  for (let i = 0; i < form.faces.length; i += 3) {
+    const ids = form.faces.slice(i, i + 3);
+    const [[ax, ay, az], [bx, by, bz], [cx, cy, cz]] = ids.map(j => points[j]);
+    const u = [bx - ax, by - ay, bz - az], v = [cx - ax, cy - ay, cz - az];
+    const nx = u[1] * v[2] - u[2] * v[1], nh = u[2] * v[0] - u[0] * v[2], nz = u[0] * v[1] - u[1] * v[0];
+    if (nx + nh + nz <= 0) continue;
+    const tint = (nx * 0.17 + nh * 0.42 - nz * 0.12) / (Math.hypot(nx, nh, nz) || 1);
+    faces.push({ ids, depth: ax + ay + az + bx + by + bz + cx + cy + cz, color: shade(col, 0.85 + tint) });
+  }
+  for (const face of faces.sort((a, c) => a.depth - c.depth)) {
+    body.poly(face.ids.flatMap(id => [screen[id].x, screen[id].y])).fill(face.color);
+  }
+  const led = HEX(b.signColor ?? FACADES[facade].led);
+  const amount = facade === 'ruina' ? Number(hashString(b.id) % 5 === 0) : facade === 'industrial' ? 1 : 8;
+  for (const [i, j] of form.cornices.slice(0, amount)) {
+    const [a, c] = [screen[i], screen[j]];
+    if (!occl((a.x + c.x) / 2, (a.y + c.y) / 2)) lights.moveTo(a.x, a.y).lineTo(c.x, c.y).stroke({ width: 2, color: led, alpha: 0.76 });
+  }
+}
 
 export function drawBuilding(b: ZoneDef['buildings'][number], body: Graphics, lights: Graphics, quality: 'low' | 'high', occl: Occl = NO_OCCL): { x: number; y: number }[] {
   const [x0, y0, w, h] = b.rect; const H = b.height; const x1 = x0 + w, y1 = y0 + h;

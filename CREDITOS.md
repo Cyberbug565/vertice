@@ -1,15 +1,19 @@
 # Créditos de recursos externos
 
-Vértice es un proyecto original. Estos son los recursos de terceros que incluye, todos con licencia libre:
+Vértice es un proyecto original. Aquí figuran los recursos de terceros y su procedencia.
 
 | Recurso | Autor | Licencia | Dónde se usa |
 |---|---|---|---|
-| City Kit Commercial 2.1 (edificios y versiones ligeras) | Kenney — www.kenney.nl | CC0 1.0 (dominio público) | `client/public/models/kenney/`: edificios 3D de la ciudad |
+| City Kit Commercial 2.1 (edificios y versiones ligeras) | Kenney — www.kenney.nl | CC0 1.0 (dominio público) | `client/public/models/kenney/`: edificios de respaldo para zonas sin modelo asignado |
 | Pack de armas low-poly (pistolas, revólveres, subfusiles, rifles, escopetas, francotiradores y accesorios) | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/armas/`: armas de fuego en las manos |
 | Universal Base Characters (cuerpos masculino y femenino con esqueleto, peinados y barba) | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/humanos/`: cuerpos de todas las personas (texturas reducidas a 1024 px) |
 | Universal Animation Library 2 (Standard): 28 animaciones recortadas | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/anim/ual2.glb`: golpes, bloqueo, reacciones y gestos |
 | Modular Character Outfits – Fantasy (Standard): jornalero y explorador | Quaternius — quaternius.com | CC0 1.0 (dominio público) | `client/public/models/atuendos/`: atuendos completos (texturas de color a 1024 px) |
 | Vocations and Uniforms (Free): 17 personajes de oficios | Su autor en itch.io (ver la ficha original del recurso) | CC BY-SA | `client/public/models/cartoon/`: convertidos del `.blend` a GLB con una paleta común, sin otros cambios. Esos archivos derivados se distribuyen con la misma licencia CC BY-SA |
+
+### Geometría urbana (v0.31)
+
+La [release «new york»](https://github.com/Cyberbug565/vertice/releases/tag/newyork) del proyecto aporta el archivo `nylowermanhattan.blend`. El catálogo usa los volúmenes de `Areas:building` y un recorte de las calles de `Ways:highway`. Cartografía © [colaboradores de OpenStreetMap](https://www.openstreetmap.org/copyright). Los materiales, el deterioro y la iluminación son adaptaciones para Vértice.
 
 ### Ropa 3D (v0.22)
 

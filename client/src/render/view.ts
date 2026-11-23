@@ -6,6 +6,7 @@ import { Traffic } from './traffic';
 import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
 import { BUILDING_H, Chars3D } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
+import { urbanForm } from './urban-form';
 import {
   GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
@@ -14,7 +15,7 @@ import { content, zoneDef } from '../content';
 import { settings } from '../settings';
 import { kairosOf, kairosScale, MATRICES } from '@vertice/shared';
 import { dancePose } from './dance';
-import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, glowTexture, makeCharacter, makeHolo, makeSevered, makeSign, makeVehicle, makeWeapon, shade, type Occl } from './art';
+import { HEX, drawBox, drawBuilding, drawGroundChunk, drawProp, drawSkybridge, drawUrbanBuilding, glowTexture, makeCharacter, makeHolo, makeSevered, makeSign, makeVehicle, makeWeapon, shade, type Occl } from './art';
 
 interface SortObj { x0: number; y0: number; x1: number; y1: number; view: Container; sx0: number; sy0: number; sx1: number; sy1: number; building?: boolean; ent?: CEnt; depth: number; mark: number }
 export interface CEnt {
@@ -292,7 +293,12 @@ export class GameView {
       const [x0, y0, w, h] = b.rect;
       const lights = new Graphics();
       const occl = this.occluder(x0, y0, x0 + w, y0 + h);
-      const obj = this.addStatic(x0, y0, w, h, (g) => { this.beacons.push(...drawBuilding(b, g, lights, q, occl)); }, true);
+      const form = urbanForm(b);
+      const obj = this.addStatic(x0, y0, w, h, (g) => {
+        if (form && city3d) drawBox(g, x0, y0, w, h, 0, b.height, HEX(b.color));
+        else if (form) drawUrbanBuilding(b, form, g, lights, occl);
+        else this.beacons.push(...drawBuilding(b, g, lights, q, occl));
+      }, true);
       (obj as any).lights = lights;
       (obj as any).bIdx = this.buildingObjs.length;
       this.buildingObjs.push(obj);

@@ -6604,6 +6604,603 @@
     7,
     2
    ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    192,
+    12,
+    14,
+    12
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    193,
+    21,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    208,
+    12,
+    12,
+    12
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    209,
+    21,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    192,
+    67,
+    14,
+    17
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    193,
+    78,
+    3,
+    6
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    208,
+    67,
+    12,
+    17
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    209,
+    78,
+    3,
+    6
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    271,
+    67,
+    12,
+    17
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    272,
+    78,
+    3,
+    6
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    159,
+    95,
+    23,
+    12
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    177,
+    102,
+    3,
+    5
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    192,
+    95,
+    14,
+    12
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    193,
+    104,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    208,
+    95,
+    12,
+    12
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    209,
+    104,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    235,
+    95,
+    25,
+    12
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    254,
+    102,
+    3,
+    5
+   ]
+  },
+  {
+   "type": "grass",
+   "rect": [
+    271,
+    95,
+    12,
+    12
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    272,
+    104,
+    3,
+    3
+   ]
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    269,
+    160,
+    29,
+    3
+   ],
+   "street": "cenit-travesia-corporativa"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    271,
+    160,
+    2,
+    3
+   ],
+   "street": "cenit-travesia-corporativa"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    296,
+    161,
+    3,
+    13
+   ],
+   "street": "cenit-calle-de-las-coronas"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    296,
+    164,
+    3,
+    2
+   ],
+   "street": "cenit-calle-de-las-coronas"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    500,
+    144,
+    3,
+    29
+   ],
+   "street": "yermo-acceso-del-convoy"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    500,
+    157,
+    3,
+    2
+   ],
+   "street": "yermo-acceso-del-convoy"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    501,
+    143,
+    19,
+    3
+   ],
+   "street": "yermo-enlace-al-taller"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    518,
+    144,
+    3,
+    29
+   ],
+   "street": "yermo-acceso-de-servicio"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    518,
+    156,
+    3,
+    2
+   ],
+   "street": "yermo-acceso-de-servicio"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    192,
+    269,
+    4,
+    27
+   ],
+   "street": "poligono-entrada-de-carga"
+  },
+  {
+   "type": "crosswalk",
+   "rect": [
+    192,
+    283,
+    4,
+    2
+   ],
+   "street": "poligono-entrada-de-carga"
+  },
+  {
+   "type": "asphalt",
+   "rect": [
+    158,
+    268,
+    142,
+    3
+   ],
+   "street": "poligono-carril-de-naves"
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    326,
+    196,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    390,
+    196,
+    5,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    426,
+    196,
+    5,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    48,
+    60,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    16,
+    99,
+    10,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    134,
+    96,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    129,
+    96,
+    7,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    552,
+    63,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    546,
+    63,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    466,
+    98,
+    10,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    476,
+    98,
+    10,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    502,
+    95,
+    7,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    557,
+    96,
+    9,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    572,
+    98,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    276,
+    286,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    202,
+    319,
+    7,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    214,
+    319,
+    7,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    279,
+    319,
+    9,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    316,
+    287,
+    9,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    325,
+    278,
+    9,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    395,
+    286,
+    7,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    434,
+    282,
+    9,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    427,
+    282,
+    9,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    316,
+    323,
+    10,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    405,
+    320,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    392,
+    320,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    550,
+    276,
+    10,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    568,
+    287,
+    10,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    472,
+    322,
+    7,
+    2
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    502,
+    318,
+    10,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    556,
+    321,
+    9,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    550,
+    321,
+    8,
+    2
+   ]
+  },
+  {
+   "type": "gravel",
+   "rect": [
+    517,
+    286,
+    10,
+    2
+   ]
   }
  ],
  "blocks": [
@@ -6844,9 +7441,14 @@
     3,
     12
    ],
-   "height": 8,
+   "height": 7,
    "style": "glass",
-   "color": "#6a5a7a"
+   "color": "#b39983",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b0-b",
@@ -6856,9 +7458,14 @@
     6,
     5
    ],
-   "height": 8,
+   "height": 4,
    "style": "glass",
-   "color": "#6a5a7a"
+   "color": "#b7a985",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b0-b-h",
@@ -6868,9 +7475,14 @@
     6,
     5
    ],
-   "height": 8,
+   "height": 5,
    "style": "glass",
-   "color": "#6a5a7a"
+   "color": "#b39983",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b1",
@@ -6880,11 +7492,16 @@
     3,
     12
    ],
-   "height": 5,
+   "height": 4,
    "style": "block",
-   "color": "#6a5a7a",
+   "color": "#9fa9a8",
    "sign": "JARDINES",
-   "signColor": "#7dd3a0"
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b1-b",
@@ -6896,8 +7513,13 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#6a5a7a",
-   "signColor": "#7dd3a0"
+   "color": "#b7a985",
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b1-b-h",
@@ -6909,88 +7531,51 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#6a5a7a",
-   "signColor": "#7dd3a0"
+   "color": "#9fa9a8",
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b2",
    "rect": [
     192,
-    12,
-    4,
-    12
+    14,
+    5,
+    7
    ],
-   "height": 25,
-   "style": "block",
-   "color": "#5a6a7a",
+   "height": 4,
+   "style": "glass",
+   "color": "#9c8173",
    "sign": "VILLA SOL",
-   "signColor": "#7dd3a0"
-  },
-  {
-   "id": "colinas-b2-b",
-   "rect": [
-    198,
-    12,
-    8,
-    5
-   ],
-   "height": 25,
-   "style": "block",
-   "color": "#5a6a7a",
-   "signColor": "#7dd3a0"
-  },
-  {
-   "id": "colinas-b2-b-h",
-   "rect": [
-    198,
-    19,
-    8,
-    5
-   ],
-   "height": 25,
-   "style": "block",
-   "color": "#5a6a7a",
-   "signColor": "#7dd3a0"
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b3",
    "rect": [
     208,
-    12,
-    4,
-    12
+    14,
+    5,
+    7
    ],
-   "height": 28,
-   "style": "block",
-   "color": "#4a6a6a",
+   "height": 5,
+   "style": "glass",
+   "color": "#b7a985",
    "sign": "OKAMI SPA",
-   "signColor": "#ff8a3d"
-  },
-  {
-   "id": "colinas-b3-b",
-   "rect": [
-    214,
-    12,
-    6,
-    5
-   ],
-   "height": 28,
-   "style": "block",
-   "color": "#4a6a6a",
-   "signColor": "#ff8a3d"
-  },
-  {
-   "id": "colinas-b3-b-h",
-   "rect": [
-    214,
-    19,
-    6,
-    5
-   ],
-   "height": 28,
-   "style": "block",
-   "color": "#4a6a6a",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b4",
@@ -7000,12 +7585,17 @@
     12,
     12
    ],
-   "height": 28,
+   "height": 24,
    "style": "glass",
-   "color": "#4a6a6a",
+   "color": "#686780",
    "sign": "ÁMBAR",
    "signColor": "#7dd3a0",
-   "name": "Sede de Rescate Ámbar"
+   "name": "Sede de Rescate Ámbar",
+   "urban": {
+    "model": "remate",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b5",
@@ -7017,10 +7607,15 @@
    ],
    "height": 5,
    "style": "shop",
-   "color": "#5a5a7a",
+   "color": "#8d9994",
    "sign": "AURELIA",
    "signColor": "#ffbf00",
-   "name": "Boutique Aurelia"
+   "name": "Boutique Aurelia",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b6",
@@ -7030,11 +7625,16 @@
     8,
     5
    ],
-   "height": 10,
+   "height": 5,
    "style": "block",
-   "color": "#4a6a6a",
+   "color": "#9fa9a8",
    "sign": "KAITEN HOMES",
-   "signColor": "#7dd3a0"
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b6-h",
@@ -7044,10 +7644,15 @@
     8,
     5
    ],
-   "height": 10,
+   "height": 4,
    "style": "block",
-   "color": "#4a6a6a",
-   "signColor": "#7dd3a0"
+   "color": "#9c8173",
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b6-b",
@@ -7059,10 +7664,15 @@
    ],
    "height": 10,
    "style": "shop",
-   "color": "#4a6a6a",
+   "color": "#9fa9a8",
    "sign": "FARMACIA ✚",
    "signColor": "#5affc8",
-   "name": "Parafarmacia Jardines"
+   "name": "Parafarmacia Jardines",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b6-b-h",
@@ -7074,10 +7684,15 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#4a6a6a",
+   "color": "#b7a985",
    "sign": "PCV",
    "signColor": "#60a5fa",
-   "name": "Comisaría de Colinas Doradas"
+   "name": "Comisaría de Colinas Doradas",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b7",
@@ -7089,7 +7704,12 @@
    ],
    "height": 6,
    "style": "arcology",
-   "color": "#5a6a7a"
+   "color": "#b9ab9e",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b7-h",
@@ -7101,7 +7721,12 @@
    ],
    "height": 6,
    "style": "arcology",
-   "color": "#5a6a7a"
+   "color": "#b9ab9e",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b7-b",
@@ -7111,12 +7736,17 @@
     14,
     7
    ],
-   "height": 90,
+   "height": 45,
    "style": "spire",
-   "color": "#4a5a4a",
+   "color": "#526386",
    "sign": "KAITEN",
    "name": "Arcología Kaiten",
-   "signColor": "#ffbf00"
+   "signColor": "#ffbf00",
+   "urban": {
+    "model": "bisel",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b7-b-h",
@@ -7126,12 +7756,17 @@
     14,
     8
    ],
-   "height": 94,
+   "height": 40,
    "style": "spire",
-   "color": "#3a2e44",
+   "color": "#31506d",
    "sign": "OKAMI",
    "name": "Torre Okami",
-   "signColor": "#5affc8"
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "oblicua",
+    "facade": "corporativa",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b8",
@@ -7143,10 +7778,15 @@
    ],
    "height": 10,
    "style": "glass",
-   "color": "#6a5a7a",
+   "color": "#b7a985",
    "sign": "SAETA",
    "signColor": "#7dd3a0",
-   "name": "Concesionario Saeta"
+   "name": "Concesionario Saeta",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b9",
@@ -7156,11 +7796,16 @@
     4,
     17
    ],
-   "height": 9,
+   "height": 4,
    "style": "block",
-   "color": "#5a6a7a",
+   "color": "#b39983",
    "sign": "OKAMI SPA",
-   "signColor": "#7dd3a0"
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b9-b-h",
@@ -7170,10 +7815,15 @@
     6,
     8
    ],
-   "height": 9,
+   "height": 6,
    "style": "block",
-   "color": "#5a6a7a",
-   "signColor": "#7dd3a0"
+   "color": "#b39983",
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b10",
@@ -7185,9 +7835,14 @@
    ],
    "height": 9,
    "style": "arcology",
-   "color": "#7a6a5a",
+   "color": "#b39983",
    "sign": "JARDINES",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b10-b",
@@ -7197,10 +7852,15 @@
     6,
     7
    ],
-   "height": 9,
+   "height": 7,
    "style": "arcology",
-   "color": "#7a6a5a",
-   "signColor": "#ff8a3d"
+   "color": "#9c8173",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b10-b-h",
@@ -7210,10 +7870,15 @@
     6,
     8
    ],
-   "height": 9,
+   "height": 6,
    "style": "arcology",
-   "color": "#7a6a5a",
-   "signColor": "#ff8a3d"
+   "color": "#b9ab9e",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b11",
@@ -7225,10 +7890,15 @@
    ],
    "height": 9,
    "style": "glass",
-   "color": "#5a6a7a",
+   "color": "#b7a985",
    "sign": "KAITEN HOMES",
    "signColor": "#7dd3a0",
-   "name": "Inmobiliaria Kaiten"
+   "name": "Inmobiliaria Kaiten",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b12",
@@ -7240,10 +7910,15 @@
    ],
    "height": 11,
    "style": "shop",
-   "color": "#4a6a6a",
+   "color": "#9c8173",
    "sign": "ÓRBITA",
    "signColor": "#ffbf00",
-   "name": "Moda Órbita"
+   "name": "Moda Órbita",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b13",
@@ -7253,9 +7928,14 @@
     3,
     17
    ],
-   "height": 11,
+   "height": 5,
    "style": "block",
-   "color": "#6a5a7a"
+   "color": "#8d9994",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b13-b",
@@ -7265,9 +7945,14 @@
     5,
     7
    ],
-   "height": 11,
+   "height": 6,
    "style": "block",
-   "color": "#6a5a7a"
+   "color": "#b7a985",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b13-b-h",
@@ -7277,85 +7962,50 @@
     5,
     8
    ],
-   "height": 11,
+   "height": 7,
    "style": "block",
-   "color": "#6a5a7a"
+   "color": "#9c8173",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b14",
    "rect": [
     192,
-    67,
-    4,
-    17
+    69,
+    5,
+    9
    ],
-   "height": 5,
-   "style": "arcology",
-   "color": "#4a6a6a",
+   "height": 3,
+   "style": "glass",
+   "color": "#b9ab9e",
    "sign": "CLUB PRIVADO",
-   "signColor": "#7dd3a0"
-  },
-  {
-   "id": "colinas-b14-b",
-   "rect": [
-    198,
-    67,
-    8,
-    7
-   ],
-   "height": 5,
-   "style": "arcology",
-   "color": "#4a6a6a",
-   "signColor": "#7dd3a0"
-  },
-  {
-   "id": "colinas-b14-b-h",
-   "rect": [
-    198,
-    76,
-    8,
-    8
-   ],
-   "height": 5,
-   "style": "arcology",
-   "color": "#4a6a6a",
-   "signColor": "#7dd3a0"
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b15",
    "rect": [
     208,
-    67,
-    4,
-    17
+    69,
+    5,
+    9
    ],
-   "height": 8,
-   "style": "block",
-   "color": "#4a6a6a"
-  },
-  {
-   "id": "colinas-b15-b",
-   "rect": [
-    214,
-    67,
-    6,
-    7
-   ],
-   "height": 8,
-   "style": "block",
-   "color": "#4a6a6a"
-  },
-  {
-   "id": "colinas-b15-b-h",
-   "rect": [
-    214,
-    76,
-    6,
-    8
-   ],
-   "height": 8,
-   "style": "block",
-   "color": "#4a6a6a"
+   "height": 6,
+   "style": "glass",
+   "color": "#9fa9a8",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b16",
@@ -7367,10 +8017,15 @@
    ],
    "height": 8,
    "style": "block",
-   "color": "#6a5a7a",
+   "color": "#9fa9a8",
    "sign": "CLUB KAITEN",
    "signColor": "#ffbf00",
-   "name": "Club de Campo Kaiten"
+   "name": "Club de Campo Kaiten",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b17",
@@ -7380,9 +8035,14 @@
     3,
     17
    ],
-   "height": 10,
+   "height": 5,
    "style": "arcology",
-   "color": "#5a5a7a"
+   "color": "#b39983",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b17-b",
@@ -7392,9 +8052,14 @@
     5,
     7
    ],
-   "height": 10,
+   "height": 6,
    "style": "arcology",
-   "color": "#5a5a7a"
+   "color": "#b9ab9e",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b17-b-h",
@@ -7404,49 +8069,33 @@
     5,
     8
    ],
-   "height": 10,
+   "height": 7,
    "style": "arcology",
-   "color": "#5a5a7a"
+   "color": "#9c8173",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b18",
    "rect": [
     271,
-    67,
-    4,
-    17
+    69,
+    5,
+    9
    ],
-   "height": 6,
-   "style": "block",
-   "color": "#6a5a7a",
+   "height": 3,
+   "style": "glass",
+   "color": "#b7a985",
    "sign": "JARDINES",
-   "signColor": "#ff8a3d"
-  },
-  {
-   "id": "colinas-b18-b",
-   "rect": [
-    277,
-    67,
-    6,
-    7
-   ],
-   "height": 6,
-   "style": "block",
-   "color": "#6a5a7a",
-   "signColor": "#ff8a3d"
-  },
-  {
-   "id": "colinas-b18-b-h",
-   "rect": [
-    277,
-    76,
-    6,
-    8
-   ],
-   "height": 6,
-   "style": "block",
-   "color": "#6a5a7a",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b19",
@@ -7456,9 +8105,14 @@
     3,
     17
    ],
-   "height": 9,
+   "height": 7,
    "style": "arcology",
-   "color": "#7a6a5a"
+   "color": "#9c8173",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b19-b",
@@ -7468,9 +8122,14 @@
     5,
     7
    ],
-   "height": 9,
+   "height": 4,
    "style": "arcology",
-   "color": "#7a6a5a"
+   "color": "#8d9994",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 3
+   }
   },
   {
    "id": "colinas-b19-b-h",
@@ -7480,226 +8139,105 @@
     5,
     8
    ],
-   "height": 9,
+   "height": 5,
    "style": "arcology",
-   "color": "#7a6a5a"
+   "color": "#9fa9a8",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b20",
    "rect": [
-    159,
+    176,
     95,
-    7,
-    5
+    6,
+    7
    ],
    "height": 6,
    "style": "glass",
-   "color": "#7a6a5a"
-  },
-  {
-   "id": "colinas-b20-h",
-   "rect": [
-    159,
-    102,
-    7,
-    5
-   ],
-   "height": 6,
-   "style": "glass",
-   "color": "#7a6a5a"
-  },
-  {
-   "id": "colinas-b20-b",
-   "rect": [
-    168,
-    95,
-    14,
-    5
-   ],
-   "height": 6,
-   "style": "glass",
-   "color": "#7a6a5a"
-  },
-  {
-   "id": "colinas-b20-b-h",
-   "rect": [
-    168,
-    102,
-    14,
-    5
-   ],
-   "height": 6,
-   "style": "glass",
-   "color": "#7a6a5a"
+   "color": "#9fa9a8",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b21",
    "rect": [
     192,
-    95,
-    4,
-    12
+    97,
+    5,
+    7
    ],
-   "height": 6,
-   "style": "arcology",
-   "color": "#5a6a7a",
+   "height": 3,
+   "style": "glass",
+   "color": "#b9ab9e",
    "sign": "CLUB PRIVADO",
-   "signColor": "#7dd3a0"
-  },
-  {
-   "id": "colinas-b21-b",
-   "rect": [
-    198,
-    95,
-    8,
-    5
-   ],
-   "height": 6,
-   "style": "arcology",
-   "color": "#5a6a7a",
-   "signColor": "#7dd3a0"
-  },
-  {
-   "id": "colinas-b21-b-h",
-   "rect": [
-    198,
-    102,
-    8,
-    5
-   ],
-   "height": 6,
-   "style": "arcology",
-   "color": "#5a6a7a",
-   "signColor": "#7dd3a0"
+   "signColor": "#7dd3a0",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b22",
    "rect": [
     208,
-    95,
-    4,
-    12
+    97,
+    5,
+    7
    ],
-   "height": 30,
+   "height": 4,
    "style": "glass",
-   "color": "#6a5a7a",
+   "color": "#b39983",
    "sign": "KAITEN HOMES",
-   "signColor": "#ffbf00"
-  },
-  {
-   "id": "colinas-b22-b",
-   "rect": [
-    214,
-    95,
-    6,
-    5
-   ],
-   "height": 30,
-   "style": "glass",
-   "color": "#6a5a7a",
-   "signColor": "#ffbf00"
-  },
-  {
-   "id": "colinas-b22-b-h",
-   "rect": [
-    214,
-    102,
-    6,
-    5
-   ],
-   "height": 30,
-   "style": "glass",
-   "color": "#6a5a7a",
-   "signColor": "#ffbf00"
+   "signColor": "#ffbf00",
+   "urban": {
+    "model": "chaflan",
+    "facade": "residencial",
+    "turn": 0
+   }
   },
   {
    "id": "colinas-b23",
    "rect": [
-    235,
+    253,
     95,
-    8,
-    5
+    7,
+    7
    ],
-   "height": 4,
-   "style": "block",
-   "color": "#6a5a7a",
+   "height": 5,
+   "style": "glass",
+   "color": "#b39983",
    "sign": "CLUB PRIVADO",
-   "signColor": "#ff8a3d"
-  },
-  {
-   "id": "colinas-b23-h",
-   "rect": [
-    235,
-    102,
-    8,
-    5
-   ],
-   "height": 4,
-   "style": "block",
-   "color": "#6a5a7a",
-   "signColor": "#ff8a3d"
-  },
-  {
-   "id": "colinas-b23-b",
-   "rect": [
-    245,
-    95,
-    15,
-    5
-   ],
-   "height": 4,
-   "style": "block",
-   "color": "#6a5a7a",
-   "signColor": "#ff8a3d"
-  },
-  {
-   "id": "colinas-b23-b-h",
-   "rect": [
-    245,
-    102,
-    15,
-    5
-   ],
-   "height": 4,
-   "style": "block",
-   "color": "#6a5a7a",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "jardin",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b24",
    "rect": [
     271,
-    95,
-    4,
-    12
+    97,
+    5,
+    7
    ],
-   "height": 5,
+   "height": 6,
    "style": "glass",
-   "color": "#4a6a6a"
-  },
-  {
-   "id": "colinas-b24-b",
-   "rect": [
-    277,
-    95,
-    6,
-    5
-   ],
-   "height": 5,
-   "style": "glass",
-   "color": "#4a6a6a"
-  },
-  {
-   "id": "colinas-b24-b-h",
-   "rect": [
-    277,
-    102,
-    6,
-    5
-   ],
-   "height": 5,
-   "style": "glass",
-   "color": "#4a6a6a"
+   "color": "#9c8173",
+   "urban": {
+    "model": "voladizo",
+    "facade": "residencial",
+    "turn": 2
+   }
   },
   {
    "id": "colinas-b25",
@@ -7709,9 +8247,14 @@
     3,
     12
    ],
-   "height": 8,
+   "height": 4,
    "style": "arcology",
-   "color": "#5a5a7a"
+   "color": "#b7a985",
+   "urban": {
+    "model": "lucernario",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b25-b",
@@ -7721,9 +8264,14 @@
     5,
     5
    ],
-   "height": 8,
+   "height": 7,
    "style": "arcology",
-   "color": "#5a5a7a"
+   "color": "#9fa9a8",
+   "urban": {
+    "model": "pabellon",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "colinas-b25-b-h",
@@ -7733,9 +8281,14 @@
     5,
     5
    ],
-   "height": 8,
+   "height": 6,
    "style": "arcology",
-   "color": "#5a5a7a"
+   "color": "#b7a985",
+   "urban": {
+    "model": "porche",
+    "facade": "residencial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b0",
@@ -7747,10 +8300,15 @@
    ],
    "height": 11,
    "style": "club",
-   "color": "#2a1a40",
+   "color": "#585570",
    "sign": "KITSUNE",
    "signColor": "#43f3ff",
-   "name": "Club Kitsune"
+   "name": "Club Kitsune",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b1",
@@ -7762,7 +8320,12 @@
    ],
    "height": 11,
    "style": "club",
-   "color": "#3a1a3a"
+   "color": "#615d72",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b1-b",
@@ -7774,7 +8337,12 @@
    ],
    "height": 11,
    "style": "club",
-   "color": "#3a1a3a"
+   "color": "#615d72",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b1-b-h",
@@ -7786,7 +8354,12 @@
    ],
    "height": 11,
    "style": "club",
-   "color": "#3a1a3a"
+   "color": "#526672",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b2",
@@ -7798,10 +8371,15 @@
    ],
    "height": 38,
    "style": "tower",
-   "color": "#3a2a50",
+   "color": "#735162",
    "sign": "CASINO LOTO",
    "signColor": "#ff3fa4",
-   "name": "Casino Loto"
+   "name": "Casino Loto",
+   "urban": {
+    "model": "curva",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b3",
@@ -7813,10 +8391,15 @@
    ],
    "height": 40,
    "style": "shop",
-   "color": "#1a1a3a",
+   "color": "#526672",
    "sign": "ARMAS",
    "signColor": "#ffd23f",
-   "name": "Armería del Callejón"
+   "name": "Armería del Callejón",
+   "urban": {
+    "model": "oblicua",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b4",
@@ -7828,10 +8411,15 @@
    ],
    "height": 21,
    "style": "glass",
-   "color": "#401a2a",
+   "color": "#526672",
    "sign": "KŌTETSU",
    "signColor": "#ffd23f",
-   "name": "Motos Kōtetsu"
+   "name": "Motos Kōtetsu",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b5",
@@ -7843,7 +8431,12 @@
    ],
    "height": 13,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#625169",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b5-b-h",
@@ -7855,7 +8448,12 @@
    ],
    "height": 13,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#715967",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b6",
@@ -7867,10 +8465,15 @@
    ],
    "height": 11,
    "style": "shop",
-   "color": "#1a1a3a",
+   "color": "#625169",
    "sign": "NEÓN WEAR",
    "signColor": "#ffd23f",
-   "name": "Ropa Neón"
+   "name": "Ropa Neón",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b7",
@@ -7882,10 +8485,15 @@
    ],
    "height": 46,
    "style": "shop",
-   "color": "#3a2a50",
+   "color": "#715967",
    "sign": "YŌKAI",
    "signColor": "#b46cff",
-   "name": "Electrónica Yōkai"
+   "name": "Electrónica Yōkai",
+   "urban": {
+    "model": "quiebro",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b8",
@@ -7897,7 +8505,12 @@
    ],
    "height": 23,
    "style": "clinic",
-   "color": "#401a2a"
+   "color": "#585570",
+   "urban": {
+    "model": "terraza",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b9",
@@ -7909,9 +8522,14 @@
    ],
    "height": 20,
    "style": "spire",
-   "color": "#3a2a50",
+   "color": "#585570",
    "sign": "VELVET",
-   "signColor": "#ff5a5a"
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b9-b",
@@ -7923,8 +8541,13 @@
    ],
    "height": 20,
    "style": "spire",
-   "color": "#3a2a50",
-   "signColor": "#ff5a5a"
+   "color": "#585570",
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b9-b-h",
@@ -7936,8 +8559,13 @@
    ],
    "height": 20,
    "style": "spire",
-   "color": "#3a2a50",
-   "signColor": "#ff5a5a"
+   "color": "#625169",
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b10",
@@ -7949,7 +8577,12 @@
    ],
    "height": 18,
    "style": "club",
-   "color": "#1a1a3a"
+   "color": "#526672",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b10-h",
@@ -7961,7 +8594,12 @@
    ],
    "height": 18,
    "style": "club",
-   "color": "#1a1a3a"
+   "color": "#526672",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b10-b",
@@ -7973,7 +8611,12 @@
    ],
    "height": 18,
    "style": "club",
-   "color": "#1a1a3a"
+   "color": "#615d72",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b10-b-h",
@@ -7985,10 +8628,15 @@
    ],
    "height": 18,
    "style": "block",
-   "color": "#1a1a3a",
+   "color": "#735162",
    "sign": "PCV",
    "name": "Comisaría de Neón Rojo",
-   "signColor": "#60a5fa"
+   "signColor": "#60a5fa",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b11",
@@ -8000,7 +8648,12 @@
    ],
    "height": 16,
    "style": "club",
-   "color": "#401a2a"
+   "color": "#735162",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b11-b",
@@ -8012,7 +8665,12 @@
    ],
    "height": 16,
    "style": "club",
-   "color": "#401a2a"
+   "color": "#585570",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b11-b-h",
@@ -8024,7 +8682,12 @@
    ],
    "height": 16,
    "style": "club",
-   "color": "#401a2a"
+   "color": "#585570",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b12",
@@ -8036,9 +8699,14 @@
    ],
    "height": 45,
    "style": "club",
-   "color": "#1a1a3a",
+   "color": "#625169",
    "sign": "ESTRELLA",
-   "signColor": "#ff3fa4"
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b12-b",
@@ -8050,8 +8718,13 @@
    ],
    "height": 45,
    "style": "club",
-   "color": "#1a1a3a",
-   "signColor": "#ff3fa4"
+   "color": "#585570",
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "prisma",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b12-b-h",
@@ -8063,8 +8736,13 @@
    ],
    "height": 45,
    "style": "club",
-   "color": "#1a1a3a",
-   "signColor": "#ff3fa4"
+   "color": "#735162",
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "curva",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b13",
@@ -8076,7 +8754,12 @@
    ],
    "height": 34,
    "style": "spire",
-   "color": "#1a1a3a"
+   "color": "#526672",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b13-b",
@@ -8088,7 +8771,12 @@
    ],
    "height": 34,
    "style": "spire",
-   "color": "#1a1a3a"
+   "color": "#526672",
+   "urban": {
+    "model": "oblicua",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b13-b-h",
@@ -8100,7 +8788,12 @@
    ],
    "height": 34,
    "style": "spire",
-   "color": "#1a1a3a"
+   "color": "#715967",
+   "urban": {
+    "model": "remate",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b14",
@@ -8112,9 +8805,14 @@
    ],
    "height": 43,
    "style": "tower",
-   "color": "#401a2a",
+   "color": "#585570",
    "sign": "SAKURA",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b14-b",
@@ -8126,8 +8824,13 @@
    ],
    "height": 43,
    "style": "tower",
-   "color": "#401a2a",
-   "signColor": "#43f3ff"
+   "color": "#625169",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "remate",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b14-b-h",
@@ -8139,8 +8842,13 @@
    ],
    "height": 43,
    "style": "tower",
-   "color": "#401a2a",
-   "signColor": "#43f3ff"
+   "color": "#735162",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "curva",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b15",
@@ -8152,9 +8860,14 @@
    ],
    "height": 19,
    "style": "tower",
-   "color": "#401a2a",
+   "color": "#715967",
    "sign": "KARAOKE 24",
-   "signColor": "#b46cff"
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b15-h",
@@ -8166,8 +8879,13 @@
    ],
    "height": 21,
    "style": "tower",
-   "color": "#401a2a",
-   "signColor": "#b46cff"
+   "color": "#715967",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b15-h-l1",
@@ -8179,8 +8897,13 @@
    ],
    "height": 14,
    "style": "tower",
-   "color": "#401a2a",
-   "signColor": "#b46cff"
+   "color": "#585570",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b15-h-l2",
@@ -8192,8 +8915,13 @@
    ],
    "height": 20,
    "style": "tower",
-   "color": "#401a2a",
-   "signColor": "#b46cff"
+   "color": "#526672",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b15-b",
@@ -8205,8 +8933,13 @@
    ],
    "height": 19,
    "style": "tower",
-   "color": "#401a2a",
-   "signColor": "#b46cff"
+   "color": "#526672",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b15-b-h",
@@ -8218,10 +8951,15 @@
    ],
    "height": 19,
    "style": "shop",
-   "color": "#401a2a",
+   "color": "#735162",
    "sign": "FARMACIA ✚",
    "signColor": "#5affc8",
-   "name": "Farmacia 24h Sakura"
+   "name": "Farmacia 24h Sakura",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b16",
@@ -8233,9 +8971,14 @@
    ],
    "height": 13,
    "style": "club",
-   "color": "#3a2a50",
+   "color": "#735162",
    "sign": "DRAGÓN",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b16-b",
@@ -8247,8 +8990,13 @@
    ],
    "height": 13,
    "style": "club",
-   "color": "#3a2a50",
-   "signColor": "#43f3ff"
+   "color": "#625169",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b16-b-h",
@@ -8260,8 +9008,13 @@
    ],
    "height": 13,
    "style": "club",
-   "color": "#3a2a50",
-   "signColor": "#43f3ff"
+   "color": "#625169",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b17",
@@ -8273,9 +9026,14 @@
    ],
    "height": 31,
    "style": "spire",
-   "color": "#3a1a3a",
+   "color": "#615d72",
    "sign": "SAKURA",
-   "signColor": "#ff3fa4"
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b17-b",
@@ -8287,8 +9045,13 @@
    ],
    "height": 31,
    "style": "spire",
-   "color": "#3a1a3a",
-   "signColor": "#ff3fa4"
+   "color": "#585570",
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "quiebro",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b17-b-h",
@@ -8300,8 +9063,13 @@
    ],
    "height": 31,
    "style": "spire",
-   "color": "#3a1a3a",
-   "signColor": "#ff3fa4"
+   "color": "#715967",
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b18",
@@ -8313,7 +9081,12 @@
    ],
    "height": 15,
    "style": "tower",
-   "color": "#3a2a50"
+   "color": "#735162",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b18-b",
@@ -8325,7 +9098,12 @@
    ],
    "height": 15,
    "style": "tower",
-   "color": "#3a2a50"
+   "color": "#585570",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b18-b-h",
@@ -8337,7 +9115,12 @@
    ],
    "height": 15,
    "style": "tower",
-   "color": "#3a2a50"
+   "color": "#526672",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b19",
@@ -8349,7 +9132,12 @@
    ],
    "height": 16,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#615d72",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b19-b",
@@ -8361,7 +9149,12 @@
    ],
    "height": 16,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#615d72",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b19-b-h",
@@ -8373,7 +9166,12 @@
    ],
    "height": 16,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#585570",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b20",
@@ -8385,9 +9183,14 @@
    ],
    "height": 41,
    "style": "glass",
-   "color": "#1a1a3a",
+   "color": "#585570",
    "sign": "KARAOKE 24",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b20-b",
@@ -8399,8 +9202,13 @@
    ],
    "height": 41,
    "style": "glass",
-   "color": "#1a1a3a",
-   "signColor": "#ffd23f"
+   "color": "#735162",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "tridente",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b20-b-h",
@@ -8412,8 +9220,13 @@
    ],
    "height": 41,
    "style": "glass",
-   "color": "#1a1a3a",
-   "signColor": "#ffd23f"
+   "color": "#526672",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "remate",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "neon-rojo-b21",
@@ -8425,9 +9238,14 @@
    ],
    "height": 21,
    "style": "tower",
-   "color": "#1a1a3a",
+   "color": "#615d72",
    "sign": "KITSUNE",
-   "signColor": "#b46cff"
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b21-b",
@@ -8439,8 +9257,13 @@
    ],
    "height": 21,
    "style": "tower",
-   "color": "#1a1a3a",
-   "signColor": "#b46cff"
+   "color": "#615d72",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b21-b-h",
@@ -8452,8 +9275,13 @@
    ],
    "height": 21,
    "style": "tower",
-   "color": "#1a1a3a",
-   "signColor": "#b46cff"
+   "color": "#715967",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "neon-rojo-b22",
@@ -8465,7 +9293,12 @@
    ],
    "height": 21,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#735162",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "neon-rojo-b22-h",
@@ -8477,7 +9310,12 @@
    ],
    "height": 21,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#625169",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b22-b",
@@ -8489,7 +9327,12 @@
    ],
    "height": 21,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#715967",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "neon-rojo-b22-b-h",
@@ -8501,7 +9344,12 @@
    ],
    "height": 21,
    "style": "club",
-   "color": "#3a2a50"
+   "color": "#625169",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b0",
@@ -8513,9 +9361,14 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#3a3a3a",
+   "color": "#6a706c",
    "sign": "AURORA DEPÓSITO",
-   "signColor": "#ff3040"
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b0-h",
@@ -8527,8 +9380,13 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#3a3a3a",
-   "signColor": "#ff3040"
+   "color": "#795e4d",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b0-b",
@@ -8540,8 +9398,13 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#3a3a3a",
-   "signColor": "#ff3040"
+   "color": "#666b73",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b0-b-h",
@@ -8553,8 +9416,13 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#3a3a3a",
-   "signColor": "#ff3040"
+   "color": "#5e493e",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b1",
@@ -8566,10 +9434,15 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#3a3a3a",
+   "color": "#70665b",
    "sign": "ENGRANAJES",
    "signColor": "#ffd23f",
-   "name": "Taller de Los Engranajes"
+   "name": "Taller de Los Engranajes",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b2",
@@ -8579,12 +9452,17 @@
     12,
     12
    ],
-   "height": 21,
+   "height": 17,
    "style": "industrial",
-   "color": "#3a3a3a",
+   "color": "#7c6053",
    "sign": "ARMERÍA 9",
    "signColor": "#ffd23f",
-   "name": "Armas Pesadas de Forja"
+   "name": "Armas Pesadas de Forja",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b3",
@@ -8596,10 +9474,15 @@
    ],
    "height": 8,
    "style": "glass",
-   "color": "#504030",
+   "color": "#6a706c",
    "sign": "USADOS",
    "signColor": "#ff3040",
-   "name": "Usados de Forja"
+   "name": "Usados de Forja",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b4",
@@ -8609,9 +9492,14 @@
     3,
     12
    ],
-   "height": 21,
+   "height": 17,
    "style": "block",
-   "color": "#504030"
+   "color": "#605b53",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b4-b",
@@ -8621,9 +9509,14 @@
     5,
     5
    ],
-   "height": 21,
+   "height": 17,
    "style": "block",
-   "color": "#504030"
+   "color": "#70665b",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b4-b-h",
@@ -8633,9 +9526,14 @@
     5,
     5
    ],
-   "height": 21,
+   "height": 17,
    "style": "block",
-   "color": "#504030"
+   "color": "#7c6053",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b5",
@@ -8647,10 +9545,15 @@
    ],
    "height": 9,
    "style": "shop",
-   "color": "#403a34",
+   "color": "#666b73",
    "sign": "COMEDOR",
    "signColor": "#ff3040",
-   "name": "Comedor obrero"
+   "name": "Comedor obrero",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b6",
@@ -8662,7 +9565,12 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#70665b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b6-b",
@@ -8674,7 +9582,12 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#605b53",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b6-b-h",
@@ -8686,7 +9599,12 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#594a40",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b7",
@@ -8698,7 +9616,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#795e4d",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b7-h",
@@ -8710,10 +9633,15 @@
    ],
    "height": 6,
    "style": "club",
-   "color": "#25334e",
+   "color": "#715967",
    "name": "Discoteca Circuito 33",
    "sign": "CIRCUITO 33",
-   "signColor": "#7b8fff"
+   "signColor": "#7b8fff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b7-b",
@@ -8725,7 +9653,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#7c6053",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b7-b-h",
@@ -8737,7 +9670,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#6a706c",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b7-b-h-l1",
@@ -8749,7 +9687,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#70665b",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b7-b-h-l2",
@@ -8761,7 +9704,12 @@
    ],
    "height": 4,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#795e4d",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b8",
@@ -8773,7 +9721,12 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#504030"
+   "color": "#5e493e",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b8-h",
@@ -8785,7 +9738,12 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#504030"
+   "color": "#795e4d",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b8-h-l1",
@@ -8797,7 +9755,12 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#504030"
+   "color": "#795e4d",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b8-h-l2",
@@ -8809,7 +9772,12 @@
    ],
    "height": 7,
    "style": "block",
-   "color": "#504030"
+   "color": "#6a706c",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b8-b",
@@ -8821,7 +9789,12 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#504030"
+   "color": "#605b53",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b8-b-h",
@@ -8831,12 +9804,17 @@
     17,
     8
    ],
-   "height": 90,
+   "height": 17,
    "style": "spire",
-   "color": "#3a4038",
+   "color": "#666b73",
    "sign": "AURORA",
    "name": "Torre Aurora Logística",
-   "signColor": "#7dff7a"
+   "signColor": "#7dff7a",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b9",
@@ -8848,9 +9826,14 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#504030",
+   "color": "#795e4d",
    "sign": "ACERÍAS",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b9-h",
@@ -8862,8 +9845,13 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#504030",
-   "signColor": "#ff8a3d"
+   "color": "#605b53",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b9-b",
@@ -8875,8 +9863,13 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#504030",
-   "signColor": "#ff8a3d"
+   "color": "#666b73",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b9-b-h",
@@ -8888,10 +9881,15 @@
    ],
    "height": 10,
    "style": "shop",
-   "color": "#504030",
+   "color": "#70665b",
    "sign": "FARMACIA ✚",
    "signColor": "#5affc8",
-   "name": "Botiquín Obrero"
+   "name": "Botiquín Obrero",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b10",
@@ -8903,7 +9901,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#605b53",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b10-h",
@@ -8915,7 +9918,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#7c6053",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b10-b",
@@ -8927,7 +9935,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#605b53",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b10-b-h",
@@ -8939,7 +9952,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#7c6053",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b10-b-h-l1",
@@ -8951,7 +9969,12 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b10-b-h-l2",
@@ -8963,7 +9986,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#6a706c",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b11",
@@ -8975,7 +10003,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#4a4038"
+   "color": "#795e4d",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b11-b",
@@ -8987,7 +10020,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#4a4038"
+   "color": "#795e4d",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b11-b-h",
@@ -8999,7 +10037,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#4a4038"
+   "color": "#64534a",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b12",
@@ -9011,9 +10054,14 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#504030",
+   "color": "#666b73",
    "sign": "ACERÍAS",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b12-b-h",
@@ -9025,8 +10073,13 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#504030",
-   "signColor": "#ffd23f"
+   "color": "#6a706c",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b13",
@@ -9038,7 +10091,12 @@
    ],
    "height": 5,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#605b53",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b13-h",
@@ -9050,7 +10108,12 @@
    ],
    "height": 4,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#5e493e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b13-h-l1",
@@ -9062,7 +10125,12 @@
    ],
    "height": 5,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#6a706c",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b13-h-l2",
@@ -9074,7 +10142,12 @@
    ],
    "height": 4,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#605b53",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b13-b",
@@ -9086,7 +10159,12 @@
    ],
    "height": 5,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b13-b-h",
@@ -9098,7 +10176,12 @@
    ],
    "height": 4,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#795e4d",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b13-b-h-l1",
@@ -9110,7 +10193,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#795e4d",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b13-b-h-l2",
@@ -9122,7 +10210,12 @@
    ],
    "height": 4,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#666b73",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b14",
@@ -9134,9 +10227,14 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#4a4038",
+   "color": "#695544",
    "sign": "AURORA DEPÓSITO",
-   "signColor": "#ff3040"
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b14-h",
@@ -9148,8 +10246,13 @@
    ],
    "height": 6,
    "style": "block",
-   "color": "#4a4038",
-   "signColor": "#ff3040"
+   "color": "#70665b",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b14-h-l1",
@@ -9161,8 +10264,13 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#4a4038",
-   "signColor": "#ff3040"
+   "color": "#605b53",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b14-h-l2",
@@ -9174,8 +10282,13 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#4a4038",
-   "signColor": "#ff3040"
+   "color": "#594a40",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b14-b",
@@ -9187,8 +10300,13 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#4a4038",
-   "signColor": "#ff3040"
+   "color": "#64534a",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "forja-b14-b-h",
@@ -9200,8 +10318,13 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#4a4038",
-   "signColor": "#ff3040"
+   "color": "#7c6053",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b15",
@@ -9213,9 +10336,14 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#3a3a3a",
+   "color": "#666b73",
    "sign": "AURORA DEPÓSITO",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b15-b",
@@ -9227,8 +10355,13 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#3a3a3a",
-   "signColor": "#ff8a3d"
+   "color": "#666b73",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b15-b-h",
@@ -9240,8 +10373,13 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#3a3a3a",
-   "signColor": "#ff8a3d"
+   "color": "#666b73",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b16",
@@ -9253,7 +10391,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#70665b",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b16-b",
@@ -9265,7 +10408,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#695544",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b16-b-h",
@@ -9277,7 +10425,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#403a34"
+   "color": "#6a706c",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b17",
@@ -9289,9 +10442,14 @@
    ],
    "height": 13,
    "style": "industrial",
-   "color": "#403a34",
+   "color": "#6a706c",
    "sign": "ACERÍAS",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b17-b",
@@ -9303,8 +10461,13 @@
    ],
    "height": 13,
    "style": "industrial",
-   "color": "#403a34",
-   "signColor": "#ffd23f"
+   "color": "#524e4c",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b17-b-h",
@@ -9316,8 +10479,13 @@
    ],
    "height": 13,
    "style": "industrial",
-   "color": "#403a34",
-   "signColor": "#ffd23f"
+   "color": "#6a706c",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b18",
@@ -9329,7 +10497,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#504030"
+   "color": "#605b53",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b18-b",
@@ -9341,7 +10514,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#504030"
+   "color": "#706458",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b18-b-h",
@@ -9353,7 +10531,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#504030"
+   "color": "#7c6053",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b19",
@@ -9365,9 +10548,14 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#403a34",
+   "color": "#795e4d",
    "sign": "NAVE 12",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b19-b",
@@ -9379,8 +10567,13 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#403a34",
-   "signColor": "#ffd23f"
+   "color": "#795e4d",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b19-b-h",
@@ -9392,8 +10585,13 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#403a34",
-   "signColor": "#ffd23f"
+   "color": "#666b73",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b20",
@@ -9405,9 +10603,14 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#4a4038",
+   "color": "#706458",
    "sign": "FUNDICIÓN 7",
-   "signColor": "#ff3040"
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b20-b",
@@ -9419,8 +10622,13 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#4a4038",
-   "signColor": "#ff3040"
+   "color": "#795e4d",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b20-b-h",
@@ -9432,8 +10640,13 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#4a4038",
-   "signColor": "#ff3040"
+   "color": "#524e4c",
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b21",
@@ -9445,7 +10658,12 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#4a4038"
+   "color": "#7c6053",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b21-b",
@@ -9457,7 +10675,12 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#4a4038"
+   "color": "#6a706c",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b21-b-h",
@@ -9469,7 +10692,12 @@
    ],
    "height": 10,
    "style": "block",
-   "color": "#4a4038"
+   "color": "#7c6053",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "forja-b22",
@@ -9481,7 +10709,12 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#4a4038"
+   "color": "#6a706c",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "forja-b22-b",
@@ -9493,7 +10726,12 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#4a4038"
+   "color": "#795e4d",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "forja-b22-b-h",
@@ -9505,7 +10743,12 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#4a4038"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b0",
@@ -9517,7 +10760,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#526672",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b0-b",
@@ -9529,7 +10777,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#625169",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b0-b-h",
@@ -9541,7 +10794,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#625169",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b1",
@@ -9553,10 +10811,15 @@
    ],
    "height": 19,
    "style": "block",
-   "color": "#3a3a4a",
+   "color": "#625169",
    "sign": "SAN CIRO",
    "signColor": "#43f3ff",
-   "name": "Iglesia de San Ciro"
+   "name": "Iglesia de San Ciro",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b2",
@@ -9568,7 +10831,12 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#5a4a4a"
+   "color": "#735162",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b2-b",
@@ -9580,7 +10848,12 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#5a4a4a"
+   "color": "#615d72",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b2-b-h",
@@ -9592,10 +10865,15 @@
    ],
    "height": 8,
    "style": "club",
-   "color": "#322235",
+   "color": "#526672",
    "name": "Bar La Última Luz",
    "sign": "ÚLTIMA LUZ",
-   "signColor": "#ff9f75"
+   "signColor": "#ff9f75",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b3",
@@ -9607,10 +10885,15 @@
    ],
    "height": 21,
    "style": "mega",
-   "color": "#4a3a3a",
+   "color": "#735162",
    "sign": "MERCADILLO",
    "signColor": "#ffd23f",
-   "name": "Mercadillo del Bloque 22"
+   "name": "Mercadillo del Bloque 22",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b4",
@@ -9622,10 +10905,15 @@
    ],
    "height": 16,
    "style": "mega",
-   "color": "#4a3a3a",
+   "color": "#585570",
    "sign": "SEGUNDA MANO",
    "signColor": "#ffd23f",
-   "name": "Ropa de Segunda Mano"
+   "name": "Ropa de Segunda Mano",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b5",
@@ -9637,9 +10925,14 @@
    ],
    "height": 28,
    "style": "mega",
-   "color": "#3a3a4a",
+   "color": "#615d72",
    "sign": "SAN CIRO",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b5-b",
@@ -9651,8 +10944,13 @@
    ],
    "height": 28,
    "style": "mega",
-   "color": "#3a3a4a",
-   "signColor": "#43f3ff"
+   "color": "#615d72",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b5-b-h",
@@ -9664,8 +10962,13 @@
    ],
    "height": 28,
    "style": "mega",
-   "color": "#3a3a4a",
-   "signColor": "#43f3ff"
+   "color": "#526672",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b6",
@@ -9677,10 +10980,15 @@
    ],
    "height": 26,
    "style": "glass",
-   "color": "#5a4a3a",
+   "color": "#625169",
    "sign": "AUTOS VIDAL",
    "signColor": "#43f3ff",
-   "name": "Autos Vidal"
+   "name": "Autos Vidal",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b7",
@@ -9692,10 +11000,15 @@
    ],
    "height": 24,
    "style": "block",
-   "color": "#5a4a4a",
+   "color": "#715967",
    "sign": "NODO",
    "signColor": "#43f3ff",
-   "name": "Nodo del Vacío"
+   "name": "Nodo del Vacío",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b8",
@@ -9707,7 +11020,12 @@
    ],
    "height": 21,
    "style": "arcology",
-   "color": "#3a3a4a"
+   "color": "#625169",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b8-b",
@@ -9719,7 +11037,12 @@
    ],
    "height": 21,
    "style": "arcology",
-   "color": "#3a3a4a"
+   "color": "#526672",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b8-b-h",
@@ -9731,7 +11054,12 @@
    ],
    "height": 21,
    "style": "arcology",
-   "color": "#3a3a4a"
+   "color": "#735162",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b9",
@@ -9743,9 +11071,14 @@
    ],
    "height": 25,
    "style": "block",
-   "color": "#5a4a3a",
+   "color": "#715967",
    "sign": "SAN CIRO",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b9-b-h",
@@ -9757,8 +11090,13 @@
    ],
    "height": 25,
    "style": "block",
-   "color": "#5a4a3a",
-   "signColor": "#43f3ff"
+   "color": "#526672",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b10",
@@ -9770,7 +11108,12 @@
    ],
    "height": 39,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#585570",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b10-b",
@@ -9780,9 +11123,14 @@
     6,
     7
    ],
-   "height": 39,
+   "height": 38,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#735162",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b10-b-h",
@@ -9792,9 +11140,14 @@
     6,
     8
    ],
-   "height": 39,
+   "height": 38,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#585570",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b11",
@@ -9806,7 +11159,12 @@
    ],
    "height": 29,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#715967",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b11-b",
@@ -9818,7 +11176,12 @@
    ],
    "height": 29,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#625169",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b11-b-h",
@@ -9830,7 +11193,12 @@
    ],
    "height": 29,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#585570",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b12",
@@ -9842,9 +11210,14 @@
    ],
    "height": 21,
    "style": "block",
-   "color": "#3a3a4a",
+   "color": "#625169",
    "sign": "TACOS 24H",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b12-b",
@@ -9856,8 +11229,13 @@
    ],
    "height": 21,
    "style": "block",
-   "color": "#3a3a4a",
-   "signColor": "#ffd23f"
+   "color": "#625169",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b12-b-h",
@@ -9869,8 +11247,13 @@
    ],
    "height": 21,
    "style": "block",
-   "color": "#3a3a4a",
-   "signColor": "#ffd23f"
+   "color": "#585570",
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b13",
@@ -9882,9 +11265,14 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#5a4a3a",
+   "color": "#625169",
    "sign": "BLOQUE 41",
-   "signColor": "#ffb347"
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b13-b",
@@ -9896,8 +11284,13 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#5a4a3a",
-   "signColor": "#ffb347"
+   "color": "#615d72",
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b13-b-h",
@@ -9909,8 +11302,13 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#5a4a3a",
-   "signColor": "#ffb347"
+   "color": "#526672",
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b14",
@@ -9922,7 +11320,12 @@
    ],
    "height": 15,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#526672",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b14-b",
@@ -9934,7 +11337,12 @@
    ],
    "height": 15,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#615d72",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b14-b-h",
@@ -9946,7 +11354,12 @@
    ],
    "height": 11,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#715967",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b14-b-h-l1",
@@ -9958,7 +11371,12 @@
    ],
    "height": 12,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#585570",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b14-b-h-l2",
@@ -9970,7 +11388,12 @@
    ],
    "height": 11,
    "style": "mega",
-   "color": "#5a4a4a"
+   "color": "#615d72",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b15",
@@ -9982,9 +11405,14 @@
    ],
    "height": 20,
    "style": "mega",
-   "color": "#4a4a3a",
+   "color": "#735162",
    "sign": "SAN CIRO",
-   "signColor": "#ffb347"
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b15-b",
@@ -9996,8 +11424,13 @@
    ],
    "height": 20,
    "style": "mega",
-   "color": "#4a4a3a",
-   "signColor": "#ffb347"
+   "color": "#715967",
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b15-b-h",
@@ -10009,8 +11442,13 @@
    ],
    "height": 20,
    "style": "mega",
-   "color": "#4a4a3a",
-   "signColor": "#ffb347"
+   "color": "#735162",
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b16",
@@ -10022,9 +11460,14 @@
    ],
    "height": 18,
    "style": "arcology",
-   "color": "#4a4a3a",
+   "color": "#615d72",
    "sign": "LA ESPERANZA",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b16-b",
@@ -10036,8 +11479,13 @@
    ],
    "height": 18,
    "style": "arcology",
-   "color": "#4a4a3a",
-   "signColor": "#43f3ff"
+   "color": "#526672",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b16-b-h",
@@ -10049,8 +11497,13 @@
    ],
    "height": 18,
    "style": "arcology",
-   "color": "#4a4a3a",
-   "signColor": "#43f3ff"
+   "color": "#585570",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b17",
@@ -10062,7 +11515,12 @@
    ],
    "height": 30,
    "style": "arcology",
-   "color": "#4a3a3a"
+   "color": "#585570",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b17-b",
@@ -10074,7 +11532,12 @@
    ],
    "height": 30,
    "style": "arcology",
-   "color": "#4a3a3a"
+   "color": "#625169",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b17-b-h",
@@ -10086,7 +11549,12 @@
    ],
    "height": 30,
    "style": "arcology",
-   "color": "#4a3a3a"
+   "color": "#615d72",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b18",
@@ -10098,7 +11566,12 @@
    ],
    "height": 16,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#615d72",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b18-b",
@@ -10110,7 +11583,12 @@
    ],
    "height": 16,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#615d72",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b18-b-h",
@@ -10122,7 +11600,12 @@
    ],
    "height": 16,
    "style": "mega",
-   "color": "#5a4a3a"
+   "color": "#615d72",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b19",
@@ -10134,9 +11617,14 @@
    ],
    "height": 23,
    "style": "arcology",
-   "color": "#4a3a3a",
+   "color": "#585570",
    "sign": "LA ESPERANZA",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b19-b",
@@ -10148,8 +11636,13 @@
    ],
    "height": 23,
    "style": "arcology",
-   "color": "#4a3a3a",
-   "signColor": "#43f3ff"
+   "color": "#526672",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b19-b-h",
@@ -10161,8 +11654,13 @@
    ],
    "height": 23,
    "style": "arcology",
-   "color": "#4a3a3a",
-   "signColor": "#43f3ff"
+   "color": "#625169",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b20",
@@ -10174,9 +11672,14 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#5a4a4a",
+   "color": "#625169",
    "sign": "LA ESPERANZA",
-   "signColor": "#ffb347"
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b20-h",
@@ -10188,8 +11691,13 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#5a4a4a",
-   "signColor": "#ffb347"
+   "color": "#585570",
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b20-b",
@@ -10201,8 +11709,13 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#5a4a4a",
-   "signColor": "#ffb347"
+   "color": "#615d72",
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b20-b-h",
@@ -10214,8 +11727,13 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#5a4a4a",
-   "signColor": "#ffb347"
+   "color": "#585570",
+   "signColor": "#ffb347",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b21",
@@ -10227,7 +11745,12 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#4a3a3a"
+   "color": "#715967",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "arrabal-b21-h",
@@ -10239,7 +11762,12 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#4a3a3a"
+   "color": "#526672",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b21-b",
@@ -10251,10 +11779,15 @@
    ],
    "height": 26,
    "style": "shop",
-   "color": "#4a3a3a",
+   "color": "#715967",
    "sign": "FARMACIA ✚",
    "name": "Farmacia de San Ciro",
-   "signColor": "#5affc8"
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b21-b-h",
@@ -10266,10 +11799,15 @@
    ],
    "height": 26,
    "style": "block",
-   "color": "#4a3a3a",
+   "color": "#526672",
    "sign": "PCV",
    "name": "Puesto de la PCV del Arrabal",
-   "signColor": "#60a5fa"
+   "signColor": "#60a5fa",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b22",
@@ -10281,7 +11819,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#3a3a4a"
+   "color": "#735162",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b22-h",
@@ -10293,7 +11836,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#3a3a4a"
+   "color": "#735162",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b22-b",
@@ -10305,7 +11853,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#3a3a4a"
+   "color": "#585570",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b22-b-h",
@@ -10317,7 +11870,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#3a3a4a"
+   "color": "#715967",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b23",
@@ -10329,7 +11887,12 @@
    ],
    "height": 15,
    "style": "arcology",
-   "color": "#3a3a4a"
+   "color": "#526672",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arrabal-b23-h",
@@ -10341,7 +11904,12 @@
    ],
    "height": 15,
    "style": "arcology",
-   "color": "#3a3a4a"
+   "color": "#585570",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "arrabal-b23-b",
@@ -10353,7 +11921,12 @@
    ],
    "height": 15,
    "style": "arcology",
-   "color": "#3a3a4a"
+   "color": "#526672",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "arrabal-b23-b-h",
@@ -10365,7 +11938,12 @@
    ],
    "height": 15,
    "style": "arcology",
-   "color": "#3a3a4a"
+   "color": "#715967",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "yermo-motel",
@@ -10378,9 +11956,14 @@
    ],
    "height": 4,
    "style": "shop",
-   "color": "#6a4a3a",
+   "color": "#6a706c",
    "sign": "MOTEL ATARDECER",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "yermo-gasolinera",
@@ -10393,9 +11976,14 @@
    ],
    "height": 3,
    "style": "shop",
-   "color": "#4a5a6a",
+   "color": "#795e4d",
    "sign": "RUTA 9",
-   "signColor": "#7dff7a"
+   "signColor": "#7dff7a",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "yermo-taller",
@@ -10406,11 +11994,16 @@
     8,
     6
    ],
-   "height": 4,
+   "height": 3,
    "style": "industrial",
-   "color": "#5a4a3a",
+   "color": "#524e4c",
    "sign": "TALLER",
-   "signColor": "#d9a066"
+   "signColor": "#d9a066",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "yermo-silo",
@@ -10420,9 +12013,14 @@
     6,
     6
    ],
-   "height": 10,
+   "height": 8,
    "style": "industrial",
-   "color": "#4a4a44"
+   "color": "#795e4d",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "yermo-antena",
@@ -10432,11 +12030,16 @@
     4,
     4
    ],
-   "height": 23,
+   "height": 18,
    "style": "spire",
-   "color": "#3a3a44",
+   "color": "#605b53",
    "sign": "HALCÓN",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "aguja",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "yermo-ruinas",
@@ -10446,9 +12049,14 @@
     4,
     8
    ],
-   "height": 6,
+   "height": 4,
    "style": "block",
-   "color": "#4a3a34"
+   "color": "#5e493e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "yermo-ruinas-l1",
@@ -10458,9 +12066,14 @@
     4,
     3
    ],
-   "height": 4,
+   "height": 3,
    "style": "block",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "yermo-ruinas-l2",
@@ -10470,9 +12083,14 @@
     6,
     3
    ],
-   "height": 5,
+   "height": 4,
    "style": "block",
-   "color": "#4a3a34"
+   "color": "#5e493e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "almacen-muelle",
@@ -10484,10 +12102,15 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#3a3f5c",
+   "color": "#70665b",
    "name": "Almacén del muelle",
    "sign": "MUELLE 3",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "torre-halcon",
@@ -10500,9 +12123,14 @@
    ],
    "height": 38,
    "style": "spire",
-   "color": "#2e3550",
+   "color": "#715967",
    "sign": "HALCÓN",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "terraza",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "torre-halcon-b",
@@ -10514,8 +12142,13 @@
    ],
    "height": 38,
    "style": "spire",
-   "color": "#2e3550",
-   "signColor": "#43f3ff"
+   "color": "#615d72",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "tridente",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "torre-halcon-b-h",
@@ -10527,8 +12160,13 @@
    ],
    "height": 38,
    "style": "spire",
-   "color": "#2e3550",
-   "signColor": "#43f3ff"
+   "color": "#615d72",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "curva",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "hotel-koi",
@@ -10541,9 +12179,14 @@
    ],
    "height": 20,
    "style": "glass",
-   "color": "#4a3a5c",
+   "color": "#526672",
    "sign": "HOTEL KOI",
-   "signColor": "#ff4fa0"
+   "signColor": "#ff4fa0",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "nave-norte",
@@ -10555,7 +12198,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#4b4a44"
+   "color": "#70665b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "nave-norte-h",
@@ -10567,7 +12215,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#4b4a44"
+   "color": "#70665b",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "bloque-oeste",
@@ -10579,9 +12232,14 @@
    ],
    "height": 25,
    "style": "mega",
-   "color": "#3c4660",
+   "color": "#526672",
    "sign": "ROPA LUMEN",
-   "signColor": "#b46cff"
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "curva",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "bloque9",
@@ -10594,9 +12252,14 @@
    ],
    "height": 35,
    "style": "arcology",
-   "color": "#5a4b6e",
+   "color": "#615d72",
    "sign": "BLOQUE 9",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "bar-rele",
@@ -10609,9 +12272,14 @@
    ],
    "height": 5,
    "style": "club",
-   "color": "#2b2d42",
+   "color": "#615d72",
    "sign": "EL RELÉ",
-   "signColor": "#ff3fa4"
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "tienda-24h",
@@ -10623,10 +12291,15 @@
    ],
    "height": 5,
    "style": "shop",
-   "color": "#405a5a",
+   "color": "#715967",
    "sign": "AURORA 24H",
    "signColor": "#7dff7a",
-   "name": "Aurora 24H"
+   "name": "Aurora 24H",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "bloque-canal",
@@ -10638,7 +12311,12 @@
    ],
    "height": 23,
    "style": "glass",
-   "color": "#3b4e63"
+   "color": "#625169",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "bloque-canal-h",
@@ -10650,10 +12328,15 @@
    ],
    "height": 23,
    "style": "block",
-   "color": "#3b4e63",
+   "color": "#585570",
    "sign": "PCV",
    "name": "Comisaría de Ferro",
-   "signColor": "#60a5fa"
+   "signColor": "#60a5fa",
+   "urban": {
+    "model": "tridente",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "nave-sur",
@@ -10665,9 +12348,14 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#4a4640",
+   "color": "#605b53",
    "sign": "AUTOS",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "clinica-sato",
@@ -10680,9 +12368,14 @@
    ],
    "height": 6,
    "style": "clinic",
-   "color": "#2f5d62",
+   "color": "#715967",
    "sign": "CLÍNICA SATO",
-   "signColor": "#5affc8"
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "bloque-sur",
@@ -10694,7 +12387,12 @@
    ],
    "height": 16,
    "style": "mega",
-   "color": "#4a3f50"
+   "color": "#585570",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "bloque-sur-b",
@@ -10706,10 +12404,15 @@
    ],
    "height": 16,
    "style": "shop",
-   "color": "#4a3f50",
+   "color": "#625169",
    "sign": "FARMACIA ✚",
    "name": "Farmacia del Canal",
-   "signColor": "#5affc8"
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "taller-sur",
@@ -10721,8 +12424,13 @@
    ],
    "height": 5,
    "style": "shop",
-   "color": "#574a3a",
-   "signColor": "#ff8a3d"
+   "color": "#615d72",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "bloque-sureste",
@@ -10734,7 +12442,12 @@
    ],
    "height": 20,
    "style": "glass",
-   "color": "#3a4a5a"
+   "color": "#625169",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "bloque-sureste-h",
@@ -10746,7 +12459,12 @@
    ],
    "height": 17,
    "style": "glass",
-   "color": "#3a4a5a"
+   "color": "#585570",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "bloque-sureste-h-l1",
@@ -10758,7 +12476,12 @@
    ],
    "height": 22,
    "style": "glass",
-   "color": "#3a4a5a"
+   "color": "#615d72",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "bloque-sureste-h-l2",
@@ -10770,7 +12493,12 @@
    ],
    "height": 17,
    "style": "glass",
-   "color": "#3a4a5a"
+   "color": "#625169",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "club-voltio",
@@ -10783,9 +12511,14 @@
    ],
    "height": 14,
    "style": "club",
-   "color": "#3a2f55",
+   "color": "#735162",
    "sign": "VOLTIO",
-   "signColor": "#b46cff"
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "torre-okami",
@@ -10798,9 +12531,14 @@
    ],
    "height": 43,
    "style": "spire",
-   "color": "#2c3a4f",
+   "color": "#735162",
    "sign": "OKAMI",
-   "signColor": "#ff5a5a"
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "torre-okami-b",
@@ -10810,10 +12548,15 @@
     8,
     5
    ],
-   "height": 43,
+   "height": 38,
    "style": "spire",
-   "color": "#2c3a4f",
-   "signColor": "#ff5a5a"
+   "color": "#735162",
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "oblicua",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "torre-okami-b-h",
@@ -10823,10 +12566,15 @@
     8,
     6
    ],
-   "height": 43,
+   "height": 38,
    "style": "spire",
-   "color": "#2c3a4f",
-   "signColor": "#ff5a5a"
+   "color": "#526672",
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "terraza",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "kanal-ne",
@@ -10838,7 +12586,12 @@
    ],
    "height": 15,
    "style": "glass",
-   "color": "#444a5a"
+   "color": "#625169",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "karaoke",
@@ -10850,9 +12603,14 @@
    ],
    "height": 13,
    "style": "club",
-   "color": "#45385a",
+   "color": "#615d72",
    "sign": "KARAOKE",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "karaoke-h",
@@ -10864,8 +12622,13 @@
    ],
    "height": 13,
    "style": "club",
-   "color": "#45385a",
-   "signColor": "#ff8a3d"
+   "color": "#735162",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "kanal-m2",
@@ -10877,7 +12640,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#3d4250"
+   "color": "#615d72",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "kanal-m2-h",
@@ -10889,7 +12657,12 @@
    ],
    "height": 18,
    "style": "mega",
-   "color": "#3d4250"
+   "color": "#526672",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "ramen-kanal",
@@ -10901,10 +12674,15 @@
    ],
    "height": 6,
    "style": "shop",
-   "color": "#3d5250",
+   "color": "#735162",
    "sign": "RAMEN",
    "signColor": "#ffd23f",
-   "name": "Ramen Kanal"
+   "name": "Ramen Kanal",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "bloque-kanal",
@@ -10916,8 +12694,13 @@
    ],
    "height": 30,
    "style": "arcology",
-   "color": "#4c4060",
-   "signColor": "#5affc8"
+   "color": "#735162",
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "bisel",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "kanal-e",
@@ -10929,7 +12712,12 @@
    ],
    "height": 20,
    "style": "glass",
-   "color": "#3a4152"
+   "color": "#526672",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "nave-kanal",
@@ -10941,7 +12729,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#4b463d"
+   "color": "#795e4d",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "nave-kanal-l1",
@@ -10953,7 +12746,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#4b463d"
+   "color": "#70665b",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "nave-kanal-l2",
@@ -10965,7 +12763,12 @@
    ],
    "height": 11,
    "style": "industrial",
-   "color": "#4b463d"
+   "color": "#666b73",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "nave-kanal-h",
@@ -10977,7 +12780,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#4b463d"
+   "color": "#6a706c",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "nave-kanal-h-l1",
@@ -10989,7 +12797,12 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#4b463d"
+   "color": "#6a706c",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "nave-kanal-h-l2",
@@ -11001,7 +12814,12 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#4b463d"
+   "color": "#7c6053",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "pachinko",
@@ -11013,10 +12831,15 @@
    ],
    "height": 15,
    "style": "club",
-   "color": "#39465a",
+   "color": "#585570",
    "sign": "PACHINKO",
    "signColor": "#43f3ff",
-   "name": "Pachinko Estrella"
+   "name": "Pachinko Estrella",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "kanal-se",
@@ -11028,8 +12851,13 @@
    ],
    "height": 19,
    "style": "clinic",
-   "color": "#3f4655",
-   "signColor": "#ff5a5a"
+   "color": "#735162",
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "aurora-hq",
@@ -11040,11 +12868,16 @@
     7,
     5
    ],
-   "height": 33,
+   "height": 71,
    "style": "glass",
-   "color": "#2a3a52",
+   "color": "#686780",
    "sign": "AURORA",
-   "signColor": "#7dff7a"
+   "signColor": "#7dff7a",
+   "urban": {
+    "model": "quiebro",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "aurora-hq-h",
@@ -11054,10 +12887,15 @@
     7,
     5
    ],
-   "height": 33,
+   "height": 17,
    "style": "glass",
-   "color": "#2a3a52",
-   "signColor": "#7dff7a"
+   "color": "#575f72",
+   "signColor": "#7dff7a",
+   "urban": {
+    "model": "tridente",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "aurora-hq-b",
@@ -11067,10 +12905,15 @@
     13,
     5
    ],
-   "height": 33,
+   "height": 20,
    "style": "glass",
-   "color": "#2a3a52",
-   "signColor": "#7dff7a"
+   "color": "#526386",
+   "signColor": "#7dff7a",
+   "urban": {
+    "model": "terraza",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "aurora-hq-b-h",
@@ -11080,10 +12923,15 @@
     13,
     5
    ],
-   "height": 33,
+   "height": 24,
    "style": "glass",
-   "color": "#2a3a52",
-   "signColor": "#7dff7a"
+   "color": "#686780",
+   "signColor": "#7dff7a",
+   "urban": {
+    "model": "curva",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "okami-central",
@@ -11094,11 +12942,16 @@
     8,
     5
    ],
-   "height": 55,
+   "height": 82,
    "style": "spire",
-   "color": "#3a2a3e",
+   "color": "#31506d",
    "sign": "OKAMI",
-   "signColor": "#ff3fa4"
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "terraza",
+    "facade": "corporativa",
+    "turn": 3
+   }
   },
   {
    "id": "okami-central-h",
@@ -11108,10 +12961,15 @@
     8,
     5
    ],
-   "height": 55,
+   "height": 47,
    "style": "spire",
-   "color": "#3a2a3e",
-   "signColor": "#ff3fa4"
+   "color": "#686780",
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "remate",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "okami-central-b",
@@ -11121,10 +12979,15 @@
     16,
     5
    ],
-   "height": 55,
+   "height": 43,
    "style": "spire",
-   "color": "#3a2a3e",
-   "signColor": "#ff3fa4"
+   "color": "#31506d",
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "bisel",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "okami-central-b-h",
@@ -11134,10 +12997,15 @@
     16,
     5
    ],
-   "height": 55,
+   "height": 28,
    "style": "spire",
-   "color": "#3a2a3e",
-   "signColor": "#ff3fa4"
+   "color": "#506a7c",
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "quiebro",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "halcon-hq",
@@ -11148,11 +13016,16 @@
     8,
     5
    ],
-   "height": 48,
+   "height": 94,
    "style": "arcology",
-   "color": "#2c3440",
+   "color": "#31506d",
    "sign": "HALCÓN DYNAMICS",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "bisel",
+    "facade": "corporativa",
+    "turn": 1
+   }
   },
   {
    "id": "halcon-hq-h",
@@ -11162,10 +13035,15 @@
     8,
     5
    ],
-   "height": 48,
+   "height": 36,
    "style": "arcology",
-   "color": "#2c3440",
-   "signColor": "#43f3ff"
+   "color": "#506a7c",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "remate",
+    "facade": "corporativa",
+    "turn": 3
+   }
   },
   {
    "id": "halcon-hq-b",
@@ -11175,10 +13053,15 @@
     14,
     5
    ],
-   "height": 48,
+   "height": 31,
    "style": "arcology",
-   "color": "#2c3440",
-   "signColor": "#43f3ff"
+   "color": "#465474",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "pantalla",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "halcon-hq-b-h",
@@ -11188,10 +13071,15 @@
     14,
     5
    ],
-   "height": 48,
+   "height": 29,
    "style": "arcology",
-   "color": "#2c3440",
-   "signColor": "#43f3ff"
+   "color": "#465474",
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "quiebro",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "teselia-spire",
@@ -11202,11 +13090,16 @@
     8,
     5
    ],
-   "height": 45,
+   "height": 109,
    "style": "glass",
-   "color": "#26304a",
+   "color": "#686780",
    "sign": "TESELIA",
-   "signColor": "#b46cff"
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "aguja",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "teselia-spire-h",
@@ -11216,10 +13109,15 @@
     8,
     5
    ],
-   "height": 45,
+   "height": 34,
    "style": "glass",
-   "color": "#26304a",
-   "signColor": "#b46cff"
+   "color": "#465474",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "remate",
+    "facade": "corporativa",
+    "turn": 1
+   }
   },
   {
    "id": "teselia-spire-b",
@@ -11229,10 +13127,15 @@
     14,
     5
    ],
-   "height": 45,
+   "height": 36,
    "style": "glass",
-   "color": "#26304a",
-   "signColor": "#b46cff"
+   "color": "#575f72",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "tridente",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "teselia-spire-b-h",
@@ -11242,10 +13145,15 @@
     14,
     5
    ],
-   "height": 45,
+   "height": 38,
    "style": "glass",
-   "color": "#26304a",
-   "signColor": "#b46cff"
+   "color": "#526386",
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "oblicua",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "hotel-nido",
@@ -11256,11 +13164,16 @@
     20,
     16
    ],
-   "height": 25,
+   "height": 27,
    "style": "mega",
-   "color": "#3e3550",
+   "color": "#526386",
    "sign": "BANCO CENTRAL",
-   "signColor": "#ffd23f"
+   "signColor": "#ffd23f",
+   "urban": {
+    "model": "pantalla",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "okami-super",
@@ -11273,9 +13186,14 @@
    ],
    "height": 10,
    "style": "shop",
-   "color": "#3a2e44",
+   "color": "#585570",
    "sign": "OKAMI MARKET",
-   "signColor": "#ff3fa4"
+   "signColor": "#ff3fa4",
+   "urban": {
+    "model": "balcones",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "clinica-okami",
@@ -11288,9 +13206,14 @@
    ],
    "height": 18,
    "style": "clinic",
-   "color": "#26404a",
+   "color": "#625169",
    "sign": "OKAMI MED",
-   "signColor": "#5affc8"
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "armeria-halcon",
@@ -11303,9 +13226,14 @@
    ],
    "height": 11,
    "style": "shop",
-   "color": "#2e3a44",
+   "color": "#526672",
    "sign": "ARMERÍA",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "oficinas-halcon",
@@ -11316,11 +13244,16 @@
     10,
     16
    ],
-   "height": 28,
+   "height": 43,
    "style": "glass",
-   "color": "#2c3444",
+   "color": "#31506d",
    "sign": "HALCÓN",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "remate",
+    "facade": "corporativa",
+    "turn": 3
+   }
   },
   {
    "id": "bloque-ejecutivo",
@@ -11331,11 +13264,16 @@
     22,
     17
    ],
-   "height": 30,
+   "height": 44,
    "style": "arcology",
-   "color": "#3a3a58",
+   "color": "#575f72",
    "sign": "BLINDADOS",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "prisma",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "torre-datos",
@@ -11346,11 +13284,16 @@
     26,
     17
    ],
-   "height": 40,
+   "height": 65,
    "style": "glass",
-   "color": "#262c48",
+   "color": "#465474",
    "sign": "TESELIA DATA",
-   "signColor": "#b46cff"
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "curva",
+    "facade": "corporativa",
+    "turn": 1
+   }
   },
   {
    "id": "comisaria",
@@ -11363,9 +13306,14 @@
    ],
    "height": 14,
    "style": "block",
-   "color": "#2c3a52",
+   "color": "#526672",
    "sign": "PCV",
-   "signColor": "#60a5fa"
+   "signColor": "#60a5fa",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "arcologia-kaiten",
@@ -11376,11 +13324,16 @@
     8,
     7
    ],
-   "height": 45,
+   "height": 64,
    "style": "arcology",
-   "color": "#40384e",
+   "color": "#31506d",
    "sign": "KAITEN",
-   "signColor": "#ff8a3d"
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "tridente",
+    "facade": "corporativa",
+    "turn": 3
+   }
   },
   {
    "id": "arcologia-kaiten-h",
@@ -11390,10 +13343,15 @@
     8,
     8
    ],
-   "height": 45,
+   "height": 36,
    "style": "arcology",
-   "color": "#40384e",
-   "signColor": "#ff8a3d"
+   "color": "#686780",
+   "signColor": "#ff8a3d",
+   "urban": {
+    "model": "quiebro",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "arcologia-kaiten-b",
@@ -11404,11 +13362,16 @@
     14,
     7
    ],
-   "height": 98,
+   "height": 95,
    "style": "spire",
-   "color": "#262c48",
+   "color": "#465474",
    "sign": "TESELIA",
-   "signColor": "#b46cff"
+   "signColor": "#b46cff",
+   "urban": {
+    "model": "pantalla",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "arcologia-kaiten-b-h",
@@ -11419,11 +13382,16 @@
     14,
     8
    ],
-   "height": 102,
+   "height": 105,
    "style": "spire",
-   "color": "#2c3444",
+   "color": "#465474",
    "sign": "HALCÓN DYNAMICS",
-   "signColor": "#43f3ff"
+   "signColor": "#43f3ff",
+   "urban": {
+    "model": "remate",
+    "facade": "corporativa",
+    "turn": 3
+   }
   },
   {
    "id": "laboratorios-okami",
@@ -11436,9 +13404,14 @@
    ],
    "height": 19,
    "style": "glass",
-   "color": "#2e3a46",
+   "color": "#615d72",
    "sign": "OKAMI LABS",
-   "signColor": "#5affc8"
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 3
+   }
   },
   {
    "id": "dr-vex",
@@ -11450,8 +13423,13 @@
    ],
    "height": 8,
    "style": "clinic",
-   "color": "#3a3040",
-   "signColor": "#ff5a5a"
+   "color": "#715967",
+   "signColor": "#ff5a5a",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "bloque-servicio",
@@ -11463,7 +13441,12 @@
    ],
    "height": 13,
    "style": "block",
-   "color": "#383848"
+   "color": "#735162",
+   "urban": {
+    "model": "pasaje",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "bloque-servicio-b",
@@ -11475,7 +13458,12 @@
    ],
    "height": 13,
    "style": "block",
-   "color": "#383848"
+   "color": "#735162",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 0
+   }
   },
   {
    "id": "bloque-servicio-b-h",
@@ -11487,7 +13475,12 @@
    ],
    "height": 13,
    "style": "block",
-   "color": "#383848"
+   "color": "#625169",
+   "urban": {
+    "model": "esquina",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "logistica-aurora",
@@ -11500,9 +13493,14 @@
    ],
    "height": 13,
    "style": "industrial",
-   "color": "#3a4038",
+   "color": "#526672",
    "sign": "AURORA LOG",
-   "signColor": "#7dff7a"
+   "signColor": "#7dff7a",
+   "urban": {
+    "model": "patio",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "torre-sur",
@@ -11512,9 +13510,14 @@
     8,
     5
    ],
-   "height": 35,
+   "height": 54,
    "style": "mega",
-   "color": "#3c3550"
+   "color": "#465474",
+   "urban": {
+    "model": "oblicua",
+    "facade": "corporativa",
+    "turn": 1
+   }
   },
   {
    "id": "torre-sur-b",
@@ -11524,9 +13527,14 @@
     14,
     5
    ],
-   "height": 35,
+   "height": 18,
    "style": "mega",
-   "color": "#3c3550"
+   "color": "#465474",
+   "urban": {
+    "model": "tridente",
+    "facade": "corporativa",
+    "turn": 2
+   }
   },
   {
    "id": "torre-sur-b-h",
@@ -11536,12 +13544,17 @@
     14,
     6
    ],
-   "height": 35,
+   "height": 22,
    "style": "shop",
-   "color": "#3c3550",
+   "color": "#31506d",
    "sign": "FARMACIA ✚",
    "name": "Farmacia Okami Cénit",
-   "signColor": "#5affc8"
+   "signColor": "#5affc8",
+   "urban": {
+    "model": "terraza",
+    "facade": "corporativa",
+    "turn": 0
+   }
   },
   {
    "id": "muelles-viejos-nave-0",
@@ -11551,9 +13564,14 @@
     23,
     11
    ],
-   "height": 8,
+   "height": 6,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#64534a",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "muelles-viejos-nave-1",
@@ -11565,7 +13583,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#7c6053",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "muelles-viejos-nave-1-z1",
@@ -11575,9 +13598,14 @@
     5,
     5
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#64534a",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "muelles-viejos-nave-1-z2",
@@ -11587,9 +13615,14 @@
     10,
     5
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "muelles-viejos-nave-1-z3",
@@ -11599,9 +13632,14 @@
     5,
     7
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#524e4c",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "muelles-viejos-nave-2",
@@ -11613,8 +13651,13 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#3a4040",
-   "name": "La Dársena"
+   "color": "#666b73",
+   "name": "La Dársena",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "muelles-viejos-nave-2-l1",
@@ -11626,7 +13669,12 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#666b73",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "muelles-viejos-nave-2-l2",
@@ -11638,7 +13686,12 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#795e4d",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "muelles-viejos-nave-3",
@@ -11648,9 +13701,14 @@
     10,
     13
    ],
-   "height": 6,
+   "height": 4,
    "style": "block",
-   "color": "#403a30"
+   "color": "#594a40",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "muelles-viejos-nave-3-l1",
@@ -11660,9 +13718,14 @@
     10,
     5
    ],
-   "height": 8,
+   "height": 6,
    "style": "block",
-   "color": "#403a30"
+   "color": "#524e4c",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "muelles-viejos-nave-3-l2",
@@ -11674,7 +13737,12 @@
    ],
    "height": 5,
    "style": "block",
-   "color": "#403a30"
+   "color": "#666b73",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "muelles-viejos-nave-4",
@@ -11684,9 +13752,14 @@
     20,
     15
    ],
-   "height": 10,
+   "height": 7,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#524e4c",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "muelles-viejos-nave-5",
@@ -11696,9 +13769,14 @@
     6,
     14
    ],
-   "height": 5,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#524e4c",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "muelles-viejos-nave-5-z1",
@@ -11708,9 +13786,14 @@
     5,
     6
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "muelles-viejos-nave-5-z2",
@@ -11720,9 +13803,14 @@
     10,
     6
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "muelles-viejos-nave-5-z3",
@@ -11732,9 +13820,14 @@
     5,
     8
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "muelles-viejos-nave-6",
@@ -11746,7 +13839,12 @@
    ],
    "height": 6,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#70665b",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "muelles-viejos-nave-6-z1",
@@ -11756,9 +13854,14 @@
     6,
     5
    ],
-   "height": 8,
+   "height": 6,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "muelles-viejos-nave-6-z2",
@@ -11768,9 +13871,14 @@
     12,
     5
    ],
-   "height": 9,
+   "height": 6,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#64534a",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "muelles-viejos-nave-6-z3",
@@ -11780,9 +13888,14 @@
     6,
     7
    ],
-   "height": 9,
+   "height": 6,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#64534a",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "muelles-viejos-nave-7",
@@ -11792,9 +13905,14 @@
     6,
     12
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#64534a",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "muelles-viejos-nave-7-z1",
@@ -11804,9 +13922,14 @@
     5,
     5
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#524e4c",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "muelles-viejos-nave-7-z2",
@@ -11818,7 +13941,12 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#70665b",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "muelles-viejos-nave-7-z3",
@@ -11828,9 +13956,14 @@
     5,
     7
    ],
-   "height": 9,
+   "height": 6,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#64534a",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "muelles-viejos-base",
@@ -11843,9 +13976,14 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#2a4a5a",
+   "color": "#666b73",
    "sign": "ALMACÉN 7",
-   "signColor": "#ff3040"
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "descampado-norte-nave-0",
@@ -11855,9 +13993,14 @@
     8,
     14
    ],
-   "height": 10,
+   "height": 7,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#64534a",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "descampado-norte-nave-0-l1",
@@ -11867,9 +14010,14 @@
     8,
     6
    ],
-   "height": 9,
+   "height": 6,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#706458",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "descampado-norte-nave-0-l2",
@@ -11881,7 +14029,12 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#7c6053",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-1",
@@ -11893,7 +14046,12 @@
    ],
    "height": 9,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#7c6053",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-1-z1",
@@ -11903,9 +14061,14 @@
     6,
     5
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-1-z2",
@@ -11915,9 +14078,14 @@
     12,
     4
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#524e4c",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-1-z3",
@@ -11929,7 +14097,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#70665b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-2",
@@ -11939,9 +14112,14 @@
     6,
     15
    ],
-   "height": 10,
+   "height": 7,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#706458",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "descampado-norte-nave-2-z1",
@@ -11951,9 +14129,14 @@
     6,
     7
    ],
-   "height": 15,
+   "height": 11,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#5e493e",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-2-z2",
@@ -11963,9 +14146,14 @@
     12,
     6
    ],
-   "height": 10,
+   "height": 7,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#524e4c",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-2-z3",
@@ -11975,9 +14163,14 @@
     6,
     9
    ],
-   "height": 12,
+   "height": 9,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#594a40",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-3",
@@ -11987,9 +14180,14 @@
     21,
     10
    ],
-   "height": 8,
+   "height": 6,
    "style": "block",
-   "color": "#403a30"
+   "color": "#594a40",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-4",
@@ -12001,7 +14199,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#605b53",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-4-l1",
@@ -12013,7 +14216,12 @@
    ],
    "height": 8,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#666b73",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-4-l2",
@@ -12023,9 +14231,14 @@
     13,
     6
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#695544",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-5",
@@ -12035,9 +14248,14 @@
     5,
     11
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#524e4c",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "descampado-norte-nave-5-z1",
@@ -12047,9 +14265,14 @@
     4,
     5
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-5-z2",
@@ -12059,9 +14282,14 @@
     9,
     4
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#5e493e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-5-z3",
@@ -12071,9 +14299,14 @@
     5,
     7
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#64534a",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "descampado-norte-nave-6",
@@ -12083,9 +14316,14 @@
     7,
     12
    ],
-   "height": 13,
+   "height": 9,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#524e4c",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "descampado-norte-nave-6-z1",
@@ -12095,9 +14333,14 @@
     6,
     5
    ],
-   "height": 16,
+   "height": 12,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#695544",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-6-z2",
@@ -12107,9 +14350,14 @@
     13,
     5
    ],
-   "height": 12,
+   "height": 9,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-nave-6-z3",
@@ -12119,9 +14367,14 @@
     7,
     7
    ],
-   "height": 11,
+   "height": 8,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#64534a",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "descampado-norte-nave-7",
@@ -12131,9 +14384,14 @@
     6,
     14
    ],
-   "height": 9,
+   "height": 6,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#5e493e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "descampado-norte-nave-7-z1",
@@ -12143,9 +14401,14 @@
     5,
     6
    ],
-   "height": 9,
+   "height": 6,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#5e493e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "descampado-norte-nave-7-z2",
@@ -12155,9 +14418,14 @@
     10,
     6
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#64534a",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "descampado-norte-nave-7-z3",
@@ -12167,9 +14435,14 @@
     5,
     8
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#695544",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "descampado-norte-base",
@@ -12182,7 +14455,12 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#5a4a3a"
+   "color": "#6a706c",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "poligono-nave-0",
@@ -12194,10 +14472,15 @@
    ],
    "height": 6,
    "style": "block",
-   "color": "#3a3a3a",
+   "color": "#7c6053",
    "sign": "PENAL DE HIERRO",
    "signColor": "#c8ccd8",
-   "name": "La Trastienda Carmesí"
+   "name": "La Trastienda Carmesí",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-1",
@@ -12209,7 +14492,12 @@
    ],
    "height": 5,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#6a706c",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "poligono-nave-1-z1",
@@ -12219,9 +14507,14 @@
     6,
     7
    ],
-   "height": 5,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-1-z2",
@@ -12231,9 +14524,14 @@
     12,
     6
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#706458",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-1-z3",
@@ -12245,7 +14543,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#7c6053",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "poligono-nave-2",
@@ -12255,9 +14558,14 @@
     17,
     12
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#5e493e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "poligono-nave-3",
@@ -12267,9 +14575,14 @@
     7,
     14
    ],
-   "height": 9,
+   "height": 6,
    "style": "block",
-   "color": "#403a30"
+   "color": "#524e4c",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "poligono-nave-3-z1",
@@ -12279,9 +14592,14 @@
     6,
     6
    ],
-   "height": 11,
+   "height": 8,
    "style": "block",
-   "color": "#403a30"
+   "color": "#706458",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "poligono-nave-3-z2",
@@ -12293,7 +14611,12 @@
    ],
    "height": 11,
    "style": "block",
-   "color": "#403a30"
+   "color": "#70665b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-3-z3",
@@ -12303,9 +14626,14 @@
     6,
     8
    ],
-   "height": 13,
+   "height": 9,
    "style": "block",
-   "color": "#403a30"
+   "color": "#524e4c",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "poligono-nave-4",
@@ -12315,9 +14643,14 @@
     7,
     14
    ],
-   "height": 9,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#594a40",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "poligono-nave-4-z1",
@@ -12327,9 +14660,14 @@
     7,
     6
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#5e493e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "poligono-nave-4-z2",
@@ -12341,7 +14679,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#6a706c",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "poligono-nave-4-z3",
@@ -12351,9 +14694,14 @@
     7,
     8
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-5",
@@ -12363,9 +14711,14 @@
     5,
     11
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#706458",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "poligono-nave-5-z1",
@@ -12375,9 +14728,14 @@
     5,
     5
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-5-z2",
@@ -12389,7 +14747,12 @@
    ],
    "height": 6,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#7c6053",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-5-z3",
@@ -12399,9 +14762,14 @@
     5,
     7
    ],
-   "height": 5,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#64534a",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "poligono-nave-6",
@@ -12411,9 +14779,14 @@
     9,
     10
    ],
-   "height": 14,
+   "height": 12,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#666b73",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "poligono-nave-6-l1",
@@ -12423,9 +14796,14 @@
     9,
     4
    ],
-   "height": 12,
+   "height": 9,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#594a40",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-6-l2",
@@ -12435,9 +14813,14 @@
     11,
     4
    ],
-   "height": 12,
+   "height": 9,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#524e4c",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "poligono-nave-7",
@@ -12447,9 +14830,14 @@
     7,
     11
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-7-z1",
@@ -12459,9 +14847,14 @@
     7,
     5
    ],
-   "height": 10,
+   "height": 7,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#64534a",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "poligono-nave-7-z2",
@@ -12471,9 +14864,14 @@
     14,
     4
    ],
-   "height": 11,
+   "height": 8,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#706458",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-nave-7-z3",
@@ -12483,9 +14881,14 @@
     7,
     7
    ],
-   "height": 10,
+   "height": 7,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "poligono-base",
@@ -12498,9 +14901,14 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#5a1a2a",
+   "color": "#666b73",
    "sign": "NAVE 14",
-   "signColor": "#ff3040"
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "vertedero-nave-0",
@@ -12510,9 +14918,14 @@
     7,
     15
    ],
-   "height": 6,
+   "height": 4,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#594a40",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "vertedero-nave-0-l1",
@@ -12522,9 +14935,14 @@
     7,
     6
    ],
-   "height": 6,
+   "height": 4,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#524e4c",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "vertedero-nave-0-l2",
@@ -12534,9 +14952,14 @@
     9,
     7
    ],
-   "height": 7,
+   "height": 5,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#594a40",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-nave-1",
@@ -12548,8 +14971,13 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#4a3a34",
-   "name": "El Desguace Hundido"
+   "color": "#795e4d",
+   "name": "El Desguace Hundido",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "vertedero-nave-2",
@@ -12559,9 +14987,14 @@
     6,
     14
    ],
-   "height": 16,
+   "height": 12,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#524e4c",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "vertedero-nave-2-z1",
@@ -12571,9 +15004,14 @@
     5,
     6
    ],
-   "height": 13,
+   "height": 9,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#5e493e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-nave-2-z2",
@@ -12583,9 +15021,14 @@
     10,
     6
    ],
-   "height": 16,
+   "height": 12,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#70665b",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "vertedero-nave-2-z3",
@@ -12595,9 +15038,14 @@
     5,
     8
    ],
-   "height": 9,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#524e4c",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "vertedero-nave-3",
@@ -12609,7 +15057,12 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#403a30"
+   "color": "#70665b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-nave-3-z1",
@@ -12619,9 +15072,14 @@
     7,
     4
    ],
-   "height": 8,
+   "height": 6,
    "style": "block",
-   "color": "#403a30"
+   "color": "#594a40",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "vertedero-nave-3-z2",
@@ -12633,7 +15091,12 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#403a30"
+   "color": "#795e4d",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-nave-3-z3",
@@ -12643,9 +15106,14 @@
     7,
     6
    ],
-   "height": 11,
+   "height": 8,
    "style": "block",
-   "color": "#403a30"
+   "color": "#5e493e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-nave-4",
@@ -12655,9 +15123,14 @@
     10,
     15
    ],
-   "height": 9,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#64534a",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "vertedero-nave-4-l1",
@@ -12667,9 +15140,14 @@
     10,
     6
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#64534a",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "vertedero-nave-4-l2",
@@ -12679,9 +15157,14 @@
     12,
     7
    ],
-   "height": 11,
+   "height": 8,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#5e493e",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "vertedero-nave-5",
@@ -12691,9 +15174,14 @@
     6,
     15
    ],
-   "height": 12,
+   "height": 9,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "vertedero-nave-5-z1",
@@ -12703,9 +15191,14 @@
     5,
     7
    ],
-   "height": 12,
+   "height": 9,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-nave-5-z2",
@@ -12717,7 +15210,12 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#6a706c",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "vertedero-nave-5-z3",
@@ -12727,9 +15225,14 @@
     5,
     9
    ],
-   "height": 12,
+   "height": 9,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "vertedero-nave-6",
@@ -12739,9 +15242,14 @@
     6,
     12
    ],
-   "height": 4,
+   "height": 3,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#706458",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "vertedero-nave-6-z1",
@@ -12751,9 +15259,14 @@
     5,
     5
    ],
-   "height": 5,
+   "height": 4,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-nave-6-z2",
@@ -12763,9 +15276,14 @@
     11,
     5
    ],
-   "height": 5,
+   "height": 4,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#64534a",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "vertedero-nave-6-z3",
@@ -12777,7 +15295,12 @@
    ],
    "height": 6,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#70665b",
+   "urban": {
+    "model": "silos",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "vertedero-nave-7",
@@ -12787,9 +15310,14 @@
     17,
     11
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#594a40",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "vertedero-base",
@@ -12802,9 +15330,14 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#5a4a2a",
+   "color": "#70665b",
    "sign": "CHATARRA",
-   "signColor": "#ff3040"
+   "signColor": "#ff3040",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-0",
@@ -12814,9 +15347,14 @@
     22,
     15
    ],
-   "height": 8,
+   "height": 6,
    "style": "block",
-   "color": "#3a3a3a"
+   "color": "#5e493e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-1",
@@ -12826,9 +15364,14 @@
     9,
     10
    ],
-   "height": 11,
+   "height": 8,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#5e493e",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-1-l1",
@@ -12838,9 +15381,14 @@
     9,
     4
    ],
-   "height": 10,
+   "height": 7,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-1-l2",
@@ -12850,9 +15398,14 @@
     11,
     4
    ],
-   "height": 13,
+   "height": 12,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#666b73",
+   "urban": {
+    "model": "hangar",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-2",
@@ -12864,8 +15417,13 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#3a4040",
-   "name": "El Vagón Taller"
+   "color": "#7c6053",
+   "name": "El Vagón Taller",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-2-l1",
@@ -12875,9 +15433,14 @@
     11,
     4
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#594a40",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-2-l2",
@@ -12889,7 +15452,12 @@
    ],
    "height": 7,
    "style": "industrial",
-   "color": "#3a4040"
+   "color": "#605b53",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-3",
@@ -12899,9 +15467,14 @@
     10,
     15
    ],
-   "height": 10,
+   "height": 7,
    "style": "block",
-   "color": "#403a30"
+   "color": "#64534a",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 3
+   }
   },
   {
    "id": "cementerio-trenes-nave-3-l1",
@@ -12911,9 +15484,14 @@
     10,
     6
    ],
-   "height": 14,
+   "height": 12,
    "style": "block",
-   "color": "#403a30"
+   "color": "#605b53",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-3-l2",
@@ -12923,9 +15501,14 @@
     12,
     7
    ],
-   "height": 9,
+   "height": 6,
    "style": "block",
-   "color": "#403a30"
+   "color": "#5e493e",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-4",
@@ -12935,9 +15518,14 @@
     6,
     14
    ],
-   "height": 10,
+   "height": 7,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#706458",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "cementerio-trenes-nave-4-z1",
@@ -12947,9 +15535,14 @@
     5,
     6
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#695544",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-4-z2",
@@ -12959,9 +15552,14 @@
     10,
     6
    ],
-   "height": 8,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#524e4c",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "cementerio-trenes-nave-4-z3",
@@ -12971,9 +15569,14 @@
     5,
     8
    ],
-   "height": 9,
+   "height": 6,
    "style": "industrial",
-   "color": "#3a3a3a"
+   "color": "#5e493e",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-5",
@@ -12983,9 +15586,14 @@
     8,
     10
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#695544",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-5-l1",
@@ -12995,9 +15603,14 @@
     9,
     4
    ],
-   "height": 7,
+   "height": 5,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-5-l2",
@@ -13007,9 +15620,14 @@
     11,
     4
    ],
-   "height": 6,
+   "height": 4,
    "style": "industrial",
-   "color": "#4a3a34"
+   "color": "#594a40",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-6",
@@ -13019,9 +15637,14 @@
     7,
     13
    ],
-   "height": 9,
+   "height": 6,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#524e4c",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 1
+   }
   },
   {
    "id": "cementerio-trenes-nave-6-z1",
@@ -13033,7 +15656,12 @@
    ],
    "height": 12,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#70665b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-6-z2",
@@ -13045,7 +15673,12 @@
    ],
    "height": 9,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#6a706c",
+   "urban": {
+    "model": "laminador",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-6-z3",
@@ -13055,9 +15688,14 @@
     6,
     8
    ],
-   "height": 10,
+   "height": 7,
    "style": "block",
-   "color": "#3a4040"
+   "color": "#695544",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-7",
@@ -13067,9 +15705,14 @@
     10,
     11
    ],
-   "height": 15,
+   "height": 12,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#605b53",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-nave-7-l1",
@@ -13079,9 +15722,14 @@
     10,
     4
    ],
-   "height": 15,
+   "height": 11,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#695544",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 2
+   }
   },
   {
    "id": "cementerio-trenes-nave-7-l2",
@@ -13091,9 +15739,14 @@
     12,
     5
    ],
-   "height": 15,
+   "height": 11,
    "style": "industrial",
-   "color": "#403a30"
+   "color": "#594a40",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 0
+   }
   },
   {
    "id": "cementerio-trenes-base",
@@ -13106,7 +15759,12 @@
    ],
    "height": 10,
    "style": "industrial",
-   "color": "#4a1a1a"
+   "color": "#70665b",
+   "urban": {
+    "model": "darsena",
+    "facade": "industrial",
+    "turn": 0
+   }
   },
   {
    "id": "casino-ultima-ficha",
@@ -13119,9 +15777,14 @@
    ],
    "height": 4,
    "style": "shop",
-   "color": "#71dba4",
+   "color": "#615d72",
    "sign": "Última Ficha",
-   "signColor": "#71dba4"
+   "signColor": "#71dba4",
+   "urban": {
+    "model": "galeria",
+    "facade": "comercial",
+    "turn": 1
+   }
   },
   {
    "id": "casino-bobina",
@@ -13134,9 +15797,14 @@
    ],
    "height": 4,
    "style": "industrial",
-   "color": "#ffa46a",
+   "color": "#7c6053",
    "sign": "La Bobina",
-   "signColor": "#ffa46a"
+   "signColor": "#ffa46a",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 2
+   }
   },
   {
    "id": "casino-cero-rojo",
@@ -13149,9 +15817,14 @@
    ],
    "height": 5,
    "style": "club",
-   "color": "#f47a89",
+   "color": "#735162",
    "sign": "Cero Rojo",
-   "signColor": "#f47a89"
+   "signColor": "#f47a89",
+   "urban": {
+    "model": "medianera",
+    "facade": "comercial",
+    "turn": 2
+   }
   },
   {
    "id": "casino-hipodromo",
@@ -13164,9 +15837,14 @@
    ],
    "height": 8,
    "style": "club",
-   "color": "#79dff0",
+   "color": "#795e4d",
    "sign": "Hipódromo Prisma",
-   "signColor": "#79dff0"
+   "signColor": "#79dff0",
+   "urban": {
+    "model": "almacen",
+    "facade": "industrial",
+    "turn": 3
+   }
   },
   {
    "id": "casino-meridiano",
@@ -13177,11 +15855,16 @@
     25,
     15
    ],
-   "height": 15,
+   "height": 12,
    "style": "arcology",
-   "color": "#f4ca81",
+   "color": "#795e4d",
    "sign": "Gran Meridiano",
-   "signColor": "#f4ca81"
+   "signColor": "#f4ca81",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 1
+   }
   },
   {
    "id": "penal-salinas",
@@ -13194,9 +15877,65 @@
    ],
    "height": 5,
    "style": "industrial",
-   "color": "#384852",
+   "color": "#7c6053",
    "sign": "PENAL DE LAS SALINAS",
-   "signColor": "#e4c18c"
+   "signColor": "#e4c18c",
+   "urban": {
+    "model": "deposito",
+    "facade": "industrial",
+    "turn": 2
+   }
+  },
+  {
+   "id": "yermo-estacion-seca",
+   "rect": [
+    523,
+    152,
+    8,
+    6
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#706458",
+   "urban": {
+    "model": "taller-vencido",
+    "facade": "ruina",
+    "turn": 3
+   }
+  },
+  {
+   "id": "yermo-subestacion-abandonada",
+   "rect": [
+    548,
+    187,
+    9,
+    6
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#524e4c",
+   "urban": {
+    "model": "nave-hundida",
+    "facade": "ruina",
+    "turn": 1
+   }
+  },
+  {
+   "id": "yermo-desguace-salitre",
+   "rect": [
+    578,
+    191,
+    8,
+    6
+   ],
+   "height": 6,
+   "style": "industrial",
+   "color": "#706458",
+   "urban": {
+    "model": "terminal-rota",
+    "facade": "ruina",
+    "turn": 3
+   }
   }
  ],
  "props": [
@@ -15783,7 +18522,7 @@
    "type": "lamp",
    "at": [
     158,
-    270
+    271
    ],
    "color": "#ffb060"
   },
@@ -16154,7 +18893,7 @@
    "type": "lamp",
    "at": [
     299,
-    270
+    271
    ],
    "color": "#ffb060"
   },
@@ -28274,14 +31013,14 @@
    "type": "bench",
    "at": [
     280,
-    160
+    159
    ]
   },
   {
    "type": "bench",
    "at": [
     287,
-    160
+    159
    ]
   },
   {
@@ -29780,7 +32519,7 @@
    "type": "lamp",
    "at": [
     270,
-    161
+    163
    ],
    "color": "#c8d8ff"
   },
@@ -32528,7 +35267,7 @@
    "type": "barrel",
    "at": [
     160,
-    270
+    271
    ]
   },
   {
@@ -32723,7 +35462,7 @@
    "type": "wreck",
    "at": [
     297,
-    270
+    271
    ]
   },
   {
@@ -36351,7 +39090,7 @@
   {
    "type": "jersey",
    "at": [
-    519,
+    521,
     167
    ]
   },
@@ -37239,8 +39978,8 @@
   {
    "type": "planter",
    "at": [
-    296,
-    166
+    295,
+    167
    ]
   },
   {
@@ -37751,7 +40490,7 @@
    "type": "planter",
    "at": [
     272,
-    161
+    163
    ]
   },
   {
@@ -38645,7 +41384,7 @@
    "type": "jersey",
    "at": [
     205,
-    269
+    271
    ],
    "color": "#ff6a20",
    "text": "fuego"
@@ -40427,6 +43166,1131 @@
     312
    ],
    "blocking": true
+  },
+  {
+   "type": "palm",
+   "at": [
+    192,
+    13
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    205,
+    22
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    193,
+    23
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    204,
+    23
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    192,
+    22
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    208,
+    13
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    219,
+    22
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    209,
+    23
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    218,
+    23
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    208,
+    22
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    192,
+    68
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    205,
+    82
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    193,
+    83
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    204,
+    83
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    192,
+    79
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    208,
+    68
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    219,
+    82
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    209,
+    83
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    218,
+    83
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    208,
+    79
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    271,
+    68
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    282,
+    82
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    272,
+    83
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    281,
+    83
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    271,
+    79
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    159,
+    96
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    181,
+    105
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    160,
+    106
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    180,
+    106
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    176,
+    103
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    192,
+    96
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    205,
+    105
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    193,
+    106
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    204,
+    106
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    192,
+    105
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    208,
+    96
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    219,
+    105
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    209,
+    106
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    218,
+    106
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    208,
+    105
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    235,
+    96
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    259,
+    105
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    236,
+    106
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    258,
+    106
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    253,
+    103
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "palm",
+   "at": [
+    271,
+    96
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "palm",
+   "at": [
+    282,
+    105
+   ],
+   "blocking": false,
+   "color": "#5b9a6b"
+  },
+  {
+   "type": "planter",
+   "at": [
+    272,
+    106
+   ],
+   "blocking": false,
+   "color": "#63a875"
+  },
+  {
+   "type": "bench",
+   "at": [
+    281,
+    106
+   ],
+   "blocking": false,
+   "color": "#d9bc9a"
+  },
+  {
+   "type": "lamp",
+   "at": [
+    271,
+    105
+   ],
+   "blocking": false,
+   "color": "#ffdb9a"
+  },
+  {
+   "type": "trash",
+   "at": [
+    406,
+    130
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    437,
+    137
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    439,
+    136
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "trash",
+   "at": [
+    319,
+    165
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    343,
+    165
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    354,
+    155
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    386,
+    165
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    393,
+    164
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    396,
+    155
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    310,
+    197
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    327,
+    197
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    319,
+    197
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    386,
+    187
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    391,
+    197
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    427,
+    197
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    422,
+    192
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    432,
+    187
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    446,
+    186
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "trash",
+   "at": [
+    315,
+    213
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    323,
+    220
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    328,
+    213
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    422,
+    220
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    87,
+    143
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    94,
+    142
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    107,
+    212
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    49,
+    61
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    62,
+    61
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    17,
+    100
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    60,
+    99
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    64,
+    98
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    101,
+    90
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    135,
+    97
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    140,
+    96
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    130,
+    97
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    477,
+    55
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    514,
+    60
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    553,
+    64
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    547,
+    64
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    467,
+    99
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    477,
+    99
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    503,
+    96
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    558,
+    97
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    573,
+    99
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    578,
+    98
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "trash",
+   "at": [
+    277,
+    287
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    280,
+    278
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "trash",
+   "at": [
+    176,
+    315
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    203,
+    320
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    215,
+    320
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    280,
+    320
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    282,
+    313
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    295,
+    312
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "trash",
+   "at": [
+    317,
+    288
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    326,
+    279
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    396,
+    287
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    435,
+    283
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    441,
+    282
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    428,
+    283
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    317,
+    324
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    406,
+    321
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    393,
+    321
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "trash",
+   "at": [
+    499,
+    277
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    551,
+    277
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    561,
+    276
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "trash",
+   "at": [
+    569,
+    288
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    473,
+    323
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    477,
+    322
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "trash",
+   "at": [
+    503,
+    319
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    511,
+    319
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    557,
+    322
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    563,
+    321
+   ],
+   "blocking": false,
+   "color": "#67613e"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    551,
+    322
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    518,
+    287
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "wreck",
+   "at": [
+    579,
+    198
+   ],
+   "blocking": false,
+   "color": "#736658"
+  },
+  {
+   "type": "plant",
+   "at": [
+    586,
+    197
+   ],
+   "blocking": false,
+   "color": "#67613e"
   }
  ],
  "doors": [

@@ -33,7 +33,7 @@ function tag(g: THREE.BufferGeometry, color: THREE.Color, b: number, ph: number,
 
 export class NeonBuilder {
   private chunks = new Map<string, Piece>();
-  constructor(private chunk = 48) {}
+  constructor(private chunk = 48, private withGlow = true) {}
   private bucket(p: V) {
     const k = `${Math.floor(p.x / this.chunk)},${Math.floor(p.z / this.chunk)}`;
     return this.chunks.get(k) ?? this.chunks.set(k, { core: [], glow: [] }).get(k)!;
@@ -46,13 +46,15 @@ export class NeonBuilder {
     const curve = o.smooth
       ? new THREE.CatmullRomCurve3(pts, !!o.closed, 'centripetal')
       : new PolyCurve(o.closed ? [...pts, pts[0]] : pts);
-    const seg = Math.max(4, Math.min(160, Math.round(len * (o.smooth ? 7 : 1.2)) + (o.smooth ? 0 : pts.length * 2)));
+    const seg = pts.length === 2 && !o.closed ? 1 :
+      Math.max(4, Math.min(160, Math.round(len * (o.smooth ? 7 : 1.2)) + (o.smooth ? 0 : pts.length * 2)));
     const P = this.bucket(pts[0]);
     P.core.push(tag(new THREE.TubeGeometry(curve, seg, r, 6, !!o.closed && !!o.smooth), o.color, o.b, o.ph, 0));
-    P.glow.push(tag(new THREE.TubeGeometry(curve, seg, r * (o.halo ?? 4.2), 7, !!o.closed && !!o.smooth), o.color, o.b, o.ph, 1));
+    if (this.withGlow) P.glow.push(tag(new THREE.TubeGeometry(curve, seg, r * (o.halo ?? 4.2), 7, !!o.closed && !!o.smooth), o.color, o.b, o.ph, 1));
   }
   /** Luz del neón sobre la pared: un rectángulo en el plano de la fachada con degradado redondo. */
   spill(center: V, normal: V, w: number, h: number, o: { color: THREE.Color; b: number; ph: number }) {
+    if (!this.withGlow) return;
     const g = new THREE.PlaneGeometry(w, h);
     const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal.clone().normalize());
     g.applyQuaternion(q); g.translate(center.x + normal.x * 0.03, center.y, center.z + normal.z * 0.03);
