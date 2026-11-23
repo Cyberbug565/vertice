@@ -1,0 +1,496 @@
+{
+ "id": "penal-servicios",
+ "name": "Servicios y muelle de residuos",
+ "kind": "interior",
+ "width": 50,
+ "height": 37,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#83b89a",
+ "safePoint": [
+  25,
+  34
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-servicios",
+   "name": "Puesto de servicios",
+   "kind": "penal",
+   "at": [
+    25,
+    11
+   ]
+  },
+  {
+   "id": "penal-carga",
+   "name": "Contenedor de la ruta de las 05:00",
+   "kind": "penal",
+   "at": [
+    33,
+    21
+   ]
+  },
+  {
+   "id": "penal-tunel",
+   "name": "Obra clandestina",
+   "kind": "penal",
+   "at": [
+    15,
+    25
+   ]
+  },
+  {
+   "id": "penal-foso",
+   "name": "Los del Foso · trato de herramientas",
+   "kind": "penal",
+   "at": [
+    10,
+    24
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-servicios-patio-sur",
+   "name": "Patio Sur · Muro y huerto",
+   "at": [
+    25,
+    36
+   ],
+   "to": {
+    "zone": "penal-patio-sur",
+    "at": [
+     32,
+     30
+    ]
+   },
+   "sign": "Patio Sur · Muro y huerto",
+   "signColor": "#86ac6f"
+  },
+  {
+   "id": "penal-servicios-control",
+   "name": "Control de seguridad",
+   "at": [
+    40,
+    13
+   ],
+   "to": {
+    "zone": "penal-control",
+    "at": [
+     19,
+     23
+    ]
+   },
+   "sign": "Control de seguridad",
+   "signColor": "#d07883"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    40,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    40,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    46,
+    2
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    46,
+    32
+   ],
+   "color": "#83b89a",
+   "blocking": false
+  },
+  {
+   "type": "desk",
+   "at": [
+    25,
+    11
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    29
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    12,
+    29
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    29
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    24,
+    5
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    24,
+    29
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    30,
+    5
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    30,
+    29
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    36,
+    5
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    36,
+    29
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    42,
+    5
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    42,
+    29
+   ],
+   "color": "#83b89a",
+   "blocking": true
+  },
+  {
+   "type": "crate",
+   "at": [
+    6,
+    18
+   ],
+   "color": "#837859",
+   "blocking": true
+  },
+  {
+   "type": "crate",
+   "at": [
+    8,
+    18
+   ],
+   "color": "#837859",
+   "blocking": true
+  },
+  {
+   "type": "crate",
+   "at": [
+    6,
+    22
+   ],
+   "color": "#837859",
+   "blocking": true
+  },
+  {
+   "type": "barrel",
+   "at": [
+    29,
+    22
+   ],
+   "color": "#837859",
+   "blocking": true
+  },
+  {
+   "type": "barrel",
+   "at": [
+    37,
+    21
+   ],
+   "color": "#837859",
+   "blocking": true
+  },
+  {
+   "type": "barrel",
+   "at": [
+    36,
+    17
+   ],
+   "color": "#837859",
+   "blocking": true
+  },
+  {
+   "type": "barrel",
+   "at": [
+    44,
+    25
+   ],
+   "color": "#837859",
+   "blocking": true
+  },
+  {
+   "type": "dumpster",
+   "at": [
+    33,
+    21
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "crate",
+   "at": [
+    15,
+    25
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    10,
+    24
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  }
+ ],
+ "blocks": [
+  {
+   "type": "barrier",
+   "rect": [
+    27,
+    13,
+    10,
+    1
+   ],
+   "height": 0.7,
+   "color": "#687079"
+  },
+  {
+   "type": "barrier",
+   "rect": [
+    27,
+    28,
+    16,
+    1
+   ],
+   "height": 0.7,
+   "color": "#687079"
+  }
+ ],
+ "ground": [
+  {
+   "type": "gravel",
+   "rect": [
+    26,
+    11,
+    19,
+    16
+   ]
+  }
+ ]
+}

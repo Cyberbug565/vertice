@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import {expect,it} from 'vitest';
-import {facingToIdx} from '@vertice/shared';
+import {facingToIdx,prisonZone} from '@vertice/shared';
 import {BotClient} from '../../tools/loadtest/src/botclient.js';
 import {createApp} from '../src/app.js';
 import {shiftAt} from '../src/world/city-people.js';
@@ -17,9 +17,11 @@ it('sincroniza relevos, comercio, conversación y seguridad con dos clientes y a
   try{
     w.stop();
     const day=active(),defs=day.map(e=>e.npc!.def!);
-    expect(defs.length).toBe(67);
-    expect(new Set(defs.map(n=>n.id)).size).toBe(67);
-    expect(new Set(defs.map(n=>n.name)).size).toBe(67);
+    const city=defs.filter(n=>!prisonZone(n.schedule[0].zone));
+    expect(city).toHaveLength(67);
+    expect(new Set(city.map(n=>n.name)).size).toBe(67);
+    expect(defs.filter(n=>prisonZone(n.schedule[0].zone))).toHaveLength(49);
+    expect(new Set(defs.map(n=>n.id)).size).toBe(defs.length);
     for(const def of defs){
       expect(new Set(def.schedule.map(s=>s.state))).toEqual(new Set(['work','talk','rest']));
       for(let t=0;t<24;t+=.25)expect(shiftAt(def,t),def.name).toBeTruthy();

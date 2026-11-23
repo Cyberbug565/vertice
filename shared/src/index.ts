@@ -18,3 +18,5 @@ export * from './cyber-models.js';
 export * from './atlas.js';
 
 export * from './casino.js';
+
+export * from './prison.js';

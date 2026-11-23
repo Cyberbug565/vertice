@@ -1,0 +1,480 @@
+{
+ "id": "penal-patio-norte",
+ "name": "Patio Norte · Cancha y gradas",
+ "kind": "interior",
+ "width": 58,
+ "height": 43,
+ "danger": "disputed",
+ "base": "plaza",
+ "wallColor": "#73bd95",
+ "safePoint": [
+  29,
+  40
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-trato",
+   "name": "Puesto informal en las gradas",
+   "kind": "penal",
+   "at": [
+    19,
+    20
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-patio-norte-ingreso",
+   "name": "Ingresos y economato",
+   "at": [
+    29,
+    42
+   ],
+   "to": {
+    "zone": "penal-ingreso",
+    "at": [
+     6,
+     19
+    ]
+   },
+   "sign": "Ingresos y economato",
+   "signColor": "#cea777"
+  },
+  {
+   "id": "penal-patio-norte-patio-sur",
+   "name": "Cruce entre patios",
+   "at": [
+    50,
+    30
+   ],
+   "to": {
+    "zone": "penal-patio-sur",
+    "at": [
+     9,
+     27
+    ]
+   },
+   "sign": "Cruce entre patios",
+   "signColor": "#86ac6f"
+  },
+  {
+   "id": "penal-patio-norte-taller",
+   "name": "Taller de reparación",
+   "at": [
+    10,
+    31
+   ],
+   "to": {
+    "zone": "penal-taller",
+    "at": [
+     19,
+     27
+    ]
+   },
+   "sign": "Taller de reparación",
+   "signColor": "#deb774"
+  },
+  {
+   "id": "penal-patio-norte-lavanderia",
+   "name": "Lavandería industrial",
+   "at": [
+    40,
+    30
+   ],
+   "to": {
+    "zone": "penal-lavanderia",
+    "at": [
+     19,
+     29
+    ]
+   },
+   "sign": "Lavandería industrial",
+   "signColor": "#9aa8ce"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    40,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    40,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    46,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    46,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    52,
+    2
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    52,
+    38
+   ],
+   "color": "#73bd95",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    18,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    24,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    30,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    36,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    42,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    48,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    19,
+    20
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    9,
+    5
+   ],
+   "color": "#8dbeb2",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    49,
+    5
+   ],
+   "color": "#8dbeb2",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    9,
+    22
+   ],
+   "color": "#8dbeb2",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    46,
+    22
+   ],
+   "color": "#8dbeb2",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    47,
+    35
+   ],
+   "color": "#8dbeb2",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    27
+   ],
+   "color": "#657c85",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    20,
+    27
+   ],
+   "color": "#657c85",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    29,
+    27
+   ],
+   "color": "#657c85",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    37,
+    27
+   ],
+   "color": "#657c85",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    44,
+    27
+   ],
+   "color": "#657c85",
+   "blocking": true
+  }
+ ],
+ "blocks": [],
+ "ground": [
+  {
+   "type": "plaza",
+   "rect": [
+    12,
+    12,
+    33,
+    14
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    15,
+    14,
+    26,
+    10
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    14,
+    12,
+    1,
+    14
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    42,
+    12,
+    1,
+    14
+   ]
+  },
+  {
+   "type": "sidewalk",
+   "rect": [
+    27,
+    14,
+    1,
+    10
+   ]
+  }
+ ]
+}

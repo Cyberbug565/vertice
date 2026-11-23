@@ -1,0 +1,1051 @@
+{
+ "id": "penal-alta",
+ "name": "Módulo D · Alta Seguridad",
+ "kind": "interior",
+ "width": 48,
+ "height": 42,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#d37480",
+ "safePoint": [
+  23,
+  35
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-recuento",
+   "name": "Registro del módulo",
+   "kind": "penal",
+   "at": [
+    23,
+    10
+   ]
+  },
+  {
+   "id": "penal-trato",
+   "name": "Banco del pasillo · contacto",
+   "kind": "penal",
+   "at": [
+    24,
+    25
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-alta-ingreso",
+   "name": "Distribuidor de ingresos",
+   "at": [
+    23,
+    41
+   ],
+   "to": {
+    "zone": "penal-ingreso",
+    "at": [
+     44,
+     7
+    ]
+   },
+   "sign": "Distribuidor de ingresos",
+   "signColor": "#cea777"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    37
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    37
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    37
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    37
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    37
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    37
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    40,
+    2
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    40,
+    37
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    7,
+    7
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    7
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    8
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    17,
+    7
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    20,
+    7
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    8
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    31,
+    7
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    34,
+    7
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    30,
+    8
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    41,
+    7
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    44,
+    7
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    40,
+    8
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    7,
+    19
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    19
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    20
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    17,
+    19
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    20,
+    19
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    20
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    31,
+    19
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    34,
+    19
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    30,
+    20
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    41,
+    19
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    44,
+    19
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    40,
+    20
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    7,
+    31
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    10,
+    31
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    32
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    17,
+    31
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    20,
+    31
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    32
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    31,
+    31
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    34,
+    31
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    30,
+    32
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    41,
+    31
+   ],
+   "color": "#748797",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    44,
+    31
+   ],
+   "color": "#576975",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    40,
+    32
+   ],
+   "color": "#816e5e",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    10,
+    15
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    34,
+    15
+   ],
+   "color": "#d37480",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    23,
+    10
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    24,
+    25
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  }
+ ],
+ "blocks": [
+  {
+   "type": "wall",
+   "rect": [
+    4,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    5,
+    5,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    11,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    14,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    15,
+    5,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    21,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    28,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    29,
+    5,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    35,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    38,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    39,
+    5,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    45,
+    5,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    4,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    5,
+    17,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    11,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    14,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    15,
+    17,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    21,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    28,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    29,
+    17,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    35,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    38,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    39,
+    17,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    45,
+    17,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    4,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    5,
+    29,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    11,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    14,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    15,
+    29,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    21,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    28,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    29,
+    29,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    35,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    38,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    39,
+    29,
+    6,
+    1
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    45,
+    29,
+    1,
+    7
+   ],
+   "height": 1.4,
+   "color": "#45515a"
+  }
+ ],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    5,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    15,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    29,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    39,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    5,
+    18,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    15,
+    18,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    29,
+    18,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    39,
+    18,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    5,
+    30,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    15,
+    30,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    29,
+    30,
+    6,
+    6
+   ]
+  },
+  {
+   "type": "tile",
+   "rect": [
+    39,
+    30,
+    6,
+    6
+   ]
+  }
+ ]
+}

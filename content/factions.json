@@ -547,5 +547,27 @@
    "cabeza",
    "torso"
   ]
+ },
+ {
+  "id": "foso",
+  "name": "Los del Foso",
+  "kind": "gang",
+  "desc": "Cuadrilla formada dentro de Las Salinas. Controla parte de los tratos de servicios.",
+  "color": "#79af98",
+  "archetype": "Banda del penal",
+  "relations": {
+   "engranajes": -35
+  }
+ },
+ {
+  "id": "salmuera",
+  "name": "La Salmuera",
+  "kind": "gang",
+  "desc": "Internos que ocupan los pasillos del módulo de violencia y se disputan el patio con Kitsune.",
+  "color": "#be877e",
+  "archetype": "Banda del penal",
+  "relations": {
+   "kitsune": -35
+  }
  }
 ]

@@ -16,6 +16,7 @@ export interface ContractProgress { instanceId: string; contractId: string; vers
 
 export interface PlayerState {
   playedMs?: number; playSessionAt?: number;
+  bank?:number; sentence?:import('@vertice/shared').Sentence|null;
   downedBy?: { charId: string; name: string };
   charId: string; accountId: string; name: string; role: string; origin: string;
   attributes: Attributes; skills: Record<string, number>; appearance: Appearance;
@@ -362,7 +363,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
     playedMs: Number(row.played_ms ?? 0), playSessionAt: Date.now(),
     charId, accountId: row.account_id, name: row.name, role: row.role, origin: row.origin,
     attributes: row.attributes, skills: row.skills, appearance: row.appearance,
-    level: row.level, xp: row.xp, roleRank: row.role_rank, money: Number(row.money), hp: row.hp, stamina: row.stamina, luck: row.luck, humanity: row.humanity,
+    level: row.level, xp: row.xp, roleRank: row.role_rank, money: Number(row.money), bank:Number(row.bank_balance??0), sentence:row.prison_state??null, hp: row.hp, stamina: row.stamina, luck: row.luck, humanity: row.humanity,
     stance: row.stance, zone: row.zone_id, x: row.pos_x, y: row.pos_y,
     inventory: invMap,
     rep: new Map(rep.rows.map((x: any) => [x.faction_id, x.value])),

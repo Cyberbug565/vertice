@@ -623,7 +623,7 @@ export class Survival {
 
   /** Muerte definitiva: cierra la vida en una transacción idempotente, registra el memorial y libera la entidad. */
   async die(p: PlayerState, e: Entity, cause: string, killer?: PlayerState, prize?: {estate:(q:import("../db/db.js").Queryable)=>Promise<void>;committed:()=>void}) {
-    if ((p as any).dead) return;
+    if ((p as any).dead||this.w.prison.capturing(p)) return;
     (p as any).dead = true;
     const place = `${e.zone.def.name}`;
     let summary: DeathSummary | null = null;
@@ -670,6 +670,7 @@ export class Survival {
     this.w.metrics.inc('deaths');
     const c = e.conn;
     if(summary)prize?.committed();
+    if(summary&&killerInfo&&killerInfo.charId!==p.charId&&!prize)await this.w.prison.homicide(killerInfo.charId,'player-death:'+p.charId).catch(err=>console.error('[penal] homicidio',err));
     if (c && summary) { this.w.send(c, { t: 'death', summary }); }
     // La vida ha terminado: la sesión deja de simularla ya (la entidad se retira tras un instante para que se vea caer).
     if (c && this.w.conns.get(c.accountId) === c) this.w.conns.delete(c.accountId);
@@ -682,6 +683,7 @@ export class Survival {
     const p = c.p!;
     const before = p.wanted;
     p.wanted = Math.min(5, p.wanted + amount);
+    if(amount>0)await this.w.prison.wanted(p,why).catch(err=>console.error('[penal] antecedentes',err));
     if (Math.floor(p.wanted) > Math.floor(before)) this.notice(c, 'warn', `Nivel de búsqueda ${Math.floor(p.wanted)} (${why}).`);
     if (p.wanted >= 2) {
       const amt = 150 * Math.floor(p.wanted);

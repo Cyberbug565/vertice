@@ -1,5 +1,5 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
-import { Atlas, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type ServerMsg } from '@vertice/shared';
+import { Atlas, prisonZone, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type PrisonView, type ServerMsg } from '@vertice/shared';
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
@@ -10,6 +10,8 @@ import { stealthBar, weaponWheel } from './ui/stealth';
 import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
 import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
 import { casinoPanel } from './ui/casino';
+import { bankPanel, prisonPanel } from './ui/prison';
+import './ui/prison.css';
 import { $ui, clearUi, fmtMoney, h, ask } from './ui/dom';
 import { Minimap } from './ui/minimap';
 import { openAtlas } from './ui/atlas-panel';
@@ -301,8 +303,11 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
 
   // ---------------------------------------------------------------- paneles
+  let prisonContext:PrisonView|undefined;
+  const prisonBadge=h('button',{class:'btn small penal-badge',hidden:true,onclick:()=>net.send({t:'penal',action:'estado',opId:newOpId()})},'Expediente de Las Salinas');
+  $ui().append(prisonBadge);
   let casino:ReturnType<typeof casinoPanel>|undefined;
-  const closePanels = () => { closeDanceMenus(); for (const id of ['casino-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { closeDanceMenus(); for (const id of ['casino-panel', 'penal-panel', 'bank-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
@@ -759,6 +764,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'cheatInfo': cheatPanel(net, m); break;
       case 'zone':
         casino?.root.remove();
+        prisonContext=undefined;
+        document.getElementById('penal-panel')?.remove();
+        document.getElementById('bank-panel')?.remove();
         localDance = null;
         closeDanceMenus();
         document.getElementById('shop-panel')?.remove();
@@ -814,6 +822,15 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if (m.from === view.meId || m.to === view.meId) { combatMusicUntil = Date.now() + 11_000; refreshScore(); }
         break;
       }
+      case 'penal': {
+        const v=m.view, s=v.state;
+        prisonBadge.hidden=!(s||prisonZone(st.zone));
+        const next=!m.open&&!v.target&&!v.hidden&&prisonContext?.target?{...v,target:prisonContext.target,actions:prisonContext.actions,detail:prisonContext.detail}:v;
+        if(m.open||document.getElementById('penal-panel'))prisonPanel(net,next);
+        prisonContext=next;
+        break;
+      }
+      case 'bank': bankPanel(net,m); break;
       case 'casino':
         if(m.view.zone!==st.zone)break;
         if(casino?.root.isConnected&&casino.table===m.view.table)casino.receive(m.view,m.seq);
@@ -824,7 +841,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'jobs': jobsPanel(life, m.view); break;
       case 'clinic': clinicPanel(life, m.view); break;
       case 'bounties': bountyPanel(life, m.view); break;
-      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target, remote: true } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId(), remote: true } as any); else net.send({ t: 'interact', target: m.view.target, remote: true } as any); }); break; }
+      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'banco') net.send({ t:'bank', action:'view', target:m.view.target, opId:newOpId() }); else if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target, remote: true } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId(), remote: true } as any); else net.send({ t: 'interact', target: m.view.target, remote: true } as any); }); break; }
       case 'death': {
         net.close();audioScene(null);
         const memorial=()=>{casino?.root.remove();sfx.voice('muerte',false,0,0);deathScreen(m.summary,()=>onExit('dead'));};

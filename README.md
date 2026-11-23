@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.28)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.29)
+
+La v0.29 abre el [Penal de las Salinas](docs/PENAL.md), con arrestos, expedientes persistentes, cuenta bancaria, turnos, libertad condicional y fugas.
 
 La v0.28 amplía la población con 67 NPC con turnos, patrullas, personal de casino y dependientes. [Horarios, interacciones y pruebas](docs/TURNOS_NPC.md).
 
@@ -81,7 +83,7 @@ Todas las teclas se pueden cambiar en **Esc → Teclas**. Estas son las de serie
 | Implantes | — | `1`–`4` |
 | Automático · empleos · propiedades · mercado · recompensas · facciones · Ámbar | — | `L` · `O` · `P` · `N` · `U` · `Ñ` · `.` |
 | Menú (continuar, ajustes, teclas, cerrar sesión) | Botón ☰ | `Esc` |
-| Menú de trucos (solo cuentas de administración: `mataxhustaadmin` y `admintester`) | — | `º` o `F10` |
+| Menú de trucos (solo cuentas de administración) | — | F10 |
 | Zoom | Rueda | `+` / `−` |
 
 ## Vida nocturna y bajos fondos
@@ -117,7 +119,7 @@ npm run loadtest -- --scenario crowd --bots 40 --duration 1200
 ./scripts/capacity-run.sh                   # concentración 20 min + carga repartida 60 min
 ```
 
-`/api/metrics` devuelve la duración del tick (p50, p95 y p99), el tráfico, las rutas, los cruces, las escrituras y la memoria. Solo responde desde localhost o con `?token=ADMIN_TOKEN`. Las pruebas de carga para más de 30 bots requieren arrancar el servidor con `AUTH_RATE_LIMIT=100000`, porque todos los bots registran sus cuentas desde la misma IP.
+El diagnóstico de rendimiento devuelve la duración del tick (p50, p95 y p99), el tráfico, las rutas, los cruces, las escrituras y la memoria. Tiene acceso restringido. Para más de 30 bots desde una misma máquina, ajusta el límite de registro en la configuración local de pruebas.
 
 Los resultados y las condiciones de medición están en [`docs/PRUEBAS.md`](docs/PRUEBAS.md).
 

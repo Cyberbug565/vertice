@@ -160,11 +160,11 @@ describe('v0.3 · combate, red y ciudad', () => {
     expect(b.ok).toBe(true);
     expect(p.wanted).toBe(0);
     expect(p.money).toBe(before - 500);
-    // Detención: KO por la PCV → multa, expediente limpio y comisaría.
+    // Detención: KO por la PCV → ingreso con expediente y requisa.
     p.wanted = 2.5;
     await app.world.combat.arrest(conn('asegurada'));
     expect(p.wanted).toBe(0);
-    expect(E('asegurada').zone.id).toBe('comisaria-int');
+    expect(E('asegurada').zone.id).toBe('penal-violencia');
     expect(await ledgerOk()).toBe(true);
   });
 

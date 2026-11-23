@@ -1,0 +1,231 @@
+{
+ "id": "penal-infirmaria",
+ "name": "Enfermería del penal",
+ "kind": "interior",
+ "width": 33,
+ "height": 22,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#7cc3c8",
+ "safePoint": [
+  16,
+  19
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-auxilio",
+   "name": "Camilla de enfermería",
+   "kind": "penal",
+   "at": [
+    16,
+    11
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-infirmaria-ingreso",
+   "name": "Ingresos y economato",
+   "at": [
+    16,
+    21
+   ],
+   "to": {
+    "zone": "penal-ingreso",
+    "at": [
+     10,
+     27
+    ]
+   },
+   "sign": "Ingresos y economato",
+   "signColor": "#cea777"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    17
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    17
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    17
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    17
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    17
+   ],
+   "color": "#7cc3c8",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    16,
+    11
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "bed",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  },
+  {
+   "type": "bed",
+   "at": [
+    6,
+    14
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  },
+  {
+   "type": "bed",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  },
+  {
+   "type": "bed",
+   "at": [
+    12,
+    14
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  },
+  {
+   "type": "bed",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  },
+  {
+   "type": "bed",
+   "at": [
+    18,
+    14
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  },
+  {
+   "type": "bed",
+   "at": [
+    24,
+    5
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  },
+  {
+   "type": "bed",
+   "at": [
+    24,
+    14
+   ],
+   "color": "#7cc3c8",
+   "blocking": true
+  }
+ ],
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    4,
+    6,
+    25,
+    11
+   ]
+  }
+ ]
+}

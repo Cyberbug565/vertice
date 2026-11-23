@@ -22,7 +22,7 @@ it('la migración conserva una cuenta y su personaje de v0.22 y se aplica una so
     await db.query(`INSERT INTO cyberware_instances(id, character_id, def_id, location, part, created_at) VALUES
       ($1,$5,'brazo-protesico','installed',NULL,'2024-01-01'), ($2,$5,'brazo-estabilizador','installed',NULL,'2024-02-01'),
       ($3,$5,'pierna-protesica','installed','pierna_izq','2024-01-01'), ($4,$5,'pierna-protesica','inventory',NULL,'2024-01-01')`, [right,left,kept,loose,char]);
-    expect(await migrate(db, false)).toEqual(['011_cuentas_expedientes.sql', '012_lados_ciberware.sql', '013_atlas.sql', '014_casinos.sql']);
+    expect(await migrate(db, false)).toEqual(['011_cuentas_expedientes.sql', '012_lados_ciberware.sql', '013_atlas.sql', '014_casinos.sql', '015_penal.sql']);
     const parts = await db.query<{ id: string; part: string | null }>('SELECT id,part FROM cyberware_instances WHERE character_id=$1', [char]);
     expect(Object.fromEntries(parts.rows.map((x) => [x.id,x.part]))).toEqual({ [right]:'brazo_der', [left]:'brazo_izq', [kept]:'pierna_izq', [loose]:null });
     expect(await selectedCharacterId(db, account)).toBe(char);

@@ -13182,6 +13182,21 @@
    "color": "#f4ca81",
    "sign": "Gran Meridiano",
    "signColor": "#f4ca81"
+  },
+  {
+   "id": "penal-salinas",
+   "name": "Penal de las Salinas",
+   "rect": [
+    537,
+    295,
+    20,
+    11
+   ],
+   "height": 5,
+   "style": "industrial",
+   "color": "#384852",
+   "sign": "PENAL DE LAS SALINAS",
+   "signColor": "#e4c18c"
   }
  ],
  "props": [
@@ -42369,6 +42384,23 @@
    },
    "sign": "Gran Meridiano",
    "signColor": "#f4ca81"
+  },
+  {
+   "id": "penal-salinas",
+   "name": "Penal de las Salinas",
+   "at": [
+    547,
+    306
+   ],
+   "to": {
+    "zone": "penal-visitas",
+    "at": [
+     17,
+     17
+    ]
+   },
+   "sign": "Penal de las Salinas",
+   "signColor": "#e4c18c"
   }
  ],
  "objects": [

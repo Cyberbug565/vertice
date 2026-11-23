@@ -549,6 +549,12 @@ export class GameView {
       rel((g) => { drawBox(g, fx + 0.1, fy + 0.2, 0.8, 0.6, 0, 0.45, 0x1a1a2a); drawBox(g, fx + 0.1, fy + 0.65, 0.8, 0.15, 0.45, 0.8, 0x24243a); const t = worldToScreen(fx + 0.5, fy + 0.7, 1.4); g.ellipse(t.x, t.y, 10, 4).stroke({ width: 2, color: 0x43f3ff }); g.circle(t.x, t.y - 4, 2).fill(0x43f3ff); });
     } else if (s.objKind === 'jackout') {
       rel((g) => { const t = worldToScreen(fx + 0.5, fy + 0.5, 0.6); g.poly([t.x, t.y - 22, t.x + 12, t.y - 4, t.x, t.y + 14, t.x - 12, t.y - 4]).fill({ color: 0x5aff8a, alpha: 0.35 }).stroke({ width: 2, color: 0x5aff8a }); g.rect(t.x - 1, t.y - 12, 2, 16).fill(0xffffff); });
+    } else if (s.objKind === 'penal') {
+      rel(g => {
+        const t = worldToScreen(fx + .5, fy + .5, 1.35);
+        g.roundRect(t.x - 8, t.y - 5, 16, 10, 2).fill(0x15202a).stroke({width:1,color:0xd8a877});
+        g.moveTo(t.x - 4,t.y).lineTo(t.x + 4,t.y).stroke({width:1,color:0xa0e6d3});
+      });
     } else if(s.objKind==='casino') {
       rel(g=>{const p=worldToScreen(fx+.5,fy+.5,1.17);
         g.ellipse(p.x,p.y,13,5).fill({color:0x102d2a,alpha:.9}).stroke({width:1,color:0xeac28a});
