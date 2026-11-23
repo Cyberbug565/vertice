@@ -2,16 +2,24 @@
 // desaparecen al acabar un tramo), paran en rojo antes del paso de peatones, guardan distancia con el de delante y
 // frenan si hay alguien en la calzada. Solo existen alrededor de la cámara (un radio amplio) y aparecen y se van con un
 // fundido. Los semáforos se dibujan en cada paso de peatones con su luz para coches y para peatones (ver shared/traffic).
-import { Container, Graphics } from 'pixi.js';
+import { Container, Graphics, Sprite } from 'pixi.js';
 import { carLight, walkLight, worldToScreen, type RoadAxis, type ZoneDef } from '@vertice/shared';
 import { drawBox, shade } from './art';
+import { vehicleSprite } from './vehicle-art';
+import { content } from '../content';
+import type { CarDef } from '@vertice/shared';
 
 interface Road { x: number; y: number; w: number; h: number; horiz: boolean; width: number; perDir: number; a0: number; a1: number; cross: { r: Road; a0: number; a1: number }[]; stops: { at0: number; at1: number; cx: number; cy: number }[] }
-interface Car { r: Road; dir: 1 | -1; lane: number; s: number; v: number; vmax: number; alpha: number; out: boolean; t0: number; o0: number; k0: number; g: Graphics; drawn: string; color: number; rx: number; ry: number; turn: { r: Road; dir: 1 | -1; at: number } | null; decided: Road | null }
+interface Car { r: Road; dir: 1 | -1; lane: number; s: number; v: number; vmax: number; alpha: number; out: boolean; t0: number; o0: number; k0: number; g: Graphics; drawn: string; def: CarDef; sprite: Sprite; rx: number; ry: number; turn: { r: Road; dir: 1 | -1; at: number } | null; decided: Road | null }
 interface Signal { cx: number; cy: number; axis: RoadAxis; px: number; py: number; qx: number; qy: number }
 
 const R_LIVE = 44, R_GONE = 50, FADE = 1.1;
-const COLORS = [0xffd23f, 0xff5a5a, 0x43f3ff, 0xe8e8f0, 0x2a2a3a, 0xb46cff, 0x7dff7a, 0xff8a3d, 0x9aa4b8, 0x1a3a6a];
+const streetCars = content.cars.filter(c => c.traffic > 0);
+const totalWeight = streetCars.reduce((sum, c) => sum + c.traffic, 0);
+function randomCar() {
+  let roll = Math.random() * totalWeight;
+  return streetCars.find(c => (roll -= c.traffic) <= 0) ?? streetCars[0];
+}
 
 export class Traffic {
   private roads: Road[] = [];
@@ -103,23 +111,32 @@ export class Traffic {
       const s = lo + Math.random() * (hi - lo);
       const dir: 1 | -1 = Math.random() < 0.5 ? 1 : -1, lane = Math.floor(Math.random() * r.perDir);
       if (this.cars.some((o) => o !== c && o.r === r && o.dir === dir && o.lane === lane && Math.abs(o.s - s) < 4)) continue;
-      const vmax = 3.2 + lane * 1.2 + Math.random() * 1.6;
-      const car: Car = c ?? { r, dir, lane, s, v: 0, vmax, alpha: 0, out: false, t0: 0, o0: 0, k0: 0, g: new Graphics(), drawn: '', color: COLORS[Math.floor(Math.random() * COLORS.length)], rx: 0, ry: 0, turn: null, decided: null };
-      Object.assign(car, { r, dir, lane, s, v: vmax * 0.6, vmax, alpha: 0, out: false, t0: performance.now(), turn: null, decided: null });
+      const def = randomCar();
+      const vmax = Math.min(7.8, 2.05 + def.speed * .95 + lane * .65 + Math.random());
+      const car: Car = c ?? { r, dir, lane, s, v: 0, vmax, alpha: 0, out: false, t0: 0, o0: 0, k0: 0, g: new Graphics(), drawn: '', def, sprite: new Sprite(), rx: 0, ry: 0, turn: null, decided: null };
+      Object.assign(car, { r, dir, lane, s, v: vmax * 0.6, vmax, def, alpha: 0, out: false, t0: performance.now(), turn: null, decided: null });
       const [x, y] = this.pos(car); car.rx = x; car.ry = y;
-      if (!c) this.layer.addChild(car.g);
+      car.sprite.anchor.set(.5);
+      car.sprite.visible = false;
+      if (!c) { car.g.addChild(car.sprite); this.layer.addChild(car.g); }
       return car;
     }
     return null;
   }
 
   private draw(c: Car) {
-    const key = `${c.r.horiz ? 'h' : 'v'}${c.dir}`;
+    const direction = (c.r.horiz ? 0 : 1) + (c.dir < 0 ? 2 : 0);
+    const texture = vehicleSprite(c.def.model, direction);
+    c.sprite.visible = !!texture;
+    if (texture) c.sprite.texture = texture;
+    const key = `${c.def.id}:${direction}:${!!texture}`;
     if (c.drawn === key) return;
     c.drawn = key;
     const g = c.g; g.clear();
+    if (texture) { g.ellipse(0, 0, 17, 7).fill({ color: 0x050713, alpha: .38 }); return; }
+    const color = parseInt(c.def.color.slice(1), 16);
     const [lx, ly] = c.r.horiz ? [1.35, 0.62] : [0.62, 1.35];
-    drawBox(g, -lx / 2, -ly / 2, lx, ly, 0.05, 0.36, c.color); drawBox(g, -lx * 0.3, -ly * 0.3, lx * 0.6, ly * 0.6, 0.41, 0.26, shade(c.color, 0.55));
+    drawBox(g, -lx / 2, -ly / 2, lx, ly, 0.05, 0.36, color); drawBox(g, -lx * 0.3, -ly * 0.3, lx * 0.6, ly * 0.6, 0.41, 0.26, shade(color, 0.55));
     const fx = c.r.horiz ? 0.66 * c.dir : 0, fy = c.r.horiz ? 0 : 0.66 * c.dir;
     const head = worldToScreen(fx, fy, 0.25), tail = worldToScreen(-fx, -fy, 0.25);
     g.circle(head.x, head.y, 2.6).fill(0xfff1c0); g.circle(tail.x, tail.y, 2.1).fill(0xff3040);
@@ -143,9 +160,9 @@ export class Traffic {
       // Posición dibujada: se acerca a la lógica con suavidad (así los giros trazan una curva).
       const [tx, ty] = this.pos(c), k = Math.min(1, dt * 5);
       c.rx += (tx - c.rx) * k; c.ry += (ty - c.ry) * k;
-      this.draw(c);
       const p = worldToScreen(c.rx, c.ry);
       c.g.position.set(p.x, p.y); c.g.alpha = c.alpha; c.g.visible = c.alpha > 0.01 && visibleAt(c.rx, c.ry);
+      if (c.g.visible) this.draw(c);
     }
     if (now - this.lastLights > 200) { this.lastLights = now; this.drawLights(now, cx, cy); }
   }
@@ -221,5 +238,5 @@ export class Traffic {
     }
   }
 
-  destroy() { for (const c of this.cars) c.g.destroy(); this.cars = []; this.lightsG.destroy(); this.marks.destroy(); }
+  destroy() { for (const c of this.cars) c.g.destroy({ children: true }); this.cars = []; this.lightsG.destroy(); this.marks.destroy(); }
 }

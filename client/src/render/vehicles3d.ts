@@ -5,7 +5,8 @@ import type { CarDef } from '@vertice/shared';
 type CarModel = NonNullable<CarDef['model']>;
 interface VehicleEntity {
   x: number; y: number;
-  s: { id: number; vehicle?: string | null };
+  s: { id: number; facing?: number; vehicle?: string | null };
+  vehicleHover?: boolean;
   vehicleModel?: CarModel;
   view?: { visible: boolean };
 }
@@ -19,7 +20,7 @@ interface Rig {
 
 const templates = new Map<CarModel, THREE.Group>();
 const requested = new Set<CarModel>();
-const paths: Record<CarModel, string> = { vector: '/models/vehiculos/vector.glb' };
+
 const shade = new THREE.CircleGeometry(1, 20);
 shade.rotateX(-Math.PI / 2);
 const shadeMaterial = new THREE.MeshBasicMaterial({ color: 0x060912, opacity: .3, transparent: true, depthWrite: false });
@@ -27,7 +28,7 @@ const shadeMaterial = new THREE.MeshBasicMaterial({ color: 0x060912, opacity: .3
 function requestModel(model: CarModel) {
   if (requested.has(model)) return;
   requested.add(model);
-  new GLTFLoader().loadAsync(paths[model]).then(glb => {
+  new GLTFLoader().loadAsync('/models/vehiculos/' + model + '.glb').then(glb => {
     templates.set(model, glb.scene);
   }).catch(error => console.warn('[modelo de vehículo]', error));
 }
@@ -38,7 +39,7 @@ export class Vehicles3D {
 
   isReady(model: CarModel) { return templates.has(model); }
 
-  private create(model: CarModel, template: THREE.Group, x: number, y: number) {
+  private create(model: CarModel, template: THREE.Group, x: number, y: number, yaw: number) {
     const group = new THREE.Group();
     const car = template.clone(true);
     const shadow = new THREE.Mesh(shade, shadeMaterial);
@@ -49,7 +50,7 @@ export class Vehicles3D {
     const tail = lamp?.material.clone();
     if (lamp && tail) lamp.material = tail;
     this.world.add(group);
-    return { group, chassis: car, tail, model, x, y, yaw: Math.PI / 2, preferredYaw: Math.PI / 2, speed: 0 };
+    return { group, chassis: car, tail, model, x, y, yaw, preferredYaw: yaw, speed: 0 };
   }
 
   sync(entities: Iterable<VehicleEntity>, now: number, delta: number, reduceMotion: boolean) {
@@ -65,7 +66,7 @@ export class Vehicles3D {
       let rig = this.models.get(id);
       if (!rig || rig.model !== model) {
         this.remove(id);
-        rig = this.create(model, template, e.x, e.y);
+        rig = this.create(model, template, e.x, e.y, Math.PI / 2 - (e.s.facing ?? 0) * Math.PI / 4);
         this.models.set(id, rig);
       }
       const dx = e.x - rig.x, dy = e.y - rig.y, distance = Math.hypot(dx, dy);
@@ -75,7 +76,7 @@ export class Vehicles3D {
       rig.yaw += Math.atan2(Math.sin(angle), Math.cos(angle)) * Math.min(1, dt * 11);
       const braking = rig.speed - nextSpeed > .85;
       rig.speed += (nextSpeed - rig.speed) * Math.min(1, dt * 7);
-      rig.chassis.position.y = reduceMotion ? 0 : Math.sin(now * .0035 + id) * .023;
+      rig.chassis.position.y = e.vehicleHover ? .13 + (reduceMotion ? 0 : Math.sin(now * .0035 + id) * .023) : 0;
       rig.group.position.set(e.x, 0, e.y);
       rig.group.rotation.y = rig.yaw;
       rig.x = e.x;

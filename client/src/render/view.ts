@@ -3,14 +3,15 @@
 import { capturedLegs, gaitCapture, loadCapture } from './captured-motion';
 import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
 import { SightShade } from './sight-shade';
+import { vehicleSprite } from './vehicle-art';
 import { Traffic } from './traffic';
 import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
 import { BUILDING_H, Chars3D } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
 import { urbanForm } from './urban-form';
 import {
-  canSee, coversActor, facingToIdx, UNAIDED_SIGHT, GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
-  type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
+  canSee, coversActor, facingToIdx, UNAIDED_SIGHT, GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, stepCar, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
+  type CarTuning, type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
 import { settings } from '../settings';
@@ -23,7 +24,8 @@ export interface CEnt {
   s: EntitySpawn; x: number; y: number; samples: { t: number; x: number; y: number }[]; flags: number; moving: boolean;
   view: Container; legs?: Container; body?: Container; visor?: Graphics; hpBar?: Graphics; tag?: Graphics; bubble?: Container; bubbleUntil?: number; label?: Text; obj: SortObj; phase: number;
   charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
-  vehX?: Container; vehY?: Container; lvl?: Text;
+  vehX?: Container; vehY?: Container; vehSprite?: Sprite; lvl?: Text;
+  vehicleHover?: boolean;
   vehicleModel?: import('@vertice/shared').CarDef['model'];
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
   kneeL?:Container; kneeR?:Container; footL?:Container; footR?:Container;
@@ -77,7 +79,7 @@ export class GameView {
   private beaconG = new Graphics();
   private beacons: { x: number; y: number }[] = [];
   private holos: Container[] = [];
-  private cars: { lane: number; t: number; v: number; g: Graphics }[] = [];
+  private cars: { lane: number; t: number; v: number; g: Sprite }[] = [];
   zone?: ZoneDef;
   grid?: ZoneGrid;
   ents = new Map<number, CEnt>();
@@ -194,6 +196,7 @@ export class GameView {
 
   // ------------------------------------------------------------------ zona
   setZone(zoneId: string, x: number, y: number) {
+    this.carMotion.speed = 0;
     this.zone = zoneDef(zoneId)!;
     this.grid = buildZoneGrid(this.zone);
     for (const e of this.ents.values()) this.destroyEnt(e);
@@ -344,8 +347,9 @@ export class GameView {
     if (z.kind === 'exterior' && q === 'high') {
       // Tráfico aéreo decorativo: vehículos voladores con luces en carriles elevados.
       for (let i = 0; i < 14; i++) {
-        const g = new Graphics();
-        g.roundRect(-9, -3, 18, 6, 3).fill(0x2a2a3a); g.rect(6, -2, 4, 4).fill(0xfff1c0); g.rect(-10, -2, 3, 4).fill(0xff3040);
+        const g = new Sprite();
+        g.anchor.set(.5);
+        g.scale.set(.56);
         this.sky.addChild(g);
         this.cars.push({ lane: i, t: Math.random(), v: 0.02 + Math.random() * 0.03, g });
       }
@@ -475,7 +479,7 @@ export class GameView {
       // Al volante: el coche sustituye a la figura (en moto, la figura va montada encima).
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
       if (car) {
-        ent.vehicleModel = car.model;
+        ent.vehicleModel = car.model; ent.vehicleHover = car.hover;
         ent.vehX = makeVehicle(car.class, car.color, s.appearance?.accent);
         ent.vehY = makeVehicle(car.class, car.color, s.appearance?.accent); ent.vehY.scale.x = -1;
         view.addChildAt(ent.vehX, 0); view.addChildAt(ent.vehY, 0); ent.vehY.visible = false;
@@ -580,7 +584,7 @@ export class GameView {
     } else if (s.objKind === 'mycar') {
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
       if (car) {
-        ent.vehicleModel = car.model;
+        ent.vehicleModel = car.model; ent.vehicleHover = car.hover;
         ent.vehX = makeVehicle(car.class, car.color, '#43f3ff');
         ent.view.addChild(ent.vehX);
         return;
@@ -1028,6 +1032,19 @@ export class GameView {
 
   /** Velocidad propia: la exacta la manda el servidor (selfSpeed); esto solo es la estimación inicial. */
   serverSpeed = false;
+  private carTuning: CarTuning | null = null;
+  readonly carMotion = { speed: 0, heading: 0 };
+  setSpeed(speed: number, tuning?: CarTuning | null) {
+    this.me.speed = speed;
+    this.serverSpeed = true;
+    if (tuning !== undefined) {
+      const old = this.carTuning;
+      this.carTuning = tuning;
+      if (old && tuning && old.acceleration === tuning.acceleration && old.braking === tuning.braking && old.handling === tuning.handling) return;
+      this.carMotion.speed = 0;
+      this.carMotion.heading = this.facing * Math.PI / 4;
+    }
+  }
   setMyAttributes(a: Attributes, speed = 1) { if (!this.serverSpeed) this.me.speed = walkSpeed(a) * speed; }
   /** Predicción local: el cliente calcula la ruta con la misma rejilla y empieza a moverse antes del ack. */
   predictMove(x: number, y: number): [number, number][] | null {
@@ -1177,9 +1194,24 @@ export class GameView {
       me.x = d.fx + (d.tx - d.fx) * ease; me.y = d.fy + (d.ty - d.fy) * ease;
       if (k >= 1) this.dashAnim = null;
     }
+    const steering = this.steer.dx !== 0 || this.steer.dy !== 0;
+    const driving = this.carTuning && this.driving && this.grid && !me.path.length;
     // WASD: el cliente avanza al instante con las mismas reglas que el servidor (se desliza por las paredes).
     if (this.dashAnim) { /* rodando: la voltereta manda */ }
-    else if ((this.steer.dx || this.steer.dy) && this.grid) {
+    else if (driving && (steering || this.carMotion.speed > 0)) {
+      const next = stepCar(this.grid!, me.x, me.y, this.carMotion, this.steer.dx, this.steer.dy, me.speed, this.carTuning!, moveDt);
+      this.carMotion.speed = next.speed;
+      this.carMotion.heading = next.heading;
+      me.x = next.x; me.y = next.y;
+      const error = Math.hypot(me.serverX - me.x, me.serverY - me.y);
+      if (error > 6) { me.x = me.serverX; me.y = me.serverY; this.carMotion.speed = 0; }
+      else if (error > .6) {
+        const k = Math.min(1, moveDt * (error > 2 ? 4 : 1.6));
+        const corrected = stepWithCollision(this.grid!, me.x, me.y, (me.serverX - me.x) * k, (me.serverY - me.y) * k);
+        me.x = corrected.x; me.y = corrected.y;
+      }
+    }
+    else if (steering && this.grid) {
       me.path = []; this.pathG.clear();
       const distance = me.speed * moveDt * (this.guarding && !this.driving ? 0.5 : 1);
       const next = stepWithCollision(this.grid, me.x, me.y, this.steer.dx * distance, this.steer.dy * distance, this.ghostMode);
@@ -1190,6 +1222,7 @@ export class GameView {
       else if (errS > 6) { me.x = me.serverX; me.y = me.serverY; }
       else if (errS > 0.35) { const k = Math.min(1, moveDt * (errS > 2 ? 4 : 1.6)); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
     } else if (me.path.length) {
+      this.carMotion.speed = 0;
       let budget = me.speed * moveDt;
       while (budget > 0 && me.path.length) {
         const [tx, ty] = me.path[0]; const dx = tx - me.x, dy = ty - me.y, d = Math.hypot(dx, dy);
@@ -1199,7 +1232,7 @@ export class GameView {
     }
     const err = Math.hypot(me.serverX - me.x, me.serverY - me.y);
     if (this.steer.dx || this.steer.dy) this.idleSince = now; // (desde cuándo no pulsas ninguna tecla de movimiento)
-    if (this.steer.dx || this.steer.dy) { /* corregido arriba */ }
+    if (steering || (driving && this.carMotion.speed > 0)) { /* corregido arriba */ }
     else if (now < me.holdUntil) { /* rodando */ }
     else if (err > 6) { me.x = me.serverX; me.y = me.serverY; }
     // Quieto: se asienta rápido en tiempo real (también con pocos FPS).
@@ -1208,7 +1241,8 @@ export class GameView {
     else if (err > 1.2) { const k = Math.min(1, dt * 2); me.x += (me.serverX - me.x) * k; me.y += (me.serverY - me.y) * k; }
 
     const actor = this.ents.get(this.meId);
-    if (this.guarding) this.facing = facingToIdx(this.cursor.x - me.x, this.cursor.y - me.y);
+    if (driving && (steering || this.carMotion.speed > 0)) this.facing = facingToIdx(Math.cos(this.carMotion.heading), Math.sin(this.carMotion.heading));
+    else if (this.guarding) this.facing = facingToIdx(this.cursor.x - me.x, this.cursor.y - me.y);
     else if (this.steer.dx || this.steer.dy) this.facing = facingToIdx(this.steer.dx, this.steer.dy);
     else if (actor) this.facing = (actor.flags >> 1) & 7;
     const renderT = now - INTERP_DELAY;
@@ -1284,14 +1318,25 @@ export class GameView {
     this.render3d(now, dt, W, H);
   }
   private render3d(now: number, dt: number, W: number, H: number) {
-    if (!this.chars3d) return;
-    const vehicles = this.chars3d.vehicles;
+    const vehicles = this.chars3d?.vehicles;
     for (const e of this.ents.values()) {
-      if (!e.vehicleModel) continue;
-      const fallback = !vehicles.isReady(e.vehicleModel);
-      if (e.vehX) e.vehX.renderable = fallback;
-      if (e.vehY) e.vehY.renderable = fallback;
+      if (!e.vehicleModel || !e.view.visible) continue;
+      const fallback = !vehicles?.isReady(e.vehicleModel);
+      const angle = e.s.id === this.meId ? this.facing : (e.flags >> 1) & 7;
+      const texture = fallback ? vehicleSprite(e.vehicleModel, Math.round(angle / 2)) : undefined;
+      if (texture && !e.vehSprite) {
+        e.vehSprite = new Sprite();
+        e.vehSprite.anchor.set(.5);
+        e.view.addChildAt(e.vehSprite, 0);
+      }
+      if (e.vehSprite) {
+        e.vehSprite.visible = !!texture;
+        if (texture) e.vehSprite.texture = texture;
+      }
+      if (e.vehX) e.vehX.renderable = fallback && !texture;
+      if (e.vehY) e.vehY.renderable = fallback && !texture;
     }
+    if (!this.chars3d) return;
     const res = this.app.renderer.resolution, key = `${W}x${H}@${res}`;
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
     this.buildingObjs.forEach((o, i) => {
@@ -1335,8 +1380,11 @@ export class GameView {
       const x = along ? c.t * W : lanePos, y = along ? lanePos : c.t * Hh;
       const p = worldToScreen(x, y, z);
       c.g.visible = this.inSight(x, y);
+      if (!c.g.visible) continue;
+      const model = ['hover-coupe', 'hover-sedan', 'maglev', 'vector'][c.lane % 4];
+      const texture = vehicleSprite(model, along ? 0 : 1);
+      if (texture) c.g.texture = texture;
       c.g.position.set(p.x, p.y);
-      c.g.scale.x = along ? 1 : -1;
     }
   }
 

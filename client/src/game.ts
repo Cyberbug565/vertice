@@ -910,7 +910,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if (m.channel !== 'global') view.say(m.fromId, m.text);
         break;
       }
-      case 'selfSpeed': view.me.speed = m.v; view.serverSpeed = true; break;
+      case 'selfSpeed': view.setSpeed(m.v, m.tuning); break;
       case 'kicked': break;
       case 'error': if (m.reason === 'mensaje_invalido') toast('El servidor rechazó un mensaje mal formado.', 'bad'); break;
     }

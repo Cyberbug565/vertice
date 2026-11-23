@@ -10,7 +10,13 @@
   "armor": 0,
   "price": 3900,
   "color": "#43f3ff",
-  "desc": "Scooter eléctrico de reparto. Barato y ágil."
+  "desc": "Scooter eléctrico de reparto. Barato y ágil.",
+  "model": "kotetsu",
+  "acceleration": 6.6,
+  "braking": 10.3,
+  "handling": 74,
+  "hover": false,
+  "traffic": 2
  },
  {
   "id": "kotetsu-raijin",
@@ -23,7 +29,13 @@
   "armor": 0,
   "price": 14500,
   "color": "#ff3fa4",
-  "desc": "Moto deportiva con carenado de neón."
+  "desc": "Moto deportiva con carenado de neón.",
+  "model": "kotetsu",
+  "acceleration": 8.7,
+  "braking": 12.5,
+  "handling": 85,
+  "hover": false,
+  "traffic": 0
  },
  {
   "id": "kotetsu-oni",
@@ -36,7 +48,13 @@
   "armor": 0,
   "price": 38000,
   "color": "#a82020",
-  "desc": "La moto más rápida de Neón Rojo."
+  "desc": "La moto más rápida de Neón Rojo.",
+  "model": "kotetsu",
+  "acceleration": 11.6,
+  "braking": 13.4,
+  "handling": 91,
+  "hover": false,
+  "traffic": 0
  },
  {
   "id": "brennan-mastin",
@@ -49,7 +67,13 @@
   "armor": 1,
   "price": 21000,
   "color": "#2a2a2a",
-  "desc": "Moto pesada de cruzar el Yermo."
+  "desc": "Moto pesada de cruzar el Yermo.",
+  "model": "kotetsu",
+  "acceleration": 7.5,
+  "braking": 10.6,
+  "handling": 67,
+  "hover": false,
+  "traffic": 0
  },
  {
   "id": "vidal-pulga",
@@ -62,7 +86,13 @@
   "armor": 0,
   "price": 5200,
   "color": "#ffd23f",
-  "desc": "Utilitario diminuto. Aparca en cualquier sitio."
+  "desc": "Utilitario diminuto. Aparca en cualquier sitio.",
+  "model": "kay-urbano",
+  "acceleration": 4.7,
+  "braking": 7.8,
+  "handling": 77,
+  "hover": false,
+  "traffic": 8
  },
  {
   "id": "vidal-gorrion",
@@ -75,7 +105,13 @@
   "armor": 0,
   "price": 8400,
   "color": "#7dd3a0",
-  "desc": "El coche de todas las familias del Arrabal."
+  "desc": "El coche de todas las familias del Arrabal.",
+  "model": "kay-sedan",
+  "acceleration": 5.3,
+  "braking": 8.4,
+  "handling": 69,
+  "hover": false,
+  "traffic": 7
  },
  {
   "id": "vidal-sardina",
@@ -88,7 +124,13 @@
   "armor": 0,
   "price": 12900,
   "color": "#ff8a3d",
-  "desc": "Compacto con turbo de serie."
+  "desc": "Compacto con turbo de serie.",
+  "model": "kay-taxi",
+  "acceleration": 5.9,
+  "braking": 9.1,
+  "handling": 71,
+  "hover": false,
+  "traffic": 3
  },
  {
   "id": "hakuro-mikan",
@@ -101,7 +143,13 @@
   "armor": 0,
   "price": 11800,
   "color": "#ff8a3d",
-  "desc": "Híbrido fiable, eterno."
+  "desc": "Híbrido fiable, eterno.",
+  "model": "hover-sedan",
+  "acceleration": 6.4,
+  "braking": 8.9,
+  "handling": 73,
+  "hover": true,
+  "traffic": 7
  },
  {
   "id": "hakuro-tanuki",
@@ -114,7 +162,13 @@
   "armor": 1,
   "price": 16500,
   "color": "#e8e8f0",
-  "desc": "Furgoneta con espacio para todo (y para todos)."
+  "desc": "Furgoneta con espacio para todo (y para todos).",
+  "model": "kay-familiar",
+  "acceleration": 5.0,
+  "braking": 8.0,
+  "handling": 60,
+  "hover": false,
+  "traffic": 6
  },
  {
   "id": "aurora-mula",
@@ -127,7 +181,13 @@
   "armor": 1,
   "price": 19800,
   "color": "#3a8a4a",
-  "desc": "La furgoneta de reparto de Aurora: maletero enorme."
+  "desc": "La furgoneta de reparto de Aurora: maletero enorme.",
+  "model": "hover-furgon",
+  "acceleration": 4.1,
+  "braking": 7.1,
+  "handling": 53,
+  "hover": true,
+  "traffic": 5
  },
  {
   "id": "brennan-percheron",
@@ -140,7 +200,13 @@
   "armor": 2,
   "price": 26500,
   "color": "#5a4a3a",
-  "desc": "Pick-up de carga pesada."
+  "desc": "Pick-up de carga pesada.",
+  "model": "hover-carga",
+  "acceleration": 4.2,
+  "braking": 6.2,
+  "handling": 46,
+  "hover": true,
+  "traffic": 3
  },
  {
   "id": "marrow-garza",
@@ -153,7 +219,13 @@
   "armor": 0,
   "price": 42000,
   "color": "#43f3ff",
-  "desc": "Coupé deportivo para las avenidas de Cénit."
+  "desc": "Coupé deportivo para las avenidas de Cénit.",
+  "model": "hover-coupe",
+  "acceleration": 9.0,
+  "braking": 11.1,
+  "handling": 82,
+  "hover": true,
+  "traffic": 5
  },
  {
   "id": "marrow-halcon-negro",
@@ -166,7 +238,13 @@
   "armor": 0,
   "price": 68000,
   "color": "#1a1a1a",
-  "desc": "Biplaza de carreras ilegales."
+  "desc": "Biplaza de carreras ilegales.",
+  "model": "prototipo",
+  "acceleration": 10.3,
+  "braking": 11.7,
+  "handling": 85,
+  "hover": false,
+  "traffic": 2
  },
  {
   "id": "saeta-dardo",
@@ -179,7 +257,13 @@
   "armor": 0,
   "price": 89000,
   "color": "#ff3fa4",
-  "desc": "Aerodinámica de fibra de carbono."
+  "desc": "Aerodinámica de fibra de carbono.",
+  "model": "prototipo",
+  "acceleration": 11.0,
+  "braking": 12.3,
+  "handling": 92,
+  "hover": false,
+  "traffic": 0
  },
  {
   "id": "zephyr-brisa",
@@ -192,7 +276,13 @@
   "armor": 0,
   "price": 54000,
   "color": "#e8e8f0",
-  "desc": "Eléctrico deportivo de cuatro plazas."
+  "desc": "Eléctrico deportivo de cuatro plazas.",
+  "model": "hover-coupe",
+  "acceleration": 9.4,
+  "braking": 10.8,
+  "handling": 84,
+  "hover": true,
+  "traffic": 0
  },
  {
   "id": "brennan-bisonte",
@@ -205,7 +295,13 @@
   "armor": 2,
   "price": 34000,
   "color": "#8a6a3a",
-  "desc": "Todoterreno nómada de verdad."
+  "desc": "Todoterreno nómada de verdad.",
+  "model": "hover-pickup",
+  "acceleration": 6.9,
+  "braking": 8.7,
+  "handling": 61,
+  "hover": true,
+  "traffic": 4
  },
  {
   "id": "brennan-uro",
@@ -218,7 +314,13 @@
   "armor": 3,
   "price": 61000,
   "color": "#4a4a3a",
-  "desc": "Seis ruedas, seis plazas, cero carreteras necesarias."
+  "desc": "Seis ruedas, seis plazas, cero carreteras necesarias.",
+  "model": "hover-municipal",
+  "acceleration": 6.0,
+  "braking": 8.2,
+  "handling": 58,
+  "hover": true,
+  "traffic": 3
  },
  {
   "id": "orca-coyote",
@@ -231,7 +333,13 @@
   "armor": 1,
   "price": 29000,
   "color": "#d9a066",
-  "desc": "Buggy de los Nómadas del Polvo."
+  "desc": "Buggy de los Nómadas del Polvo.",
+  "model": "hover-pickup",
+  "acceleration": 7.7,
+  "braking": 9.6,
+  "handling": 68,
+  "hover": true,
+  "traffic": 0
  },
  {
   "id": "zephyr-aurora",
@@ -244,7 +352,13 @@
   "armor": 1,
   "price": 110000,
   "color": "#e8d8f0",
-  "desc": "Berlina eléctrica para ejecutivos."
+  "desc": "Berlina eléctrica para ejecutivos.",
+  "model": "hover-taxi",
+  "acceleration": 7.9,
+  "braking": 10.1,
+  "handling": 76,
+  "hover": true,
+  "traffic": 4
  },
  {
   "id": "kaiten-sakura",
@@ -257,7 +371,13 @@
   "armor": 2,
   "price": 165000,
   "color": "#1a1a2a",
-  "desc": "Limusina con bar y cristales tintados."
+  "desc": "Limusina con bar y cristales tintados.",
+  "model": "hover-sedan",
+  "acceleration": 7.0,
+  "braking": 9.9,
+  "handling": 79,
+  "hover": true,
+  "traffic": 0
  },
  {
   "id": "saeta-imperial",
@@ -270,7 +390,13 @@
   "armor": 1,
   "price": 198000,
   "color": "#ffd23f",
-  "desc": "Lujo artesanal de las Colinas."
+  "desc": "Lujo artesanal de las Colinas.",
+  "model": "maglev",
+  "acceleration": 9.2,
+  "braking": 10.4,
+  "handling": 70,
+  "hover": true,
+  "traffic": 1.5
  },
  {
   "id": "marrow-duque",
@@ -283,7 +409,13 @@
   "armor": 1,
   "price": 142000,
   "color": "#6b2140",
-  "desc": "Gran turismo de los que ya no se fabrican."
+  "desc": "Gran turismo de los que ya no se fabrican.",
+  "model": "hover-coupe",
+  "acceleration": 8.2,
+  "braking": 10.5,
+  "handling": 76,
+  "hover": true,
+  "traffic": 0
  },
  {
   "id": "halcon-centurion",
@@ -296,7 +428,13 @@
   "armor": 5,
   "price": 185000,
   "color": "#2a3a4a",
-  "desc": "Blindado ejecutivo: aguanta un asalto."
+  "desc": "Blindado ejecutivo: aguanta un asalto.",
+  "model": "hover-blindada",
+  "acceleration": 5.5,
+  "braking": 7.6,
+  "handling": 56,
+  "hover": true,
+  "traffic": 2
  },
  {
   "id": "halcon-pretoriano",
@@ -309,7 +447,13 @@
   "armor": 7,
   "price": 260000,
   "color": "#3a3a3a",
-  "desc": "Transporte táctico de la Unidad Hierro (versión civil)."
+  "desc": "Transporte táctico de la Unidad Hierro (versión civil).",
+  "model": "hover-patrulla",
+  "acceleration": 6.5,
+  "braking": 9.7,
+  "handling": 64,
+  "hover": true,
+  "traffic": 1
  },
  {
   "id": "saeta-relampago",
@@ -322,7 +466,13 @@
   "armor": 0,
   "price": 420000,
   "color": "#43f3ff",
-  "desc": "Hiperdeportivo de 1.900 caballos."
+  "desc": "Hiperdeportivo de 1.900 caballos.",
+  "model": "royal",
+  "acceleration": 13.9,
+  "braking": 14.4,
+  "handling": 88,
+  "hover": false,
+  "traffic": 0.65
  },
  {
   "id": "marrow-espectro",
@@ -335,7 +485,13 @@
   "armor": 0,
   "price": 650000,
   "color": "#b46cff",
-  "desc": "Un mito sobre ruedas: solo existen doce."
+  "desc": "Un mito sobre ruedas: solo existen doce.",
+  "model": "royal",
+  "acceleration": 15.1,
+  "braking": 15.2,
+  "handling": 93,
+  "hover": false,
+  "traffic": 0
  },
  {
   "id": "zephyr-singularidad",
@@ -348,7 +504,13 @@
   "armor": 1,
   "price": 980000,
   "color": "#e8e8f0",
-  "desc": "Prototipo con levitación parcial. El coche más caro de Vértice."
+  "desc": "Prototipo con levitación parcial. El coche más caro de Vértice.",
+  "model": "maglev",
+  "acceleration": 16.1,
+  "braking": 15.0,
+  "handling": 86,
+  "hover": true,
+  "traffic": 0
  },
  {
   "id": "saeta-vector",
@@ -362,6 +524,87 @@
   "price": 36000,
   "color": "#adc6df",
   "desc": "Deportivo de perfil bajo con cuatro propulsores de levitación. Homologado para circular por las avenidas de Vértice.",
-  "model": "vector"
+  "model": "vector",
+  "acceleration": 10.8,
+  "braking": 12.9,
+  "handling": 79,
+  "hover": true,
+  "traffic": 1.5
+ },
+ {
+  "id": "vidal-vigia",
+  "name": "Vigía",
+  "maker": "Vidal",
+  "class": "economico",
+  "speed": 2.52,
+  "trunk": 120,
+  "seats": 4,
+  "armor": 2,
+  "price": 14900,
+  "color": "#3e5681",
+  "desc": "Berlina de patrulla reacondicionada para uso civil.",
+  "model": "kay-patrulla",
+  "acceleration": 6.1,
+  "braking": 9.2,
+  "handling": 75,
+  "hover": false,
+  "traffic": 1.75
+ },
+ {
+  "id": "brennan-rescate",
+  "name": "Rescate",
+  "maker": "Brennan",
+  "class": "utilitario",
+  "speed": 2.28,
+  "trunk": 270,
+  "seats": 4,
+  "armor": 2,
+  "price": 32900,
+  "color": "#cfb9b1",
+  "desc": "Furgón sanitario de segunda mano, con espacio para carga.",
+  "model": "hover-rescate",
+  "acceleration": 5.2,
+  "braking": 7.7,
+  "handling": 55,
+  "hover": true,
+  "traffic": 1.4
+ },
+ {
+  "id": "brennan-escoria",
+  "name": "Escoria",
+  "maker": "Brennan",
+  "class": "blindado",
+  "speed": 2.12,
+  "trunk": 410,
+  "seats": 4,
+  "armor": 5,
+  "price": 94500,
+  "color": "#cb4b42",
+  "desc": "Antiguo camión de bomberos. Grande, protegido y pesado.",
+  "model": "hover-incendios",
+  "acceleration": 3.9,
+  "braking": 6.0,
+  "handling": 39,
+  "hover": true,
+  "traffic": 0.5
+ },
+ {
+  "id": "aurora-remesa",
+  "name": "Remesa",
+  "maker": "Aurora",
+  "class": "utilitario",
+  "speed": 2.08,
+  "trunk": 355,
+  "seats": 2,
+  "armor": 2,
+  "price": 27900,
+  "color": "#417e93",
+  "desc": "Camión de reparto con caja cerrada y gran maletero.",
+  "model": "hover-servicio",
+  "acceleration": 4.5,
+  "braking": 6.8,
+  "handling": 50,
+  "hover": true,
+  "traffic": 2.05
  }
 ]

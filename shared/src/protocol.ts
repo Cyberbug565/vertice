@@ -1,3 +1,4 @@
+import type { CarTuning } from './driving.js';
 import { PRISON_ACTIONS, type PrisonView } from './prison.js';
 import { CASINO_GAMES, type CasinoView } from './casino.js';
 import { CYBER_SIDES, type CyberSide, type CyberModel } from './cyber-models.js';
@@ -152,10 +153,10 @@ export interface TrunkView { car: string; name: string; capacity: number; used: 
 export interface SkillProg { id: string; name: string; attr: string; level: number; xp: number; from: number; to: number; bonus: number }
 export interface BuildingView { building: string; name: string; zone: string; units: { id: string; name: string; size: string; floor: number; price: number; owner: string | null; mine: boolean; allowed: boolean }[] }
 export interface RealtyView { houses: { id: string; name: string; size: string; zone: string; zoneName: string; price: number; floor: number }[]; index: Record<string, number>; mine: string[] }
-export interface DealerView { dealer: string; name: string; desc: string; cars: { id: string; name: string; maker: string; class: string; speed: number; trunk: number; seats: number; armor: number; price: number; color: string; desc: string }[]; owned: { id: string; car: string; name: string; value: number }[] }
+export interface DealerView { dealer: string; name: string; desc: string; cars: (CarTuning & { id: string; name: string; maker: string; class: string; speed: number; model: string; trunk: number; seats: number; armor: number; price: number; color: string; desc: string })[]; owned: { id: string; car: string; name: string; value: number }[] }
 export interface PropsView {
   houses: { id: string; name: string; zone: string; zoneName: string; size: string; value: number; paid: number; permits: string[] }[];
-  cars: { id: string; car: string; name: string; class: string; value: number; speed: number }[];
+  cars: (CarTuning & { id: string; car: string; name: string; class: string; value: number; speed: number })[];
   driving: string | null;
 }
 export interface StashView { house: string; name: string; items: { def: string; name: string; qty: number }[]; inventory: { def: string; name: string; qty: number }[] }
@@ -349,7 +350,7 @@ export type ServerMsg =
   | { t: 'sector'; sector: string; danger: string }
   | { t: 'facts'; facts: Record<string, unknown> }
   | { t: 'chat'; from: string; fromId: number; channel: 'local' | 'global'; text: string }
-  | { t: 'selfSpeed'; v: number; guard: boolean }
+  | { t: 'selfSpeed'; v: number; guard: boolean; tuning?: CarTuning | null }
   | { t: 'possess'; you: number; zone: string; x: number; y: number; ghost: boolean }
   | { t: 'legend'; view: import('./relics.js').LegendView; open: boolean }
   | { t: 'cheatInfo'; items: { id: string; name: string; kind: string }[]; npcs: string[]; places: { id: string; name: string }[] }

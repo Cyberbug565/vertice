@@ -1,0 +1,40 @@
+<!doctype html>
+<meta charset="utf-8">
+<script type="module">
+import * as T from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+const renderer = new T.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(160, 112);
+renderer.setClearColor(0, 0);
+renderer.toneMapping = T.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.36;
+const scene = new T.Scene();
+scene.add(new T.HemisphereLight(0xe5f0ff, 0x9993ac, 2.35));
+const sun = new T.DirectionalLight(0xfff5ec, 1.8);
+sun.position.set(-2, 5, 6);
+scene.add(sun);
+const camera = new T.OrthographicCamera(-80 / 45.25, 80 / 45.25, 56 / 45.25, -56 / 45.25, .1, 50);
+camera.position.set(8, 8 * Math.sqrt(2 / 3), 8);
+camera.lookAt(0, 0, 0);
+const loader = new GLTFLoader();
+window.renderCar = async (id, hover) => {
+  const root = (await loader.loadAsync('/models/vehiculos/' + id + '.glb')).scene;
+  root.position.y = hover ? .13 : 0;
+  scene.add(root);
+  const atlas = document.createElement('canvas');
+  atlas.width = 640; atlas.height = 112;
+  const ctx = atlas.getContext('2d');
+  // +X, +Y, -X, -Y de la planta que usa el juego.
+  for (let angle = 0; angle < 4; angle++) {
+    root.rotation.y = Math.PI / 2 - angle * Math.PI / 2;
+    renderer.render(scene, camera);
+    ctx.drawImage(renderer.domElement, angle * 160, 0);
+  }
+  const preview = document.createElement('canvas');
+  preview.width = 160; preview.height = 112;
+  preview.getContext('2d').drawImage(atlas, 0, 0, 160, 112, 0, 0, 160, 112);
+  scene.remove(root);
+  const encode = canvas => canvas.toDataURL('image/webp', .86).split(',')[1];
+  return { atlas: encode(atlas), preview: encode(preview) };
+};
+</script>

@@ -101,3 +101,16 @@ Las siguientes obras se adaptaron bajo [Creative Commons Atribución 4.0 Interna
 | [Spine Implant Segment](https://sketchfab.com/3d-models/spine-implant-segment-8026497f40d646c38de51e86608e2ab0) | [dxvs](https://sketchfab.com/dxvs) | Columna de discos Rótula |
 
 Mano de taller, Vigía, Estibador, Bastión, Arconte, Coloso y Titán se modelaron para Vértice. El [inventario de la release](docs/CIBERWARE_3D.md#inventario-del-release) identifica las piezas y los dos archivos idénticos.
+
+## Flota de Vértice v0.34
+
+La [release `coches`](https://github.com/Cyberbug565/vertice/releases/tag/coches) aporta los archivos de origen. El juego usa versiones normalizadas con texturas reducidas y miniaturas generadas a partir de las mismas mallas.
+
+| Archivos de origen | Uso |
+| --- | --- |
+| KayKit City Builder Bits 1.0 Free, de Kay Lousberg (CC0) | Compacto, berlina, familiar, taxi y patrulla |
+| HoverCars.zip | Doce carrocerías, incluidos modelos civiles, industriales y de emergencias |
+| Futuristic Car 2.1, Royal Hyper X, sci fi flying car 01 y BIKE FINAL | Prototipo, hiperdeportivo, maglev y moto |
+| Cyberpunk DeLorean, de Chaosmonger Studio | Saeta Vector, ya adaptado en v0.32 |
+
+`HoverCars.unitypackage` repite el paquete HoverCars. Los archivos de texturas y las ilustraciones 2D de la release son recursos gráficos, sin nuevas mallas de vehículos. `Future_CAR_Concept.mb` y `default.c4d` quedan pendientes de una exportación compatible.

@@ -361,7 +361,9 @@ export type PerkDef = z.infer<typeof PerkSchema>;
 export const CAR_CLASSES = ['moto', 'economico', 'utilitario', 'deportivo', 'todoterreno', 'lujo', 'blindado', 'hiper'] as const;
 export const CarSchema = z.object({
   id: z.string(), name: z.string(), maker: z.string(), class: z.enum(CAR_CLASSES), speed: z.number(), trunk: z.number(), seats: z.number().int(), armor: z.number().int(),
-  price: z.number().int(), color: z.string(), desc: z.string(), model: z.literal('vector').optional(),
+  price: z.number().int(), color: z.string(), desc: z.string(), model: z.string().regex(/^[a-z][a-z0-9-]*$/),
+  acceleration: z.number().positive(), braking: z.number().positive(), handling: z.number().min(1).max(100),
+  hover: z.boolean().default(false), traffic: z.number().min(0).default(1),
 });
 export type CarDef = z.infer<typeof CarSchema>;
 export const DealerSchema = z.object({ id: z.string(), name: z.string(), zone: z.string(), classes: z.array(z.enum(CAR_CLASSES)), priceMult: z.number(), desc: z.string() });

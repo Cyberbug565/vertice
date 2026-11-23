@@ -1,3 +1,4 @@
+import type { CarMotion } from '@vertice/shared';
 import type { Appearance, EntityKind, EntitySpawn, TaskDef, FugitiveDef, EmoteState } from '@vertice/shared';
 import type { Zone } from './zone.js';
 import type { PlayerConn } from './world.js';
@@ -11,6 +12,7 @@ export interface Entity {
   zone: Zone; x: number; y: number; cellKey: number; sectorId: string;
   path: [number, number][]; speed: number; facing: number; moving: boolean; lastMoveTick: number;
   /** v0.7: dirección de WASD (con marca de tiempo para cortar si el cliente deja de avisar) y guardia con clic derecho. */
+  carMotion?: CarMotion;
   steer?: { dx: number; dy: number; at: number }; guard?: boolean; guardFacing?:number; guardSince?: number; dodgeUntil?: number; dodgeReadyAt?: number; sign?: { text: string; color?: string; icon?: string }; carry?: string[]; lastDir?: { dx: number; dy: number }; markedUntil?: number;
   appearance?: Appearance; role?: string; label: string; labelVer: number;
   interactive: boolean; objKind?: string; dialog?: string; danger?: string;
