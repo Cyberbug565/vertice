@@ -802,7 +802,7 @@ export class Survival {
   private checkShop(c: PlayerConn, shop: string) {
     const o = this.x(c).openShop;
     const src = o && this.w.entities.get(o.entity);
-    if (!o || o.shop !== shop || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > SHOP_RANGE) throw new GameError('Tienes que estar en la tienda.');
+    if (!o || o.shop !== shop || !src || (this.w.cityPeople.has(src)&&(!this.w.cityPeople.isWorking(src)||src.npcShop!==shop)) || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > SHOP_RANGE) throw new GameError('Tienes que estar en la tienda.');
   }
   async buy(c: PlayerConn, m: Extract<ClientMsg, { t: 'buy' }>) {
     this.checkShop(c, m.shop);

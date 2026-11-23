@@ -254,8 +254,12 @@ describe('v0.2 · vivir en la ciudad', () => {
     expect(r.ok).toBe(true);
     expect(pc.money).toBe(m0 - 100);
     await target.waitFor((m) => m.t === 'label' && (m as any).bounty === 100, 3000, 'marca de recompensa').catch(() => {});
+    // Aísla la captura legal de un aviso independiente por llevar armas a la vista.
+    expect((await hunter.cmd({ t:'equip', item:null })).ok).toBe(true);
+    expect((await target.cmd({ t:'equip', item:null })).ok).toBe(true);
     await hunter.enterDoor('Salida'); await target.enterDoor('Salida');
     const ph = P('cazadora'), pt = P('objetivo');
+    pt.hp=24;
     pt.stance = 'defend'; pt.nextAttackAt = Date.now() + 1e9;
     const mh = ph.money;
     app.world.survival.rng = () => 0.95;

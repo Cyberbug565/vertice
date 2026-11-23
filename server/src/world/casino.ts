@@ -72,6 +72,8 @@ export class Casino {
     const table=this.table(m.table);
     this.assertAt(c,table);
     const p=c.p!;
+    if((m.action==='challenge'||m.action==='bet')&&this.world.cityPeople.holdsCasino(c.e!))
+      throw new GameError('Seguridad ha pausado tus apuestas. Baja el arma y espera unos segundos.');
     if(this.busy.has(c.accountId))throw new GameError('El duelo se está resolviendo.');
     if(m.action==='view')return this.send(c,table,await this.read(this.world.db,p.charId),undefined,false,m.seq);
     if(m.action==='seen'){

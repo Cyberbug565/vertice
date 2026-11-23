@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.27)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.28)
+
+La v0.28 amplía la población con 67 NPC con turnos, patrullas, personal de casino y dependientes. [Horarios, interacciones y pruebas](docs/TURNOS_NPC.md).
 
 La v0.27 abre cinco casinos con eurodólares del juego, mesas animadas y salas VIP. [Ubicaciones, apuestas, reglas y planos](docs/CASINOS.md).
 

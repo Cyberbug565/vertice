@@ -1,0 +1,17 @@
+{
+  "cuatro_horas_sin_jugadores": {
+    "residentDecisions": 0,
+    "residentPathIntents": 0,
+    "residentDormantTransitions": 183
+  },
+  "relevo_meridiano": {
+    "dia": "Nora Ríos",
+    "noche": "Jan Lozano"
+  },
+  "juego_con_dos_clientes": {
+    "residentDecisions": 8,
+    "residentPathIntents": 4,
+    "residentDormantTransitions": 462,
+    "reacciones": 1
+  }
+}

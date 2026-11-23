@@ -163,6 +163,12 @@ export const ContractSchema = z.object({
 });
 export type ContractDef = z.infer<typeof ContractSchema>;
 
+export const NpcResidentSchema = z.object({
+  job:z.enum(['seguridad','policia','venta','reparto','limpieza','crupier','tecnico','vecino']),
+  temper:z.enum(['cauto','curioso','cordial','seco','metodico','nervioso']),
+  speed:z.number().min(1).max(3.2),
+  personal:z.string().min(8).max(170),
+});
 export const NpcSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -171,8 +177,12 @@ export const NpcSchema = z.object({
   faction: z.string().optional(),
   essential: z.boolean().default(true),
   shop: z.string().optional(),
-  appearance: z.object({ skin: z.string(), hair: z.string(), jacket: z.string(), accent: z.string() }),
-  schedule: z.array(z.object({ from: z.number().min(0).max(24), to: z.number().min(0).max(24), zone: z.string(), at: xy, state: z.enum(['rest', 'work', 'talk']), label: z.string() })).min(1),
+  appearance: z.object({ skin: z.string(), hair: z.string(), jacket: z.string(), accent: z.string(),
+    body:z.string().optional(),hairStyle:z.string().optional(),top:z.string().optional(),build:z.string().optional(),accessory:z.string().optional(),pants:z.string().optional() }),
+  resident:NpcResidentSchema.optional(),
+  schedule: z.array(z.object({ from: z.number().min(0).max(24), to: z.number().min(0).max(24), zone: z.string(), at: xy, state: z.enum(['rest', 'work', 'talk']), label: z.string(),
+    stops:z.array(xy).max(6).optional(), face:xy.optional(),
+    pose:z.enum(['brazos','gesto','telefono','sentado','fumar','abrir','lanzar']).optional() })).min(1),
 });
 export type NpcDef = z.infer<typeof NpcSchema>;
 
