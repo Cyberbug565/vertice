@@ -7,6 +7,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { hashString, seededRng, type ZoneDef } from '@vertice/shared';
 import { NeonBuilder, neonClock, neonNight, shape, SHAPES } from './neon3d';
+import { urbanForm, type UrbanLook } from './urban-form';
+import { urbanFacade, urbanGeometry, urbanLighting, urbanTransform } from './urban3d';
 
 const LOW = ['building-a', 'building-b', 'building-c', 'building-d', 'building-e', 'building-h', 'building-k'];
 const MID = ['building-f', 'building-g', 'building-i', 'building-j', 'building-l', 'building-m', 'building-n'];
@@ -49,6 +51,7 @@ function loadKit(): Promise<Map<string, KModel>> {
 /** v0.15 · Altura de las megatorras del centro (Cénit), o 0 si el edificio no lo es. La usan también las fachadas 2D
  *  invisibles que deciden cuándo atenuar un edificio, para que cuadren con el volumen 3D. */
 export function megaHeight(z: ZoneDef, b: ZoneDef['buildings'][number]): number {
+  if (urbanForm(b)) return 0;
   const c = (z as any).districts?.find((d: { id: string }) => d.id === 'cenit')?.rect as [number, number, number, number] | undefined;
   if (!c || z.kind !== 'exterior') return 0;
   const [x, y, w, h] = b.rect, mx = x + w / 2, my = y + h / 2, H = b.height * 1.35;
@@ -99,20 +102,59 @@ export class City3D {
   private cells: Cell[][] = [];
   private state: number[] = [];
   private owned: THREE.Material[] = [];
-  private zone: ZoneDef | null = null;
+  private ghosts = new Map<THREE.InstancedMesh, number>();
+  private requestedKit = false;
   private neonFade: ((i: number, mode: 0 | 1 | 2) => void) | null = null;
   private neonTex: THREE.Texture | null = null;
-
-  constructor() {
-    loadKit().then((kit) => { this.kit = kit; if (this.zone) this.build(this.zone); this.onReady?.(); }).catch((err) => console.warn('[ciudad 3D]', err));
-  }
 
   /** Construye la ciudad de la zona (solo exteriores). Devuelve si los edificios van en 3D. */
   build(z: ZoneDef, quality: 'low' | 'high' = 'high'): boolean {
     this.clear();
-    this.zone = z;
-    if (!this.kit || z.kind !== 'exterior' || !z.buildings.length) { this.active = false; return false; }
-    const groups = new Map<string, { model: string; items: { m: THREE.Matrix4; c: THREE.Color; b: number }[] }>();
+    if (z.kind !== 'exterior' || !z.buildings.length) return false;
+    if (!this.kit && z.buildings.some(b => !urbanForm(b))) {
+      if (!this.requestedKit) {
+        this.requestedKit = true;
+        loadKit().then((kit) => { this.kit = kit; this.onReady?.(); }).catch((err) => console.warn('[ciudad 3D]', err));
+      }
+      return false;
+    }
+    type Batch = {
+      geo: THREE.BufferGeometry;
+      solid: THREE.MeshStandardMaterial;
+      ghost: THREE.MeshStandardMaterial;
+      items: { m: THREE.Matrix4; c: THREE.Color; b: number }[];
+    };
+    const groups = new Map<string, Batch>();
+    const materials = new Map<string, Pick<Batch, 'solid' | 'ghost'>>();
+    const addInstance = (
+      key: string, x: number, y: number, geo: THREE.BufferGeometry,
+      palette: Pick<Batch, 'solid' | 'ghost'>, item: Batch['items'][number],
+    ) => {
+      const id = `${key}|${Math.floor(x / CHUNK)},${Math.floor(y / CHUNK)}`;
+      const group = groups.get(id) ?? groups.set(id, { geo, ...palette, items: [] }).get(id)!;
+      group.items.push(item);
+    };
+    const kitPalette = (model: string, solid: THREE.MeshStandardMaterial) => {
+      const existing = materials.get(model);
+      if (existing) return existing;
+      const ghost = solid.clone();
+      litWindows(ghost);
+      ghost.transparent = true;
+      ghost.opacity = 0.2;
+      const palette = { solid, ghost };
+      materials.set(model, palette);
+      this.owned.push(ghost);
+      return palette;
+    };
+    const urbanPalette = (facade: UrbanLook['facade']) => {
+      const existing = materials.get(facade);
+      if (existing) return existing;
+      const palette = { solid: urbanFacade(facade), ghost: urbanFacade(facade, true) };
+      materials.set(facade, palette);
+      this.owned.push(palette.solid, palette.ghost);
+      return palette;
+    };
+    const nb = new NeonBuilder(CHUNK, quality === 'high');
     /** Módulos colocados (para el neón): modelo, matriz, escalas, base y qué fachadas ve la cámara. */
     const placed: { b: number; k: KModel; m: THREE.Matrix4; s: number; sy: number; y0: number; front: boolean; mega: boolean; last: boolean; fx: boolean; fz: boolean }[] = [];
     const add = (b: number, model: string, x: number, y: number, w: number, d: number, Hgoal: number, rot: number, tint: THREE.Color, maxStretch: number, y0 = 0, minStretch = 0.6) => {
@@ -125,20 +167,24 @@ export class City3D {
       // Centro del modelo (rotado y escalado) sobre el centro de la celda.
       const off = new THREE.Vector3(-k.cx * s, 0, -k.cz * s).applyQuaternion(q);
       const m = new THREE.Matrix4().compose(new THREE.Vector3(x + w / 2 + off.x, y0, y + d / 2 + off.z), q, new THREE.Vector3(s, sy, s));
-      const key = `${model}|${Math.floor((x + w / 2) / CHUNK)},${Math.floor((y + d / 2) / CHUNK)}`;
-      const g = groups.get(key) ?? groups.set(key, { model, items: [] }).get(key)!;
-      g.items.push({ m, c: tint, b });
+      addInstance(model, x + w / 2, y + d / 2, k.geo, kitPalette(model, k.mat), { m, c: tint, b });
       placed.push({ b, k, m, s, sy, y0, front: minStretch >= 0.85 || maxStretch >= 3.2, mega: false, last: false, fx: true, fz: true });
       return k.my * sy; // altura real que ha quedado
     };
     const white = new THREE.Color(1, 1, 1);
-    const heights: number[] = z.buildings.map((b) => b.height * 1.35);
     z.buildings.forEach((b, bi) => {
       const [x0, y0, w, h] = b.rect;
       const H = b.height * 1.35;
       const rng = seededRng(hashString(b.id));
       // Tinte de la manzana: su color mezclado con blanco (el kit es casi blanco y así toma el tono del barrio).
       const base = new THREE.Color(b.color ?? '#8a8aa0');
+      const form = urbanForm(b);
+      if (form && b.urban) {
+        const { facade, model } = b.urban;
+        addInstance(`${model}|${facade}`, x0 + w / 2, y0 + h / 2, urbanGeometry(form), urbanPalette(facade), { m: urbanTransform(b, H), c: base, b: bi });
+        urbanLighting(nb, b, form, H, bi);
+        return;
+      }
       const tint = base.clone().lerp(white, 0.22 + rng() * 0.14);
       const rot = () => (rng() < 0.5 ? 0 : Math.PI / 2); // de cara a la calle que ve la cámara (+z o +x)
       // v0.15 · Centro (Cénit): megatorres modernas y escalonadas, mucho más altas, con corona de neón y aguja.
@@ -154,7 +200,6 @@ export class City3D {
           // Retranqueo: cada tramo es más estrecho que el anterior.
           const k = 0.72; ix += (iw * (1 - k)) / 2; iy += (ih * (1 - k)) / 2; iw *= k; ih *= k;
         }
-        heights[bi] = y;
       } else if (H >= 16) {
         // Torres: uno o varios rascacielos a lo largo del lado largo, estirados hasta su altura (con tope).
         const n = Math.max(1, Math.min(4, Math.round(Math.max(w, h) / Math.max(6.5, Math.min(w, h)))));
@@ -191,21 +236,18 @@ export class City3D {
     this.cells = z.buildings.map(() => []);
     this.state = z.buildings.map(() => 0);
     // v0.16 · Neón pegado a las paredes reales de cada módulo (ver neon3d.ts).
-    const nb = new NeonBuilder(CHUNK);
     for (const it of placed) if (it.front) this.decorate(nb, z, it);
     const neon = nb.build(z.buildings.length, quality);
     for (const m of neon.meshes) this.group.add(m);
     this.owned.push(...neon.materials); this.neonTex = neon.texture; this.neonFade = neon.setFade;
     for (const g of groups.values()) {
-      const k = this.kit.get(g.model)!;
-      const solidMat = k.mat;
-      const ghostMat = k.mat.clone(); litWindows(ghostMat); ghostMat.transparent = true; ghostMat.opacity = 0.2; this.owned.push(ghostMat); // escribe profundidad: el fantasma se tapa a sí mismo (sin efecto rayos X)
-      const solid = new THREE.InstancedMesh(k.geo, solidMat, g.items.length);
-      const ghost = new THREE.InstancedMesh(k.geo, ghostMat, g.items.length);
+      const solid = new THREE.InstancedMesh(g.geo, g.solid, g.items.length);
+      const ghost = new THREE.InstancedMesh(g.geo, g.ghost, g.items.length);
       g.items.forEach((it, i) => { solid.setMatrixAt(i, it.m); solid.setColorAt(i, it.c); ghost.setMatrixAt(i, ZERO); ghost.setColorAt(i, it.c); this.cells[it.b].push({ solid, ghost, i, m: it.m }); });
       for (const im of [solid, ghost]) { im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; im.computeBoundingSphere(); }
       // La esfera del fantasma se calcula con las matrices de verdad (vacías no servirían para recortar).
       ghost.boundingSphere = solid.boundingSphere!.clone();
+      ghost.visible = false;
       this.group.add(solid, ghost);
     }
     this.active = true;
@@ -290,19 +332,29 @@ export class City3D {
   /** 0 = normal, 1 = translúcido (tapa al jugador), 2 = oculto (cámara muy cerca). */
   setFaded(i: number, mode: 0 | 1 | 2) {
     if (!this.active || this.state[i] === mode) return;
+    const old = this.state[i];
     this.state[i] = mode;
     this.neonFade?.(i, mode === 0 ? 2 : 0); // v0.19: el neón de un edificio transparente se apaga (si no, llena la pantalla de rayas)
     for (const c of this.cells[i] ?? []) {
       c.solid.setMatrixAt(c.i, mode === 0 ? c.m : ZERO);
       c.ghost.setMatrixAt(c.i, mode === 1 ? c.m : ZERO);
       c.solid.instanceMatrix.needsUpdate = true; c.ghost.instanceMatrix.needsUpdate = true;
+      const count = (this.ghosts.get(c.ghost) ?? 0) + Number(mode === 1) - Number(old === 1);
+      if (count) this.ghosts.set(c.ghost, count);
+      else this.ghosts.delete(c.ghost);
+      c.ghost.visible = count > 0;
     }
   }
 
   clear() {
-    for (const o of [...this.group.children]) { this.group.remove(o); (o as THREE.InstancedMesh).dispose?.(); }
+    for (const o of [...this.group.children]) {
+      this.group.remove(o);
+      if (o instanceof THREE.InstancedMesh) o.dispose();
+      else if (o instanceof THREE.Mesh) o.geometry.dispose();
+    }
     for (const m of this.owned) m.dispose();
     this.neonTex?.dispose(); this.neonTex = null; this.neonFade = null;
     this.owned = []; this.cells = []; this.state = []; this.active = false;
+    this.ghosts.clear();
   }
 }

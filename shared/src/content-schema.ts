@@ -24,12 +24,17 @@ export const ZoneSchema = z.object({
   danger: DangerLevel,
   base: z.enum(GROUND_TYPES),
   wallColor: z.string().optional(),
-  ground: z.array(z.object({ type: z.enum(GROUND_TYPES), rect })).default([]),
+  ground: z.array(z.object({ type: z.enum(GROUND_TYPES), rect, street: z.string().optional() })).default([]),
   blocks: z.array(z.object({ type: z.enum(['fence', 'wall', 'barrier', 'counter', 'furniture']), rect, height: z.number().default(1), color: z.string().optional() })).default([]),
   buildings: z.array(z.object({
     id: z.string(), name: z.string().optional(), rect, height: z.number().positive(),
     style: z.enum(['mega', 'block', 'shop', 'club', 'clinic', 'industrial', 'tower', 'arcology', 'spire', 'glass']),
     color: z.string(), sign: z.string().optional(), signColor: z.string().optional(),
+    urban: z.object({
+      model: z.string().regex(/^[a-z][a-z0-9-]{1,43}$/),
+      facade: z.enum(['corporativa', 'residencial', 'comercial', 'industrial', 'ruina']),
+      turn: z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]).default(0),
+    }).optional(),
   })).default([]),
   props: z.array(z.object({ type: z.enum(['stall', 'lamp', 'crate', 'bench', 'plant', 'vending', 'car', 'neon', 'table', 'bed', 'screen', 'pipe', 'holo', 'antenna', 'shelf', 'trash', 'tent', 'smokestack', 'wreck', 'billboard', 'palm', 'neonstrip', 'crane', 'window', 'column', 'sofa', 'desk', 'locker', 'fridge', 'planter', 'arcade', 'barrel', 'dumpster', 'hydrant', 'kiosk', 'jersey', 'busstop', 'monolith', 'datastream', 'glitch', 'node', 'codewall', 'citylights']), at: xy, blocking: z.boolean().default(true), color: z.string().optional(), text: z.string().optional(), z: z.number().optional() })).default([]),
   skybridges: z.array(z.object({ from: xy, to: xy, z: z.number(), color: z.string().optional() })).default([]),
