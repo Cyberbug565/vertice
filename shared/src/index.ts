@@ -20,3 +20,4 @@ export * from './atlas.js';
 export * from './casino.js';
 
 export * from './prison.js';
+export * from './worn-appearance.js';

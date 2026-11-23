@@ -4,25 +4,26 @@
 import type { Appearance } from '@vertice/shared';
 
 /** Rasgos (ver Look.face en human3d.ts). `r` es el azar propio de la persona. */
-export function faceParams(a: Required<Appearance>, r: () => number, female: boolean): number[] {
-  const fsh = a.faceShape, nz = a.nose, mo = a.mouth;
+export function faceParams(a: Appearance, r: () => number, female: boolean): number[] {
+  const fsh = a.faceShape ?? 'ovalada', nz = a.nose ?? 'recta', mo = a.mouth ?? 'neutra';
   const pick = (m: Record<string, number>, k: string) => m[k] ?? 0;
   return [
-    (r() - 0.5) * 0.09 + pick({ ancha: 0.04, redonda: 0.035, alargada: -0.03, afilada: -0.035, diamante: -0.01, cuadrada: 0.02 }, fsh),
-    (r() - 0.5) * 0.3 + pick({ cuadrada: 0.18, triangular: -0.16, corazon: -0.16, afilada: -0.18, ancha: 0.1, angulosa: 0.08 }, fsh) + (female ? -0.04 : 0.04),
-    (r() - 0.5) * 1.5 + pick({ aguilena: 1.0, chata: -0.9, respingona: -0.6, pequena: -0.6, rota: 0.4 }, nz),
-    (r() - 0.5) * 1.4 + pick({ alargada: 0.8, afilada: 0.7, redonda: -0.5, triangular: 0.4 }, fsh),
-    (r() - 0.5) * 1.6 + pick({ gruesas: 0.6, finas: -0.4, cortadas: 0.2 }, a.brows),
-    (r() - 0.5) * 1.4 + pick({ diamante: 1.1, angulosa: 1.0, redonda: -0.4 }, fsh),
+    (r() - 0.5) * 0.045 + pick({ oblonga: -.032, 'frente-ancha': .092, 'pomulos-altos': .025, 'ovalada-corta': .027, ancha: 0.04, redonda: 0.035, alargada: -0.03, afilada: -0.035, diamante: -0.01, cuadrada: 0.02 }, fsh),
+    (r() - 0.5) * 0.13 + pick({ 'mandibula-marcada': .37, 'frente-ancha': -.24, 'pomulos-altos': -.13, 'perfil-suave': -.035, cuadrada: 0.18, triangular: -0.16, corazon: -0.16, afilada: -0.18, ancha: 0.1, angulosa: 0.08 }, fsh) + (female ? -0.04 : 0.04),
+    (r() - 0.5) * 0.65 + pick({ 'puente-alto': .78, 'puente-bajo': -.72, 'perfil-griego': .47, aguilena: 1.0, chata: -0.9, respingona: -0.6, pequena: -0.6, rota: 0.4 }, nz),
+    (r() - 0.5) * 0.7 + pick({ oblonga: 1.35, 'mandibula-marcada': .63, 'ovalada-corta': -.9, 'perfil-suave': -.24, alargada: 0.8, afilada: 0.7, redonda: -0.5, triangular: 0.4 }, fsh),
+    (r() - 0.5) * 1.6 + pick({ gruesas: 0.6, finas: -0.4, cortadas: 0.2 }, a.brows ?? 'normales'),
+    (r() - 0.5) * 0.8 + pick({ 'pomulos-altos': 1.8, 'mandibula-marcada': .75, 'ovalada-corta': -.43, 'perfil-suave': -.6, diamante: 1.1, angulosa: 1.0, redonda: -0.4 }, fsh),
     (r() - 0.5) * 0.5 + pick({ ancha: 0.35, chata: 0.22, pequena: -0.2, respingona: -0.12, rota: 0.15 }, nz),
-    (r() - 0.5) * 1.4 + pick({ alargada: 0.4, corazon: 0.5, redonda: -0.2 }, fsh),
-    (r() - 0.5) * 1.2 + pick({ 'labios-gruesos': 1.1, fina: -0.8, seria: -0.3 }, mo) + (female ? 0.35 : 0),
+    (r() - 0.5) * 0.8 + pick({ 'frente-ancha': 1.05, oblonga: .59, 'ovalada-corta': -.52, alargada: 0.4, corazon: 0.5, redonda: -0.2 }, fsh),
+    (r() - 0.5) * 0.62 + pick({ arco: .65, 'labio-inferior': 1.35, 'comisuras-altas': .22, 'labios-gruesos': 1.1, fina: -0.8, seria: -0.3 }, mo) + (female ? 0.35 : 0),
     (r() - 0.5) * 1.6,
-    (r() - 0.5) * 0.7 + pick({ cuadrada: 0.4, ancha: 0.25, afilada: -0.35, corazon: -0.3, triangular: 0.2, diamante: -0.25 }, fsh),
-    (r() - 0.5) * 1.4 + pick({ arqueadas: 0.6, cortadas: -0.2 }, a.brows),
-    (r() - 0.5) * 1.3 + pick({ aguilena: 0.9, chata: -0.9, rota: 0.6, recta: 0.2 }, nz),
-    (r() - 0.5) * 1.3 + pick({ redonda: 0.9, ancha: 0.4, angulosa: -0.6, afilada: -0.6, diamante: -0.4 }, fsh),
-    (r() - 0.5) * 0.9 + pick({ alargada: 0.6, redonda: -0.35, triangular: 0.2 }, fsh),
+    (r() - 0.5) * 0.38 + pick({ 'mandibula-marcada': .69, 'frente-ancha': -.38, 'pomulos-altos': -.37, 'perfil-suave': -.14, cuadrada: 0.4, ancha: 0.25, afilada: -0.35, corazon: -0.3, triangular: 0.2, diamante: -0.25 }, fsh),
+    (r() - 0.5) * 1.4 + pick({ arqueadas: 0.6, cortadas: -0.2 }, a.brows ?? 'normales'),
+    (r() - 0.5) * 0.66 + pick({ 'puente-alto': 1.55, 'puente-bajo': -1.45, 'perfil-griego': 1.15, aguilena: 0.9, chata: -0.9, rota: 0.6, recta: 0.2 }, nz),
+    (r() - 0.5) * 0.75 + pick({ 'perfil-suave': 1.12, 'pomulos-altos': -.74, 'ovalada-corta': .64, redonda: 0.9, ancha: 0.4, angulosa: -0.6, afilada: -0.6, diamante: -0.4 }, fsh),
+    (r() - 0.5) * 0.48 + pick({ oblonga: 1.23, 'ovalada-corta': -.92, 'frente-ancha': .52, alargada: 0.6, redonda: -0.35, triangular: 0.2 }, fsh),
+    pick({ arco: .75, 'comisuras-altas': 1, sonrisa: .7, mueca: .35, seria: -.4, 'labio-inferior': -.25 }, mo),
   ];
 }
 

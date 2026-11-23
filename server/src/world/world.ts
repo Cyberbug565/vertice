@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db, Queryable } from '../db/db.js';
@@ -152,10 +152,6 @@ export class World {
       diversifyAppearance(e.appearance as any, rng, 'civil'); // v0.9: más ropa, tejidos, tatuajes y calzado
       (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
       e.npc.nextThink = Math.floor(rng() * 20);
-      // v0.21 · La mitad de la gente de la calle lleva un personaje cartoon (oficios de la ciudad y alguno del pack medieval).
-      const roll = rng();
-      if (roll < 0.42) (e.appearance as any).model = pick(['base-hombre', 'base-mujer', 'ejecutivo', 'ejecutiva', 'medico', 'enfermera', 'ingeniero', 'cientifico', 'estudiante-o', 'estudiante-a', 'profesora', 'mecanico', 'basurero', 'bombero']);
-      else if (roll < 0.52) (e.appearance as any).model = pick(['med-vecino-1', 'med-vecina-2', 'med-campesino-1', 'med-campesino-2', 'med-campesino-3', 'med-campesino-4', 'med-campesino-5', 'med-campesino-6', 'med-rico-1', 'med-rico-2', 'med-rico-3', 'med-rico-4']);
       return e;
     };
     for (const zone of exteriors) {
@@ -181,8 +177,6 @@ export class World {
     await this.posts.load();
     await this.mythics.load();
     this.combat.spawnPopulation();
-    // v0.21 · Parte de la PCV con el uniforme cartoon de agente o de tráfico.
-    for (const z of this.zones.values()) for (const e of z.entities) if (e.npcType === 'police' && e.appearance && rng() < 0.55) (e.appearance as any).model = rng() < 0.7 ? 'policia' : 'agente-trafico';
     this.nightlife.populate();
     this.underworld.populate();
     if (this.cfg.threats !== false) await this.threats.init(); else this.threats.enabled = false;
@@ -304,7 +298,7 @@ export class World {
   addEntity(z: Zone, o: Partial<Entity> & { kind: Entity['kind']; name: string; x: number; y: number; interactive: boolean; label: string; speed?: number }): Entity {
     const e: Entity = {
       id: this.nextId++, zone: z, cellKey: 0, sectorId: '', path: [], facing: 2, moving: false, lastMoveTick: 0, labelVer: 0, ...o,
-      speed: (o.speed ?? 2.6) * this.cfg.speedScale,
+      speed: (o.speed ?? RULES.walkSpeedBase) * (o.kind === 'npc' && o.speed ? 0.82 : 1) * this.cfg.speedScale,
     } as Entity;
     e.sectorId = sectorOf(z.grid, e.x, e.y).id;
     z.add(e);
@@ -444,13 +438,8 @@ export class World {
     const p = this.playerOf(e);
     if (e.transit || e.carriedBy || e.state === 'downed' || (p && (p.status !== 'alive' || p.sleeping)) || (e.stunUntil ?? 0) > Date.now()) { e.moving = false; return; }
     this.nightlife.stop(e);
-    const step = e.speed * dt * (e.guard ? 0.5 : 1) * (e.timeScale ?? 1);
-    const g = e.zone.grid;
-    // La proyección de Eco atraviesa paredes (solo no puede salirse del mapa).
-    const free = e.ghostOf ? (x: number, y: number) => x > 0.3 && y > 0.3 && x < g.w - 0.3 && y < g.h - 0.3
-      : (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - e.x) * 0.22, y + Math.sign(y - e.y) * 0.22);
-    let nx = e.x + s.dx * step, ny = e.y + s.dy * step;
-    if (!free(nx, ny)) { if (free(nx, e.y)) ny = e.y; else if (free(e.x, ny)) nx = e.x; else { nx = e.x; ny = e.y; } }
+    const step = e.speed * dt * (e.guard && !p?.driving ? 0.5 : 1) * (e.timeScale ?? 1);
+    const { x: nx, y: ny } = stepWithCollision(e.zone.grid, e.x, e.y, s.dx * step, s.dy * step, !!e.ghostOf);
     const moved = nx !== e.x || ny !== e.y;
     if (moved) { e.facing = e.guard && e.guardFacing!==undefined ? e.guardFacing : facingToIdx(nx-e.x,ny-e.y); e.x = nx; e.y = ny; e.zone.moved(e); }
     e.moving = moved;
@@ -791,6 +780,7 @@ export class World {
       case 'dodge': return guarded(m.seq, async () => this.combat.dodge(c, m.dx, m.dy));
       case 'swing': return guarded(m.seq, async () => this.combat.swing(c, m.dx, m.dy, !!m.heavy, m.opId));
       case 'guard': {
+        if(p.driving && m.on){this.send(c,{t:'ack',seq:m.seq,ok:false,reason:'Estás al volante.'});return;}
         if(!!e.guard!==m.on){e.guard=m.on;e.guardSince=m.on?Date.now():undefined;e.labelVer++;}
         e.guardFacing=m.on?m.facing:undefined;
         if(m.on && m.facing!==undefined && e.facing!==m.facing){e.facing=m.facing;e.lastMoveTick=this.tick+1;}
@@ -833,7 +823,7 @@ export class World {
       case 'ability': return guarded(m.seq, () => this.combat.ability(c, m.id));
       case 'props': this.send(c, { t: 'props', view: this.property.propsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'marketLive': this.property.liveOn(c, m.on); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
-      case 'run': p.running = m.on; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
+      case 'run': p.running = m.on; this.survival.refreshMovement(c); this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
       case 'auto': return guarded(m.seq, async () => this.autopilot.set(c, m.on, m.personality));
       case 'post': return guarded(m.seq, async () => {
         if (m.action === 'apply') { await this.posts.apply(c, m.post ?? ''); this.send(c, { t: 'hiring', view: this.posts.hiringView(c, m.obj ?? this.c.posts.find((x) => x.id === m.post)?.obra) }); }

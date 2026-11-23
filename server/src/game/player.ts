@@ -1,7 +1,7 @@
 // Estado en memoria de una vida de personaje y su persistencia básica.
 import { randomUUID } from 'node:crypto';
 import {
-  pairedRegion, cyberSide, type CyberwareDef, ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
+  visibleParts, dressedAppearance, editableAppearance, ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
   CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, woundList, effectiveBleed, painOf, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
@@ -71,13 +71,6 @@ export interface PlayerState {
 export interface CyberInstance { id: string; def: string; location: 'inventory' | 'installed'; stolen: boolean; part?: string | null }
 
 export const NET_RANKS = [0, 3, 8, 15, 25, 38, 55, 75, 100, 130, 170];
-export function visibleParts(def: CyberwareDef, part?: string | null): string[] {
-  if (def.visible === 'ninguna') return [];
-  if (def.visible === 'piernas') return ['pierna_izq', 'pierna_der'];
-  if (pairedRegion(def.visible)) return [def.visible + '_' + (cyberSide(part) ?? 'der')];
-  return [def.visible];
-}
-
 export function chromeParts(c: Content, p: { cyber: CyberInstance[] }): string[] {
   const out = new Set<string>();
   for (const ci of p.cyber) {
@@ -112,66 +105,9 @@ export function perkMods(c: Content, p: PlayerState) {
   for (const ci of p.cyber) if (ci.location === 'installed') { const d = c.cyberware.find((x) => x.id === ci.def); if (d?.unique) flags.add(d.unique); }
   return { mods, flags };
 }
-/** Aspecto con la ropa puesta encima. */
-/** Estilos de calzado antiguos → v0.9. */
-const SHOE_STYLE: Record<string, string> = { calzado: 'botas', deportivas: 'zapatillas', zapatos: 'mocasines' };
+/** Usa la misma composición visual que el probador del cliente. */
 export function wornAppearance(c: Content, p: PlayerState): Appearance {
-  const a: any = { ...p.appearance };
-  // v0.22 · Prendas 3D, ropa interior y partes al aire. Un hueco vacío ('') es que se ha quitado lo de serie.
-  const worn = (slot: string) => { const id = p.wear[slot]; const it = id ? c.items.find((i) => i.id === id) : undefined; return it?.wear && (p.inventory.get(it.id) ?? 0) > 0 ? it : undefined; };
-  const garments: string[] = [], bare = new Set<string>();
-  const covered = new Set<string>();
-  for (const slot of Object.keys(p.wear)) { const it = worn(slot); if (it?.wear?.also) for (const s2 of it.wear.also) covered.add(s2); }
-  const off = (slot: string) => p.wear[slot] === '' && !covered.has(slot);
-  if (off('torso_int') && !worn('torso_ext') || off('torso_ext') && !worn('torso_int')) bare.add('torso');
-  for (const [slot, part] of [['piernas', 'piernas'], ['pies', 'pies'], ['cabeza', 'cabeza'], ['cara', 'cara'], ['manos', 'manos']] as const) if (off(slot)) bare.add(part);
-  for (const slot of ['torso_int', 'torso_ext', 'piernas', 'pies', 'cabeza', 'cara', 'manos', 'accesorio']) {
-    const it = worn(slot);
-    if (!it?.wear?.style.startsWith('g:')) continue;
-    garments.push(it.wear.style.slice(2));
-    // Lo que tapa la prenda 3D no se dibuja con la ropa de serie (queda «al aire» debajo de la prenda).
-    for (const s2 of [slot, ...(it.wear.also ?? [])]) bare.add(s2 === 'torso_int' || s2 === 'torso_ext' ? 'torso' : s2);
-  }
-  // Con una prenda 3D en el tronco, la de serie solo se queda si el otro hueco lleva ropa clásica.
-  const classicTorso = ['torso_int', 'torso_ext'].some((s2) => worn(s2) && !worn(s2)!.wear!.style.startsWith('g:'));
-  if (classicTorso) bare.delete('torso');
-  for (const [slot, key] of [['interior_sup', 'underTop'], ['interior_inf', 'underBottom']] as const) {
-    if (p.wear[slot] === '') { a[key] = ''; continue; }
-    const it = worn(slot);
-    if (it?.wear?.style.startsWith('u:')) { a[key] = it.wear.style.slice(2); a[key + 'Color'] = it.wear.color; }
-  }
-  if (garments.length) a.garments = garments.join(',');
-  if (bare.size) a.bare = [...bare].join(',');
-  for (const [slot, id] of Object.entries(p.wear)) {
-    const it = id ? c.items.find((i) => i.id === id) : undefined;
-    if (!it?.wear || (p.inventory.get(it.id) ?? 0) <= 0) continue;
-    const w = it.wear;
-    if (w.style.startsWith('g:') || w.style.startsWith('u:') || slot === 'accesorio') continue;
-    const ww = w as typeof w & { pattern?: string; detail?: string; accent?: string };
-    if (slot === 'torso_ext') { a.top = w.style; a.jacket = w.color; a.outer = w.style; a.topPattern = ww.pattern ?? 'liso'; a.topDetail = ww.detail ?? 'ninguno'; if (ww.accent) a.accent2 = ww.accent; }
-    else if (slot === 'torso_int') { a.shirt = w.color; if (!p.wear.torso_ext || (p.inventory.get(p.wear.torso_ext) ?? 0) <= 0) { a.top = w.style; a.jacket = w.color; a.topPattern = ww.pattern ?? 'liso'; a.topDetail = ww.detail ?? 'ninguno'; if (ww.accent) a.accent2 = ww.accent; } }
-    else if (slot === 'piernas') { a.pants = w.color; a.legwear = w.style; a.pantsPattern = ww.pattern ?? 'liso'; }
-    else if (slot === 'pies') { a.shoes = w.color; a.shoeStyle = SHOE_STYLE[w.style] ?? w.style; }
-    else if (slot === 'cabeza') { a.headwear = w.style; a.headColor = w.color; }
-    else if (slot === 'cara') { a.eyewear = w.style; a.accessory = 'ninguno'; }
-    else if (slot === 'manos') { a.gloves = w.style; a.gloveColor = w.color; } // v0.16 · guantes
-    if (it.rarity === 'legendario' || it.rarity === 'epico') a.rarityGlow = it.rarity === 'legendario' ? '#ffd23f' : '#b46cff';
-  }
-  // v0.16 · Gama del cromo visible de cada parte (según el grado y la rareza del implante): chatarra barata hasta lujo.
-  const tiers: Record<string, string> = {};
-  const rank = (t: string) => ['chatarra', 'estandar', 'militar', 'lujo'].indexOf(t);
-  for (const ci of p.cyber) {
-    if (ci.location !== 'installed') continue;
-    const d = c.cyberware.find((x) => x.id === ci.def);
-    if (!d || d.visible === 'ninguna') continue;
-    const r = d.rarity ?? '';
-    const t = r === 'mitico' || r === 'legendario' || d.grade >= 5 ? 'lujo' : d.grade >= 4 || r === 'epico' ? 'militar' : d.grade >= 2 ? 'estandar' : 'chatarra';
-    const parts = visibleParts(d, ci.part);
-    if (d.model) for (const part of parts) (a.chromeModels ??= {})[part] = d.model;
-    for (const pt of parts) if (!tiers[pt] || rank(t) > rank(tiers[pt])) tiers[pt] = t;
-  }
-  if (Object.keys(tiers).length) a.chromeTier = tiers;
-  return a;
+  return dressedAppearance(c, p.appearance, p.wear, p.inventory, p.cyber);
 }
 
 export function effective(c: Content, p: PlayerState) {
@@ -362,7 +298,7 @@ export async function loadPlayer(db: Queryable, charId: string): Promise<PlayerS
   const p: PlayerState = {
     playedMs: Number(row.played_ms ?? 0), playSessionAt: Date.now(),
     charId, accountId: row.account_id, name: row.name, role: row.role, origin: row.origin,
-    attributes: row.attributes, skills: row.skills, appearance: row.appearance,
+    attributes: row.attributes, skills: row.skills, appearance: editableAppearance(row.appearance),
     level: row.level, xp: row.xp, roleRank: row.role_rank, money: Number(row.money), bank:Number(row.bank_balance??0), sentence:row.prison_state??null, hp: row.hp, stamina: row.stamina, luck: row.luck, humanity: row.humanity,
     stance: row.stance, zone: row.zone_id, x: row.pos_x, y: row.pos_y,
     inventory: invMap,

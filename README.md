@@ -1,4 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.29)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.30)
+
+La v0.30 revisa la [marcha, los probadores y el creador](docs/ASPECTO_030.md).
 
 La v0.29 abre el [Penal de las Salinas](docs/PENAL.md), con arrestos, expedientes persistentes, cuenta bancaria, turnos, libertad condicional y fugas.
 

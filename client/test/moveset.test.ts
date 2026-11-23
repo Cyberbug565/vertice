@@ -67,13 +67,13 @@ it('selecciona la captura por dirección, equipo y acción, y conserva la patada
   };
   const sight={x:0,y:20,until:5000};
   for(const [data,id] of [
-    [{speed:2},'andar'],[{speed:4,state:{buffs:['corriendo']}},'trotar'],[{speed:6},'correr'],
+    [{speed:2},undefined],[{speed:4,state:{buffs:['corriendo']}},'trotar'],[{speed:6},'correr'],
     [{speed:3,state:{buffs:['paso-der','corriendo']}},'herido'],[{speed:2,state:{buffs:['paso-ebrio']}},'ebrio'],
     [{speed:2,rig:{ranged:true,big:true},state:{weapon:'fusil'}},'fusil'],
     [{speed:2,vy:-2,guard:true,event:{lookAt:sight}},'retroceso'],
     [{speed:2,vx:2,vy:0,guard:true,event:{lookAt:sight}},'lateral-izq'],
     [{speed:2,vx:-2,vy:0,guard:true,event:{lookAt:sight}},'lateral-der'],
-    [{speed:2,vy:-2,rig:{wasMoving:false}},'pivote'],[{speed:4,vy:-4,rig:{wasMoving:true,travel:0}},'revertir'],
+    [{speed:2,vy:-2,rig:{wasMoving:false}},undefined],[{speed:4,vy:-4,rig:{wasMoving:false}},'pivote'],[{speed:4,vy:-4,rig:{wasMoving:true,travel:0}},'revertir'],
     [{speed:4,vx:4,vy:0,rig:{wasMoving:true,travel:0}},'curva']
   ] as const)expect(run(data).base?.id).toBe(id);
   for(const [data,id] of [

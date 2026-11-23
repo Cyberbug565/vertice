@@ -16,8 +16,12 @@ export const RULES = {
   luckMaxSpendPerCheck: 4,
   tickRate: 20,
   snapshotEveryTicks: 2,
-  walkSpeedBase: 2.6, // losetas/s con MOVE 5
-  walkSpeedPerMove: 0.12,
+  walkSpeedBase: 1.55, // losetas/s con MOVE 5
+  walkSpeedPerMove: 0.085,
+  runSpeedFactor: 1.82,
+  maxFootSpeed: 5.4,
+  vehicleSpeedUnit: 3.45,
+  actorScale: 0.86,
 } as const;
 
 export function maxHp(a: Pick<Attributes, 'BODY' | 'WILL'>): number {
@@ -37,6 +41,11 @@ export function humanityBase(empBase: number): number {
 }
 export function walkSpeed(a: Pick<Attributes, 'MOVE'>): number {
   return RULES.walkSpeedBase + (a.MOVE - 5) * RULES.walkSpeedPerMove;
+}
+
+/** La velocidad de crucero depende del vehículo y sus mejoras de conducción. */
+export function vehicleSpeed(model: number, bonus = 0): number {
+  return RULES.vehicleSpeedUnit * model * (1 + Math.max(0, bonus));
 }
 
 /** Humanidad tras cirugía: primero se aplica el nuevo máximo y después el coste transitorio. */

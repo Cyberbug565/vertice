@@ -52,6 +52,24 @@ export function isWalkable(g: ZoneGrid, x: number, y: number): boolean {
   return g.walk[ty * g.w + tx] === 1;
 }
 
+/** Barre el desplazamiento para impedir atravesar casillas sólidas incluso en coche. */
+export function stepWithCollision(g: ZoneGrid, x: number, y: number, dx: number, dy: number, ghost = false) {
+  const count = Math.max(1, Math.ceil(Math.max(Math.abs(dx), Math.abs(dy)) / 0.24));
+  dx /= count;
+  dy /= count;
+  const free = (nx: number, ny: number) => ghost
+    ? nx > 0.3 && ny > 0.3 && nx < g.w - 0.3 && ny < g.h - 0.3
+    : isWalkable(g, nx, ny) && isWalkable(g, nx + Math.sign(nx - x) * 0.22, ny + Math.sign(ny - y) * 0.22);
+  for (let i = 0; i < count; i++) {
+    const nx = x + dx, ny = y + dy;
+    if (free(nx, ny)) { x = nx; y = ny; }
+    else if (dx && free(nx, y)) x = nx;
+    else if (dy && free(x, ny)) y = ny;
+    else break;
+  }
+  return { x, y };
+}
+
 export function dangerAt(g: ZoneGrid, x: number, y: number): DangerLevel {
   const tx = Math.max(0, Math.min(g.w - 1, Math.floor(x))), ty = Math.max(0, Math.min(g.h - 1, Math.floor(y)));
   return DANGER_FROM_IDX[g.danger[ty * g.w + tx]];

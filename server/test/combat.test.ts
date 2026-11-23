@@ -61,7 +61,7 @@ describe('v0.3 · combate, red y ciudad', () => {
     freeRng();
     expect(civ.state).toBe('downed');
     expect(civ.npcLethalDown).toBe(true);
-    expect(pa.inventory.get('bala-pistola')!).toBeLessThan(ammo0);
+    expect(pa.inventory.get('bala-pistola') ?? 0).toBeLessThan(ammo0);
     near('pistolera', civ.x + 1, civ.y);
     const r = await a.cmd({ t: 'hostile', target: civ.id, action: 'carry', opId: op() });
     expect(r.ok).toBe(true);
