@@ -1,0 +1,281 @@
+{
+ "id": "casino-ultima-ficha",
+ "name": "Última Ficha",
+ "kind": "interior",
+ "width": 16,
+ "height": 12,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#71dba4",
+ "safePoint": [
+  8,
+  9
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "ultima-ficha",
+  "room": "Sala de juego"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    7,
+    2,
+    3,
+    8
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-ultima-ficha-ruleta",
+   "kind": "casino",
+   "name": "Mesa de ruleta",
+   "games": [
+    "ruleta"
+   ],
+   "at": [
+    5,
+    4
+   ]
+  },
+  {
+   "id": "casino-ultima-ficha-poker",
+   "kind": "casino",
+   "name": "Mesa de póker",
+   "games": [
+    "poker"
+   ],
+   "at": [
+    11,
+    4
+   ]
+  },
+  {
+   "id": "casino-ultima-ficha-rasca",
+   "kind": "casino",
+   "name": "Terminal Rasca y gana",
+   "games": [
+    "rasca"
+   ],
+   "at": [
+    5,
+    10
+   ]
+  },
+  {
+   "id": "casino-ultima-ficha-blackjack",
+   "kind": "casino",
+   "name": "Mesa de blackjack",
+   "games": [
+    "blackjack"
+   ],
+   "at": [
+    11,
+    10
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    9
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    9
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    9
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    5,
+    4
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    11,
+    4
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    10,
+    5
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "arcade",
+   "at": [
+    5,
+    10
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    11,
+    10
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    10,
+    11
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    11
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    2,
+    3
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#71dba4",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    13,
+    3
+   ],
+   "color": "#444255"
+  },
+  {
+   "type": "trash",
+   "at": [
+    13,
+    8
+   ],
+   "color": "#71dba4"
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-ultima-ficha-salida",
+   "name": "Salir a la calle",
+   "at": [
+    8,
+    11
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     69,
+     205
+    ]
+   },
+   "sign": "Salir a la calle",
+   "signColor": "#71dba4"
+  }
+ ]
+}

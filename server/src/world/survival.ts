@@ -622,7 +622,7 @@ export class Survival {
   }
 
   /** Muerte definitiva: cierra la vida en una transacción idempotente, registra el memorial y libera la entidad. */
-  async die(p: PlayerState, e: Entity, cause: string, killer?: PlayerState) {
+  async die(p: PlayerState, e: Entity, cause: string, killer?: PlayerState, prize?: {estate:(q:import("../db/db.js").Queryable)=>Promise<void>;committed:()=>void}) {
     if ((p as any).dead) return;
     (p as any).dead = true;
     const place = `${e.zone.def.name}`;
@@ -644,6 +644,8 @@ export class Survival {
       // Míticos únicos: pasan al asesino antes de que el resto del cromo se pierda con el cuerpo.
       mythics = await this.w.mythics.onDeathTx(q, p, heir);
       const r = await q.query<any>("UPDATE characters SET status='dead', died_at=now(), cause_of_death=$2, hp=0 WHERE id=$1 AND status <> 'dead' RETURNING created_at, level, money", [p.charId, cause]);
+      if(prize)await prize.estate(q);
+      await q.query('DELETE FROM casino_hands WHERE character_id=$1',[p.charId]);
       // Una sola vida: sus casas vuelven al mercado (el alijo se pierde) y sus coches desaparecen.
       await q.query('DELETE FROM house_stash WHERE house_id IN (SELECT house_id FROM houses_owned WHERE character_id=$1)', [p.charId]);
       await q.query('DELETE FROM houses_owned WHERE character_id=$1', [p.charId]);
@@ -667,6 +669,7 @@ export class Survival {
     for (const rf of refunds) { const oc = this.connOf(rf.placedBy); if (oc?.p) { oc.p.money += rf.amount; this.notice(oc, 'info', `${p.name} ha muerto sin que nadie cobrara tu recompensa: te devuelven ${rf.amount} €$.`); this.sheet(oc); } }
     this.w.metrics.inc('deaths');
     const c = e.conn;
+    if(summary)prize?.committed();
     if (c && summary) { this.w.send(c, { t: 'death', summary }); }
     // La vida ha terminado: la sesión deja de simularla ya (la entidad se retira tras un instante para que se vea caer).
     if (c && this.w.conns.get(c.accountId) === c) this.w.conns.delete(c.accountId);

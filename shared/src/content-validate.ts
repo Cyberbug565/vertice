@@ -1,3 +1,4 @@
+import { VIP } from './casino.js';
 // Ensamblado y validación cruzada del contenido: puertas, condiciones, traducciones, objetos y requisitos.
 import { ContentSchema, type Content, type Condition, type Effect } from './content-schema.js';
 import { buildZoneGrid, isWalkable } from './zonegrid.js';
@@ -57,6 +58,9 @@ export function validateContent(c: Content): string[] {
       if (!back && !z.id.startsWith('casa-')) errs.push(`${z.id}/${d.id}: la zona ${d.to.zone} no tiene puerta de regreso`); // las casas son instancias: su salida se fija al entrar
     }
     for (const o of z.objects) {
+      if(o.kind==='casino'&&(!z.casino||!o.games?.length||new Set(o.games).size!==o.games.length||
+        o.games.includes('duelo')!==(z.id===VIP.zone)))
+        errs.push(`${z.id}/${o.id}: mesa de casino mal configurada`);
       if (o.dialog && !(o.dialog in c.dialogs)) errs.push(`${z.id}/${o.id}: diálogo ${o.dialog} desconocido`);
       const adj = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => isWalkable(g, o.at[0] + dx + 0.5, o.at[1] + dy + 0.5));
       if (!adj) errs.push(`${z.id}/${o.id}: sin acceso transitable`);

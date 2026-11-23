@@ -26,6 +26,12 @@ export class Property {
     for (const car of w.c.cars) this.carIdx.set(car.class, 1);
   }
 
+  inheritHouse(p:PlayerState,id:string,price:number) {
+    p.houses.push(id);
+    this.tempPermits.delete(id);
+    this.owners.set(id,{charId:p.charId,name:p.name,price,permits:[]});
+  }
+
   async load() {
     const r = await this.w.db.query<any>('SELECT h.house_id, h.character_id, h.price, h.permits, c.name FROM houses_owned h JOIN characters c ON c.id = h.character_id');
     for (const x of r.rows) this.owners.set(x.house_id, { charId: x.character_id, name: x.name, price: Number(x.price), permits: x.permits ?? [] });

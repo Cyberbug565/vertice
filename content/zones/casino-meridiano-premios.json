@@ -1,0 +1,368 @@
+{
+ "id": "casino-meridiano-premios",
+ "name": "Jardín de Premios",
+ "kind": "interior",
+ "width": 27,
+ "height": 21,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#85e9ba",
+ "safePoint": [
+  13,
+  18
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "meridiano",
+  "room": "Rasca y gana"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    12,
+    2,
+    3,
+    17
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-meridiano-premios-rasca",
+   "kind": "casino",
+   "name": "Terminal Rasca y gana",
+   "games": [
+    "rasca"
+   ],
+   "at": [
+    14,
+    7
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    18
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    18
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    18
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    2
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    18
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    2
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    18
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    18
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "arcade",
+   "at": [
+    14,
+    7
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    5
+   ],
+   "color": "#85e9ba"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    10
+   ],
+   "color": "#85e9ba"
+  },
+  {
+   "type": "planter",
+   "at": [
+    4,
+    15
+   ],
+   "color": "#85e9ba"
+  },
+  {
+   "type": "planter",
+   "at": [
+    22,
+    5
+   ],
+   "color": "#85e9ba"
+  },
+  {
+   "type": "planter",
+   "at": [
+    22,
+    10
+   ],
+   "color": "#85e9ba"
+  },
+  {
+   "type": "planter",
+   "at": [
+    22,
+    15
+   ],
+   "color": "#85e9ba"
+  },
+  {
+   "type": "arcade",
+   "at": [
+    7,
+    5
+   ],
+   "color": "#66887a",
+   "blocking": true
+  },
+  {
+   "type": "arcade",
+   "at": [
+    9,
+    5
+   ],
+   "color": "#66887a",
+   "blocking": true
+  },
+  {
+   "type": "arcade",
+   "at": [
+    17,
+    5
+   ],
+   "color": "#66887a",
+   "blocking": true
+  },
+  {
+   "type": "arcade",
+   "at": [
+    19,
+    5
+   ],
+   "color": "#66887a",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    7,
+    11
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    7,
+    15
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    10,
+    11
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    10,
+    15
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    16,
+    11
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    16,
+    15
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    19,
+    11
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    19,
+    15
+   ],
+   "color": "#7c9a7f",
+   "blocking": true
+  },
+  {
+   "type": "neon",
+   "at": [
+    8,
+    4
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    18,
+    4
+   ],
+   "color": "#85e9ba",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    13,
+    3
+   ],
+   "color": "#85e9ba",
+   "text": "Jardín de Premios",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-meridiano-premios-vestibulo",
+   "name": "Volver al vestíbulo",
+   "at": [
+    13,
+    20
+   ],
+   "to": {
+    "zone": "casino-meridiano",
+    "at": [
+     28,
+     5
+    ]
+   },
+   "sign": "Volver al vestíbulo",
+   "signColor": "#85e9ba"
+  }
+ ]
+}

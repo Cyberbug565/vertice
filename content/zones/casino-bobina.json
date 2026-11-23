@@ -1,0 +1,299 @@
+{
+ "id": "casino-bobina",
+ "name": "La Bobina",
+ "kind": "interior",
+ "width": 18,
+ "height": 13,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#ffa46a",
+ "safePoint": [
+  9,
+  10
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "bobina",
+  "room": "Sala de juego"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    8,
+    2,
+    3,
+    9
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-bobina-ruleta",
+   "kind": "casino",
+   "name": "Mesa de ruleta",
+   "games": [
+    "ruleta"
+   ],
+   "at": [
+    6,
+    4
+   ]
+  },
+  {
+   "id": "casino-bobina-poker",
+   "kind": "casino",
+   "name": "Mesa de póker",
+   "games": [
+    "poker"
+   ],
+   "at": [
+    12,
+    4
+   ]
+  },
+  {
+   "id": "casino-bobina-rasca",
+   "kind": "casino",
+   "name": "Terminal Rasca y gana",
+   "games": [
+    "rasca"
+   ],
+   "at": [
+    6,
+    10
+   ]
+  },
+  {
+   "id": "casino-bobina-blackjack",
+   "kind": "casino",
+   "name": "Mesa de blackjack",
+   "games": [
+    "blackjack"
+   ],
+   "at": [
+    12,
+    10
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    10
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    10
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    10
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    2
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    10
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    4
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    5,
+    5
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    7,
+    5
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    12,
+    4
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    11,
+    5
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    13,
+    5
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "arcade",
+   "at": [
+    6,
+    10
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    12,
+    10
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    11,
+    11
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    13,
+    11
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "pipe",
+   "at": [
+    2,
+    3
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "pipe",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#ffa46a",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    15,
+    3
+   ],
+   "color": "#444255"
+  },
+  {
+   "type": "trash",
+   "at": [
+    15,
+    9
+   ],
+   "color": "#ffa46a"
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-bobina-salida",
+   "name": "Salir a la calle",
+   "at": [
+    9,
+    12
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     18,
+     76
+    ]
+   },
+   "sign": "Salir a la calle",
+   "signColor": "#ffa46a"
+  }
+ ]
+}

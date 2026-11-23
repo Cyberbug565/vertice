@@ -13107,6 +13107,81 @@
    "height": 10,
    "style": "industrial",
    "color": "#4a1a1a"
+  },
+  {
+   "id": "casino-ultima-ficha",
+   "name": "Última Ficha",
+   "rect": [
+    65,
+    199,
+    8,
+    5
+   ],
+   "height": 4,
+   "style": "shop",
+   "color": "#71dba4",
+   "sign": "Última Ficha",
+   "signColor": "#71dba4"
+  },
+  {
+   "id": "casino-bobina",
+   "name": "La Bobina",
+   "rect": [
+    14,
+    69,
+    9,
+    6
+   ],
+   "height": 4,
+   "style": "industrial",
+   "color": "#ffa46a",
+   "sign": "La Bobina",
+   "signColor": "#ffa46a"
+  },
+  {
+   "id": "casino-cero-rojo",
+   "name": "Cero Rojo",
+   "rect": [
+    76,
+    280,
+    10,
+    6
+   ],
+   "height": 5,
+   "style": "club",
+   "color": "#f47a89",
+   "sign": "Cero Rojo",
+   "signColor": "#f47a89"
+  },
+  {
+   "id": "casino-hipodromo",
+   "name": "Hipódromo Prisma",
+   "rect": [
+    164,
+    293,
+    15,
+    10
+   ],
+   "height": 8,
+   "style": "club",
+   "color": "#79dff0",
+   "sign": "Hipódromo Prisma",
+   "signColor": "#79dff0"
+  },
+  {
+   "id": "casino-meridiano",
+   "name": "Gran Meridiano",
+   "rect": [
+    484,
+    17,
+    25,
+    15
+   ],
+   "height": 15,
+   "style": "arcology",
+   "color": "#f4ca81",
+   "sign": "Gran Meridiano",
+   "signColor": "#f4ca81"
   }
  ],
  "props": [
@@ -42209,6 +42284,91 @@
     ]
    },
    "danger": "disputed"
+  },
+  {
+   "id": "casino-ultima-ficha",
+   "name": "Última Ficha",
+   "at": [
+    69,
+    204
+   ],
+   "to": {
+    "zone": "casino-ultima-ficha",
+    "at": [
+     8,
+     9
+    ]
+   },
+   "sign": "Última Ficha",
+   "signColor": "#71dba4"
+  },
+  {
+   "id": "casino-bobina",
+   "name": "La Bobina",
+   "at": [
+    18,
+    75
+   ],
+   "to": {
+    "zone": "casino-bobina",
+    "at": [
+     9,
+     10
+    ]
+   },
+   "sign": "La Bobina",
+   "signColor": "#ffa46a"
+  },
+  {
+   "id": "casino-cero-rojo",
+   "name": "Cero Rojo",
+   "at": [
+    81,
+    286
+   ],
+   "to": {
+    "zone": "casino-cero-rojo",
+    "at": [
+     11,
+     12
+    ]
+   },
+   "sign": "Cero Rojo",
+   "signColor": "#f47a89"
+  },
+  {
+   "id": "casino-hipodromo",
+   "name": "Hipódromo Prisma",
+   "at": [
+    171,
+    303
+   ],
+   "to": {
+    "zone": "casino-hipodromo",
+    "at": [
+     17,
+     19
+    ]
+   },
+   "sign": "Hipódromo Prisma",
+   "signColor": "#79dff0"
+  },
+  {
+   "id": "casino-meridiano",
+   "name": "Gran Meridiano",
+   "at": [
+    496,
+    32
+   ],
+   "to": {
+    "zone": "casino-meridiano",
+    "at": [
+     29,
+     35
+    ]
+   },
+   "sign": "Gran Meridiano",
+   "signColor": "#f4ca81"
   }
  ],
  "objects": [

@@ -1,0 +1,524 @@
+{
+ "id": "casino-meridiano",
+ "name": "Gran Meridiano",
+ "kind": "interior",
+ "width": 58,
+ "height": 38,
+ "danger": "protected",
+ "base": "wood",
+ "wallColor": "#f4ca81",
+ "safePoint": [
+  29,
+  35
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "meridiano",
+  "room": "Vestíbulo"
+ },
+ "blocks": [
+  {
+   "type": "counter",
+   "rect": [
+    4,
+    16,
+    2,
+    4
+   ],
+   "height": 0.7,
+   "color": "#65515a"
+  },
+  {
+   "type": "counter",
+   "rect": [
+    22,
+    16,
+    2,
+    4
+   ],
+   "height": 0.7,
+   "color": "#65515a"
+  },
+  {
+   "type": "counter",
+   "rect": [
+    34,
+    16,
+    2,
+    4
+   ],
+   "height": 0.7,
+   "color": "#65515a"
+  },
+  {
+   "type": "counter",
+   "rect": [
+    53,
+    16,
+    2,
+    4
+   ],
+   "height": 0.7,
+   "color": "#65515a"
+  }
+ ],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    28,
+    2,
+    3,
+    34
+   ]
+  }
+ ],
+ "objects": [],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    35
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    35
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    2
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    35
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    2
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    35
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    35
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    42,
+    2
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    42,
+    35
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    50,
+    2
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    50,
+    35
+   ],
+   "color": "#f4ca81",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    10,
+    13
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    11,
+    13
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    10,
+    21
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    11,
+    21
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    10,
+    28
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    11,
+    28
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    18,
+    13
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    19,
+    13
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    18,
+    21
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    19,
+    21
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    18,
+    28
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    19,
+    28
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    38,
+    13
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    39,
+    13
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    38,
+    21
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    39,
+    21
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    38,
+    28
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    39,
+    28
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    46,
+    13
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    47,
+    13
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    46,
+    21
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    47,
+    21
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "sofa",
+   "at": [
+    46,
+    28
+   ],
+   "color": "#5a324c"
+  },
+  {
+   "type": "plant",
+   "at": [
+    47,
+    28
+   ],
+   "color": "#75a07f",
+   "blocking": false
+  },
+  {
+   "type": "holo",
+   "at": [
+    29,
+    11
+   ],
+   "text": "GRAN MERIDIANO",
+   "color": "#f4ca81",
+   "blocking": false
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-meridiano-salida",
+   "name": "Salir a la calle",
+   "at": [
+    29,
+    37
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     496,
+     33
+    ]
+   },
+   "sign": "Salir a la calle",
+   "signColor": "#f4ca81"
+  },
+  {
+   "id": "casino-meridiano-ruleta",
+   "name": "Salón Órbita",
+   "at": [
+    8,
+    4
+   ],
+   "to": {
+    "zone": "casino-meridiano-ruleta",
+    "at": [
+     15,
+     19
+    ]
+   },
+   "sign": "Salón Órbita",
+   "signColor": "#f7c775"
+  },
+  {
+   "id": "casino-meridiano-cartas",
+   "name": "Galería de Nácar",
+   "at": [
+    18,
+    4
+   ],
+   "to": {
+    "zone": "casino-meridiano-cartas",
+    "at": [
+     18,
+     20
+    ]
+   },
+   "sign": "Galería de Nácar",
+   "signColor": "#c097ef"
+  },
+  {
+   "id": "casino-meridiano-premios",
+   "name": "Jardín de Premios",
+   "at": [
+    28,
+    4
+   ],
+   "to": {
+    "zone": "casino-meridiano-premios",
+    "at": [
+     13,
+     18
+    ]
+   },
+   "sign": "Jardín de Premios",
+   "signColor": "#85e9ba"
+  },
+  {
+   "id": "casino-meridiano-pistas",
+   "name": "Tribuna Cenital",
+   "at": [
+    38,
+    4
+   ],
+   "to": {
+    "zone": "casino-meridiano-pistas",
+    "at": [
+     22,
+     23
+    ]
+   },
+   "sign": "Tribuna Cenital",
+   "signColor": "#7cdff8"
+  },
+  {
+   "id": "casino-meridiano-vip",
+   "name": "Pasillo de servicio",
+   "at": [
+    48,
+    28
+   ],
+   "to": {
+    "zone": "casino-meridiano-vip",
+    "at": [
+     13,
+     16
+    ]
+   },
+   "sign": "Pasillo de servicio",
+   "signColor": "#d07778"
+  }
+ ]
+}

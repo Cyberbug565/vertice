@@ -1,0 +1,317 @@
+{
+ "id": "casino-cero-rojo",
+ "name": "Cero Rojo",
+ "kind": "interior",
+ "width": 22,
+ "height": 15,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#f47a89",
+ "safePoint": [
+  11,
+  12
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "cero-rojo",
+  "room": "Sala de juego"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    10,
+    2,
+    3,
+    11
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-cero-rojo-ruleta",
+   "kind": "casino",
+   "name": "Mesa de ruleta",
+   "games": [
+    "ruleta"
+   ],
+   "at": [
+    7,
+    4
+   ]
+  },
+  {
+   "id": "casino-cero-rojo-poker",
+   "kind": "casino",
+   "name": "Mesa de póker",
+   "games": [
+    "poker"
+   ],
+   "at": [
+    15,
+    4
+   ]
+  },
+  {
+   "id": "casino-cero-rojo-rasca",
+   "kind": "casino",
+   "name": "Terminal Rasca y gana",
+   "games": [
+    "rasca"
+   ],
+   "at": [
+    7,
+    11
+   ]
+  },
+  {
+   "id": "casino-cero-rojo-blackjack",
+   "kind": "casino",
+   "name": "Mesa de blackjack",
+   "games": [
+    "blackjack"
+   ],
+   "at": [
+    15,
+    11
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    12
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    12
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    12
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    2
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    12
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    2
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    12
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    7,
+    4
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    8,
+    5
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    15,
+    4
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    14,
+    5
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    5
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "arcade",
+   "at": [
+    7,
+    11
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    15,
+    11
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    14,
+    12
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    12
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    2,
+    3
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "neon",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#f47a89",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    19,
+    3
+   ],
+   "color": "#444255"
+  },
+  {
+   "type": "trash",
+   "at": [
+    19,
+    11
+   ],
+   "color": "#f47a89"
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-cero-rojo-salida",
+   "name": "Salir a la calle",
+   "at": [
+    11,
+    14
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     81,
+     287
+    ]
+   },
+   "sign": "Salir a la calle",
+   "signColor": "#f47a89"
+  }
+ ]
+}

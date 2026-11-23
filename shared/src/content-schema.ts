@@ -1,3 +1,4 @@
+import { CASINOS, CASINO_GAMES } from './casino.js';
 import { CYBER_MODELS, type CyberModel } from './cyber-models.js';
 // Esquemas validables del contenido del mundo. El motor no conoce lugares concretos: todo vive en /content.
 import { z } from 'zod';
@@ -37,7 +38,8 @@ export const ZoneSchema = z.object({
     sign: z.string().optional(), signColor: z.string().optional(), signIcon: z.string().optional() })).default([]),
   objects: z.array(z.object({
     id: z.string(), name: z.string(), at: xy,
-    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot', 'camera', 'computer', 'neuralchair', 'jackout']),
+    kind: z.enum(['generator', 'terminal', 'crates', 'elevator', 'board', 'vending', 'shop', 'jobboard', 'bountyboard', 'bed', 'trash', 'workplace', 'marketterm', 'atm', 'ambar', 'bribe', 'housing', 'dealer', 'stash', 'realty', 'hiring', 'loot', 'camera', 'computer', 'neuralchair', 'jackout', 'casino']),
+    games: z.array(z.enum(CASINO_GAMES)).min(1).optional(),
     dialog: z.string().optional(), shop: z.string().optional(), workplace: z.string().optional(), dealer: z.string().optional(),
     sleep: z.object({ quality: z.number().min(0).max(1), price: z.number().int().nonnegative().default(0) }).optional(),
   })).default([]),
@@ -68,6 +70,7 @@ export const ZoneSchema = z.object({
   /** v0.10 · Lugar restringido (vigilancia, uniformes que encajan) y arco detector de armas en la entrada. */
   restricted: z.enum(['policia', 'banco', 'carcel', 'corporativo', 'laboratorio']).optional(), detector: z.boolean().optional(),
   furnished: z.boolean().optional(),
+  casino: z.object({id:z.enum(Object.keys(CASINOS) as [keyof typeof CASINOS,...(keyof typeof CASINOS)[]]), room:z.string()}).optional(),
   /** v0.8: ciberespacio (se dibuja con fallos visuales) y guarida de una leyenda (hace falta su confianza para entrar). */
   cyber: z.boolean().optional(), legend: z.string().optional(),
   nightlife: z.object({ kind: z.enum(['bar', 'club']), music: z.enum(['fiesta', 'chill']), floor: rect, color: z.string().regex(/^#[0-9a-fA-F]{6}$/) }).optional(),

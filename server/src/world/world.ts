@@ -31,6 +31,7 @@ import { Street } from './street.js';
 import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
 import { Nightlife } from './nightlife.js';
+import { Casino } from './casino.js';
 import { Underworld } from './underworld.js';
 import { isSick } from '../game/substances.js';
 import { selectCharacter } from '../game/accounts.js';
@@ -88,6 +89,7 @@ export class World {
   readonly admin: Admin;
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
+  readonly casino: Casino;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
@@ -111,6 +113,7 @@ export class World {
     this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
+    this.casino = new Casino(this);
     sheetHooks.post = (p) => this.posts.status(p);
     sheetHooks.objective = (p) => objectiveStatus(p).text;
   }
@@ -515,6 +518,7 @@ export class World {
     const NEAR2 = 12 * 12;
     for (const v of vis) {
       if (v.privateTo && v.privateTo !== c) continue;
+      if(v.doorTo?.zone==='casino-meridiano-vip' && (!c.p||!this.casino.vip(c.p)))continue;
       visIds.add(v.id);
       const k = c.known.get(v.id);
       if (!k) { spawns.push(spawnOf(v)); c.known.set(v.id, { lv: v.labelVer, sent: this.tick }); continue; }
@@ -636,6 +640,7 @@ export class World {
     conn.closed = true;
     if (this.conns.get(conn.accountId) !== conn) return;
     this.conns.delete(conn.accountId);
+    this.casino.disconnect(conn);
     const e = conn.e, p = conn.p;
     if (!e || !p) return;
     this.nightlife.stop(e);
@@ -840,6 +845,7 @@ export class World {
         if (m.action === 'view') this.send(c, { t: 'trunk', view: await this.property.trunkView(c) });
         else await this.property.trunkMove(c, m.item ?? '', m.qty ?? 1, m.action);
       });
+      case 'casino': return guarded(m.seq,()=>this.casino.play(c,m));
       case 'dance': return guarded(m.seq, async () => this.nightlife.dance(c, m.move));
       case 'underworld': return guarded(m.seq, () => this.underworld.command(c, m));
       case 'factions': this.send(c, { t: 'factions', view: this.combat.factionsView(p) }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
@@ -1013,7 +1019,7 @@ export class World {
     const to = this.ensureZone(door.doorTo.zone);
     if (!to) return;
     // v0.8: las guaridas de las leyendas y el Velo solo se abren a quien se ha ganado su confianza.
-    const deny = this.legends.denyEntry(p, to);
+    const deny = await this.casino.deny(p,e.zone.id,to.id)??this.legends.denyEntry(p, to);
     if (deny) { this.send(c, { t: 'notice', kind: 'warn', text: deny }); return; }
     this.nightlife.stop(e);
     if (p.driving && to.def.kind !== 'exterior') this.property.park(c, true);
@@ -1078,6 +1084,7 @@ export class World {
     const sv = this.survival;
     const run = (fn: () => Promise<void> | void) => this.enqueue(c, async () => { try { await fn(); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'notice', kind: 'warn', text: err.message }); else throw err; } });
     switch (o.objKind) {
+      case 'casino': return run(()=>this.casino.open(c,o.id));
       case 'vending': case 'shop': return sv.openShop(c, o.shop!, o);
       case 'bed': return run(() => sv.sleepInBed(c, o));
       case 'trash': return run(() => sv.rummage(c, o));

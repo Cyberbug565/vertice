@@ -1,0 +1,431 @@
+{
+ "id": "casino-hipodromo",
+ "name": "Hipódromo Prisma",
+ "kind": "interior",
+ "width": 34,
+ "height": 22,
+ "danger": "protected",
+ "base": "metal",
+ "wallColor": "#79dff0",
+ "safePoint": [
+  17,
+  19
+ ],
+ "waypoints": [],
+ "furnished": true,
+ "casino": {
+  "id": "hipodromo",
+  "room": "Sala de juego"
+ },
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    16,
+    2,
+    3,
+    18
+   ]
+  }
+ ],
+ "objects": [
+  {
+   "id": "casino-hipodromo-ruleta",
+   "kind": "casino",
+   "name": "Mesa de ruleta",
+   "games": [
+    "ruleta"
+   ],
+   "at": [
+    8,
+    4
+   ]
+  },
+  {
+   "id": "casino-hipodromo-poker",
+   "kind": "casino",
+   "name": "Mesa de póker",
+   "games": [
+    "poker"
+   ],
+   "at": [
+    17,
+    4
+   ]
+  },
+  {
+   "id": "casino-hipodromo-rasca",
+   "kind": "casino",
+   "name": "Terminal Rasca y gana",
+   "games": [
+    "rasca"
+   ],
+   "at": [
+    26,
+    4
+   ]
+  },
+  {
+   "id": "casino-hipodromo-blackjack",
+   "kind": "casino",
+   "name": "Mesa de blackjack",
+   "games": [
+    "blackjack"
+   ],
+   "at": [
+    8,
+    15
+   ]
+  },
+  {
+   "id": "casino-hipodromo-deportes",
+   "kind": "casino",
+   "name": "Pantalla de apuestas deportivas",
+   "games": [
+    "deportes"
+   ],
+   "at": [
+    17,
+    15
+   ]
+  },
+  {
+   "id": "casino-hipodromo-caballos",
+   "kind": "casino",
+   "name": "Carreras de caballos",
+   "games": [
+    "caballos"
+   ],
+   "at": [
+    26,
+    15
+   ]
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    2,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    14,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    18,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    26,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    30,
+    2
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    30,
+    19
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    4
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    7,
+    5
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    9,
+    5
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    17,
+    4
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    16,
+    5
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "arcade",
+   "at": [
+    26,
+    4
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    15
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    7,
+    16
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    9,
+    16
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    17,
+    15
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    26,
+    15
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    2,
+    3
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    2,
+    11
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    2,
+    15
+   ],
+   "color": "#79dff0",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    31,
+    3
+   ],
+   "color": "#444255"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    31,
+    18
+   ],
+   "color": "#79dff0"
+  }
+ ],
+ "doors": [
+  {
+   "id": "casino-hipodromo-salida",
+   "name": "Salir a la calle",
+   "at": [
+    17,
+    21
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     171,
+     304
+    ]
+   },
+   "sign": "Salir a la calle",
+   "signColor": "#79dff0"
+  }
+ ]
+}
