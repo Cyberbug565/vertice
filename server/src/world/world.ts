@@ -5,7 +5,7 @@ import {
   hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight } from '@vertice/shared';
 import type { Config } from '../config.js';
-import type { Db } from '../db/db.js';
+import type { Db, Queryable } from '../db/db.js';
 import type { Metrics } from '../metrics.js';
 import { Zone } from './zone.js';
 import { spawnOf, type Entity } from './entity.js';
@@ -33,6 +33,7 @@ import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
 import { Nightlife } from './nightlife.js';
 import { Casino } from './casino.js';
+import { Prison } from './prison.js';
 import { Underworld } from './underworld.js';
 import { isSick } from '../game/substances.js';
 import { selectCharacter } from '../game/accounts.js';
@@ -92,6 +93,7 @@ export class World {
   readonly nightlife: Nightlife;
   readonly underworld: Underworld;
   readonly casino: Casino;
+  readonly prison: Prison;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
@@ -117,6 +119,7 @@ export class World {
     this.nightlife = new Nightlife(this);
     this.underworld = new Underworld(this);
     this.casino = new Casino(this);
+    this.prison = new Prison(this);
     sheetHooks.post = (p) => this.posts.status(p);
     sheetHooks.objective = (p) => objectiveStatus(p).text;
   }
@@ -197,7 +200,14 @@ export class World {
     if(n.id.startsWith('leyenda-')){e.legendId=n.id;e.level=25;}
     if(n.resident){
       e.npc.nextThink=this.tick+e.id%12;
-      if(n.resident.job==='policia'){
+      if(n.id.startsWith('penal-guardia-')){
+        Object.assign(e,{prisonStaff:true,npcType:'police',faction:'pcv',npcMax:76,npcHp:76,defense:12,weaponId:'taser',
+          respawn:{zone:entry.zone,template:{resident:n.id}}});
+      }else if(n.id.startsWith('penal-interno-')){
+        Object.assign(e,{prisonGang:n.faction,npcType:'gang',npcMax:34+(seed>>>0)%29,npcHp:34+(seed>>>0)%29,
+          defense:7+(seed>>>0)%4,respawn:{zone:entry.zone,template:{resident:n.id}}});
+        if((seed>>>0)%4===0)e.weaponId='navaja';
+      }else if(n.resident.job==='policia'){
         const f=this.c.factions.find(f=>f.id==='pcv')!;
         Object.assign(e,{npcType:'police',faction:'pcv',npcMax:f.hp,npcHp:f.hp,defense:f.defense,weaponId:f.weapon,chrome:[...f.chrome],
           respawn:{zone:entry.zone,template:{resident:n.id}}});
@@ -264,6 +274,10 @@ export class World {
   async teleport(c: PlayerConn, zoneId: string, at: [number, number]) {
     const fake = { doorTo: { zone: zoneId, at }, kind: 'door', name: 'traslado' } as unknown as Entity;
     await this.transferPlayer(c, fake);
+  }
+  async legalTransfer(c:PlayerConn,zone:string,at:[number,number],apply:(q:Queryable)=>Promise<()=>void>){
+    const door={doorTo:{zone,at},kind:'door',name:'Traslado penitenciario'} as Entity;
+    if(!await this.transferPlayer(c,door,apply))throw new GameError('Hay un traslado en curso. Inténtalo de nuevo.');
   }
   playerOf(e: Entity): PlayerState | undefined {
     if (e.kind !== 'player') return undefined;
@@ -333,6 +347,7 @@ export class World {
     if (this.tick % 10 === 1) for (const z of this.zones.values()) if (z.def.districts.length) z.refreshActive();
     this.relics.dilation();
     if(this.tick%20===1)this.cityPeople.everySecond();
+    if(this.tick%20===11)this.prison.everySecond();
     for (const z of this.zones.values()) {
       // Nivel de detalle: lejos de cualquier jugador, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
       const anyone = z.players.size > 0;
@@ -646,6 +661,7 @@ export class World {
       t: 'welcome', you: e.id, sheet: buildSheet(this.c, conn.p!), zone: e.zone.id, x: e.x, y: e.y, tick: this.tick,
       cityHourMs: this.c.manifest.cityHourMs, cityEpoch: this.cfg.cityHourOffset, journal: this.journal(conn.p!), facts: this.facts.all(), sector: s.name, danger: conn.lastDanger,
     });
+    if(conn.p?.sentence||e.zone.id==='penal-visitas')this.prison.show(conn);
     await rememberMap(this.db,conn.p!,e.zone.id,e.x,e.y,true);
     this.send(conn,{t:'atlas',map:mapKnowledge(conn.p!),reset:true});
     this.corpses.sendBlood(conn);
@@ -664,6 +680,7 @@ export class World {
     const e = conn.e, p = conn.p;
     if (!e || !p) return;
     this.nightlife.stop(e);
+    this.prison.disconnect(conn);
     e.task = undefined; e.channel = undefined; e.path = []; e.pendingInteract = undefined; e.moving = false; e.conn = undefined;
     const danger = dangerAt(e.zone.grid, e.x, e.y);
     if (danger === 'protected' || this.cfg.lingerSeconds <= 0) { this.scheduleRemoval(conn.accountId, e, p, conn.queue); return; }
@@ -736,8 +753,10 @@ export class World {
     if (!e || !c.p) return;
     this.metrics.inc('msgsIn');
     const p = c.p, sv = this.survival;
+    const blocked=this.prison.allowCommand(c,m);
+    if(blocked){if('seq' in m)this.send(c,{t:'ack',seq:m.seq,ok:false,reason:blocked});return;}
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
-    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto'];
+    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto', 'penal'];
     // Una orden manual del jugador (no del piloto automático, que usa seq 0) le devuelve el control.
     if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'retreat', 'stop', 'dance'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
     if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop', 'dance'].includes(m.t)) this.autopilot.takeOver(c);
@@ -753,6 +772,8 @@ export class World {
       catch (err) { if (err instanceof GameError) this.send(c, { t: 'ack', seq, ok: false, reason: err.message }); else throw err; }
     });
     switch (m.t) {
+      case 'penal': return guarded(m.seq,()=>this.prison.command(c,m));
+      case 'bank': return guarded(m.seq,()=>this.prison.bank(c,m));
       case 'ping': this.send(c, { t: 'pong', seq: m.seq, ct: m.ct, st: Date.now() }); return;
       case 'move': return this.onMove(c, e, m.seq, m.x, m.y);
       case 'steer': {
@@ -1033,14 +1054,15 @@ export class World {
   }
 
   // ---------------------------------------------------------------- puertas y traslados
-  private async transferPlayer(c: PlayerConn, door: Entity) {
+  private async transferPlayer(c: PlayerConn, door: Entity, legal?:(q:Queryable)=>Promise<()=>void>) {
     const e = c.e!, p = c.p!;
     if (e.transit || !door.doorTo) return;
-    if (e.ghostOf) { this.relics.ghostDoor(c, door); return; }
+    if (e.ghostOf) { if(!legal&&!this.prison.portal(c,door.doorTo.zone))this.relics.ghostDoor(c, door); return; }
     const to = this.ensureZone(door.doorTo.zone);
     if (!to) return;
     // v0.8: las guaridas de las leyendas y el Velo solo se abren a quien se ha ganado su confianza.
-    const deny = await this.casino.deny(p,e.zone.id,to.id)??this.legends.denyEntry(p, to);
+    const deny = legal?undefined:(this.prison.portal(c,to.id)??await this.casino.deny(p,e.zone.id,to.id)??this.legends.denyEntry(p,to));
+    if(e.transit)return;
     if (deny) { this.send(c, { t: 'notice', kind: 'warn', text: deny }); return; }
     this.nightlife.stop(e);
     if (p.driving && to.def.kind !== 'exterior') this.property.park(c, true);
@@ -1050,22 +1072,26 @@ export class World {
     const transferId = randomUUID();
     const nx = door.doorTo.at[0] + 0.5, ny = door.doorTo.at[1] + 0.5;
     const entered = mapKeys(p,to.id,nx,ny,true);
+    let apply:(()=>void)|undefined;
     const t0 = performance.now();
     try {
       // El traslado se confirma en la base de datos antes de cambiar de autoridad; si falla, el origen sigue siendo propietario.
       await this.db.tx(async (q) => {
+        if(legal)apply=await legal(q);
         await q.query('UPDATE characters SET zone_id=$2, pos_x=$3, pos_y=$4 WHERE id=$1', [p.charId, to.id, nx, ny]);
         await q.query('INSERT INTO zone_transfers (id, character_id, from_zone, to_zone) VALUES ($1,$2,$3,$4)', [transferId, p.charId, e.zone.id, to.id]);
         await writeMapKeys(q,p.charId,entered);
       });
     } catch (err) {
       e.transit = false;
+      if(legal)throw err;
       console.error('[world] traslado fallido', err);
       this.send(c, { t: 'notice', kind: 'bad', text: 'No se pudo cruzar la puerta. Sigues donde estabas.' });
       return;
     }
     this.metrics.dbWrite.push(performance.now() - t0);
     if (c.closed && this.conns.get(c.accountId) !== c && !this.lingering.has(c.accountId)) { /* desconectado en tránsito: aún aplicamos el traslado */ }
+    apply?.();
     e.zone.remove(e);
     e.x = nx; e.y = ny; p.zone = to.id; p.x = nx; p.y = ny;
     to.add(e);
@@ -1088,7 +1114,9 @@ export class World {
       void this.legends.event(conn, { type: 'visit', zone: to.id }).catch(() => {});
       // v0.10 · Arco detector de armas en la entrada de los lugares restringidos.
       this.stealth.detector(conn, to.id);
+      if(p.sentence||to.id==='penal-visitas')this.prison.show(conn);
     }
+    return true;
   }
 
   transferNpc(e: Entity, zoneId: string, at: [number, number]) {
@@ -1105,6 +1133,7 @@ export class World {
     const sv = this.survival;
     const run = (fn: () => Promise<void> | void) => this.enqueue(c, async () => { try { await fn(); } catch (err) { if (err instanceof GameError) this.send(c, { t: 'notice', kind: 'warn', text: err.message }); else throw err; } });
     switch (o.objKind) {
+      case 'penal': return run(()=>this.prison.open(c,o));
       case 'casino': return run(()=>this.casino.open(c,o.id));
       case 'vending': case 'shop': return sv.openShop(c, o.shop!, o);
       case 'bed': return run(() => sv.sleepInBed(c, o));

@@ -1,0 +1,303 @@
+{
+ "id": "penal-control",
+ "name": "Control de seguridad",
+ "kind": "interior",
+ "width": 38,
+ "height": 25,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#d07883",
+ "safePoint": [
+  19,
+  22
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-control",
+   "name": "Panel de salida exterior",
+   "kind": "penal",
+   "at": [
+    19,
+    11
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-control-servicios",
+   "name": "Servicios y muelle de residuos",
+   "at": [
+    19,
+    24
+   ],
+   "to": {
+    "zone": "penal-servicios",
+    "at": [
+     40,
+     13
+    ]
+   },
+   "sign": "Servicios y muelle de residuos",
+   "signColor": "#83b89a"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    20
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    20
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    20
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    20
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    20
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    20
+   ],
+   "color": "#d07883",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    19,
+    11
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    6,
+    17
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    12,
+    17
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    18,
+    17
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    24,
+    5
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    24,
+    17
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    30,
+    5
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    30,
+    17
+   ],
+   "color": "#d07883",
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    7,
+    10
+   ],
+   "color": "#bc6873",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    13,
+    10
+   ],
+   "color": "#bc6873",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    25,
+    10
+   ],
+   "color": "#bc6873",
+   "blocking": false
+  },
+  {
+   "type": "screen",
+   "at": [
+    30,
+    10
+   ],
+   "color": "#bc6873",
+   "blocking": false
+  }
+ ],
+ "blocks": [],
+ "ground": [
+  {
+   "type": "grid",
+   "rect": [
+    5,
+    7,
+    26,
+    13
+   ]
+  }
+ ]
+}

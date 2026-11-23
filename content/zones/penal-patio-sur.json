@@ -1,0 +1,544 @@
+{
+ "id": "penal-patio-sur",
+ "name": "Patio Sur · Muro y huerto",
+ "kind": "interior",
+ "width": 64,
+ "height": 42,
+ "danger": "disputed",
+ "base": "gravel",
+ "wallColor": "#86ac6f",
+ "safePoint": [
+  32,
+  39
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-trato",
+   "name": "Puesto informal en las gradas",
+   "kind": "penal",
+   "at": [
+    19,
+    20
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-patio-sur-ingreso",
+   "name": "Ingresos y economato",
+   "at": [
+    32,
+    41
+   ],
+   "to": {
+    "zone": "penal-ingreso",
+    "at": [
+     47,
+     19
+    ]
+   },
+   "sign": "Ingresos y economato",
+   "signColor": "#cea777"
+  },
+  {
+   "id": "penal-patio-sur-patio-norte",
+   "name": "Patio Norte · Cancha y gradas",
+   "at": [
+    9,
+    27
+   ],
+   "to": {
+    "zone": "penal-patio-norte",
+    "at": [
+     50,
+     30
+    ]
+   },
+   "sign": "Patio Norte · Cancha y gradas",
+   "signColor": "#73bd95"
+  },
+  {
+   "id": "penal-patio-sur-servicios",
+   "name": "Servicios y muelle de residuos",
+   "at": [
+    32,
+    30
+   ],
+   "to": {
+    "zone": "penal-servicios",
+    "at": [
+     25,
+     35
+    ]
+   },
+   "sign": "Servicios y muelle de residuos",
+   "signColor": "#83b89a"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    40,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    40,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    46,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    46,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    52,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    52,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    58,
+    2
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    58,
+    37
+   ],
+   "color": "#86ac6f",
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    12,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    18,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    24,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    30,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    36,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    42,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    48,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    54,
+    9
+   ],
+   "color": "#76785b",
+   "blocking": true
+  },
+  {
+   "type": "bench",
+   "at": [
+    19,
+    20
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "planter",
+   "at": [
+    41,
+    12
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    41,
+    17
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    41,
+    22
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    46,
+    12
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    46,
+    17
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    46,
+    22
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    51,
+    12
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    51,
+    17
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    51,
+    22
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    55,
+    12
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    55,
+    17
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "planter",
+   "at": [
+    55,
+    22
+   ],
+   "color": "#7c986b",
+   "blocking": true
+  },
+  {
+   "type": "lamp",
+   "at": [
+    9,
+    10
+   ],
+   "color": "#9aae70",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    34,
+    11
+   ],
+   "color": "#9aae70",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    37,
+    28
+   ],
+   "color": "#9aae70",
+   "blocking": false
+  },
+  {
+   "type": "lamp",
+   "at": [
+    58,
+    26
+   ],
+   "color": "#9aae70",
+   "blocking": false
+  },
+  {
+   "type": "barrel",
+   "at": [
+    25,
+    11
+   ],
+   "color": "#8a5f56",
+   "blocking": true
+  },
+  {
+   "type": "barrel",
+   "at": [
+    23,
+    16
+   ],
+   "color": "#8a5f56",
+   "blocking": true
+  },
+  {
+   "type": "barrel",
+   "at": [
+    11,
+    29
+   ],
+   "color": "#8a5f56",
+   "blocking": true
+  }
+ ],
+ "blocks": [],
+ "ground": [
+  {
+   "type": "grass",
+   "rect": [
+    39,
+    9,
+    19,
+    17
+   ]
+  },
+  {
+   "type": "dirt",
+   "rect": [
+    40,
+    11,
+    16,
+    14
+   ]
+  }
+ ]
+}

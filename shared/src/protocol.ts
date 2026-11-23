@@ -1,3 +1,4 @@
+import { PRISON_ACTIONS, type PrisonView } from './prison.js';
 import { CASINO_GAMES, type CasinoView } from './casino.js';
 import { CYBER_SIDES, type CyberSide, type CyberModel } from './cyber-models.js';
 // Protocolo compartido cliente ↔ servidor. Los mensajes de control viajan como JSON; las posiciones, como binario.
@@ -11,6 +12,9 @@ const seq = z.number().int().nonnegative();
 const opId = z.string().min(8).max(64).regex(/^[A-Za-z0-9_-]+$/);
 
 export const ClientMsg = z.discriminatedUnion('t', [
+  z.object({ t:z.literal('penal'),seq,action:z.enum(PRISON_ACTIONS),target:z.number().int().positive().optional(),opId }),
+  z.object({ t:z.literal('bank'),seq,action:z.enum(['view','deposit','withdraw']),target:z.number().int().positive(),
+    amount:z.number().int().positive().max(10000000).optional(),opId }),
   z.object({t:z.literal('casino'),seq,table:z.number().int().positive(),game:z.enum(CASINO_GAMES).optional(),
     action:z.enum(['view','bet','hit','stand','draw','challenge','accept','decline','seen']),
     stake:z.number().int().min(1).max(100000).optional(),pick:z.string().max(40).optional(),
@@ -292,6 +296,8 @@ export interface DialogView {
 }
 
 export type ServerMsg =
+  | {t:'penal';view:PrisonView;open?:boolean}
+  | {t:'bank';target:number;wallet:number;bank:number}
   | {t:'casino';view:CasinoView;open?:boolean; seq?:number}
   | { t: 'atlas'; map: import('./atlas.js').MapKnowledge; reset?: boolean }
   | { t: 'welcome'; you: number; sheet: CharacterSheet; zone: string; x: number; y: number; tick: number; cityHourMs: number; cityEpoch: number; journal: JournalEntry[]; facts: Record<string, unknown>; sector: string; danger: string }

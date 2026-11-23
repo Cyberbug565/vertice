@@ -143,6 +143,7 @@ export class Combat {
         return { target: target.id, name: target.name, subtitle: off ? 'Cámara de vigilancia · APAGADA' : 'Cámara de vigilancia · grabando (si matas delante, te identifica)', options: opts };
       }
       if (target.objKind === 'shop' || target.objKind === 'vending') opts.push({ id: 'trade', kind: 'interact', group: 'social', label: 'Comprar y vender' });
+      if(target.objKind==='atm')opts.push({id:'banco',kind:'interact',group:'social',label:'Ingresar o retirar dinero'});
       if (target.objKind === 'atm' || target.objKind === 'shop') this.hackOptions(p, e, target, opts);
       return { target: target.id, name: target.name, subtitle: target.objKind === 'atm' ? 'Cajero automático' : 'Comercio', options: opts };
     }
@@ -702,7 +703,7 @@ export class Combat {
   }
 
   damagePlayer(tp: PlayerState, te: Entity, dmg: number, lethal: boolean, src: Src) {
-    if ((tp as any).god) return;
+    if ((tp as any).god||this.w.prison.capturing(tp)) return;
     // La proyección de Eco se corta si alguien hiere el cuerpo.
     if (te.ghostOwner) this.w.relics.endGhost(te.ghostOwner, false);
     this.w.nightlife.stop(te);
@@ -715,7 +716,7 @@ export class Combat {
     this.notice(te.conn, 'bad', `${src.name} te ${lethal ? 'hiere' : 'golpea'}: −${dmg} de salud.`);
     if (te.conn) this.w.send(te.conn, { t: 'sheet', sheet: (this.sv as any).sheetOf(tp) });
     if (tp.hp <= 0) {
-      if (src.police && !lethal && te.conn) { void this.arrest(te.conn); return; }
+      if (src.police && !lethal && te.conn) { void this.arrest(te.conn).catch(err=>console.error('[detención]',err)); return; }
       this.sv.downed(te.conn, `${lethal ? 'disparos o heridas' : 'golpes'} de ${src.name}`, tp, te, lethal, src.charId ? { charId: src.charId, name: src.name } : undefined);
     }
   }
@@ -799,7 +800,11 @@ export class Combat {
     by ??= attacker ? attacker.conn : undefined;
     const killer = by?.p ?? (attacker ? this.w.playerOf(attacker) : undefined);
     const killerId = killer?.charId ?? target.lastAttackerInfo?.charId;
-    const recorded = killerId ? recordActivity(this.w.db, killerId, `npc-death:${randomUUID()}`, 'kill', { name: target.name, kind: 'npc', cause: 'combate', place: target.zone.def.name }) : Promise.resolve();
+    const deathKey=`npc-death:${randomUUID()}`;
+    const recorded = killerId ? Promise.all([
+      recordActivity(this.w.db,killerId,deathKey,'kill',{name:target.name,kind:'npc',cause:'combate',place:target.zone.def.name}),
+      ...(['civil','essential','police'].includes(target.npcType??'')||target.prisonGang?[this.w.prison.homicide(killerId,deathKey)]:[]),
+    ]) : Promise.resolve();
     for (const o of target.zone.query(target.x, target.y, 20)) if (o.kind === 'player' && o.conn) this.notice(o.conn, 'bad', `${target.name} ha muerto.`);
     if (target.fugitive) {
       const p = by?.p;
@@ -821,6 +826,7 @@ export class Combat {
     const p = c.p!;
     if (target.npcType === 'psycho' || (target.predator && target.aggro !== undefined)) return;
     if ((legit ?? this.claimable(target, p).length > 0) && kind !== 'kill') return;
+    if(c.e&&this.w.prison.isPrison(c.e.zone.id)){if(kind!=='attempt')this.w.prison.incident(c.e,target);return;}
     // v0.10 · Solo cuenta si alguien lo VE o lo OYE (o lo graba una cámara). En sigilo, nadie se entera.
     const wit = this.w.stealth.witnesses(c.e!, (c as any).lastNoise ?? 2.5, kind === 'kill' || kind === 'down' || target.state === 'downed' || target.dead ? target : undefined);
     const camera = this.cameraSees(c.e!);
@@ -1196,32 +1202,7 @@ export class Combat {
   }
 
   // ================================================================ policía: detención y Unidad Hierro
-  async arrest(c: PlayerConn) {
-    const p = c.p!, e = c.e!;
-    // v0.12 · La multa se calcula con el saldo real dentro de la transacción (antes, si el dinero cambiaba entre medias, el
-    // saldo quedaba negativo, la base de datos lo rechazaba y el error tumbaba el servidor). Un fallo aquí ya no detiene nada.
-    let fine = 0;
-    try {
-      const paid = await this.w.db.tx(async (q) => {
-        const cur = await q.query<{ money: number }>('SELECT money FROM characters WHERE id = $1 FOR UPDATE', [p.charId]);
-        const money = Number(cur.rows[0]?.money ?? 0);
-        const f = Math.min(money, Math.max(50, Math.floor(money * 0.25)));
-        if (f <= 0) return 0;
-        await q.query('UPDATE characters SET money = money - $2 WHERE id = $1', [p.charId, f]);
-        await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`arrest-${randomUUID()}`, p.charId, -f, money - f, 'Multa de la PCV por detención']);
-        return f;
-      });
-      fine = paid; if (paid) p.money = Math.max(0, p.money - paid);
-    } catch (err) { console.error('[detención] multa no cobrada', (err as Error).message); }
-    p.wanted = 0; p.hp = 15; p.status = 'alive'; p.downedUntil = 0;
-    const pcv = this.sv.bounties.onPlayer(p.charId).filter((b) => b.poster === 'pcv');
-    if (pcv.length) await this.sv.bounties.cancel(pcv.map((b) => b.id));
-    for (const o of e.zone.entities) if (o.aggro === e.id) o.aggro = undefined;
-    e.label = ''; e.state = 'alive'; this.bump(e);
-    this.sv.updateMarker(e);
-    this.w.send(c, { t: 'reward', title: 'Detenido por la PCV', lines: [`Multa: −${fine} €$`, 'Te sueltan en la comisaría de Cénit con el expediente limpio… por ahora.'] });
-    await this.w.teleport(c, 'comisaria-int', [11, 5]);
-  }
+  async arrest(c:PlayerConn){return this.w.prison.arrest(c);}
 
   private hierroTick() {
     for (const conn of this.w.conns.values()) {
@@ -1256,7 +1237,7 @@ export class Combat {
       const tp = t ? this.w.playerOf(t) : undefined;
       if (t && !tp && t.kind === 'npc') return this.npcVsNpc(e, t);
       const hidden = tp && ((tp.buffs.invisible ?? 0) > now || (tp.buffs.senuelo ?? 0) > now);
-      if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || hidden || (e.npcType === 'police' && tp.wanted < 1)) { e.aggro = undefined; if (e.label !== 'Patrullando') { e.label = e.npcType === 'police' ? 'Patrullando' : ''; this.bump(e); } return false; }
+      if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || hidden || (e.npcType === 'police' && !e.prisonStaff && tp.wanted < 1)) { e.aggro = undefined; if (e.label !== 'Patrullando') { e.label = e.npcType === 'police' ? 'Patrullando' : ''; this.bump(e); } return false; }
       const wp = this.npcWeapon(e);
       const dist = Math.hypot(t.x - e.x, t.y - e.y);
       const inRange = dist <= wp.w.range - 0.2 && (wp.w.kind === 'melee' || lineWalkable(e.zone.grid, e.x, e.y, t.x, t.y));
@@ -1278,13 +1259,14 @@ export class Combat {
         if (hitOk && ((t.dodgeUntil ?? 0) > Date.now() ? this.rng() < 0.8 : this.rng() < this.dodgeOf(tp))) { this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id, { weapon: wp.id, hit: false }); this.notice(t.conn, 'good', `Esquivas a ${e.name}.`); }
         else if (hitOk) {
           const police = e.npcType === 'police';
-          const lethal = police ? !!e.aggroLethal : e.aggroLethal !== false;
+          const lethal = !police && e.aggroLethal !== false;
           let raw = Math.max(1, this.rollDamage(wp.w, a - d) - (wp.w.traits?.includes('perforante') ? 0 : this.armorOf(tp)));
           if (t.guard && wp.w.kind === 'melee' && this.weaponOf(tp).w.kind === 'melee') { raw = Math.max(1, Math.round(raw * 0.35)); this.notice(t.conn, 'good', `Bloqueas a ${e.name}.`); }
           const wnd = this.wounds.hit(t, tp, hitPart(this.rng), raw, wp, lethal);
           this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id, { weapon: wp.id, hit: true, part: wnd.part, sever: !!wnd.severed });
           if (wnd.severed && t.conn) this.notice(t.conn, 'bad', `¡${e.name} te ha arrancado ${PART_NAMES[wnd.severed]}! Un matasanos puede implantarte una prótesis.`);
-          if (wnd.ko && tp.status === 'alive') { tp.hp -= wnd.dmg; this.sv.downed(t.conn, `conmoción (golpe de ${e.name} en la cabeza)`, tp, t, false); }
+          if(wnd.ko&&police&&t.conn)void this.arrest(t.conn).catch(err=>console.error('[detención]',err));
+          else if (wnd.ko && tp.status === 'alive') { tp.hp -= wnd.dmg; this.sv.downed(t.conn, `conmoción (golpe de ${e.name} en la cabeza)`, tp, t, false); }
           else this.damagePlayer(tp, t, wnd.dmg, lethal, { name: e.name, police });
           if (tp.status === 'alive') this.counter(t, e);
         } else { this.fx(e, wp.w.kind === 'ranged' ? 'shot' : 'hit', e.id, t.id, { weapon: wp.id, hit: false }); if (cover && a >= d && t.conn) this.notice(t.conn, 'good', `La cobertura te salva de ${e.name}.`); this.counter(t, e); }
@@ -1301,7 +1283,7 @@ export class Combat {
         // v0.10 · Solo detectan lo que VEN (cono de visión, línea de visión, oscuridad y callejones).
         if (!o.conn || !this.w.stealth.sees(e, o)) continue;
         const of = perkMods(this.c, op).flags;
-        if (e.npcType === 'police' && op.wanted >= 2 && !of.has('sombra') && this.w.stealth.recognizes(e, o.conn)) { e.aggro = o.id; e.aggroLethal = op.identified?.crime === 'asesinato'; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
+        if (e.npcType === 'police' && !e.prisonStaff && op.wanted >= 2 && !of.has('sombra') && this.w.stealth.recognizes(e, o.conn)) { e.aggro = o.id; e.aggroLethal = op.identified?.crime === 'asesinato'; this.notice(o.conn, 'warn', `${e.name}: «¡Alto, PCV! Queda detenido.»`); return true; }
         // En la base de una banda (o en una planta restringida de una torre), quien no sea de los suyos es un intruso.
         const allied = f && this.w.underworld.isAlly(op, f.id);
         const intruder = (f && e.zone.def.gangBase?.faction === f.id && !allied && (op.rep.get(f.id) ?? 0) < 20)

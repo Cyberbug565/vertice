@@ -13,7 +13,7 @@ export function assembleContent(files: Record<string, unknown>): { content: Cont
     origins: get('origins.json'), factions: get('factions.json'), npcs: [get('npcs.json'), ...Object.keys(files).filter(k=>k.startsWith('npcs/')).sort().map(k=>files[k])].flat(),
     items: [get('items.json'), ...Object.keys(files).filter((k) => k.startsWith('items/')).sort().map((k) => files[k])].flat(),
     zones, dialogs: get('dialogs.json'), tasks: get('tasks.json'), contracts: get('contracts.json'), locale: get('locale/es.json'),
-    needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: get('cyberware.json'), ripperdocs: get('ripperdocs.json'),
+    needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: [get('cyberware.json'), ...Object.keys(files).filter(k=>k.startsWith('cyberware/')).sort().map(k=>files[k])].flat(), ripperdocs: get('ripperdocs.json'),
     professions: get('professions.json'), workplaces: get('workplaces.json'), jobs: get('jobs.json'), fugitives: get('fugitives.json'),
     quickhacks: get('quickhacks.json'), ambar: get('ambar.json'), world: get('world.json'),
     perks: get('perks.json'), cars: get('cars.json'), dealers: get('dealers.json'), houses: get('houses.json'), posts: get('posts.json'),

@@ -1,0 +1,357 @@
+{
+ "id": "penal-cocina",
+ "name": "Cocinas y comedor",
+ "kind": "interior",
+ "width": 46,
+ "height": 32,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#d99976",
+ "safePoint": [
+  23,
+  29
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-cocina",
+   "name": "Servicio de cocina",
+   "kind": "penal",
+   "at": [
+    23,
+    11
+   ]
+  },
+  {
+   "id": "penal-racion",
+   "name": "Ventanilla de raciones",
+   "kind": "penal",
+   "at": [
+    22,
+    14
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-cocina-ingreso",
+   "name": "Ingresos y economato",
+   "at": [
+    23,
+    31
+   ],
+   "to": {
+    "zone": "penal-ingreso",
+    "at": [
+     43,
+     27
+    ]
+   },
+   "sign": "Ingresos y economato",
+   "signColor": "#cea777"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    27
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    27
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    27
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    27
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    27
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    27
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    40,
+    2
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    40,
+    27
+   ],
+   "color": "#d99976",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    23,
+    11
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    6,
+    24
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    12,
+    24
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    18,
+    24
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    24,
+    5
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    24,
+    24
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    30,
+    5
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    30,
+    24
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    36,
+    5
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    36,
+    24
+   ],
+   "color": "#d99976",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    8,
+    17
+   ],
+   "color": "#a88a6b",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    14,
+    17
+   ],
+   "color": "#a88a6b",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    30,
+    17
+   ],
+   "color": "#a88a6b",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    36,
+    17
+   ],
+   "color": "#a88a6b",
+   "blocking": true
+  },
+  {
+   "type": "table",
+   "at": [
+    22,
+    14
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  }
+ ],
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    5,
+    8,
+    36,
+    17
+   ]
+  }
+ ]
+}

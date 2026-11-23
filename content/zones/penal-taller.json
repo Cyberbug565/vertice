@@ -1,0 +1,267 @@
+{
+ "id": "penal-taller",
+ "name": "Taller de reparación",
+ "kind": "interior",
+ "width": 38,
+ "height": 29,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#deb774",
+ "safePoint": [
+  19,
+  26
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-taller",
+   "name": "Banco de reparación",
+   "kind": "penal",
+   "at": [
+    19,
+    11
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-taller-patio-norte",
+   "name": "Patio Norte · Cancha y gradas",
+   "at": [
+    19,
+    28
+   ],
+   "to": {
+    "zone": "penal-patio-norte",
+    "at": [
+     10,
+     31
+    ]
+   },
+   "sign": "Patio Norte · Cancha y gradas",
+   "signColor": "#73bd95"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    24
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    24
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    24
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    24
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    24
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    24
+   ],
+   "color": "#deb774",
+   "blocking": false
+  },
+  {
+   "type": "desk",
+   "at": [
+    19,
+    11
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    21
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    12,
+    21
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    18,
+    21
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    24,
+    5
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    24,
+    21
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    30,
+    5
+   ],
+   "color": "#deb774",
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    30,
+    21
+   ],
+   "color": "#deb774",
+   "blocking": true
+  }
+ ],
+ "blocks": [],
+ "ground": [
+  {
+   "type": "metal",
+   "rect": [
+    4,
+    9,
+    30,
+    12
+   ]
+  }
+ ]
+}

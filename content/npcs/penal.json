@@ -1,0 +1,2916 @@
+[
+ {
+  "id": "penal-guardia-0",
+  "name": "Aroa León",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#cea777",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-ingreso",
+    "at": [
+     26,
+     31
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-ingreso",
+    "at": [
+     26,
+     32
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-ingreso",
+    "at": [
+     26,
+     33
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-1",
+  "name": "Vela León",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#cea777",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-ingreso",
+    "at": [
+     27,
+     31
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-ingreso",
+    "at": [
+     27,
+     32
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-ingreso",
+    "at": [
+     27,
+     33
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-2",
+  "name": "Nico León",
+  "title": "La Salmuera",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#cea777",
+   "top": "mono",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 1.6,
+   "personal": "La Salmuera protege la enfermería. El patio es otra historia."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-ingreso",
+    "at": [
+     28,
+     31
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-ingreso",
+    "at": [
+     28,
+     32
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-ingreso",
+    "at": [
+     28,
+     33
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "salmuera"
+ },
+ {
+  "id": "penal-interno-3",
+  "name": "Sol León",
+  "title": "Los del Foso",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#cea777",
+   "top": "mono",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 1.6,
+   "personal": "Quien trabaja en servicios suele saber más de lo que cuenta."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-ingreso",
+    "at": [
+     29,
+     31
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-ingreso",
+    "at": [
+     29,
+     32
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-ingreso",
+    "at": [
+     29,
+     33
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ],
+  "faction": "foso"
+ },
+ {
+  "id": "penal-interno-4",
+  "name": "Vidal León",
+  "title": "Engranajes",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#cea777",
+   "top": "mono",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cordial",
+   "speed": 1.6,
+   "personal": "Fuera arreglábamos chatarra en Forja. Aquí ahora arreglamos cuentas."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-ingreso",
+    "at": [
+     30,
+     31
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-ingreso",
+    "at": [
+     30,
+     32
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-ingreso",
+    "at": [
+     30,
+     33
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "engranajes"
+ },
+ {
+  "id": "penal-guardia-5",
+  "name": "Soto León",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#6cbab7",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patrimonio",
+    "at": [
+     23,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patrimonio",
+    "at": [
+     23,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patrimonio",
+    "at": [
+     23,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-6",
+  "name": "Juno León",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#6cbab7",
+   "top": "chaleco",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-patrimonio",
+    "at": [
+     24,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-patrimonio",
+    "at": [
+     24,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-patrimonio",
+    "at": [
+     24,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-7",
+  "name": "Tariq León",
+  "title": "Los del Foso",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#6cbab7",
+   "top": "mono",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 1.6,
+   "personal": "Quien trabaja en servicios suele saber más de lo que cuenta."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patrimonio",
+    "at": [
+     25,
+     32
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patrimonio",
+    "at": [
+     25,
+     33
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patrimonio",
+    "at": [
+     25,
+     34
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "foso"
+ },
+ {
+  "id": "penal-guardia-8",
+  "name": "Nora León",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#9a8dd5",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "curioso",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-fraude",
+    "at": [
+     23,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-fraude",
+    "at": [
+     23,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-fraude",
+    "at": [
+     23,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-9",
+  "name": "Iria León",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#9a8dd5",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cordial",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-fraude",
+    "at": [
+     24,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-fraude",
+    "at": [
+     24,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-fraude",
+    "at": [
+     24,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-10",
+  "name": "Rui León",
+  "title": "La Salmuera",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#9a8dd5",
+   "top": "mono",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "seco",
+   "speed": 1.6,
+   "personal": "La Salmuera protege la enfermería. El patio es otra historia."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-fraude",
+    "at": [
+     25,
+     32
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-fraude",
+    "at": [
+     25,
+     33
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-fraude",
+    "at": [
+     25,
+     34
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "salmuera"
+ },
+ {
+  "id": "penal-guardia-11",
+  "name": "Aroa Cruz",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#c28969",
+   "top": "chaleco",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-violencia",
+    "at": [
+     23,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-violencia",
+    "at": [
+     23,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-violencia",
+    "at": [
+     23,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-12",
+  "name": "Vela Cruz",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#c28969",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cauto",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-violencia",
+    "at": [
+     24,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-violencia",
+    "at": [
+     24,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-violencia",
+    "at": [
+     24,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-13",
+  "name": "Nico Cruz",
+  "title": "Kitsune",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#c28969",
+   "top": "mono",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 1.6,
+   "personal": "La gente de fuera cree que la red acaba en los muros."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-violencia",
+    "at": [
+     25,
+     32
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-violencia",
+    "at": [
+     25,
+     33
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-violencia",
+    "at": [
+     25,
+     34
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "kitsune"
+ },
+ {
+  "id": "penal-guardia-14",
+  "name": "Sol Cruz",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#d37480",
+   "top": "chaleco",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cordial",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-alta",
+    "at": [
+     23,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-alta",
+    "at": [
+     23,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-alta",
+    "at": [
+     23,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-15",
+  "name": "Vidal Cruz",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#d37480",
+   "top": "chaleco",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-alta",
+    "at": [
+     24,
+     32
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-alta",
+    "at": [
+     24,
+     33
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-alta",
+    "at": [
+     24,
+     34
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-16",
+  "name": "Soto Cruz",
+  "title": "Engranajes",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#d37480",
+   "top": "mono",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "metodico",
+   "speed": 1.6,
+   "personal": "Fuera arreglábamos chatarra en Forja. Aquí ahora arreglamos cuentas."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-alta",
+    "at": [
+     25,
+     32
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-alta",
+    "at": [
+     25,
+     33
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-alta",
+    "at": [
+     25,
+     34
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "engranajes"
+ },
+ {
+  "id": "penal-interno-17",
+  "name": "Juno Cruz",
+  "title": "Kitsune",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#d37480",
+   "top": "mono",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 1.6,
+   "personal": "La gente de fuera cree que la red acaba en los muros."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-alta",
+    "at": [
+     26,
+     32
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-alta",
+    "at": [
+     26,
+     33
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-alta",
+    "at": [
+     26,
+     34
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ],
+  "faction": "kitsune"
+ },
+ {
+  "id": "penal-interno-18",
+  "name": "Tariq Cruz",
+  "title": "La Salmuera",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#d37480",
+   "top": "mono",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 1.6,
+   "personal": "La Salmuera protege la enfermería. El patio es otra historia."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-alta",
+    "at": [
+     27,
+     32
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-alta",
+    "at": [
+     27,
+     33
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-alta",
+    "at": [
+     27,
+     34
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "salmuera"
+ },
+ {
+  "id": "penal-guardia-19",
+  "name": "Nora Cruz",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#73bd95",
+   "top": "chaleco",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cordial",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patio-norte",
+    "at": [
+     29,
+     37
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patio-norte",
+    "at": [
+     29,
+     38
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patio-norte",
+    "at": [
+     29,
+     39
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-20",
+  "name": "Iria Cruz",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#73bd95",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-patio-norte",
+    "at": [
+     30,
+     37
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-patio-norte",
+    "at": [
+     30,
+     38
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-patio-norte",
+    "at": [
+     30,
+     39
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-21",
+  "name": "Rui Cruz",
+  "title": "Kitsune",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#73bd95",
+   "top": "mono",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "metodico",
+   "speed": 1.6,
+   "personal": "La gente de fuera cree que la red acaba en los muros."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patio-norte",
+    "at": [
+     31,
+     37
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patio-norte",
+    "at": [
+     31,
+     38
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patio-norte",
+    "at": [
+     31,
+     39
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "kitsune"
+ },
+ {
+  "id": "penal-interno-22",
+  "name": "Aroa Ríos",
+  "title": "La Salmuera",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#73bd95",
+   "top": "mono",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 1.6,
+   "personal": "La Salmuera protege la enfermería. El patio es otra historia."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-patio-norte",
+    "at": [
+     32,
+     37
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-patio-norte",
+    "at": [
+     32,
+     38
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-patio-norte",
+    "at": [
+     32,
+     39
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ],
+  "faction": "salmuera"
+ },
+ {
+  "id": "penal-interno-23",
+  "name": "Vela Ríos",
+  "title": "Los del Foso",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#73bd95",
+   "top": "mono",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 1.6,
+   "personal": "Quien trabaja en servicios suele saber más de lo que cuenta."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patio-norte",
+    "at": [
+     33,
+     37
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patio-norte",
+    "at": [
+     33,
+     38
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patio-norte",
+    "at": [
+     33,
+     39
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "foso"
+ },
+ {
+  "id": "penal-guardia-24",
+  "name": "Nico Ríos",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#86ac6f",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cordial",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patio-sur",
+    "at": [
+     32,
+     36
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patio-sur",
+    "at": [
+     32,
+     37
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patio-sur",
+    "at": [
+     32,
+     38
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-25",
+  "name": "Sol Ríos",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#86ac6f",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-patio-sur",
+    "at": [
+     33,
+     36
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-patio-sur",
+    "at": [
+     33,
+     37
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-patio-sur",
+    "at": [
+     33,
+     38
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-26",
+  "name": "Vidal Ríos",
+  "title": "La Salmuera",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#86ac6f",
+   "top": "mono",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "metodico",
+   "speed": 1.6,
+   "personal": "La Salmuera protege la enfermería. El patio es otra historia."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patio-sur",
+    "at": [
+     34,
+     36
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patio-sur",
+    "at": [
+     34,
+     37
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patio-sur",
+    "at": [
+     34,
+     38
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "salmuera"
+ },
+ {
+  "id": "penal-interno-27",
+  "name": "Soto Ríos",
+  "title": "Los del Foso",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#86ac6f",
+   "top": "mono",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 1.6,
+   "personal": "Quien trabaja en servicios suele saber más de lo que cuenta."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-patio-sur",
+    "at": [
+     35,
+     36
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-patio-sur",
+    "at": [
+     35,
+     37
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-patio-sur",
+    "at": [
+     35,
+     38
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ],
+  "faction": "foso"
+ },
+ {
+  "id": "penal-interno-28",
+  "name": "Juno Ríos",
+  "title": "Engranajes",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#86ac6f",
+   "top": "mono",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 1.6,
+   "personal": "Fuera arreglábamos chatarra en Forja. Aquí ahora arreglamos cuentas."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-patio-sur",
+    "at": [
+     36,
+     36
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-patio-sur",
+    "at": [
+     36,
+     37
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-patio-sur",
+    "at": [
+     36,
+     38
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "engranajes"
+ },
+ {
+  "id": "penal-guardia-29",
+  "name": "Tariq Ríos",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#deb774",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cordial",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-taller",
+    "at": [
+     19,
+     23
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-taller",
+    "at": [
+     19,
+     24
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-taller",
+    "at": [
+     19,
+     25
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-30",
+  "name": "Nora Ríos",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#deb774",
+   "top": "chaleco",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-taller",
+    "at": [
+     20,
+     23
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-taller",
+    "at": [
+     20,
+     24
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-taller",
+    "at": [
+     20,
+     25
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-31",
+  "name": "Iria Ríos",
+  "title": "Los del Foso",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#deb774",
+   "top": "mono",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "metodico",
+   "speed": 1.6,
+   "personal": "Quien trabaja en servicios suele saber más de lo que cuenta."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-taller",
+    "at": [
+     21,
+     23
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-taller",
+    "at": [
+     21,
+     24
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-taller",
+    "at": [
+     21,
+     25
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "foso"
+ },
+ {
+  "id": "penal-guardia-32",
+  "name": "Rui Ríos",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#9aa8ce",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cauto",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-lavanderia",
+    "at": [
+     19,
+     25
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-lavanderia",
+    "at": [
+     19,
+     26
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-lavanderia",
+    "at": [
+     19,
+     27
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-33",
+  "name": "Aroa Prat",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#9aa8ce",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "curioso",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-lavanderia",
+    "at": [
+     20,
+     25
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-lavanderia",
+    "at": [
+     20,
+     26
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-lavanderia",
+    "at": [
+     20,
+     27
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-34",
+  "name": "Vela Prat",
+  "title": "La Salmuera",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#9aa8ce",
+   "top": "mono",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cordial",
+   "speed": 1.6,
+   "personal": "La Salmuera protege la enfermería. El patio es otra historia."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-lavanderia",
+    "at": [
+     21,
+     25
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-lavanderia",
+    "at": [
+     21,
+     26
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-lavanderia",
+    "at": [
+     21,
+     27
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "salmuera"
+ },
+ {
+  "id": "penal-guardia-35",
+  "name": "Nico Prat",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#d99976",
+   "top": "chaleco",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-cocina",
+    "at": [
+     23,
+     26
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-cocina",
+    "at": [
+     23,
+     27
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-cocina",
+    "at": [
+     23,
+     28
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-36",
+  "name": "Sol Prat",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#d99976",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-cocina",
+    "at": [
+     24,
+     26
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-cocina",
+    "at": [
+     24,
+     27
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-cocina",
+    "at": [
+     24,
+     28
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-37",
+  "name": "Vidal Prat",
+  "title": "Kitsune",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#d99976",
+   "top": "mono",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 1.6,
+   "personal": "La gente de fuera cree que la red acaba en los muros."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-cocina",
+    "at": [
+     25,
+     26
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-cocina",
+    "at": [
+     25,
+     27
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-cocina",
+    "at": [
+     25,
+     28
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "kitsune"
+ },
+ {
+  "id": "penal-guardia-38",
+  "name": "Soto Prat",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#83b89a",
+   "top": "chaleco",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "curioso",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-servicios",
+    "at": [
+     25,
+     31
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-servicios",
+    "at": [
+     25,
+     32
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-servicios",
+    "at": [
+     25,
+     33
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-39",
+  "name": "Juno Prat",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#83b89a",
+   "top": "chaleco",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cordial",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-servicios",
+    "at": [
+     26,
+     31
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-servicios",
+    "at": [
+     26,
+     32
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-servicios",
+    "at": [
+     26,
+     33
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-40",
+  "name": "Tariq Prat",
+  "title": "Engranajes",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#83b89a",
+   "top": "mono",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "seco",
+   "speed": 1.6,
+   "personal": "Fuera arreglábamos chatarra en Forja. Aquí ahora arreglamos cuentas."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-servicios",
+    "at": [
+     27,
+     31
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-servicios",
+    "at": [
+     27,
+     32
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-servicios",
+    "at": [
+     27,
+     33
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "engranajes"
+ },
+ {
+  "id": "penal-guardia-41",
+  "name": "Nora Prat",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#7cc3c8",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "metodico",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-infirmaria",
+    "at": [
+     16,
+     16
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-infirmaria",
+    "at": [
+     16,
+     17
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-infirmaria",
+    "at": [
+     16,
+     18
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-42",
+  "name": "Iria Prat",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#7cc3c8",
+   "top": "chaleco",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cauto",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-infirmaria",
+    "at": [
+     17,
+     16
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-infirmaria",
+    "at": [
+     17,
+     17
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-infirmaria",
+    "at": [
+     17,
+     18
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-43",
+  "name": "Rui Prat",
+  "title": "Los del Foso",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#7cc3c8",
+   "top": "mono",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 1.6,
+   "personal": "Quien trabaja en servicios suele saber más de lo que cuenta."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-infirmaria",
+    "at": [
+     18,
+     16
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-infirmaria",
+    "at": [
+     18,
+     17
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-infirmaria",
+    "at": [
+     18,
+     18
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "foso"
+ },
+ {
+  "id": "penal-guardia-44",
+  "name": "Aroa Vidal",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#d07883",
+   "top": "chaleco",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "cordial",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-control",
+    "at": [
+     19,
+     19
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-control",
+    "at": [
+     19,
+     20
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-control",
+    "at": [
+     19,
+     21
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ]
+ },
+ {
+  "id": "penal-guardia-45",
+  "name": "Vela Vidal",
+  "title": "Vigilancia de Las Salinas",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#263944",
+   "accent": "#d07883",
+   "top": "chaleco",
+   "hairStyle": "coleta",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "seguridad",
+   "temper": "seco",
+   "speed": 2.15,
+   "personal": "Al cambiar de turno comprobamos el recuento de cada módulo."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-control",
+    "at": [
+     20,
+     19
+    ],
+    "state": "work",
+    "label": "Ronda de vigilancia",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-control",
+    "at": [
+     20,
+     20
+    ],
+    "state": "talk",
+    "label": "Pausa del turno",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-control",
+    "at": [
+     20,
+     21
+    ],
+    "state": "rest",
+    "label": "Vigila el relevo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ]
+ },
+ {
+  "id": "penal-interno-46",
+  "name": "Nico Vidal",
+  "title": "La Salmuera",
+  "essential": false,
+  "appearance": {
+   "skin": "#d39b80",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#d07883",
+   "top": "mono",
+   "hairStyle": "afro",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "metodico",
+   "speed": 1.6,
+   "personal": "La Salmuera protege la enfermería. El patio es otra historia."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-control",
+    "at": [
+     21,
+     19
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-control",
+    "at": [
+     21,
+     20
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-control",
+    "at": [
+     21,
+     21
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "salmuera"
+ },
+ {
+  "id": "penal-interno-47",
+  "name": "Sol Vidal",
+  "title": "Los del Foso",
+  "essential": false,
+  "appearance": {
+   "skin": "#ae7656",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#d07883",
+   "top": "mono",
+   "hairStyle": "corto",
+   "body": "femenino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "cauto",
+   "speed": 1.6,
+   "personal": "Quien trabaja en servicios suele saber más de lo que cuenta."
+  },
+  "schedule": [
+   {
+    "to": 4,
+    "zone": "penal-control",
+    "at": [
+     22,
+     19
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 18
+   },
+   {
+    "to": 7,
+    "zone": "penal-control",
+    "at": [
+     22,
+     20
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 4
+   },
+   {
+    "to": 18,
+    "zone": "penal-control",
+    "at": [
+     22,
+     21
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 7
+   }
+  ],
+  "faction": "foso"
+ },
+ {
+  "id": "penal-interno-48",
+  "name": "Vidal Vidal",
+  "title": "Engranajes",
+  "essential": false,
+  "appearance": {
+   "skin": "#875742",
+   "hair": "#29242c",
+   "jacket": "#b76343",
+   "accent": "#d07883",
+   "top": "mono",
+   "hairStyle": "rapado",
+   "body": "masculino"
+  },
+  "resident": {
+   "job": "vecino",
+   "temper": "curioso",
+   "speed": 1.6,
+   "personal": "Fuera arreglábamos chatarra en Forja. Aquí ahora arreglamos cuentas."
+  },
+  "schedule": [
+   {
+    "to": 16,
+    "zone": "penal-control",
+    "at": [
+     23,
+     19
+    ],
+    "state": "work",
+    "label": "Pasea por el módulo",
+    "pose": "brazos",
+    "from": 6
+   },
+   {
+    "to": 19,
+    "zone": "penal-control",
+    "at": [
+     23,
+     20
+    ],
+    "state": "talk",
+    "label": "Charla en el pasillo",
+    "pose": "gesto",
+    "from": 16
+   },
+   {
+    "to": 6,
+    "zone": "penal-control",
+    "at": [
+     23,
+     21
+    ],
+    "state": "rest",
+    "label": "Descansa en su módulo",
+    "pose": "sentado",
+    "from": 19
+   }
+  ],
+  "faction": "engranajes"
+ }
+]

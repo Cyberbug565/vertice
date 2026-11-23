@@ -1,0 +1,17 @@
+[
+  {
+    "id": "camiseta-penal",
+    "name": "Uniforme de Las Salinas",
+    "desc": "Ropa de ingreso del penal, en naranja de alta visibilidad.",
+    "weight": 0.4,
+    "category": "ropa",
+    "wear": { "slot": "torso_int", "style": "camiseta", "color": "#d4804b" }
+  },
+  {
+    "id": "herramienta-penal",
+    "name": "Herramienta clandestina del Foso",
+    "desc": "Una herramienta improvisada para abrir un tramo de la obra abandonada de Las Salinas.",
+    "weight": 0.8,
+    "category": "contrabando"
+  }
+]

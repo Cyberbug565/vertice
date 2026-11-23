@@ -1,0 +1,34 @@
+.penal-panel {
+  position: absolute;
+  z-index: 36;
+  top: max(74px, 10%);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(510px, calc(100vw - 26px));
+  max-height: min(76vh, 690px);
+  overflow: auto;
+  border-color: #9d7655;
+  background: #141a21;
+  color: #e5e5e9;
+}
+.penal-content { padding: 16px 20px; display: grid; gap: 13px; }
+.penal-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.penal-header h2 { margin: 0; color: #f0d4b2; font-size: 1.5rem; }
+.penal-header p { margin: 0 0 4px; color: #d8aa7a; font-size: .66rem; letter-spacing: .13em; }
+.penal-status { display: flex; justify-content: space-between; background: #262722; border-left: 3px solid #d58b51; padding: 10px; gap: 12px; }
+.penal-status strong, .penal-charges { color: #e5b58b; }
+.penal-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.penal-details > span { min-width: 0; padding: 8px; background: #1e2730; font-size: .75rem; color: #acb9c4; }
+.penal-details strong { display: block; color: #f2efea; padding-top: 4px; font-size: .91rem; }
+.penal-details progress { max-width: 100%; accent-color: #d58b51; }
+.penal-charges, .penal-caption, .penal-context { margin: 0; font-size: .85rem; }
+.penal-caption { color: #b7c4d2; }
+.penal-context { color: #a8dfd1; }
+.penal-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.penal-schedule { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; padding-top: 8px; font-size: .75rem; }
+.penal-schedule > div { display: flex; gap: 8px; }
+.penal-schedule time { color: #a3b2c0; white-space: nowrap; }
+.penal-schedule .current { color: #ffc38d; font-weight: 700; }
+.penal-badge { position: absolute; z-index: 18; bottom: 76px; left: 50%; transform: translateX(-50%); }
+.bank-panel { width: min(390px, calc(100vw - 26px)); }
+.bank-panel input { width: 100%; padding: 8px; background: #0f171f; border: 1px solid #586671; color: #fff; }

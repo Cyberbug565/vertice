@@ -30,6 +30,7 @@ legendId?: string;
     privateTo?: PlayerConn; ghostOf?: number; ghostOwner?: PlayerConn; kairosTier?: number; timeScale?: number; legendBoss?: { legend: string; step: number; owner: string };
   predator?: boolean; escortOf?: number; lootTier?: number; lootChrome?: string[]; dispatchedUntil?: number; callingUntil?: number;
   lastHitBy?: number; lastHitAt?: number; faction?: string; npcMax?: number; defense?: number; weaponId?: string; chrome?: string[];
+  prisonStaff?:boolean; prisonGang?:string;
   aggro?: number; aggroLethal?: boolean; nextAttackAt?: number; fleeUntil?: number; nextPathAt?: number;
   downedUntil?: number; npcLethalDown?: boolean; lastAttacker?: number; lastAttackerInfo?: { charId: string; name: string }; carriedBy?: number; blindUntil?: number;
   respawn?: { zone: string; template: Record<string, unknown> }; hunting?: string; expiresAt?: number;

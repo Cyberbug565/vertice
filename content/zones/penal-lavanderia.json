@@ -1,0 +1,267 @@
+{
+ "id": "penal-lavanderia",
+ "name": "Lavandería industrial",
+ "kind": "interior",
+ "width": 39,
+ "height": 31,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#9aa8ce",
+ "safePoint": [
+  19,
+  28
+ ],
+ "furnished": true,
+ "waypoints": [],
+ "objects": [
+  {
+   "id": "penal-lavanderia",
+   "name": "Clasificación de lavandería",
+   "kind": "penal",
+   "at": [
+    19,
+    11
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "penal-lavanderia-patio-norte",
+   "name": "Patio Norte · Cancha y gradas",
+   "at": [
+    19,
+    30
+   ],
+   "to": {
+    "zone": "penal-patio-norte",
+    "at": [
+     40,
+     30
+    ]
+   },
+   "sign": "Patio Norte · Cancha y gradas",
+   "signColor": "#73bd95"
+  }
+ ],
+ "props": [
+  {
+   "type": "neonstrip",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    4,
+    26
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    10,
+    26
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    16,
+    2
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    16,
+    26
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    22,
+    2
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    22,
+    26
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    28,
+    2
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    28,
+    26
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    34,
+    2
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "column",
+   "at": [
+    34,
+    26
+   ],
+   "color": "#9aa8ce",
+   "blocking": false
+  },
+  {
+   "type": "locker",
+   "at": [
+    19,
+    11
+   ],
+   "color": "#79bdb2",
+   "blocking": false
+  },
+  {
+   "type": "locker",
+   "at": [
+    6,
+    5
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    6,
+    23
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    12,
+    5
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    12,
+    23
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    18,
+    5
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    18,
+    23
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    24,
+    5
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    24,
+    23
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    30,
+    5
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    30,
+    23
+   ],
+   "color": "#9aa8ce",
+   "blocking": true
+  }
+ ],
+ "blocks": [],
+ "ground": [
+  {
+   "type": "tile",
+   "rect": [
+    4,
+    8,
+    31,
+    13
+   ]
+  }
+ ]
+}
