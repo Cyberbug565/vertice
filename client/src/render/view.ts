@@ -23,6 +23,7 @@ export interface CEnt {
   view: Container; legs?: Container; body?: Container; visor?: Graphics; hpBar?: Graphics; tag?: Graphics; bubble?: Container; bubbleUntil?: number; label?: Text; obj: SortObj; phase: number;
   charRoot?: Container; marker?: Container; markerAmt?: number; zz?: Text;
   vehX?: Container; vehY?: Container; lvl?: Text;
+  vehicleModel?: import('@vertice/shared').CarDef['model'];
   // v0.6: extremidades articuladas, arma en la mano y animación de ataque.
   kneeL?:Container; kneeR?:Container; footL?:Container; footR?:Container;
   legL?: Container; legR?: Container; armB?: Container; armF?: Container; hand?: Container; bodyY?: number;
@@ -468,6 +469,7 @@ export class GameView {
       // Al volante: el coche sustituye a la figura (en moto, la figura va montada encima).
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
       if (car) {
+        ent.vehicleModel = car.model;
         ent.vehX = makeVehicle(car.class, car.color, s.appearance?.accent);
         ent.vehY = makeVehicle(car.class, car.color, s.appearance?.accent); ent.vehY.scale.x = -1;
         view.addChildAt(ent.vehX, 0); view.addChildAt(ent.vehY, 0); ent.vehY.visible = false;
@@ -571,7 +573,12 @@ export class GameView {
       rel((g) => { drawBox(g, fx + 0.1, fy + 0.2, 0.8, 0.6, 0, 0.75, 0x2a2a36); const t = worldToScreen(fx + 0.5, fy + 0.6, 0.75); g.rect(t.x - 8, t.y - 13, 16, 11).fill(0x101018); g.rect(t.x - 7, t.y - 12, 14, 9).fill(0x43f3ff); g.rect(t.x - 6, t.y - 10, 8, 1).fill(0x101018); g.rect(t.x - 6, t.y - 7, 10, 1).fill(0x101018); });
     } else if (s.objKind === 'mycar') {
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
-      if (car) { const v = makeVehicle(car.class, car.color, '#43f3ff'); ent.view.addChild(v); return; }
+      if (car) {
+        ent.vehicleModel = car.model;
+        ent.vehX = makeVehicle(car.class, car.color, '#43f3ff');
+        ent.view.addChild(ent.vehX);
+        return;
+      }
     } else if (s.objKind === 'atm') {
       // v0.11 · Objetos que antes no se dibujaban (y parecían colisiones invisibles).
       rel((g) => { drawBox(g, fx + 0.2, fy + 0.25, 0.6, 0.5, 0, 1.25, 0x2a3a4a); const t = worldToScreen(fx + 0.5, fy + 0.75, 1.0); g.rect(t.x - 6, t.y - 9, 12, 7).fill(0x43f3ff); g.rect(t.x - 4, t.y, 8, 2).fill(0x101018); });
@@ -606,14 +613,14 @@ export class GameView {
       if (lostChanged || wChanged) {
         // Miembro arrancado: cae al suelo junto al cuerpo.
         for (const part of extra.lost ?? []) if (!(e.s.lost ?? []).includes(part) && !part.startsWith('mano')) this.severed(e, part);
-        this.upsert({ ...e.s, x: e.x, y: e.y, lost: extra.lost, weapon: extra.weapon, carry: extra.carry, label, chrome: chrome ?? e.s.chrome, appearance: extra.appearance ?? e.s.appearance, vehicle: extra.vehicle ?? e.s.vehicle, state: state === 'alive' ? undefined : state ?? e.s.state });
+        this.upsert({ ...e.s, x: e.x, y: e.y, lost: extra.lost, weapon: extra.weapon, carry: extra.carry, label, chrome: chrome ?? e.s.chrome, appearance: extra.appearance ?? e.s.appearance, vehicle: extra.vehicle === undefined ? e.s.vehicle : extra.vehicle, state: state === 'alive' ? undefined : state ?? e.s.state });
         return;
       }
       if (extra.buffs !== undefined) e.s.buffs = extra.buffs;
       if (extra.level !== undefined) e.s.level = extra.level;
       const apChanged = extra.appearance && JSON.stringify(extra.appearance) !== JSON.stringify(e.s.appearance);
-      const vehChanged = (extra.vehicle ?? null) !== (e.s.vehicle ?? null);
-      if (apChanged || vehChanged) { this.upsert({ ...e.s, x: e.x, y: e.y, appearance: extra.appearance ?? e.s.appearance, vehicle: extra.vehicle ?? null, chrome: chrome ?? e.s.chrome, label, state: state === 'alive' ? undefined : state ?? e.s.state }); return; }
+      const nextVehicle = extra.vehicle === undefined ? e.s.vehicle : extra.vehicle;
+      if (apChanged || nextVehicle !== e.s.vehicle) { this.upsert({ ...e.s, x: e.x, y: e.y, appearance: extra.appearance ?? e.s.appearance, vehicle: nextVehicle, chrome: chrome ?? e.s.chrome, label, state: state === 'alive' ? undefined : state ?? e.s.state }); return; }
     }
     if (hpPct !== undefined) e.s.hpPct = hpPct;
     if (carried !== undefined) e.s.carried = carried || undefined;
@@ -1259,6 +1266,13 @@ export class GameView {
   }
   private render3d(now: number, dt: number, W: number, H: number) {
     if (!this.chars3d) return;
+    const vehicles = this.chars3d.vehicles;
+    for (const e of this.ents.values()) {
+      if (!e.vehicleModel) continue;
+      const fallback = !vehicles.isReady(e.vehicleModel);
+      if (e.vehX) e.vehX.renderable = fallback;
+      if (e.vehY) e.vehY.renderable = fallback;
+    }
     const res = this.app.renderer.resolution, key = `${W}x${H}@${res}`;
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
     this.buildingObjs.forEach((o, i) => this.chars3d!.setBuildingFaded(i, o.view.alpha < 0.6 || !o.view.visible, o.view.visible ? o.view.alpha : 0));

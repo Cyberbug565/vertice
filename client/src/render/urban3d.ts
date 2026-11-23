@@ -16,16 +16,40 @@ export function urbanGeometry(form: UrbanForm): THREE.BufferGeometry {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.BufferAttribute(points, 3));
   geometry.computeVertexNormals();
+  if (form.surface) {
+    const colors = new Float32Array(points.length), glow = new Float32Array(points.length / 3);
+    const palette = form.surface.palette.map(({ color, light }) => ({ color: new THREE.Color(color), light }));
+    form.surface.face.forEach((id, i) => {
+      const { color, light } = palette[id];
+      for (let j = 0; j < 3; j++) {
+        color.toArray(colors, i * 9 + j * 3);
+        glow[i * 3 + j] = light;
+      }
+    });
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('surfaceGlow', new THREE.BufferAttribute(glow, 1));
+  }
   forms.set(form, geometry);
   return geometry;
 }
 
-export function urbanFacade(kind: UrbanLook['facade'], ghost = false): THREE.MeshStandardMaterial {
+export function urbanFacade(kind: UrbanLook['facade'], ghost = false, detailed = false): THREE.MeshStandardMaterial {
   const style = FACADES[kind];
   const material = new THREE.MeshStandardMaterial({
     roughness: style.rough, metalness: style.metal,
-    transparent: ghost, opacity: ghost ? 0.2 : 1,
+    transparent: ghost, opacity: ghost ? 0.2 : 1, vertexColors: detailed,
   });
+  if (detailed) {
+    material.onBeforeCompile = (shader) => {
+      shader.vertexShader = 'attribute float surfaceGlow; varying float urbanGlow;\n' + shader.vertexShader
+        .replace('#include <begin_vertex>', '#include <begin_vertex>\nurbanGlow = surfaceGlow;');
+      shader.uniforms.urbanNight = neonNight;
+      shader.fragmentShader = 'uniform float urbanNight; varying float urbanGlow;\n' + shader.fragmentShader
+        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * urbanGlow * (0.18 + 1.35 * urbanNight);');
+    };
+    material.customProgramCacheKey = () => 'vertice-malla-importada';
+    return material;
+  }
   material.onBeforeCompile = (shader) => {
     shader.uniforms.urbanNight = neonNight;
     shader.uniforms.urbanGlass = { value: new THREE.Color(style.glass) };

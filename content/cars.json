@@ -349,5 +349,19 @@
   "price": 980000,
   "color": "#e8e8f0",
   "desc": "Prototipo con levitación parcial. El coche más caro de Vértice."
+ },
+ {
+  "id": "saeta-vector",
+  "name": "Vector",
+  "maker": "Saeta",
+  "class": "deportivo",
+  "speed": 4.5,
+  "trunk": 35,
+  "seats": 2,
+  "armor": 1,
+  "price": 36000,
+  "color": "#adc6df",
+  "desc": "Deportivo de perfil bajo con cuatro propulsores de levitación. Homologado para circular por las avenidas de Vértice.",
+  "model": "vector"
  }
 ]

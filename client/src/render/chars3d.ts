@@ -22,6 +22,7 @@ import { kineticShield, placeShield } from './kinetic-shield';
 import { CapturePlayer, captureLength, gaitCapture, loadCapture, type Sample } from './captured-motion';
 import { dancePose } from './dance';
 import { City3D, tickNeon } from './city3d';
+import { Vehicles3D } from './vehicles3d';
 import { gunModel, gunsVersion, loadGuns } from './guns3d';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { humansReady, humansVersion, kitInfo, loadHumans, makeHuman, poseHuman, supportHand, REG, type Human } from './human3d';
@@ -37,6 +38,7 @@ export const BUILDING_H = 1.35;
 
 export interface Ent3D {
   x: number; y: number; moving: boolean; s: EntitySpawn; attackAt?: number; attackKind?: string; swingN?: number; hurtAt?: number; rollAt?: number; kickAt?: number; drawAt?: number; headHitAt?: number; cue?:{id:import('@vertice/shared').MotionCue;at:number}; jumpAt?: number; sideRoll?: number;
+  vehicleModel?: import('@vertice/shared').CarDef['model']; view?: { visible: boolean };
   samples: { x: number; y: number; t: number }[]; lookAt?: { x: number; y: number; until: number }; flags?: number;
   /** v0.12 · Fantasma (compañeros de las matrices): translúcido, flota y se tiñe del color de su matriz. */
   ghost?: { color: number; alpha: number; float: number };
@@ -201,6 +203,7 @@ export class Chars3D {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
   private world = new THREE.Group();
+  readonly vehicles = new Vehicles3D();
   private camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 4000);
   private rigs = new Map<number, Rig>();
   private occl = new THREE.Group();
@@ -228,7 +231,7 @@ export class Chars3D {
     this.scene.add(this.world, this.hemi, this.sun, this.rim);
     this.sun.position.set(2, 8, 5); // luz principal desde arriba y de cara a la cámara
     this.rim.position.set(-6, 4, -6); // contraluz frío: separa la silueta del fondo
-    this.world.add(this.occl);
+    this.world.add(this.occl, this.vehicles.world);
     loadHumans(() => {}); // v0.15 · cuerpos del kit (los personajes se rehacen al cargarlos)
     loadGuns(() => {}); // v0.14 · modelos de armas de fuego (los personajes se rehacen solos al cambiar la versión)
   }
@@ -240,6 +243,7 @@ export class Chars3D {
 
   /** Volúmenes invisibles que tapan: edificios, muros y mobiliario grande. */
   setZone(z: ZoneDef): boolean {
+    this.vehicles.clear();
     for (const r of this.rigs.values()) this.disposeRig(r);
     this.rigs.clear(); this.born.clear(); this.leaving.clear();
     this.occl.clear(); this.bOccl = [];
@@ -874,12 +878,19 @@ export class Chars3D {
 
   // ================================================================ animación y dibujo
   /** Sincroniza los modelos con las entidades visibles y dibuja el fotograma. */
-  render(ents: Iterable<Ent3D>, opts: { W: number; H: number; zoom: number; worldX: number; worldY: number; meId: number; guarding: boolean; now: number; dt: number; serverNow: number; hidden: (e: Ent3D) => boolean }) {
+  render(ents: readonly Ent3D[], opts: { W: number; H: number; zoom: number; worldX: number; worldY: number; meId: number; guarding: boolean; now: number; dt: number; serverNow: number; hidden: (e: Ent3D) => boolean }) {
     tickNeon(opts.now / 1000);
+    this.vehicles.sync(ents, opts.now, opts.dt, settings.reduceMotion);
     const seen = new Set<number>();
     for (const e of ents) {
       const s = e.s;
-      if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) continue;
+      if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) {
+        if (s.vehicle) {
+          const r = this.rigs.get(s.id);
+          if (r) { this.disposeRig(r); this.rigs.delete(s.id); this.born.delete(s.id); this.leaving.delete(s.id); }
+        }
+        continue;
+      }
       seen.add(s.id);
       // v0.19 · La firma del modelo (JSON de su aspecto) solo se recalcula si cambia alguna de sus piezas: antes se
       // serializaba la apariencia entera de cada persona en cada fotograma.
@@ -1131,7 +1142,7 @@ export class Chars3D {
     r.shadow.visible = !lying;
   }
 
-  dispose() { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); }
+  dispose() { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); this.vehicles.clear(); }
   /** v0.21 · Animaciones de la librería universal encima del movimiento procedural (ver anim3d.ts). */
   private playClips(r: Rig, e: Ent3D, now: number, guard: boolean) {
     loadCapture();

@@ -1,5 +1,6 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.31)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.32)
 
+La v0.32 amplía Ciudad Vértice al este y al sur, incorpora las fachadas y los contenedores nuevos y añade el [Saeta Vector conducible](docs/ENSANCHE_032.md).
 La v0.31 renueva [el trazado y los edificios de Ciudad Vértice](docs/URBANISMO_031.md) con geometría de Lower Manhattan.
 La v0.30 revisa la [marcha, los probadores y el creador](docs/ASPECTO_030.md).
 
