@@ -41,7 +41,8 @@ export function gaitCapture(style: Gait, flags: readonly string[], speed: number
   if (style==='esprint') return 'correr';
   if (style==='trote') return 'trotar';
   if (rifle) return 'fusil';
-  return style==='cautela'?'':'andar';
+  // La marcha base está en ciclos.json para ambos renderizadores.
+  return '';
 }
 export function capturedLegs(id: string, phase: number, left: Float64Array, right: Float64Array, mirror=false) {
   const clip=bank?.index.clips[id]; if (!bank || !clip) return false;

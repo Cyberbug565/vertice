@@ -7,7 +7,7 @@ import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPD
 import { BUILDING_H, Chars3D } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
 import {
-  GROUND_TYPES, buildZoneGrid, findPath, isWalkable, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
+  GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
@@ -30,7 +30,7 @@ export interface CEnt {
 
 const INTERP_DELAY = 110;
 /** Las personas se dibujan algo más pequeñas que antes para que farolas, coches y edificios tengan escala real. */
-const CHAR_SCALE = 0.74;
+const CHAR_SCALE = 0.74 * RULES.actorScale;
 const FACTION_COLORS: Record<string, number> = { engranajes: 0xff3040, kitsune: 0xb46cff, 'hermandad-sol': 0xffb347, furias: 0xff4fa0, 'voces-vacio': 0x43f3ff, 'nomadas-polvo': 0xd9a066, saqueadores: 0x8a6a3a, pcv: 0x60a5fa, 'unidad-hierro': 0x1e3a8a, ambar: 0xffbf00, chatarreros: 0xff8a3d, 'hojas-rojas': 0xff5a5a };
 const CHUNK = 16;
 
@@ -75,7 +75,7 @@ export class GameView {
   grid?: ZoneGrid;
   ents = new Map<number, CEnt>();
   meId = -1;
-  me = { x: 0, y: 0, path: [] as [number, number][], speed: 2.6, serverX: 0, serverY: 0, serverMoving: false, lastServer: 0, holdUntil: 0 };
+  me = { x: 0, y: 0, path: [] as [number, number][], speed: RULES.walkSpeedBase as number, serverX: 0, serverY: 0, serverMoving: false, lastServer: 0, holdUntil: 0 };
   private statics: SortObj[] = [];
   private chunks = new Map<string, Container>();
   private chunkLights = new Map<string, Container>();
@@ -89,10 +89,11 @@ export class GameView {
     ap?: any; chrome?: string[]; vis: number; shown: boolean; nextSwitch: number; ox: number; oy: number; ent3d?: any }[] = [];
   private halluc: { c: Container; until: number; x: number; y: number }[] = [];
   ghostMode = false;
+  driving = false;
   psyche = 0;
   private marketLights = new Graphics();
   private powered = false;
-  zoom = 1.7; // v0.16 · cámara más cercana
+  zoom = 1.55;
   cam = { x: 0, y: 0 };
   hovered: CEnt | null = null;
   onGroundClick: (x: number, y: number) => void = () => {};
@@ -156,7 +157,7 @@ export class GameView {
     this.app.stage.on('pointertap', (ev: FederatedPointerEvent) => this.onTap(ev));
     this.app.stage.on('pointermove', (ev: FederatedPointerEvent) => this.onMove(ev));
     this.app.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-    this.app.canvas.addEventListener('pointerdown', (e) => { if (e.button === 2) { this.guarding = true; this.onGuard(true); } });
+    this.app.canvas.addEventListener('pointerdown', (e) => { if (e.button === 2 && !this.driving) { this.guarding = true; this.onGuard(true); } });
     // v0.21 · Con el derecho mantenido, el navegador no manda «pointerdown» al pulsar el izquierdo (es un acorde de botones):
     // se escucha el «mousedown», que sí llega por cada botón, y se trata como el clic de ataque.
     this.app.canvas.addEventListener('mousedown', (e) => {
@@ -182,7 +183,7 @@ export class GameView {
     this.rebuild();
   }
 
-  setZoom(z: number) { this.zoom = Math.max(1.05, Math.min(4.6, z)); } // v0.16 · cámara más cercana: más zoom y sin vista lejana
+  setZoom(z: number) { this.zoom = Math.max(0.9, Math.min(4.6, z)); } // v0.16 · cámara más cercana: más zoom y sin vista lejana
 
   // ------------------------------------------------------------------ zona
   setZone(zoneId: string, x: number, y: number) {
@@ -1160,14 +1161,9 @@ export class GameView {
     if (this.dashAnim) { /* rodando: la voltereta manda */ }
     else if ((this.steer.dx || this.steer.dy) && this.grid) {
       me.path = []; this.pathG.clear();
-      const g = this.grid;
-      for (let left = moveDt; left > 1e-6; left -= 0.05) {
-        const step = me.speed * Math.min(0.05, left) * (this.guarding ? 0.5 : 1);
-        const free = (x: number, y: number) => isWalkable(g, x, y) && isWalkable(g, x + Math.sign(x - me.x) * 0.22, y + Math.sign(y - me.y) * 0.22);
-        let nx = me.x + this.steer.dx * step, ny = me.y + this.steer.dy * step;
-        if (!free(nx, ny)) { if (free(nx, me.y)) ny = me.y; else if (free(me.x, ny)) nx = me.x; else { nx = me.x; ny = me.y; } }
-        me.x = nx; me.y = ny;
-      }
+      const distance = me.speed * moveDt * (this.guarding && !this.driving ? 0.5 : 1);
+      const next = stepWithCollision(this.grid, me.x, me.y, this.steer.dx * distance, this.steer.dy * distance, this.ghostMode);
+      me.x = next.x; me.y = next.y;
       // v0.12 · Corrección suave y proporcional (sin saltos): solo se recoloca de golpe si el desfase es enorme.
       const errS = Math.hypot(me.serverX - me.x, me.serverY - me.y);
       if (now < me.holdUntil) { /* esperando la confirmación de un rodar */ }
@@ -1307,7 +1303,7 @@ export class GameView {
     loadCapture();
     const rm = settings.reduceMotion;
     const first=e.samples[0],last=e.samples[e.samples.length-1],flags=e.s.buffs??[];
-    const speed=first && last && last.t>first.t?Math.hypot(last.x-first.x,last.y-first.y)*1000/(last.t-first.t):2.4;
+    const speed=first && last && last.t>first.t?Math.hypot(last.x-first.x,last.y-first.y)*1000/(last.t-first.t):e.s.id===this.meId?this.me.speed:RULES.walkSpeedBase;
     const guard=e.s.id===this.meId?this.guarding:flags.includes('guardia');
     const hurtL=flags.includes('paso-izq')||e.s.lost?.includes('pierna_izq');
     const hurtR=flags.includes('paso-der')||e.s.lost?.includes('pierna_der');

@@ -1,6 +1,6 @@
 // v0.4 · Propiedades: viviendas (instancias privadas con permisos y alijo), coches, viaje en coche e índices de mercado en tiempo real.
 import { randomUUID } from 'node:crypto';
-import { nearestWalkable, type BuildingView, type DealerView, type HouseDef, type MarketLiveView, type PropsView, type RealtyView, type StashView, type TrunkView } from '@vertice/shared';
+import { nearestWalkable, vehicleSpeed, type BuildingView, type DealerView, type HouseDef, type MarketLiveView, type PropsView, type RealtyView, type StashView, type TrunkView } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
 import { buildSheet, perkMods, weaponFits, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
@@ -292,7 +292,7 @@ export class Property {
     p.money -= price; p.cars.push({ id, car: carId });
     this.carIdx.set(car.class, Math.min(1.5, (this.carIdx.get(car.class) ?? 1) * 1.01));
     this.trade(`${p.name} se lleva un ${car.maker} ${car.name} por ${price.toLocaleString('es-ES')} €$.`);
-    this.w.send(c, { t: 'reward', title: `${car.maker} ${car.name}`, lines: [`${price.toLocaleString('es-ES')} €$`, `Velocidad ×${car.speed} · maletero ${car.trunk} kg · blindaje ${car.armor}`, 'En la calle pulsa V (o el botón Conducir) para subirte.', 'Desde el mapa (M) puedes viajar en coche a otro distrito.'] });
+    this.w.send(c, { t: 'reward', title: `${car.maker} ${car.name}`, lines: [`${price.toLocaleString('es-ES')} €$`, `Velocidad ${vehicleSpeed(car.speed).toFixed(1)} losetas/s · maletero ${car.trunk} kg · blindaje ${car.armor}`, 'En la calle pulsa V (o el botón Conducir) para subirte.', 'Desde el mapa (M) puedes viajar en coche a otro distrito.'] });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
   }
   async sellCar(c: PlayerConn, ownedId: string, opId: string) {
@@ -324,7 +324,8 @@ export class Property {
     const own = (ownedId ? p.cars.find((x) => x.id === ownedId) : undefined) ?? [...p.cars].sort((a, b) => this.w.c.cars.find((x) => x.id === b.car)!.speed - this.w.c.cars.find((x) => x.id === a.car)!.speed)[0];
     this.w.nightlife.stop(e);
     p.driving = own.id;
-    e.vehicle = own.car; e.labelVer++;
+    e.vehicle = own.car; e.guard = false; e.guardFacing = undefined; e.guardSince = undefined; e.labelVer++;
+    this.w.survival.refreshMovement(c);
     // Si estaba aparcado, deja de estarlo (de cerca te subes; de lejos llega solo con el piloto automático).
     const parked = this.parked.get(own.id);
     if (parked) { const far = parked.zone !== e.zone || Math.hypot(parked.x - e.x, parked.y - e.y) > 4; this.w.removeEntity(parked); this.parked.delete(own.id); if (far) this.w.send(c, { t: 'notice', kind: 'info', text: 'Tu coche llega solo desde donde lo aparcaste (piloto automático).' }); }
@@ -337,6 +338,7 @@ export class Property {
     if (!p.driving) return;
     const ownedId = p.driving;
     p.driving = null; e.vehicle = null; e.labelVer++;
+    this.w.survival.refreshMovement(c);
     if (e.zone.def.kind === 'exterior') this.spawnParked(p, ownedId, e.zone.id, e.x, e.y, true);
     if (!quiet) this.w.send(c, { t: 'notice', kind: 'info', text: 'Aparcas y bajas del coche. Haz clic en él para abrir el maletero.' });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });

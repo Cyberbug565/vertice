@@ -1,5 +1,5 @@
 // Paneles de la v0.2: tienda, red de mercado, empleos, matasanos, recompensas, menú de acciones y pantalla de muerte.
-import type { AmbarView, BountyView, ClinicOffer, ClinicView, DeathSummary, FactionsView, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
+import type { AmbarView, BountyView, ClinicOffer, ClinicView, CharacterSheet, DeathSummary, FactionsView, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
 import { RARITY_COLOR, RARITY_LABEL } from '@vertice/shared';
 import { content } from '../content';
 import type { Net } from '../net';
@@ -7,8 +7,10 @@ import { newOpId } from '../net';
 import { $ui, fmtMoney, h, ask } from './dom';
 import { recordPanel } from './record';
 import { blip } from '../audio';
+import { tryClothingRoom, tryCyberRoom } from './fitting-room';
+import { garmentFits } from './fitting-model';
 
-export interface LifeCtx { net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
+export interface LifeCtx { sheet?: () => CharacterSheet | null; stopForPreview?: () => void; net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
 
 const pct = (p: number) => (p > 0.99 && p < 1 ? `${(p * 100).toFixed(1).replace('.', ',')} %` : `${Math.round(p * 100)} %`);
 const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medicina: 'Medicina', ciberware: 'Ciberware', herramienta: 'Herramientas', arma: 'Armas', ropa: 'Ropa', chatarra: 'Chatarra', mision: 'Misión', equipo: 'Equipo', contrabando: 'Contrabando' };
@@ -25,15 +27,24 @@ export function showPanel(id: string, title: string, ...body: (Node | string | n
 }
 
 export function shopPanel(ctx: LifeCtx, v: ShopView) {
-  const rows = v.items.map((it) => h('tr', {},
-    h('td', {}, h('b', {}, it.name), h('div', { class: 'muted', style: { fontSize: '0.85em' } }, `${CAT[it.category] ?? it.category} · ${it.desc}`)),
-    h('td', { class: 'mono' }, `${it.price} €$`, it.discount ? h('div', { class: 'cy', style: { fontSize: '0.8em' } }, `−${it.discount} %`) : '', h('div', { class: it.trend > 5 ? 'netbad' : it.trend < -5 ? 'netok' : 'muted', style: { fontSize: '0.8em' } }, it.trend > 0 ? `▲ ${it.trend} %` : it.trend < 0 ? `▼ ${-it.trend} %` : '= precio corp.')),
-    h('td', { class: 'mono' }, `${it.stock} uds.`),
-    h('td', {}, h('div', { class: 'row' },
-      h('button', { class: 'btn small', disabled: it.price > v.money || it.stock < 1, onclick: () => { ctx.net.send({ t: 'buy', shop: v.shop, item: it.item, qty: 1, opId: newOpId() } as any); blip(); } }, 'Comprar'),
-      v.bar && it.category === 'bebida' ? h('button', { class: 'btn small primary', disabled: !it.owned, 'data-bar-drink': it.item,
-        'aria-label': `Beber ${it.name}`, onclick: () => ctx.net.send({ t: 'useItem', item: it.item, opId: newOpId() }) }, 'Beber') : null,
-      !it.item.startsWith('cyber:') && it.stock > 0 ? h('button', { class: 'btn small danger', title: `Destreza + Sigilo + 1d10 contra la seguridad (${v.security}). Si fallas: paliza y nivel de búsqueda.`, onclick: () => { ask(`Intentar robar ${it.name}. Probabilidad ${pct(it.stealChance)}. Si fallas, el vigilante te hará daño y subirá tu nivel de búsqueda. ¿Seguir?`, () => { ctx.net.send({ t: 'steal', shop: v.shop, item: it.item, opId: newOpId() } as any); }); } }, `Robar ${pct(it.stealChance)}`) : null))));
+  const sheet = ctx.sheet?.();
+  const rows = v.items.map((it) => {
+    const d = content.items.find(x => x.id === it.item);
+    const implant = it.item.startsWith('cyber:') ? content.cyberware.find(x => x.id === it.item.slice(6)) : undefined;
+    const fits = sheet && d && garmentFits(sheet, d);
+    return h('tr', {},
+      h('td', {}, h('b', {}, it.name), h('div', { class: 'muted', style: { fontSize: '0.85em' } }, `${CAT[it.category] ?? it.category} · ${it.desc}`)),
+      h('td', { class: 'mono' }, `${it.price} €$`, it.discount ? h('div', { class: 'cy', style: { fontSize: '0.8em' } }, `−${it.discount} %`) : '', h('div', { class: it.trend > 5 ? 'netbad' : it.trend < -5 ? 'netok' : 'muted', style: { fontSize: '0.8em' } }, it.trend > 0 ? `▲ ${it.trend} %` : it.trend < 0 ? `▼ ${-it.trend} %` : '= precio corp.')),
+      h('td', { class: 'mono' }, `${it.stock} uds.`),
+      h('td', {}, h('div', { class: 'row' },
+        sheet && d?.wear ? h('button', { class: 'btn small', disabled: !fits, title: fits ? undefined : 'Prenda para el otro cuerpo',
+          onclick: () => { ctx.stopForPreview?.(); tryClothingRoom(sheet, d); } }, 'Probar') : null,
+        sheet && implant ? h('button', { class: 'btn small', onclick: () => { ctx.stopForPreview?.(); tryCyberRoom(sheet, implant); } }, 'Simular') : null,
+        h('button', { class: 'btn small', disabled: it.price > v.money || it.stock < 1, onclick: () => { ctx.net.send({ t: 'buy', shop: v.shop, item: it.item, qty: 1, opId: newOpId() } as any); blip(); } }, 'Comprar'),
+        v.bar && it.category === 'bebida' ? h('button', { class: 'btn small primary', disabled: !it.owned, 'data-bar-drink': it.item,
+          'aria-label': `Beber ${it.name}`, onclick: () => ctx.net.send({ t: 'useItem', item: it.item, opId: newOpId() }) }, 'Beber') : null,
+        !it.item.startsWith('cyber:') && it.stock > 0 ? h('button', { class: 'btn small danger', title: `Destreza + Sigilo + 1d10 contra la seguridad (${v.security}). Si fallas: paliza y nivel de búsqueda.`, onclick: () => { ask(`Intentar robar ${it.name}. Probabilidad ${pct(it.stealChance)}. Si fallas, el vigilante te hará daño y subirá tu nivel de búsqueda. ¿Seguir?`, () => { ctx.net.send({ t: 'steal', shop: v.shop, item: it.item, opId: newOpId() } as any); }); } }, `Robar ${pct(it.stealChance)}`) : null)));
+  });
   const sell = v.sell.length ? h('table', { class: 'sheet' }, ...v.sell.map((s) => h('tr', {}, h('td', {}, s.name), h('td', { class: 'mono' }, `×${s.qty}`), h('td', { class: 'mono' }, `${s.price} €$/u`),
     h('td', {}, h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'sell', shop: v.shop, item: s.item, qty: 1, opId: newOpId() } as any) }, 'Vender 1'))))) : h('p', { class: 'muted' }, 'Aquí no compran nada de lo que llevas.');
   showPanel('shop-panel', v.name,
@@ -79,6 +90,7 @@ export function jobsPanel(ctx: LifeCtx, v: JobsView, filter: { mine: boolean } =
 }
 
 export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
+  const sheet = ctx.sheet?.();
   const confirmOp = (o: ClinicOffer) => {
     const side = h('select', { 'aria-label': 'Lado del implante' }, ...(o.sides ?? []).map((s) => h('option', { value: s }, s === 'izq' ? 'Izquierdo' : 'Derecho'))) as HTMLSelectElement;
     const ov = h('div', { class: 'overlay' }, h('div', { class: 'reward', role: 'dialog' },
@@ -97,12 +109,17 @@ export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
         h('button', { class: 'btn', onclick: () => ov.remove() }, 'Cancelar'))));
     $ui().append(ov);
   };
-  const row = (o: ClinicOffer) => h('tr', {},
-    h('td', {}, h('b', { style: { color: RARITY_COLOR[o.rarity ?? 'comun'] } }, o.name), ` · ${RARITY_LABEL[o.rarity ?? 'comun']}${o.part ? (o.part.endsWith('izq') ? ' · izq.' : ' · der.') : ''} · grado ${['I', 'II', 'III', 'IV', 'V'][o.grade - 1]}`, o.stolen ? h('span', { class: 'netbad' }, ' · robado') : '',
-      h('div', { class: 'muted', style: { fontSize: '0.82em' } }, `${o.family} · ranura ${o.slot} · ${o.desc} · capacidad ${o.capacity}, Humanidad −${o.humanity}`)),
-    h('td', { class: 'mono' }, fmtMoney(o.price)),
-    h('td', { class: 'mono' }, h('span', { class: o.survival > 0.97 ? 'netok' : o.survival > 0.9 ? 'netmid' : 'netbad' }, pct(o.survival)), h('div', { class: 'muted' }, o.danger)),
-    h('td', {}, o.blocked ? h('span', { class: 'muted', style: { fontSize: '0.8em' } }, o.blocked) : h('button', { class: 'btn small', onclick: () => confirmOp(o) }, o.action === 'install' ? 'Instalar…' : 'Retirar…')));
+  const row = (o: ClinicOffer) => {
+    const implant = content.cyberware.find(x => x.id === o.def);
+    return h('tr', {},
+      h('td', {}, h('b', { style: { color: RARITY_COLOR[o.rarity ?? 'comun'] } }, o.name), ` · ${RARITY_LABEL[o.rarity ?? 'comun']}${o.part ? (o.part.endsWith('izq') ? ' · izq.' : ' · der.') : ''} · grado ${['I', 'II', 'III', 'IV', 'V'][o.grade - 1]}`, o.stolen ? h('span', { class: 'netbad' }, ' · robado') : '',
+        h('div', { class: 'muted', style: { fontSize: '0.82em' } }, `${o.family} · ranura ${o.slot} · ${o.desc} · capacidad ${o.capacity}, Humanidad −${o.humanity}`)),
+      h('td', { class: 'mono' }, fmtMoney(o.price)),
+      h('td', { class: 'mono' }, h('span', { class: o.survival > 0.97 ? 'netok' : o.survival > 0.9 ? 'netmid' : 'netbad' }, pct(o.survival)), h('div', { class: 'muted' }, o.danger)),
+      h('td', {}, h('div', { class: 'row wrap' },
+        sheet && implant ? h('button', { class: 'btn small', onclick: () => { ctx.stopForPreview?.(); tryCyberRoom(sheet, implant, o); } }, 'Simular') : null,
+        o.blocked ? h('span', { class: 'muted', style: { fontSize: '0.8em' } }, o.blocked) : h('button', { class: 'btn small', onclick: () => confirmOp(o) }, o.action === 'install' ? 'Instalar…' : 'Retirar…'))));
+  };
   const groups: [string, ClinicOffer[]][] = [
     ['Catálogo (procedencia verificada)', v.offers.filter((o) => o.source === 'stock')],
     ['Bajo el mostrador (robado)', v.offers.filter((o) => o.source === 'stolen')],

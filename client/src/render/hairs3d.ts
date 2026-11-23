@@ -3,6 +3,7 @@
 // hombre. Se descargan solo cuando alguien los lleva y se colocan sobre la cabeza del cuerpo del kit (escala según la
 // anchura de su cabeza). Los archivos no van en el repositorio: los baja `tools/fetch-assets.mjs` desde la release.
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const cache = new Map<string, THREE.BufferGeometry | null>();
@@ -22,10 +23,17 @@ export function collectionHair(id: string): THREE.BufferGeometry | null {
   new GLTFLoader().loadAsync(`/models/extra/pelos/${id}.glb`).then((g) => {
     const parts: THREE.BufferGeometry[] = [];
     g.scene.updateMatrixWorld(true);
-    g.scene.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) parts.push(m.geometry.clone().applyMatrix4(m.matrixWorld)); });
-    if (!parts.length) return;
-    const geo = parts[0];
-    geo.computeVertexNormals();
+    g.scene.traverse(o => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      const geometry = (mesh.geometry.index ? mesh.geometry.toNonIndexed() : mesh.geometry.clone()).applyMatrix4(mesh.matrixWorld);
+      if (!geometry.getAttribute('normal')) geometry.computeVertexNormals();
+      for (const name of Object.keys(geometry.attributes)) if (name !== 'position' && name !== 'normal') geometry.deleteAttribute(name);
+      parts.push(geometry);
+    });
+    const geo = parts.length > 1 ? mergeGeometries(parts) : parts[0];
+    if (!geo) { failed.add(id); version++; return; }
+    if (parts.length > 1) parts.forEach(g => g.dispose());
     cache.set(id, geo); version++;
   }).catch((err) => { failed.add(id); version++; console.warn('[pelos]', id, err); });
   return null;

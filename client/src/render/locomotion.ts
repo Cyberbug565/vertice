@@ -1,3 +1,4 @@
+// Paseo y marcha trasladan los apoyos y la flexión del ciclo Walk_Unarmed de la release moveset.
 import cycles from './motion/ciclos.json';
 export type Gait = Exclude<keyof typeof cycles,'canales'>;
 const rad=Math.PI/180;
@@ -7,8 +8,8 @@ export function chooseGait(speed:number,running:boolean,guarding:boolean,buffs:r
   if(buffs.includes('paso-carga'))return 'carga';
   if(guarding||buffs.includes('invisible'))return 'cautela';
   if(buffs.includes('esprint')||speed>=5.1)return 'esprint';
-  if(running||speed>3.2)return 'trote';
-  return speed<1.65?'paseo':'marcha';
+  if(running||speed>2.75)return 'trote';
+  return speed<1.28?'paseo':'marcha';
 }
 function tangent(a:number,b:number){return a*b<=0?0:2*a*b/(a+b);}
 export function sampleLeg(style:Gait,phase:number,out:Float64Array) {

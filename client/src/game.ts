@@ -10,6 +10,7 @@ import { stealthBar, weaponWheel } from './ui/stealth';
 import { closeDanceMenus, danceWheel, substanceReadout, worldActions } from './ui/nightlife';
 import { jobBrief, underworldPanel, undergroundStanding, updateDeliveryClock } from './ui/underworld';
 import { casinoPanel } from './ui/casino';
+import { closeFittingRoom, fittingRoomOpen } from './ui/fitting-room';
 import { bankPanel, prisonPanel } from './ui/prison';
 import './ui/prison.css';
 import { $ui, clearUi, fmtMoney, h, ask } from './ui/dom';
@@ -46,7 +47,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   let combatMusicUntil = 0;
   let localDance: DanceId | null = null;
   let exited = false;
-  const onExit = (reason?: string) => { if (exited) return; exited = true; closeRecordPanel(); closeCharScreen(); eventScope.abort(); audioScene(null); window.removeEventListener('keydown', keys); for (const t of timers) clearInterval(t); net.close(); try { view.app.destroy(true); } catch {} onExit0(reason); };
+  const onExit = (reason?: string) => { if (exited) return; exited = true; closeFittingRoom(); closeRecordPanel(); closeCharScreen(); eventScope.abort(); audioScene(null); window.removeEventListener('keydown', keys); for (const t of timers) clearInterval(t); net.close(); try { view.app.destroy(true); } catch {} onExit0(reason); };
   clearUi();
   initAudio();
   const resumeOnGesture = () => initAudio();
@@ -252,6 +253,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     renderShift(cityHour());
     const sb = document.getElementById('btn-sleep'); if (sb) { sb.querySelector('.ico')!.textContent = s.sleeping ? '☀' : '💤'; sb.querySelector('.lbl')!.textContent = s.sleeping ? 'Despertar' : 'Dormir'; }
     renderStance();
+    view.driving = !!s.driving;
+    if (view.driving) view.guarding = false;
     view.setMyAttributes(s.attributes as any, s.substances.speed);
     bodyPanel.update(s);
     // v0.8: compañeros de las matrices, síntomas de ciberpsicosis y medidor de estabilidad mental.
@@ -307,7 +310,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const prisonBadge=h('button',{class:'btn small penal-badge',hidden:true,onclick:()=>net.send({t:'penal',action:'estado',opId:newOpId()})},'Expediente de Las Salinas');
   $ui().append(prisonBadge);
   let casino:ReturnType<typeof casinoPanel>|undefined;
-  const closePanels = () => { closeDanceMenus(); for (const id of ['casino-panel', 'penal-panel', 'bank-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { closeFittingRoom(); closeDanceMenus(); for (const id of ['casino-panel', 'penal-panel', 'bank-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
@@ -635,6 +638,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   }, { signal: eventScope.signal });
   const openPause = () => pauseMenu({ onSettings: () => settingsPanel(() => view.applySettings()), onLogout: () => onExit('logout'), onCharacters: () => onExit(), onKeysChanged: () => { renderToolbar(); chatIn.placeholder = `Chat local (${keyOf('chat')})…`; globalIn.placeholder = `Chat global (${keyOf('chatGlobal')})…`; } });
   const keys = (e: KeyboardEvent) => {
+    if (fittingRoomOpen()) return;
     const tag = (e.target as HTMLElement)?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
     if (document.getElementById('keys-panel') || document.getElementById('pause-menu') || document.getElementById('ask-modal')) return;
@@ -643,7 +647,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     if (k === 'escape') {
       if (document.getElementById('weapon-wheel')) { document.getElementById('weapon-wheel')!.remove(); wheelRef = null; return; }
       if (hackMode) { setHackMode(false); return; }
-      if (closeDanceMenus()) return;
+      if (closeFittingRoom() || closeDanceMenus()) return;
       if (document.getElementById('loot-panel')) { document.getElementById('loot-panel')!.remove(); return; }
       if (charScreenOpen()) closeCharScreen(); else if (document.getElementById('scan-card')) document.getElementById('scan-card')!.remove();
       else if (document.getElementById('target-menu')) document.getElementById('target-menu')!.remove();
@@ -726,7 +730,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
 
   // ---------------------------------------------------------------- red
   net.onPositions = (p) => view.positions(p.ents);
-  const life: LifeCtx = { net, toast };
+  const life: LifeCtx = { net, toast, sheet: () => st.sheet, stopForPreview: () => { held.clear(); pushSteer(true); } };
   net.onStatus = (s, detail) => {
     if (s === 'online') document.getElementById('reconnect-panel')?.remove();
     if (s === 'offline') {
@@ -763,6 +767,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'legend': if (m.open || document.getElementById('legend-panel')) legendPanel(net, m.view); break;
       case 'cheatInfo': cheatPanel(net, m); break;
       case 'zone':
+        closeFittingRoom();
         casino?.root.remove();
         prisonContext=undefined;
         document.getElementById('penal-panel')?.remove();
@@ -843,6 +848,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'bounties': bountyPanel(life, m.view); break;
       case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'banco') net.send({ t:'bank', action:'view', target:m.view.target, opId:newOpId() }); else if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target, remote: true } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId(), remote: true } as any); else net.send({ t: 'interact', target: m.view.target, remote: true } as any); }); break; }
       case 'death': {
+        closeFittingRoom();
         net.close();audioScene(null);
         const memorial=()=>{casino?.root.remove();sfx.voice('muerte',false,0,0);deathScreen(m.summary,()=>onExit('dead'));};
         if(casino?.root.isConnected&&m.summary.cause.includes('Ruleta rusa')&&!settings.reduceMotion)window.setTimeout(memorial,1850);

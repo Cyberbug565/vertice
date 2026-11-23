@@ -117,8 +117,9 @@ export interface Appearance {
   headwear?: string; headColor?: string; eyewear?: string; legwear?: string; outer?: string; rarityGlow?: string;
   /** v0.15 · Cuerpo base (masculino o femenino); vacío = según la persona. */
   body?: string;
-  /** v0.21 · Personaje cartoon (id de CARTOON_MODELS) en lugar del cuerpo personalizable del kit; vacío = kit. */
-  model?: string;
+  /** Patrón de tinte y tono secundario, también para peinados importados. */
+  hairDye?: string;
+  hairTint?: string;
   /** v0.16 · Guantes (estilo y color). */
   gloves?: string; gloveColor?: string;
   /** v0.16 · Gama del cromo visible por parte (chatarra, estandar, militar, lujo). */

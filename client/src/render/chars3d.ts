@@ -6,10 +6,9 @@ import { attachImplants, implantsVersion, wearerImplantRevision, implantRegions,
 // del juego, y los edificios (y el mobiliario grande) se añaden como volúmenes invisibles que tapan a quien está detrás.
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { hashString, seededRng, bodyKindOf, garmentById, underwearById, DEFAULT_UNDER, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
+import { RULES, hashString, seededRng, bodyKindOf, garmentById, underwearById, DEFAULT_UNDER, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
 import { content } from '../content';
 import { loadAnims, loadExtraAnims, sampleClip, clipDur } from './anim3d';
-import { buildCartoon, cartoonVersion, type Cartoon } from './cartoon3d';
 import { buildOutfit, isOutfit, outfitVersion } from './outfit3d';
 import { fabricCanvas, skinCanvas, tattooCanvas } from './textures';
 import { dress, LEGS, TOP } from './clothes3d';
@@ -49,7 +48,7 @@ const SHORT = new Set(['camiseta', 'camisa']);
 const COAT = new Set(['gabardina', 'abrigo', 'chubasquero', 'haori']);
 /** v0.15 · Peinados que salen del kit (el resto se modela aparte sobre la cabeza). '' = sin pelo. */
 /** v0.16 · Peinados que salen del kit (hechos para este cuerpo); el resto se generan con la propia cabeza en clothes3d.ts. */
-const KIT_HAIR: Record<string, string> = { rapado: 'Hair_Buzzed', corto: 'Hair_SimpleParted', largo: 'Hair_Long', melena: 'Hair_Long', ondas: 'Hair_Long', 'moño': 'Hair_Buns' };
+const KIT_HAIR: Record<string, string> = { rapado: 'Hair_Buzzed', corto: 'Hair_SimpleParted', largo: 'Hair_Long', melena: 'Hair_Long', 'moño': 'Hair_Buns' };
 const FACE_COVER = new Set(['mascara', 'mascara-gas', 'bandana-cara', 'mascara-demonio']);
 
 // Geometrías compartidas (se escalan por pieza).
@@ -187,8 +186,6 @@ interface Rig {
   capture?: CapturePlayer; shield?: THREE.Group; observedAt?: number; baseMotion?: Sample;
   turn?: { id: string; at: number; mirror: boolean }; travel?: number; wasMoving?: boolean; guardSince?: number;
   heavy?: boolean; upAt?: number; wasDown?: boolean; emoteAt?: number;
-  /** v0.21 · Personaje cartoon que copia la pose del cuerpo del kit (invisible). */
-  cartoon?: Cartoon;
   /** v0.19 · Fundido al aparecer/irse: opacidad actual y estado original de cada material. */
   /** Piezas de las que sale la firma del modelo (para no recalcularla si no cambian). */
   src?: unknown[];
@@ -372,14 +369,13 @@ export class Chars3D {
     const kitBeard = !metalHead && kind === 'masculino' && (a.facial === 'barba' || a.facial === 'barba-larga');
     // Debajo de la ropa, la piel se tiñe del color de la prenda (por si asoma en algún pliegue).
     const topTex = tex(fabricCanvas('liso', a.jacket || '#333344', a.accent, 2, 2)), pantsTex = tex(fabricCanvas('liso', a.pants || '#1a1a24', a.accent, 2, 2));
-    const genitals = kind === 'masculino' && nudeOk && under.bot < 0 && cover[REG.pelvis] === 0 && !(hide && ki && hide[ki.crotchV]) && !a.model && a.top !== 'exo-tormenta';
+    const genitals = kind === 'masculino' && nudeOk && under.bot < 0 && cover[REG.pelvis] === 0 && !(hide && ki && hide[ki.crotchV]) && a.top !== 'exo-tormenta';
     const H = makeHuman({ kind, look: { skin: a.skin, top: topTex, pants: pantsTex, shoe: a.shoes || '#101018', accent: a.accent, cover, face,
       tattoo: tst ? tattooCanvas(tst, a.tattooInk || '#14141e', a.accent) : null, tattooZones: zones, decal: faceDecal(a, seed), hide, under },
-      hair: helmet || hidesHair || a.top === 'atuendo-explorador' ? '' : kitHairName ?? '', hairColor: a.hair, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost, genitals });
+      hair: helmet || hidesHair || a.top === 'atuendo-explorador' ? '' : kitHairName ?? '', hairColor: a.hair, hairTint: a.hairTint, hairDye: a.hairDye, beard: kitBeard, eyes: a.eyes || '#3a2a1a', lost, genitals });
     if (!H) return null;
     { const bm = H.bodyMesh.material as THREE.Material; bm.userData.owned = [...(bm.userData.owned ?? []), topTex, pantsTex]; }
     if (a.top === 'exo-tormenta') return H; // el piloto va dentro de la superarmadura (se oculta al montarla)
-    if (a.model) return H; // v0.21 · personaje cartoon: el cuerpo del kit solo mueve el esqueleto (ni ropa ni pelo)
     const fallback = new Set([...chrome].filter((part) => !implants.has(part) && !lost.has(part)));
     if (implants.has('ojo_der') || implants.has('ojo_izq')) fallback.delete('ojos');
     if (implants.has('mandibula')) fallback.delete('cabeza');
@@ -398,7 +394,7 @@ export class Chars3D {
         top: noTop ? 'ninguno' : top, topColor: a.jacket, topPattern: a.topPattern && a.topPattern !== 'liso' ? fabricCanvas(a.topPattern, a.jacket, a.accent, 8, 8) : null, detail: a.topDetail || '',
         shirtColor: a.shirt || '#2a2a3a', inner: 'camiseta', legs: noLegs ? 'ninguno' : lw, legColor: a.pants, legPattern: a.pantsPattern && a.pantsPattern !== 'liso' ? fabricCanvas(a.pantsPattern, a.pants, a.accent, 8, 8) : null,
         shoes: noShoes ? 'descalzo' : a.shoeStyle || 'botas', shoeColor: a.shoes || '#101018', gloves: bare.has('manos') ? '' : (a as any).gloves || '', gloveColor: (a as any).gloveColor || '#141418',
-        head: bare.has('cabeza') ? '' : a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: bare.has('cara') ? '' : a.eyewear || '', hair: a.top === 'atuendo-explorador' || hidesHair ? 'calvo' : a.hairStyle, hairColor: a.hair,
+        head: bare.has('cabeza') ? '' : a.headwear || (['gorra', 'capucha'].includes(a.accessory) ? a.accessory : ''), headColor: a.headColor, face: bare.has('cara') ? '' : a.eyewear || '', hair: a.top === 'atuendo-explorador' || hidesHair ? 'calvo' : a.hairStyle, hairColor: a.hair, hairTint: a.hairTint, hairDye: a.hairDye,
         facial: metalHead ? 'ninguno' : a.facial, accent: a.accent, accent2: a.accent2, kitHair: !metalHead && kitHairName !== undefined && !helmet && a.top !== 'atuendo-explorador', kitBeard, accessory: a.accessory,
       }));
       // v0.21 · Atuendo completo de Quaternius (se ata a los huesos de esta persona).
@@ -468,12 +464,7 @@ export class Chars3D {
     // lo demás (pelo especial, sombreros, gafas, cromo, armas, abrigos) se cuelga de sus huesos. Si no, el procedural.
     const H = humansReady() ? this.kitHuman(s, a, chrome, lost) : null;
     if (H) { body.add(H.root); mats.push(...H.mats); }
-    // v0.21 · Personaje cartoon: se monta sobre el esqueleto del kit (en reposo) y el cuerpo del kit no se dibuja.
-    let cartoon: Cartoon | undefined;
-    if (H && a.model && a.top !== 'exo-tormenta') {
-      const c = buildCartoon(a.model, H.root, H.bones, loadedImplants(a.chromeModels, H.kind, lost), lost, H.kind);
-      if (c) { cartoon = c; mats.push(...c.mats); H.root.traverse((o) => { if ((o as THREE.Mesh).isMesh && !c.mats.includes((o as THREE.Mesh).material as THREE.Material)) o.visible = false; }); }
-    }
+
     const proxy = () => new THREE.Group();
     // ---- piernas
     const hipY = 0.92;
@@ -688,7 +679,7 @@ export class Chars3D {
       const t = buildTormenta(a.accent2 && /^#/.test(a.accent2) ? a.accent2 : '#2fb8ff');
       mech = t; body.add(t.root); mats.push(...t.mats); shadow.scale.multiplyScalar(1.8); H.root.visible = false;
     }
-    return { ankleL:L.foot,ankleR:R.foot,toeL:L.toe,toeR:R.toe,leftFrame:new Float64Array(6),rightFrame:new Float64Array(6),mech, cartoon, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
+    return { ankleL:L.foot,ankleR:R.foot,toeL:L.toe,toeR:R.toe,leftFrame:new Float64Array(6),rightFrame:new Float64Array(6),mech, human: H ?? undefined, grip2: handR.getObjectByName('grip2') ?? undefined, root, body, hips: rigHips, spine, chest, neck, thighL: L.thigh, thighR: R.thigh, kneeL: L.knee, kneeR: R.knee, shoulderL: AL.sh, shoulderR: AR.sh, elbowL: AL.el, elbowR: AR.el, handR, coat,
       shadow, key: '', heading: Math.PI / 4, phase: Math.random() * 6, lie: 0, big, ranged, heavy: heavyW, mats, lastX: e.x, lastY: e.y, speed: 0 };
   }
 
@@ -893,18 +884,18 @@ export class Chars3D {
       // v0.19 · La firma del modelo (JSON de su aspecto) solo se recalcula si cambia alguna de sus piezas: antes se
       // serializaba la apariencia entera de cada persona en cada fotograma.
       let r = this.rigs.get(s.id);
-      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), implantsVersion(), settings.nudity];
+      const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), outfitVersion(), garmentsVersion(), implantsVersion(), settings.nudity];
       const same = !!r && !!r.src && r.src.length === src.length && r.src.every((v, i) => v === src[i]);
-      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, s.appearance?.model ? cartoonVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0, s.appearance?.garments ? garmentsVersion() : 0, wearerImplantRevision(s), settings.nudity]);
+      const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0, s.appearance?.garments ? garmentsVersion() : 0, wearerImplantRevision(s), settings.nudity]);
       if (r) r.src = src;
       if (!r || r.key !== key) { const t0 = performance.now(); if (r) this.disposeRig(r); r = this.build(e); r.key = key; r.src = src; this.rigs.set(s.id, r); if (e.ghost) this.ghostify(r, e.ghost.color); const ms = performance.now() - t0; if (ms > 150) console.warn(`[3d] modelo lento: ${s.name ?? s.id} ${ms.toFixed(0)} ms`); }
       this.leaving.delete(s.id);
       let born = this.born.get(s.id); if (born === undefined) { born = opts.now; this.born.set(s.id, born); }
       if (!e.ghost) this.fade(r, Math.min(1, (opts.now - born) / FADE_MS));
+      r.root.scale.setScalar(RULES.actorScale);
       this.animate(r, e, opts);
       this.applyHuman(r);
       if (r.human && !r.mech) this.playClips(r, e, opts.now, s.id === opts.meId ? opts.guarding : !!s.buffs?.includes('guardia'));
-      r.cartoon?.update();
       if (e.ghost && r.ghostMats) {
         // Flota a un palmo del suelo, se mece y parpadea un poco (más cuanto menos visible está).
         r.root.position.y = e.ghost.float;
@@ -986,7 +977,7 @@ export class Chars3D {
       else if(Math.abs(offset)>.67)id=offset>0?'lateral-izq':'lateral-der';
       else if(!id)id=r.ranged&&r.big?'fusil':'andar';
     }
-    if(!guard && travelling && travel!==undefined && !soreLeft && !soreRight && !flags.includes('paso-carga')){
+    if(run && !guard && travelling && travel!==undefined && !soreLeft && !soreRight && !flags.includes('paso-carga') && !flags.includes('paso-ebrio')){
       const bend=r.travel!==undefined?angleDelta(travel,r.travel):0;
       if(r.wasMoving!==undefined && now-(r.turn?.at??-Infinity)>750){
         if(!r.wasMoving && Math.abs(diff)>2.15)r.turn={id:'pivote',at:now,mirror:diff>0};
@@ -1011,7 +1002,7 @@ export class Chars3D {
     const bob=moving?-profile.descenso+(run ? .042 : .015)*Math.sin(2*r.phase-Math.PI/2):Math.sin(r.phase)*.006;
     let thL=L[0],thR=R[0],knL=L[1],knR=R[1];
     let shL=L[4],shR=R[4],elL=moving?L[5]:-.12,elR=moving?R[5]:-.12;
-    let shLz=-.06,shRz=.06,spineX=moving?profile.tronco*Math.PI/180:0,spineY=moving?sw*.08:0,neckX=0;
+    let shLz=-.06,shRz=.06,spineX=moving?profile.tronco*Math.PI/180:0,spineY=moving?sw*profile.balanceo*Math.PI/180:0,neckX=0;
     r.chest.scale.setScalar(1 + (moving ? 0 : Math.sin(r.phase * 1.4) * 0.012)); // respiración
     // Armas: postura de combate o de apuntar.
     const since = e.attackAt ? now - e.attackAt : 1e9;
@@ -1310,7 +1301,9 @@ export class Preview3D {
     (window as any).__vtPreview = this; // (para las capturas automáticas)
   }
   /** Cambia el aspecto (se reconstruye el modelo al momento). */
-  async show(ap: any, chrome: string[], weapon?: string) { this.ent.s = { ...this.ent.s, appearance: { ...ap }, chrome: [...chrome], weapon } as any; }
+  async show(ap: Appearance, chrome: string[], weapon?: string, lost?: string[], name?: string) {
+    this.ent.s = { ...this.ent.s, name: name ?? '', appearance: { ...ap }, chrome: [...chrome], weapon, lost };
+  }
   private frame() {
     // Solo dibuja mientras está en pantalla (y a unos 30 fps): fuera del paso del aspecto no gasta nada.
     const now = performance.now();
@@ -1320,7 +1313,7 @@ export class Preview3D {
     if (this.idleSpin && !this.drag) this.angle = 0.25 * (1 - this.zoomK) + Math.sin(now / 2600) * 0.85 * (1 - 0.65 * this.zoomK);
     const c = this.c3d;
     const s = this.ent.s;
-    const key = JSON.stringify([s.appearance, s.chrome, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), cartoonVersion(), outfitVersion(), garmentsVersion(), wearerImplantRevision(s), settings.nudity]);
+    const key = JSON.stringify([s.name, s.appearance, s.chrome, s.lost, s.weapon, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), outfitVersion(), garmentsVersion(), wearerImplantRevision(s), settings.nudity]);
     let r = c.rigs.get(1);
     if (!r || r.key !== key) { if (r) c.disposeRig(r); r = c.build(this.ent); r.key = key; c.rigs.set(1, r); r.shadow.material.opacity = 0.5; r.root.traverse((o: any) => { if (o.geometry?.type === 'RingGeometry') o.visible = false; }); }
     // Un gesto cada pocos segundos para que se vea vivo.
@@ -1329,7 +1322,6 @@ export class Preview3D {
     c.animate(r, this.ent, { meId: 1, guarding: false, now, dt, serverNow: Date.now() });
     c.applyHuman(r);
     if(r.human && !r.mech)c.playClips(r,this.ent,now,false);
-    r.cartoon?.update(); // v0.21 · personaje cartoon
     r.root.rotation.y = this.angle;
     this.zoomK += (this.zoomGoal - this.zoomK) * Math.min(1, dt * 8);
     const zk = this.zoomK * this.zoomK * (3 - 2 * this.zoomK);

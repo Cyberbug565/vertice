@@ -5,7 +5,7 @@ import { content, zoneDef } from '../content';
 import { settings, saveSettings } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { CARTOON_MODELS, HAIR_COLLECTION, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { HAIR_COLLECTION, HAIR_DYE, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 import { Preview3D } from '../render/chars3d';
 import { recordPanel } from './record';
@@ -35,7 +35,7 @@ export function loginScreen(onDone: () => void) {
     h('label', { for: 'username' }, 'Usuario'), user, h('label', { for: 'password' }, 'Contraseña'), pass, err,
     h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'submit', id: 'btn-login' }, 'Entrar'), h('button', { class: 'btn', type: 'button', id: 'btn-register', onclick: () => go('register') }, 'Crear cuenta')));
   $ui().append(h('div', { class: 'screen' }, h('div', { class: 'card narrow' },
-    h('h1', { class: 'logo neon' }, 'VÉRTICE'), mode, h('p', { class: 'muted' }, 'Ciudad Vértice · Alfa v0.23. Cada cuenta conserva sus personajes y su memorial.'), form)));
+    h('h1', { class: 'logo neon' }, 'VÉRTICE'), mode, h('p', { class: 'muted' }, 'Ciudad Vértice · Alfa v0.30. Cada cuenta conserva sus personajes y su memorial.'), form)));
   user.focus();
 }
 
@@ -97,7 +97,8 @@ function memorialPanel(list: any[]) {
 
 // v0.14 · Más tonos de piel (de muy clara a muy oscura) y pieles sintéticas de los modificados (cromo pálido, gris azulado, lila, menta).
 const SKIN = ['#f6dcc8', '#f0c8a8', '#e8bc96', '#e0b48c', '#d0a078', '#c89070', '#b88060', '#b07a5a', '#9a6848', '#8a5a3c', '#744a30', '#6a4028', '#5a3420', '#46281a', '#c8ccd8', '#8a9ab0', '#c8a8d8', '#9ad8c8'];
-const HAIR = ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#ffd23f'];
+const HAIR = ['#17151b', '#30211b', '#5a3a2a', '#895d3f', '#864331', '#b77640', '#baa581', '#deb477',
+  '#e7cf9f', '#d9d9e3', '#a1a4b4', '#e8e5dd', '#422052', '#b46cff', '#286d88', '#43f3ff', '#13856a', '#9fe47d', '#ff4fa0', '#ff8b4d', '#ffd23f', '#8d252f'];
 const JACKET = ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a', '#8a2a2a'];
 // Color del cromo (luces, implantes y estela del Kairós).
 const ACCENT = ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff', '#ff2040', '#ffffff', '#3a6bff', '#00ffa8', '#ff00ff', '#c0ff00', '#ffb020', '#8a8aff', '#ff6a6a', '#2affff'];
@@ -114,7 +115,7 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
     appearance: { skin: SKIN[2], hair: HAIR[0], jacket: JACKET[1], accent: ACCENT[0], eyes: EYE_COLORS[0] as string, pants: PANTS[0], body: 'masculino', build: 'medio', hairStyle: 'corto', top: 'chaqueta', facial: 'ninguno', accessory: 'ninguno', tattoo: '',
       faceShape: 'ovalada', nose: 'recta', mouth: 'neutra', brows: 'normales', makeup: 'ninguno', makeupColor: MAKEUP_COL[0], piercing: 'ninguno', scar: 'ninguna', bodyTattoo: 'ninguno', shirt: SHIRT[0], shoes: SHOES[0],
-      tattooZone: 'brazos', tattooInk: INK[0], faceTattoo: 'ninguno', topPattern: 'liso', pantsPattern: 'liso', shoeStyle: 'botas', topDetail: 'ninguno', model: '' },
+      tattooZone: 'brazos', tattooInk: INK[0], faceTattoo: 'ninguno', topPattern: 'liso', pantsPattern: 'liso', shoeStyle: 'botas', topDetail: 'ninguno', hairDye: 'uniforme', hairTint: '#b46cff' },
     attributes: { INT: 6, REF: 6, DEX: 5, TECH: 6, COOL: 6, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 } as Attributes,
     bio: { objective: 'rico', childhood: 'calle', event: 'traicion' }, skillPoints: {} as Record<string, number> };
   const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Historia', 'Rol', 'Oficio', 'Atributos', 'Habilidades', 'Revisión'];
@@ -124,8 +125,9 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
   const bioBonus = (k: string) => [OBJECTIVES, CHILDHOODS, EVENTS].reduce((acc, list) => acc + (((list as readonly any[]).find((o) => o.id === (list === OBJECTIVES ? st.bio.objective : list === CHILDHOODS ? st.bio.childhood : st.bio.event))?.skills ?? {})[k] ?? 0), 0);
   const bioMoney = () => [OBJECTIVES.find((o) => o.id === st.bio.objective), CHILDHOODS.find((o) => o.id === st.bio.childhood), EVENTS.find((o) => o.id === st.bio.event)].reduce((a, o) => a + ((o as any)?.money ?? 0), 0);
   const LAST = STEPS.length - 1;
+  const startingClothes = TOPS.filter(t => t !== 'exo-tormenta' && !t.startsWith('atuendo-'));
   // v0.13 · Vista previa 3D (el mismo modelo que en la calle, girando); si el navegador no puede, la 2D de siempre.
-  let preview: { el: HTMLElement; show: (ap: any, chrome: string[]) => Promise<void> | void; destroy: () => void };
+  let preview: Preview3D | Preview;
   try { preview = settings.chars3d ? new Preview3D(240, 300) : new Preview(); } catch { preview = new Preview(); }
   const leave = (fn: () => void) => () => { preview.destroy(); fn(); };
   onCancel = leave(onCancel);
@@ -138,6 +140,12 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
     h('div', { class: 'swatches', role: 'group', 'aria-label': label }, ...colors.map((c) => h('button', { class: `swatch${c ? '' : ' none'}`, style: { background: c || 'transparent' }, title: c ? c : 'Sin tatuaje', 'aria-label': `${label} ${c || 'ninguno'}`, 'aria-pressed': String(st.appearance[key] === c), onclick: () => { (st.appearance as any)[key] = c; render(); } }))));
   const optRow = (label: string, key: keyof typeof st.appearance, opts: readonly string[]) => h('div', { class: 'col' }, h('span', {}, label),
     h('div', { class: 'seg wrap', role: 'group', 'aria-label': label }, ...opts.map((o) => h('button', { class: 'segbtn', 'aria-pressed': String(st.appearance[key] === o), onclick: () => { (st.appearance as any)[key] = o; render(); } }, LABELS[o] ?? o))));
+  const customHairColor = (label: string, key: 'hair' | 'hairTint') => h('label', { class: 'row' }, label, h('input', {
+    type: 'color', value: st.appearance[key], 'aria-label': label, onchange: (e: Event) => {
+      st.appearance[key] = (e.target as HTMLInputElement).value;
+      render();
+    },
+  }));
   // v0.17 · Peinados de la colección (modelos 3D de la release): una cuadrícula de miniaturas. Si los recursos no
   // están descargados en el servidor, la fila no aparece.
   const hairCollectionRow = () => {
@@ -154,7 +162,7 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
   };
   const randomize = () => {
     Object.assign(st.appearance, { skin: pick(SKIN), hair: pick(HAIR), jacket: pick(JACKET), accent: pick(ACCENT), eyes: pick(EYE_COLORS), pants: pick(PANTS),
-      body: pick(BODIES), build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(TOPS.filter((t) => t !== 'exo-tormenta')), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO),
+      hairDye: pick(HAIR_DYE), hairTint: pick(HAIR), body: pick(BODIES), build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), top: pick(startingClothes), facial: pick(FACIALS), accessory: pick(ACCESSORIES), tattoo: pick(TATTOO),
       faceShape: pick(FACE_SHAPES), nose: pick(NOSES), mouth: pick(MOUTHS), brows: pick(BROWS), makeup: pick(MAKEUPS), makeupColor: pick(MAKEUP_COL), piercing: pick(PIERCINGS), scar: pick(SCARS), bodyTattoo: pick(BODY_TATTOOS), shirt: pick(SHIRT), shoes: pick(SHOES),
       tattooZone: pick(TATTOO_ZONES), tattooInk: pick(INK), faceTattoo: pick(FACE_TATTOOS), topPattern: pick(FABRICS), pantsPattern: pick(FABRICS), shoeStyle: pick(SHOE_STYLES), topDetail: pick(TOP_DETAILS) });
     render();
@@ -172,27 +180,23 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
         h('p', { class: 'muted' }, 'En el siguiente paso eliges su aspecto: complexión, peinado, ojos, ropa, accesorios y tatuajes.'));
       setTimeout(() => name.focus());
     } else if (st.step === 1) {
-      void preview.show(st.appearance, st.previewChrome ? [...CHROME_PARTS] : []);
+      void preview.show(st.appearance, st.previewChrome ? [...CHROME_PARTS] : [], undefined, undefined, st.name);
       const controls = h('div', { class: 'col appearance-controls' },
-        // v0.21 · Modelo: el cuerpo personalizable del kit o un personaje cartoon de pocos polígonos (ropa propia).
-        h('h4', { class: 'creator-sec' }, 'Modelo'),
-        h('div', { class: 'col' }, h('span', {}, 'Personaje'),
-          h('div', { class: 'seg wrap', role: 'group', 'aria-label': 'Modelo de personaje' },
-            h('button', { class: 'segbtn', 'aria-pressed': String(!st.appearance.model), onclick: () => { st.appearance.model = ''; render(); } }, 'Personalizable'),
-            ...CARTOON_MODELS.map((m) => h('button', { class: 'segbtn', title: m.pack === 'med' ? 'Pack medieval (se descarga con los recursos extra)' : 'Estilo cartoon', 'aria-pressed': String(st.appearance.model === m.id),
-              onclick: () => { st.appearance.model = m.id; st.appearance.body = m.gender === 'f' ? 'femenino' : 'masculino'; render(); } }, `${m.name}${m.gender === 'f' && !/a$|Enfermera|Magnate/.test(m.name) ? ' (f)' : ''}`)))),
-        st.appearance.model ? h('p', { class: 'muted small' }, 'Los personajes cartoon llevan su propia ropa y pelo: lo de abajo solo cuenta para el cuerpo personalizable.') : null,
         h('h4', { class: 'creator-sec' }, 'Cuerpo y cara'),
         optRow('Cuerpo base', 'body', BODIES), optRow('Complexión', 'build', BUILDS), swatchRow('Piel', 'skin', SKIN), optRow('Forma de la cara', 'faceShape', FACE_SHAPES), optRow('Nariz', 'nose', NOSES), optRow('Boca', 'mouth', MOUTHS), swatchRow('Ojos', 'eyes', [...EYE_COLORS]), optRow('Cejas', 'brows', BROWS),
         h('h4', { class: 'creator-sec' }, 'Pelo'),
-        optRow('Peinado', 'hairStyle', HAIR_STYLES), hairCollectionRow(), swatchRow('Color de pelo', 'hair', HAIR), optRow('Vello facial', 'facial', FACIALS),
+        optRow('Peinado', 'hairStyle', HAIR_STYLES), hairCollectionRow(), swatchRow('Color de pelo', 'hair', HAIR), customHairColor('Color base personalizado', 'hair'),
+        optRow('Tinte', 'hairDye', HAIR_DYE),
+        st.appearance.hairDye !== 'uniforme' ? swatchRow('Color del tinte', 'hairTint', HAIR) : null,
+        st.appearance.hairDye !== 'uniforme' ? customHairColor('Color de tinte personalizado', 'hairTint') : null,
+        optRow('Vello facial', 'facial', FACIALS),
         h('h4', { class: 'creator-sec' }, 'Detalles'),
         optRow('Maquillaje', 'makeup', MAKEUPS), swatchRow('Color del maquillaje', 'makeupColor', MAKEUP_COL), optRow('Piercing', 'piercing', PIERCINGS), optRow('Cicatriz', 'scar', SCARS),
         h('h4', { class: 'creator-sec' }, 'Tatuajes'),
         optRow('Diseño', 'bodyTattoo', BODY_TATTOOS), optRow('Dónde', 'tattooZone', TATTOO_ZONES), swatchRow('Tinta', 'tattooInk', INK),
         optRow('Tatuaje facial', 'faceTattoo', FACE_TATTOOS), swatchRow('Color del tatuaje facial', 'tattoo', TATTOO),
         h('h4', { class: 'creator-sec' }, 'Ropa de partida'),
-        optRow('Prenda', 'top', TOPS.filter((t) => t !== 'exo-tormenta')), optRow('Tejido de la prenda', 'topPattern', FABRICS), optRow('Detalle', 'topDetail', TOP_DETAILS), swatchRow('Color de la prenda', 'jacket', JACKET), swatchRow('Camiseta', 'shirt', SHIRT),
+        optRow('Prenda', 'top', startingClothes), optRow('Tejido de la prenda', 'topPattern', FABRICS), optRow('Detalle', 'topDetail', TOP_DETAILS), swatchRow('Color de la prenda', 'jacket', JACKET), swatchRow('Camiseta', 'shirt', SHIRT),
         swatchRow('Pantalón', 'pants', PANTS), optRow('Tejido del pantalón', 'pantsPattern', FABRICS), optRow('Calzado', 'shoeStyle', SHOE_STYLES), swatchRow('Color del calzado', 'shoes', SHOES),
         optRow('Accesorio', 'accessory', ACCESSORIES), swatchRow('Acento (luces y cromo)', 'accent', ACCENT),
         h('p', { class: 'muted small' }, 'En el juego podrás cambiarte de ropa: chaquetas, camisetas, pantalones, calzado, gorros y gafas, algunas con mejoras.'));

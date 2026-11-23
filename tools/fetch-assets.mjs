@@ -3,7 +3,6 @@
 // los originales no está confirmada. Si no se pueden bajar, el juego funciona igual sin ellos (la Tormenta se ve con su
 // versión de placas y el creador no ofrece la colección de peinados).
 import { existsSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
-import { inflateRawSync } from 'node:zlib';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,7 +16,6 @@ const URLS = process.env.VERTICE_EXTRA_URL ? [process.env.VERTICE_EXTRA_URL] : [
   'https://github.com/Cyberbug565/vertice/releases/download/armaduras/vertice-extra-v17.tar.gz',
 ];
 
-await fetchMedieval();
 if (existsSync(marker) && !process.argv.includes('--force')) { console.log('[recursos] modelos extra ya presentes'); process.exit(0); }
 try {
   let res = null;
@@ -47,41 +45,4 @@ try {
     break;
   }
   if (!existsSync(marker)) console.warn('[recursos] sin modelos extra: el juego funciona igual (la Tormenta se ve con su versión de placas).');
-}
-
-// v0.21 · Personajes medievales de pocos polígonos (CraftPix): se bajan del zip de la release «moveset» (su licencia no
-// permite redistribuirlos en el repositorio). Solo se extraen los FBX «people_unity» y la textura de paleta.
-async function fetchMedieval() {
-  const out = join(dest, 'extra', 'medieval');
-  if (existsSync(join(out, 'people_texture_map.png')) && !process.argv.includes('--force')) return;
-  const u = 'https://github.com/Cyberbug565/vertice/releases/download/moveset/Free.Medieval.3D.People.Low.Poly.Pack.zip';
-  try {
-    const r = await fetch(u, { redirect: 'follow', signal: AbortSignal.timeout(12000) });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const zip = Buffer.from(await r.arrayBuffer());
-    mkdirSync(out, { recursive: true });
-    let n = 0;
-    for (const f of unzipEntries(zip)) {
-      const base = f.name.split('/').pop();
-      if (/people_unity\/[^/]+\.fbx$/i.test(f.name) || base === 'people_texture_map.png') { writeFileSync(join(out, base), f.data()); n++; }
-    }
-    console.log(`[recursos] personajes medievales: ${n} archivos en`, out);
-  } catch (err) { console.warn('[recursos] sin personajes medievales (el juego usa el cuerpo personalizable en su lugar):', err.message); }
-}
-/** Lector mínimo de ZIP (directorio central + «deflate» o sin comprimir). */
-function* unzipEntries(b) {
-  let eocd = b.length - 22;
-  while (eocd >= 0 && b.readUInt32LE(eocd) !== 0x06054b50) eocd--;
-  if (eocd < 0) throw new Error('zip no válido');
-  const count = b.readUInt16LE(eocd + 10);
-  let p = b.readUInt32LE(eocd + 16);
-  for (let i = 0; i < count; i++) {
-    const method = b.readUInt16LE(p + 10), csize = b.readUInt32LE(p + 20), nlen = b.readUInt16LE(p + 28), xlen = b.readUInt16LE(p + 30), clen = b.readUInt16LE(p + 32), off = b.readUInt32LE(p + 42);
-    const name = b.toString('utf8', p + 46, p + 46 + nlen);
-    p += 46 + nlen + xlen + clen;
-    if (name.endsWith('/')) continue;
-    const lstart = off + 30 + b.readUInt16LE(off + 26) + b.readUInt16LE(off + 28);
-    const raw = b.subarray(lstart, lstart + csize);
-    yield { name, data: () => (method === 8 ? inflateRawSync(raw) : Buffer.from(raw)) };
-  }
 }

@@ -14,6 +14,7 @@ import type { Human, KitData, Landmarks } from './human3d';
 import { REG, HEAD_MORPH, HEAD_UNIFORMS } from './human3d';
 import { collectionHair, hairFailed, isCollectionHair, REF_HEAD_W } from './hairs3d';
 import { samuraiPiece, SAMURAI_SCALE } from './samurai3d';
+import { applyHairDye } from './hair-color';
 
 export interface VI { x: number; y: number; z: number; nx: number; ny: number; nz: number; reg: number; armT: number; legT: number; bone: string; ax: number }
 type Fn = (v: VI, L: Landmarks) => number;
@@ -396,7 +397,7 @@ function hairShell0(style: string): Shell | null {
     case 'cresta': case 'mohicano': return { key: `h:${style}`, cov: (v, L) => isHead(v) || (v.reg === REG.neck && v.z < 0) ? Math.min(v.y - (L.eyeY + 0.03), 0.022 - v.ax) : -1, off: (v, L) => (style === 'mohicano' ? 0.075 : 0.04) * sat((v.y - L.eyeY - 0.03) / 0.05) + 0.004 };
     case 'afro': case 'afro-corto': case 'rizos': return { key: `h:${style}`, cov: (v, L) => scalp(v, L, L.eyeY + 0.045), off: (v, L) => (style === 'afro' ? 0.075 : style === 'afro-corto' ? 0.035 : 0.026) * (0.55 + 0.45 * sat((v.y - L.eyeY + 0.04) / 0.12)) + (style === 'rizos' ? 0.012 * spikes(v) : 0) };
     case 'bob': case 'media-melena': return { key: `h:${style}`, cov: (v, L) => isHead(v) || v.reg === REG.neck ? v.y - line(v, L, L.eyeY + 0.035, (style === 'bob' ? L.mouthY : L.neckY - 0.02)) + (v.ax > 0.05 && v.z < L.faceZ - 0.04 ? 0.05 : 0) : -1, off: (v, L) => 0.02 + 0.022 * sat((L.eyeY - v.y) / 0.09) };
-    case 'mullet': return { key: 'h:mullet', cov: (v, L) => isHead(v) || ((v.reg === REG.neck || v.reg === REG.torso) && v.z < 0 && v.y > L.armY - 0.03) ? v.y - line(v, L, L.eyeY + 0.048, L.armY - 0.03) : -1, off: (v, L) => 0.012 + 0.01 * sat((L.eyeY - v.y) / 0.1) };
+    case 'mullet': return { key: 'h:mullet', cov: (v, L) => scalp(v, L), off: (v, L) => 0.012 + 0.012 * sat((v.y - L.eyeY) / 0.10) };
     default: return { key: 'h:base', cov: (v, L) => scalp(v, L), off: () => 0.007 }; // base para coletas, trenzas, moños y largos
   }
 }
@@ -418,7 +419,7 @@ export interface Outfit {
   top: string; topColor: string; topPattern: HTMLCanvasElement | null; detail: string; shirtColor: string; inner: string;
   legs: string; legColor: string; legPattern: HTMLCanvasElement | null;
   shoes: string; shoeColor: string; gloves: string; gloveColor: string;
-  head: string; headColor: string; face: string; hair: string; hairColor: string; facial: string; accent: string; accent2: string;
+  head: string; headColor: string; face: string; hair: string; hairColor: string; hairDye?: string; hairTint?: string; facial: string; accent: string; accent2: string;
   kitHair: boolean; kitBeard: boolean; accessory: string;
 }
 /** Viste a la persona: devuelve las mallas (ya unidas al esqueleto) y sus materiales. */
@@ -479,23 +480,28 @@ export function dress(h: Human, o: Outfit): THREE.Material[] {
   if (o.gloves) add(shell(d, kind, gloveShell(o.gloves === 'sin-dedos')), mat({ color: o.gloveColor, pattern: null, accent, rough: o.gloves === 'tacticos' ? 0.7 : 0.4, trim: o.gloves === 'led' ? 1 : 0 }));
   // Peinado (si no lo tapa un casco) y vello facial.
   const covered = o.head === 'casco' || o.head === 'casco-moto' || o.head === 'casco-oni';
-  const hairM = () => headMat({ color: o.hairColor, pattern: null, accent, rough: 0.6, hair: o.hair === 'rapado' ? 2 : 1 });
+  const hairM = () => {
+    const material = headMat({ color: o.hairColor, pattern: null, accent, rough: 0.56, hair: o.hair === 'rapado' ? 2 : 1 });
+    const depth = /largo|melena|coleta|ondas|rastas|trenza|mullet|lobo/.test(o.hair) || isCollectionHair(o.hair) ? .29 : .12;
+    applyHairDye(material, o.hairDye, o.hairTint, L.headTop + .018, depth);
+    return material;
+  };
   if (!covered && !o.kitHair && isCollectionHair(o.hair)) {
     // v0.17 · Peinado de la colección (modelo de verdad), encajado en la cabeza de este cuerpo.
     const g = collectionHair(o.hair);
     if (g && o.head !== 'capucha' && o.head !== 'gorro') {
       // v0.18 · Base de pelo pegada al cráneo (del color del pelo) para que nunca asome el cuero cabelludo entre mechones.
-      const base = hairShell('rapado'); if (base) add(shell(d, kind, { ...base, key: 'h:capbase', off: () => 0.004 }), headMat({ color: o.hairColor, pattern: null, accent, rough: 0.75, hair: 1 }));
+      const base = hairShell('rapado');
+      if (base) add(shell(d, kind, { ...base, key: 'h:capbase', off: () => 0.004 }), hairM());
       add(fittedHair(d, kind, o.hair, g), hairM());
     }
     else if (!g && hairFailed(o.hair)) { const hs = hairShell('corto'); if (hs) add(shell(d, kind, hs), hairM()); }
   } else if (!covered && !o.kitHair) {
-    const hs = hairShell(o.hair);
-    if (hs) {
-      const hm = hairM();
-      const hatTrim = o.head && !['bandana', 'diadema-led'].includes(o.head);
-      if (!(hatTrim && ['rapado', 'corto', 'undercut', 'pixie'].includes(o.hair))) add(shell(d, kind, hs), hm);
-      for (const g of hairExtras(d, o.hair)) add(g, hm);
+    const hatTrim = !!o.head && !['bandana', 'diadema-led'].includes(o.head);
+    const hair = proceduralHair(d, kind, o.hair, hatTrim);
+    if (hair.length) {
+      const material = hairM();
+      for (const g of hair) add(g, material);
     }
   }
   if (!o.kitBeard) { const fs = facialShell(o.facial); if (fs) add(shell(d, kind, fs), headMat({ color: o.hairColor, pattern: null, accent, rough: 0.7, hair: 1 })); }
@@ -635,30 +641,90 @@ function phonesGeo(L: Landmarks) {
   const band = new THREE.TorusGeometry(L.earX + 0.012, 0.006, 6, 24, Math.PI); band.translate(0, L.eyeY - 0.015, -0.005); parts.push(band);
   return mergeSimple(parts);
 }
-/** Coletas, trenzas, rastas y moños (pegados a la cabeza). */
-function hairExtras(d: KitData, style: string): THREE.BufferGeometry[] {
-  const L = d.L, out: THREE.BufferGeometry[] = [];
+export function proceduralHair(d: KitData, kind: string, style: string, underHat = false): THREE.BufferGeometry[] {
+  const cap = hairShell(style);
+  if (!cap || underHat && ['rapado', 'corto', 'undercut', 'pixie'].includes(style)) return [];
+  return [shell(d, kind, cap), ...(underHat ? [] : hairstyleVolumes(d, style))];
+}
+
+/** Mechones con sección y caída, compartidos por todos los personajes del mismo cuerpo. */
+const hairVolumes = new WeakMap<KitData, Map<string, THREE.BufferGeometry[]>>();
+function hairstyleVolumes(d: KitData, style: string): THREE.BufferGeometry[] {
+  let cache = hairVolumes.get(d);
+  if (!cache) { cache = new Map(); hairVolumes.set(d, cache); }
+  const previous = cache.get(style);
+  if (previous) return previous;
+  const L = d.L, raw: THREE.BufferGeometry[] = [], falling: THREE.BufferGeometry[] = [];
   const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
-  const back = L.headBackZ - 0.005;
-  const tail = (y: number, len: number, r: number) => rigid(d, tubeGeo([V(0, y, back), V(0, y - 0.05, back - 0.05), V(0, y - len * 0.6, back - 0.06), V(0, y - len, back - 0.03)], r, r * 0.35), 'Head', { bone: 'neck_01', f: (p) => (y - p.y) / len });
-  const braid = (x: number, len: number) => {
-    const segs: THREE.BufferGeometry[] = [];
-    for (let i = 0; i < 11; i++) { const s = new THREE.SphereGeometry(0.018 - i * 0.0008, 10, 6); s.scale(1, 1.5, 1); s.translate(x + (i % 2 ? 0.004 : -0.004), L.eyeY - 0.02 - i * (len / 11), back + 0.02 - Math.min(i, 3) * 0.008); segs.push(s); }
-    return rigid(d, mergeSimple(segs), 'Head', { bone: 'neck_01', f: (p) => (L.eyeY - p.y) / len });
+  const back = L.headBackZ - .004, crown = L.headTop;
+  const lock = (points: THREE.Vector3[], r: number, tip: number, long = false) =>
+    (long ? falling : raw).push(tubeGeo(points, r, tip, 18, 7));
+  const ball = (x: number, y: number, z: number, r: number, sy = 1, sz = 1) => {
+    const g = new THREE.SphereGeometry(r, 12, 9);
+    g.scale(1, sy, sz); g.translate(x, y, z); raw.push(g);
   };
-  const bun = (x: number, y: number, z: number, r: number) => { const s = new THREE.SphereGeometry(r, 16, 10); s.translate(x, y, z); return rigid(d, s, 'Head'); };
-  switch (style) {
-    case 'coleta': out.push(tail(L.eyeY + 0.02, 0.26, 0.026)); break;
-    case 'coleta-alta': out.push(tail(L.eyeY + 0.08, 0.3, 0.028)); break;
-    case 'coleta-baja': out.push(tail(L.eyeY - 0.045, 0.24, 0.024)); break;
-    case 'trenza-larga': out.push(braid(0, 0.4)); break;
-    case 'trenzas': for (const s of [-1, 1]) out.push(rigid(d, mergeSimple([...Array(10)].map((_, i) => { const g = new THREE.SphereGeometry(0.014, 8, 6); g.scale(1, 1.5, 1); g.translate(s * (L.earX - 0.005), L.eyeY - 0.03 - i * 0.026, -0.02 - i * 0.002); return g; })), 'Head')); break;
-    case 'trenzas-pegadas': for (let i = 0; i < 6; i++) { const x = -0.05 + i * 0.02; out.push(rigid(d, tubeGeo([V(x, L.eyeY + 0.05, L.faceZ - 0.02), V(x, L.headTop + 0.005, 0), V(x, L.eyeY + 0.03, back + 0.005), V(x * 0.6, L.headBase + 0.02, back + 0.02)], 0.007, 0.006, 24, 6), 'Head')); } break;
-    case 'rastas': for (let i = 0; i < 14; i++) { const a = Math.PI * (0.05 + 0.9 * (i / 13)), x = Math.cos(a) * (L.earX + 0.005), z = -Math.sin(a) * 0.09 + 0.01; out.push(rigid(d, tubeGeo([V(x * 0.8, L.eyeY + 0.06, z * 0.8), V(x, L.eyeY - 0.02, z), V(x * 1.05, L.eyeY - 0.18 - (i % 3) * 0.03, z * 1.1)], 0.009, 0.007, 12, 6), 'Head', { bone: 'neck_01', f: (p) => (L.eyeY - 0.02 - p.y) / 0.2 })); } break;
-    case 'moño': out.push(bun(0, L.eyeY + 0.07, back - 0.02, 0.045)); break;
-    case 'dos-moños': for (const s of [-1, 1]) out.push(bun(s * 0.055, L.headTop - 0.01, -0.01, 0.034)); break;
-    case 'samurai': out.push(bun(0, L.headTop + 0.01, -0.02, 0.028), rigid(d, tubeGeo([V(0, L.headTop + 0.02, -0.04), V(0, L.headTop + 0.01, -0.09), V(0, L.headTop - 0.03, -0.12)], 0.012, 0.008, 12, 6), 'Head')); break;
+  const braid = (x: number, len: number) => {
+    const path = new THREE.CatmullRomCurve3([V(x * .8, crown - .055, back * .65), V(x, L.eyeY - .01, back),
+      V(x * 1.17, L.eyeY - len * .65, back - .046), V(x * .95, L.eyeY - len, back - .015)]);
+    for (let n = 0; n < 3; n++) {
+      const points = Array.from({ length: 22 }, (_, i) => {
+        const t = i / 21, p = path.getPoint(t), phase = n * 2.094 + t * Math.PI * 8;
+        return p.add(V(.008 * Math.cos(phase), 0, .008 * Math.sin(phase)));
+      });
+      lock(points, .013, .004, true);
+    }
+  };
+  if (['coleta', 'coleta-alta', 'coleta-baja'].includes(style)) {
+    const y = L.eyeY + (style === 'coleta-alta' ? .078 : style === 'coleta-baja' ? -.04 : .015);
+    for (let i = -2; i <= 2; i++) lock([V(i * .005, y, back + .01), V(i * .012, y - .04, back - .047),
+      V(i * .007, y - .16, back - .063), V(i * .001, y - .28 - .012 * i, back - .033)], .016, .0024, true);
   }
+  if (style === 'trenza-larga' || style === 'trenzas') {
+    const points = style === 'trenzas' ? [-L.earX * .88, L.earX * .88] : [0];
+    for (const x of points) braid(x, style === 'trenza-larga' ? .36 : .295);
+  }
+  if (style === 'trenzas-pegadas') for (let i = 0; i < 7; i++) {
+    const x = -.057 + i * .019;
+    lock([V(x, L.eyeY + .055, L.faceZ - .005), V(x, crown + .004 - .25 * Math.abs(x), .011),
+      V(x, L.eyeY + .045, back), V(x * .65, L.headBase + .027, back + .013)], .006, .004);
+  }
+  if (style === 'rastas') for (let i = 0; i < 12; i++) {
+    const a = Math.PI * (.07 + .86 * i / 11), x = Math.cos(a) * (L.earX + .012), z = -Math.sin(a) * .087;
+    lock([V(x * .78, crown - .046, z * .69), V(x, L.eyeY - .013, z - .015),
+      V(x * 1.15, L.eyeY - .11, z - .021), V(x * 1.05, L.eyeY - .185 - (i % 3) * .022, z - .036)], .011, .005, true);
+  }
+  const fallLength: Record<string, number> = { bob: .152, 'media-melena': .219, lobo: .175, mullet: .185, ondas: .225 };
+  const len = fallLength[style];
+  if (len) for (let i = 0; i < 11; i++) {
+    const a = Math.PI * (.055 + .89 * i / 10), x = Math.cos(a) * (L.earX + .009), z = -Math.sin(a) * .101;
+    const stagger = style === 'bob' ? .004 * (i % 2) : .016 * (i % 3);
+    const wave = style === 'ondas' ? .017 : .009;
+    lock([V(x * .73, crown - .049, z * .55), V(x, L.eyeY + .01, z - .014),
+      V(x + Math.cos(i) * wave, L.eyeY - len * .38, z - .028),
+      V(x * .92 - Math.cos(i) * wave * .4, L.eyeY - len + .044 + stagger, z - .009)], .021, style === 'bob' ? .008 : .0035, true);
+  }
+  if (['flequillo', 'asimetrico', 'pixie', 'pompadour', 'undercut'].includes(style)) for (let i = 0; i < 6; i++) {
+    const x = -.061 + .020 * i, sweep = style === 'pixie' ? .018 : .028;
+    const y = style === 'pompadour' ? .048 : style === 'undercut' ? .028 : .016;
+    const end = style === 'flequillo' ? .026 : style === 'asimetrico' ? .032 + (5 - i) * .006 : .063;
+    lock([V(x, crown - .008 - .19 * Math.abs(x), -.025), V(x + sweep * .4, crown + y - .22 * Math.abs(x), .053),
+      V(x + sweep, L.eyeY + end + .032, L.faceZ + .013), V(x + sweep, L.eyeY + end, L.faceZ + .009)], .013, .0025);
+  }
+  if (['afro', 'afro-corto', 'rizos'].includes(style)) {
+    const r = style === 'afro' ? .029 : style === 'afro-corto' ? .021 : .016;
+    for (let i = 0; i < 31; i++) {
+      const phi = 2.39996 * i, y = .23 + .76 * (i / 30), ring = Math.sqrt(1 - y*y);
+      ball(.108 * Math.cos(phi) * ring, L.eyeY + (.123 + r) * y, -.023 + .098 * Math.sin(phi) * ring, r * (.82 + (i % 4) * .07), 1.07);
+    }
+  }
+  if (style === 'moño' || style === 'samurai') ball(0, crown + .012, back * .72, .036, .8, 1.04);
+  if (style === 'dos-moños') for (const s of [-1, 1]) ball(s*.063, crown + .008, -.032, .034, 1.08);
+  const out: THREE.BufferGeometry[] = [];
+  if (raw.length) out.push(rigid(d, mergeSimple(raw), 'Head'));
+  if (falling.length) out.push(rigid(d, mergeSimple(falling), 'Head',
+    { bone: 'neck_01', f: point => .26 * smooth(L.eyeY - .09, L.eyeY - .33, point.y) }));
+  raw.concat(falling).forEach(g => g.dispose());
+  cache.set(style, out);
   return out;
 }
 /** Piezas del samurái colocadas en este cuerpo (una vez por cuerpo). */

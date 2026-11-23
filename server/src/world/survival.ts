@@ -1,8 +1,8 @@
 // Supervivencia y vida en la ciudad: necesidades, sueño, comercio, empleos, matasanos, recompensas, agresiones y muerte.
 import { randomUUID } from 'node:crypto';
 import {
-  checkChance, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
-  OBJECTIVES, PART_NAMES, TREATMENTS, WOUND_INFO, type TreatmentId, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView, REMOTE_RANGE, WEAR_SLOTS, bodyKindOf, hashString } from '@vertice/shared';
+  checkChance, RULES, vehicleSpeed, walkSpeed, nearestWalkable, isWalkable, dangerAt, findPath, t,
+  OBJECTIVES, PART_NAMES, TREATMENTS, WOUND_INFO, type TreatmentId, type BodyPart, type BountyView, type ClientMsg, type DeathSummary, type FugitiveDef, type ItemDef, type JobsView, type TargetMenuView, REMOTE_RANGE, WEAR_SLOTS, bodyKindOf, hashString, withWear } from '@vertice/shared';
 import type { World, PlayerConn } from './world.js';
 import type { MythicTransfer } from './mythics.js';
 import type { Entity, RunningTask } from './entity.js';
@@ -55,6 +55,38 @@ export class Survival {
     return e;
   }
   gameHoursPerSecond() { return (1000 / this.w.c.manifest.cityHourMs) * this.w.cfg.needsScale; }
+  private canRun(p: PlayerState, ef: ReturnType<typeof effective>) {
+    return p.running && p.stamina > 3 && !p.carrying && !p.sleeping && ef.legsLost === 0;
+  }
+
+  refreshMovement(c: PlayerConn, ef = effective(this.w.c, c.p!), substances = substanceEffects(this.w.c, c.p!.substances).status) {
+    const p = c.p!, e = c.e!;
+    const car = this.w.property.carOf(p);
+    const run = !car && this.canRun(p, ef);
+    const gait: string[] = [];
+    if (!car) {
+      if (substances.drunk >= 35) gait.push('paso-ebrio');
+      if (p.carrying || ef.weight > ef.carryMax) gait.push('paso-carga');
+      if (run) gait.push('corriendo');
+      for (const part of ['pierna_izq', 'pierna_der'] as const) {
+        if ((p.body.wounds[part] ?? 0) >= 10 || ef.chromeBroken.includes(part)) gait.push(part === 'pierna_izq' ? 'paso-izq' : 'paso-der');
+      }
+    }
+    if (gait.join() !== (e.gaitFlags ?? []).join()) { e.gaitFlags = gait; e.labelVer++; }
+    const now = Date.now();
+    const speed = car ? vehicleSpeed(car.speed, ef.carSpeed) : Math.min(RULES.maxFootSpeed,
+      walkSpeed(ef.attrs) * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1)
+      * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p)
+      * ((p.buffs.esprint ?? 0) > now ? 1.7 : 1) * (run ? RULES.runSpeedFactor : 1)
+      * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > now ? 0.55 : 1));
+    e.speed = speed * this.w.cfg.speedScale;
+    const x = this.x(c), v = Math.round(e.speed * (e.timeScale ?? 1) * 1000) / 1000;
+    if (x.sentSpeed !== v || x.sentGuard !== !!e.guard) {
+      x.sentSpeed = v; x.sentGuard = !!e.guard;
+      this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard });
+    }
+  }
+
   sheetOf(p: PlayerState) { return buildSheet(this.w.c, p); }
   private sheet(c: PlayerConn) { this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, c.p!) }); this.x(c).lastSheetAt = Date.now(); }
   private notice(c: PlayerConn | undefined, kind: 'info' | 'good' | 'warn' | 'bad', text: string) { if (c) this.w.send(c, { t: 'notice', kind, text }); }
@@ -144,30 +176,17 @@ export class Survival {
     // v0.10 · Las demás armas que llevas encima se ven: las grandes a la espalda y las pequeñas en la cadera.
     const carry = this.w.stealth.detectable(p).filter((id) => id !== shown);
     if ((e.carry ?? []).join() !== carry.join()) { e.carry = carry; e.labelVer++; }
-    const gait:string[]=[];
-    if(substances.drunk>=35)gait.push('paso-ebrio');
-    if(p.carrying || ef.weight>ef.carryMax)gait.push('paso-carga');
-    if(p.running && p.stamina>3 && !p.carrying && !p.sleeping && ef.legsLost===0)gait.push('corriendo');
-    for(const part of ['pierna_izq','pierna_der'] as const){
-      if((p.body.wounds[part]??0)>=10||ef.chromeBroken.includes(part))gait.push(part==='pierna_izq'?'paso-izq':'paso-der');
-    }
-    if(gait.join()!==(e.gaitFlags??[]).join()){e.gaitFlags=gait;e.labelVer++;}
-    // Velocidad: atributos efectivos, oficio y cansancio.
     const car = this.w.property.carOf(p);
-    if (car && e.zone.def.kind === 'exterior') e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * car.speed * (1 + ef.carSpeed);
-    else {
-      if (p.driving) this.w.property.park(c, true);
-      // Correr: más rápido a cambio de aguante; sin aguante se vuelve a andar.
-      const run = p.running && p.stamina > 3 && !p.carrying && !p.sleeping && ef.legsLost === 0;
+    const run = !car && this.canRun(p, ef);
+    if (!car) {
       if (p.running && ef.legsLost > 0 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin una pierna no puedes correr: busca un matasanos que te implante una prótesis.'); }
       if (run && e.moving) p.stamina = Math.max(0, p.stamina - 3);
       else p.stamina = Math.min(ef.staminaMax, p.stamina + (Date.now() - p.lastCombatAt > 8000 ? 2.5 : 1) * (e.moving ? 0.6 : 1) * (ef.flags.has('corazon-reactor') ? 2 : 1));
       if (p.running && p.stamina <= 3 && e.moving && !x.breathless) { x.breathless = true; this.notice(c, 'warn', 'Sin aliento: vuelves a andar hasta recuperar aguante.'); }
       if (p.stamina > 20) x.breathless = false;
-      e.speed = walkSpeed(ef.attrs) * this.w.cfg.speedScale * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1) * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p) * ((p.buffs.esprint ?? 0) > Date.now() ? 1.7 : 1) * (run ? 1.65 : 1) * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > Date.now() ? 0.55 : 1);
     }
-    // v0.7: el cliente predice el movimiento con WASD a la misma velocidad que el servidor.
-    { const v = Math.round(e.speed * (e.timeScale ?? 1) * 1000) / 1000; if (x.sentSpeed !== v || x.sentGuard !== !!e.guard) { x.sentSpeed = v; x.sentGuard = !!e.guard; this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard }); } }
+    if (p.driving && (!car || e.zone.def.kind !== 'exterior')) this.w.property.park(c, true);
+    else this.refreshMovement(c, ef, substances);
     // Entrenamiento al recorrer la ciudad (atletismo a pie, conducción al volante).
     if (x.lastPos && x.lastPos.zone === e.zone.id) this.w.progress.walkTick(p, Math.hypot(e.x - x.lastPos.x, e.y - x.lastPos.y) * (p.running && !p.driving ? 2 : 1));
     x.lastPos = { zone: e.zone.id, x: e.x, y: e.y };
@@ -368,6 +387,7 @@ export class Survival {
     if (next.newDependence) this.notice(c, 'warn', d.substance?.kind === 'alcohol'
       ? 'Has desarrollado dependencia al alcohol. Al quedarte sobrio puedes sufrir abstinencia.'
       : `Has desarrollado dependencia a ${d.name}. Puedes sufrir abstinencia cuando se acabe el efecto.`);
+    this.refreshMovement(c);
     this.sheet(c);
   }
 
@@ -764,21 +784,14 @@ export class Survival {
     if (p.wear.torso_ext === 'exo-tormenta' && (p.inventory.get('exo-tormenta') ?? 0) > 0) throw new GameError('Vas dentro de la superarmadura «Tormenta»: no se abre nunca.');
     if (item === 'exo-tormenta' && !confirm) throw new GameError('Ponerse la Tormenta es para siempre: confírmalo.');
     if (!(WEAR_SLOTS as readonly string[]).includes(slot)) throw new GameError('Hueco de ropa desconocido.');
-    // v0.22 · Quitar deja el hueco vacío de verdad (se ve el cuerpo); «default» vuelve a la ropa de serie del personaje.
-    const freeAlso = (s2: string) => { for (const [k, id] of Object.entries(p.wear)) { const d2 = id ? this.w.c.items.find((i) => i.id === id) : undefined; if (k !== slot && d2?.wear?.also?.includes(s2 as any)) p.wear[k] = ''; } };
-    if (item === null) { p.wear[slot] = ''; }
-    else if (item === 'default') { delete p.wear[slot]; freeAlso(slot); }
-    else {
+    if (item !== null && item !== 'default') {
       const def = this.w.c.items.find((i) => i.id === item);
       if (!def?.wear) throw new GameError('Eso no se puede poner.');
       if (def.wear.slot !== slot) throw new GameError('Esa prenda va en otro sitio.');
       if ((p.inventory.get(item) ?? 0) < 1) throw new GameError('No la tienes.');
       if (def.wear.sex && def.wear.sex !== (bodyKindOf(p.appearance, hashString(`${p.name}#`)) === 'masculino' ? 'm' : 'f')) throw new GameError('Esa prenda no es para tu cuerpo.');
-      p.wear[slot] = item;
-      // Una prenda que ocupa varios huecos (un mono) los deja libres; y ponerse algo en un hueco que tapaba un mono lo quita.
-      for (const s2 of def.wear.also ?? []) p.wear[s2] = '';
-      freeAlso(slot);
     }
+    p.wear = withWear(this.w.c.items, p.wear, slot, item);
     e.appearance = wornAppearance(this.w.c, p); this.bump(e);
     void savePlayerVitals(this.w.db, p).catch(() => {});
     this.sheet(c);

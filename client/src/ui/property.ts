@@ -1,5 +1,6 @@
 // v0.4 · Paneles de viviendas, inmobiliaria, concesionarios, propiedades, alijo, mercado en tiempo real y análisis de objetivos.
 import type { BuildingView, DealerView, MarketLiveView, PropsView, RealtyView, ScanView, StashView } from '@vertice/shared';
+import { vehicleSpeed } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
 import { $ui, fmtMoney, h, ask } from './dom';
@@ -64,7 +65,7 @@ export function dealerPanel(ctx: PropCtx, v: DealerView) {
     h('div', { class: 'carpaint', style: { background: `linear-gradient(135deg, ${c.color}, #101018)` } }, h('span', {}, CLASS[c.class])),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, `${c.maker} ${c.name}`)),
     h('div', { class: 'small muted' }, c.desc),
-    h('div', { class: 'carstats' }, cstat('Velocidad', c.speed / 5, `×${c.speed}`), cstat('Maletero', c.trunk / 400, `${c.trunk} kg`), cstat('Blindaje', c.armor / 7, String(c.armor)), cstat('Plazas', c.seats / 8, String(c.seats))),
+    h('div', { class: 'carstats' }, cstat('Velocidad', c.speed / 5, `${vehicleSpeed(c.speed).toFixed(1)} losetas/s`), cstat('Maletero', c.trunk / 400, `${c.trunk} kg`), cstat('Blindaje', c.armor / 7, String(c.armor)), cstat('Plazas', c.seats / 8, String(c.seats))),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', { class: 'mono' }, fmtMoney(c.price)),
       h('button', { class: 'btn small primary', disabled: ctx.money() < c.price, onclick: () => { ask(`¿Comprar ${c.maker} ${c.name} por ${fmtMoney(c.price)}?`, () => { ctx.net.send({ t: 'car', action: 'buy', dealer: v.dealer, car: c.id, opId: newOpId() } as any); }); } }, 'Comprar'))));
   showPanel('dealer-panel', v.name, h('p', { class: 'muted' }, `${v.desc} Los precios siguen al índice de vehículos del mercado.`),
@@ -83,7 +84,7 @@ export function propsPanel(ctx: PropCtx, v: PropsView) {
     h('button', { class: 'btn small danger', onclick: () => { ask(`¿Vender ${x.name} por ${fmtMoney(x.value)} (70 % del valor)? Lo que haya en el alijo se pierde.`, () => { ctx.net.send({ t: 'house', action: 'sell', house: x.id, opId: newOpId() } as any); }, { danger: true }); } }, `Vender (${fmtMoney(x.value)})`)));
   const cars = v.cars.map((c) => h('div', { class: 'fcard', style: { borderTopColor: content.cars.find((k) => k.id === c.car)?.color ?? '#43f3ff' } },
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, c.name), h('span', { class: 'chip' }, CLASS[c.class])),
-    h('div', { class: 'small' }, `Velocidad ×${c.speed} · vale ${fmtMoney(c.value)}`),
+    h('div', { class: 'small' }, `Velocidad ${vehicleSpeed(c.speed).toFixed(1)} losetas/s · vale ${fmtMoney(c.value)}`),
     h('div', { class: 'row' }, v.driving === c.id ? h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'car', action: 'park' } as any) }, 'Aparcar') : h('button', { class: 'btn small primary', onclick: () => ctx.net.send({ t: 'car', action: 'drive', car: c.id } as any) }, 'Conducir'),
       h('button', { class: 'btn small danger', onclick: () => { ask(`¿Vender ${c.name} por ${fmtMoney(c.value)}?`, () => { ctx.net.send({ t: 'car', action: 'sell', car: c.id, opId: newOpId() } as any); }, { danger: true }); } }, 'Vender'))));
   showPanel('props-panel', 'Propiedades',

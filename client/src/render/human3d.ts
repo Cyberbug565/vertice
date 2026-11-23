@@ -8,6 +8,7 @@
 //  · la piel toma cualquier tono conservando el detalle de la textura.
 // La animación es la del juego: los ángulos de cada articulación se pasan a los huesos, y la mano libre agarra el arma.
 import * as THREE from 'three';
+import { applyHairDye } from './hair-color';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
 
@@ -196,6 +197,8 @@ export const HEAD_MORPH = `        vec3 p = transformed;
         // v0.16 · Más rasgos: frente, labios, orejas, ancho de barbilla, altura de cejas, puente de la nariz, mofletes y largo.
         transformed.z += uFace3.x * 0.008 * front * smoothstep(ey + 0.02, ey + 0.08, p.y);
         transformed.z += uFace3.y * 0.005 * exp(-p.x * p.x / 0.0005) * exp(-(p.y - mouthY) * (p.y - mouthY) / 0.00012) * front;
+        float lipY = (p.y - mouthY) / 0.016;
+        transformed.y += uFace5 * 0.009 * front * smoothstep(0.009, 0.031, abs(p.x)) * exp(-lipY * lipY);
         float ear = smoothstep(0.058, 0.072, abs(p.x)) * clamp(1.0 - abs(p.y - (ey - 0.015)) / 0.035, 0.0, 1.0) * step(p.z, 0.04);
         transformed.x += sign(p.x) * uFace3.z * 0.009 * ear; transformed.y += uFace3.z * 0.004 * ear;
         transformed.x *= 1.0 + uFace3.w * 0.22 * clamp((mouthY - 0.03 - p.y) / 0.04, 0.0, 1.0);
@@ -205,7 +208,7 @@ export const HEAD_MORPH = `        vec3 p = transformed;
         transformed.z += uFace4.z * 0.007 * cheek; transformed.x += sign(p.x) * uFace4.z * 0.005 * cheek;
         transformed.y += uFace4.w * 0.022 * t * t;
 `;
-export const HEAD_UNIFORMS = 'uniform vec4 uFace;\nuniform vec4 uFace2;\nuniform vec4 uFace3;\nuniform vec4 uFace4;\nuniform vec4 uHead;\n';
+export const HEAD_UNIFORMS = 'uniform vec4 uFace;\nuniform vec4 uFace2;\nuniform vec4 uFace3;\nuniform vec4 uFace4;\nuniform float uFace5;\nuniform vec4 uHead;\n';
 /** Material del cuerpo para una persona: piel teñida, ropa por zonas, cromo con líneas de luz y cara propia. */
 function bodyMaterial(kit: Kit, look: Look): THREE.MeshStandardMaterial {
   const m = kit.bodyMat.clone();
@@ -216,6 +219,7 @@ function bodyMaterial(kit: Kit, look: Look): THREE.MeshStandardMaterial {
     uMetal: { value: new THREE.Color(0xb8c0cc) }, uAccent: { value: new THREE.Color(look.accent) }, uCover: { value: look.cover },
     uFace: { value: new THREE.Vector4(look.face[0], look.face[1], look.face[2], look.face[3]) }, uFace2: { value: new THREE.Vector4(look.face[4], look.face[5], look.face[6], 0) },
     uFace3: { value: new THREE.Vector4(look.face[7] ?? 0, look.face[8] ?? 0, look.face[9] ?? 0, look.face[10] ?? 0) }, uFace4: { value: new THREE.Vector4(look.face[11] ?? 0, look.face[12] ?? 0, look.face[13] ?? 0, look.face[14] ?? 0) },
+    uFace5: { value: look.face[15] ?? 0 },
     uHead: { value: new THREE.Vector4(kit.headBase, kit.headTop, kit.faceZ, kit.eyeY) },
     uTat: { value: canvasTex(look.tattoo, true) }, uTatZ: { value: look.tattooZones ?? new Array(16).fill(0) },
     uDecal: { value: canvasTex(look.decal, false) }, uDecalOn: { value: look.decal ? 1 : 0 },
@@ -224,11 +228,11 @@ function bodyMaterial(kit: Kit, look: Look): THREE.MeshStandardMaterial {
     uUnder: { value: new THREE.Vector4(look.under?.top ?? -1, look.under?.bot ?? -1, look.under?.topLace ? 1 : 0, look.under?.botLace ? 1 : 0) },
     uUnderTop: { value: new THREE.Color(look.under?.topColor ?? '#222') }, uUnderBot: { value: new THREE.Color(look.under?.botColor ?? '#222') },
   };
-  m.userData.face = { uFace: uniforms.uFace, uFace2: uniforms.uFace2, uFace3: uniforms.uFace3, uFace4: uniforms.uFace4, uHead: uniforms.uHead };
+  m.userData.face = { uFace: uniforms.uFace, uFace2: uniforms.uFace2, uFace3: uniforms.uFace3, uFace4: uniforms.uFace4, uFace5: uniforms.uFace5, uHead: uniforms.uHead };
   if (look.tattoo || look.decal) m.userData.owned = [uniforms.uTat.value, uniforms.uDecal.value].filter((t) => t !== NO_TEX);
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, uniforms);
-    sh.vertexShader = 'attribute float aRegion;\nattribute float aHide;\nvarying float vHide;\nvarying float vRegion;\nvarying vec3 vRP;\nuniform vec4 uFace;\nuniform vec4 uFace2;\nuniform vec4 uFace3;\nuniform vec4 uFace4;\nuniform vec4 uHead;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+    sh.vertexShader = 'attribute float aRegion;\nattribute float aHide;\nvarying float vHide;\nvarying float vRegion;\nvarying vec3 vRP;\nuniform vec4 uFace;\nuniform vec4 uFace2;\nuniform vec4 uFace3;\nuniform vec4 uFace4;\nuniform float uFace5;\nuniform vec4 uHead;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
       vRegion = aRegion; vRP = position; vHide = aHide;
       if (aRegion < 0.5) {
 ${HEAD_MORPH}
@@ -292,7 +296,7 @@ export interface Human {
   /** Cuelga un contenedor (ejes del mundo en reposo) de un hueso, con origen en P (espacio del cuerpo en reposo). */
   attach: (boneName: string, P: THREE.Vector3, extraQ?: THREE.Quaternion) => THREE.Group;
 }
-export interface HumanOpts { kind: BodyKind; look: Look; hair: string; hairColor: string; beard: boolean; eyes: string; lost: Set<string>;
+export interface HumanOpts { kind: BodyKind; look: Look; hair: string; hairColor: string; hairTint?: string; hairDye?: string; beard: boolean; eyes: string; lost: Set<string>;
   /** v0.22 · Genitales masculinos a la vista (cuerpo masculino sin nada que tape la entrepierna). */
   genitals?: boolean }
 const qDownP = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.08, -1, 0).normalize());
@@ -359,6 +363,7 @@ export function makeHuman(o: HumanOpts): Human | null {
       hm.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, fu); sh.vertexShader = HEAD_UNIFORMS + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>\n{\n${HEAD_MORPH}\n}`); };
       hm.customProgramCacheKey = () => 'vt-pelo-kit-1';
     }
+    if (name !== 'Hair_Beard') applyHairDye(hm, o.hairDye, o.hairTint, h.forBody === 'masculino' ? 1.83 : 1.78, name === 'Hair_Long' ? .32 : .125);
     c.traverse((x) => { const m = x as THREE.Mesh; if (m.isMesh) { m.material = hm; m.frustumCulled = false; } });
     // Si el peinado es del otro cuerpo, se sube o baja a la altura de esta cabeza.
     if (h.forBody !== o.kind) c.position.y += o.kind === 'masculino' ? 0.043 : -0.043;

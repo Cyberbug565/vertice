@@ -240,11 +240,15 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   head.rect(-2.2, -39.8, 4.4, 3.4).fill(tex(skinTex('cuello', 4.4, 3.4)));
   head.rect(-2.2, -37, 4.4, 0.6).fill({ color: shade(skin, 0.6), alpha: 0.5 });
   const fs = a.faceShape;
-  const [fw, fh, fr, fy] = fs === 'angulosa' ? [12, 13, 2, -52] : fs === 'redonda' ? [13, 12.5, 6, -51.5] : fs === 'alargada' ? [11, 14.5, 4, -53]
-    : fs === 'cuadrada' ? [13, 13, 1.5, -52] : fs === 'corazon' ? [12.5, 12.5, 5, -52] : fs === 'ancha' ? [14, 12.5, 4.5, -51.5] : fs === 'afilada' ? [11, 14, 3, -52.5] : [12, 13, 5, -52];
+  const addedFaces: Record<string, number[]> = {
+    oblonga: [10.8, 15.4, 3.8, -53], 'mandibula-marcada': [13.2, 13.8, 1.7, -52], 'frente-ancha': [13.7, 13.8, 4.2, -52.5],
+    'pomulos-altos': [13.2, 13, 3.3, -52], 'ovalada-corta': [12.8, 11.9, 5.4, -51.5], 'perfil-suave': [12.3, 13.1, 5.6, -52],
+  };
+  const [fw, fh, fr, fy] = addedFaces[fs] ?? (fs === 'angulosa' ? [12, 13, 2, -52] : fs === 'redonda' ? [13, 12.5, 6, -51.5] : fs === 'alargada' ? [11, 14.5, 4, -53]
+    : fs === 'cuadrada' ? [13, 13, 1.5, -52] : fs === 'corazon' ? [12.5, 12.5, 5, -52] : fs === 'ancha' ? [14, 12.5, 4.5, -51.5] : fs === 'afilada' ? [11, 14, 3, -52.5] : [12, 13, 5, -52]);
   head.roundRect(-fw / 2, fy, fw, fh, fr).fill(skin).stroke(edge);
-  if (fs === 'corazon' || fs === 'afilada') head.poly([-fw / 2 + 1, fy + fh - 4, fw / 2 - 1, fy + fh - 4, 1, fy + fh + 1.6]).fill(skin);
-  if (fs === 'cuadrada') head.rect(-fw / 2, fy + fh - 3, fw, 2).fill(shade(skin, 0.94));
+  if (fs === 'corazon' || fs === 'afilada' || fs === 'frente-ancha') head.poly([-fw / 2 + 1, fy + fh - 4, fw / 2 - 1, fy + fh - 4, 1, fy + fh + 1.6]).fill(skin);
+  if (fs === 'cuadrada' || fs === 'mandibula-marcada') head.rect(-fw / 2, fy + fh - 3, fw, 2).fill(shade(skin, 0.94));
   if (fs === 'angulosa') head.poly([-6, -42, -3, -38.6, 4, -38.6, 6, -42]).fill(shade(skin, 0.92));
   // Volumen de la cara: sombra en el lado contrario a la luz, pómulo iluminado y oreja con detalle.
   head.roundRect(-fw / 2, fy, fw * 0.32, fh, fr).fill({ color: 0x000000, alpha: 0.13 });
@@ -307,7 +311,8 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
   // Peinados (si no hay casco que los tape) con mechones con brillo para dar textura.
   const hs = a.hairStyle;
   const covered = hw === 'casco' || hw === 'casco-moto';
-  const hl = shade(hair, 1.6);
+  const dye = a.hairTint ? HEX(a.hairTint) : hair;
+  const hl = a.hairDye === 'mechas' ? dye : shade(hair, 1.6);
   if (!covered) {
     if (hs !== 'calvo' && hs !== 'rapado' && hs !== 'mohicano') { head.roundRect(-6.5, -53.5, 13, 5, 3).fill(hair); for (let i = 0; i < 5; i++) head.moveTo(-5 + i * 2.4, -53).quadraticCurveTo(-4 + i * 2.4, -51.5, -4.4 + i * 2.4, -49.6).stroke({ width: 0.35, color: hl, alpha: 0.45 }); }
     if (hs === 'rapado' || hs === 'mohicano') head.roundRect(-6, -52.4, 12, 3, 2).fill({ color: hair, alpha: 0.5 });
@@ -337,6 +342,12 @@ export function makeCharacter(ap: Appearance | undefined, kind: string, chrome: 
     if (hs === 'flequillo') head.poly([-1, -53, 7, -53, 6.5, -48.6, 3, -49.8, 0, -48.8]).fill(hair);
     if (hs === 'puntas') head.poly([-6.5, -52, -5, -57, -3, -53.5, -1, -58, 1, -53.5, 3, -58, 4.5, -53.5, 6.5, -56, 6.5, -52]).fill(hair);
     if (hs === 'lobo') { head.roundRect(-7, -54.5, 14, 6, 3).fill(hair); head.poly([-7, -50, -8, -42, -5, -46]).fill(hair); head.poly([6, -50, 7, -44, 4.5, -47]).fill(hair); }
+    if (a.hairTint && hs !== 'calvo' && (a.hairDye === 'puntas' || a.hairDye === 'raices')) {
+      const at = a.hairDye === 'raices' ? -52.4 : /largo|melena|bob|lobo|ondas|rastas|coleta/.test(hs) ? -42.2 : -50.4;
+      const shape = a.hairDye === 'puntas' && at > -45 ? hairBack : head;
+      shape.moveTo(-5.6, at + .25).quadraticCurveTo(-.6, at - 1.05, 5, at + .1).stroke({ width: .82, color: dye, alpha: .8 });
+    }
+
   }
   // ================================================================ prendas de cabeza y cara
   const visor = new Graphics();
