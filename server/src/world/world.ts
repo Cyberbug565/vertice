@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  installedSight, canSee, Interiors, edgeDirection, rotateFloor, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  installedSight, canSee, Interiors, edgeDirection, rotateFloor, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, lineWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight, portalZoneDef, isPortalZone, parsePortalZone } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db, Queryable } from '../db/db.js';
@@ -77,6 +77,7 @@ export class World {
   private nextId = 1;
   private dialogNo = 1;
   private pathBudget = 0;
+  private combatPathBudget = 0;
   private pathCache = new Map<string, [number, number][]>();
   private timer?: NodeJS.Timeout;
   private nextTickAt = 0;
@@ -435,7 +436,8 @@ export class World {
   step() {
     const t0 = performance.now();
     this.tick++;
-    this.pathBudget = 40;
+    this.pathBudget = 36;
+    this.combatPathBudget = 12;
     const dt = 1 / RULES.tickRate;
     const catchUp = this.catchUpDt; this.catchUpDt = 0;
     if (this.tick % 10 === 1) for (const z of this.zones.values()) if (z.def.districts.length) z.refreshActive();
@@ -463,9 +465,9 @@ export class World {
         if (e.channel && this.tick >= e.channel.endTick) { const ch = e.channel; e.channel = undefined; ch.apply(); }
         if (e.task) this.processTask(e);
         if (e.npc && e.npc.nextThink <= this.tick) {
-          if (this.pathBudget > 0) {
+          if (e.aggro !== undefined || this.pathBudget > 0) {
             thinkNpc(this, e);
-            const wait = e.npc.localCrowd && e.aggro === undefined ? (e.moving ? 12 : 18) :
+            const wait = e.npc.localCrowd && e.aggro === undefined ? (e.moving ? 16 : 19) :
               resident && e.aggro === undefined ? (e.moving ? 7 : 14) : anyone ? 5 : 20;
             e.npc.nextThink = this.tick + wait + (e.id % 3);
           } else e.npc.nextThink = this.tick + 1;
@@ -714,6 +716,8 @@ export class World {
     let np = 0;
     const NEAR2 = 12 * 12;
     for (const v of vis) {
+      // La población adicional llena el primer plano. A distancia quedan los residentes y grupos normales.
+      if (v.npc?.localCrowd && v.aggro === undefined && (v.x-e.x)**2 + (v.y-e.y)**2 > 30**2) continue;
       // Puertas y mobiliario fijo ya figuran en la cartografía del cliente. Los actores y los objetos dinámicos sí se filtran aquí.
       const fixed = v.kind === 'door' || v.kind === 'object' && !!v.objId;
       // v0.40 · El cono de visión es una regla de equilibrio de la vista cenital (que no se vea más que los demás). Con la cámara
@@ -1099,18 +1103,29 @@ export class World {
   }
 
   /** Ruta de PNJ con presupuesto por tick y caché de rutas comunes. */
-  npcPath(e: Entity, x: number, y: number): boolean {
+  npcPath(e: Entity, x: number, y: number, combat = false): boolean {
     const grid = e.zone.grid;
-    const end = nearestWalkable(pedestrianGrid(grid, 'stop'), x, y, 8);
+    const walk = combat ? grid : pedestrianGrid(grid);
+    const end = nearestWalkable(combat ? grid : pedestrianGrid(grid, 'stop'), x, y, combat ? 2 : 8);
     if (!end) return false;
-    const key = `${e.zone.id}|${e.x},${e.y}|${end.x},${end.y}`;
+    const key = `${e.zone.id}|${combat ? 'c' : 'p'}|${e.x},${e.y}|${end.x},${end.y}`;
     const cached = this.pathCache.get(key);
     if (cached) { this.metrics.inc('pathCacheHits'); e.path = cached.slice(); e.moving = true; return true; }
-    if (this.pathBudget <= 0) return false;
-    this.pathBudget--;
+    if (lineWalkable(walk, e.x, e.y, end.x, end.y)) {
+      e.path = [[end.x, end.y]];
+      e.moving = true;
+      return true;
+    }
+    if (combat) {
+      if (this.combatPathBudget <= 0) return false;
+      this.combatPathBudget--;
+    } else {
+      if (this.pathBudget <= 0) return false;
+      this.pathBudget--;
+    }
     this.metrics.inc('pathRequests');
     // v0.19 · Los transeúntes van por la acera y cruzan por los pasos de peatones.
-    const r = findPath(grid, e.x, e.y, end.x, end.y, 9000, { pedestrian: true });
+    const r = findPath(grid, e.x, e.y, end.x, end.y, combat ? 2200 : e.npc?.localCrowd ? 2200 : 9000, { pedestrian: !combat });
     this.metrics.inc('pathExpanded', r.expanded);
     if (!r.ok) { this.metrics.inc('pathFailures'); return false; }
     if (this.pathCache.size > 3000) this.pathCache.delete(this.pathCache.keys().next().value!);
