@@ -102,6 +102,8 @@ export class City3D {
   onReady: (() => void) | null = null;
   private cells: Cell[][] = [];
   private state: number[] = [];
+  private hidden = new Set<number>();
+  private requested = new Map<number,0|1|2>();
   private owned: THREE.Material[] = [];
   private ghosts = new Map<THREE.InstancedMesh, number>();
   private requestedKit = false;
@@ -333,7 +335,13 @@ export class City3D {
   }
 
   /** 0 = normal, 1 = translúcido (tapa al jugador), 2 = oculto (cámara muy cerca). */
-  setFaded(i: number, mode: 0 | 1 | 2) {
+  setHidden(i: number, hidden: boolean) {
+    if(hidden) this.hidden.add(i); else this.hidden.delete(i);
+    this.setFaded(i,this.requested.get(i)??0);
+  }
+  setFaded(i: number, requested: 0 | 1 | 2) {
+    this.requested.set(i,requested);
+    const mode = this.hidden.has(i) ? 2 : requested;
     if (!this.active || this.state[i] === mode) return;
     const old = this.state[i];
     this.state[i] = mode;
@@ -358,6 +366,6 @@ export class City3D {
     for (const m of this.owned) m.dispose();
     this.neonTex?.dispose(); this.neonTex = null; this.neonFade = null;
     this.owned = []; this.cells = []; this.state = []; this.active = false;
-    this.ghosts.clear();
+    this.ghosts.clear(); this.requested.clear();
   }
 }

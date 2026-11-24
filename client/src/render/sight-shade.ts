@@ -13,16 +13,16 @@ export class SightShade {
     this.shade.setMask({ mask: this.opening, inverse: true });
   }
 
-  update(grid: ZoneGrid, x: number, y: number, facing: number, sight: Sight, world: Container, width: number, height: number) {
+  update(grid: ZoneGrid, x: number, y: number, facing: number, sight: Sight, world: Container, width: number, height: number, project = worldToScreen, opacity = .94) {
     this.layer.position.copyFrom(world.position);
     this.layer.scale.copyFrom(world.scale);
-    const key = [Math.round(x * 32), Math.round(y * 32), facing, sight.range, sight.degrees, width, height, world.scale.x].join('/');
+    const key = [Math.round(x * 32), Math.round(y * 32), facing, sight.range, sight.degrees, width, height, world.scale.x, opacity].join('/');
     if (grid === this.grid && this.last === key) return;
     this.grid = grid;
     this.last = key;
-    const base = worldToScreen(x, y), mask = this.opening.clear();
+    const base = project(x, y), mask = this.opening.clear();
     const extent = Math.max(width, height) / world.scale.x + 2048;
-    this.shade.clear().rect(base.x - extent, base.y - extent, extent * 2, extent * 2).fill({ color: 0x090c18, alpha: .94 });
+    this.shade.clear().rect(base.x - extent, base.y - extent, extent * 2, extent * 2).fill({ color: 0x090c18, alpha: opacity });
     const angle = sight.degrees * Math.PI / 180, start = facing * Math.PI / 4 - angle / 2;
     const outline = sight.degrees < 360 ? [base.x, base.y] : [];
     const steps = Math.ceil(sight.degrees / 1.5);
@@ -30,7 +30,7 @@ export class SightShade {
     for (let i = 0; i <= steps; i++) {
       const a = start + angle * i / steps, dx = Math.cos(a), dy = Math.sin(a);
       const d = sightRay(grid, x, y, dx, dy, sight.range);
-      const hit = worldToScreen(x + dx * d, y + dy * d);
+      const hit = project(x + dx * d, y + dy * d);
       outline.push(hit.x, hit.y);
       const col = Math.floor(x + dx * (d + .001)), row = Math.floor(y + dy * (d + .001));
       const id = d < sight.range && col >= 0 && row >= 0 && col < grid.w && row < grid.h ? grid.buildingAt[row * grid.w + col] : -1;

@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  installedSight, canSee, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  installedSight, canSee, Interiors, edgeDirection, rotateFloor, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight, portalZoneDef, isPortalZone, parsePortalZone } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db, Queryable } from '../db/db.js';
@@ -104,6 +104,7 @@ export class World {
   readonly underworld: Underworld;
   readonly casino: Casino;
   readonly prison: Prison;
+  readonly interiors: Interiors;
   readonly debts: Debts;
   readonly scanner: Scanner;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
@@ -134,6 +135,7 @@ export class World {
     this.underworld = new Underworld(this);
     this.casino = new Casino(this);
     this.prison = new Prison(this);
+    this.interiors = new Interiors(c);
     this.debts = new Debts(this);
     this.scanner = new Scanner(this);
     sheetHooks.loan = (p) => this.debts.view(p);
@@ -549,8 +551,39 @@ export class World {
     if (moved) { e.x = nx; e.y = ny; e.zone.moved(e); }
     e.moving = moved;
     e.lastMoveTick = this.tick;
-    if (e.kind === 'player' && e.conn) this.sectorCheck(e);
+    if (e.kind === 'player' && e.conn) {
+      this.sectorCheck(e);
+      this.walkThrough(e, s.dx, s.dy);
+    }
   }
+
+  private doorHeading(door: Entity) {
+    if (!door.doorTo || door.hiddenDoc) return;
+    const z = door.zone.def;
+    const at = [Math.floor(door.x), Math.floor(door.y)];
+    if (z.kind === 'exterior') {
+      const entry = this.interiors.atStreet(z.id, at);
+      return entry ? [-entry.out[0], -entry.out[1]] : undefined;
+    }
+    if (this.interiors.frame(z)) return edgeDirection(z, at);
+  }
+
+  private walkThrough(e: Entity, dx: number, dy: number) {
+    if ((e.doorRetry ?? 0) > this.tick || e.ghostOf || e.transit || e.vehicle) return;
+    const latch = e.doorLatch !== undefined ? this.entities.get(e.doorLatch) : undefined;
+    if (latch && (latch.zone !== e.zone || Math.hypot(e.x-latch.x,e.y-latch.y)>1.5)) e.doorLatch=undefined;
+    for (const door of e.zone.query(e.x, e.y, 1)) {
+      if (door.id === e.doorLatch || door.kind !== 'door' || Math.hypot(e.x-door.x, e.y-door.y) > .58) continue;
+      const heading = this.doorHeading(door);
+      if (!heading || dx * heading[0] + dy * heading[1] < .62) continue;
+      const away = (e.x-door.x)*heading[0] + (e.y-door.y)*heading[1];
+      if (away < -.18) continue;
+      e.doorRetry = this.tick + RULES.tickRate;
+      void this.transferPlayer(e.conn!, door);
+      return;
+    }
+  }
+
   private sectorCheck(e: Entity) {
     const s = sectorOf(e.zone.grid, e.x, e.y);
     const dn = dangerAt(e.zone.grid, e.x, e.y);
@@ -1069,7 +1102,17 @@ export class World {
       if (d > max) return this.send(c, { t: 'ack', seq, ok: false, reason: target.kind === 'door' ? `Acércate a la puerta (WASD): estás a ${d.toFixed(0)} m.` : `Demasiado lejos (${d.toFixed(0)} m de ${REMOTE_RANGE} m). Acércate con WASD.` });
       if (target.kind === 'player' || target.fugitive || (target.npcType && target.npcType !== 'essential' && target.npcType !== 'civil' && !this.cityPeople.has(target))) { this.send(c, { t: 'targetMenu', view: this.combat.menu(c, target) }); return this.send(c, { t: 'ack', seq, ok: true }); }
       this.closeDialog(c);
-      if (target.kind === 'door') { void this.transferPlayer(c, target); return this.send(c, { t: 'ack', seq, ok: true }); }
+      if (target.kind === 'door') {
+        if (d > .64 && this.doorHeading(target) && !e.vehicle && !e.ghostOf) {
+          this.cancelActivity(e);
+          const approach = this.playerPath(e, target.x, target.y);
+          if (!approach.ok) return this.send(c, { t: 'ack', seq, ok: false, reason: approach.reason });
+          e.pendingInteract = target.id;
+          return this.send(c, { t: 'ack', seq, ok: true, path: e.path });
+        }
+        void this.transferPlayer(c, target);
+        return this.send(c, { t: 'ack', seq, ok: true });
+      }
       this.tryInteract(c, target, 0, REMOTE_RANGE);
       return this.send(c, { t: 'ack', seq, ok: true });
     }
@@ -1188,7 +1231,25 @@ export class World {
     e.transit = true;
     e.path = []; e.moving = false;
     const transferId = randomUUID();
-    const nx = door.doorTo.at[0] + 0.5, ny = door.doorTo.at[1] + 0.5;
+    const fromFrame = this.interiors.frame(e.zone.def), toFrame = this.interiors.frame(to.def);
+    const crossing = door.id !== undefined && !legal && !!(fromFrame || toFrame) &&
+      (e.zone.def.kind === 'exterior' ? toFrame?.entrance.zone === e.zone.id :
+        to.def.kind === 'exterior' ? fromFrame?.entrance.zone === to.id : fromFrame?.entrance.building === toFrame?.entrance.building);
+    const turns = (fromFrame?.turns ?? 0) - (toFrame?.turns ?? 0);
+    const reciprocal = crossing ? to.query(door.doorTo.at[0]+.5,door.doorTo.at[1]+.5,7)
+      .filter(v=>v.doorTo?.zone===e.zone.id)
+      .sort((a,b)=>Math.hypot(a.x-door.doorTo!.at[0]-.5,a.y-door.doorTo!.at[1]-.5)
+        -Math.hypot(b.x-door.doorTo!.at[0]-.5,b.y-door.doorTo!.at[1]-.5))[0] : undefined;
+    let nx = door.doorTo.at[0]+.5, ny = door.doorTo.at[1]+.5;
+    // Solo separar al jugador del umbral si el plano no define un punto más adentro.
+    if (reciprocal && to.def.kind==='interior' && e.zone.def.kind==='exterior' &&
+      Math.hypot(reciprocal.x-nx,reciprocal.y-ny)<.5) {
+      const normal=edgeDirection(to.def,[Math.floor(reciprocal.x),Math.floor(reciprocal.y)]);
+      if(normal){
+        const ix=reciprocal.x-normal[0]*.85, iy=reciprocal.y-normal[1]*.85;
+        if(isWalkable(to.grid,ix,iy)){ nx=ix;ny=iy; }
+      }
+    }
     const entered = mapKeys(p,to.id,nx,ny,true);
     let apply:(()=>void)|undefined;
     const t0 = performance.now();
@@ -1215,8 +1276,15 @@ export class World {
     to.add(e);
     const discovery = applyMapKeys(p,entered);
     e.transit = false;
+    e.doorLatch = reciprocal?.id;
     e.pendingAction = undefined;
     if (e.carMotion) { e.carMotion.speed = 0; e.steer = undefined; }
+    if (crossing) {
+      const dx = Math.cos(e.facing * Math.PI / 4), dy = Math.sin(e.facing * Math.PI / 4);
+      e.facing = facingToIdx(...rotateFloor(dx, dy, turns));
+      e.doorRetry = this.tick + RULES.tickRate * .5;
+      if (e.steer) { const [dx,dy] = rotateFloor(e.steer.dx,e.steer.dy,turns); e.steer = { ...e.steer, dx, dy }; }
+    }
     if (p.carrying) { const body = this.entities.get(p.carrying); if (body) this.moveEntityTo(body, to, nx + 0.3, ny + 0.3); }
     this.metrics.inc('zoneTransfers');
     const conn = e.conn;
@@ -1226,7 +1294,7 @@ export class World {
       const s = sectorOf(to.grid, nx, ny);
       e.sectorId = s.id;
       conn.lastDanger = dangerAt(to.grid, nx, ny);
-      this.send(conn, { t: 'zone', zone: to.id, x: nx, y: ny, sector: s.name, danger: conn.lastDanger });
+      this.send(conn, { t: 'zone', zone: to.id, x: nx, y: ny, sector: s.name, danger: conn.lastDanger, crossing, facing: e.facing });
       if (discovery) this.send(conn,{t:'atlas',map:discovery});
       if (e.hiddenIn) { e.hiddenIn = undefined; delete conn.p!.buffs.escondido; }
       this.corpses.sendBlood(conn);
@@ -1234,6 +1302,7 @@ export class World {
       // v0.10 · Arco detector de armas en la entrada de los lugares restringidos.
       this.stealth.detector(conn, to.id);
       if(p.sentence||to.id==='penal-visitas')this.prison.show(conn);
+      if (crossing) this.snapshot(conn);
     }
     return true;
   }

@@ -4,6 +4,7 @@ import { attachImplants, implantsVersion, wearerImplantRevision, implantRegions,
 // a la espalda y en la cadera, y animación procedural (andar, correr, respirar, golpear, apuntar, bloquear, patada, rodar,
 // bailar, caer). Se dibujan en un lienzo WebGL propio con una cámara ortográfica que reproduce exactamente la proyección 2:1
 // del juego, y los edificios (y el mobiliario grande) se añaden como volúmenes invisibles que tapan a quien está detrás.
+import { roomToCity } from '@vertice/shared';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { RULES, hashString, seededRng, bodyKindOf, garmentById, underwearById, DEFAULT_UNDER, type Appearance, type EntitySpawn, type ZoneDef } from '@vertice/shared';
@@ -16,7 +17,8 @@ import { faceDecal, faceParams } from './face3d';
 import { roboticParts } from './cyber3d';
 import { hairsVersion, isCollectionHair } from './hairs3d';
 import { samuraiVersion } from './samurai3d';
-import { buildScene3D, makeSky, type Scene3D } from './world3d';
+import { architecture, ConnectedArchitecture } from './architecture3d';
+import { buildScene3D, makeSky, stairRise, type Scene3D } from './world3d';
 import type { TrafficCar } from './traffic';
 import { Bullets3D } from './bullets3d';
 import { buildTormenta, loadTormenta, retargetTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
@@ -227,6 +229,15 @@ export class Chars3D {
   private pcam = new THREE.PerspectiveCamera(62, 1, 0.05, 260);
   private camReady = false; private pivot = new THREE.Vector3(); private lastMode: CamMode = 'cenital';
   private zoneDef: ZoneDef | null = null;
+  private resetActorMotion=false;
+  private readonly architecture = new ConnectedArchitecture(BUILDING_H);
+  get embeddedRoom() { return !!this.zoneDef && !!architecture.frame(this.zoneDef); }
+  preserveCamera(turns: number, x: number, y: number) {
+    if(this.camMode==='cenital')return;
+    this.camYaw -= turns * Math.PI / 2;
+    this.pivot.set(x,0,y);
+    this.camReady=true;
+  }
   private nearScenes = new Map<string, Scene3D>(); private near: Scene3D | null = null;
   private sky = makeSky(); private fog3d = new THREE.Fog(0x000000, 30, 140);
   private viewW = 1; private viewH = 1;
@@ -275,14 +286,15 @@ export class Chars3D {
   private scenes = new Map<string, { city: City3D; occl: THREE.Group; bOccl: (THREE.Mesh | null)[]; built: boolean; quality: string }>();
   private interior = { city: null as City3D | null, occl: new THREE.Group() };
   setZone(z: ZoneDef, force = false): boolean {
-    this.zoneDef = z; this.camReady = false;
+    this.architecture.reset();
+    if(!this.architecture.group.parent)this.world.add(this.architecture.group);
+    this.zoneDef = z; this.camReady = false; this.resetActorMotion=true;
     if (this.near) this.near.group.visible = false;
     for (const [k, sc] of this.nearScenes) if (k !== z.id && !this.scenes.has(k)) { this.world.remove(sc.group); sc.dispose(); this.nearScenes.delete(k); }
     if (force) for (const [k, sc] of this.nearScenes) if (k === z.id) { this.world.remove(sc.group); sc.dispose(); this.nearScenes.delete(k); }
     this.near = null;
     this.vehicles.clear();
-    for (const r of this.rigs.values()) this.disposeRig(r);
-    this.rigs.clear(); this.born.clear();
+    if (force) { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); this.born.clear(); }
     for (const sc of this.scenes.values()) { sc.city.group.visible = false; sc.occl.visible = false; }
     if (this.interior.city) this.interior.city.group.visible = false;
     this.interior.occl.visible = false;
@@ -983,6 +995,7 @@ export class Chars3D {
       let born = this.born.get(s.id); if (born === undefined) { born = opts.now; this.born.set(s.id, born); }
       if (!e.ghost) this.fade(r, Math.min(1, (opts.now - born) / FADE_MS));
       r.root.scale.setScalar(RULES.actorScale);
+      if(this.resetActorMotion){r.lastX=e.x;r.lastY=e.y;r.speed=0;}
       this.animate(r, e, opts);
       this.applyHuman(r);
       if (r.human) this.playClips(r, e, opts.now, s.id === opts.meId ? opts.guarding : !!s.buffs?.includes('guardia'));
@@ -1006,14 +1019,25 @@ export class Chars3D {
       this.disposeRig(rig); this.rigs.delete(id); this.born.delete(id);
     }
     this.viewW = opts.W; this.viewH = opts.H;
-    if (this.camMode !== 'cenital') { this.renderNear(opts); return; }
+    this.resetActorMotion=false;
+    if (this.camMode !== 'cenital') { this.syncArchitecture(ents, opts.meId, false, opts.now); this.renderNear(opts); return; }
     this.leaveNear();
+    this.syncArchitecture(ents, opts.meId, true, opts.now);
+    const frame=this.zoneDef && architecture.frame(this.zoneDef);
+    if(frame) {
+      this.ensureNear()?.setCut(true);
+      this.occl.visible=false;
+      const [x,y]=roomToCity(frame,0,0);
+      this.world.position.set(x,frame.height*Y_SQUASH,y);
+      this.world.rotation.set(0,-frame.turns*Math.PI/2,0);
+      this.world.scale.set(frame.scale[0],Y_SQUASH,frame.scale[1]);
+    } else this.resetWorldSpace(Y_SQUASH);
     // Cámara: el centro de la pantalla corresponde al mismo punto del suelo que en la vista 2D.
     const z = opts.zoom;
     const lx = (opts.W / 2 - opts.worldX) / z, ly = (opts.H / 2 - opts.worldY) / z; // píxeles del mundo sin cámara
     const tx = (lx / 32 + ly / 16) / 2, ty = (ly / 16 - lx / 32) / 2;            // inversa de worldToScreen
     const c = Math.cos(Math.PI / 6), sn = Math.sin(Math.PI / 6);
-    const target = new THREE.Vector3(tx, 0, ty);
+    const target = new THREE.Vector3(tx, frame ? frame.height * Y_SQUASH : 0, ty);
     const d = new THREE.Vector3(-c / Math.SQRT2, -sn, -c / Math.SQRT2);
     this.camera.position.copy(target).addScaledVector(d, -1500);
     this.camera.up.set(0, 1, 0); this.camera.lookAt(target);
@@ -1034,10 +1058,38 @@ export class Chars3D {
   /** Escena cercana de la zona actual (suelo, mobiliario, muros): se hace la primera vez que se mira de cerca. */
   private ensureNear() {
     const z = this.zoneDef; if (!z) return null;
-    let sc = this.nearScenes.get(z.id);
-    if (!sc) { const t0 = performance.now(); sc = buildScene3D(z, !!this.city?.active, BUILDING_H); this.nearScenes.set(z.id, sc); this.world.add(sc.group); const ms = performance.now() - t0; if (ms > 120) console.info(`[3d] escena cercana de ${z.id}: ${ms.toFixed(0)} ms`); }
-    this.near = sc; sc.group.visible = true;
+    const sc=this.obtainScene(z,!!this.city?.active);
+    this.near=sc;sc.group.visible=true;
     return sc;
+  }
+  private obtainScene(z: ZoneDef, cityActive: boolean) {
+    let sc=this.nearScenes.get(z.id);
+    if(!sc){
+      const t0=performance.now();
+      sc=buildScene3D(z,cityActive,BUILDING_H);
+      this.nearScenes.set(z.id,sc);
+      this.world.add(sc.group);
+      if(performance.now()-t0>120)console.info(`[3d] escena cercana de ${z.id}: ${(performance.now()-t0).toFixed(0)} ms`);
+    }
+    return sc;
+  }
+  private nearbyStreet(z: ZoneDef) {
+    let sc=this.scenes.get(z.id);
+    if(!sc){
+      const city=new City3D();
+      sc={city,occl:new THREE.Group(),bOccl:[],built:false,quality:this.quality};
+      this.scenes.set(z.id,sc);
+      this.world.add(city.group,sc.occl);
+      city.onReady=()=>{city.build(z,this.quality);};
+      city.build(z,this.quality);
+    }
+    return {city:sc.city,terrain:this.obtainScene(z,true)};
+  }
+  private syncArchitecture(ents: readonly Ent3D[], id: number, cut: boolean, now: number) {
+    const z=this.zoneDef, me=ents.find(e=>e.s.id===id);
+    if(!z||!me)return;
+    if(z.kind==='exterior'&&!this.city?.active)return;
+    this.architecture.sync(z,this.city,me.x,me.y,cut,now,outside=>this.nearbyStreet(outside));
   }
   /** Vuelta a la cenital: se deshace todo lo de la vista cercana. */
   private leaveNear() {
@@ -1056,14 +1108,20 @@ export class Chars3D {
     if (ix < 0 || iy < 0 || ix >= z.width || iy >= z.height) return 99;
     return sc.heights[iy * z.width + ix];
   }
+  private resetWorldSpace(vertical: number) {
+    this.world.position.set(0,0,0);
+    this.world.rotation.set(0,0,0);
+    this.world.scale.set(1,vertical,1);
+  }
   private renderNear(opts: { W: number; H: number; meId: number; dt: number }) {
     const sc = this.ensureNear(), me = this.rigs.get(opts.meId);
+    sc?.setCut(false);
     const first = this.lastMode === 'cenital';
     this.lastMode = this.camMode;
-    this.world.scale.y = 1; this.occl.visible = false;
+    this.resetWorldSpace(1); this.occl.visible = false;
     this.bullets.group.visible = true; this.bullets.update(opts.dt);
     if (!me) { this.camReady = false; return; }
-    const interior = this.zoneDef?.kind !== 'exterior';
+    const interior = this.zoneDef?.kind !== 'exterior' && !this.embeddedRoom;
     // Luz y cielo según la hora (en los interiores, siempre luz de dentro).
     const day = interior ? 0.85 : this.daylight;
     this.hemi.intensity = 2.9 * (0.32 + 0.68 * day); this.sun.intensity = 3.1 * (0.15 + 0.85 * day); this.rim.intensity = 1.6;
@@ -1085,13 +1143,13 @@ export class Chars3D {
     if (this.camMode === 'primera') {
       // Ojos: la cabeza del modelo (sigue al cuerpo al andar, agacharse o rodar); un pelín por delante para no ver el pelo.
       const head = me.human?.bones.get('Head');
-      const eye = head && !me.mech ? head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0.07, 0)) : new THREE.Vector3(p.x, 1.42 * tall * 1.5, p.z);
+      const eye = head && !me.mech ? head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0.07, 0)) : new THREE.Vector3(p.x, p.y+1.42 * tall * 1.5, p.z);
       eye.addScaledVector(new THREE.Vector3(fwd.x, 0, fwd.z).normalize(), 0.12);
       cam.position.copy(eye);
       cam.fov = 70; me.root.visible = false;
     } else {
       // Tercera persona: detrás y un poco a la derecha del hombro; si algo se interpone, la cámara se acerca.
-      const pivot = new THREE.Vector3(this.pivot.x, 1.32 * tall, this.pivot.z).addScaledVector(right, 0.38 * tall);
+      const pivot = new THREE.Vector3(this.pivot.x, p.y+1.32 * tall, this.pivot.z).addScaledVector(right, 0.38 * tall);
       const want = this.camDist * tall;
       let d = want;
       for (let t = 0.25; t <= want; t += 0.08) {
@@ -1143,15 +1201,17 @@ export class Chars3D {
   /** Punto del suelo bajo el píxel (gx, gy) con la cámara cercana (para apuntar y señalar). */
   groundAt(gx: number, gy: number): { x: number; y: number } | null {
     const ndc = new THREE.Vector2(gx / this.viewW * 2 - 1, -(gy / this.viewH * 2 - 1));
-    const rc = new THREE.Raycaster(); rc.setFromCamera(ndc, this.pcam);
-    const hit = rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3());
-    if (!hit || hit.distanceTo(this.pcam.position) > 120) return null;
-    return { x: hit.x, y: hit.z };
+    const iso=this.camMode==='cenital', cam=iso?this.camera:this.pcam;
+    const rc = new THREE.Raycaster(); rc.setFromCamera(ndc, cam);
+    const hit = rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), -this.world.position.y), new THREE.Vector3());
+    if (!hit || (!iso && hit.distanceTo(cam.position) > 120)) return null;
+    const p=this.world.worldToLocal(hit);
+    return { x: p.x, y: p.z };
   }
 
   private animate(r: Rig, e: Ent3D, o: { meId: number; guarding: boolean; now: number; dt: number; serverNow: number }) {
     const s = e.s, now = o.now, dt = Math.min(0.1, o.dt);
-    r.root.position.set(e.x, 0, e.y);
+    r.root.position.set(e.x, this.zoneDef ? stairRise(this.zoneDef,e.x,e.y) : 0, e.y);
     // Velocidad y orientación: hacia donde se mueve (giro suave), o hacia su objetivo cuando ataca.
     const dx = e.x - r.lastX, dy = e.y - r.lastY; r.lastX = e.x; r.lastY = e.y;
     const sp = Math.hypot(dx, dy) / Math.max(0.001, dt);
@@ -1341,7 +1401,7 @@ export class Chars3D {
     r.shadow.visible = !lying;
   }
 
-  dispose() { for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); this.vehicles.clear(); }
+  dispose() { this.architecture.reset(); for (const r of this.rigs.values()) this.disposeRig(r); this.rigs.clear(); this.vehicles.clear(); }
   /** v0.21 · Animaciones de la librería universal encima del movimiento procedural (ver anim3d.ts). */
   private playClips(r: Rig, e: Ent3D, now: number, guard: boolean) {
     loadCapture();

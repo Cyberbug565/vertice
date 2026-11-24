@@ -129,6 +129,25 @@
     ]
    },
    "danger": "public"
+  },
+  {
+   "id": "escalera-comisaria-arrabal",
+   "name": "Subir a Investigación",
+   "at": [
+    3,
+    0
+   ],
+   "to": {
+    "zone": "comisaria-arrabal-servicios",
+    "at": [
+     3,
+     1
+    ]
+   },
+   "danger": "public",
+   "sign": "01 · INVESTIGACIÓN",
+   "signColor": "#68caff",
+   "signIcon": "subir"
   }
  ],
  "objects": [
@@ -164,5 +183,25 @@
  "furnished": true,
  "restricted": "policia",
  "detector": true,
- "police": 3
+ "police": 3,
+ "ground": [
+  {
+   "type": "deck",
+   "rect": [
+    11,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "type": "metal",
+   "rect": [
+    2,
+    1,
+    3,
+    2
+   ]
+  }
+ ]
 }
