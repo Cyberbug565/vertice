@@ -705,6 +705,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   let camHintT = 0;
   const applyCamera = (m: CamMode, announce: boolean) => {
     const got = view.setCamMode(m);
+    net.send({ t: 'camera', mode: got } as any);
     crosshair.style.display = got === 'primera' ? '' : 'none';
     document.documentElement.dataset.cam = got;
     if (announce) {
@@ -831,6 +832,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     switch (m.t) {
       case 'atlas': atlas.apply(m.map,m.reset); minimap.refresh(); document.dispatchEvent(new Event('vertice-atlas')); break;
       case 'welcome':
+        if (view.camMode !== 'cenital') net.send({ t: 'camera', mode: view.camMode } as any); // (la conexión es nueva)
         atlas.apply({cells:[],places:[],unlocked:false},true);
         localDance = null;
         view.meId = m.you; st.sheet = m.sheet; st.journal = m.journal; st.facts = m.facts; st.cityHourMs = m.cityHourMs; st.cityEpoch = m.cityEpoch;
@@ -1027,5 +1029,6 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     entities: () => [...view.ents.values()].map((e) => ({ id: e.s.id, name: e.s.name, kind: e.s.kind, x: e.x, y: e.y })),
     screenOf: (x: number, y: number, z = 0) => view.screenOf(x, y, z),
     camera: (m?: CamMode) => (m ? applyCamera(m, false) : view.camMode),
+    drawDist: (d: number) => saveSettings({ drawDist: d }),
   };
 }

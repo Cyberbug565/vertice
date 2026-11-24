@@ -46,6 +46,8 @@ export interface PlayerConn {
   known: Map<number, { lv: number; sent: number }>; lastSnapTick: number; dialog?: { no: number; dialogId: string; node: string; targetId: number };
   queue: Promise<void>; chatTimes: number[]; closed: boolean; lastSector?: string; lastDanger?: string; bytesOut: number;
   sentScaled?: number; admin?: boolean; kairosWarnAt?: number;
+  /** v0.40 · Mira con una cámara cercana (tercera o primera persona): los PNJ se replican sin el cono de visión. */
+  nearCam?: boolean;
 }
 
 const INTERACT_RANGE = 2.3;
@@ -652,7 +654,10 @@ export class World {
     for (const v of vis) {
       // Puertas y mobiliario fijo ya figuran en la cartografía del cliente. Los actores y los objetos dinámicos sí se filtran aquí.
       const fixed = v.kind === 'door' || v.kind === 'object' && !!v.objId;
-      if (!fixed && v !== e && !canSee(e.zone.grid, e.x, e.y, e.facing, sight, v.x, v.y)) continue;
+      // v0.40 · El cono de visión es una regla de equilibrio de la vista cenital (que no se vea más que los demás). Con la cámara
+      // en tercera o primera persona, los PNJ al alcance se ven siempre (la cámara puede mirar a tu espalda).
+      const npcNear = c.nearCam && v.kind === 'npc' && (v.x - e.x) ** 2 + (v.y - e.y) ** 2 <= Math.max(this.cfg.viewRadius, sight.range) ** 2;
+      if (!fixed && v !== e && !npcNear && !canSee(e.zone.grid, e.x, e.y, e.facing, sight, v.x, v.y)) continue;
       if (v.privateTo && v.privateTo !== c) continue;
       if(v.doorTo?.zone==='casino-meridiano-vip' && (!c.p||!this.casino.vip(c.p)))continue;
       visIds.add(v.id);
@@ -859,7 +864,7 @@ export class World {
     const blocked=this.prison.allowCommand(c,m);
     if(blocked){if('seq' in m)this.send(c,{t:'ack',seq:m.seq,ok:false,reason:blocked});return;}
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
-    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto', 'penal', 'look', 'dossier', 'loan'];
+    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto', 'penal', 'look', 'dossier', 'loan', 'camera'];
     // Una orden manual del jugador (no del piloto automático, que usa seq 0) le devuelve el control.
     if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'retreat', 'stop', 'dance'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
     if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop', 'dance'].includes(m.t)) this.autopilot.takeOver(c);
@@ -934,6 +939,7 @@ export class World {
       case 'skillUp': return guarded(m.seq, () => this.progress.skillUp(c, m.skill));
       case 'loan': return guarded(m.seq, () => this.debts.pay(c, m.amount));
       case 'look': return void this.scanner.scan(c, m.target).catch((err) => console.error('[escáner]', err));
+      case 'camera': c.nearCam = m.mode !== 'cenital'; return;
       case 'dossier': return guarded(m.seq, () => this.scanner.command(c, m.action, m.offer));
       case 'perkBuy': return guarded(m.seq, () => this.progress.perkBuy(c, m.perk));
       case 'wear': return guarded(m.seq, async () => sv.wear(c, m.slot, m.item, (m as any).confirm === true));

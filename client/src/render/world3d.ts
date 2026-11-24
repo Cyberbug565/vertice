@@ -129,9 +129,11 @@ export function makeSky() {
     vertexShader: 'varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
     fragmentShader: 'uniform vec3 uTop; uniform vec3 uHorizon; varying vec3 vD; void main(){ float k = smoothstep(-0.05, 0.6, vD.y); gl_FragColor = vec4(mix(uHorizon, uTop, k), 1.0); }',
   });
-  const mesh = new THREE.Mesh(new THREE.SphereGeometry(200, 24, 12), mat);
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 12), mat); // (se escala a la distancia de dibujado)
   mesh.renderOrder = -10; mesh.frustumCulled = false; mesh.name = 'cielo';
-  const day = { top: new THREE.Color(0x4f86d0), hor: new THREE.Color(0xb9c6dc) }, night = { top: new THREE.Color(0x04050c), hor: new THREE.Color(0x2a1838) };
+  // v0.40 · El horizonte es la boina de contaminación: de día, una calima parda; de noche, una niebla morada teñida de neón.
+  // La niebla de la distancia de dibujado usa este mismo color, así que lo lejano se funde con el cielo.
+  const day = { top: new THREE.Color(0x5a86c0), hor: new THREE.Color(0xa69c8c) }, night = { top: new THREE.Color(0x05060e), hor: new THREE.Color(0x3a2040) };
   const indoor = new THREE.Color(0x0c0b12);
   return {
     mesh,

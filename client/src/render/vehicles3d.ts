@@ -94,5 +94,26 @@ export class Vehicles3D {
     this.models.delete(id);
   }
 
-  clear() { for (const id of this.models.keys()) this.remove(id); }
+  /** v0.40 · Tráfico de la calle con los modelos 3D (en las cámaras cercanas; en la cenital van sus dibujos 2D). */
+  private traffic = new Map<number, Rig>();
+  syncTraffic(cars: readonly { uid: number; x: number; y: number; yaw: number; alpha: number; model: CarModel; hover: boolean }[], now: number) {
+    const seen = new Set<number>();
+    for (const c of cars) {
+      const template = templates.get(c.model);
+      if (!template) { requestModel(c.model); continue; }
+      seen.add(c.uid);
+      let rig = this.traffic.get(c.uid);
+      if (rig && rig.model !== c.model) { this.dropTraffic(c.uid); rig = undefined; }
+      if (!rig) { rig = this.create(c.model, template, c.x, c.y, c.yaw); this.traffic.set(c.uid, rig); }
+      rig.group.position.set(c.x, 0, c.y);
+      rig.group.rotation.y = c.yaw;
+      // Entra y se va escalando un poco (los modelos son opacos: sin transparencias que cuesten).
+      rig.group.scale.setScalar(0.6 + 0.4 * Math.min(1, c.alpha));
+      rig.chassis.position.y = c.hover ? .13 + Math.sin(now * .0035 + c.uid) * .023 : 0;
+    }
+    for (const id of [...this.traffic.keys()]) if (!seen.has(id)) this.dropTraffic(id);
+  }
+  private dropTraffic(id: number) { const rig = this.traffic.get(id); if (!rig) return; this.world.remove(rig.group); rig.tail?.dispose(); this.traffic.delete(id); }
+
+  clear() { for (const id of this.models.keys()) this.remove(id); for (const id of [...this.traffic.keys()]) this.dropTraffic(id); }
 }

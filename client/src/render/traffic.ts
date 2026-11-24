@@ -10,10 +10,13 @@ import { content } from '../content';
 import type { CarDef } from '@vertice/shared';
 
 interface Road { x: number; y: number; w: number; h: number; horiz: boolean; width: number; perDir: number; a0: number; a1: number; cross: { r: Road; a0: number; a1: number }[]; stops: { at0: number; at1: number; cx: number; cy: number }[] }
-interface Car { r: Road; dir: 1 | -1; lane: number; s: number; v: number; vmax: number; alpha: number; out: boolean; t0: number; o0: number; k0: number; g: Graphics; drawn: string; def: CarDef; sprite: Sprite; rx: number; ry: number; turn: { r: Road; dir: 1 | -1; at: number } | null; decided: Road | null }
+interface Car { uid: number; yaw: number; r: Road; dir: 1 | -1; lane: number; s: number; v: number; vmax: number; alpha: number; out: boolean; t0: number; o0: number; k0: number; g: Graphics; drawn: string; def: CarDef; sprite: Sprite; rx: number; ry: number; turn: { r: Road; dir: 1 | -1; at: number } | null; decided: Road | null }
 interface Signal { cx: number; cy: number; axis: RoadAxis; px: number; py: number; qx: number; qy: number }
 
 const R_LIVE = 44, R_GONE = 50, FADE = 1.1;
+let nextUid = 1;
+/** v0.40 · Lo que necesita la vista 3D de cada coche del tráfico. */
+export interface TrafficCar { uid: number; x: number; y: number; yaw: number; alpha: number; model: NonNullable<CarDef['model']>; hover: boolean }
 const streetCars = content.cars.filter(c => c.traffic > 0);
 const totalWeight = streetCars.reduce((sum, c) => sum + c.traffic, 0);
 function randomCar() {
@@ -113,9 +116,10 @@ export class Traffic {
       if (this.cars.some((o) => o !== c && o.r === r && o.dir === dir && o.lane === lane && Math.abs(o.s - s) < 4)) continue;
       const def = randomCar();
       const vmax = Math.min(7.8, 2.05 + def.speed * .95 + lane * .65 + Math.random());
-      const car: Car = c ?? { r, dir, lane, s, v: 0, vmax, alpha: 0, out: false, t0: 0, o0: 0, k0: 0, g: new Graphics(), drawn: '', def, sprite: new Sprite(), rx: 0, ry: 0, turn: null, decided: null };
+      const car: Car = c ?? { uid: nextUid++, yaw: 0, r, dir, lane, s, v: 0, vmax, alpha: 0, out: false, t0: 0, o0: 0, k0: 0, g: new Graphics(), drawn: '', def, sprite: new Sprite(), rx: 0, ry: 0, turn: null, decided: null };
       Object.assign(car, { r, dir, lane, s, v: vmax * 0.6, vmax, def, alpha: 0, out: false, t0: performance.now(), turn: null, decided: null });
       const [x, y] = this.pos(car); car.rx = x; car.ry = y;
+      car.yaw = r.horiz ? (dir > 0 ? Math.PI / 2 : -Math.PI / 2) : (dir > 0 ? 0 : Math.PI);
       car.sprite.anchor.set(.5);
       car.sprite.visible = false;
       if (!c) { car.g.addChild(car.sprite); this.layer.addChild(car.g); }
@@ -159,7 +163,10 @@ export class Traffic {
       this.drive(c, dt, now, people);
       // Posición dibujada: se acerca a la lógica con suavidad (así los giros trazan una curva).
       const [tx, ty] = this.pos(c), k = Math.min(1, dt * 5);
+      const ox = c.rx, oy = c.ry;
       c.rx += (tx - c.rx) * k; c.ry += (ty - c.ry) * k;
+      // Rumbo para el modelo 3D: hacia donde avanza (con suavidad, así los giros se ven como giros).
+      if (Math.hypot(c.rx - ox, c.ry - oy) > 1e-4) { const want = Math.atan2(c.rx - ox, c.ry - oy), d = Math.atan2(Math.sin(want - c.yaw), Math.cos(want - c.yaw)); c.yaw += d * Math.min(1, dt * 8); }
       const p = worldToScreen(c.rx, c.ry);
       c.g.position.set(p.x, p.y); c.g.alpha = c.alpha; c.g.visible = c.alpha > 0.01 && visibleAt(c.rx, c.ry);
       if (c.g.visible) this.draw(c);
@@ -238,6 +245,12 @@ export class Traffic {
     }
   }
 
+  /** v0.40 · Coches vivos (para dibujarlos con su modelo 3D en las cámaras cercanas). */
+  liveCars(): TrafficCar[] {
+    const out: TrafficCar[] = [];
+    for (const c of this.cars) if (c.alpha > 0.02 && c.def.model) out.push({ uid: c.uid, x: c.rx, y: c.ry, yaw: c.yaw, alpha: c.alpha, model: c.def.model, hover: !!c.def.hover });
+    return out;
+  }
   destroy() { for (const c of this.cars) c.g.destroy({ children: true }); this.cars = []; this.lightsG.destroy(); this.marks.destroy(); }
   /** v0.35 · Se guarda sin destruir (entras en un interior) y se vuelve a poner al salir: los coches siguen donde estaban. */
   detach() { this.layer.removeChild(this.marks, this.lightsG, ...this.cars.map((c) => c.g)); }

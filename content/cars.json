@@ -16,7 +16,7 @@
   "braking": 10.3,
   "handling": 74,
   "hover": false,
-  "traffic": 2
+  "traffic": 6.42
  },
  {
   "id": "kotetsu-raijin",
@@ -35,7 +35,7 @@
   "braking": 12.5,
   "handling": 85,
   "hover": false,
-  "traffic": 0
+  "traffic": 3.26
  },
  {
   "id": "kotetsu-oni",
@@ -54,7 +54,7 @@
   "braking": 13.4,
   "handling": 91,
   "hover": false,
-  "traffic": 0
+  "traffic": 1.56
  },
  {
   "id": "brennan-mastin",
@@ -73,7 +73,7 @@
   "braking": 10.6,
   "handling": 67,
   "hover": false,
-  "traffic": 0
+  "traffic": 2.5
  },
  {
   "id": "vidal-pulga",
@@ -92,7 +92,7 @@
   "braking": 7.8,
   "handling": 77,
   "hover": false,
-  "traffic": 8
+  "traffic": 5.74
  },
  {
   "id": "vidal-gorrion",
@@ -111,7 +111,7 @@
   "braking": 8.4,
   "handling": 69,
   "hover": false,
-  "traffic": 7
+  "traffic": 4.55
  },
  {
   "id": "vidal-sardina",
@@ -130,7 +130,7 @@
   "braking": 9.1,
   "handling": 71,
   "hover": false,
-  "traffic": 3
+  "traffic": 3.52
  },
  {
   "id": "hakuro-mikan",
@@ -149,7 +149,7 @@
   "braking": 8.9,
   "handling": 73,
   "hover": true,
-  "traffic": 7
+  "traffic": 3.72
  },
  {
   "id": "hakuro-tanuki",
@@ -168,7 +168,7 @@
   "braking": 8.0,
   "handling": 60,
   "hover": false,
-  "traffic": 6
+  "traffic": 2.98
  },
  {
   "id": "aurora-mula",
@@ -187,7 +187,7 @@
   "braking": 7.1,
   "handling": 53,
   "hover": true,
-  "traffic": 5
+  "traffic": 2.61
  },
  {
   "id": "brennan-percheron",
@@ -206,7 +206,7 @@
   "braking": 6.2,
   "handling": 46,
   "hover": true,
-  "traffic": 3
+  "traffic": 2.09
  },
  {
   "id": "marrow-garza",
@@ -225,7 +225,7 @@
   "braking": 11.1,
   "handling": 82,
   "hover": true,
-  "traffic": 5
+  "traffic": 1.43
  },
  {
   "id": "marrow-halcon-negro",
@@ -244,7 +244,7 @@
   "braking": 11.7,
   "handling": 85,
   "hover": false,
-  "traffic": 2
+  "traffic": 0.93
  },
  {
   "id": "saeta-dardo",
@@ -263,7 +263,7 @@
   "braking": 12.3,
   "handling": 92,
   "hover": false,
-  "traffic": 0
+  "traffic": 0.73
  },
  {
   "id": "zephyr-brisa",
@@ -282,7 +282,7 @@
   "braking": 10.8,
   "handling": 84,
   "hover": true,
-  "traffic": 0
+  "traffic": 1.15
  },
  {
   "id": "brennan-bisonte",
@@ -301,7 +301,7 @@
   "braking": 8.7,
   "handling": 61,
   "hover": true,
-  "traffic": 4
+  "traffic": 1.71
  },
  {
   "id": "brennan-uro",
@@ -339,7 +339,7 @@
   "braking": 9.6,
   "handling": 68,
   "hover": true,
-  "traffic": 0
+  "traffic": 1.94
  },
  {
   "id": "zephyr-aurora",
@@ -358,7 +358,7 @@
   "braking": 10.1,
   "handling": 76,
   "hover": true,
-  "traffic": 4
+  "traffic": 0.6
  },
  {
   "id": "kaiten-sakura",
@@ -377,7 +377,7 @@
   "braking": 9.9,
   "handling": 79,
   "hover": true,
-  "traffic": 0
+  "traffic": 0.41
  },
  {
   "id": "saeta-imperial",
@@ -396,7 +396,7 @@
   "braking": 10.4,
   "handling": 70,
   "hover": true,
-  "traffic": 1.5
+  "traffic": 0.34
  },
  {
   "id": "marrow-duque",
@@ -415,7 +415,7 @@
   "braking": 10.5,
   "handling": 76,
   "hover": true,
-  "traffic": 0
+  "traffic": 0.47
  },
  {
   "id": "halcon-centurion",
@@ -472,7 +472,7 @@
   "braking": 14.4,
   "handling": 88,
   "hover": false,
-  "traffic": 0.65
+  "traffic": 0.16
  },
  {
   "id": "marrow-espectro",
@@ -491,7 +491,7 @@
   "braking": 15.2,
   "handling": 93,
   "hover": false,
-  "traffic": 0
+  "traffic": 0.11
  },
  {
   "id": "zephyr-singularidad",
@@ -510,7 +510,7 @@
   "braking": 15.0,
   "handling": 86,
   "hover": true,
-  "traffic": 0
+  "traffic": 0.07
  },
  {
   "id": "saeta-vector",
@@ -529,7 +529,7 @@
   "braking": 12.9,
   "handling": 79,
   "hover": true,
-  "traffic": 1.5
+  "traffic": 1.63
  },
  {
   "id": "vidal-vigia",

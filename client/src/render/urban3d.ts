@@ -15,6 +15,10 @@ export function urbanGeometry(form: UrbanForm): THREE.BufferGeometry {
   });
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.BufferAttribute(points, 3));
+  // v0.40 · La base del edificio siempre en el suelo (y = 0), aunque el modelo venga desplazado.
+  geometry.computeBoundingBox();
+  const lift = geometry.boundingBox!.min.y;
+  if (Math.abs(lift) > 1e-4) geometry.translate(0, -lift, 0);
   geometry.computeVertexNormals();
   if (form.surface) {
     const colors = new Float32Array(points.length), glow = new Float32Array(points.length / 3);

@@ -1061,6 +1061,8 @@ export class GameView {
     }
     if (kind === 'shot') {
       const id = extra.weapon ?? '';
+      // v0.40 · Con la cámara cercana, la bala de su calibre en 3D (la traza 2D no se ve desde ahí).
+      if (this.near) this.chars3d!.shoot(a.s.id, a, a === b && extra.x !== undefined ? { x: extra.x, y: extra.y ?? b.y, part: extra.part } : { id: b.s.id, x: b.x, y: b.y, part: extra.part }, id, wi?.weapon?.ammo, fam, hit, extra.burst ?? 1);
       const col = /plasma|termica/.test(id) ? 0xff7a30 : /riel|pulsos|sonico|emp|inteligente/.test(id) ? 0x43c8ff : fam === 'Táser' ? 0xffd23f : fam === 'Arco' ? 0xd8e0ec : 0xfff1a0;
       const pellets = (fam === 'Escopeta' ? 5 : fam === 'Ametralladora' ? 4 : fam === 'Subfusil' ? 3 : 1) * Math.max(1, extra.burst ?? 1);
       if (from === this.meId || to === this.meId) this.shake(fam === 'Escopeta' || (extra.burst ?? 1) > 1 ? 3 : 1.5, 110);
@@ -1505,7 +1507,8 @@ export class GameView {
         e.x = nx; e.y = ny;
       }
       // v0.35 · Las puertas y objetos fijos son parte del edificio: se ven aunque queden fuera del cono de visión.
-      e.view.visible = e.s.id === this.meId || e.s.kind === 'door' || (e.s.kind === 'object' && !e.s.dead) || this.inSight(e.x, e.y);
+      // v0.40 · Con cámara cercana, los PNJ se ven siempre (el cono de visión solo rige en la cenital).
+      e.view.visible = e.s.id === this.meId || e.s.kind === 'door' || (e.s.kind === 'object' && !e.s.dead) || (this.near && e.s.kind === 'npc') || this.inSight(e.x, e.y);
       if (e.bubble) e.bubble.visible = e.view.visible;
       if (!e.view.visible) {
         if (e.label) e.label.visible = false;
@@ -1579,6 +1582,7 @@ export class GameView {
     if (!this.chars3d) return;
     const res = this.app.renderer.resolution, key = `${W}x${H}@${res}`;
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
+    this.chars3d.drawDist = settings.drawDist ?? 120;
     { const h = this.cityHourFn(); this.chars3d.daylight = Math.max(0, Math.min(1, (h - 5) / 2.5)) * Math.max(0, Math.min(1, (20.5 - h) / 2.5)); }
     this.buildingObjs.forEach((o, i) => {
       const b = this.zone!.buildings[i];
@@ -1587,7 +1591,7 @@ export class GameView {
     });
     // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).
     this.pending3d = [[...this.ents.values(), ...this.companions.filter((c) => c.ent3d).map((c) => c.ent3d)] as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
-      hidden: (e: any) => e.view?.visible === false || !!e.s.vehicle || !!e.s.carried || !!e.vehX }];
+      hidden: (e: any) => e.view?.visible === false || !!e.s.vehicle || !!e.s.carried || !!e.vehX, traffic: this.near ? this.trafficSys?.liveCars() ?? [] : [] }];
   }
 
   /** Tráfico rodado: coches que circulan por las calzadas anchas del distrito. */

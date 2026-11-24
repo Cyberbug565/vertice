@@ -17,6 +17,8 @@ import { roboticParts } from './cyber3d';
 import { hairsVersion, isCollectionHair } from './hairs3d';
 import { samuraiVersion } from './samurai3d';
 import { buildScene3D, makeSky, type Scene3D } from './world3d';
+import type { TrafficCar } from './traffic';
+import { Bullets3D } from './bullets3d';
 import { buildTormenta, loadTormenta, retargetTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
 import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
 import { kineticShield, placeShield } from './kinetic-shield';
@@ -220,12 +222,16 @@ export class Chars3D {
   camYaw = 0; camPitch = -0.18; camDist = 3.2;
   /** Luz del día (0 noche, 1 mediodía): en las vistas cercanas no hay capa de oscuridad 2D encima. */
   daylight = 1;
+  /** v0.40 · Distancia de dibujado de las cámaras cercanas (losetas): hasta ahí se ve; antes, la neblina de contaminación. */
+  drawDist = 120;
   private pcam = new THREE.PerspectiveCamera(62, 1, 0.05, 260);
   private camReady = false; private pivot = new THREE.Vector3(); private lastMode: CamMode = 'cenital';
   private zoneDef: ZoneDef | null = null;
   private nearScenes = new Map<string, Scene3D>(); private near: Scene3D | null = null;
   private sky = makeSky(); private fog3d = new THREE.Fog(0x000000, 30, 140);
   private viewW = 1; private viewH = 1;
+  /** v0.40 · Balas, fogonazos y vainas en 3D (solo en las cámaras cercanas). */
+  readonly bullets = new Bullets3D();
   private rigs = new Map<number, Rig>();
   private occl = new THREE.Group();
   private bOccl: (THREE.Mesh | null)[] = [];
@@ -253,7 +259,8 @@ export class Chars3D {
     this.sky.mesh.visible = false;
     this.sun.position.set(2, 8, 5); // luz principal desde arriba y de cara a la cámara
     this.rim.position.set(-6, 4, -6); // contraluz frío: separa la silueta del fondo
-    this.world.add(this.vehicles.world, this.doors.group);
+    this.world.add(this.vehicles.world, this.doors.group, this.bullets.group);
+    this.bullets.group.visible = false;
     loadHumans(() => {}); // v0.15 · cuerpos del kit (los personajes se rehacen al cargarlos)
     loadGuns(() => {}); // v0.14 · modelos de armas de fuego (los personajes se rehacen solos al cambiar la versión)
   }
@@ -949,9 +956,10 @@ export class Chars3D {
 
   // ================================================================ animación y dibujo
   /** Sincroniza los modelos con las entidades visibles y dibuja el fotograma. */
-  render(ents: readonly Ent3D[], opts: { W: number; H: number; zoom: number; worldX: number; worldY: number; meId: number; guarding: boolean; now: number; dt: number; serverNow: number; hidden: (e: Ent3D) => boolean }) {
+  render(ents: readonly Ent3D[], opts: { W: number; H: number; zoom: number; worldX: number; worldY: number; meId: number; guarding: boolean; now: number; dt: number; serverNow: number; hidden: (e: Ent3D) => boolean; traffic?: readonly TrafficCar[] }) {
     tickNeon(opts.now / 1000);
     this.vehicles.sync(ents, opts.now, opts.dt, settings.reduceMotion);
+    this.vehicles.syncTraffic(this.camMode !== 'cenital' ? opts.traffic ?? [] : [], opts.now);
     const seen = new Set<number>();
     for (const e of ents) {
       const s = e.s;
@@ -1038,6 +1046,7 @@ export class Chars3D {
     this.world.scale.y = Y_SQUASH;
     if (this.near) this.near.group.visible = false;
     this.occl.visible = true; this.sky.mesh.visible = false; this.scene.fog = null;
+    this.bullets.clear(); this.bullets.group.visible = false;
     this.hemi.intensity = 2.9; this.sun.intensity = 3.1; this.rim.intensity = 1.6;
   }
   /** Altura de lo que ocupa la loseta (x, y): edificios, muros y mobiliario. */
@@ -1052,13 +1061,16 @@ export class Chars3D {
     const first = this.lastMode === 'cenital';
     this.lastMode = this.camMode;
     this.world.scale.y = 1; this.occl.visible = false;
+    this.bullets.group.visible = true; this.bullets.update(opts.dt);
     if (!me) { this.camReady = false; return; }
     const interior = this.zoneDef?.kind !== 'exterior';
     // Luz y cielo según la hora (en los interiores, siempre luz de dentro).
     const day = interior ? 0.85 : this.daylight;
     this.hemi.intensity = 2.9 * (0.32 + 0.68 * day); this.sun.intensity = 3.1 * (0.15 + 0.85 * day); this.rim.intensity = 1.6;
     const hor = this.sky.set(day, interior);
-    this.fog3d.color.copy(hor); this.fog3d.near = interior ? 14 : 34; this.fog3d.far = interior ? 46 : 150;
+    // v0.40 · Distancia de dibujado: la niebla de contaminación empieza a un tercio y lo tapa todo justo antes del límite.
+    const far = interior ? Math.min(60, this.drawDist) : this.drawDist;
+    this.fog3d.color.copy(hor); this.fog3d.near = far * (interior ? 0.3 : 0.22); this.fog3d.far = far * 0.97;
     this.scene.fog = this.fog3d; this.sky.mesh.visible = true;
     const p = me.root.position, dt = Math.min(0.1, opts.dt);
     // Al entrar en la vista cercana, la cámara se pone detrás del personaje, mirando hacia donde mira él.
@@ -1089,7 +1101,8 @@ export class Chars3D {
       cam.position.copy(pivot).addScaledVector(fwd, -d);
       cam.fov = 62;
     }
-    cam.aspect = opts.W / Math.max(1, opts.H); cam.near = 0.05; cam.far = interior ? 60 : 175; // (más allá, la niebla ya lo tapa)
+    cam.aspect = opts.W / Math.max(1, opts.H); cam.near = 0.05; cam.far = far; // (más allá, la niebla ya lo tapa)
+    this.sky.mesh.scale.setScalar(far * 0.9); // el cielo, siempre dentro de lo que se dibuja (si no, se ven huecos negros)
     cam.up.set(0, 1, 0); cam.lookAt(cam.position.clone().add(fwd));
     cam.updateProjectionMatrix();
     this.sky.mesh.position.copy(cam.position);
@@ -1102,6 +1115,21 @@ export class Chars3D {
     this.renderer.render(this.scene, cam);
     this.renderer.resetState();
     gl.viewport(vp[0], vp[1], vp[2], vp[3]);
+  }
+  /** v0.40 · Disparo en 3D: de la boca del arma de `fromId` a `toId` (a la altura de la parte del cuerpo) o a un punto. */
+  shoot(fromId: number, fromXY: { x: number; y: number }, to: { id?: number; x: number; y: number; part?: string }, weapon: string, ammo: string | undefined, family: string | undefined, hit: boolean, burst: number) {
+    if (this.camMode === 'cenital') return;
+    this.world.updateMatrixWorld(true);
+    const ra = this.rigs.get(fromId), rb = to.id !== undefined ? this.rigs.get(to.id) : undefined;
+    const tall = (r?: Rig) => (r?.mech ? 1.65 : 1);
+    // Boca del arma: la mano que la empuña, un palmo hacia delante; si no hay modelo, a la altura del pecho.
+    const from = ra ? ra.handR.getWorldPosition(new THREE.Vector3()) : new THREE.Vector3(fromXY.x, 1.15, fromXY.y);
+    const h = to.part === 'cabeza' ? 1.38 : to.part?.startsWith('pierna') ? 0.5 : 1.0;
+    const target = rb ? new THREE.Vector3(rb.root.position.x, h * tall(rb), rb.root.position.z) : new THREE.Vector3(to.x, h, to.y);
+    const fwd = target.clone().sub(from).setY(0).normalize();
+    from.addScaledVector(fwd, 0.28 * tall(ra));
+    const side = new THREE.Vector3(fwd.z, 0, -fwd.x); // (las vainas salen por la derecha del arma)
+    this.bullets.fire(weapon, ammo, family, from, target, { hit, burst, side, reduceFlashes: settings.reduceFlashes });
   }
   /** Punto de la rejilla (x, y, altura) en píxeles de pantalla con la cámara actual; null si queda detrás. */
   project(x: number, h: number, y: number): { x: number; y: number; depth: number } | null {

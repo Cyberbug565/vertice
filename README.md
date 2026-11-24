@@ -1,4 +1,13 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.39)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.40)
+
+La v0.40 arregla las cámaras cercanas:
+- **PNJ:** en tercera y primera persona se ven siempre, aunque estén a tu espalda. Los jugadores siguen con el cono de visión, la regla de equilibrio de la cenital.
+- **Cielo y edificios:** ya no hay huecos negros en el cielo ni edificios cortados.
+- **Distancia de dibujado:** se ajusta en las opciones (40–320 m) y lo lejano se funde en una neblina de contaminación.
+- **Tráfico:** los coches 3D circulan por la calle, y los caros se ven menos que los baratos.
+- **Balas:** cada arma dispara la bala de su calibre (de 9 mm a .50 BMG y calibre 12), con trazadora, fogonazo y vaina.
+
+[Novedades](docs/NOVEDADES-v0.40.md).
 
 La v0.39 añade dos cámaras a la cenital, y **F5** cambia entre las tres:
 - **Tercera persona:** detrás del hombro, con colisión contra paredes y edificios.

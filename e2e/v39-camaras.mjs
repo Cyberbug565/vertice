@@ -60,6 +60,16 @@ await step('Arrastrar gira sin clicar; un clic en la puerta la abre', async () =
   await page.mouse.click(s.x, s.y);
   await page.waitForFunction((z) => window.__vt.me().zone !== z, z0, { timeout: 30000 });
 });
+await step('v0.40 · Un disparo en tercera persona dibuja la bala 3D de su calibre (y la vaina)', async () => {
+  await page.evaluate(() => window.__vt.camera('tercera')); await page.waitForTimeout(500);
+  const n = await page.evaluate(() => { const v = window.__vt.view; const me = v.me; v.fx('shot', v.meId, v.meId, { weapon: 'rifle-asalto', hit: true, x: me.x + 6, y: me.y + 1 }); return v.chars3d.bullets.group.children.length; });
+  if (n < 2) throw new Error(`piezas 3D tras el disparo: ${n}`);
+});
+await step('v0.40 · La distancia de dibujado limita la cámara cercana', async () => {
+  const far = async (d) => { await page.evaluate((d) => window.__vt.drawDist(d), d); await page.waitForTimeout(400); return page.evaluate(() => window.__vt.view.chars3d.pcam.far); };
+  const f60 = await far(60), f250 = await far(250);
+  if (!(f250 > f60)) throw new Error(`far ${f60} → ${f250}`);
+});
 await step('Primera persona: el modelo propio no se dibuja y la mirilla sí', async () => {
   await page.evaluate(() => window.__vt.camera('primera')); await page.waitForTimeout(600);
   const r = await page.evaluate(() => { const rig = window.__vt.view.chars3d.rigs.get(window.__vt.me().id); return { body: rig?.root.visible, cross: getComputedStyle(document.querySelector('.crosshair')).display }; });

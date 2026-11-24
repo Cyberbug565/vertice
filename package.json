@@ -1,7 +1,7 @@
 {
   "name": "vertice",
   "private": true,
-  "version": "0.39.0",
+  "version": "0.40.0",
   "type": "module",
   "description": "RPG multijugador persistente isométrico de ambientación cyberpunk (universo original: Ciudad Vértice)",
   "workspaces": [
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "concurrently -n server,client -c magenta,cyan \"npm run dev -w server\" \"npm run dev -w client\"",
-    "build": "node tools/fetch-assets.mjs && npm run build -w client",
+    "build": "node tools/fetch-assets.mjs && node tools/balas/descargar.mjs && npm run build -w client",
     "assets": "node tools/fetch-assets.mjs --force",
     "start": "npm run start -w server",
     "db:migrate": "npm run migrate -w server",

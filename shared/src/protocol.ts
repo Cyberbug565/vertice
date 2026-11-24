@@ -81,6 +81,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('loan'), seq, amount: z.number().int().positive().max(1_000_000), opId }),
   // v0.38 · Interfaz: escanear a alguien de cerca, tu expediente, borrar la descripción y ofertas de trabajo de red.
   z.object({ t: z.literal('look'), target: z.number().int() }),
+  // v0.40 · Cámara del cliente: con la tercera o la primera persona los PNJ cercanos se ven aunque no estén delante.
+  z.object({ t: z.literal('camera'), mode: z.enum(['cenital', 'tercera', 'primera']) }),
   z.object({ t: z.literal('dossier'), seq, action: z.enum(['view', 'wipe', 'accept', 'decline']).default('view'), offer: z.string().max(64).optional() }),
   z.object({ t: z.literal('perkBuy'), seq, perk: z.string().max(48), opId }),
   z.object({ t: z.literal('wear'), seq, slot: z.string().max(16), item: z.string().max(64).nullable(), confirm: z.boolean().optional() }),
