@@ -7,8 +7,8 @@ type Profile = 'corporativo' | 'barrio' | 'periferia';
 type Tile = [number, number];
 type Cohort = { zone: Zone; points: Tile[]; people: Entity[]; seen: number };
 const CELL_SIZE = 28;
-const MAX_CIVILIANS = 180;
-const SPAWN_PER_UPDATE = 8;
+export const MAX_CIVILIANS = 620;
+const SPAWN_PER_UPDATE = 16;
 const KEEP_TICKS = RULES.tickRate * 12;
 const CORE = new Set(['cenit', 'colinas', 'estacion-central']);
 
@@ -92,7 +92,7 @@ export class Crowds {
       const profile = districtProfile(district.id, district.ambient);
       const hub = this.landmarksFor(zone).has(cell.join(','));
       const activity = night ? (district.id === 'neon-rojo' ? 1.4 : .55) : 1;
-      target = Math.round((profile === 'corporativo' ? 7 : profile === 'barrio' ? 3 : .45) * activity * scale + (hub ? 2 : 0));
+      target = Math.round((profile === 'corporativo' ? 24 : profile === 'barrio' ? 12 : 3) * activity * scale + (hub ? 5 : 0));
     } else {
       const casino = floor.casino && floor.casino.room !== 'vip' && !floor.id.endsWith('-vip');
       const publicTower = floor.tower?.access === 'publico';
@@ -100,10 +100,10 @@ export class Crowds {
       const station = floor.restricted === 'policia' && !floor.storey;
       if (!(casino || publicTower || shop || station || floor.nightlife)) return [];
       const district = this.world.districtDef(zone, floor.safePoint[0], floor.safePoint[1]);
-      const divisor = publicTower || districtProfile(district?.id ?? '', district?.ambient) === 'corporativo' ? 23 : 33;
+      const divisor = publicTower || districtProfile(district?.id ?? '', district?.ambient) === 'corporativo' ? 10 : 14;
       const activity = casino || floor.nightlife ? (night ? 1.2 : .8) : (night ? .62 : 1);
       const area = grid.walk.reduce((n, open) => n + open, 0);
-      target = Math.min(25, Math.round(area / divisor * activity * scale));
+      target = Math.min(64, Math.round(area / divisor * activity * scale));
     }
     const points: Tile[] = [];
     if (!target || x0 >= x1 || y0 >= y1) return points;
@@ -144,10 +144,11 @@ export class Crowds {
         let busy = false;
         for (const e of cohort.people) {
           if (!this.world.entities.has(e.id)) continue;
-          if (e.aggro !== undefined || e.carriedBy || e.state === 'downed' || e.dots?.length) { busy = true; continue; }
+          if (e.aggro !== undefined || e.carriedBy || e.state === 'downed' || e.dots?.length) { busy = true; count++; continue; }
           this.world.removeEntity(e);
         }
-        if (!busy) { this.cohorts.delete(key); continue; }
+        if (!busy) this.cohorts.delete(key);
+        continue;
       }
       count += cohort.people.length;
     }

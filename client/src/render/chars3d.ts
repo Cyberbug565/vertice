@@ -973,6 +973,7 @@ export class Chars3D {
     this.vehicles.sync(ents, opts.now, opts.dt, settings.reduceMotion);
     this.vehicles.syncTraffic(this.camMode !== 'cenital' ? opts.traffic ?? [] : [], opts.now);
     const seen = new Set<number>();
+    let crowdModels = 0;
     for (const e of ents) {
       const s = e.s;
       if ((s.kind !== 'player' && s.kind !== 'npc') || opts.hidden(e)) {
@@ -986,6 +987,8 @@ export class Chars3D {
       // v0.19 · La firma del modelo (JSON de su aspecto) solo se recalcula si cambia alguna de sus piezas: antes se
       // serializaba la apariencia entera de cada persona en cada fotograma.
       let r = this.rigs.get(s.id);
+      // Una oleada de peatones se prepara en varios fotogramas, dejando prioridad al jugador y a los PNJ de misión.
+      if (s.crowd && !r && crowdModels++ >= 5) continue;
       const src = [s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, gunsVersion(), humansVersion(), tormentaVersion(), hairsVersion(), samuraiVersion(), outfitVersion(), garmentsVersion(), implantsVersion(), settings.nudity];
       const same = !!r && !!r.src && r.src.length === src.length && r.src.every((v, i) => v === src[i]);
       const key = same ? r!.key : JSON.stringify([s.appearance, s.chrome, s.lost, s.weapon, s.carry, s.kind, e.ghost?.color, (s.weapon || s.carry?.length) ? gunsVersion() : 0, humansVersion(), s.appearance?.top === 'exo-tormenta' ? tormentaVersion() : 0, isCollectionHair(s.appearance?.hairStyle ?? '') ? hairsVersion() : 0, s.appearance?.headwear === 'casco-oni' || s.appearance?.shoeStyle === 'grebas-flotantes' ? samuraiVersion() : 0, isOutfit(s.appearance?.top ?? '') ? outfitVersion() : 0, s.appearance?.garments ? garmentsVersion() : 0, wearerImplantRevision(s), settings.nudity]);

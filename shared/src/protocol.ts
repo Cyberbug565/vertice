@@ -141,6 +141,7 @@ export interface Appearance {
 }
 export interface EntitySpawn {
   facing?: number;
+  crowd?: true;
   id: number; kind: EntityKind; name: string; title?: string; x: number; y: number;
   appearance?: Appearance; role?: string; label?: string; interactive: boolean; objKind?: string; danger?: string;
   bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; fugitive?: boolean;

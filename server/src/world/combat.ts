@@ -8,6 +8,7 @@ import type { Entity } from './entity.js';
 import type { Survival } from './survival.js';
 import { ambientBrain } from './npc.js';
 import { districtProfile } from './crowds.js';
+import { TacticalAI, tacticalProfile, type Point } from './tactics.js';
 import { GameError } from '../game/effects.js';
 import { NET_RANKS, aimOf, chromeParts, effective, perkMods, skillLevel, weaponFits, type PlayerState } from '../game/player.js';
 import { recordActivity } from '../game/records.js';
@@ -23,11 +24,16 @@ type Src = { name: string; charId?: string; npc?: Entity; police?: boolean };
 export class Combat {
   /** Comparte el generador de la supervivencia (las pruebas lo fijan para ser deterministas). */
   rng: () => number = () => this.sv.rng();
+  private readonly squadAlerts = new WeakMap<Entity, number>();
   private atmCooldown = new Map<string, number>();
   private respawnQueue: { at: number; zone: string; template: Record<string, unknown> }[] = [];
   private rescues = new Map<string, { at: number; team: number[]; plan: string }>();
 
-  constructor(private w: World, private sv: Survival) {}
+  readonly tactics: TacticalAI;
+
+  constructor(private w: World, private sv: Survival) {
+    this.tactics = new TacticalAI((npc, x, y) => w.npcPath(npc, x, y, true), (shooter, target) => this.coverOf(shooter, target));
+  }
   private get c() { return this.w.c; }
   /** v0.35 · Lleva un arma empuñada (las integradas en el cuerpo no cuentan). */
   weaponDrawn(p: PlayerState) { return !!(p.equipped && !effective(this.c, p).integrated.includes(p.equipped)); }
@@ -530,7 +536,7 @@ export class Combat {
   }
   /** Cobertura del objetivo frente al tirador: total (+6 a su defensa) o parcial (+3). */
   private coverMaps = new WeakMap<object, Map<number, number>>();
-  coverOf(shooter: Entity, target: Entity): number {
+  coverOf(shooter: Point, target: Point & { zone: Zone }): number {
     const z = target.zone;
     let m = this.coverMaps.get(z.def);
     if (!m) {
@@ -1262,20 +1268,13 @@ export class Combat {
       const t = this.w.entities.get(e.aggro);
       const tp = t ? this.w.playerOf(t) : undefined;
       if (t && !tp && t.kind === 'npc') return this.npcVsNpc(e, t);
-      const hidden = tp && ((tp.buffs.invisible ?? 0) > now || (tp.buffs.senuelo ?? 0) > now);
-      if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || hidden || (e.npcType === 'police' && !e.prisonStaff && tp.wanted < 1)) { e.aggro = undefined; if (e.label !== 'Patrullando') { e.label = e.npcType === 'police' ? 'Patrullando' : ''; this.bump(e); } return false; }
-      const wp = this.npcWeapon(e);
-      const dist = Math.hypot(t.x - e.x, t.y - e.y);
-      const inRange = dist <= wp.w.range - 0.2 && (wp.w.kind === 'melee' || lineWalkable(e.zone.grid, e.x, e.y, t.x, t.y));
-      if (e.label !== 'En combate') { e.label = 'En combate'; this.bump(e); }
-      if (!inRange) {
-        if (!e.path.length || (e.nextPathAt ?? 0) < now) {
-          e.nextPathAt = now + 1500;
-          if (this.w.npcPath(e, t.x, t.y) && e.path.length > 1) e.path.pop();
-        }
-        return true;
+      const hidden = !!(tp && ((tp.buffs.invisible ?? 0) > now || (tp.buffs.senuelo ?? 0) > now));
+      if (!t || t.zone !== e.zone || !tp || tp.status !== 'alive' || e.npcType === 'police' && !e.prisonStaff && tp.wanted < 1) {
+        this.endNpcEngagement(e);
+        return false;
       }
-      e.path = []; e.moving = false;
+      const wp = this.npcWeapon(e);
+      if (!this.npcReady(e, t, wp.w, now, hidden)) return e.aggro !== undefined;
       if ((e.nextAttackAt ?? 0) <= now) {
         e.nextAttackAt = now + (wp.w.cooldown * 1000 * 1.3) / (e.timeScale ?? 1);
         const a = this.npcAttackScore(e) + this.roll(), d = this.defenseScore(tp) + this.roll();
@@ -1327,26 +1326,72 @@ export class Combat {
     return false;
   }
 
+  private endNpcEngagement(e: Entity) {
+    e.aggro = undefined;
+    this.tactics.forget(e);
+    e.path = [];
+    e.moving = false;
+    e.lastMoveTick = this.w.tick;
+    const label = e.npcType === 'police' ? 'Patrullando' : e.npcType === 'psycho' ? 'Fuera de control' : '';
+    if (e.label !== label) { e.label = label; this.bump(e); }
+  }
+
+  private npcReady(e: Entity, target: Entity, weapon: WeaponDef, now: number, hidden = false) {
+    const decision = this.tactics.plan(e, target, weapon, now, hidden);
+    if (!hidden && decision && decision !== 'end') this.alertSquad(e, target, now);
+    if (decision === 'end' || hidden && !decision) {
+      this.endNpcEngagement(e);
+      return false;
+    }
+    if (decision && decision !== 'attack') return false;
+    if (!decision) {
+      const dist = Math.hypot(target.x-e.x,target.y-e.y);
+      if (dist > weapon.range - .2 || weapon.kind !== 'melee' && !lineWalkable(e.zone.grid, e.x,e.y,target.x,target.y)) {
+        if (!e.path.length || (e.nextPathAt ?? 0) < now) {
+          e.nextPathAt = now + 1500;
+          if (this.w.npcPath(e,target.x,target.y) && e.path.length > 1) e.path.pop();
+        }
+        return false;
+      }
+    }
+    if (e.label !== 'En combate') { e.label = 'En combate'; this.bump(e); }
+    e.path = [];
+    e.moving = false;
+    if (decision) {
+      this.tactics.aim(e, target);
+      e.lastMoveTick = this.w.tick;
+    }
+    return true;
+  }
+
+  private alertSquad(e: Entity, target: Entity, now: number) {
+    if (!e.faction || target.kind !== 'player' || now < (this.squadAlerts.get(e) ?? 0)) return;
+    const profile = tacticalProfile(e), point = this.tactics.observation(e, target.id, now);
+    if (!profile || !point || dangerAt(target.zone.grid, point.x, point.y) === 'protected') return;
+    this.squadAlerts.set(e, now + 6500);
+    const nearby = e.zone.query(e.x, e.y, profile === 'police' ? 17 : 12)
+      .filter(ally => ally !== e && ally.aggro === undefined && !ally.dead && ally.state !== 'downed' &&
+        ally.faction === e.faction && tacticalProfile(ally) === profile &&
+        (ally.fleeUntil ?? 0) <= now && (!this.w.cityPeople.has(ally) || this.w.cityPeople.isWorking(ally)))
+      .sort((a,b) => Math.hypot(a.x-e.x,a.y-e.y) - Math.hypot(b.x-e.x,b.y-e.y)).slice(0, 2);
+    for (const ally of nearby) {
+      ally.aggro = target.id;
+      ally.aggroLethal = e.aggroLethal;
+      ally.path = [];
+      ally.moving = false;
+      this.tactics.report(ally, target, point, now);
+    }
+  }
+
   /** v0.7 · PNJ contra PNJ: maleantes que atacan a civiles, policía contra criminales, ciberpsicópatas contra todo. */
   private npcVsNpc(e: Entity, t: Entity): boolean {
     const now = Date.now();
-    if (t.zone !== e.zone || t.state === 'downed' || t.dead || Math.hypot(t.x - e.x, t.y - e.y) > 30) {
-      e.aggro = undefined;
-      if (e.label === 'En combate' || e.label === 'Atacando') { e.label = e.npcType === 'police' ? 'Patrullando' : e.npcType === 'psycho' ? 'Fuera de control' : ''; this.bump(e); }
+    if (t.zone !== e.zone || t.state === 'downed' || t.dead || Math.hypot(t.x - e.x, t.y - e.y) > 30 && !tacticalProfile(e)) {
+      this.endNpcEngagement(e);
       return false;
     }
     const wp = this.npcWeapon(e);
-    const dist = Math.hypot(t.x - e.x, t.y - e.y);
-    const inRange = dist <= wp.w.range - 0.2 && (wp.w.kind === 'melee' || lineWalkable(e.zone.grid, e.x, e.y, t.x, t.y));
-    if (e.label !== 'En combate') { e.label = 'En combate'; this.bump(e); }
-    if (!inRange) {
-      if (!e.path.length || (e.nextPathAt ?? 0) < now) {
-        e.nextPathAt = now + 1500;
-        if (this.w.npcPath(e, t.x, t.y) && e.path.length > 1) e.path.pop();
-      }
-      return true;
-    }
-    e.path = []; e.moving = false;
+    if (!this.npcReady(e, t, wp.w, now)) return e.aggro !== undefined;
     if ((e.nextAttackAt ?? 0) > now) return true;
     e.nextAttackAt = now + (wp.w.cooldown * 1000 * 1.3) / (e.timeScale ?? 1);
     const kind = wp.w.kind === 'ranged' ? 'shot' : 'hit';

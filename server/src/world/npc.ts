@@ -1,13 +1,15 @@
 // Cerebros de PNJ: lógica compartida con parámetros (horario, deambular, multitud). Decisiones escalonadas a 4 Hz cerca y 1 Hz lejos.
-import { facingToIdx, nearestWalkable, pedestrianGrid, seededRng, isWalkable, type NpcDef } from '@vertice/shared';
+import { facingToIdx, nearestWalkable, pedestrianGrid, seededRng, type NpcDef } from '@vertice/shared';
 import type { Entity } from './entity.js';
 import type { World } from './world.js';
+import { nextPedestrianStop, type LocalRoute } from './pedestrian-routes.js';
 
 export type NpcState = 'rest' | 'travel' | 'work' | 'talk' | 'alert' | 'search' | 'combat' | 'retreat';
 
 export interface NpcBrain {
   type: 'scheduled' | 'ambient';
   localCrowd?: boolean;
+  route?: LocalRoute;
   state: NpcState;
   nextThink: number;
   def?: NpcDef;
@@ -126,18 +128,10 @@ function thinkAmbient(w: World, e: Entity) {
     setState(w, e, label === 'Charlando' ? 'talk' : 'rest', label);
     return;
   }
-  let tx: number, ty: number;
-  if (b.home) {
-    const r = b.radius ?? 10;
-    const p = nearestWalkable(e.zone.grid, b.home[0] + (b.rng() * 2 - 1) * r, b.home[1] + (b.rng() * 2 - 1) * r, 3);
-    if (!p) return;
-    tx = p.x; ty = p.y;
+  const stop = nextPedestrianStop(e);
+  if (stop && w.npcPath(e, ...stop)) {
+    setState(w, e, 'travel', e.npcType === 'police' ? 'Patrullando' : 'Paseando');
   } else {
-    const wps = e.zone.def.waypoints;
-    if (!wps.length) return;
-    const wp = wps[Math.floor(b.rng() * wps.length)];
-    tx = wp[0] + 0.5 + (b.rng() - 0.5) * 0.8; ty = wp[1] + 0.5 + (b.rng() - 0.5) * 0.8;
-    if (!isWalkable(e.zone.grid, tx, ty)) { tx = wp[0] + 0.5; ty = wp[1] + 0.5; }
+    b.pauseUntil = w.tick + 7 + e.id % 13;
   }
-  if (w.npcPath(e, tx, ty)) setState(w, e, 'travel', 'Paseando');
 }

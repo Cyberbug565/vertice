@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { GROUND_TYPES, isWalkable, pedestrianGrid, RULES, type ServerMsg } from '@vertice/shared';
 import { BotClient } from '../../tools/loadtest/src/botclient.js';
+import { MAX_CIVILIANS } from '../src/world/crowds.js';
 import { createApp } from '../src/app.js';
 import { effective, loadPlayer, wornAppearance } from '../src/game/player.js';
 
@@ -47,7 +48,7 @@ it('concentra población cerca de los jugadores, comparte grupos y libera zonas 
     const center = near(223.5, 152.5), outer = near(415.5, 365.5);
     expect(center.length).toBeGreaterThan(10);
     expect(center.length).toBeGreaterThan(outer.length * 2);
-    expect(extra().length).toBeLessThanOrEqual(180);
+    expect(extra().length).toBeLessThanOrEqual(MAX_CIVILIANS);
     const pavement = pedestrianGrid(city.grid, 'stop');
     expect(extra().filter(e => e.zone === city).every(e => isWalkable(pavement, e.x, e.y) &&
       ['sidewalk', 'plaza', 'market'].includes(GROUND_TYPES[city.grid.ground[Math.floor(e.y) * city.grid.w + Math.floor(e.x)]]))).toBe(true);
