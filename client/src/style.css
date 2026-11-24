@@ -736,3 +736,41 @@ body.hack-mode canvas { cursor: crosshair !important; filter: hue-rotate(-12deg)
 .dance-overlay { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }
 .dance-gestures { display:flex; gap:.7rem; justify-content:center; z-index:1; }
 .dance-gestures span { margin-right:.35em; }
+
+/* v0.38 · Ajustes → Interfaz en pantalla: lo apagado se oculta. */
+html[data-hide~="help"] .actionline.is-help,
+html[data-hide~="stats"] .hud-stats,
+html[data-hide~="needs"] .hud-needs,
+html[data-hide~="minimap"] #minimap,
+html[data-hide~="stealth"] #stealth-bar,
+html[data-hide~="place"] .hud-place,
+html[data-hide~="net"] .hud-net,
+html[data-hide~="panels"] .toolbar.panels,
+html[data-hide~="chatLocal"] .chat:not(.chat-global),
+html[data-hide~="chatGlobal"] .chat-global,
+html[data-hide~="body"] .body-panel,
+html[data-hide~="weapon"] .hud-weapon,
+html[data-hide~="abilities"] .hud-abilities,
+html[data-hide~="xp"] .xp-pops,
+html[data-hide~="toasts"] .toasts .toast:not(.bad) { display: none !important; }
+html[data-hide~="labels"] .toolbar.actions .ibtn .lbl { display: none; }
+html[data-hide~="labels"] .toolbar.actions .ibtn { min-width: 0; padding-left: 8px; padding-right: 8px; }
+.actionline:empty { display: none; }
+/* v0.38 · Datos del escáner (Interfaz) en la etiqueta flotante. */
+.tooltip .scan-row { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 2px; }
+.tooltip .scan-chip { font-size: 0.72em; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid #5a5a78; border-radius: 3px; padding: 0 5px; color: #c8c8d8; }
+.tooltip .scan-line { font-size: 0.82em; line-height: 1.35; }
+.tooltip .scan-more { font-size: 0.72em; color: #8a8aa8; margin-top: 3px; font-style: italic; }
+.hud-settings { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2px 14px; }
+.hud-settings h4 { grid-column: 1 / -1; margin: 8px 0 2px; color: var(--cy, #43f3ff); font-size: 0.8em; letter-spacing: 0.1em; text-transform: uppercase; }
+.hud-file { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 4px; font-size: 0.78em; cursor: pointer; pointer-events: auto; }
+.hud-file:empty { display: none; }
+.hud-file .flabel { font-size: 0.8em; letter-spacing: 0.14em; color: #8a8aa8; }
+.hud-file .ftag { border: 1px solid #4a4a66; border-radius: 3px; padding: 0 5px; }
+.hud-file .ftag.ok { color: #5aff8a; border-color: #2f7a4a; }
+.hud-file .ftag.bad { color: #ff5060; border-color: #8a2a34; }
+.hud-file .ftag.warn { color: #ffb040; border-color: #8a5a20; }
+.hud-file .ftag.good { color: #43f3ff; border-color: #2a6a7a; }
+html[data-hide~="file"] .hud-file { display: none !important; }
+.hud-settings label.row { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+.hud-settings label.row input { flex: 0 0 auto; }

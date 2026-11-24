@@ -417,7 +417,11 @@ export const ContentSchema = z.object({
   attributes: z.array(z.object({ id: z.enum(ATTRIBUTE_IDS), name: z.string(), represents: z.string(), effect: z.string(), example: z.string() })),
   skills: z.array(z.object({ id: z.string(), name: z.string(), attr: z.enum(ATTRIBUTE_IDS) })),
   roles: z.array(RoleSchema),
-  origins: z.array(z.object({ id: z.string(), name: z.string(), desc: z.string(), contact: z.string(), startMoney: z.number().int() })),
+  /** v0.38 · Inicios: dónde empiezas, con qué equipo, qué habilidades y con quién te llevas bien o mal. */
+  origins: z.array(z.object({ id: z.string(), name: z.string(), desc: z.string(), contact: z.string(), startMoney: z.number().int(),
+    start: z.object({ zone: z.string(), at: xy }).optional(), items: z.array(z.tuple([z.string(), z.number().int().positive()])).default([]),
+    skills: z.record(z.string(), z.number().int()).default({}), rep: z.record(z.string(), z.number().int()).default({}),
+    ventaja: z.string().default(''), dificultad: z.enum(['facil', 'normal', 'dificil']).default('normal') })),
   factions: z.array(z.object({
     id: z.string(), name: z.string(), kind: z.enum(['gang', 'service', 'authority', 'corp', 'contact', 'neighborhood']), desc: z.string(),
     color: z.string().default('#9a9ac0'), archetype: z.string().default(''), territory: z.array(z.string()).default([]), relations: z.record(z.string(), z.number()).default({}),

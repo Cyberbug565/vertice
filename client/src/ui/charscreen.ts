@@ -1,6 +1,6 @@
 // v0.4 · Pantalla de personaje a pantalla completa: inventario con huecos de ropa y armas, ciberware sobre la silueta,
 // habilidades 1–25 con barras de experiencia y árbol de perks.
-import { MATRICES, RARITY_COLOR, RARITY_LABEL, bodyKindOf, hashString, type CharacterSheet } from '@vertice/shared';
+import { MATRICES, RARITY_COLOR, RARITY_LABEL, bodyKindOf, hashString, HARD_SKILLS, SCAN_TIERS, skillPointCost, type CharacterSheet, type DossierView } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
 import { $ui, fmtMoney, h, ask } from './dom';
@@ -11,7 +11,7 @@ import { blip } from '../audio';
 import { recordPanel } from './record';
 
 export interface CharCtx { net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
-type Tab = 'inv' | 'cyber' | 'skills' | 'sheet';
+type Tab = 'inv' | 'cyber' | 'skills' | 'sheet' | 'net';
 
 const RARITY: Record<string, { name: string; color: string }> = {
   comun: { name: 'Común', color: '#9a9ac0' }, 'poco-comun': { name: 'Poco común', color: '#5affc8' }, raro: { name: 'Raro', color: '#43a8ff' },
@@ -31,17 +31,20 @@ const REGIONS: { id: string; name: string; slots: number; side: 'l' | 'r'; y: nu
   { id: 'manos', name: 'Manos y dedos', slots: 6, side: 'r', y: 3 }, { id: 'circulatorio', name: 'Circulatorio', slots: 4, side: 'r', y: 4 }, { id: 'tegumentario', name: 'Piel', slots: 3, side: 'r', y: 5 },
 ];
 
-const st: { tab: Tab; filter: string; skill: string; preview: { el: HTMLElement; show: (ap: any, chrome: string[], weapon?: string) => Promise<void> | void } | null; ctx: CharCtx | null; sheet: CharacterSheet | null } = { tab: 'inv', filter: 'todo', skill: 'armas', preview: null, ctx: null, sheet: null };
+const st: { tab: Tab; filter: string; skill: string; preview: { el: HTMLElement; show: (ap: any, chrome: string[], weapon?: string) => Promise<void> | void } | null; ctx: CharCtx | null; sheet: CharacterSheet | null; dossier?: DossierView } = { tab: 'inv', filter: 'todo', skill: 'armas', preview: null, ctx: null, sheet: null };
 
 export const charScreenOpen = () => !!document.getElementById('char-screen');
 export function closeCharScreen() { document.getElementById('char-screen')?.remove(); hideTip(); }
 
 export function openCharScreen(ctx: CharCtx, sheet: CharacterSheet, tab: Tab) {
+  if (tab === 'net') ctx.net.send({ t: 'dossier', seq: 0, action: 'view' } as any);
   if (charScreenOpen() && st.tab === tab) { closeCharScreen(); return; }
   st.ctx = ctx; st.sheet = sheet; st.tab = tab; cyberNet = ctx.net;
   render();
 }
 export function refreshCharScreen(sheet: CharacterSheet) { st.sheet = sheet; if (charScreenOpen()) render(); }
+/** v0.38 · Llega tu expediente (pestaña Interfaz). */
+export function setDossier(v: DossierView) { st.dossier = v; if (charScreenOpen() && st.tab === 'net') render(); }
 
 function bar(cur: number, max: number, color: string, cls = 'xpbar') {
   return h('div', { class: cls }, h('i', { style: { width: `${Math.max(0, Math.min(100, (100 * cur) / Math.max(1, max)))}%`, background: color } }));
@@ -52,17 +55,18 @@ function render() {
   const old = document.getElementById('char-screen');
   const scroll = old?.querySelector('.cs-body')?.scrollTop ?? 0;
   const xpIn = s.xp - s.xpLevelStart, xpNeed = s.xpNext - s.xpLevelStart;
-  const tabBtn = (id: Tab, label: string, badge?: number) => h('button', { class: `cs-tab${st.tab === id ? ' on' : ''}`, onclick: () => { st.tab = id; render(); } }, label, badge ? h('span', { class: 'cs-badge' }, String(badge)) : null);
+  const tabBtn = (id: Tab, label: string, badge?: number) => h('button', { class: `cs-tab${st.tab === id ? ' on' : ''}`, id: `cs-tab-${id}`, onclick: () => { st.tab = id; if (id === 'net') ctx.net.send({ t: 'dossier', seq: 0, action: 'view' } as any); render(); } }, label, badge ? h('span', { class: 'cs-badge' }, String(badge)) : null);
   const head = h('div', { class: 'cs-head' },
     h('div', { class: 'cs-level' }, h('div', { class: 'cs-lvnum' }, String(s.level)), h('div', {}, h('div', { class: 'cs-lvlabel' }, 'NIVEL'), bar(xpIn, xpNeed, 'var(--xp)'), h('div', { class: 'mono small muted' }, `${xpIn}/${xpNeed} XP`))),
     h('div', { class: 'cs-cred' }, h('div', { class: 'cs-lvlabel' }, 'REP. CALLE'), h('b', {}, String(s.streetRep))),
-    h('nav', { class: 'cs-tabs' }, tabBtn('inv', 'Inventario'), tabBtn('cyber', 'Ciberware'), tabBtn('skills', 'Habilidades', s.skillPoints + s.perkPoints), tabBtn('sheet', 'Ficha')),
+    h('nav', { class: 'cs-tabs' }, tabBtn('inv', 'Inventario'), tabBtn('cyber', 'Ciberware'), tabBtn('skills', 'Habilidades', s.skillPoints + s.perkPoints), tabBtn('sheet', 'Ficha'), tabBtn('net', 'Interfaz', st.dossier?.offers.length)),
     h('div', { class: 'cs-money' }, h('span', { class: 'mono' }, fmtMoney(s.money)), h('span', { class: `mono small ${s.encumbrance !== 'normal' ? 'netbad' : 'muted'}` }, `Carga ${s.carry}/${s.carryMax} kg`)),
     h('button', { class: 'btn small', onclick: closeCharScreen, title: 'Cerrar (Esc)' }, '✕'));
   const body = h('div', { class: 'cs-body' });
   if (st.tab === 'inv') body.append(invTab(s, ctx));
   else if (st.tab === 'cyber') body.append(cyberTab(s));
   else if (st.tab === 'skills') body.append(skillsTab(s, ctx));
+  else if (st.tab === 'net') body.append(netTab(s, ctx));
   else body.append(sheetTab(s));
   const scr = h('div', { class: 'cs', id: 'char-screen', role: 'dialog', 'aria-label': 'Personaje' }, head, body);
   if (old) old.replaceWith(scr); else $ui().append(scr);
@@ -291,7 +295,8 @@ function skillsTab(s: CharacterSheet, ctx: CharCtx) {
       h('div', { class: 'row', style: { justifyContent: 'space-between', alignItems: 'baseline' } }, h('span', { class: 'sk-lv' }, String(sk.level), h('small', {}, '/25')), h('span', { class: 'mono small' }, `+${sk.bonus} a tiradas`)),
       bar(max ? 1 : cur, max ? 1 : need, max ? 'linear-gradient(90deg,#ffbf00,#ff3fa4)' : 'var(--xp)'),
       h('div', { class: 'row small', style: { justifyContent: 'space-between' } }, h('span', { class: 'mono muted' }, max ? 'DOMINIO' : `${cur}/${need} XP`), h('span', { class: 'muted' }, `perks ${owned}/${perksHere.length}`),
-        s.skillPoints > 0 && sk.level < 20 ? h('button', { class: 'btn small primary', title: 'Invertir un punto de habilidad', onclick: (ev: Event) => { ev.stopPropagation(); net.send({ t: 'skillUp', skill: sk.id, opId: newOpId() } as any); blip('good'); } }, '+') : null));
+        s.skillPoints >= skillPointCost(sk.id, sk.level) && sk.level < 20 ? h('button', { class: 'btn small primary', title: skillPointCost(sk.id, sk.level) > 1 ? `Cuesta ${skillPointCost(sk.id, sk.level)} puntos de habilidad (habilidad difícil)` : 'Invertir un punto de habilidad', onclick: (ev: Event) => { ev.stopPropagation(); net.send({ t: 'skillUp', skill: sk.id, opId: newOpId() } as any); blip('good'); } }, skillPointCost(sk.id, sk.level) > 1 ? '+ (2)' : '+') : null),
+      HARD_SKILLS[sk.id] ? h('div', { class: 'small', style: { color: '#ffbf00' } }, '◆ Difícil de subir: más valiosa') : null);
   });
   const branch = st.skill;
   const perks = content.perks.filter((p) => p.skill === branch || (branch === 'general' && p.skill === 'general'));
@@ -323,6 +328,57 @@ function skillsTab(s: CharacterSheet, ctx: CharCtx) {
     h('div', { class: 'pk-tree' }, ...tiers));
 }
 
+// ---------------------------------------------------------------- v0.38 · Interfaz: lo que la ciudad sabe de ti
+function netTab(_s: CharacterSheet, ctx: CharCtx) {
+  const v = st.dossier, net = ctx.net;
+  if (!v) return h('p', { class: 'muted' }, 'Conectando con las bases de datos de la ciudad…');
+  const send = (action: string, offer?: string) => { net.send({ t: 'dossier', seq: 0, action, offer } as any); blip('step'); };
+  const row = (k: string, val: unknown) => h('tr', {}, h('td', { class: 'muted' }, k), h('td', {}, val as any));
+  const locked = (lvl: number) => h('span', { class: 'muted small' }, `🔒 Interfaz ${lvl}`);
+  const T = (i: number) => SCAN_TIERS[i].level;
+  const tiers = h('table', { class: 'sheet small' }, ...SCAN_TIERS.map((t, i) => h('tr', { style: { opacity: i <= v.tier ? '1' : '0.45' } },
+    h('td', { class: 'mono' }, `${i <= v.tier ? '▣' : '▢'} ${t.level}`), h('td', {}, h('b', {}, t.name)), h('td', {}, t.people), h('td', { class: 'muted' }, t.self))));
+  const file = h('table', { class: 'sheet' },
+    row('¿Te busca la PCV?', v.wanted ? h('b', { class: 'bad' }, 'Sí') : 'No'),
+    row('Nivel de búsqueda', v.tier >= 1 ? String(v.wantedLevel ?? 0) : locked(T(1))),
+    row('Precio por tu cabeza', v.tier >= 2 ? (v.bounty ? h('b', { class: 'bad' }, fmtMoney(v.bounty)) : 'Ninguno') : v.tier >= 1 ? (v.bountyApprox ?? 'Ninguno') : locked(T(1))),
+    row('La PCV se olvida en', v.tier >= 2 ? (v.decayMin ? `~${v.decayMin} min` : '—') : locked(T(2))),
+    row('Descripción de testigos', v.tier >= 2 ? (v.description ? h('span', {}, `«${v.description.crime}» · ${v.description.minutes} min · `, v.description.matches ? h('b', { class: 'bad' }, 'tu ropa coincide') : h('span', { class: 'netok' }, 'te has cambiado: ya no encajas')) : 'Ninguna') : locked(T(2))),
+    row('Cara', v.tier >= 2 ? (v.faceCovered ? 'Tapada' : 'Al descubierto') : locked(T(2))),
+    row('Quién paga por ti', v.tier >= 3 ? (v.bountyBy?.length ? h('div', {}, ...v.bountyBy.map((b) => h('div', {}, b))) : 'Nadie') : locked(T(3))),
+    row('Antecedentes públicos', v.tier >= 3 ? (v.record?.length ? h('div', {}, ...v.record.map((b) => h('div', {}, b))) : 'Limpio') : locked(T(3))),
+    row('Te están cazando', v.tier >= 4 ? (v.hunters?.length ? h('div', { class: 'bad' }, ...v.hunters.map((b) => h('div', {}, b))) : 'Nadie, que sepas') : locked(T(4))),
+    row('Bandas que te quieren muerto', v.tier >= 4 ? (v.hostile?.length ? v.hostile.join(', ') : 'Ninguna') : locked(T(4))),
+    row('Acceso raíz', v.tier >= 5 ? h('button', { class: 'btn small', disabled: !v.canWipe || !v.description, onclick: () => send('wipe') }, v.canWipe ? 'Borrar la descripción de la base de la PCV' : `Disponible en ${v.wipeInMin} min`) : locked(T(5))));
+  const offers = v.offers.map((o) => h('div', { class: 'fcard', style: { borderTopColor: o.kind === 'corp' ? '#43a8ff' : '#ff3fa4' } },
+    h('b', {}, `${o.factionName} · contrato de red`), h('div', { class: 'small muted' }, `«${o.pitch}»`),
+    h('div', {}, `${fmtMoney(o.bonus)} al firmar + ${fmtMoney(o.daily)} al día durante ${o.days} días de juego · caduca en ${o.expiresInMin} min`),
+    h('div', { class: 'small muted' }, 'Firmar sube tu reputación con ellos y baja la de sus rivales.'),
+    h('div', { class: 'row', style: { gap: '6px', marginTop: '6px' } }, h('button', { class: 'btn small primary', onclick: () => send('accept', o.id) }, 'Firmar'), h('button', { class: 'btn small', onclick: () => send('decline', o.id) }, 'Rechazar'))));
+  return h('div', { class: 'sheet-tab' },
+    h('h3', {}, `Interfaz ${v.interfaz} · ${SCAN_TIERS[v.tier].name}`),
+    h('p', { class: 'muted small' }, 'Tu implante cruza lo que ves con las bases de datos de la ciudad. Cuanto más nivel, más capas: de la gente de alrededor (pasa el ratón por encima) y de ti. Interfaz es de las habilidades más difíciles de subir: la experiencia cunde menos y, desde el nivel 6, cada punto cuesta dos. Por eso bandas, carteles y corporaciones pagan bien a quien la domina (ofertas desde Interfaz 8).'),
+    v.next ? h('div', { class: 'small', style: { color: '#ffbf00' } }, `Siguiente capa en Interfaz ${v.next.level}: ${v.next.unlocks}`) : h('div', { class: 'small netok' }, 'Acceso total.'),
+    h('h3', {}, 'Lo que la ciudad sabe de ti'), file,
+    v.retainer ? h('div', { class: 'fcard', style: { borderTopColor: '#5aff8a', marginTop: '8px' } }, h('b', {}, `Trabajas para ${v.retainer.factionName}`), h('div', {}, `${fmtMoney(v.retainer.daily)} al día · quedan ${v.retainer.left} días · próximo ingreso en ${v.retainer.inMin} min de juego`)) : null,
+    h('h3', {}, 'Ofertas'), offers.length ? h('div', { class: 'cards' }, ...offers) : h('p', { class: 'muted small' }, v.interfaz >= 8 ? 'Ninguna ahora mismo. Llegan al móvil cada cierto tiempo.' : 'Con Interfaz 8 empezarán a llegarte ofertas de trabajo de red.'),
+    h('h3', {}, 'Capas de información'), tiers);
+}
+
+// ---------------------------------------------------------------- v0.38 · préstamo de los Kuro
+function loanCard(s: CharacterSheet) {
+  const l = s.loan!, net = st.ctx!.net;
+  const pay = (amount: number) => { net.send({ t: 'loan', seq: 0, amount, opId: newOpId() } as any); blip('step'); };
+  const hh = Math.floor(l.inMin / 60), mm = l.inMin % 60;
+  return h('div', { class: 'fcard', style: { borderTopColor: l.missed >= 2 ? '#ff3040' : l.missed ? '#ff9a30' : '#c8a24a', marginTop: '8px' } },
+    h('b', {}, `Préstamo de los Kuro · debes ${fmtMoney(l.owed)}`),
+    h('div', {}, `Cuota: ${fmtMoney(l.daily)} cada día de juego · próxima en ${hh ? `${hh} h ` : ''}${mm} min de juego (se cobra sola si la llevas encima)`),
+    l.missed ? h('div', { class: 'bad' }, `${l.missed} cuota${l.missed > 1 ? 's' : ''} impagada${l.missed > 1 ? 's' : ''}${l.hunted ? ' · mercenarios buscándote' : l.missed >= 2 ? ' · los Kuro mandan mercenarios cuando sales a la calle' : ''}`) : null,
+    h('div', { class: 'row', style: { marginTop: '6px', gap: '6px' } },
+      h('button', { class: 'btn small', disabled: s.money < l.daily, onclick: () => pay(l.daily) }, `Pagar una cuota (${fmtMoney(l.daily)})`),
+      h('button', { class: 'btn small', disabled: s.money < l.owed, onclick: () => pay(l.owed) }, `Saldarlo todo (${fmtMoney(l.owed)})`)));
+}
+
 // ---------------------------------------------------------------- ficha
 function sheetTab(s: CharacterSheet) {
   const role = content.roles.find((r) => r.id === s.role);
@@ -342,6 +398,7 @@ function sheetTab(s: CharacterSheet) {
     h('h3', {}, 'Cuerpo y heridas'), bodyBlock(s),
     h('h3', {}, 'Armas encima'),
     h('div', { class: 'attr-grid' }, stat('Largas', `${s.weaponSlots.grande}/${s.weaponSlots.maxGrande}`), stat('Cortas', `${s.weaponSlots.pequena}/${s.weaponSlots.maxPequena}`), stat('Tiro seguro', `${s.aim.range} m`), stat('Apuntar', `${s.aim.time} s`)),
+    s.loan ? loanCard(s) : null,
     s.bio ? h('div', { class: 'fcard', style: { borderTopColor: s.bio.done ? '#5affc8' : '#ffd23f', marginTop: '8px' } }, h('b', {}, `Objetivo vital: ${s.bio.objectiveName}`), h('div', {}, s.bio.done ? '✔ Cumplido (+2 puntos de perk)' : s.bio.progress)) : null,
     s.psychosis ? h('div', { class: 'fcard', style: { borderTopColor: '#ff2020', marginTop: '8px' } }, h('b', { style: { color: 'var(--red)' } }, `🧠 ${s.psychosis}`), h('div', {}, s.psychosis === 'Ciberpsicosis' ? 'Pierdes el control: disparas y atacas sin querer. Quítate cromo en un matasanos y descansa.' : 'Insultas y empujas a la gente sin motivo. Llevas más cromo del que aguantas.')) : null,
     s.chromeDebuff ? h('div', { class: 'fcard', style: { borderTopColor: '#ff9a30', marginTop: '8px' } }, h('b', {}, 'Rechazo del cromo'), h('div', {}, `Capacidad de cromo −${s.chromeDebuff.amount} durante ${s.chromeDebuff.minutes} min.`)) : null,

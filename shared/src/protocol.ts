@@ -78,6 +78,10 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('rescue'), seq, target: z.number().int().nonnegative(), opId }),
   // ---- v0.4
   z.object({ t: z.literal('skillUp'), seq, skill: z.string().max(32), opId }),
+  z.object({ t: z.literal('loan'), seq, amount: z.number().int().positive().max(1_000_000), opId }),
+  // v0.38 · Interfaz: escanear a alguien de cerca, tu expediente, borrar la descripción y ofertas de trabajo de red.
+  z.object({ t: z.literal('look'), target: z.number().int() }),
+  z.object({ t: z.literal('dossier'), seq, action: z.enum(['view', 'wipe', 'accept', 'decline']).default('view'), offer: z.string().max(64).optional() }),
   z.object({ t: z.literal('perkBuy'), seq, perk: z.string().max(48), opId }),
   z.object({ t: z.literal('wear'), seq, slot: z.string().max(16), item: z.string().max(64).nullable(), confirm: z.boolean().optional() }),
   z.object({ t: z.literal('ability'), seq, id: z.string().max(64) }),
@@ -273,6 +277,8 @@ export interface CharacterSheet {
   weaponSlots: { grande: number; pequena: number; maxGrande: number; maxPequena: number };
   aim: { range: number; time: number };
   bio: { objective: string; objectiveName: string; childhood: string; event: string; done: boolean; progress: string } | null;
+  /** v0.38 · Préstamo de los Kuro (si lo tienes): deuda, cuota diaria, minutos de juego hasta la próxima y cuotas impagadas. */
+  loan?: { owed: number; daily: number; inMin: number; missed: number; hunted: boolean };
   identified: { crime: string; district: string } | null;
   psychosis: 'Inquieto' | 'Inestable' | 'Ciberpsicosis' | null;
   psyche: { level: number; episode: { grave: boolean; days: number } | null };
@@ -338,6 +344,8 @@ export type ServerMsg =
   | { t:'motion'; id:number; cue:MotionCue }
   | { t: 'fx'; kind: 'shot' | 'hit' | 'hack' | 'ko' | 'dodge' | 'kick' | 'heavy' | 'wave' | 'alarm'; jump?: boolean; dx?:number; dy?:number; from: number; to: number; part?: string; weapon?: string; hit?: boolean; sever?: boolean; crit?: boolean; burst?: number; x?: number; y?: number; r?: number; ko?: boolean }
   | { t: 'searchResults'; device: 'phone' | 'computer'; results: SearchResult[] }
+  | { t: 'lookInfo'; info: import('./interfaz.js').ScanInfo }
+  | { t: 'dossier'; view: import('./interfaz.js').DossierView }
   | { t: 'gotoTarget'; target: { label: string; zone: string; x: number; y: number } | null }
   | { t: 'trunk'; view: TrunkView }
   | { t: 'ack'; seq: number; ok: boolean; reason?: string; path?: [number, number][]; info?: string }

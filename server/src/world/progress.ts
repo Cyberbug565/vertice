@@ -1,5 +1,5 @@
 // v0.4 · Progresión: habilidades 1–25 que suben con el uso, niveles de personaje, puntos de habilidad y árbol de perks.
-import { SKILL_MAX, SKILL_POINT_CAP, skillLevelForXp, skillXpFor, levelForXp, RULES } from '@vertice/shared';
+import { SKILL_MAX, SKILL_POINT_CAP, skillLevelForXp, skillXpFor, levelForXp, RULES, skillPointCost, skillXpRate } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
 import { buildSheet, perkMods, pointsAvailable, savePlayerVitals, skillLevel, type PlayerState } from '../game/player.js';
 import type { PlayerConn, World } from './world.js';
@@ -23,7 +23,10 @@ export class Progress {
     const pm = perkMods(this.w.c, p);
     const before = skillLevel(p, skill);
     if (before >= SKILL_MAX) return;
-    const gain = Math.max(1, Math.round(amount * (1 + (pm.mods.skillXp ?? 0))));
+    // v0.38 · Interfaz (y las que se marquen como difíciles) cunde menos por uso. Por debajo de 1 punto, se acumula al azar.
+    const raw = amount * (1 + (pm.mods.skillXp ?? 0)) * skillXpRate(skill);
+    const gain = Math.floor(raw) + (Math.random() < raw - Math.floor(raw) ? 1 : 0);
+    if (gain <= 0) return;
     p.skillXp[skill] = Math.min(skillXpFor(SKILL_MAX), (p.skillXp[skill] ?? 0) + gain);
     const after = skillLevelForXp(p.skillXp[skill]);
     const c = this.connOf(p);
@@ -59,11 +62,11 @@ export class Progress {
   async skillUp(c: PlayerConn, skill: string) {
     const p = c.p!;
     if (!this.w.c.skills.some((s) => s.id === skill)) throw new GameError('Habilidad desconocida.');
-    if (pointsAvailable(this.w.c, p).skill <= 0) throw new GameError('No te quedan puntos de habilidad: sube de nivel para ganar más.');
-    const lv = skillLevel(p, skill);
+    const lv = skillLevel(p, skill), cost = skillPointCost(skill, lv);
+    if (pointsAvailable(this.w.c, p).skill < cost) throw new GameError(cost > 1 ? `Desde aquí, cada nivel de ${this.w.c.skills.find((s) => s.id === skill)!.name} cuesta ${cost} puntos de habilidad.` : 'No te quedan puntos de habilidad: sube de nivel para ganar más.');
     if (lv >= SKILL_POINT_CAP) throw new GameError(`Con puntos solo se llega al ${SKILL_POINT_CAP}. Del ${SKILL_POINT_CAP} al ${SKILL_MAX} se sube usando la habilidad.`);
     p.skillXp[skill] = skillXpFor(lv + 1);
-    p.skillPointsSpent++;
+    p.skillPointsSpent += cost;
     await savePlayerVitals(this.w.db, p);
     this.w.send(c, { t: 'notice', kind: 'good', text: `${this.w.c.skills.find((s) => s.id === skill)!.name} sube a ${lv + 1}.` });
     this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });

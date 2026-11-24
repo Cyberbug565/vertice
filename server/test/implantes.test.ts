@@ -54,14 +54,14 @@ it('el lado, el modelo y sus bonificaciones sobreviven a la instalación, retira
       clinic.operate(p, 'sato', 'install', 'stock', ref, randomUUID(), side);
   await buy('cromo-circuito', 'der');
   expect(wornAppearance(c, p).chromeModels).toEqual({ brazo_der: 'circuito' });
-  expect(effective(c, p).carryMax).toBe(ef.carryMax + 3);
+  expect(effective(c, p).carryMax).toBe(ef.carryMax + (c.cyberware.find((d) => d.id === 'cromo-circuito')!.effects.carry ?? 0));
   const cash = p.money;
   await expect(buy('cromo-servo', 'der')).rejects.toThrow(/lado/);
   expect(p.money).toBe(cash);
   await buy('cromo-servo', 'izq');
   const fresh = (await loadPlayer(app.db, p.charId))!;
   expect(wornAppearance(c, fresh).chromeModels).toEqual({ brazo_der: 'circuito', brazo_izq: 'servo' });
-  expect(effective(c, fresh).meleeDmg).toBeCloseTo(ef.meleeDmg + 0.16);
+  expect(effective(c, fresh).meleeDmg).toBeCloseTo(ef.meleeDmg + (c.cyberware.find((d) => d.id === 'cromo-servo')!.effects.meleeDmg ?? 0));
   const installed = fresh.cyber.find((i) => i.def === 'cromo-circuito')!;
   await clinic.operate(fresh, 'sato', 'remove', 'installed', installed.id, randomUUID());
   expect(wornAppearance(c, fresh).chromeModels).toEqual({ brazo_izq: 'servo' });

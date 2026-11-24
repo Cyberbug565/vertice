@@ -1,4 +1,14 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.37)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.38)
+
+La v0.38 reequilibra el arranque y la progresión:
+- **Inicios:** 11 (antes 3), cada uno con su ventaja, su dificultad y su sitio de salida.
+- **Giro «deuda»:** un préstamo de 15.000 €$ de los Kuro a cambio de +5 puntos de habilidad. Cada día de juego se cobra una cuota; si no pagas, mandan mercenarios a matarte.
+- **Ciberware:** 174 implantes con poder y precio acordes a su rareza; los míticos únicos siguen rotos a propósito.
+- **La Tormenta:** se mueve con las animaciones capturadas nuevas.
+- **Interfaz:** decide cuánto ves de la gente de alrededor (persona o PNJ, nivel, actitud, recompensa, antecedentes, cromo, dinero…) y de tu propio expediente (qué sabe la PCV, el precio por tu cabeza, quién te caza). Es de las habilidades más difíciles de subir, y bandas, carteles y corporaciones te ofrecen contratos si la dominas.
+- **HUD:** más limpio, con un panel para elegir qué se ve.
+
+[Novedades](docs/NOVEDADES-v0.38.md) · [equilibrio del ciberware](docs/EQUILIBRIO_CIBERWARE.md).
 
 La v0.37 añade 1.006 diálogos nuevos según la zona: cada barrio habla con su registro (pijo, corporativo, de fiesta, obrero, marginal o del desierto) y los casinos, comisarías, bares, tiendas y clínicas tienen sus propias frases. Hay sátira, humor negro y burlas según la pinta del jugador. Funciona como el sistema de respuestas por reglas de Valve: primero se mira el contexto y luego gana la frase más específica. [Novedades](docs/NOVEDADES-v0.37.md) · [cómo funciona y cómo escribir más](docs/DIALOGOS_ZONA.md).
 

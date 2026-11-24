@@ -107,22 +107,62 @@ export function buildTormenta(neon = '#2fb8ff'): Tormenta {
   return t;
 }
 
-/** Pose del juego (mismos proxies que la persona) + vida propia: halo que gira, alas que respiran, neón que late. */
-export function poseTormenta(m: Tormenta, p: { hips: THREE.Object3D; spine: THREE.Object3D; neck: THREE.Object3D; shP: THREE.Object3D; elP: THREE.Object3D; shM: THREE.Object3D; elM: THREE.Object3D; thP: THREE.Object3D; knP: THREE.Object3D; thM: THREE.Object3D; knM: THREE.Object3D }, t: number) {
-  m.pelvis.rotation.set(p.hips.rotation.x, p.hips.rotation.y, p.hips.rotation.z);
-  m.spine.rotation.set(p.spine.rotation.x, p.spine.rotation.y, 0);
-  m.neck.rotation.set(p.neck.rotation.x, p.neck.rotation.y, 0);
-  m.shL.rotation.set(p.shP.rotation.x, 0, p.shP.rotation.z); m.elL.rotation.set(p.elP.rotation.x, 0, 0);
-  m.shR.rotation.set(p.shM.rotation.x, 0, p.shM.rotation.z); m.elR.rotation.set(p.elM.rotation.x, 0, 0);
-  m.hipL.rotation.set(p.thP.rotation.x, 0, 0); m.knL.rotation.set(p.knP.rotation.x, 0, 0);
-  m.hipR.rotation.set(p.thM.rotation.x, 0, 0); m.knR.rotation.set(p.knM.rotation.x, 0, 0);
+/** v0.38 · Movimiento nuevo: la Tormenta copia la pose del esqueleto humano del piloto (oculto), que mueven los clips
+ *  capturados (andar, correr, esquivas, golpes, gestos…), en vez de los proxies antiguos. Cada articulación toma el giro del
+ *  hueso respecto a su reposo; en brazos y piernas se corrige además la diferencia entre la pose de reposo del kit y la de la
+ *  armadura (brazos caídos), alineando la dirección de cada segmento. */
+type BoneMap = [joint: keyof Tormenta, bone: string, child: string | null, parent: keyof Tormenta | null, tormDir: [string, string] | null];
+const MAP: BoneMap[] = [
+  ['pelvis', 'pelvis', null, null, null], ['spine', 'spine_03', null, 'pelvis', null], ['neck', 'Head', null, 'spine', null],
+  ['shL', 'upperarm_l', 'lowerarm_l', 'spine', ['shL', 'elL']], ['elL', 'lowerarm_l', 'hand_l', 'shL', ['shL', 'elL']],
+  ['shR', 'upperarm_r', 'lowerarm_r', 'spine', ['shR', 'elR']], ['elR', 'lowerarm_r', 'hand_r', 'shR', ['shR', 'elR']],
+  ['hipL', 'thigh_l', 'calf_l', 'pelvis', ['hipL', 'knL']], ['knL', 'calf_l', 'foot_l', 'hipL', ['knL', 'anL']], ['anL', 'foot_l', null, 'knL', null],
+  ['hipR', 'thigh_r', 'calf_r', 'pelvis', ['hipR', 'knR']], ['knR', 'calf_r', 'foot_r', 'hipR', ['knR', 'anR']], ['anR', 'foot_r', null, 'knR', null],
+];
+interface Retarget { align: Map<string, THREE.Quaternion>; base: THREE.Vector3; pelvisRest: THREE.Vector3; k: number }
+const rt = new WeakMap<Tormenta, Retarget>();
+const _q = new THREE.Quaternion(), _r = new THREE.Quaternion(), _v = new THREE.Vector3();
+const world = new Map<string, THREE.Quaternion>();
+export function retargetTormenta(m: Tormenta, h: { root: THREE.Object3D; bones: Map<string, THREE.Bone>; kit: { rest: Map<string, { q: THREE.Quaternion; p: THREE.Vector3 }>; headTop: number } }, t: number) {
+  let R = rt.get(m);
+  if (!R) {
+    const align = new Map<string, THREE.Quaternion>();
+    for (const [j, bone, child, , td] of MAP) {
+      const rb = h.kit.rest.get(bone), rc = child ? h.kit.rest.get(child) : undefined;
+      if (!td || !rb || !rc) continue;
+      const kitDir = rc.p.clone().sub(rb.p).normalize();
+      const torDir = new THREE.Vector3(...PIV[td[1]]).sub(new THREE.Vector3(...PIV[td[0]])).normalize();
+      align.set(j, new THREE.Quaternion().setFromUnitVectors(torDir, kitDir));
+    }
+    // De la escala del kit (metros de la persona) a la de la armadura: la cadera de la Tormenta sube y baja en proporción.
+    const k = HEIGHT_M / Math.max(1, h.kit.headTop) / Math.max(1e-3, m.root.scale.y);
+    R = { align, base: m.pelvis.position.clone(), pelvisRest: h.kit.rest.get('pelvis')?.p.clone() ?? new THREE.Vector3(), k };
+    rt.set(m, R);
+  }
+  h.root.updateMatrixWorld(true);
+  const rootInv = h.root.getWorldQuaternion(_r).invert().clone();
+  world.clear();
+  for (const [j, bone, , parent] of MAP) {
+    const b = h.bones.get(bone), rest = h.kit.rest.get(bone), g = m[j] as THREE.Object3D | undefined;
+    if (!b || !rest || !g) continue;
+    // Giro del hueso respecto a su reposo, en el espacio del cuerpo; con la corrección de reposo del segmento.
+    const w = rootInv.clone().multiply(b.getWorldQuaternion(_q)).multiply(_r.copy(rest.q).invert());
+    const al = R.align.get(j); if (al) w.multiply(al);
+    world.set(j, w);
+    const pw = parent ? world.get(parent) : undefined;
+    g.quaternion.copy(pw ? pw.clone().invert().multiply(w) : w);
+  }
+  const pel = h.bones.get('pelvis');
+  if (pel) {
+    pel.getWorldPosition(_v); h.root.worldToLocal(_v);
+    m.pelvis.position.copy(R.base).addScaledVector(_v.sub(R.pelvisRest), R.k);
+  }
   if (m.halo) m.halo.rotation.y = t * 0.6;
   const breathe = Math.sin(t * 1.3) * 0.05;
   if (m.wingL) m.wingL.rotation.y = breathe; if (m.wingR) m.wingR.rotation.y = -breathe;
   m.pulse.value = 0.5 + 0.5 * Math.sin(t * 2.2);
 }
 
-// ------------------------------------------------------------------------------------------------ v0.19 · de placas
 /** Tormenta hecha de placas (sin el modelo de la release): coraza negra con filos azul neón, núcleo de fusión en el
  *  pecho, casco con visor, hombreras, brazos y piernas blindados. Mismas articulaciones y tamaño que el modelo. */
 function buildPlated(neon: string): Tormenta {

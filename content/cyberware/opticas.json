@@ -9,9 +9,9 @@
   "rarity": "raro",
   "capacity": 3,
   "humanity": 2,
-  "price": 4900,
+  "price": 2500,
   "maker": "aurora",
-  "desc": "Telescopio monocular de calle. Distingue movimiento a 30 losetas en un arco de 150°.",
+  "desc": "Telescopio monocular de calle. Visión de 30 losetas en 150°.",
   "effects": {
    "sight": {
     "range": 30,
@@ -31,9 +31,9 @@
   "rarity": "legendario",
   "capacity": 6,
   "humanity": 5,
-  "price": 36500,
+  "price": 25650,
   "maker": "okami",
-  "desc": "Matriz de visión periférica. Cubre 360° y 32 losetas hasta la primera pared.",
+  "desc": "Matriz de visión periférica. Visión de 32 losetas en 360°.",
   "effects": {
    "sight": {
     "range": 32,

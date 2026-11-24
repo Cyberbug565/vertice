@@ -7,7 +7,7 @@
   "grade": 1,
   "capacity": 3,
   "humanity": 1,
-  "price": 450,
+  "price": 700,
   "maker": "teselia",
   "desc": "Reconoce pistas a corta distancia.",
   "effects": {
@@ -28,12 +28,12 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 0,
-  "price": 220,
+  "price": 350,
   "maker": "teselia",
-  "desc": "Prótesis auditiva básica.",
+  "desc": "Prótesis auditiva básica. +2 Percepción.",
   "effects": {
    "skills": {
-    "percepcion": 1
+    "percepcion": 2
    }
   },
   "prosthetic": true,
@@ -49,7 +49,7 @@
   "grade": 1,
   "capacity": 3,
   "humanity": 1,
-  "price": 500,
+  "price": 700,
   "maker": "teselia",
   "desc": "Bloquea escaneos hostiles (hito 2). Hoy: +1 Voluntad efectiva.",
   "effects": {
@@ -69,12 +69,12 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 0,
-  "price": 380,
+  "price": 350,
   "maker": "teselia",
-  "desc": "Sustituye un brazo con funcionalidad normal.",
+  "desc": "Sustituye un brazo con funcionalidad normal. +2 Atletismo.",
   "effects": {
    "skills": {
-    "atletismo": 1
+    "atletismo": 2
    }
   },
   "prosthetic": true,
@@ -88,9 +88,9 @@
   "family": "Brazos y manos",
   "slot": "brazo",
   "grade": 2,
-  "capacity": 5,
+  "capacity": 4,
   "humanity": 2,
-  "price": 1100,
+  "price": 5300,
   "maker": "halcon",
   "desc": "Agarre reforzado: +2 en enfrentamientos y +15 kg de carga.",
   "effects": {
@@ -112,7 +112,7 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 0,
-  "price": 400,
+  "price": 700,
   "maker": "teselia",
   "desc": "Prótesis de pierna fiable.",
   "effects": {
@@ -133,15 +133,15 @@
   "grade": 3,
   "capacity": 6,
   "humanity": 3,
-  "price": 2400,
+  "price": 12800,
   "maker": "halcon",
-  "desc": "+2 MOVE efectivo, evasión breve.",
+  "desc": "Piernas y locomoción. +1 MOVE, +1 Atletismo.",
   "effects": {
    "attrs": {
-    "MOVE": 2
+    "MOVE": 1
    },
    "skills": {
-    "atletismo": 2
+    "atletismo": 1
    }
   },
   "visible": "piernas",
@@ -163,7 +163,7 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 2,
-  "price": 1300,
+  "price": 3700,
   "maker": "halcon",
   "desc": "Protección bajo la piel: +15 salud máxima y blindaje 2.",
   "effects": {
@@ -182,7 +182,7 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 1,
-  "price": 900,
+  "price": 3050,
   "maker": "teselia",
   "desc": "El hambre crece un 40 % más despacio.",
   "effects": {
@@ -204,9 +204,9 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 600,
+  "price": 1000,
   "maker": "teselia",
-  "desc": "La sed crece un 35 % más despacio.",
+  "desc": "Circulatorio y torácico.",
   "effects": {
    "needs": {
     "hunger": 1,
@@ -226,7 +226,7 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 2,
-  "price": 1500,
+  "price": 3050,
   "maker": "teselia",
   "desc": "El cansancio crece un 40 % más despacio.",
   "effects": {
@@ -248,7 +248,7 @@
   "grade": 3,
   "capacity": 6,
   "humanity": 3,
-  "price": 2600,
+  "price": 9500,
   "maker": "teselia",
   "desc": "+1 INT y +1 REF efectivos.",
   "effects": {
@@ -267,16 +267,16 @@
   "family": "Sistema operativo",
   "slot": "so",
   "grade": 3,
-  "capacity": 9,
+  "capacity": 6,
   "humanity": 4,
-  "price": 3200,
+  "price": 11900,
   "maker": "teselia",
-  "desc": "12 RAM y +2 Interfaz: hackeos rápidos más potentes.",
+  "desc": "Sistema operativo. +3 Interfaz, 19 RAM.",
   "effects": {
    "skills": {
-    "interfaz": 2
+    "interfaz": 3
    },
-   "ram": 12
+   "ram": 19
   },
   "visible": "cabeza",
   "region": "so",
@@ -288,13 +288,13 @@
   "family": "Sistema operativo",
   "slot": "so",
   "grade": 3,
-  "capacity": 10,
-  "humanity": 6,
-  "price": 3800,
+  "capacity": 6,
+  "humanity": 5,
+  "price": 10000,
   "maker": "halcon",
-  "desc": "Reflejos acelerados: +3 al atacar y defender.",
+  "desc": "Reflejos acelerados. +8 en enfrentamientos.",
   "effects": {
-   "confront": 3
+   "confront": 8
   },
   "visible": "cabeza",
   "region": "so",
@@ -305,10 +305,10 @@
   "name": "Sistema de apoyo básico",
   "family": "Sistema operativo",
   "slot": "so",
-  "grade": 1,
+  "grade": 2,
   "capacity": 3,
   "humanity": 1,
-  "price": 700,
+  "price": 4850,
   "maker": "teselia",
   "desc": "Ahorra capacidad: +1 COOL y +1 EMP efectivos.",
   "effects": {
@@ -319,7 +319,7 @@
   },
   "visible": "cabeza",
   "region": "so",
-  "rarity": "comun"
+  "rarity": "raro"
  },
  {
   "id": "ice-aislamiento",
@@ -329,12 +329,12 @@
   "grade": 4,
   "capacity": 7,
   "humanity": 4,
-  "price": 4200,
+  "price": 42800,
   "maker": "teselia",
-  "desc": "Aísla efectos neurales (hito 2). Hoy: +2 WILL.",
+  "desc": "Hoy. +4 WILL.",
   "effects": {
    "attrs": {
-    "WILL": 2
+    "WILL": 4
    }
   },
   "visible": "cabeza",
@@ -349,7 +349,7 @@
   "grade": 4,
   "capacity": 8,
   "humanity": 5,
-  "price": 5200,
+  "price": 42150,
   "maker": "halcon",
   "desc": "+4 al robar y en sigilo.",
   "effects": {
@@ -376,12 +376,12 @@
   "grade": 5,
   "capacity": 9,
   "humanity": 6,
-  "price": 7800,
+  "price": 48300,
   "maker": "okami",
-  "desc": "Mejora la supervivencia en cirugías (+8 %) y +10 salud.",
+  "desc": "Circulatorio y torácico. +21 salud, +17 % de supervivencia en quirófano.",
   "effects": {
-   "hpMax": 10,
-   "surgery": 0.08
+   "hpMax": 21,
+   "surgery": 0.17
   },
   "visible": "torso",
   "region": "circulatorio",
@@ -396,7 +396,7 @@
   "grade": 3,
   "capacity": 6,
   "humanity": 4,
-  "price": 3400,
+  "price": 13950,
   "maker": "halcon",
   "desc": "Hojas retráctiles en el antebrazo: arma cuerpo a cuerpo integrada.",
   "effects": {
@@ -420,12 +420,12 @@
   "grade": 3,
   "capacity": 6,
   "humanity": 3,
-  "price": 2800,
+  "price": 18000,
   "maker": "halcon",
-  "desc": "Brazo hidráulico: golpes brutales y +25 kg de carga.",
+  "desc": "Brazo hidráulico. +1 BODY, +16 kg de carga.",
   "effects": {
    "weapon": "puno-hidraulico-arma",
-   "carry": 25,
+   "carry": 16,
    "attrs": {
     "BODY": 1
    }
@@ -449,7 +449,7 @@
   "grade": 4,
   "capacity": 8,
   "humanity": 5,
-  "price": 5200,
+  "price": 45650,
   "maker": "halcon",
   "desc": "Escopeta oculta en el brazo (usa cartuchos).",
   "effects": {
@@ -473,7 +473,7 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 2,
-  "price": 1400,
+  "price": 4300,
   "maker": "halcon",
   "desc": "Marcado de objetivos: +2 Armas y +1 Percepción. Campo visual de 170° y alcance de 26 losetas.",
   "effects": {
@@ -496,13 +496,13 @@
   "family": "Sistema operativo",
   "slot": "so",
   "grade": 1,
-  "capacity": 4,
+  "capacity": 3,
   "humanity": 1,
-  "price": 900,
+  "price": 500,
   "maker": "teselia",
-  "desc": "6 RAM: permite hackear aunque no seas Netrunner.",
+  "desc": "Sistema operativo. 10 RAM.",
   "effects": {
-   "ram": 6
+   "ram": 10
   },
   "visible": "cabeza",
   "region": "so",
@@ -514,9 +514,9 @@
   "family": "Sistema operativo",
   "slot": "so",
   "grade": 5,
-  "capacity": 11,
+  "capacity": 10,
   "humanity": 6,
-  "price": 9800,
+  "price": 45250,
   "maker": "halcon",
   "desc": "20 RAM y +3 Interfaz: el deck de los profesionales.",
   "effects": {
@@ -543,7 +543,7 @@
   "grade": 4,
   "capacity": 8,
   "humanity": 5,
-  "price": 6800,
+  "price": 25000,
   "maker": "halcon",
   "desc": "Acelera tus sinapsis: durante unos segundos todo va a cámara lenta para ti (atacas mucho más rápido y esquivas).",
   "effects": {},
@@ -565,11 +565,11 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 1500,
+  "price": 3950,
   "maker": "teselia",
-  "desc": "Tus reflejos esquivan solos: 12 % de esquiva.",
+  "desc": "Tus reflejos esquivan solos. +17 % de esquiva.",
   "effects": {
-   "dodge": 0.12
+   "dodge": 0.17
   },
   "visible": "ninguna",
   "rarity": "raro"
@@ -583,7 +583,7 @@
   "grade": 5,
   "capacity": 9,
   "humanity": 5,
-  "price": 9500,
+  "price": 27900,
   "maker": "okami",
   "desc": "Un corazón de reserva: una vez cada dos días de juego, si te matan, vuelves a la vida con la mitad de salud.",
   "effects": {},
@@ -600,7 +600,7 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 2,
-  "price": 1600,
+  "price": 2500,
   "maker": "okami",
   "desc": "Libera adrenalina sintética: recuperas un 35 % de salud en 5 s.",
   "effects": {},
@@ -623,7 +623,7 @@
   "grade": 4,
   "capacity": 7,
   "humanity": 4,
-  "price": 5900,
+  "price": 25000,
   "maker": "halcon",
   "desc": "Suelta un pulso que aturde y daña a todos los que tengas a 5 m, sobre todo a los muy cromados.",
   "effects": {},
@@ -646,11 +646,11 @@
   "grade": 3,
   "capacity": 6,
   "humanity": 3,
-  "price": 3900,
+  "price": 12150,
   "maker": "engranajes",
-  "desc": "Propulsores en los gemelos: te lanzas sobre tu objetivo y golpeas con ventaja.",
+  "desc": "Propulsores en los gemelos: te lanzas sobre tu objetivo y golpeas con ventaja. +12 % de velocidad.",
   "effects": {
-   "speed": 0.05
+   "speed": 0.12
   },
   "visible": "piernas",
   "ability": {
@@ -670,7 +670,7 @@
   "grade": 3,
   "capacity": 5,
   "humanity": 3,
-  "price": 3300,
+  "price": 8000,
   "maker": "teselia",
   "desc": "Proyecta un doble tuyo: quien te ataca pierde tu rastro unos segundos.",
   "effects": {},
@@ -692,7 +692,7 @@
   "grade": 4,
   "capacity": 7,
   "humanity": 5,
-  "price": 6100,
+  "price": 25000,
   "maker": "engranajes",
   "desc": "Arma integrada: un látigo de un hilo molecular. Alcance 3 m y corta a varios a la vez.",
   "effects": {
@@ -710,7 +710,7 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 3,
-  "price": 2200,
+  "price": 2500,
   "maker": "engranajes",
   "desc": "Arma integrada: cuchillas bajo las uñas, rápidas y sangrantes.",
   "effects": {
@@ -728,7 +728,7 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 1800,
+  "price": 2500,
   "maker": "halcon",
   "desc": "Arma integrada no letal: una descarga desde la palma te deja noquear sin armas.",
   "effects": {
@@ -746,12 +746,12 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 1,
-  "price": 1700,
+  "price": 4450,
   "maker": "teselia",
-  "desc": "Al pasar el ratón ves el nivel y la salud de cualquiera, y el menú muestra sus estadísticas.",
+  "desc": "Al pasar el ratón ves el nivel y la salud de cualquiera, y el menú muestra sus estadísticas. +2 Percepción.",
   "effects": {
    "skills": {
-    "percepcion": 1
+    "percepcion": 2
    }
   },
   "visible": "ojos",
@@ -767,9 +767,9 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 900,
+  "price": 1100,
   "maker": "teselia",
-  "desc": "Cambia tu voz y tu cara ante las cámaras: tu nivel de búsqueda baja el doble de rápido.",
+  "desc": "Cambia tu voz y tu cara ante las cámaras: tu nivel de búsqueda baja el doble de rápido. +1 Actuación, +1 Negociación.",
   "effects": {
    "skills": {
     "actuacion": 1,
@@ -789,7 +789,7 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 800,
+  "price": 300,
   "maker": "chatarreros",
   "desc": "Un hueco en las costillas: los robos te quitan la mitad.",
   "effects": {},
@@ -804,9 +804,9 @@
   "slot": "esqueleto",
   "region": "esqueleto",
   "grade": 3,
-  "capacity": 7,
+  "capacity": 6,
   "humanity": 3,
-  "price": 4600,
+  "price": 9850,
   "maker": "halcon",
   "desc": "Huesos reforzados: +20 de salud, +20 kg de carga y blindaje 1.",
   "effects": {
@@ -826,12 +826,12 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 2,
-  "price": 1900,
+  "price": 4000,
   "maker": "engranajes",
-  "desc": "+10 de salud y +15 % de daño cuerpo a cuerpo.",
+  "desc": "Esqueleto. +17 salud, +26 % de daño cuerpo a cuerpo.",
   "effects": {
-   "hpMax": 10,
-   "meleeDmg": 0.15
+   "hpMax": 17,
+   "meleeDmg": 0.26
   },
   "visible": "ninguna",
   "rarity": "raro"
@@ -845,13 +845,13 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 750,
+  "price": 350,
   "maker": "aurora",
-  "desc": "Conectas el coche a tu cerebro: +20 % de velocidad al volante y +2 a conducción.",
+  "desc": "Conectas el coche a tu cerebro. +1 Conducción, +14 % de velocidad al volante.",
   "effects": {
-   "carSpeed": 0.2,
+   "carSpeed": 0.14,
    "skills": {
-    "conduccion": 2
+    "conduccion": 1
    }
   },
   "visible": "ninguna",
@@ -866,7 +866,7 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 650,
+  "price": 700,
   "maker": "teselia",
   "desc": "+2 a negociación y +1 a actuación.",
   "effects": {
@@ -887,12 +887,12 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 1200,
+  "price": 3850,
   "maker": "engranajes",
-  "desc": "Cromo a la vista: +2 a intimidación.",
+  "desc": "Cromo a la vista. +5 Intimidación.",
   "effects": {
    "skills": {
-    "intimidacion": 2
+    "intimidacion": 5
    }
   },
   "visible": "cabeza",
@@ -1104,27 +1104,30 @@
   "family": "Acelerador neuromotor",
   "slot": "columna",
   "grade": 5,
-  "capacity": 26,
-  "humanity": 20,
+  "capacity": 22,
+  "humanity": 16,
   "price": 0,
   "maker": "saqueadores",
   "desc": "Prototipo único de un líder de banda que llegó a lo más alto. Zona de 12 m: los demás parecen estatuas. Sustituye la columna. Se activa como habilidad: gasta mucha RAM; sin RAM, quema tu salud. Al apagarlo quedas exhausto. Usarlo mucho acerca la ciberpsicosis.",
   "effects": {
    "attrs": {
-    "REF": 3
+    "REF": 4,
+    "MOVE": 2
    },
    "skills": {},
-   "hpMax": 30,
+   "hpMax": 45,
    "confront": 0,
    "steal": 0,
    "surgery": 0,
    "carry": 0,
-   "ram": 16,
+   "ram": 22,
    "armor": 0,
    "meleeDmg": 0,
-   "speed": 0.18,
+   "speed": 0.24,
    "carSpeed": 0,
-   "dodge": 0.12
+   "dodge": 0.16,
+   "crit": 0.12,
+   "regen": 1
   },
   "region": "esqueleto",
   "rarity": "mitico",
@@ -1177,25 +1180,13 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 900,
+  "price": 500,
   "maker": "aurora",
   "desc": "Zoom óptico ×4 y balance de blancos nocturno. Campo visual de 150° y alcance de 23 losetas.",
   "effects": {
-   "attrs": {},
    "skills": {
     "percepcion": 1
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "sight": {
     "range": 23,
     "degrees": 150
@@ -1214,26 +1205,14 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1100,
+  "price": 350,
   "maker": "teselia",
   "desc": "Resalta siluetas sobre el fondo.",
   "effects": {
-   "attrs": {},
    "skills": {
     "percepcion": 1,
     "armas": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   }
   },
   "region": "ojos",
   "rarity": "comun",
@@ -1248,25 +1227,13 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 3800,
+  "price": 4150,
   "maker": "halcon",
-  "desc": "Visión térmica: marca a los hostiles cercanos aunque estén tras una pared.",
+  "desc": "Visión térmica: marca a los hostiles cercanos aunque estén tras una pared. +3 Percepción.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "percepcion": 3
+   }
   },
   "region": "ojos",
   "rarity": "raro",
@@ -1282,25 +1249,13 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1400,
+  "price": 1900,
   "maker": "chatarreros",
-  "desc": "Intensificador de luz: los callejones oscuros ya no lo son tanto.",
+  "desc": "Intensificador de luz: los callejones oscuros ya no lo son tanto. +3 Percepción.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "percepcion": 3
+   }
   },
   "region": "ojos",
   "rarity": "poco-comun",
@@ -1315,26 +1270,14 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3200,
+  "price": 3850,
   "maker": "aurora",
-  "desc": "Reconoce marcas, falsificaciones y precios de mercado.",
+  "desc": "Reconoce marcas, falsificaciones y precios de mercado. +3 Negociación, +2 Investigación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "negociacion": 2,
-    "investigacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "negociacion": 3,
+    "investigacion": 2
+   }
   },
   "region": "ojos",
   "rarity": "raro",
@@ -1349,22 +1292,10 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 3,
-  "price": 9500,
+  "price": 11350,
   "maker": "teselia",
   "desc": "Lee la tensión muscular de quien te ataca medio segundo antes: +12 % de esquiva. Campo visual de 210° y alcance de 29 losetas.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
    "dodge": 0.12,
    "sight": {
     "range": 29,
@@ -1384,26 +1315,14 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 3,
-  "price": 8200,
+  "price": 12300,
   "maker": "okami",
-  "desc": "Ampliación ×400: suturas y soldaduras perfectas.",
+  "desc": "Óptica. +4 Medicina, +4 Reparación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "medicina": 2,
-    "reparacion": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "medicina": 4,
+    "reparacion": 4
+   }
   },
   "region": "ojos",
   "rarity": "epico",
@@ -1418,25 +1337,13 @@
   "grade": 4,
   "capacity": 6,
   "humanity": 6,
-  "price": 42000,
+  "price": 46400,
   "maker": "halcon",
-  "desc": "Coprocesador balístico de uso militar: el 90 % de tus disparos acierta aunque estés fuera de tu alcance seguro. Campo visual de 300° y alcance de 32 losetas.",
+  "desc": "Coprocesador balístico de uso militar. +2 Armas a distancia, visión de 32 losetas en 300°.",
   "effects": {
-   "attrs": {},
    "skills": {
     "armas": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "sight": {
     "range": 32,
     "degrees": 300
@@ -1456,26 +1363,14 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 5,
-  "price": 36000,
+  "price": 52300,
   "maker": "aurora",
-  "desc": "Ve en el espectro de las cámaras: sabes cuándo te graban y cuándo no. Campo visual de 360° y alcance de 28 losetas.",
+  "desc": "Ve en el espectro de las cámaras: sabes cuándo te graban y cuándo no. +2 Percepción, +1 Sigilo, visión de 28 losetas en 360°.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 3,
+    "percepcion": 2,
     "sigilo": 1
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "sight": {
     "range": 28,
     "degrees": 360
@@ -1495,25 +1390,13 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 0,
-  "price": 600,
+  "price": 500,
   "maker": "chatarreros",
-  "desc": "Silencia el tráfico: duermes y piensas mejor.",
+  "desc": "Silencia el tráfico: duermes y piensas mejor. +2 Percepción.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 1
+    "percepcion": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "needs": {
     "hunger": 1,
     "thirst": 1,
@@ -1533,25 +1416,14 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 1,
-  "price": 700,
+  "price": 350,
   "maker": "engranajes",
-  "desc": "Amplifica los sonidos débiles.",
+  "desc": "Amplifica los sonidos débiles. +2 Percepción, +1 Sigilo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "percepcion": 2,
+    "sigilo": 1
+   }
   },
   "region": "cara",
   "rarity": "comun",
@@ -1566,26 +1438,14 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 1,
-  "price": 2400,
+  "price": 3050,
   "maker": "aurora",
-  "desc": "Traduce jergas de banda en tiempo real.",
+  "desc": "Traduce jergas de banda en tiempo real. +2 Negociación, +2 Actuación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "negociacion": 1,
-    "actuacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "negociacion": 2,
+    "actuacion": 2
+   }
   },
   "region": "cara",
   "rarity": "raro",
@@ -1600,25 +1460,14 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 3,
-  "price": 7600,
+  "price": 12500,
   "maker": "teselia",
-  "desc": "Ecolocalización: oyes los pasos de quien te flanquea.",
+  "desc": "Ecolocalización: oyes los pasos de quien te flanquea. +6 Percepción, +7 % de esquiva.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 3
+    "percepcion": 6
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0.04
+   "dodge": 0.07
   },
   "region": "cara",
   "rarity": "epico",
@@ -1631,28 +1480,16 @@
   "family": "Audio",
   "slot": "oidos",
   "grade": 4,
-  "capacity": 4,
+  "capacity": 5,
   "humanity": 4,
-  "price": 28000,
+  "price": 38750,
   "maker": "okami",
-  "desc": "Recoge conversaciones a cincuenta metros a través de los cristales.",
+  "desc": "Recoge conversaciones a cincuenta metros a través de los cristales. +7 Investigación, +4 Percepción.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "investigacion": 3,
-    "percepcion": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "investigacion": 7,
+    "percepcion": 4
+   }
   },
   "region": "cara",
   "rarity": "legendario",
@@ -1667,23 +1504,12 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 3,
-  "price": 4200,
+  "price": 3900,
   "maker": "engranajes",
-  "desc": "Pistones en el codo: golpeas y cargas más.",
+  "desc": "Pistones en el codo: golpeas y cargas más. +12 kg de carga, +30 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 5,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.12,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "carry": 12,
+   "meleeDmg": 0.3
   },
   "region": "brazos",
   "rarity": "raro",
@@ -1698,25 +1524,13 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 3600,
+  "price": 3850,
   "maker": "halcon",
-  "desc": "Giroscopios que anulan el temblor al apuntar.",
+  "desc": "Giroscopios que anulan el temblor al apuntar. +5 Armas a distancia.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "armas": 5
+   }
   },
   "region": "brazos",
   "rarity": "raro",
@@ -1731,25 +1545,13 @@
   "grade": 3,
   "capacity": 6,
   "humanity": 5,
-  "price": 14000,
+  "price": 11550,
   "maker": "halcon",
-  "desc": "Gatillo neural y cargador en el antebrazo: −30 % de tiempo entre disparos.",
+  "desc": "Gatillo neural y cargador en el antebrazo. +4 Armas a distancia.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "armas": 4
+   }
   },
   "region": "brazos",
   "rarity": "epico",
@@ -1765,23 +1567,11 @@
   "grade": 4,
   "capacity": 7,
   "humanity": 6,
-  "price": 38000,
+  "price": 38550,
   "maker": "engranajes",
-  "desc": "Cada puñetazo lleva una onda de choque: empuja y aturde a quien golpeas.",
+  "desc": "Cada puñetazo lleva una onda de choque: empuja y aturde a quien golpeas. +50 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.3,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.5
   },
   "region": "brazos",
   "rarity": "legendario",
@@ -1797,25 +1587,13 @@
   "grade": 4,
   "capacity": 6,
   "humanity": 5,
-  "price": 40000,
+  "price": 34900,
   "maker": "okami",
-  "desc": "Servos ultrarrápidos: en guardia con un arma blanca desvías el 60 % de las balas.",
+  "desc": "Servos ultrarrápidos. +5 Filo (vivir al límite del cromo).",
   "effects": {
-   "attrs": {},
    "skills": {
-    "filo": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "filo": 5
+   }
   },
   "region": "brazos",
   "rarity": "legendario",
@@ -1831,25 +1609,14 @@
   "grade": 3,
   "capacity": 5,
   "humanity": 5,
-  "price": 12500,
+  "price": 10200,
   "maker": "okami",
-  "desc": "Una segunda hoja retráctil que se suma a la primera.",
+  "desc": "Una segunda hoja retráctil que se suma a la primera. +2 Filo (vivir al límite del cromo), +38 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "filo": 1
+    "filo": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.15,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.38
   },
   "region": "brazos",
   "rarity": "epico",
@@ -1864,23 +1631,11 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 3900,
+  "price": 1550,
   "maker": "chatarreros",
-  "desc": "Placas de acero soldadas a mano.",
+  "desc": "Placas de acero soldadas a mano. Blindaje 2.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "armor": 2
   },
   "region": "brazos",
   "rarity": "poco-comun",
@@ -1895,25 +1650,13 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 4,
-  "price": 9800,
+  "price": 12800,
   "maker": "saqueadores",
-  "desc": "Lanza un cable con garfio: te impulsa hacia tu objetivo.",
+  "desc": "Lanza un cable con garfio: te impulsa hacia tu objetivo. +4 Atletismo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "atletismo": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "atletismo": 4
+   }
   },
   "region": "brazos",
   "rarity": "epico",
@@ -1935,25 +1678,13 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1200,
+  "price": 350,
   "maker": "teselia",
-  "desc": "Microestabilizadores en la muñeca.",
+  "desc": "Microestabilizadores en la muñeca. +2 Armas a distancia.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "armas": 2
+   }
   },
   "region": "manos",
   "rarity": "comun",
@@ -1968,25 +1699,14 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3400,
+  "price": 3850,
   "maker": "okami",
-  "desc": "Pulso de cirujano y bisturí láser retráctil.",
+  "desc": "Pulso de cirujano y bisturí láser retráctil. +4 Medicina, +4 % de supervivencia en quirófano.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "medicina": 2
+    "medicina": 4
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0.02,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "surgery": 0.04
   },
   "region": "manos",
   "rarity": "raro",
@@ -2001,25 +1721,14 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3000,
+  "price": 3700,
   "maker": "saqueadores",
-  "desc": "Yemas sensibles y articulaciones silenciosas.",
+  "desc": "Yemas sensibles y articulaciones silenciosas. +2 Sigilo, +4 al robar.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "sigilo": 1
+    "sigilo": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 2,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "steal": 4
   },
   "region": "manos",
   "rarity": "raro",
@@ -2034,25 +1743,14 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 2800,
+  "price": 1500,
   "maker": "engranajes",
-  "desc": "Sujeta herramientas, armas y puertas de coche.",
+  "desc": "Sujeta herramientas, armas y puertas de coche. +2 Reparación, +8 kg de carga.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "reparacion": 1
+    "reparacion": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 3,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "carry": 8
   },
   "region": "manos",
   "rarity": "poco-comun",
@@ -2067,25 +1765,13 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1600,
+  "price": 1900,
   "maker": "saqueadores",
-  "desc": "Microganchos en las yemas para trepar por cualquier fachada.",
+  "desc": "Microganchos en las yemas para trepar por cualquier fachada. +3 Atletismo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "atletismo": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "atletismo": 3
+   }
   },
   "region": "manos",
   "rarity": "poco-comun",
@@ -2100,23 +1786,11 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 6,
-  "price": 34000,
+  "price": 28600,
   "maker": "okami",
-  "desc": "Microagujas en los nudillos: recuperas salud con cada golpe que das (20 % del daño).",
+  "desc": "Microagujas en los nudillos. +25 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.1,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.25
   },
   "region": "manos",
   "rarity": "legendario",
@@ -2132,23 +1806,11 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 3,
-  "price": 8800,
+  "price": 9400,
   "maker": "teselia",
-  "desc": "Descarga eléctrica en cada golpe: aturde un instante.",
+  "desc": "Descarga eléctrica en cada golpe: aturde un instante. +20 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.08,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.2
   },
   "region": "manos",
   "rarity": "epico",
@@ -2164,23 +1826,11 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 1,
-  "price": 800,
+  "price": 250,
   "maker": "saqueadores",
-  "desc": "La punta del índice se convierte en una ganzúa electrónica.",
+  "desc": "La punta del índice se convierte en una ganzúa electrónica. +2 al robar.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 1,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "steal": 2
   },
   "region": "manos",
   "rarity": "comun",
@@ -2195,25 +1845,13 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 0,
-  "price": 300,
+  "price": 350,
   "maker": "chatarreros",
-  "desc": "Un LED en la yema. Útil en los callejones.",
+  "desc": "Un LED en la yema. Útil en los callejones. +2 Investigación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "investigacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "investigacion": 2
+   }
   },
   "region": "manos",
   "rarity": "comun",
@@ -2228,25 +1866,13 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 1,
-  "price": 900,
+  "price": 350,
   "maker": "teselia",
-  "desc": "Clavija de datos para enchufarte a cualquier terminal.",
+  "desc": "Clavija de datos para enchufarte a cualquier terminal. +2 Interfaz.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "interfaz": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "interfaz": 2
+   }
   },
   "region": "manos",
   "rarity": "comun",
@@ -2261,25 +1887,13 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3800,
+  "price": 3950,
   "maker": "saqueadores",
-  "desc": "Una bala de 5 mm escondida en el meñique: arma integrada silenciosa que los arcos detectores no ven.",
+  "desc": "Dedos. +2 Armas a distancia.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 1
+    "armas": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "weapon": "dedo-pistola-arma"
   },
   "region": "manos",
@@ -2295,25 +1909,14 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 3,
-  "price": 4200,
+  "price": 2700,
   "maker": "okami",
-  "desc": "Aguja retráctil con neurotoxina.",
+  "desc": "Aguja retráctil con neurotoxina. +2 Sigilo, +12 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "sigilo": 1
+    "sigilo": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.05,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.12
   },
   "region": "manos",
   "rarity": "raro",
@@ -2326,26 +1929,12 @@
   "family": "Dedos",
   "slot": "dedos",
   "grade": 3,
-  "capacity": 2,
+  "capacity": 3,
   "humanity": 3,
-  "price": 9200,
+  "price": 8000,
   "maker": "halcon",
   "desc": "Conexión directa con el gatillo: −30 % de tiempo entre disparos.",
-  "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
-  },
+  "effects": {},
   "region": "manos",
   "rarity": "epico",
   "prosthetic": false,
@@ -2358,27 +1947,16 @@
   "family": "Dedos",
   "slot": "dedos",
   "grade": 1,
-  "capacity": 1,
+  "capacity": 2,
   "humanity": 1,
-  "price": 1100,
+  "price": 2250,
   "maker": "saqueadores",
-  "desc": "Un chip clonado de pago sin contacto. No preguntes de quién.",
+  "desc": "Un chip clonado de pago sin contacto. No preguntes de quién. +2 Negociación, +2 al robar.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "negociacion": 1
+    "negociacion": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 1,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "steal": 2
   },
   "region": "manos",
   "rarity": "poco-comun",
@@ -2391,26 +1969,13 @@
   "family": "Dedos",
   "slot": "dedos",
   "grade": 2,
-  "capacity": 1,
+  "capacity": 2,
   "humanity": 1,
-  "price": 2600,
+  "price": 2500,
   "maker": "teselia",
-  "desc": "Una tarjeta de memoria en la falange: +1 de RAM.",
+  "desc": "Una tarjeta de memoria en la falange. +2 RAM máxima.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "ramPlus": 1
+   "ramPlus": 2
   },
   "region": "manos",
   "rarity": "raro",
@@ -2423,27 +1988,16 @@
   "family": "Dedos",
   "slot": "dedos",
   "grade": 3,
-  "capacity": 2,
+  "capacity": 3,
   "humanity": 3,
-  "price": 8600,
+  "price": 8350,
   "maker": "okami",
-  "desc": "Corta como un bisturí molecular.",
+  "desc": "Corta como un bisturí molecular. +2 Filo (vivir al límite del cromo), +25 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "filo": 1
+    "filo": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.1,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.25
   },
   "region": "manos",
   "rarity": "epico",
@@ -2458,25 +2012,14 @@
   "grade": 2,
   "capacity": 4,
   "humanity": 3,
-  "price": 4400,
+  "price": 3600,
   "maker": "engranajes",
-  "desc": "Tendones de acero: corres y saltas más.",
+  "desc": "Tendones de acero: corres y saltas más. +2 Atletismo, +9 % de velocidad.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "atletismo": 1
+    "atletismo": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0.04,
-   "carSpeed": 0,
-   "dodge": 0
+   "speed": 0.09
   },
   "region": "piernas",
   "rarity": "raro",
@@ -2491,23 +2034,11 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1400,
+  "price": 250,
   "maker": "chatarreros",
-  "desc": "Para caer de dos pisos sin romperte nada.",
+  "desc": "Para caer de dos pisos sin romperte nada. +5 % de esquiva.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0.02
+   "dodge": 0.05
   },
   "region": "piernas",
   "rarity": "comun",
@@ -2522,23 +2053,12 @@
   "grade": 3,
   "capacity": 5,
   "humanity": 4,
-  "price": 11000,
+  "price": 11850,
   "maker": "halcon",
-  "desc": "Ruedas de esquiva mucho más largas y que cansan la mitad.",
+  "desc": "Ruedas de esquiva mucho más largas y que cansan la mitad. +7 % de velocidad, +7 % de esquiva.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0.05,
-   "carSpeed": 0,
-   "dodge": 0.05
+   "speed": 0.07,
+   "dodge": 0.07
   },
   "region": "piernas",
   "rarity": "epico",
@@ -2554,23 +2074,11 @@
   "grade": 3,
   "capacity": 5,
   "humanity": 4,
-  "price": 12500,
+  "price": 9500,
   "maker": "aurora",
-  "desc": "Fibra de carbono y músculo artificial: +8 % de velocidad.",
+  "desc": "Fibra de carbono y músculo artificial. +20 % de velocidad.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0.08,
-   "carSpeed": 0,
-   "dodge": 0
+   "speed": 0.2
   },
   "region": "piernas",
   "rarity": "epico",
@@ -2585,25 +2093,13 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 4600,
+  "price": 4150,
   "maker": "okami",
-  "desc": "Articulaciones lubricadas con gel: los PNJ tardan más en oírte llegar.",
+  "desc": "Articulaciones lubricadas con gel: los PNJ tardan más en oírte llegar. +3 Sigilo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "sigilo": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "sigilo": 3
+   }
   },
   "region": "piernas",
   "rarity": "raro",
@@ -2621,21 +2117,10 @@
   "humanity": 3,
   "price": 3900,
   "maker": "engranajes",
-  "desc": "Pistones de carga pesada: nadie te tumba.",
+  "desc": "Pistones de carga pesada: nadie te tumba. Blindaje 2, +17 kg de carga.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 8,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "carry": 17,
+   "armor": 2
   },
   "region": "piernas",
   "rarity": "raro",
@@ -2650,22 +2135,11 @@
   "grade": 4,
   "capacity": 6,
   "humanity": 5,
-  "price": 39000,
+  "price": 36300,
   "maker": "okami",
   "desc": "Aterrizas sin hacer ruido y te mueves como un gato.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
    "speed": 0.1,
-   "carSpeed": 0,
    "dodge": 0.08
   },
   "region": "piernas",
@@ -2684,21 +2158,9 @@
   "humanity": 4,
   "price": 9400,
   "maker": "engranajes",
-  "desc": "Tus patadas lanzan a la gente tres metros.",
+  "desc": "Tus patadas lanzan a la gente tres metros. +20 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.08,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.2
   },
   "region": "piernas",
   "rarity": "epico",
@@ -2714,26 +2176,14 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1500,
+  "price": 350,
   "maker": "teselia",
   "desc": "Haces cuentas de cabeza más rápido que una calculadora.",
   "effects": {
-   "attrs": {},
    "skills": {
     "investigacion": 1,
     "reparacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   }
   },
   "region": "corteza",
   "rarity": "comun",
@@ -2748,25 +2198,13 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 1,
-  "price": 900,
+  "price": 350,
   "maker": "aurora",
-  "desc": "Doce idiomas y treinta jergas callejeras.",
+  "desc": "Doce idiomas y treinta jergas callejeras. +2 Negociación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "negociacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "negociacion": 2
+   }
   },
   "region": "corteza",
   "rarity": "comun",
@@ -2781,26 +2219,14 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 3,
-  "price": 4600,
+  "price": 3050,
   "maker": "halcon",
-  "desc": "Analiza coberturas y líneas de tiro.",
+  "desc": "Analiza coberturas y líneas de tiro. +2 Armas a distancia, +2 Cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 1,
-    "cuerpo": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "armas": 2,
+    "cuerpo": 2
+   }
   },
   "region": "corteza",
   "rarity": "raro",
@@ -2815,25 +2241,12 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 3,
-  "price": 13500,
+  "price": 12300,
   "maker": "teselia",
-  "desc": "Comprime procesos: +3 de RAM y −12 % de gasto de RAM.",
+  "desc": "Comprime procesos. +5 RAM máxima, −20 % de gasto de RAM.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "ramPlus": 3,
-   "ramSave": 0.12
+   "ramPlus": 5,
+   "ramSave": 0.2
   },
   "region": "corteza",
   "rarity": "epico",
@@ -2848,26 +2261,14 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 6,
-  "price": 41000,
+  "price": 31600,
   "maker": "halcon",
-  "desc": "Detecta el punto débil de quien está malherido: doble daño contra objetivos por debajo del 30 % de salud.",
+  "desc": "Detecta el punto débil de quien está malherido. +2 Armas a distancia, +2 Filo (vivir al límite del cromo).",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 1,
-    "filo": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "armas": 2,
+    "filo": 2
+   }
   },
   "region": "corteza",
   "rarity": "legendario",
@@ -2882,26 +2283,14 @@
   "slot": "cortex",
   "grade": 2,
   "capacity": 2,
-  "humanity": 0,
-  "price": 3600,
+  "humanity": 1,
+  "price": 3300,
   "maker": "aurora",
-  "desc": "Regula el cortisol: resistes mejor la ciberpsicosis.",
+  "desc": "Regula el cortisol: resistes mejor la ciberpsicosis. +2 Actuación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "actuacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "actuacion": 2
+   }
   },
   "region": "corteza",
   "rarity": "raro",
@@ -2917,24 +2306,11 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 3,
-  "price": 11000,
+  "price": 11950,
   "maker": "okami",
-  "desc": "Encuentra arterias y articulaciones: +10 % de críticos.",
+  "desc": "Encuentra arterias y articulaciones. +17 % de crítico.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "crit": 0.1
+   "crit": 0.17
   },
   "region": "corteza",
   "rarity": "epico",
@@ -2950,25 +2326,13 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 3,
-  "price": 12000,
+  "price": 12800,
   "maker": "halcon",
-  "desc": "Marca a todos los enemigos cercanos: se ven a través de las paredes y les aciertas mejor.",
+  "desc": "Marca a todos los enemigos cercanos: se ven a través de las paredes y les aciertas mejor. +4 Percepción.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "percepcion": 4
+   }
   },
   "region": "corteza",
   "rarity": "epico",
@@ -2990,25 +2354,13 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1600,
+  "price": 350,
   "maker": "teselia",
-  "desc": "Avisa de amenazas en tu campo visual.",
+  "desc": "Avisa de amenazas en tu campo visual. +2 Percepción.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "percepcion": 2
+   }
   },
   "region": "so",
   "rarity": "comun",
@@ -3023,23 +2375,11 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 4,
-  "price": 12000,
+  "price": 11250,
   "maker": "okami",
-  "desc": "Levanta un escudo de energía que absorbe el próximo daño.",
+  "desc": "Levanta un escudo de energía que absorbe el próximo daño. Blindaje 2.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "armor": 2
   },
   "region": "so",
   "rarity": "epico",
@@ -3061,23 +2401,11 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 4,
-  "price": 11500,
+  "price": 10000,
   "maker": "halcon",
-  "desc": "Sobrecarga las piernas para un salto de seis metros.",
+  "desc": "Sobrecarga las piernas para un salto de seis metros. +7 % de velocidad.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0.03,
-   "carSpeed": 0,
-   "dodge": 0
+   "speed": 0.07
   },
   "region": "so",
   "rarity": "epico",
@@ -3099,24 +2427,11 @@
   "grade": 4,
   "capacity": 6,
   "humanity": 6,
-  "price": 45000,
+  "price": 38900,
   "maker": "teselia",
-  "desc": "Pulso electromagnético que aturde y daña a todos los que te rodean (doble contra cromados).",
+  "desc": "Pulso electromagnético que aturde y daña a todos los que te rodean (doble contra cromados). +5 RAM máxima.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "ramPlus": 2
+   "ramPlus": 5
   },
   "region": "so",
   "rarity": "legendario",
@@ -3138,23 +2453,12 @@
   "grade": 3,
   "capacity": 5,
   "humanity": 4,
-  "price": 13000,
+  "price": 12550,
   "maker": "engranajes",
-  "desc": "Huesos recubiertos de grafeno: +25 de salud.",
+  "desc": "Huesos recubiertos de grafeno. +43 salud, blindaje 2.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 25,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "hpMax": 43,
+   "armor": 2
   },
   "region": "esqueleto",
   "rarity": "epico",
@@ -3169,23 +2473,12 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 3800,
+  "price": 3200,
   "maker": "aurora",
-  "desc": "Huesos huecos de aleación: más ligero y rápido.",
+  "desc": "Huesos huecos de aleación: más ligero y rápido. +7 % de velocidad, +7 % de esquiva.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0.03,
-   "carSpeed": 0,
-   "dodge": 0.03
+   "speed": 0.07,
+   "dodge": 0.07
   },
   "region": "esqueleto",
   "rarity": "raro",
@@ -3200,23 +2493,11 @@
   "grade": 4,
   "capacity": 6,
   "humanity": 5,
-  "price": 39000,
+  "price": 38550,
   "maker": "halcon",
-  "desc": "Placas que se endurecen al impacto: el primer golpe cada 8 s se reduce un 80 %.",
+  "desc": "Placas que se endurecen al impacto. Blindaje 4.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 2,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "armor": 4
   },
   "region": "esqueleto",
   "rarity": "legendario",
@@ -3232,25 +2513,13 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 3200,
+  "price": 3850,
   "maker": "aurora",
-  "desc": "Vértebras de polímero: te contorsionas como un acróbata.",
+  "desc": "Vértebras de polímero: te contorsionas como un acróbata. +5 Atletismo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "atletismo": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "atletismo": 5
+   }
   },
   "region": "esqueleto",
   "rarity": "raro",
@@ -3265,23 +2534,11 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 3400,
+  "price": 1550,
   "maker": "engranajes",
-  "desc": "Soporte vertebral reforzado: +10 kg de carga.",
+  "desc": "Soporte vertebral reforzado. +25 kg de carga.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 10,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "carry": 25
   },
   "region": "esqueleto",
   "rarity": "poco-comun",
@@ -3296,25 +2553,13 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 2,
-  "price": 2900,
+  "price": 1200,
   "maker": "engranajes",
-  "desc": "Rotación completa del hombro.",
+  "desc": "Rotación completa del hombro. +2 Cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "cuerpo": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "cuerpo": 2
+   }
   },
   "region": "brazos",
   "rarity": "poco-comun",
@@ -3329,25 +2574,13 @@
   "grade": 3,
   "capacity": 5,
   "humanity": 4,
-  "price": 10500,
+  "price": 9850,
   "maker": "halcon",
-  "desc": "Minilanzagranadas en la escápula: una carga explosiva a tu alrededor.",
+  "desc": "Minilanzagranadas en la escápula: una carga explosiva a tu alrededor. +2 Armas a distancia.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "armas": 2
+   }
   },
   "region": "brazos",
   "rarity": "epico",
@@ -3369,23 +2602,10 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 3,
-  "price": 10000,
+  "price": 11550,
   "maker": "okami",
   "desc": "Reparan los tejidos: las heridas curan un 50 % más rápido y recuperas más salud al descansar. No regeneran salud solos.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "regen": 1
   },
   "region": "circulatorio",
@@ -3402,24 +2622,10 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3600,
+  "price": 2500,
   "maker": "okami",
   "desc": "Las hemorragias se cortan solas mucho antes.",
-  "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
-  },
+  "effects": {},
   "region": "circulatorio",
   "rarity": "raro",
   "prosthetic": false,
@@ -3434,25 +2640,13 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3200,
+  "price": 3300,
   "maker": "aurora",
-  "desc": "Más oxígeno en cada glóbulo: recuperas aguante el doble de rápido.",
+  "desc": "Más oxígeno en cada glóbulo: recuperas aguante el doble de rápido. +2 Atletismo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "atletismo": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "atletismo": 2
+   }
   },
   "region": "circulatorio",
   "rarity": "raro",
@@ -3468,23 +2662,11 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 4,
-  "price": 12000,
+  "price": 12050,
   "maker": "teselia",
-  "desc": "Bomba sanguínea doble: +15 de salud y aguante el doble de rápido.",
+  "desc": "Bomba sanguínea doble. +36 salud.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 15,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "hpMax": 36
   },
   "region": "circulatorio",
   "rarity": "epico",
@@ -3500,23 +2682,11 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 5,
-  "price": 44000,
+  "price": 38550,
   "maker": "okami",
-  "desc": "Desfibrilador interno: una vez cada 30 minutos, cuando caes, te levantas con un tercio de la salud.",
+  "desc": "Desfibrilador interno. +50 salud.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 20,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "hpMax": 50
   },
   "region": "circulatorio",
   "rarity": "legendario",
@@ -3532,23 +2702,10 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 2800,
+  "price": 2650,
   "maker": "aurora",
   "desc": "Inmune a gases y humos; los bajones de las drogas duran la mitad.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "needs": {
     "hunger": 1,
     "thirst": 1,
@@ -3569,25 +2726,13 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 1,
-  "price": 1300,
+  "price": 350,
   "maker": "chatarreros",
-  "desc": "Diez minutos sin respirar.",
+  "desc": "Diez minutos sin respirar. +2 Atletismo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "atletismo": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "atletismo": 2
+   }
   },
   "region": "circulatorio",
   "rarity": "comun",
@@ -3602,25 +2747,13 @@
   "grade": 2,
   "capacity": 3,
   "humanity": 3,
-  "price": 4800,
+  "price": 4850,
   "maker": "halcon",
-  "desc": "+1 a Reflejos.",
+  "desc": "Nervioso. +2 REF.",
   "effects": {
    "attrs": {
-    "REF": 1
-   },
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "REF": 2
+   }
   },
   "region": "nervioso",
   "rarity": "raro",
@@ -3635,25 +2768,14 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 4,
-  "price": 12500,
+  "price": 13500,
   "maker": "teselia",
-  "desc": "Las señales nerviosas viajan por fibra óptica.",
+  "desc": "Las señales nerviosas viajan por fibra óptica. +2 REF, +9 % de esquiva.",
   "effects": {
    "attrs": {
-    "REF": 1
+    "REF": 2
    },
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0.05
+   "dodge": 0.09
   },
   "region": "nervioso",
   "rarity": "epico",
@@ -3668,23 +2790,11 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 3,
-  "price": 3600,
+  "price": 2500,
   "maker": "okami",
-  "desc": "No sientes las heridas (lo cual no siempre es bueno).",
+  "desc": "No sientes las heridas (lo cual no siempre es bueno). +25 salud.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 10,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "hpMax": 25
   },
   "region": "nervioso",
   "rarity": "raro",
@@ -3699,25 +2809,14 @@
   "grade": 4,
   "capacity": 6,
   "humanity": 7,
-  "price": 47000,
+  "price": 38150,
   "maker": "halcon",
   "desc": "Durante unos segundos, todo a tu alrededor va a cámara lenta.",
   "effects": {
    "attrs": {
     "REF": 1
    },
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.15,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.15
   },
   "region": "nervioso",
   "rarity": "legendario",
@@ -3739,23 +2838,11 @@
   "grade": 1,
   "capacity": 2,
   "humanity": 1,
-  "price": 1800,
+  "price": 700,
   "maker": "chatarreros",
-  "desc": "Una malla de fibra bajo la piel.",
+  "desc": "Una malla de fibra bajo la piel. Blindaje 2.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "armor": 2
   },
   "region": "tegumentario",
   "rarity": "comun",
@@ -3770,23 +2857,11 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 4,
-  "price": 13000,
+  "price": 10150,
   "maker": "aurora",
-  "desc": "Polímero reactivo: devuelve un 25 % del daño de los golpes cuerpo a cuerpo.",
+  "desc": "Polímero reactivo. Blindaje 2.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "armor": 2
   },
   "region": "tegumentario",
   "rarity": "epico",
@@ -3802,25 +2877,13 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 4,
-  "price": 12000,
+  "price": 11250,
   "maker": "aurora",
   "desc": "Cromatóforos sintéticos: te funde con el entorno.",
   "effects": {
-   "attrs": {},
    "skills": {
     "sigilo": 3
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   }
   },
   "region": "tegumentario",
   "rarity": "epico",
@@ -3842,23 +2905,11 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3300,
+  "price": 4150,
   "maker": "engranajes",
-  "desc": "Las quemaduras no prenden en ti.",
+  "desc": "Las quemaduras no prenden en ti. Blindaje 2.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "armor": 2
   },
   "region": "tegumentario",
   "rarity": "raro",
@@ -3874,23 +2925,11 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3500,
+  "price": 4150,
   "maker": "teselia",
-  "desc": "Las descargas eléctricas y los PEM no te aturden.",
+  "desc": "Las descargas eléctricas y los PEM no te aturden. Blindaje 2.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 1,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "armor": 2
   },
   "region": "tegumentario",
   "rarity": "raro",
@@ -3904,27 +2943,15 @@
   "family": "Piel",
   "slot": "piel",
   "grade": 1,
-  "capacity": 1,
+  "capacity": 2,
   "humanity": 1,
-  "price": 1200,
+  "price": 1250,
   "maker": "aurora",
-  "desc": "Tinta de nanopartículas que se mueve sobre tu piel.",
+  "desc": "Tinta de nanopartículas que se mueve sobre tu piel. +2 Actuación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "actuacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "actuacion": 2
+   }
   },
   "region": "tegumentario",
   "rarity": "poco-comun",
@@ -3937,28 +2964,16 @@
   "family": "Cara",
   "slot": "cara",
   "grade": 3,
-  "capacity": 2,
+  "capacity": 3,
   "humanity": 4,
-  "price": 11000,
+  "price": 11550,
   "maker": "aurora",
-  "desc": "Cambia rasgos a voluntad: las cámaras no saben quién eres la mitad de las veces.",
+  "desc": "Cambia rasgos a voluntad: las cámaras no saben quién eres la mitad de las veces. +3 Actuación, +1 Sigilo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "actuacion": 2,
+    "actuacion": 3,
     "sigilo": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   }
   },
   "region": "cara",
   "rarity": "epico",
@@ -3973,26 +2988,14 @@
   "slot": "mandibula",
   "grade": 2,
   "capacity": 2,
-  "humanity": 3,
-  "price": 2900,
+  "humanity": 2,
+  "price": 1850,
   "maker": "chatarreros",
-  "desc": "Comes cualquier cosa. Sonríes de forma inquietante.",
+  "desc": "Comes cualquier cosa. Sonríes de forma inquietante. +2 Intimidación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "intimidacion": 1
+    "intimidacion": 2
    },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "needs": {
     "hunger": 0.85,
     "thirst": 1,
@@ -4010,28 +3013,16 @@
   "family": "Cara",
   "slot": "laringe",
   "grade": 2,
-  "capacity": 1,
+  "capacity": 2,
   "humanity": 2,
-  "price": 3100,
+  "price": 3850,
   "maker": "aurora",
-  "desc": "Imita cualquier voz que hayas oído.",
+  "desc": "Imita cualquier voz que hayas oído. +3 Actuación, +2 Negociación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "actuacion": 2,
-    "negociacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "actuacion": 3,
+    "negociacion": 2
+   }
   },
   "region": "cara",
   "rarity": "raro",
@@ -4046,23 +3037,11 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 3,
-  "price": 3800,
+  "price": 3550,
   "maker": "okami",
-  "desc": "Un chute de adrenalina que te cura un poco.",
+  "desc": "Un chute de adrenalina que te cura un poco. +15 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.06,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "meleeDmg": 0.15
   },
   "region": "circulatorio",
   "rarity": "raro",
@@ -4084,25 +3063,13 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 1,
-  "price": 1100,
+  "price": 350,
   "maker": "aurora",
-  "desc": "Serotonina a demanda.",
+  "desc": "Serotonina a demanda. +2 Negociación.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "negociacion": 1
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "negociacion": 2
+   }
   },
   "region": "circulatorio",
   "rarity": "comun",
@@ -4117,23 +3084,10 @@
   "grade": 1,
   "capacity": 1,
   "humanity": 1,
-  "price": 1400,
+  "price": 1000,
   "maker": "chatarreros",
   "desc": "Aprovechas hasta la última caloría.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
    "needs": {
     "hunger": 0.8,
     "thirst": 0.85,
@@ -4153,24 +3107,11 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3600,
+  "price": 3850,
   "maker": "teselia",
-  "desc": "Memoria extra bajo la clavícula: +2 de RAM.",
+  "desc": "Memoria extra bajo la clavícula. +5 RAM máxima.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "ramPlus": 2
+   "ramPlus": 5
   },
   "region": "so",
   "rarity": "raro",
@@ -4185,25 +3126,12 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 3,
-  "price": 10500,
+  "price": 12650,
   "maker": "teselia",
-  "desc": "+4 de RAM y −5 % de gasto.",
+  "desc": "Memoria. +7 RAM máxima, −8 % de gasto de RAM.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "ramPlus": 4,
-   "ramSave": 0.05
+   "ramPlus": 7,
+   "ramSave": 0.08
   },
   "region": "so",
   "rarity": "epico",
@@ -4216,27 +3144,14 @@
   "family": "Memoria",
   "slot": "bateria",
   "grade": 4,
-  "capacity": 4,
+  "capacity": 5,
   "humanity": 4,
-  "price": 32000,
+  "price": 38350,
   "maker": "teselia",
-  "desc": "Gestor militar de memoria: +5 de RAM y −18 % de gasto de RAM (Kairós, hackeos y habilidades).",
+  "desc": "Gestor militar de memoria. +7 RAM máxima, −26 % de gasto de RAM.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "ramPlus": 5,
-   "ramSave": 0.18
+   "ramPlus": 7,
+   "ramSave": 0.26
   },
   "region": "so",
   "rarity": "legendario",
@@ -4251,25 +3166,12 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 4200,
+  "price": 3700,
   "maker": "aurora",
-  "desc": "La versión de tienda: −8 % de gasto de RAM.",
+  "desc": "La versión de tienda. +2 RAM máxima, −19 % de gasto de RAM.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0,
-   "ramPlus": 1,
-   "ramSave": 0.08
+   "ramPlus": 2,
+   "ramSave": 0.19
   },
   "region": "so",
   "rarity": "raro",
@@ -4284,25 +3186,13 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 5,
-  "price": 41000,
+  "price": 43000,
   "maker": "okami",
-  "desc": "Suprime tu firma térmica, sonora y electrónica: invisible durante más tiempo.",
+  "desc": "Suprime tu firma térmica, sonora y electrónica: invisible durante más tiempo. +6 Sigilo.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "sigilo": 4
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "sigilo": 6
+   }
   },
   "region": "tegumentario",
   "rarity": "legendario",
@@ -4324,23 +3214,13 @@
   "grade": 3,
   "capacity": 3,
   "humanity": 3,
-  "price": 9500,
+  "price": 9850,
   "maker": "aurora",
-  "desc": "Un holograma tuyo atrae todas las miradas.",
+  "desc": "Un holograma tuyo atrae todas las miradas. +2 Actuación.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "skills": {
+    "actuacion": 2
+   }
   },
   "region": "so",
   "rarity": "epico",
@@ -4362,25 +3242,13 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 2,
-  "price": 3400,
+  "price": 4150,
   "maker": "halcon",
-  "desc": "Ves a los hostiles en el minimapa aunque no los veas tú.",
+  "desc": "Ves a los hostiles en el minimapa aunque no los veas tú. +3 Percepción.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "percepcion": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "percepcion": 3
+   }
   },
   "region": "so",
   "rarity": "raro",
@@ -4396,25 +3264,13 @@
   "grade": 3,
   "capacity": 4,
   "humanity": 5,
-  "price": 13500,
+  "price": 12800,
   "maker": "teselia",
-  "desc": "Llena tu RAM al instante. Te deja la cabeza ardiendo.",
+  "desc": "Llena tu RAM al instante. Te deja la cabeza ardiendo. +4 Interfaz.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "interfaz": 2
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "interfaz": 4
+   }
   },
   "region": "corteza",
   "rarity": "epico",
@@ -4436,25 +3292,13 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 5,
-  "price": 37000,
+  "price": 43000,
   "maker": "halcon",
-  "desc": "Tu próximo disparo hace el doble de daño; recarga rápida.",
+  "desc": "Tu próximo disparo hace el doble de daño; recarga rápida. +6 Armas a distancia.",
   "effects": {
-   "attrs": {},
    "skills": {
-    "armas": 3
-   },
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+    "armas": 6
+   }
   },
   "region": "brazos",
   "rarity": "legendario",
@@ -4476,23 +3320,12 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 7,
-  "price": 36000,
+  "price": 41000,
   "maker": "saqueadores",
-  "desc": "Te lanzas contra el enemigo más cercano y lo golpeas como un tren.",
+  "desc": "Te lanzas contra el enemigo más cercano y lo golpeas como un tren. +15 salud, +31 % de daño cuerpo a cuerpo.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 10,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.2,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "hpMax": 15,
+   "meleeDmg": 0.31
   },
   "region": "circulatorio",
   "rarity": "legendario",
@@ -4514,23 +3347,11 @@
   "grade": 2,
   "capacity": 2,
   "humanity": 3,
-  "price": 4200,
+  "price": 3300,
   "maker": "aurora",
-  "desc": "Diez segundos corriendo como el viento.",
+  "desc": "Diez segundos corriendo como el viento. +5 % de velocidad.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0.02,
-   "carSpeed": 0,
-   "dodge": 0
+   "speed": 0.05
   },
   "region": "circulatorio",
   "rarity": "raro",
@@ -4552,23 +3373,12 @@
   "grade": 4,
   "capacity": 6,
   "humanity": 5,
-  "price": 43000,
+  "price": 40050,
   "maker": "engranajes",
-  "desc": "Placas subcutáneas de grafeno: +3 de blindaje y +20 de salud.",
+  "desc": "Placas subcutáneas de grafeno. +32 salud, blindaje 5.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 20,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 3,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "hpMax": 32,
+   "armor": 5
   },
   "region": "tegumentario",
   "rarity": "legendario",
@@ -4583,25 +3393,15 @@
   "grade": 4,
   "capacity": 7,
   "humanity": 7,
-  "price": 48000,
+  "price": 44850,
   "maker": "saqueadores",
-  "desc": "Músculo injertado de origen dudoso: más fuerza, más salud, más hambre.",
+  "desc": "Músculo injertado de origen dudoso: más fuerza, más salud, más hambre. +2 BODY, +23 salud, +31 % de daño cuerpo a cuerpo.",
   "effects": {
    "attrs": {
-    "BODY": 1
+    "BODY": 2
    },
-   "skills": {},
-   "hpMax": 15,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0.2,
-   "speed": 0,
-   "carSpeed": 0,
-   "dodge": 0
+   "hpMax": 23,
+   "meleeDmg": 0.31
   },
   "region": "esqueleto",
   "rarity": "legendario",
@@ -4616,22 +3416,10 @@
   "grade": 4,
   "capacity": 5,
   "humanity": 5,
-  "price": 40000,
+  "price": 34900,
   "maker": "teselia",
   "desc": "Prevé los movimientos del rival: +10 % de esquiva y +8 % de críticos.",
   "effects": {
-   "attrs": {},
-   "skills": {},
-   "hpMax": 0,
-   "confront": 0,
-   "steal": 0,
-   "surgery": 0,
-   "carry": 0,
-   "ram": 0,
-   "armor": 0,
-   "meleeDmg": 0,
-   "speed": 0,
-   "carSpeed": 0,
    "dodge": 0.1,
    "crit": 0.08
   },
@@ -4651,12 +3439,12 @@
   "rarity": "comun",
   "capacity": 2,
   "humanity": 0,
-  "price": 380,
+  "price": 350,
   "maker": "chatarreros",
-  "desc": "Pinza recuperada con nudillos independientes. +1 a Reparación.",
+  "desc": "Pinza recuperada con nudillos independientes. +2 Reparación.",
   "effects": {
    "skills": {
-    "reparacion": 1
+    "reparacion": 2
    }
   },
   "model": "taller",
@@ -4673,12 +3461,12 @@
   "rarity": "comun",
   "capacity": 2,
   "humanity": 0,
-  "price": 440,
+  "price": 350,
   "maker": "teselia",
-  "desc": "Encaje de resina y vástago de acero. +1 a Atletismo.",
+  "desc": "Encaje de resina y vástago de acero. +2 Atletismo.",
   "effects": {
    "skills": {
-    "atletismo": 1
+    "atletismo": 2
    }
   },
   "model": "protesis",
@@ -4695,13 +3483,13 @@
   "rarity": "poco-comun",
   "capacity": 3,
   "humanity": 1,
-  "price": 1950,
+  "price": 1500,
   "maker": "engranajes",
-  "desc": "Servos de segunda mano con un carenado ligero. +3 kg de carga y +1 a Reparación.",
+  "desc": "Servos de segunda mano con un carenado ligero. +2 Reparación, +8 kg de carga.",
   "effects": {
-   "carry": 3,
+   "carry": 8,
    "skills": {
-    "reparacion": 1
+    "reparacion": 2
    }
   },
   "model": "circuito",
@@ -4720,10 +3508,10 @@
   "humanity": 1,
   "price": 2200,
   "maker": "engranajes",
-  "desc": "Cinco dedos mecánicos con retorno independiente. +2 a Reparación.",
+  "desc": "Cinco dedos mecánicos con retorno independiente. +4 Reparación.",
   "effects": {
    "skills": {
-    "reparacion": 2
+    "reparacion": 4
    }
   },
   "model": "pinza",
@@ -4740,14 +3528,15 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 5900,
+  "price": 4400,
   "maker": "aurora",
-  "desc": "Pie articulado y amortiguador de carrera. +4 % de velocidad y +1 a Atletismo.",
+  "desc": "Pie articulado y amortiguador de carrera. +2 Atletismo, +7 % de velocidad, +5 % de esquiva.",
   "effects": {
-   "speed": 0.04,
+   "speed": 0.07,
    "skills": {
-    "atletismo": 1
-   }
+    "atletismo": 2
+   },
+   "dodge": 0.05
   },
   "model": "corredor",
   "prosthetic": true,
@@ -4763,14 +3552,14 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 6400,
+  "price": 3850,
   "maker": "teselia",
-  "desc": "Tendones mecánicos de precisión. +2 a Medicina y +2 puntos de probabilidad quirúrgica.",
+  "desc": "Tendones mecánicos de precisión. +4 Medicina, +4 % de supervivencia en quirófano.",
   "effects": {
    "skills": {
-    "medicina": 2
+    "medicina": 4
    },
-   "surgery": 0.02
+   "surgery": 0.04
   },
   "model": "bio",
   "prosthetic": true,
@@ -4786,12 +3575,12 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 6600,
+  "price": 2800,
   "maker": "aurora",
-  "desc": "Paneles segmentados para abrirse paso entre el tráfico. +4 kg de carga y +8 % de daño cuerpo a cuerpo.",
+  "desc": "Paneles segmentados para abrirse paso entre el tráfico. +10 kg de carga, +20 % de daño cuerpo a cuerpo.",
   "effects": {
-   "carry": 4,
-   "meleeDmg": 0.08
+   "carry": 10,
+   "meleeDmg": 0.2
   },
   "model": "correo-brazo",
   "prosthetic": true,
@@ -4807,12 +3596,12 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 6900,
+  "price": 3950,
   "maker": "aurora",
-  "desc": "Prótesis ligera con talón articulado. +5 % de velocidad y +2 puntos de esquiva.",
+  "desc": "Prótesis ligera con talón articulado. +12 % de velocidad, +5 % de esquiva.",
   "effects": {
-   "speed": 0.05,
-   "dodge": 0.02
+   "speed": 0.12,
+   "dodge": 0.05
   },
   "model": "correo-pierna",
   "prosthetic": true,
@@ -4828,12 +3617,12 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 7300,
+  "price": 2500,
   "maker": "engranajes",
-  "desc": "Segmentos dorsales visibles que reparten el peso. +5 kg de carga y +5 de salud máxima.",
+  "desc": "Segmentos dorsales visibles que reparten el peso. +12 salud, +12 kg de carga.",
   "effects": {
-   "carry": 5,
-   "hpMax": 5
+   "carry": 12,
+   "hpMax": 12
   },
   "model": "rotula",
   "prosthetic": false,
@@ -4849,13 +3638,13 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 8400,
+  "price": 3850,
   "maker": "okami",
-  "desc": "Lente monocular iluminada. +2 a Percepción y +1 a Armas.",
+  "desc": "Lente monocular iluminada. +3 Percepción, +2 Armas a distancia.",
   "effects": {
    "skills": {
-    "percepcion": 2,
-    "armas": 1
+    "percepcion": 3,
+    "armas": 2
    }
   },
   "model": "optico",
@@ -4872,12 +3661,12 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 6800,
+  "price": 3450,
   "maker": "engranajes",
-  "desc": "Mandíbula blindada con respiraderos laterales. +2 a Intimidación y +1 de blindaje.",
+  "desc": "Mandíbula blindada con respiraderos laterales. +3 Intimidación, blindaje 1.",
   "effects": {
    "skills": {
-    "intimidacion": 2
+    "intimidacion": 3
    },
    "armor": 1
   },
@@ -4895,13 +3684,13 @@
   "rarity": "raro",
   "capacity": 4,
   "humanity": 2,
-  "price": 8500,
+  "price": 3450,
   "maker": "halcon",
-  "desc": "Bastidor táctico y muñeca estabilizada. +1 de blindaje y +2 a Armas.",
+  "desc": "Bastidor táctico y muñeca estabilizada. +3 Armas a distancia, blindaje 1.",
   "effects": {
    "armor": 1,
    "skills": {
-    "armas": 2
+    "armas": 3
    }
   },
   "model": "vigia",
@@ -4918,14 +3707,14 @@
   "rarity": "epico",
   "capacity": 6,
   "humanity": 4,
-  "price": 18600,
+  "price": 14050,
   "maker": "engranajes",
-  "desc": "Actuador de carga y mano articulada. +1 a Cuerpo y +16 % de daño cuerpo a cuerpo.",
+  "desc": "Actuador de carga y mano articulada. +2 BODY, +25 % de daño cuerpo a cuerpo.",
   "effects": {
    "attrs": {
-    "BODY": 1
+    "BODY": 2
    },
-   "meleeDmg": 0.16
+   "meleeDmg": 0.25
   },
   "model": "servo",
   "prosthetic": true,
@@ -4941,12 +3730,12 @@
   "rarity": "epico",
   "capacity": 6,
   "humanity": 4,
-  "price": 21500,
+  "price": 12200,
   "maker": "engranajes",
-  "desc": "Talón reforzado y placas de carga. +8 kg de carga y +2 de blindaje.",
+  "desc": "Talón reforzado y placas de carga. Blindaje 4, +16 kg de carga.",
   "effects": {
-   "carry": 8,
-   "armor": 2
+   "carry": 16,
+   "armor": 4
   },
   "model": "grua",
   "prosthetic": true,
@@ -4962,13 +3751,13 @@
   "rarity": "epico",
   "capacity": 6,
   "humanity": 4,
-  "price": 20100,
+  "price": 11200,
   "maker": "halcon",
-  "desc": "Módulo táctico exterior montado sobre el antebrazo. +18 % de daño cuerpo a cuerpo y +1 a Armas.",
+  "desc": "Módulo táctico exterior montado sobre el antebrazo. +2 Armas a distancia, +44 % de daño cuerpo a cuerpo.",
   "effects": {
-   "meleeDmg": 0.18,
+   "meleeDmg": 0.44,
    "skills": {
-    "armas": 1
+    "armas": 2
    }
   },
   "model": "modulo",
@@ -4985,12 +3774,12 @@
   "rarity": "epico",
   "capacity": 6,
   "humanity": 4,
-  "price": 24000,
+  "price": 11650,
   "maker": "engranajes",
-  "desc": "Dos carriles de carga sostienen el hombro. +10 kg de carga y +15 % de daño cuerpo a cuerpo.",
+  "desc": "Dos carriles de carga sostienen el hombro. +25 kg de carga, +38 % de daño cuerpo a cuerpo.",
   "effects": {
-   "carry": 10,
-   "meleeDmg": 0.15
+   "carry": 25,
+   "meleeDmg": 0.38
   },
   "model": "atlas",
   "prosthetic": true,
@@ -5006,12 +3795,12 @@
   "rarity": "epico",
   "capacity": 6,
   "humanity": 4,
-  "price": 27000,
+  "price": 13200,
   "maker": "halcon",
-  "desc": "Blindaje de escolta con junta de codo expuesta. +2 de blindaje y +12 de salud máxima.",
+  "desc": "Blindaje de escolta con junta de codo expuesta. +21 salud, blindaje 4.",
   "effects": {
-   "armor": 2,
-   "hpMax": 12
+   "armor": 4,
+   "hpMax": 21
   },
   "model": "bastion",
   "prosthetic": true,
@@ -5027,13 +3816,13 @@
   "rarity": "epico",
   "capacity": 6,
   "humanity": 4,
-  "price": 29000,
+  "price": 11550,
   "maker": "okami",
-  "desc": "Cráneo sintético con visor central. +2 de blindaje y +2 a Percepción. Sustituye la cabeza completa.",
+  "desc": "Cráneo sintético con visor central. Sustituye la cabeza completa. +3 Percepción, blindaje 3.",
   "effects": {
-   "armor": 2,
+   "armor": 3,
    "skills": {
-    "percepcion": 2
+    "percepcion": 3
    }
   },
   "model": "yelmo",
@@ -5050,15 +3839,15 @@
   "rarity": "legendario",
   "capacity": 9,
   "humanity": 7,
-  "price": 65000,
+  "price": 35850,
   "maker": "okami",
-  "desc": "Placas escalonadas y servo de torsión pesado. +1 a Cuerpo, +30 % de daño cuerpo a cuerpo y +2 de blindaje.",
+  "desc": "Placas escalonadas y servo de torsión pesado. +1 BODY, blindaje 3, +42 % de daño cuerpo a cuerpo.",
   "effects": {
    "attrs": {
     "BODY": 1
    },
-   "meleeDmg": 0.3,
-   "armor": 2
+   "meleeDmg": 0.42,
+   "armor": 3
   },
   "model": "asedio",
   "prosthetic": true,
@@ -5074,15 +3863,15 @@
   "rarity": "legendario",
   "capacity": 9,
   "humanity": 7,
-  "price": 61000,
+  "price": 43750,
   "maker": "halcon",
-  "desc": "Rodillera de asalto y doble actuador de impulso. +1 a Movimiento, +10 % de velocidad y +2 de blindaje.",
+  "desc": "Rodillera de asalto y doble actuador de impulso. +2 MOVE, blindaje 3, +15 % de velocidad.",
   "effects": {
    "attrs": {
-    "MOVE": 1
+    "MOVE": 2
    },
-   "speed": 0.1,
-   "armor": 2
+   "speed": 0.15,
+   "armor": 3
   },
   "model": "coloso",
   "prosthetic": true,
@@ -5098,15 +3887,15 @@
   "rarity": "legendario",
   "capacity": 9,
   "humanity": 7,
-  "price": 69000,
+  "price": 33000,
   "maker": "okami",
-  "desc": "Bastidor pesado con espinillera acorazada. +1 a Cuerpo, +3 de blindaje y +14 kg de carga.",
+  "desc": "Bastidor pesado con espinillera acorazada. +1 BODY, blindaje 4, +21 kg de carga.",
   "effects": {
    "attrs": {
     "BODY": 1
    },
-   "armor": 3,
-   "carry": 14
+   "armor": 4,
+   "carry": 21
   },
   "model": "titan",
   "prosthetic": true,

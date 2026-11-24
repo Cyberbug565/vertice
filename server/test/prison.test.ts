@@ -54,7 +54,7 @@ it('persiste ingreso, cuenta, trabajo, condicional y las tres salidas clandestin
     expect(p.bank).toBe(500);
     expect((await bot.cmd({t:'bank',target:atm.id,action:'withdraw',amount:200,opId:randomUUID()})).ok).toBe(true);
     expect(p.bank).toBe(300);
-    const cyber={id:randomUUID(),def:'brazos-asistencia',part:'brazo_izq',location:'installed' as const,stolen:false};
+    const cyber={id:randomUUID(),def:'brazo-blindaje-placas',part:'brazo_izq',location:'installed' as const,stolen:false};
     p.cyber.push(cyber);
     await app.db.query("INSERT INTO cyberware_instances (id,def_id,character_id,location,part) VALUES ($1,$2,$3,'installed',$4)",[cyber.id,cyber.def,p.charId,cyber.part]);
     await w.prison.note(p.charId,'robo',randomUUID());
@@ -67,7 +67,9 @@ it('persiste ingreso, cuenta, trabajo, condicional y las tres salidas clandestin
     expect(p.bank).toBe(0);
     expect([...p.inventory.keys()]).toEqual(['camiseta-penal']);
     expect(p.cyber).toContainEqual(expect.objectContaining({def:'brazo-protesico',part:'brazo_izq'}));
-    expect(p.sentence).toMatchObject({days:3,conduct:50,fine:1800,debt:950});
+    // La deuda es la multa menos lo del banco (300) y la mitad del precio del implante liquidado (v0.38: precios por valor).
+    const debt0=1800-300-Math.floor(w.c.cyberware.find(d=>d.id==='brazo-blindaje-placas')!.price/2);
+    expect(p.sentence).toMatchObject({days:3,conduct:50,fine:1800,debt:debt0});
     expect(Number((await app.db.query('SELECT sum(delta) AS n FROM ledger WHERE character_id=$1',[p.charId])).rows[0].n)).toBe(0);
     const reopened=new BotClient(base,'reconexion');bots.push(reopened);
     const reconnected=await reopened.connect(token,app.contentHash);
@@ -86,7 +88,7 @@ it('persiste ingreso, cuenta, trabajo, condicional y las tres salidas clandestin
     const work=await go('penal-taller','penal-taller');
     expect((await send('trabajar',work.id)).ok).toBe(true);
     await client.until(()=>user.p!.sentence!.work===1,9000,'turno de taller');
-    expect(user.p!.sentence).toMatchObject({work:1,debt:896,conduct:59});
+    expect(user.p!.sentence).toMatchObject({work:1,debt:debt0-54,conduct:59});
     expect(user.p!.bank).toBe(66);
     expect((await send('trabajar',work.id)).ok).toBe(false);
     async function setSentence(fields:Record<string,unknown>){

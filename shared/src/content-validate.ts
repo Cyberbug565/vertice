@@ -86,6 +86,13 @@ export function validateContent(c: Content): string[] {
   if (contractIds.size !== c.contracts.length) errs.push('Misiones: contratos duplicados');
   if (objectiveIds.size !== c.contracts.reduce((n, x) => n + x.objectives.length, 0)) errs.push('Misiones: objetivos duplicados');
   if (encounterIds.size !== c.missionEncounters.length) errs.push('Misiones: eventos duplicados');
+  // v0.38 · Inicios: lugar transitable, objetos, habilidades y facciones que existan.
+  const checkOrigins = () => { for (const o of c.origins) {
+    if (o.start) walk(o.start.zone, o.start.at, `origen ${o.id}`);
+    for (const [it] of o.items) if (!itemIds.has(it)) errs.push(`origen ${o.id}: objeto desconocido ${it}`);
+    for (const k of Object.keys(o.skills)) if (!skillIds.has(k)) errs.push(`origen ${o.id}: habilidad desconocida ${k}`);
+    for (const k of Object.keys(o.rep)) if (!factionIds.has(k)) errs.push(`origen ${o.id}: facción desconocida ${k}`);
+  } };
   const loc = (key: string, where: string) => { if (!(key in c.locale)) errs.push(`${where}: falta traducción "${key}"`); };
   const walk = (zone: string, at: readonly number[], where: string) => {
     const g = grids.get(zone);
@@ -94,6 +101,7 @@ export function validateContent(c: Content): string[] {
   };
   if (!zoneIds.has(c.manifest.startZone)) errs.push(`manifest: zona inicial desconocida`);
   else walk(c.manifest.startZone, c.manifest.startAt, 'manifest.startAt');
+  checkOrigins();
   if (c.roles.length !== 10) errs.push(`Se esperan 10 roles, hay ${c.roles.length}`);
   for (const r of c.roles) for (const s of Object.keys(r.skills)) if (!skillIds.has(s)) errs.push(`rol ${r.id}: habilidad ${s} desconocida`);
   for (const z of c.zones) {

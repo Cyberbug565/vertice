@@ -16,7 +16,7 @@ import { faceDecal, faceParams } from './face3d';
 import { roboticParts } from './cyber3d';
 import { hairsVersion, isCollectionHair } from './hairs3d';
 import { samuraiVersion } from './samurai3d';
-import { buildTormenta, loadTormenta, poseTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
+import { buildTormenta, loadTormenta, retargetTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
 import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
 import { kineticShield, placeShield } from './kinetic-shield';
 import { CapturePlayer, captureLength, gaitCapture, loadCapture, type Sample } from './captured-motion';
@@ -457,8 +457,9 @@ export class Chars3D {
   }
   /** v0.15 · Pasa la pose del juego a los huesos del cuerpo del kit y lleva la mano libre al arma. */
   private applyHuman(r: Rig) {
-    if (r.mech) poseTormenta(r.mech, { hips: r.hips, spine: r.spine, neck: r.neck, shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, thP: r.thighR, knP: r.kneeR, thM: r.thighL, knM: r.kneeL }, performance.now() / 1000);
-    if (!r.human || r.mech) return;
+    // v0.38 · Con la Tormenta puesta, el piloto (oculto) se sigue animando igual que cualquiera: la armadura copia su pose
+    // después de los clips capturados (ver retargetTormenta).
+    if (!r.human) return;
     const two = r.ranged && (r.big || !!r.aimNow) && r.lie < 0.3;
     const W = poseHuman(r.human, { hips: r.hips, spine: r.spine, chest: r.chest, neck: r.neck, thighP: r.thighR, kneeP: r.kneeR, thighM: r.thighL, kneeM:r.kneeL,ankleP:r.ankleR.rotation.x,ankleM:r.ankleL.rotation.x,toeP:r.toeR.rotation.x,toeM:r.toeL.rotation.x,
       shP: r.shoulderR, elP: r.elbowR, shM: r.shoulderL, elM: r.elbowL, gripP: r.handR.children.length ? 1 : 0.3, gripM: two ? 0.9 : 0.3 });
@@ -953,7 +954,8 @@ export class Chars3D {
       r.root.scale.setScalar(RULES.actorScale);
       this.animate(r, e, opts);
       this.applyHuman(r);
-      if (r.human && !r.mech) this.playClips(r, e, opts.now, s.id === opts.meId ? opts.guarding : !!s.buffs?.includes('guardia'));
+      if (r.human) this.playClips(r, e, opts.now, s.id === opts.meId ? opts.guarding : !!s.buffs?.includes('guardia'));
+      if (r.mech && r.human) retargetTormenta(r.mech, r.human, opts.now / 1000);
       if (e.ghost && r.ghostMats) {
         // Flota a un palmo del suelo, se mece y parpadea un poco (más cuanto menos visible está).
         r.root.position.y = e.ghost.float;
@@ -1375,7 +1377,8 @@ export class Preview3D {
     s.emote = t > 9 && t < 12.5 ? { move: 'gesto', at: Date.now() - (t - 9) * 1000 } : undefined;
     c.animate(r, this.ent, { meId: 1, guarding: false, now, dt, serverNow: Date.now() });
     c.applyHuman(r);
-    if(r.human && !r.mech)c.playClips(r,this.ent,now,false);
+    if(r.human)c.playClips(r,this.ent,now,false);
+    if(r.mech && r.human)retargetTormenta(r.mech,r.human,now/1000);
     r.root.rotation.y = this.angle;
     this.zoomK += (this.zoomGoal - this.zoomK) * Math.min(1, dt * 8);
     const zk = this.zoomK * this.zoomK * (3 - 2 * this.zoomK);

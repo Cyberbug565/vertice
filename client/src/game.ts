@@ -1,9 +1,9 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
-import { installedSight, Atlas, prisonZone, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type DanceId, type DialogView, type JournalEntry, type PrisonView, type ServerMsg } from '@vertice/shared';
+import { installedSight, Atlas, prisonZone, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type ScanInfo, type DossierView, type DanceId, type DialogView, type JournalEntry, type PrisonView, type ServerMsg } from '@vertice/shared';
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
-import { settings, onSettings } from './settings';
+import { settings, onSettings, hud } from './settings';
 import { audioScene, blip, initAudio, setAmbientActive } from './audio';
 import * as sfx from './sfx';
 import { stealthBar, weaponWheel } from './ui/stealth';
@@ -17,7 +17,7 @@ import { $ui, clearUi, fmtMoney, h, ask } from './ui/dom';
 import { Minimap } from './ui/minimap';
 import { openAtlas } from './ui/atlas-panel';
 import { settingsPanel } from './ui/screens';
-import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen } from './ui/charscreen';
+import { charScreenOpen, closeCharScreen, openCharScreen, refreshCharScreen, setDossier } from './ui/charscreen';
 import { autoPanel, elevatorPanel, hiringPanel } from './ui/work';
 import { searchPanel, trunkPanel } from './ui/intel';
 import { actionFor, keyOf, keymap } from './keymap';
@@ -81,14 +81,14 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const hpBar = h('i', { style: { background: 'var(--red)' } }), stBar = h('i', { style: { background: 'var(--green)' } });
   const needBar = (color: string) => h('i', { style: { background: color } });
   const hgBar = needBar('#ff8a3d'), thBar = needBar('#43a8ff'), ftBar = needBar('#b46cff');
-  const needsEl = h('div', { style: { display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 6px', alignItems: 'center', fontSize: '0.8em', margin: '2px 0 4px' } },
+  const needsEl = h('div', { class: 'hud-needs', style: { display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 6px', alignItems: 'center', fontSize: '0.8em', margin: '2px 0 4px' } },
     h('span', {}, 'Hambre'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Hambre' }, hgBar),
     h('span', {}, 'Sed'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sed' }, thBar),
     h('span', {}, 'Sueño'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sueño' }, ftBar));
   const statusEl = h('div', { style: { fontSize: '0.85em', minHeight: '1.2em' }, 'aria-live': 'polite' });
   const psycheEl = h('div', { class: 'psyche-meter', style: { display: 'none' } });
   const substancesEl = h('div', { class: 'substance-readout', 'aria-label': 'Estado de consumo' });
-  const nameEl = h('div', {}), moneyEl = h('div', { class: 'mono' }), statsEl = h('div', { class: 'muted', style: { fontSize: '0.85em' } });
+  const nameEl = h('div', {}), moneyEl = h('div', { class: 'mono' }), statsEl = h('div', { class: 'muted hud-stats', style: { fontSize: '0.85em' } });
   const hpTxt = h('span', { class: 'mono' }), stTxt = h('span', { class: 'mono' });
   const xpFill = h('i', { style: { background: 'var(--xp)' } }), xpTxt = h('span', { class: 'mono small' });
   const xpEl = h('div', { class: 'hud-xp', title: 'Experiencia de nivel' }, h('div', { class: 'xpbar' }, xpFill), xpTxt);
@@ -99,15 +99,31 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const mm = h('canvas', { id: 'minimap', title: 'Mapa grande (M)', onclick: () => bigMap() }) as HTMLCanvasElement;
   const atlas = new Atlas();
   const minimap = new Minimap(mm,atlas);
-  const sectorEl = h('div', { style: { fontWeight: '600', marginTop: '4px' } }), dangerEl = h('span', { class: 'badge' }), clockEl = h('span', { class: 'mono' }), netEl = h('span', { class: 'mono' });
+  const sectorEl = h('div', { class: 'hud-place', style: { fontWeight: '600', marginTop: '4px' } }), dangerEl = h('span', { class: 'badge' }), clockEl = h('span', { class: 'mono' }), netEl = h('span', { class: 'mono' });
   // Reloj de la ciudad (un día dura 1 h 30 min reales) y turno del puesto de trabajo.
-  const phaseEl = h('span', { class: 'phase' }), shiftEl = h('div', { class: 'shift' });
+  const phaseEl = h('span', { class: 'phase' }), shiftEl = h('div', { class: 'shift hud-place' });
   const clockBox = h('div', { class: 'clockbox' }, h('span', { class: 'clock mono' }, clockEl), phaseEl);
   // Destino marcado: chip con el nombre y botón para desmarcarlo.
   const goalEl = h('div', { class: 'goalchip', style: { display: 'none' } });
   const streetGoal = h('div', { id: 'underworld-goal' });
   const sbar = stealthBar();
-  const tr = h('div', { class: 'hud hud-tr' }, mm, sbar.el, goalEl, streetGoal, sectorEl, h('div', { class: 'row', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
+  // v0.38 · Tu expediente en el HUD (lo que sabe la PCV, el precio por tu cabeza…), con más detalle cuanta más Interfaz.
+  const fileEl = h('div', { class: 'hud-file', id: 'hud-file', title: 'Tu expediente (Personaje → Interfaz)', onclick: () => charScreen('net') });
+  const renderFile = (v: DossierView) => {
+    const bits: (HTMLElement | string)[] = [];
+    const tag = (t: string, cls = '') => h('span', { class: `ftag ${cls}` }, t);
+    if (!v.wanted && !v.bounty && !v.bountyApprox) bits.push(tag('PCV: limpio', 'ok'));
+    else if (v.tier < 1) bits.push(tag('PCV: te busca', 'bad'));
+    else bits.push(tag(`★ ${v.wantedLevel ?? 0}`, v.wanted ? 'bad' : ''), tag(v.bounty ? fmtMoney(v.bounty) : v.bountyApprox ? `~ ${v.bountyApprox}` : 'sin precio', v.bounty || v.bountyApprox ? 'bad' : ''));
+    if (v.description?.matches) bits.push(tag(`Testigos: tu ropa ${v.description.minutes}′`, 'warn'));
+    if (v.decayMin && v.wanted) bits.push(tag(`olvida ~${v.decayMin}′`));
+    if (v.hunters?.length) bits.push(tag(`${v.hunters.length} cazándote`, 'bad'));
+    if (v.offers.length) bits.push(tag(`📱 ${v.offers.length} oferta`, 'good'));
+    if (v.retainer) bits.push(tag(`a sueldo: ${v.retainer.factionName}`, 'good'));
+    fileEl.replaceChildren(h('span', { class: 'flabel' }, 'EXPEDIENTE'), ...bits);
+  };
+  setInterval(() => { if (net.status === 'online' && hud.file) net.send({ t: 'dossier', seq: 0, action: 'view' } as any); }, 8000);
+  const tr = h('div', { class: 'hud hud-tr' }, mm, sbar.el, fileEl, goalEl, streetGoal, sectorEl, h('div', { class: 'row hud-place', style: { justifyContent: 'space-between', marginTop: '4px' } }, h('span', {}, 'Peligro ', dangerEl), clockBox), shiftEl, h('div', { class: 'muted hud-net', style: { fontSize: '0.8em' } }, 'Red: ', netEl));
   const actionEl = h('div', { class: 'actionline', 'aria-live': 'polite', id: 'action' });
   const progress = h('div', { class: 'progress', style: { display: 'none' } }, h('i'));
   const stanceSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Postura' });
@@ -205,6 +221,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const setAction = (text: string, duration?: number) => {
     st.action = text;
+    actionEl.classList.toggle('is-help', !text && !st.destination);
     actionEl.textContent = text ? `Acción: ${text}${st.destination ? ` · Destino: ${st.destination}` : ''}` : st.destination ? `Destino: ${st.destination}` : `${[keyOf('up'), keyOf('left'), keyOf('down'), keyOf('right')].join('')} para andar · ${keyOf('interact')} o clic: interactuar · clic der. + clic: atacar (Ctrl: fuerte) · ${keyOf('wheel')}: armas · ${keyOf('hack')}: hackear · ${keyOf('dodge')}: esquivar · ${keyOf('kick')}: patada`;
     const bar = progress.firstChild as HTMLElement;
     if (duration) {
@@ -565,10 +582,42 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   void worldActions;
   // La etiqueta flotante solo tiene sentido sobre el mapa: se oculta al pasar por encima de la interfaz.
   $ui().addEventListener('pointerover', (ev) => { if (ev.target !== $ui()) tooltip.style.display = 'none'; });
+  // v0.38 · Lo que sabes de quien señalas depende de tu Interfaz: se pide al servidor (que decide qué capas ves).
+  const scans = new Map<number, { info: ScanInfo; at: number }>();
+  let hovered: { e: NonNullable<Parameters<typeof view.onHover>[0]>; sx: number; sy: number } | null = null;
+  const ATT: Record<string, string> = { hostil: '#ff4050', recelosa: '#ffb040', neutral: '#c8c8d8', amistosa: '#5aff8a' };
+  const scanLines = (i: ScanInfo) => {
+    const out: (HTMLElement | string)[] = [];
+    const chip = (t: string, color?: string) => h('span', { class: 'scan-chip', style: color ? { color, borderColor: color } : {} }, t);
+    const head: HTMLElement[] = [];
+    if (i.kind) head.push(chip(i.kind === 'jugador' ? '◉ PERSONA' : '◌ PNJ', i.kind === 'jugador' ? '#43f3ff' : '#9a9ac0'));
+    if (i.level !== undefined) head.push(chip(`Nv ${i.level}`)); else if (i.levelApprox) head.push(chip(i.levelApprox));
+    if (i.attitude) head.push(chip(i.attitude, ATT[i.attitude]));
+    if (i.wanted) head.push(chip(`★ buscado ${i.wanted}`, '#ff4050'));
+    if (head.length) out.push(h('div', { class: 'scan-row' }, ...head));
+    const line = (k: string, v?: string | number | false | null) => { if (v !== undefined && v !== null && v !== false && v !== '') out.push(h('div', { class: 'scan-line' }, h('span', { class: 'muted' }, k + ' '), String(v))); };
+    line('', [...new Set([i.title, i.faction].filter(Boolean))].join(' · '));
+    line('Salud', i.hpPct !== undefined ? `${i.hpPct}%` : undefined);
+    line('Arma', i.armed); if (i.bleeding) line('', 'Sangra');
+    line('Recompensa', i.bounty ? fmtMoney(i.bounty) : undefined);
+    line('Pagan', i.bountyBy?.join(', '));
+    line('Antecedentes', i.record?.length ? i.record.slice(0, 2).join(' · ') : undefined);
+    line('Cromo', i.chrome?.length ? (i.chrome.length > 3 ? `${i.chrome.slice(0, 3).join(', ')} +${i.chrome.length - 3}` : i.chrome.join(', ')) : undefined);
+    line('Destaca en', i.skills?.join(', '));
+    line('Lleva', i.money); if (i.debt) line('', 'Debe dinero a los Kuro');
+    line('RAM', i.ram); line('Humanidad', i.humanity); if (i.psycho) line('', '⚠ Riesgo de ciberpsicosis');
+    if (i.tier < 5) out.push(h('div', { class: 'scan-more' }, `Interfaz ${['3', '6', '10', '15', '20'][i.tier]}: más datos`));
+    return out;
+  };
   view.onHover = (e, sx, sy) => {
+    hovered = e ? { e, sx, sy } : null;
     if (!e) { tooltip.style.display = 'none'; return; }
+    const person = e.s.kind === 'player' || e.s.kind === 'npc';
+    const sc = person ? scans.get(e.s.id) : undefined;
+    if (person && (!sc || Date.now() - sc.at > 2500)) { if (sc) sc.at = Date.now(); else scans.set(e.s.id, { info: { id: e.s.id, tier: 0, name: e.s.name }, at: Date.now() - 2000 }); net.send({ t: 'look', target: e.s.id } as any); }
     const hint = hackMode ? (e.s.id === view.meId ? 'Modo hackeo: elige a otro' : 'Clic: ver hackeos posibles') : e.s.id === view.meId ? 'Clic: tu menú' : e.s.kind === 'door' ? `Clic o ${keyOf('interact')}: entrar · Zona ${DANGER_TXT[e.s.danger ?? 'public']}` : e.s.kind === 'object' ? `Clic o ${keyOf('interact')}: usar` : view.guarding ? `Clic: ¡atacar! · Ctrl+clic: golpe fuerte o ráfaga · ${keyOf('kick')}: patada · ${keyOf('dodge')}: esquivar` : `Clic: menú (a distancia) · clic derecho mantenido + clic: atacar · ${keyOf('hack')} + clic: hackear`;
-    tooltip.replaceChildren(h('b', {}, e.s.name), e.s.title ? ` · ${e.s.title}` : '', e.s.label ? h('div', { class: 'muted' }, e.s.label) : '', h('div', { class: 'cy' }, hint));
+    const info = sc && sc.info.tier >= 0 && sc.info.name === e.s.name ? sc.info : undefined;
+    tooltip.replaceChildren(h('b', {}, e.s.name), !info?.title && e.s.title ? ` · ${e.s.title}` : '', e.s.label ? h('div', { class: 'muted' }, e.s.label) : '', ...(info && hud.scan ? scanLines(info) : []), hud.hints ? h('div', { class: 'cy' }, hint) : '');
     tooltip.style.display = 'block'; tooltip.style.left = `${sx + 14}px`; tooltip.style.top = `${sy + 14}px`;
   };
   view.onContextLost = (lost) => { ctxOverlay.style.display = lost ? 'flex' : 'none'; };
@@ -719,7 +768,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   window.addEventListener('keydown', keys);
   onSettings(() => renderSheet());
-  function charScreen(tab: 'inv' | 'cyber' | 'skills' | 'sheet') { if (!st.sheet) return; closePanels(); tooltip.style.display = 'none'; openCharScreen({ net, toast }, st.sheet, tab); }
+  function charScreen(tab: 'inv' | 'cyber' | 'skills' | 'sheet' | 'net') { if (!st.sheet) return; closePanels(); tooltip.style.display = 'none'; openCharScreen({ net, toast }, st.sheet, tab); }
   function toggleRun() { if (st.sheet) { net.send({ t: 'run', on: !st.sheet.running } as any); toast(st.sheet.running ? 'Andas.' : 'Corres: más rápido, pero gastas aguante.', 'info'); } }
   function toggleAuto() { if (!st.sheet) return; if (st.sheet.auto.on) net.send({ t: 'auto', on: false } as any); else autoPanel(st.sheet.auto.personality, (personality) => net.send({ t: 'auto', on: true, personality } as any)); }
   function toggleDrive() { if (!st.sheet) return; if (st.sheet.driving) net.send({ t: 'car', action: 'park' } as any); else if (!st.sheet.cars.length) toast('No tienes coche: cómpralo en un concesionario (mira el mapa).', 'warn'); else net.send({ t: 'car', action: 'drive' } as any); }
@@ -868,6 +917,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'dialog': st.dialog = m.view; st.luck = 0; st.destination = ''; setAction(''); renderDialog(); break;
       case 'dialogClose': st.dialog = null; renderDialog(); break;
       case 'searchResults': searchPanel({ net }, m.device, m.results); break;
+      case 'lookInfo': { scans.set(m.info.id, { info: m.info, at: Date.now() }); if (scans.size > 300) scans.delete(scans.keys().next().value!); const hv = hovered; if (hv && hv.e.s.id === m.info.id) view.onHover(hv.e, hv.sx, hv.sy); break; }
+      case 'dossier': setDossier(m.view); renderFile(m.view); break;
       case 'trunk': trunkPanel({ net }, m.view); break;
       case 'gotoTarget': {
         minimap.goal = m.target ? { x: m.target.x, y: m.target.y, zone: m.target.zone } : null; view.goal = minimap.goal;

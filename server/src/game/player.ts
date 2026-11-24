@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import {
   visibleParts, dressedAppearance, editableAppearance, ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
-  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, WEAPON_SLOTS, newBody, woundList, effectiveBleed, painOf, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
+  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, bioExtraPoints, LOAN, WEAPON_SLOTS, newBody, woundList, effectiveBleed, painOf, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
@@ -11,6 +11,8 @@ import { substanceEffects, type SubstanceUse } from './substances.js';
 import { underworldStatus, type UnderworldState } from './underworld.js';
 import { selectedCharacterId } from './accounts.js';
 import { playedMs } from './records.js';
+/** v0.38 · Préstamo de los Kuro: lo que se debe, la cuota, cuándo vence (en tiempo jugado) y cuotas impagadas seguidas. */
+export interface Loan { owed: number; daily: number; due: number; missed: number }
 
 export interface ContractProgress { instanceId: string; contractId: string; version: number; state: 'active' | 'completed' | 'abandoned'; objectives: Record<string, boolean>; outcome?: string | null }
 
@@ -53,7 +55,7 @@ export interface PlayerState {
   running: boolean; auto: { on: boolean; personality: string; status: string };
   // ---- v0.6
   body: BodyState;
-  bio: { objective: string; childhood: string; event: string; done: boolean } | null;
+  bio: { objective: string; childhood: string; event: string; done: boolean; loan?: Loan } | null;
   identified: { crime: string; district: string; at: number } | null;
   intel: Map<string, { name: string; zone: string; x: number; y: number; at: number; precise: boolean }>;
   substances: SubstanceUse;
@@ -213,7 +215,7 @@ export function validateCreate(c: Content, input: any): string | null {
     if (!EVENTS.some((o) => o.id === input.bio.event)) return 'Giro vital desconocido';
   }
   if (input.skillPoints) {
-    const extra = (input.bio?.objective === 'maestria' ? 2 : 0) + (input.bio?.event === 'deuda' ? 2 : 0);
+    const extra = bioExtraPoints(input.bio);
     let sum = 0;
     for (const [k, v] of Object.entries(input.skillPoints)) {
       if (!c.skills.some((s) => s.id === k) || !Number.isInteger(v) || (v as number) < 0 || (v as number) > CREATION_SKILL_MAX) return `Reparto de habilidades inválido (${k})`;
@@ -238,6 +240,7 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
   const bio = input.bio;
   const add = (m: Record<string, number> | undefined) => { for (const [k, v] of Object.entries(m ?? {})) lv[k] = (lv[k] ?? 1) + v; };
   if (bio) { add(OBJECTIVES.find((o) => o.id === bio.objective)?.skills); add(CHILDHOODS.find((o) => o.id === bio.childhood)?.skills); add(EVENTS.find((o) => o.id === bio.event)?.skills); }
+  add(origin.skills);
   add(input.skillPoints);
   const skillXp = Object.fromEntries(Object.entries(lv).map(([k, v]) => [k, skillXpFor(Math.min(SKILL_POINT_CAP, Math.max(1, v)))]));
   const bioMoney = bio ? (OBJECTIVES.find((o) => o.id === bio.objective)?.money ?? 0) + (CHILDHOODS.find((o) => o.id === bio.childhood)?.money ?? 0) + (EVENTS.find((o) => o.id === bio.event)?.money ?? 0) : 0;
@@ -251,6 +254,16 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
   if (role.id === 'solo') items.push(['pistola-ligera', 1], ['bala-pistola', 24]);
   if (role.id === 'lawman') items.push(['taser', 1], ['carga-taser', 6]);
   if (role.id === 'nomad') items.push(['bate', 1]);
+  // v0.38 · Equipo del inicio elegido; la ropa del inicio se viste en su hueco.
+  for (const [it, qty] of origin.items) {
+    const def = c.items.find((x) => x.id === it);
+    const have = items.find((x) => x[0] === it);
+    if (have) have[1] += qty; else items.push([it, qty]);
+    if (def?.wear) (wear as Record<string, string>)[def.wear.slot] = it;
+  }
+  const start = origin.start ?? { zone: c.manifest.startZone, at: c.manifest.startAt };
+  // El préstamo de los Kuro: primera cuota dentro de dos días de juego.
+  const loan = bio?.event === 'deuda' ? { owed: LOAN.principal, daily: LOAN.daily, due: LOAN.graceDays * 24 * c.manifest.cityHourMs, missed: 0 } : undefined;
   const equipped = role.id === 'solo' ? 'pistola-ligera' : role.id === 'lawman' ? 'taser' : role.id === 'nomad' ? 'bate' : 'navaja';
   try {
     await db.tx(async (q) => {
@@ -260,9 +273,10 @@ export async function createCharacter(db: Db, c: Content, accountId: string, inp
         `INSERT INTO characters (id, account_id, name, origin, role, attributes, skills, appearance, money, hp, stamina, luck, humanity, zone_id, pos_x, pos_y, rules_version, content_version, profession, humanity_max)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$13)`,
         [id, accountId, input.name.trim(), origin.id, role.id, JSON.stringify(attrs), JSON.stringify(skills), JSON.stringify((normalizeAppearance(input.appearance) as any).value), 0,
-          maxHp(attrs), maxStamina(attrs), attrs.LUCK, humanityBase(attrs.EMP), c.manifest.startZone, c.manifest.startAt[0] + 0.5, c.manifest.startAt[1] + 0.5, RULES.version, contentVersion, input.profession ?? 'vagabundo']);
+          maxHp(attrs), maxStamina(attrs), attrs.LUCK, humanityBase(attrs.EMP), start.zone, start.at[0] + 0.5, start.at[1] + 0.5, RULES.version, contentVersion, input.profession ?? 'vagabundo']);
       await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$3,$4)', [`start-${id}`, id, startMoney, `Fondos iniciales (${origin.name})`]);
-      await q.query('UPDATE characters SET money = $2, equipped = $3, skill_xp = $4, wear = $5, bio = $6 WHERE id = $1', [id, startMoney, equipped, JSON.stringify(skillXp), JSON.stringify(wear), bio ? JSON.stringify({ ...bio, done: false }) : null]);
+      await q.query('UPDATE characters SET money = $2, equipped = $3, skill_xp = $4, wear = $5, bio = $6 WHERE id = $1', [id, startMoney, equipped, JSON.stringify(skillXp), JSON.stringify(wear), bio ? JSON.stringify({ ...bio, done: false, ...(loan ? { loan } : {}) }) : null]);
+      for (const [f, v] of Object.entries(origin.rep)) await q.query('INSERT INTO reputation (character_id, faction_id, value) VALUES ($1,$2,$3) ON CONFLICT (character_id, faction_id) DO UPDATE SET value = EXCLUDED.value', [id, f, v]);
       for (const [def, qty] of items) await q.query('INSERT INTO inventory_items (id, character_id, def_id, qty) VALUES ($1,$2,$3,$4)', [randomUUID(), id, def, qty]);
       await q.query('UPDATE accounts SET selected_character_id=$2 WHERE id=$1', [accountId, id]);
     });
@@ -335,7 +349,7 @@ export function flagValue(p: PlayerState, key: string): unknown {
 }
 
 /** Ganchos que rellena el mundo (datos que no viven en el estado del personaje). */
-export const sheetHooks: { post: (p: PlayerState) => CharacterSheet['post']; objective: (p: PlayerState) => string } = { post: () => null, objective: () => '' };
+export const sheetHooks: { post: (p: PlayerState) => CharacterSheet['post']; objective: (p: PlayerState) => string; loan: (p: PlayerState) => CharacterSheet['loan'] } = { post: () => null, objective: () => '', loan: () => undefined };
 /** Armas que llevas encima por tamaño (las integradas no cuentan). */
 export function weaponSlotsOf(c: Content, p: PlayerState) {
   let grande = 0, pequena = 0;
@@ -384,7 +398,8 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     body: { wounds: { ...p.body.wounds } as Record<string, number>, lost: [...p.body.lost], bleed: Math.round(p.body.bleed * 10) / 10, chrome: mechanicalParts(c, p), broken: effective(c, p).chromeBroken,
       list: woundList(p.body).map((w) => ({ ...w, bleed: Math.round(effectiveBleed(w) * 1000) / 1000})), tempHp: p.tempHp ? Math.round(p.tempHp.amount) : 0, tempHpS: p.tempHp ? Math.max(0, Math.round((p.tempHp.until - Date.now()) / 1000)) : 0, pain: painOf(p.body) },
     weaponSlots: weaponSlotsOf(c, p), aim: aimOf(c, p),
-    bio: p.bio ? { ...p.bio, objectiveName: OBJECTIVES.find((o) => o.id === p.bio!.objective)?.name ?? p.bio.objective, progress: sheetHooks.objective(p) } : null,
+    bio: p.bio ? { objective: p.bio.objective, childhood: p.bio.childhood, event: p.bio.event, done: p.bio.done, objectiveName: OBJECTIVES.find((o) => o.id === p.bio!.objective)?.name ?? p.bio.objective, progress: sheetHooks.objective(p) } : null,
+    loan: sheetHooks.loan(p),
     identified: p.identified ? { crime: p.identified.crime, district: p.identified.district } : null,
     substances: substanceEffects(c, p.substances).status, underworld: underworldStatus(c, p.underworld),
     // Ciberpsicosis: no se nota nada hasta que es seria.

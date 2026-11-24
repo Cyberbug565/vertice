@@ -1,5 +1,297 @@
 [
-  { "id": "callejero", "name": "Callejero", "desc": "Creciste en los bloques de Ferro. Conoces a los comerciantes y desconfías de los uniformes.", "contact": "Lin, la del puesto de fideos del Mercado Lumen", "startMoney": 150 },
-  { "id": "corporativo", "name": "Corporativo", "desc": "Saliste de una corporación con algo de dinero y muchas preguntas sin responder.", "contact": "Nadia «Bisagra» Ortuño, fixer en el bar El Relé", "startMoney": 300 },
-  { "id": "nomada", "name": "Nómada", "desc": "Llegaste de las rutas exteriores. Sabes arreglar motores y no dejar a nadie atrás.", "contact": "Tomás, el dueño del desguace", "startMoney": 120 }
+  {
+    "id": "callejero",
+    "name": "Callejero",
+    "desc": "Creciste en los bloques de Ferro. Conoces a los comerciantes y desconfías de los uniformes.",
+    "contact": "Lin, la del puesto de fideos del Mercado Lumen",
+    "startMoney": 150,
+    "ventaja": "Conoces el barrio: empiezas en el Bloque 9, zona segura."
+  },
+  {
+    "id": "corporativo",
+    "name": "Corporativo",
+    "desc": "Saliste de una corporación con algo de dinero y muchas preguntas sin responder.",
+    "contact": "Nadia «Bisagra» Ortuño, fixer en el bar El Relé",
+    "startMoney": 300,
+    "ventaja": "Más dinero de partida y contactos con fixers."
+  },
+  {
+    "id": "nomada",
+    "name": "Nómada",
+    "desc": "Llegaste de las rutas exteriores. Sabes arreglar motores y no dejar a nadie atrás.",
+    "contact": "Tomás, el dueño del desguace",
+    "startMoney": 120,
+    "ventaja": "Sabes de motores y de carretera."
+  },
+  {
+    "id": "excarcelado",
+    "name": "Recién salido del penal",
+    "desc": "Seis años en el Penal de las Salinas. Te han soltado con una bolsa de plástico, un número de expediente y mala fama.",
+    "contact": "Rufo, el camarero de La Última Luz",
+    "startMoney": 40,
+    "start": {
+      "zone": "bar-ultima-luz",
+      "at": [
+        14,
+        6
+      ]
+    },
+    "items": [
+      [
+        "herramienta-penal",
+        1
+      ],
+      [
+        "venda",
+        2
+      ]
+    ],
+    "skills": {
+      "intimidacion": 2,
+      "sigilo": 1
+    },
+    "rep": {
+      "hermandad-sol": 10,
+      "pcv": -15
+    },
+    "ventaja": "Intimidas de serie y la Hermandad del Sol te debe un favor. La PCV te tiene fichado.",
+    "dificultad": "dificil"
+  },
+  {
+    "id": "desheredado",
+    "name": "Desheredado de Colinas",
+    "desc": "Tu familia te ha borrado del testamento y de las fotos. Te queda un abrigo carísimo, buenos modales y ninguna idea de cómo se vive sin servicio.",
+    "contact": "La señora Marlow, tu antigua niñera",
+    "startMoney": 900,
+    "start": {
+      "zone": "vertice",
+      "at": [
+        224,
+        56
+      ]
+    },
+    "items": [
+      [
+        "abrigo-sastre-noir",
+        1
+      ],
+      [
+        "gafas-sol",
+        1
+      ]
+    ],
+    "skills": {
+      "negociacion": 2,
+      "actuacion": 1
+    },
+    "rep": {
+      "calle": -5
+    },
+    "ventaja": "Dinero y ropa de lujo, pero la calle te mira como a un turista.",
+    "dificultad": "facil"
+  },
+  {
+    "id": "becario",
+    "name": "Becario de Aurora Logística",
+    "desc": "Tres años de prácticas sin sueldo en la torre Aurora. Hoy te han dado una tarjeta de acceso caducada y las gracias.",
+    "contact": "Íñigo, el de recursos humanos que te debe una",
+    "startMoney": 220,
+    "start": {
+      "zone": "torre-aurora-p0",
+      "at": [
+        3,
+        7
+      ]
+    },
+    "items": [
+      [
+        "credencial-falsa",
+        1
+      ]
+    ],
+    "skills": {
+      "interfaz": 1,
+      "investigacion": 1
+    },
+    "rep": {
+      "aurora": 15
+    },
+    "ventaja": "Conoces cómo funciona una corpo por dentro y tienes una credencial que abre alguna puerta.",
+    "dificultad": "normal"
+  },
+  {
+    "id": "fugado",
+    "name": "Fugado de un laboratorio",
+    "desc": "Te despertaste en una camilla de Okami con cicatrices que no recuerdas. Saliste por el conducto de ventilación. Okami quiere su propiedad de vuelta.",
+    "contact": "La doctora Sato, que te cosió sin preguntar",
+    "startMoney": 30,
+    "start": {
+      "zone": "clinica-sato",
+      "at": [
+        8,
+        5
+      ]
+    },
+    "items": [
+      [
+        "estim",
+        2
+      ],
+      [
+        "mascara-filtro",
+        1
+      ]
+    ],
+    "skills": {
+      "filo": 2,
+      "percepcion": 1,
+      "atletismo": 1
+    },
+    "rep": {
+      "okami": -40
+    },
+    "ventaja": "Tu cuerpo aguanta más cromo que el de nadie. Okami te busca.",
+    "dificultad": "dificil"
+  },
+  {
+    "id": "musico",
+    "name": "Músico de Neón Rojo",
+    "desc": "Tocas en garitos que pagan en copas. Conoces a todos los porteros y a ningún casero que te quiera.",
+    "contact": "Mika, DJ residente del Circuito 33",
+    "startMoney": 180,
+    "start": {
+      "zone": "discoteca-circuito",
+      "at": [
+        19,
+        8
+      ]
+    },
+    "items": [
+      [
+        "cerveza-kanal",
+        2
+      ]
+    ],
+    "skills": {
+      "actuacion": 2,
+      "negociacion": 1
+    },
+    "rep": {
+      "kitsune": 10
+    },
+    "ventaja": "Te abren puertas en Neón Rojo y caes bien a las Kitsune.",
+    "dificultad": "normal"
+  },
+  {
+    "id": "vertedero",
+    "name": "Rata del Vertedero",
+    "desc": "Naciste entre montañas de chatarra. Sabes desmontar cualquier cosa y venderla por piezas antes de que su dueño se dé cuenta.",
+    "contact": "La Abuela Chispa, jefa de los Chatarreros",
+    "startMoney": 60,
+    "start": {
+      "zone": "vertice",
+      "at": [
+        312,
+        294
+      ]
+    },
+    "items": [
+      [
+        "kit-herramientas",
+        1
+      ],
+      [
+        "ganzua-electronica",
+        1
+      ],
+      [
+        "mascara-filtro",
+        1
+      ]
+    ],
+    "skills": {
+      "reparacion": 2,
+      "sigilo": 1
+    },
+    "rep": {
+      "chatarreros": 20
+    },
+    "ventaja": "Herramientas, ganzúa y los Chatarreros de tu parte. Empiezas en zona sin ley.",
+    "dificultad": "dificil"
+  },
+  {
+    "id": "hijo-yermo",
+    "name": "Hijo del Yermo",
+    "desc": "Llegas a la ciudad por primera vez, con arena en los bolsillos y un machete. En el Motel Atardecer aún te fían una noche.",
+    "contact": "Doña Ramira, la del Motel Atardecer",
+    "startMoney": 80,
+    "start": {
+      "zone": "motel-int",
+      "at": [
+        13,
+        5
+      ]
+    },
+    "items": [
+      [
+        "machete",
+        1
+      ],
+      [
+        "agua-filtrada",
+        4
+      ],
+      [
+        "abrigo-nomada",
+        1
+      ]
+    ],
+    "skills": {
+      "atletismo": 1,
+      "conduccion": 2
+    },
+    "rep": {
+      "nomadas-polvo": 20
+    },
+    "ventaja": "Aguantas el desierto y los nómadas del Polvo te consideran de los suyos.",
+    "dificultad": "normal"
+  },
+  {
+    "id": "expolicia",
+    "name": "Expolicía",
+    "desc": "Te echaron de la PCV por negarte a cobrar un sobre. O por cobrarlo mal, depende de quién lo cuente.",
+    "contact": "El sargento Ortega, que aún te pasa información",
+    "startMoney": 200,
+    "start": {
+      "zone": "bar-rele",
+      "at": [
+        10,
+        5
+      ]
+    },
+    "items": [
+      [
+        "taser",
+        1
+      ],
+      [
+        "carga-taser",
+        6
+      ],
+      [
+        "gabardina-detective",
+        1
+      ]
+    ],
+    "skills": {
+      "investigacion": 2,
+      "armas": 1
+    },
+    "rep": {
+      "pcv": -10,
+      "hojas-rojas": -20
+    },
+    "ventaja": "Sabes investigar y tienes contactos dentro. Las Hojas Rojas te recuerdan.",
+    "dificultad": "normal"
+  }
 ]

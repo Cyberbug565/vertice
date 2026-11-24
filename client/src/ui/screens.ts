@@ -2,10 +2,10 @@
 import { ATTRIBUTE_IDS, RULES, carryCapacity, chromeCapacity, humanityBase, maxHp, maxStamina, walkSpeed, type Attributes, type AccountRoster } from '@vertice/shared';
 import { api, setToken } from '../api';
 import { content, zoneDef } from '../content';
-import { settings, saveSettings } from '../settings';
+import { settings, saveSettings, HUD_ITEMS } from '../settings';
 import { blip, initAudio } from '../audio';
 import { $ui, clearUi, fmtMoney, h } from './dom';
-import { HAIR_COLLECTION, HAIR_DYE, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
+import { HAIR_COLLECTION, HAIR_DYE, FABRICS, FACE_TATTOOS, SHOE_STYLES, TATTOO_ZONES, TOP_DETAILS, MOUTHS, NOSES, CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, bioExtraPoints, LOAN, OBJECTIVES, ACCESSORIES, BODIES, BODY_TATTOOS, BROWS, BUILDS, CHROME_PARTS, EYE_COLORS, FACE_SHAPES, FACIALS, HAIR_STYLES, LABELS, MAKEUPS, PIERCINGS, SCARS, TOPS } from '@vertice/shared';
 import { Preview } from './preview';
 import { Preview3D } from '../render/chars3d';
 import { recordPanel } from './record';
@@ -110,6 +110,15 @@ const SHOES = ['#101018', '#e8e8f0', '#5a3a1a', '#a82020', '#43f3ff', '#3a3a3a']
 const MAKEUP_COL = ['#ff3fa4', '#43f3ff', '#ffd23f', '#b46cff', '#a82020', '#1a1a1a'];
 const pick = <T,>(l: readonly T[]) => l[Math.floor(Math.random() * l.length)];
 
+/** v0.38 · Dónde empieza cada inicio, en palabras. */
+function startPlace(o: (typeof content.origins)[number]) {
+  if (!o.start) return 'el vestíbulo del Bloque 9 (Ferro, zona segura)';
+  const z = content.zones.find((x) => x.id === o.start!.zone);
+  if (z?.kind === 'interior') return z.name;
+  const d = z?.districts.find((d) => o.start!.at[0] >= d.rect[0] && o.start!.at[1] >= d.rect[1] && o.start!.at[0] < d.rect[0] + d.rect[2] && o.start!.at[1] < d.rect[1] + d.rect[3]);
+  return d ? `la calle, en ${d.name}` : 'la calle';
+}
+
 export function creationScreen(onDone: (id: string) => void, onCancel: () => void) {
   clearUi();
   const st = { step: 0, name: '', origin: 'callejero', role: 'solo', profession: 'vagabundo', previewChrome: false,
@@ -120,7 +129,7 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
     bio: { objective: 'rico', childhood: 'calle', event: 'traicion' }, skillPoints: {} as Record<string, number> };
   const STEPS = ['Identidad', 'Aspecto', 'Origen', 'Historia', 'Rol', 'Oficio', 'Atributos', 'Habilidades', 'Revisión'];
   const S = (n: string) => STEPS.indexOf(n);
-  const skillBudget = () => CREATION_SKILL_POINTS + (st.bio.objective === 'maestria' ? 2 : 0) + (st.bio.event === 'deuda' ? 2 : 0);
+  const skillBudget = () => CREATION_SKILL_POINTS + bioExtraPoints(st.bio);
   const skillSpent = () => Object.values(st.skillPoints).reduce((a, b) => a + b, 0);
   const bioBonus = (k: string) => [OBJECTIVES, CHILDHOODS, EVENTS].reduce((acc, list) => acc + (((list as readonly any[]).find((o) => o.id === (list === OBJECTIVES ? st.bio.objective : list === CHILDHOODS ? st.bio.childhood : st.bio.event))?.skills ?? {})[k] ?? 0), 0);
   const bioMoney = () => [OBJECTIVES.find((o) => o.id === st.bio.objective), CHILDHOODS.find((o) => o.id === st.bio.childhood), EVENTS.find((o) => o.id === st.bio.event)].reduce((a, o) => a + ((o as any)?.money ?? 0), 0);
@@ -207,9 +216,12 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
           h('p', { class: 'muted small' }, 'El cromo se ve por partes: cabeza, ojos, torso, brazos y piernas. Empiezas sin implantes; los verás aparecer al operarte.')),
         controls);
     } else if (st.step === S('Origen')) {
-      body = h('div', { class: 'grid2' }, ...content.origins.map((o) => h('button', { class: 'choice', 'aria-pressed': String(st.origin === o.id), onclick: () => { st.origin = o.id; render(); } },
-        h('h4', {}, o.name), h('p', {}, o.desc), h('p', {}, `Contacto inicial: ${o.contact}`), h('p', {}, `Fondos: ${fmtMoney(o.startMoney)}`))));
-      body = h('div', { class: 'col' }, h('p', { class: 'muted' }, 'El origen cambia tus contactos y opciones de diálogo. Es independiente del rol (puedes ser de origen nómada sin ser Nómada).'), body);
+      const DIFF: Record<string, string> = { facil: 'Fácil', normal: 'Normal', dificil: 'Difícil' };
+      body = h('div', { class: 'grid2' }, ...content.origins.map((o) => h('button', { class: 'choice', id: `origin-${o.id}`, 'aria-pressed': String(st.origin === o.id), onclick: () => { st.origin = o.id; render(); } },
+        h('h4', {}, o.name, h('small', { class: `diff diff-${o.dificultad}` }, ` · ${DIFF[o.dificultad]}`)), h('p', {}, o.desc),
+        o.ventaja ? h('p', { style: { color: 'var(--yellow)' } }, o.ventaja) : null,
+        h('p', { class: 'muted small' }, `Empiezas en ${startPlace(o)} · ${fmtMoney(o.startMoney)} · Contacto: ${o.contact}`))));
+      body = h('div', { class: 'col' }, h('p', { class: 'muted' }, 'Tu inicio decide dónde apareces, con qué equipo, qué sabes hacer y quién te tiene simpatía (o ganas). Es independiente del rol.'), body);
     } else if (st.step === S('Historia')) {
       const group = (title: string, key: 'objective' | 'childhood' | 'event', list: readonly any[], hint: string) => h('div', { class: 'col' }, h('h4', { class: 'creator-sec' }, title), h('p', { class: 'muted small' }, hint),
         h('div', { class: 'grid2' }, ...list.map((o) => h('button', { class: 'choice', id: `bio-${key}-${o.id}`, 'aria-pressed': String(st.bio[key] === o.id), onclick: () => { st.bio[key] = o.id; render(); } },
@@ -260,7 +272,8 @@ export function creationScreen(onDone: (id: string) => void, onCancel: () => voi
         h('p', { class: 'mono' }, ATTRIBUTE_IDS.map((k) => `${k} ${st.attributes[k]}`).join(' · ')),
         h('p', {}, `Objetivo: ${OBJECTIVES.find((x) => x.id === st.bio.objective)?.name} · ${CHILDHOODS.find((x) => x.id === st.bio.childhood)?.name} · ${EVENTS.find((x) => x.id === st.bio.event)?.name}`),
         h('p', { class: 'mono small' }, Object.entries(st.skillPoints).filter(([, v]) => v > 0).map(([k, v]) => `${content.skills.find((x) => x.id === k)?.name ?? k} +${v}`).join(' · ') || 'Sin puntos de habilidad repartidos.'),
-        h('p', {}, `Empiezas en el vestíbulo del Bloque 9 (zona segura, verde) con ${fmtMoney(Math.max(20, o.startMoney + bioMoney()))}, agente personal, chaqueta, navaja, dos raciones de fideos y dos de agua. Tendrás que comer, beber y dormir.`),
+        h('p', {}, `Empiezas en ${startPlace(o)} con ${fmtMoney(Math.max(20, o.startMoney + bioMoney()))}, agente personal, ropa básica, navaja, dos raciones de fideos y dos de agua${o.items.length ? `, más: ${o.items.map(([i, q]) => `${content.items.find((x) => x.id === i)?.name ?? i}${q > 1 ? ` ×${q}` : ''}`).join(', ')}` : ''}. Tendrás que comer, beber y dormir.`),
+        st.bio.event === 'deuda' ? h('p', { class: 'bad' }, `Préstamo de los Kuro: debes ${fmtMoney(LOAN.principal)}. Cuota de ${fmtMoney(LOAN.daily)} cada día de juego (la primera dentro de ${LOAN.graceDays}). Si no la llevas encima, recargo de ${fmtMoney(LOAN.penalty)}; con ${LOAN.mercsAfter} impagadas te mandan mercenarios.`) : null,
         h('p', { class: 'muted' }, 'Recuerda: una sola vida. Si tu personaje muere, se pierde su progreso; la cuenta conserva ajustes, amigos y el memorial.'));
     }
     card.replaceChildren(h('h2', {}, 'Crear personaje'), h('div', { class: 'steps' }, ...STEPS.map((s, i) => h('span', { class: i === st.step ? 'on' : '' }, `${i + 1}. ${s}`))), body, err, nav);
@@ -298,6 +311,14 @@ export function settingsPanel(onChange?: () => void) {
       h('label', { class: 'row' }, h('input', { type: 'checkbox', checked: s.nudity, onchange: (e: any) => set({ nudity: e.target.checked }) }), 'Desnudos (contenido adulto). Si lo quitas, quien no lleve ropa interior aparece con la de serie'),
       h('label', { class: 'row' }, h('span', { style: { width: '9em' } }, 'Tamaño de texto'), h('select', { onchange: (e: any) => set({ textSize: e.target.value }) }, h('option', { value: 'normal', selected: s.textSize === 'normal' }, 'Normal'), h('option', { value: 'large', selected: s.textSize === 'large' }, 'Grande'), h('option', { value: 'xl', selected: s.textSize === 'xl' }, 'Muy grande'))),
       range('music', 'Música'), range('ambient', 'Ambiente'), range('sfx', 'Efectos'), range('ui', 'Interfaz'),
-      h('p', { class: 'muted' }, 'Controles: clic izquierdo para moverte o interactuar · clic derecho → Bailar (o Y) · S para cancelar · Tab/Mayús+Tab seleccionar lo cercano · E o Espacio interactuar · R retirada · Z dormir · O empleos · K mercado · B recompensas · J diario · C ficha · I inventario · M mapa · Enter chat · rueda o +/− zoom.')));
+      h('h3', {}, 'Interfaz en pantalla'),
+      h('p', { class: 'muted small' }, 'Elige qué se ve. Lo de texto largo viene apagado; los controles están en Esc → Teclas.'),
+      h('div', { class: 'hud-settings' }, ...HUD_ITEMS.flatMap((it, i) => [
+        ...(i === 0 || HUD_ITEMS[i - 1].group !== it.group ? [h('h4', {}, it.group)] : []),
+        h('label', { class: 'row' }, h('input', { type: 'checkbox', id: `hud-${it.id}`, checked: s.hud[it.id], onchange: (e: any) => set({ hud: { ...settings.hud, [it.id]: e.target.checked } }) }), it.name)])),
+      h('div', { class: 'row', style: { gap: '6px', marginTop: '6px' } },
+        h('button', { class: 'btn small', onclick: () => { set({ hud: Object.fromEntries(HUD_ITEMS.map((i) => [i.id, i.on])) as any }); panel.remove(); settingsPanel(onChange); } }, 'Por defecto'),
+        h('button', { class: 'btn small', onclick: () => { set({ hud: Object.fromEntries(HUD_ITEMS.map((i) => [i.id, ['scan', 'needs', 'minimap', 'body', 'weapon', 'toasts'].includes(i.id)])) as any }); panel.remove(); settingsPanel(onChange); } }, 'Mínimo'),
+        h('button', { class: 'btn small', onclick: () => { set({ hud: Object.fromEntries(HUD_ITEMS.map((i) => [i.id, true])) as any }); panel.remove(); settingsPanel(onChange); } }, 'Todo'))));
   $ui().append(panel);
 }

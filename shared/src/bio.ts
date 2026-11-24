@@ -15,7 +15,7 @@ export const CHILDHOODS = [
 ] as const;
 export const EVENTS = [
   { id: 'traicion', name: 'Una traición', desc: 'Alguien de confianza te vendió. Ahora miras dos veces.', skills: { percepcion: 1, intimidacion: 1 } as Record<string, number>, money: 0 },
-  { id: 'deuda', name: 'Una deuda', desc: 'Debes dinero a quien no debes. Empiezas con menos, pero aprendiste rápido.', skills: {}, money: -100, points: 2 },
+  { id: 'deuda', name: 'Un préstamo de los Kuro', desc: 'Pediste 15.000 €$ a los prestamistas Kuro para formarte. +5 puntos de habilidad, pero cada día de juego te cobran una cuota; si no pagas, mandan mercenarios.', skills: {}, money: 0, points: 5 },
   { id: 'perdida', name: 'Una pérdida', desc: 'Perdiste a alguien. Desde entonces actúas para no sentir.', skills: { actuacion: 2 }, money: 0 },
   { id: 'pelea', name: 'Una pelea que lo cambió todo', desc: 'Ganaste. El otro no se levantó.', skills: { cuerpo: 2 }, money: 0 },
   { id: 'servicio', name: 'Servicio militar', desc: 'Dos años de uniforme y disparos.', skills: { armas: 2 }, money: 0 },
@@ -23,3 +23,13 @@ export const EVENTS = [
 /** Puntos de habilidad que se reparten al crear el personaje (máximo 3 por habilidad). */
 export const CREATION_SKILL_POINTS = 10;
 export const CREATION_SKILL_MAX = 3;
+
+/** v0.38 · Préstamo del giro vital «deuda»: 5 puntos de habilidad a cambio de 15.000 €$ que se devuelven por cuotas diarias
+ *  (un día de juego = 24 horas de ciudad). Si una cuota no se puede pagar, se acumula con recargo; con dos impagadas, los
+ *  Kuro mandan mercenarios, cada vez más y mejor armados. */
+export const LOAN = { principal: 15000, daily: 600, penalty: 300, graceDays: 2, mercsAfter: 2 } as const;
+/** Puntos de habilidad extra al crear el personaje según su historia. */
+export function bioExtraPoints(bio?: { objective?: string; event?: string } | null) {
+  const ev = EVENTS.find((e) => e.id === bio?.event) as { points?: number } | undefined;
+  return (bio?.objective === 'maestria' ? 2 : 0) + (ev?.points ?? 0);
+}

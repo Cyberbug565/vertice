@@ -569,5 +569,27 @@
   "relations": {
    "kitsune": -35
   }
+ },
+ {
+  "id": "kuro",
+  "name": "Prestamistas Kuro",
+  "kind": "contact",
+  "desc": "Familia de usureros de Neón Rojo. Prestan a quien nadie presta y cobran a quien no puede pagar, con mercenarios.",
+  "color": "#c8a24a",
+  "archetype": "Usureros con ejército privado",
+  "territory": [
+   "neon-rojo"
+  ],
+  "relations": {
+   "pcv": 10,
+   "kitsune": 20
+  },
+  "hp": 90,
+  "defense": 14,
+  "chrome": [
+   "ojos",
+   "brazo_der"
+  ],
+  "weapon": "subfusil"
  }
 ]

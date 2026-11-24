@@ -32,6 +32,8 @@ import { Street } from './street.js';
 import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
 import { Missions } from './missions.js';
+import { Debts } from './debt.js';
+import { Scanner } from './scanner.js';
 import { Nightlife } from './nightlife.js';
 import { Casino } from './casino.js';
 import { Prison } from './prison.js';
@@ -100,6 +102,8 @@ export class World {
   readonly underworld: Underworld;
   readonly casino: Casino;
   readonly prison: Prison;
+  readonly debts: Debts;
+  readonly scanner: Scanner;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
@@ -128,6 +132,9 @@ export class World {
     this.underworld = new Underworld(this);
     this.casino = new Casino(this);
     this.prison = new Prison(this);
+    this.debts = new Debts(this);
+    this.scanner = new Scanner(this);
+    sheetHooks.loan = (p) => this.debts.view(p);
     sheetHooks.post = (p) => this.posts.status(p);
     sheetHooks.objective = (p) => objectiveStatus(p).text;
   }
@@ -455,6 +462,8 @@ export class World {
     if (this.tick % 20 === 12) this.legends.tick().catch((err) => console.error('[leyendas]', err));
     if (this.tick % 20 === 15) { try { this.relics.everySecond(); } catch (err) { console.error('[matrices]', err); } }
     if (this.tick % 20 === 5) this.threats.tick().catch((err) => console.error('[amenazas]', err));
+    if (this.tick % 20 === 3) this.debts.everySecond().catch((err) => console.error('[deuda]', err));
+    if (this.tick % 1200 === 7) this.scanner.everyMinute().catch((err) => console.error('[red]', err));
     if (this.tick % 20 === 0) this.facts.expire().then((ch) => { if (ch) this.broadcastFacts(); }).catch(() => {});
     if (this.tick % (RULES.tickRate * 15) === 0) void this.persistAll();
     if (this.tick % (RULES.tickRate * 20) === 7) this.collectZones();
@@ -850,7 +859,7 @@ export class World {
     const blocked=this.prison.allowCommand(c,m);
     if(blocked){if('seq' in m)this.send(c,{t:'ack',seq:m.seq,ok:false,reason:blocked});return;}
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
-    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto', 'penal'];
+    const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto', 'penal', 'look', 'dossier', 'loan'];
     // Una orden manual del jugador (no del piloto automático, que usa seq 0) le devuelve el control.
     if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'retreat', 'stop', 'dance'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
     if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop', 'dance'].includes(m.t)) this.autopilot.takeOver(c);
@@ -923,6 +932,9 @@ export class World {
       case 'hack': return guarded(m.seq, () => this.combat.hack(c, m));
       case 'equip': return guarded(m.seq, async () => sv.equip(c, m.item));
       case 'skillUp': return guarded(m.seq, () => this.progress.skillUp(c, m.skill));
+      case 'loan': return guarded(m.seq, () => this.debts.pay(c, m.amount));
+      case 'look': return void this.scanner.scan(c, m.target).catch((err) => console.error('[escáner]', err));
+      case 'dossier': return guarded(m.seq, () => this.scanner.command(c, m.action, m.offer));
       case 'perkBuy': return guarded(m.seq, () => this.progress.perkBuy(c, m.perk));
       case 'wear': return guarded(m.seq, async () => sv.wear(c, m.slot, m.item, (m as any).confirm === true));
       case 'ability': return guarded(m.seq, () => this.combat.ability(c, m.id));
