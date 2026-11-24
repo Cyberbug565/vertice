@@ -1,4 +1,7 @@
 {
+ "doc.remache.root": "Has encontrado la radio. Cierra la puerta y siéntate. Si vienes por una mano para volver al turno, tengo una. Si vienes para ajustar cuentas, te enseño el cajón de abajo.",
+ "doc.remache.pregunta": "¿De dónde sale todo este cromo?",
+ "doc.remache.procedencia": "De lo que deja la fundición cuando cierra. Las fábricas tiran carcasas enteras por una grieta. Yo las reparo. La clínica de Cénit cobra por el sello; aquí cobramos por devolver a alguien a casa.",
  "opt.leave": "Marcharte.",
  "opt.leave_later": "Ahora no. (Marcharte)",
  "opt.ok": "Entendido.",

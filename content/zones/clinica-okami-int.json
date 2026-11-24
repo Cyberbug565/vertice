@@ -1,4 +1,5 @@
 {
+ "police": 2,
  "id": "clinica-okami-int",
  "name": "Clínica Okami",
  "kind": "interior",
@@ -104,6 +105,15 @@
  ],
  "objects": [
   {
+   "id": "vigilancia-clinica-okami-int",
+   "name": "Cámara de vigilancia interior",
+   "at": [
+    10,
+    2
+   ],
+   "kind": "camera"
+  },
+  {
    "id": "obj-wp-clinica-okami",
    "name": "Puesto: Quirófano de la Clínica Okami",
    "at": [
@@ -115,6 +125,10 @@
   }
  ],
  "waypoints": [
+  [
+   3,
+   7
+  ],
   [
    9,
    4

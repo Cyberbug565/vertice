@@ -8,6 +8,7 @@ export class Zone {
   readonly id: string;
   readonly grid: ZoneGrid;
   readonly entities = new Set<Entity>();
+  readonly actors = new Set<Entity>();
   readonly players = new Set<Entity>();
   private cells = new Map<number, Set<Entity>>();
   constructor(readonly def: ZoneDef) { this.id = def.id; this.grid = buildZoneGrid(def); }
@@ -29,11 +30,13 @@ export class Zone {
 
   add(e: Entity) {
     this.entities.add(e); if (e.kind === 'player') this.players.add(e);
+    if (e.kind === 'player' || e.kind === 'npc') this.actors.add(e);
     e.zone = this; e.cellKey = Zone.cellKey(e.x, e.y);
     let s = this.cells.get(e.cellKey); if (!s) this.cells.set(e.cellKey, (s = new Set())); s.add(e);
   }
   remove(e: Entity) {
     this.entities.delete(e); this.players.delete(e);
+    this.actors.delete(e);
     this.cells.get(e.cellKey)?.delete(e);
   }
   moved(e: Entity) {

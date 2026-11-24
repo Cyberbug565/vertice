@@ -1,0 +1,237 @@
+[
+ {
+  "id": "okami-iris-nacar",
+  "name": "Iris Nácar",
+  "family": "Okami Signature",
+  "slot": "ojos",
+  "grade": 4,
+  "price": 28900,
+  "capacity": 7,
+  "humanity": 3,
+  "maker": "okami",
+  "line": "certificado",
+  "desc": "Óptica binaural de baja luz. Visión 320° a 35 m y +2 a Percepción.",
+  "effects": {
+   "sight": {
+    "range": 35,
+    "degrees": 320
+   },
+   "skills": {
+    "percepcion": 2
+   }
+  },
+  "region": "ojos",
+  "model": "optico",
+  "visible": "ojo",
+  "rarity": "legendario"
+ },
+ {
+  "id": "okami-brazo-caligrafia",
+  "name": "Brazo Caligrafía",
+  "family": "Okami Signature",
+  "slot": "brazo",
+  "grade": 4,
+  "price": 31500,
+  "capacity": 8,
+  "humanity": 3,
+  "maker": "okami",
+  "line": "certificado",
+  "desc": "Carcasa satinada y estabilización de precisión. +2 Destreza y +2 a Cirugía.",
+  "effects": {
+   "attrs": {
+    "DEX": 2
+   },
+   "surgery": 2
+  },
+  "region": "brazos",
+  "model": "atlas",
+  "visible": "brazo",
+  "prosthetic": true,
+  "rarity": "legendario"
+ },
+ {
+  "id": "okami-pierna-seda",
+  "name": "Pierna Seda",
+  "family": "Okami Signature",
+  "slot": "pierna",
+  "grade": 4,
+  "price": 36500,
+  "capacity": 9,
+  "humanity": 4,
+  "maker": "okami",
+  "line": "certificado",
+  "desc": "Marcha amortiguada para largas jornadas. +12 % de velocidad y −10 % de fatiga.",
+  "effects": {
+   "speed": 0.12,
+   "needs": {
+    "fatigue": 0.9
+   }
+  },
+  "region": "piernas",
+  "model": "titan",
+  "visible": "pierna",
+  "prosthetic": true,
+  "rarity": "legendario"
+ },
+ {
+  "id": "okami-velo-porcelana",
+  "name": "Velo Porcelana",
+  "family": "Okami Signature",
+  "slot": "mandibula",
+  "grade": 3,
+  "price": 18900,
+  "capacity": 6,
+  "humanity": 2,
+  "maker": "okami",
+  "line": "certificado",
+  "desc": "Placa facial a medida y modulador de voz. +1 Temple y +2 a Negociación.",
+  "effects": {
+   "attrs": {
+    "COOL": 1
+   },
+   "skills": {
+    "negociacion": 2
+   }
+  },
+  "region": "cara",
+  "model": "mordaza",
+  "visible": "mandibula",
+  "rarity": "epico"
+ },
+ {
+  "id": "okami-cortex-orbita",
+  "name": "Córtex Órbita",
+  "family": "Okami Signature",
+  "slot": "cortex",
+  "grade": 5,
+  "price": 45800,
+  "capacity": 12,
+  "humanity": 5,
+  "maker": "okami",
+  "line": "certificado",
+  "desc": "Coprocesador de interfaz de serie numerada. +2 Inteligencia, +2 a Interfaz y +2 RAM con cyberdeck.",
+  "effects": {
+   "attrs": {
+    "INT": 2
+   },
+   "skills": {
+    "interfaz": 2
+   },
+   "ramPlus": 2
+  },
+  "region": "corteza",
+  "rarity": "legendario"
+ },
+ {
+  "id": "remache-mano-garra",
+  "name": "Garra de desguace",
+  "family": "Recambios de Remache",
+  "slot": "manos",
+  "grade": 1,
+  "price": 1050,
+  "capacity": 5,
+  "humanity": 4,
+  "maker": "chatarreros",
+  "line": "taller",
+  "desc": "Pinza industrial recuperada. Suma 3 de daño cuerpo a cuerpo con una carga para la Humanidad alta para su grado.",
+  "effects": {
+   "meleeDmg": 3
+  },
+  "region": "manos",
+  "model": "pinza",
+  "visible": "mano",
+  "prosthetic": true,
+  "rarity": "comun"
+ },
+ {
+  "id": "remache-brazo-matarife",
+  "name": "Brazo Matarife",
+  "family": "Recambios de Remache",
+  "slot": "brazo",
+  "grade": 3,
+  "price": 5700,
+  "capacity": 13,
+  "humanity": 9,
+  "maker": "chatarreros",
+  "line": "taller",
+  "desc": "Brazo de chatarra con hoja integrada. La placa pesada da 1 de blindaje y ocupa 13 de capacidad.",
+  "effects": {
+   "weapon": "cuchillas-antebrazo-arma",
+   "armor": 1
+  },
+  "region": "brazos",
+  "model": "circuito",
+  "visible": "brazo",
+  "prosthetic": true,
+  "rarity": "epico"
+ },
+ {
+  "id": "remache-pierna-mazo",
+  "name": "Pierna Mazo",
+  "family": "Recambios de Remache",
+  "slot": "pierna",
+  "grade": 2,
+  "price": 2550,
+  "capacity": 8,
+  "humanity": 6,
+  "maker": "chatarreros",
+  "line": "taller",
+  "desc": "Prótesis de demolición reconvertida. Suma 4 de daño cuerpo a cuerpo y resta 5 % de velocidad de marcha.",
+  "effects": {
+   "meleeDmg": 4,
+   "speed": -0.05
+  },
+  "region": "piernas",
+  "model": "protesis",
+  "visible": "pierna",
+  "prosthetic": true,
+  "rarity": "raro"
+ },
+ {
+  "id": "remache-mordaza-chapa",
+  "name": "Mordaza de chapa",
+  "family": "Recambios de Remache",
+  "slot": "mandibula",
+  "grade": 2,
+  "price": 2050,
+  "capacity": 8,
+  "humanity": 6,
+  "maker": "chatarreros",
+  "line": "taller",
+  "desc": "Mandíbula ensamblada con placas de recambio. Suma 2 de blindaje y 2 al daño cuerpo a cuerpo.",
+  "effects": {
+   "armor": 2,
+   "meleeDmg": 2
+  },
+  "region": "cara",
+  "model": "mordaza",
+  "visible": "mandibula",
+  "rarity": "raro"
+ },
+ {
+  "id": "remache-optica-carbu",
+  "name": "Óptica Carburo",
+  "family": "Recambios de Remache",
+  "slot": "ojos",
+  "grade": 2,
+  "price": 1900,
+  "capacity": 6,
+  "humanity": 5,
+  "maker": "chatarreros",
+  "line": "taller",
+  "desc": "Óptica de visor de obra reacondicionada. Visión frontal de 150° a 25 m y +1 a Percepción.",
+  "effects": {
+   "sight": {
+    "range": 25,
+    "degrees": 150
+   },
+   "skills": {
+    "percepcion": 1
+   }
+  },
+  "region": "ojos",
+  "model": "optico",
+  "visible": "ojo",
+  "rarity": "raro"
+ }
+]

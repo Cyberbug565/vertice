@@ -1,4 +1,53 @@
 {
+ "matasanos-remache": {
+  "speaker": "remache",
+  "entries": [
+   {
+    "if": [],
+    "node": "root"
+   }
+  ],
+  "nodes": {
+   "root": {
+    "text": "doc.remache.root",
+    "options": [
+     {
+      "id": "catalogo",
+      "text": "doc.opt.clinic",
+      "effects": [
+       {
+        "open": "clinic",
+        "id": "remache"
+       }
+      ]
+     },
+     {
+      "id": "procedencia",
+      "text": "doc.remache.pregunta",
+      "goto": "procedencia"
+     },
+     {
+      "id": "leave",
+      "text": "opt.leave"
+     }
+    ]
+   },
+   "procedencia": {
+    "text": "doc.remache.procedencia",
+    "options": [
+     {
+      "id": "volver",
+      "text": "opt.back",
+      "goto": "root"
+     },
+     {
+      "id": "leave",
+      "text": "opt.leave"
+     }
+    ]
+   }
+  }
+ },
  "nadia": {
   "speaker": "nadia",
   "entries": [

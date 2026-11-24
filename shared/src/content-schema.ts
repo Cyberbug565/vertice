@@ -320,6 +320,8 @@ export const CyberwareSchema = z.object({
     /** v0.9 · RAM extra, ahorro de RAM, regeneración de salud por segundo y probabilidad de crítico. */
     ramPlus: z.number().optional(), ramSave: z.number().optional(), regen: z.number().optional(), crit: z.number().optional(),
   }).prefault({}),
+  /** Procedencia comercial de las series especiales. Independiente de si la pieza es robada. */
+  line: z.enum(['certificado', 'taller']).optional(),
   /** v0.4: zona del cuerpo en la pantalla de ciberware. */
   region: z.enum(CYBER_REGIONS).optional(),
   /** Habilidad que se activa (tecla) con enfriamiento. */

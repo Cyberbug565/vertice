@@ -29,6 +29,7 @@ import { Legends } from './legends.js';
 import { Mythics } from './mythics.js';
 import { Corpses } from './corpses.js';
 import { Street } from './street.js';
+import { Crowds, districtProfile, regionalChrome } from './crowds.js';
 import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
 import { Missions } from './missions.js';
@@ -64,6 +65,7 @@ const YARD_ROLES = ['Taller mecánico', 'Estiba', 'Reciclaje', 'Mantenimiento', 
 const PALETTE = { skin: ['#f6dcc8', '#f0c8a8', '#e8bc96', '#e0b48c', '#d0a078', '#c89070', '#b88060', '#b07a5a', '#9a6848', '#8a5a3c', '#744a30', '#6a4028', '#5a3420', '#46281a', '#c8ccd8'], hair: ['#1a1a1a', '#5a3a2a', '#d9d9e3', '#b46cff', '#43f3ff', '#ff4fa0', '#c0c0c0'], jacket: ['#2f6b4f', '#40506a', '#6b2140', '#7a5b2a', '#3a3a4a', '#5a4b6e', '#2b4a6a'], accent: ['#43f3ff', '#ff4fa0', '#ffd23f', '#7dff7a', '#ff8a3d', '#b46cff'] };
 
 export class World {
+  private readonly districts: Map<string, Content['zones'][number]['districts'][number]>;
   private readonly optics: Map<string, Content['cyberware'][number]>;
   readonly zones = new Map<string, Zone>();
   readonly entities = new Map<number, Entity>();
@@ -98,6 +100,7 @@ export class World {
   readonly corpses: Corpses;
   readonly street: Street;
   readonly cityPeople: CityPeople;
+  readonly crowds: Crowds;
   readonly admin: Admin;
   readonly nightlife: Nightlife;
   readonly missions: Missions;
@@ -110,6 +113,7 @@ export class World {
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
+    this.districts = new Map(c.zones.flatMap(z => z.districts.map(d => [d.id, d] as const)));
     this.optics = new Map(c.cyberware.filter(d => d.effects.sight).map(d => [d.id, d]));
     this.facts = new FactService(db);
     this.inst = new InstanceService(db, c);
@@ -136,6 +140,7 @@ export class World {
     this.casino = new Casino(this);
     this.prison = new Prison(this);
     this.interiors = new Interiors(c);
+    this.crowds = new Crowds(this);
     this.debts = new Debts(this);
     this.scanner = new Scanner(this);
     sheetHooks.loan = (p) => this.debts.view(p);
@@ -157,23 +162,6 @@ export class World {
     const exteriors = [...this.zones.values()].filter((z) => z.def.kind === 'exterior' && z.def.ambient > 0);
     // Ciudad única: la población se reparte por distritos (AMBIENT_NPCS es la de Ferro; el resto escala por su peso).
     const ref = 24; // Peso histórico de Ferro para la configuración AMBIENT_NPCS.
-    const mkAmbient = (zone: Zone, x: number, y: number, home?: [number, number], radius?: number) => {
-      const district = zone.districtAt(x, y);
-      const roles = (district?.ambient ?? 0) >= 16 ? STREET_ROLES : YARD_ROLES;
-      const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES) + ' ' + pick(AMBIENT_SURNAMES), title: pick(roles), x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.3 + rng() * 1.1,
-        appearance: { body: rng() < 0.5 ? 'femenino' : 'masculino', skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent) } });
-      e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
-      // Transeúntes: civiles con algo de cromo visible y salud propia.
-      e.npcType = 'civil'; e.npcMax = 35; e.npcHp = 35; e.defense = 9; e.respawn = { zone: zone.id, template: { type: 'civil', near: { x, y } } }; e.level = 1 + Math.floor(rng() * 6);
-      const chromeRoll = rng();
-      e.chrome = chromeRoll < 0.15 ? ['ojos'] : chromeRoll < 0.25 ? [rng() < 0.5 ? 'brazo_izq' : 'brazo_der'] : chromeRoll < 0.3 ? ['cabeza', 'ojos'] : chromeRoll < 0.34 ? ['pierna_izq', 'pierna_der'] : [];
-      (e.appearance as any).build = pick([...BUILDS, 'medio', 'medio']); (e.appearance as any).hairStyle = pick([...HAIR_STYLES]); (e.appearance as any).faceShape = pick([...FACE_SHAPES]); (e.appearance as any).nose = pick([...NOSES]); (e.appearance as any).mouth = pick([...MOUTHS]); (e.appearance as any).legwear = pick(['pantalon', 'pantalon', 'pantalon', 'shorts', 'falda']);
-      (e.appearance as any).top = pick(['chaqueta', 'gabardina', 'sudadera', 'top', 'traje', 'chaleco', 'mono']); (e.appearance as any).accessory = pick(['ninguno', 'ninguno', 'gafas', 'gorra', 'capucha', 'auriculares', 'visor']);
-      diversifyAppearance(e.appearance as any, rng, 'civil'); // v0.9: más ropa, tejidos, tatuajes y calzado
-      (e.appearance as any).eyes = pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']); (e.appearance as any).pants = pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']); (e.appearance as any).facial = pick(['ninguno', 'ninguno', 'barba', 'bigote']);
-      e.npc.nextThink = Math.floor(rng() * 20);
-      return e;
-    };
     for (const zone of exteriors) {
       if (zone.def.districts.length) {
         const pavement = pedestrianGrid(zone.grid, 'stop');
@@ -184,23 +172,23 @@ export class World {
             const x = Math.max(d.rect[0] + .5, Math.min(d.rect[0] + d.rect[2] - .5, wp[0] + (rng() - .5) * 17));
             const y = Math.max(d.rect[1] + .5, Math.min(d.rect[1] + d.rect[3] - .5, wp[1] + (rng() - .5) * 17));
             const pos = nearestWalkable(pavement, x, y, 7) ?? nearestWalkable(pavement, wp[0] + .5, wp[1] + .5, 10);
-            if (pos) mkAmbient(zone, pos.x, pos.y, [wp[0], wp[1]], 10 + Math.floor(rng() * 18));
+            if (pos) this.createCivil(zone, pos.x, pos.y, rng, [wp[0], wp[1]], 10 + Math.floor(rng() * 18));
           }
         }
         continue;
       }
       const n = Math.round((this.cfg.ambientNpcs * zone.def.ambient) / ref);
-      for (let i = 0; i < n; i++) { const wp = pick(zone.def.waypoints); mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5); }
+      for (let i = 0; i < n; i++) { const wp = pick(zone.def.waypoints); this.createCivil(zone, wp[0] + 0.5, wp[1] + 0.5, rng); }
     }
     const crowdZone = this.zones.get('vertice') ?? this.zones.get('ferro') ?? exteriors[0];
     for (let i = 0; i < this.cfg.crowdNpcs; i++) {
       const p = nearestWalkable(crowdZone.grid, this.cfg.crowdAt[0] + (rng() * 2 - 1) * 8, this.cfg.crowdAt[1] + (rng() * 2 - 1) * 8, 4) ?? { x: this.cfg.crowdAt[0] + 0.5, y: this.cfg.crowdAt[1] + 0.5 };
-      mkAmbient(crowdZone, p.x, p.y, this.cfg.crowdAt, 9);
+      this.createCivil(crowdZone, p.x, p.y, rng, this.cfg.crowdAt, 9);
     }
     this.spawnAmbientFn = (zone: Zone, near?: { x: number; y: number }) => {
       const d = near ? zone.districtAt(near.x, near.y) : null;
       const wp = pick(d?.waypoints.length ? d.waypoints : zone.def.waypoints);
-      return wp ? mkAmbient(zone, wp[0] + 0.5, wp[1] + 0.5) : undefined;
+      return wp ? this.createCivil(zone, wp[0] + 0.5, wp[1] + 0.5, rng) : undefined;
     };
     await this.survival.init();
     await this.property.load();
@@ -212,6 +200,46 @@ export class World {
     this.underworld.populate();
     if (this.cfg.threats !== false) await this.threats.init(); else this.threats.enabled = false;
     for(const n of this.c.npcs)if(n.resident)this.spawnScheduled(n);
+  }
+
+  private createCivil(zone: Zone, x: number, y: number, rng: () => number, home?: [number, number], radius?: number) {
+    const pick = <T,>(a: readonly T[]) => a[Math.floor(rng() * a.length)];
+    const district = zone.def.kind === 'exterior' ? zone.districtAt(x, y) : this.districtDef(zone, x, y);
+    const profile = districtProfile(district?.id ?? zone.id, district?.ambient);
+    const roles = zone.def.tower ? ['Recepción de visitas', 'Representante comercial', 'Empleada de oficina', 'Mensajería'] :
+      zone.def.casino ? ['Cliente del casino', 'Visitante', 'Aficionada a las carreras'] :
+      zone.def.kind === 'interior' ? ['Clientela', 'Haciendo un recado', 'Visitante'] :
+      profile === 'corporativo' ? ['Analista', 'Diseñadora', 'Mensajería corporativa', 'Personal de oficina', 'Turista'] :
+      profile === 'barrio' ? STREET_ROLES : YARD_ROLES;
+    const appearance: NonNullable<Entity['appearance']> = {
+      body: rng() < .5 ? 'femenino' : 'masculino', skin: pick(PALETTE.skin), hair: pick(PALETTE.hair), jacket: pick(PALETTE.jacket), accent: pick(PALETTE.accent),
+      build: pick(BUILDS), hairStyle: pick(HAIR_STYLES), faceShape: pick(FACE_SHAPES), nose: pick(NOSES), mouth: pick(MOUTHS),
+      accessory: pick(['ninguno', 'ninguno', 'gafas', 'gorra', 'capucha', 'auriculares', 'visor']),
+      eyes: pick(['#3a2a1a', '#2a6aa8', '#3a8a4a', '#43f3ff']), pants: pick(['#1a1a24', '#2a2a3a', '#3a2a24', '#1a2a3a']),
+      facial: pick(['ninguno', 'ninguno', 'barba', 'bigote']),
+    };
+    diversifyAppearance(appearance, rng, 'civil');
+    if (profile === 'corporativo' && rng() < .45) {
+      appearance.top = pick(['traje', 'gabardina', 'camisa']);
+      appearance.topPattern = 'liso';
+      appearance.jacket = pick(['#17283c', '#42506a', '#d8d3c7', '#301a37']);
+    }
+    const e = this.addEntity(zone, { kind: 'npc', name: pick(AMBIENT_NAMES) + ' ' + pick(AMBIENT_SURNAMES),
+      title: pick(roles), x, y, interactive: true, dialog: 'transeunte', label: 'Paseando', speed: 1.3 + rng() * 1.1,
+      appearance, chrome: regionalChrome(appearance, profile, rng), npcType: 'civil', npcMax: 35, npcHp: 35,
+      defense: 9, level: 1 + Math.floor(rng() * 6),
+      respawn: { zone: zone.id, template: { type: 'civil', near: { x, y } } },
+    });
+    e.npc = ambientBrain(this.cfg.seed * 31 + e.id, home, radius);
+    e.npc.nextThink = this.tick + Math.floor(rng() * 20);
+    return e;
+  }
+
+  spawnCrowdCivil(zone: Zone, point: [number, number], rng: () => number) {
+    const e = this.createCivil(zone, point[0] + .5, point[1] + .5, rng, point, zone.def.kind === 'interior' ? 8 : 10);
+    e.respawn = undefined;
+    e.npc!.localCrowd = true;
+    return e;
   }
 
   spawnScheduled(n:Content['npcs'][number],level?:number){
@@ -311,7 +339,7 @@ export class World {
     if (zone.id.startsWith('casa:')) out = this.property.houses.get(zone.id.slice(5))?.district || zone.id;
     else if (isPortalZone(zone.id)) { const b = parsePortalZone(zone.id)!.building; out = this.c.houses.find((h) => h.building === b)?.district || zone.id; }
     else {
-      const lobby = zone.def.tower ? this.zones.get(`${zone.def.tower.id}-p0`) : zone;
+      const lobby = zone.def.tower ? this.zones.get(`${zone.def.tower.id}-p0`) : zone.def.storey ? this.zones.get(zone.def.storey.of) : zone;
       const d = lobby?.def.doors.find((x) => this.zones.get(x.to.zone)?.def.kind === 'exterior');
       const ext = d && this.zones.get(d.to.zone);
       if (d && ext) out = this.districtOf(ext, d.to.at[0], d.to.at[1]);
@@ -320,9 +348,7 @@ export class World {
     return out;
   }
   districtDef(zone: Zone, x: number, y: number) {
-    const id = this.districtOf(zone, x, y);
-    for (const z of this.zones.values()) for (const d of z.def.districts) if (d.id === id) return d;
-    return null;
+    return this.districts.get(this.districtOf(zone, x, y)) ?? null;
   }
 
   /** Crea un PNJ (lo usa la supervivencia para los fugitivos). */
@@ -370,7 +396,7 @@ export class World {
       id: this.nextId++, zone: z, cellKey: 0, sectorId: '', path: [], facing: 2, moving: false, lastMoveTick: 0, labelVer: 0, ...o,
       speed: (o.speed ?? RULES.walkSpeedBase) * (o.kind === 'npc' && o.speed ? 0.82 : 1) * this.cfg.speedScale,
     } as Entity;
-    if (o.kind === 'npc' && z.def.kind === 'exterior') {
+    if (o.kind === 'npc' && z.def.kind === 'exterior' && !isWalkable(pedestrianGrid(z.grid, 'stop'), e.x, e.y)) {
       const stop = nearestWalkable(pedestrianGrid(z.grid, 'stop'), e.x, e.y, 12);
       if (stop) { e.x = stop.x; e.y = stop.y; }
     }
@@ -416,12 +442,13 @@ export class World {
     this.relics.dilation();
     if(this.tick%20===1){this.cityPeople.everySecond();this.cityPeople.watchDoors();}
     if(this.tick%20===11)this.prison.everySecond();
+    if(this.tick%5===3)this.crowds.update();
     for (const z of this.zones.values()) {
       // Nivel de detalle: lejos de cualquier jugador, los transeúntes y bandas quedan «resumidos» (no se mueven ni piensan).
       const anyone = z.players.size > 0;
       // v0.35 · Una planta de portal o una casa vacía no tiene nada que simular (solo puertas y muebles).
       if (!anyone && this.dynamicSince.has(z.id)) continue;
-      for (const e of z.entities) {
+      for (const e of z.actors) {
         const resident=!!e.npc?.def?.resident;
         if(resident&&!z.isActive(e)&&e.aggro===undefined)continue;
         if (e.npc && e.npcType !== 'essential' && e.aggro === undefined && (!anyone || !z.isActive(e))) continue;
@@ -438,7 +465,9 @@ export class World {
         if (e.npc && e.npc.nextThink <= this.tick) {
           if (this.pathBudget > 0) {
             thinkNpc(this, e);
-            e.npc.nextThink = this.tick + (resident&&e.aggro===undefined?(e.moving?7:14):z.players.size>0?5:20)+(e.id%3);
+            const wait = e.npc.localCrowd && e.aggro === undefined ? (e.moving ? 12 : 18) :
+              resident && e.aggro === undefined ? (e.moving ? 7 : 14) : anyone ? 5 : 20;
+            e.npc.nextThink = this.tick + wait + (e.id % 3);
           } else e.npc.nextThink = this.tick + 1;
         }
       }

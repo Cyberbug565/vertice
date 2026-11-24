@@ -21,12 +21,14 @@ export class ClinicService {
   }
   private rep(p: PlayerState, d: RipperdocDef) { return d.faction ? p.rep.get(d.faction) ?? 0 : 0; }
 
-  private offer(p: PlayerState, d: RipperdocDef, def: CyberwareDef, source: ClinicOffer['source'], ref: string, stolen: boolean): ClinicOffer {
-    const ef = effective(this.c, p);
+  private offer(p: PlayerState, d: RipperdocDef, def: CyberwareDef, source: ClinicOffer['source'], ref: string, stolen: boolean, ef = effective(this.c, p)): ClinicOffer {
     const removal = source === 'installed';
     const labor = Math.round(120 * def.grade * d.priceMult * (removal ? 0.6 : 1));
     let price = labor;
-    if (source === 'stock') price += Math.round(this.market.corpPrice(def.id, 'ciberware') * d.priceMult);
+    if (source === 'stock') {
+      const materialPrice = def.line === 'taller' ? def.price : this.market.corpPrice(def.id, 'ciberware');
+      price += Math.round(materialPrice * d.priceMult);
+    }
     if (source === 'stolen') price += Math.round(def.price * 0.6 * d.priceMult);
     if (source === 'inventory' && stolen && d.morality === 'flexible') price = Math.round(price * 1.4);
     const capacityAfter = removal ? ef.chromeUsed - def.capacity : ef.chromeUsed + def.capacity;
@@ -40,6 +42,7 @@ export class ClinicService {
     if (!removal) {
       if (def.grade > d.maxGrade) blocked = `${d.name} no trabaja cromo de grado ${ROMAN[def.grade - 1]} (máximo ${ROMAN[d.maxGrade - 1]}).`;
       else if (stolen && d.morality === 'estricta') blocked = 'Se niega: no instala cromo robado.';
+      else if (def.line === 'taller' && d.morality === 'estricta') blocked = 'Se niega: esta modificación de taller carece de licencia.';
       // v0.9 · Ranuras dobles: dos ojos, dos brazos, cuatro dedos… Solo se bloquea cuando todos los huecos están ocupados.
       const inSlot = p.cyber.filter((x) => x.location === 'installed' && this.c.cyberware.find((y) => y.id === x.def)?.slot === def.slot);
       const cap = cyberSlotCapacity(def.slot);
@@ -64,7 +67,7 @@ export class ClinicService {
     if (!blocked && sides?.length === 0) blocked = 'No hay un lado disponible. Retira el implante que ocupa el hueco o repón el brazo amputado.';
     if (!blocked && !removal && def.visible === 'piernas' && installed.some((ci) => this.c.cyberware.find((d) => d.id === ci.def)?.slot === 'pierna')) blocked = 'Esta pareja de piernas necesita los dos lados libres.';
     return {
-      rarity: def.rarity ?? rarityOfGrade(def.grade), sides, part: removal ? installed.find((ci) => ci.id === ref)?.part : undefined,
+      line: def.line, rarity: def.rarity ?? rarityOfGrade(def.grade), sides, part: removal ? installed.find((ci) => ci.id === ref)?.part : undefined,
       source, ref, action: removal ? 'remove' : 'install', def: def.id, name: def.name, grade: def.grade, slot: def.slot, family: def.family, desc: def.desc, stolen,
       capacity: def.capacity, humanity: def.humanity, price, survival: risk.survival, clean: risk.clean, theft: risk.theft, danger: risk.label,
       humanityAfter: removal ? p.humanity : humanityAfter, capacityAfter, blocked, replaces, warning,
@@ -75,11 +78,11 @@ export class ClinicService {
     const d = this.doc(docId);
     const ef = effective(this.c, p);
     const offers: ClinicOffer[] = [];
-    for (const id of d.stock) offers.push(this.offer(p, d, this.c.cyberware.find((x) => x.id === id)!, 'stock', id, false));
-    if (d.morality !== 'estricta') for (const id of d.stolenStock) offers.push(this.offer(p, d, this.c.cyberware.find((x) => x.id === id)!, 'stolen', id, true));
+    for (const id of d.stock) offers.push(this.offer(p, d, this.c.cyberware.find((x) => x.id === id)!, 'stock', id, false, ef));
+    if (d.morality !== 'estricta') for (const id of d.stolenStock) offers.push(this.offer(p, d, this.c.cyberware.find((x) => x.id === id)!, 'stolen', id, true, ef));
     for (const ci of p.cyber) {
       const def = this.c.cyberware.find((x) => x.id === ci.def)!;
-      offers.push(this.offer(p, d, def, ci.location === 'installed' ? 'installed' : 'inventory', ci.id, ci.stolen));
+      offers.push(this.offer(p, d, def, ci.location === 'installed' ? 'installed' : 'inventory', ci.id, ci.stolen, ef));
     }
     const dangerLabel = d.danger >= 0.3 ? 'Peligroso: tiene fama de robar a sus pacientes' : d.danger > 0.05 ? 'Algo turbio' : 'De confianza';
     return { doc: d.id, name: d.name, skill: d.skill, morality: MORALITY[d.morality], dangerLabel, desc: d.desc, money: p.money, humanity: p.humanity, humanityMax: p.humanityMax, chromeUsed: ef.chromeUsed, chromeCapacity: ef.chromeCapacity, rep: this.rep(p, d), offers,

@@ -189,6 +189,15 @@
  ],
  "objects": [
   {
+   "id": "vigilancia-torre-teselia-p0",
+   "name": "Cámara de vigilancia interior",
+   "at": [
+    9,
+    2
+   ],
+   "kind": "camera"
+  },
+  {
    "id": "ascensor-torre-teselia-p0",
    "name": "Ascensor",
    "at": [
@@ -226,5 +235,5 @@
  "furnished": true,
  "restricted": "corporativo",
  "detector": true,
- "police": 2
+ "police": 4
 }
