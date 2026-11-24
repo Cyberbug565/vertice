@@ -16,6 +16,7 @@ import { faceDecal, faceParams } from './face3d';
 import { roboticParts } from './cyber3d';
 import { hairsVersion, isCollectionHair } from './hairs3d';
 import { samuraiVersion } from './samurai3d';
+import { buildScene3D, makeSky, type Scene3D } from './world3d';
 import { buildTormenta, loadTormenta, retargetTormenta, tormentaReady, tormentaVersion, type Tormenta } from './tormenta3d';
 import { chooseGait, cadence, gaitProfile, sampleLeg } from './locomotion';
 import { kineticShield, placeShield } from './kinetic-shield';
@@ -200,6 +201,10 @@ interface Rig {
   mech?: Tormenta;
 }
 
+/** v0.39 · Cámaras disponibles. */
+export type CamMode = 'cenital' | 'tercera' | 'primera';
+export const CAM_NAMES: Record<CamMode, string> = { cenital: 'Cenital', tercera: 'Tercera persona', primera: 'Primera persona' };
+
 export class Chars3D {
   readonly canvas: HTMLCanvasElement;
   private renderer: THREE.WebGLRenderer;
@@ -209,6 +214,18 @@ export class Chars3D {
   /** v0.36 · Puertas del kit encajadas en las fachadas. */
   readonly doors = new Doors3D();
   private camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 4000);
+  // ---- v0.39 · Cámaras: cenital (la de siempre), tercera persona y primera persona.
+  camMode: CamMode = 'cenital';
+  /** Hacia dónde mira la cámara cercana (radianes; 0 = +y de la rejilla) y cuánto sube o baja. */
+  camYaw = 0; camPitch = -0.18; camDist = 3.2;
+  /** Luz del día (0 noche, 1 mediodía): en las vistas cercanas no hay capa de oscuridad 2D encima. */
+  daylight = 1;
+  private pcam = new THREE.PerspectiveCamera(62, 1, 0.05, 260);
+  private camReady = false; private pivot = new THREE.Vector3(); private lastMode: CamMode = 'cenital';
+  private zoneDef: ZoneDef | null = null;
+  private nearScenes = new Map<string, Scene3D>(); private near: Scene3D | null = null;
+  private sky = makeSky(); private fog3d = new THREE.Fog(0x000000, 30, 140);
+  private viewW = 1; private viewH = 1;
   private rigs = new Map<number, Rig>();
   private occl = new THREE.Group();
   private bOccl: (THREE.Mesh | null)[] = [];
@@ -232,7 +249,8 @@ export class Chars3D {
     this.renderer.debug.checkShaderErrors = !!import.meta.env.DEV;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.world.scale.y = Y_SQUASH;
-    this.scene.add(this.world, this.hemi, this.sun, this.rim);
+    this.scene.add(this.world, this.hemi, this.sun, this.rim, this.sky.mesh);
+    this.sky.mesh.visible = false;
     this.sun.position.set(2, 8, 5); // luz principal desde arriba y de cara a la cámara
     this.rim.position.set(-6, 4, -6); // contraluz frío: separa la silueta del fondo
     this.world.add(this.vehicles.world, this.doors.group);
@@ -250,6 +268,11 @@ export class Chars3D {
   private scenes = new Map<string, { city: City3D; occl: THREE.Group; bOccl: (THREE.Mesh | null)[]; built: boolean; quality: string }>();
   private interior = { city: null as City3D | null, occl: new THREE.Group() };
   setZone(z: ZoneDef, force = false): boolean {
+    this.zoneDef = z; this.camReady = false;
+    if (this.near) this.near.group.visible = false;
+    for (const [k, sc] of this.nearScenes) if (k !== z.id && !this.scenes.has(k)) { this.world.remove(sc.group); sc.dispose(); this.nearScenes.delete(k); }
+    if (force) for (const [k, sc] of this.nearScenes) if (k === z.id) { this.world.remove(sc.group); sc.dispose(); this.nearScenes.delete(k); }
+    this.near = null;
     this.vehicles.clear();
     for (const r of this.rigs.values()) this.disposeRig(r);
     this.rigs.clear(); this.born.clear();
@@ -974,6 +997,9 @@ export class Chars3D {
     for (const [id, rig] of this.rigs) if (!seen.has(id)) {
       this.disposeRig(rig); this.rigs.delete(id); this.born.delete(id);
     }
+    this.viewW = opts.W; this.viewH = opts.H;
+    if (this.camMode !== 'cenital') { this.renderNear(opts); return; }
+    this.leaveNear();
     // Cámara: el centro de la pantalla corresponde al mismo punto del suelo que en la vista 2D.
     const z = opts.zoom;
     const lx = (opts.W / 2 - opts.worldX) / z, ly = (opts.H / 2 - opts.worldY) / z; // píxeles del mundo sin cámara
@@ -994,6 +1020,105 @@ export class Chars3D {
     this.renderer.render(this.scene, this.camera);
     this.renderer.resetState();
     gl.viewport(vp[0], vp[1], vp[2], vp[3]);
+  }
+
+  // ------------------------------------------------------------------ v0.39 · cámaras cercanas
+  /** Escena cercana de la zona actual (suelo, mobiliario, muros): se hace la primera vez que se mira de cerca. */
+  private ensureNear() {
+    const z = this.zoneDef; if (!z) return null;
+    let sc = this.nearScenes.get(z.id);
+    if (!sc) { const t0 = performance.now(); sc = buildScene3D(z, !!this.city?.active, BUILDING_H); this.nearScenes.set(z.id, sc); this.world.add(sc.group); const ms = performance.now() - t0; if (ms > 120) console.info(`[3d] escena cercana de ${z.id}: ${ms.toFixed(0)} ms`); }
+    this.near = sc; sc.group.visible = true;
+    return sc;
+  }
+  /** Vuelta a la cenital: se deshace todo lo de la vista cercana. */
+  private leaveNear() {
+    if (this.lastMode === 'cenital') return;
+    this.lastMode = 'cenital';
+    this.world.scale.y = Y_SQUASH;
+    if (this.near) this.near.group.visible = false;
+    this.occl.visible = true; this.sky.mesh.visible = false; this.scene.fog = null;
+    this.hemi.intensity = 2.9; this.sun.intensity = 3.1; this.rim.intensity = 1.6;
+  }
+  /** Altura de lo que ocupa la loseta (x, y): edificios, muros y mobiliario. */
+  private solidAt(x: number, y: number) {
+    const sc = this.near, z = this.zoneDef; if (!sc || !z) return 0;
+    const ix = Math.floor(x), iy = Math.floor(y);
+    if (ix < 0 || iy < 0 || ix >= z.width || iy >= z.height) return 99;
+    return sc.heights[iy * z.width + ix];
+  }
+  private renderNear(opts: { W: number; H: number; meId: number; dt: number }) {
+    const sc = this.ensureNear(), me = this.rigs.get(opts.meId);
+    const first = this.lastMode === 'cenital';
+    this.lastMode = this.camMode;
+    this.world.scale.y = 1; this.occl.visible = false;
+    if (!me) { this.camReady = false; return; }
+    const interior = this.zoneDef?.kind !== 'exterior';
+    // Luz y cielo según la hora (en los interiores, siempre luz de dentro).
+    const day = interior ? 0.85 : this.daylight;
+    this.hemi.intensity = 2.9 * (0.32 + 0.68 * day); this.sun.intensity = 3.1 * (0.15 + 0.85 * day); this.rim.intensity = 1.6;
+    const hor = this.sky.set(day, interior);
+    this.fog3d.color.copy(hor); this.fog3d.near = interior ? 14 : 34; this.fog3d.far = interior ? 46 : 150;
+    this.scene.fog = this.fog3d; this.sky.mesh.visible = true;
+    const p = me.root.position, dt = Math.min(0.1, opts.dt);
+    // Al entrar en la vista cercana, la cámara se pone detrás del personaje, mirando hacia donde mira él.
+    if (first || !this.camReady) { this.camYaw = me.heading; this.camPitch = this.camMode === 'primera' ? -0.05 : -0.18; this.pivot.set(p.x, 0, p.z); this.camReady = true; }
+    const k = Math.min(1, dt * 12);
+    this.pivot.x += (p.x - this.pivot.x) * k; this.pivot.z += (p.z - this.pivot.z) * k;
+    const cy = Math.cos(this.camPitch), fwd = new THREE.Vector3(Math.sin(this.camYaw) * cy, Math.sin(this.camPitch), Math.cos(this.camYaw) * cy);
+    const right = new THREE.Vector3(-Math.cos(this.camYaw), 0, Math.sin(this.camYaw));
+    const tall = me.mech ? 1.65 : 1;
+    const cam = this.pcam;
+    this.world.updateMatrixWorld(true);
+    if (this.camMode === 'primera') {
+      // Ojos: la cabeza del modelo (sigue al cuerpo al andar, agacharse o rodar); un pelín por delante para no ver el pelo.
+      const head = me.human?.bones.get('Head');
+      const eye = head && !me.mech ? head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0.07, 0)) : new THREE.Vector3(p.x, 1.42 * tall * 1.5, p.z);
+      eye.addScaledVector(new THREE.Vector3(fwd.x, 0, fwd.z).normalize(), 0.12);
+      cam.position.copy(eye);
+      cam.fov = 70; me.root.visible = false;
+    } else {
+      // Tercera persona: detrás y un poco a la derecha del hombro; si algo se interpone, la cámara se acerca.
+      const pivot = new THREE.Vector3(this.pivot.x, 1.32 * tall, this.pivot.z).addScaledVector(right, 0.38 * tall);
+      const want = this.camDist * tall;
+      let d = want;
+      for (let t = 0.25; t <= want; t += 0.08) {
+        const q = pivot.clone().addScaledVector(fwd, -t);
+        if (q.y < 0.15 || this.solidAt(q.x, q.z) > q.y - 0.1) { d = Math.max(0.45, t - 0.25); break; }
+      }
+      cam.position.copy(pivot).addScaledVector(fwd, -d);
+      cam.fov = 62;
+    }
+    cam.aspect = opts.W / Math.max(1, opts.H); cam.near = 0.05; cam.far = interior ? 60 : 175; // (más allá, la niebla ya lo tapa)
+    cam.up.set(0, 1, 0); cam.lookAt(cam.position.clone().add(fwd));
+    cam.updateProjectionMatrix();
+    this.sky.mesh.position.copy(cam.position);
+    void sc;
+    const gl = this.renderer.getContext();
+    const vp = gl.getParameter(gl.VIEWPORT) as Int32Array;
+    this.renderer.resetState();
+    this.renderer.setViewport(0, 0, this.vpW, this.vpH);
+    this.renderer.clearDepth();
+    this.renderer.render(this.scene, cam);
+    this.renderer.resetState();
+    gl.viewport(vp[0], vp[1], vp[2], vp[3]);
+  }
+  /** Punto de la rejilla (x, y, altura) en píxeles de pantalla con la cámara actual; null si queda detrás. */
+  project(x: number, h: number, y: number): { x: number; y: number; depth: number } | null {
+    const cam = this.camMode === 'cenital' ? this.camera : this.pcam;
+    const v = this.world.localToWorld(new THREE.Vector3(x, h, y));
+    const depth = v.distanceTo(cam.position);
+    v.project(cam);
+    if (v.z > 1 || v.z < -1) return null;
+    return { x: (v.x + 1) / 2 * this.viewW, y: (1 - v.y) / 2 * this.viewH, depth };
+  }
+  /** Punto del suelo bajo el píxel (gx, gy) con la cámara cercana (para apuntar y señalar). */
+  groundAt(gx: number, gy: number): { x: number; y: number } | null {
+    const ndc = new THREE.Vector2(gx / this.viewW * 2 - 1, -(gy / this.viewH * 2 - 1));
+    const rc = new THREE.Raycaster(); rc.setFromCamera(ndc, this.pcam);
+    const hit = rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3());
+    if (!hit || hit.distanceTo(this.pcam.position) > 120) return null;
+    return { x: hit.x, y: hit.z };
   }
 
   private animate(r: Rig, e: Ent3D, o: { meId: number; guarding: boolean; now: number; dt: number; serverNow: number }) {

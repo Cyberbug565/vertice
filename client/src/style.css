@@ -774,3 +774,10 @@ html[data-hide~="labels"] .toolbar.actions .ibtn { min-width: 0; padding-left: 8
 html[data-hide~="file"] .hud-file { display: none !important; }
 .hud-settings label.row { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
 .hud-settings label.row input { flex: 0 0 auto; }
+
+/* v0.39 · Cámaras cercanas: aviso al cambiar y mirilla en primera persona. */
+.cam-hint { position: fixed; top: 18%; left: 50%; transform: translateX(-50%); background: var(--panel-solid, #0d0d18); border: 1px solid #43f3ff66; border-radius: 6px; padding: 6px 14px; text-align: center; z-index: 30; pointer-events: none; letter-spacing: 0.04em; }
+.crosshair { position: fixed; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; pointer-events: none; z-index: 20; }
+.crosshair::before, .crosshair::after { content: ''; position: absolute; background: #e8fbffcc; box-shadow: 0 0 3px #000; }
+.crosshair::before { left: 8px; top: 0; width: 2px; height: 18px; }
+.crosshair::after { top: 8px; left: 0; height: 2px; width: 18px; }

@@ -3,7 +3,8 @@ import { installedSight, Atlas, prisonZone, facingToIdx, checkChance, chanceBand
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
-import { settings, onSettings, hud } from './settings';
+import { settings, onSettings, hud, saveSettings } from './settings';
+import { CAM_NAMES, type CamMode } from './render/chars3d';
 import { audioScene, blip, initAudio, setAmbientActive } from './audio';
 import * as sfx from './sfx';
 import { stealthBar, weaponWheel } from './ui/stealth';
@@ -634,6 +635,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     for (const a of held) { const v = MOVE[a]; if (v) { sx += v[0]; sy += v[1]; } }
     // Pantalla → mundo isométrico: arriba = (−1,−1), derecha = (1,−1). (v0.9: W y S iban al revés.)
     let dx = sx + sy, dy = sy - sx;
+    // v0.39 · Con la cámara cercana, W va hacia donde mira la cámara y A/D de lado.
+    if (view.near && (sx || sy)) { const f = view.camForward(); dx = -sy * f.x - sx * f.y; dy = -sy * f.y + sx * f.x; }
     const len = Math.hypot(dx, dy); if (len) { dx /= len; dy /= len; }
     view.steer = { dx, dy };
     if (dx || dy) lastSteerDir = { dx, dy };
@@ -682,16 +685,40 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     if (lootTarget >= 0) { const lp = document.getElementById('loot-panel'); const t = view.ents.get(lootTarget); if (!lp) lootTarget = -1; else if (!t || Math.hypot(t.x - view.me.x, t.y - view.me.y) > 3.2) { lp.remove(); lootTarget = -1; } }
     const act = eAction();
     if (!act) { ePrompt.style.display = 'none'; return; }
-    const sp = view.world.toGlobal(worldToScreen(view.me.x, view.me.y));
     ePrompt.textContent = '';
     ePrompt.append(h('span', { class: 'kbd' }, keyOf('interact')), ` ${act.label}`);
-    ePrompt.style.display = ''; ePrompt.style.left = `${Math.round(sp.x)}px`; ePrompt.style.top = `${Math.round(sp.y - 95 * view.zoom)}px`;
+    ePrompt.style.display = '';
+    // v0.39 · Con la cámara cercana, el aviso va en el centro, un poco por debajo de la mirilla.
+    if (view.near) { ePrompt.style.left = `${Math.round(window.innerWidth / 2)}px`; ePrompt.style.top = `${Math.round(window.innerHeight * 0.6)}px`; }
+    else { const sp = view.world.toGlobal(worldToScreen(view.me.x, view.me.y)); ePrompt.style.left = `${Math.round(sp.x)}px`; ePrompt.style.top = `${Math.round(sp.y - 95 * view.zoom)}px`; }
   }, 150));
   window.addEventListener('blur', () => { held.clear(); pushSteer(true); }, { signal: eventScope.signal });
   window.addEventListener('keyup', (e) => {
     const a = ARROWS[e.key.toLowerCase()] ?? actionFor(e.key.toLowerCase());
     if (a && MOVE[a] && held.delete(a)) pushSteer();
   }, { signal: eventScope.signal });
+  // v0.39 · Cámaras: cenital → tercera persona → primera persona (tecla configurable, F5 por defecto). Se recuerda la última.
+  const CAMS: CamMode[] = ['cenital', 'tercera', 'primera'];
+  const camHint = h('div', { class: 'cam-hint', style: { display: 'none' } });
+  const crosshair = h('div', { class: 'crosshair', style: { display: 'none' } });
+  $ui().append(camHint, crosshair);
+  let camHintT = 0;
+  const applyCamera = (m: CamMode, announce: boolean) => {
+    const got = view.setCamMode(m);
+    crosshair.style.display = got === 'primera' ? '' : 'none';
+    document.documentElement.dataset.cam = got;
+    if (announce) {
+      camHint.replaceChildren(h('b', {}, `Cámara: ${CAM_NAMES[got]}`), got === 'cenital' ? '' : h('div', { class: 'small' }, `Arrastra con el ratón para mirar · W hacia donde miras${got === 'tercera' ? ' · rueda: distancia' : ''} · ${keyOf('camera')}: cambiar`));
+      camHint.style.display = ''; clearTimeout(camHintT); camHintT = window.setTimeout(() => { camHint.style.display = 'none'; }, 3500);
+    }
+    held.size && pushSteer(true);
+  };
+  const cycleCamera = () => {
+    if (!settings.chars3d) { toast('Las cámaras cercanas necesitan los personajes en 3D (Ajustes).', 'warn'); return; }
+    const next = CAMS[(CAMS.indexOf(view.camMode) + 1) % CAMS.length];
+    saveSettings({ camera: next }); applyCamera(next, true); blip('ui');
+  };
+  queueMicrotask(() => applyCamera(settings.camera ?? 'cenital', false));
   const openPause = () => pauseMenu({ onSettings: () => settingsPanel(() => view.applySettings()), onLogout: () => onExit('logout'), onCharacters: () => onExit(), onKeysChanged: () => { renderToolbar(); chatIn.placeholder = `Chat local (${keyOf('chat')})…`; globalIn.placeholder = `Chat global (${keyOf('chatGlobal')})…`; } });
   const keys = (e: KeyboardEvent) => {
     if (fittingRoomOpen()) return;
@@ -750,6 +777,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'bounties': net.send({ t: 'bounties' } as any); break;
       case 'factions': net.send({ t: 'factions' } as any); break;
       case 'ambar': net.send({ t: 'ambar' } as any); break;
+      case 'camera': { e.preventDefault(); cycleCamera(); break; }
       case 'zoomIn': view.setZoom(view.zoom * 1.1); break;
       case 'zoomOut': view.setZoom(view.zoom / 1.1); break;
       case 'target': if (onWorld()) {
@@ -997,6 +1025,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     st, view, net,
     me: () => ({ id: view.meId, x: view.me.x, y: view.me.y, zone: st.zone }),
     entities: () => [...view.ents.values()].map((e) => ({ id: e.s.id, name: e.s.name, kind: e.s.kind, x: e.x, y: e.y })),
-    screenOf: (x: number, y: number) => { const p = view.world.toGlobal(worldToScreen(x, y)); return { x: p.x, y: p.y }; },
+    screenOf: (x: number, y: number, z = 0) => view.screenOf(x, y, z),
+    camera: (m?: CamMode) => (m ? applyCamera(m, false) : view.camMode),
   };
 }

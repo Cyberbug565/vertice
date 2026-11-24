@@ -6,7 +6,7 @@ import { SightShade } from './sight-shade';
 import { vehicleSprite } from './vehicle-art';
 import { Traffic } from './traffic';
 import { AlphaFilter, Application, Container, Graphics, Point, Sprite, Text, UPDATE_PRIORITY, type FederatedPointerEvent, type WebGLRenderer } from 'pixi.js';
-import { BUILDING_H, Chars3D } from './chars3d';
+import { BUILDING_H, Chars3D, type CamMode } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
 import { urbanForm } from './urban-form';
 import {
@@ -184,7 +184,22 @@ export class GameView {
     });
     window.addEventListener('pointerup', (e) => { if (e.button === 2 && this.guarding) { this.guarding = false; this.onGuard(false); } });
     window.addEventListener('blur', () => { if (this.guarding) { this.guarding = false; this.onGuard(false); } });
-    this.app.canvas.addEventListener('wheel', (e) => { e.preventDefault(); this.setZoom(this.zoom * (e.deltaY > 0 ? 0.9 : 1.1)); }, { passive: false });
+    this.app.canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      if (this.near) { const c = this.chars3d!; if (c.camMode === 'tercera') c.camDist = Math.max(1.4, Math.min(7, c.camDist * (e.deltaY > 0 ? 1.1 : 0.9))); return; }
+      this.setZoom(this.zoom * (e.deltaY > 0 ? 0.9 : 1.1));
+    }, { passive: false });
+    // v0.39 · Con la cámara cercana, arrastrar con el botón izquierdo gira la vista (un clic sin arrastrar sigue siendo un clic).
+    let drag: { x: number; y: number; moved: boolean } | null = null;
+    this.app.canvas.addEventListener('pointerdown', (e) => { if (e.button === 0 && this.near) drag = { x: e.clientX, y: e.clientY, moved: false }; });
+    window.addEventListener('pointermove', (e) => {
+      if (!drag || !this.near) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!drag.moved && Math.hypot(dx, dy) < 5) return;
+      drag.moved = true; this.dragged = true;
+      this.turnCam(dx * 0.0055, dy * 0.0045); drag.x = e.clientX; drag.y = e.clientY;
+    });
+    window.addEventListener('pointerup', (e) => { if (e.button === 0) { drag = null; setTimeout(() => { this.dragged = false; }, 0); } });
     // Pérdida del contexto gráfico: aviso y reconstrucción de la escena al recuperarlo.
     this.app.canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.onContextLost(true); });
     this.app.canvas.addEventListener('webglcontextrestored', () => { this.dropSceneCache(); this.rebuild(); this.onContextLost(false); });
@@ -1151,7 +1166,7 @@ export class GameView {
   private statusVisuals(e: CEnt, now: number) {
     if (e.bubble) {
       if (now > (e.bubbleUntil ?? 0)) { e.bubble.destroy({ children: true }); e.bubble = undefined; }
-      else { const g = this.world.toGlobal(worldToScreen(e.x, e.y, 1.8)); e.bubble.position.set(g.x, g.y); }
+      else { const g = this.screenOf(e.x, e.y, 1.8); if (g) e.bubble.position.set(g.x, g.y); e.bubble.renderable = !!g; }
     }
     // Barra de salud de PNJ heridos y marca de facción.
     if (e.s.npcType && e.s.npcType !== 'essential' && e.s.hpPct !== undefined && e.s.hpPct < 100) {
@@ -1254,10 +1269,50 @@ export class GameView {
 
   // ------------------------------------------------------------------ entrada
   private toWorld(gx: number, gy: number) {
+    if (this.near) return this.chars3d!.groundAt(gx, gy) ?? { x: this.me.x, y: this.me.y };
     const l = this.world.toLocal({ x: gx, y: gy });
     return screenToWorld(l.x, l.y);
   }
+  // ------------------------------------------------------------------ v0.39 · cámaras
+  /** ¿Se está mirando con una cámara cercana (tercera o primera persona)? */
+  get near() { return !!this.chars3d && this.chars3d.camMode !== 'cenital'; }
+  get camMode(): CamMode { return this.chars3d?.camMode ?? 'cenital'; }
+  /** Cambia de cámara. Sin personajes 3D solo existe la cenital. */
+  setCamMode(m: CamMode) {
+    if (!this.chars3d) return 'cenital';
+    this.chars3d.camMode = m;
+    return m;
+  }
+  /** Gira la cámara cercana (en radianes). */
+  turnCam(dYaw: number, dPitch: number) {
+    const c = this.chars3d; if (!c) return;
+    c.camYaw -= dYaw;
+    c.camPitch = Math.max(c.camMode === 'primera' ? -1.35 : -1.1, Math.min(c.camMode === 'primera' ? 1.25 : 0.45, c.camPitch - dPitch));
+  }
+  /** Hacia dónde mira la cámara cercana en la rejilla (vector unitario en x, y). */
+  camForward() { const y = this.chars3d?.camYaw ?? 0; return { x: Math.sin(y), y: Math.cos(y) }; }
+  /** Punto del mundo (x, y y altura en losetas como worldToScreen) en la pantalla, con la cámara que toque. */
+  screenOf(x: number, y: number, z = 0): { x: number; y: number; d?: number } | null {
+    if (!this.near) { const g = this.world.toGlobal(worldToScreen(x, y, z)); return { x: g.x, y: g.y }; }
+    const p = this.chars3d!.project(x, 0.45 + z, y);
+    return p ? { x: p.x, y: p.y, d: p.depth } : null;
+  }
+  /** Selección con la cámara cercana: lo más cercano a la cámara cuyo cuerpo cae bajo el puntero. */
+  private pick3d(gx: number, gy: number, includeSelf: boolean): CEnt | null {
+    let best: CEnt | null = null, bestD = Infinity;
+    for (const e of this.ents.values()) {
+      if (!e.view.visible || !e.s.interactive || (!includeSelf && e.s.id === this.meId)) continue;
+      const tall = e.s.kind === 'door' ? 2.2 : e.s.kind === 'object' ? 1.4 : 1.55;
+      const top = this.chars3d!.project(e.x, tall, e.y), foot = this.chars3d!.project(e.x, 0, e.y);
+      if (!top || !foot || foot.depth > 40) continue;
+      const half = Math.max(10, (foot.y - top.y) * (e.s.kind === 'door' ? 0.45 : 0.3));
+      if (gx < foot.x - half || gx > foot.x + half || gy < top.y - 6 || gy > foot.y + 6) continue;
+      if (foot.depth < bestD) { best = e; bestD = foot.depth; }
+    }
+    return best;
+  }
   private pick(gx: number, gy: number, includeSelf = false): CEnt | null {
+    if (this.near) return this.pick3d(gx, gy, includeSelf);
     const l = this.world.toLocal({ x: gx, y: gy });
     let best: CEnt | null = null, bestDepth = -Infinity;
     for (const e of this.ents.values()) {
@@ -1325,8 +1380,9 @@ export class GameView {
     }
     return best;
   }
+  private dragged = false;
   private onTap(ev: FederatedPointerEvent) {
-    if (ev.button !== 0 || this.guarding) return; // (en guardia lo atiende el «mousedown»)
+    if (ev.button !== 0 || this.guarding || this.dragged) return; // (en guardia lo atiende el «mousedown»)
     this.tapAt(ev.global.x, ev.global.y);
   }
   private tapAt(gx: number, gy: number) {
@@ -1461,11 +1517,10 @@ export class GameView {
       // Animación corta: piernas alternas y balanceo; se desactiva con «reducir movimiento».
       if (e.legs && e.body && !(e.charRoot && e.charRoot.rotation !== 0)) this.animateBody(e, dt, now, serverNow);
       if (e.label) {
-        e.label.visible = settings.showNames || e === this.hovered;
-        const p = worldToScreen(e.x, e.y, 1.25);
-        const g = this.world.toGlobal(p);
-        e.label.position.set(g.x, g.y);
-        e.label.scale.set(Math.max(0.8, this.zoom));
+        e.label.visible = (settings.showNames || e === this.hovered) && !(this.near && e.s.id === this.meId);
+        const g = this.screenOf(e.x, e.y, 1.25);
+        if (!g) e.label.visible = false; else e.label.position.set(g.x, g.y);
+        e.label.scale.set(this.near ? Math.max(0.6, Math.min(1.4, 6 / Math.max(1, g?.d ?? 6))) : Math.max(0.8, this.zoom));
       }
     }
 
@@ -1496,6 +1551,10 @@ export class GameView {
     this.drawRain(dt);
     this.animateSky(now, dt);
     this.drawBlood();
+    // v0.39 · Con una cámara cercana, el mundo 2D isométrico no cuadra: se deja de pintar (la lógica sigue igual).
+    const near = this.near;
+    this.world.renderable = !near;
+    for (const l of [this.signsLayer, this.nightOverlay, this.darkness, this.lightsLayer, this.sightShade.layer]) l.renderable = !near;
     this.render3d(now, dt, W, H);
   }
   private render3d(now: number, dt: number, W: number, H: number) {
@@ -1520,9 +1579,10 @@ export class GameView {
     if (!this.chars3d) return;
     const res = this.app.renderer.resolution, key = `${W}x${H}@${res}`;
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
+    { const h = this.cityHourFn(); this.chars3d.daylight = Math.max(0, Math.min(1, (h - 5) / 2.5)) * Math.max(0, Math.min(1, (20.5 - h) / 2.5)); }
     this.buildingObjs.forEach((o, i) => {
       const b = this.zone!.buildings[i];
-      const faded = coversActor(b.rect, o.height!, this.me.x, this.me.y);
+      const faded = !this.near && coversActor(b.rect, o.height!, this.me.x, this.me.y);
       this.chars3d!.setBuildingFaded(i, faded, faded ? .22 : 1);
     });
     // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).

@@ -1,4 +1,10 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.38)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.39)
+
+La v0.39 añade dos cámaras a la cenital, y **F5** cambia entre las tres:
+- **Tercera persona:** detrás del hombro, con colisión contra paredes y edificios.
+- **Primera persona:** desde los ojos del personaje, con mirilla.
+
+En las dos, se arrastra con el ratón para mirar y W anda hacia donde mira la cámara. Para verlas desde cerca se levantan en 3D el suelo, el mobiliario, los muros de los interiores y el cielo según la hora. [Novedades](docs/NOVEDADES-v0.39.md).
 
 La v0.38 reequilibra el arranque y la progresión:
 - **Inicios:** 11 (antes 3), cada uno con su ventaja, su dificultad y su sitio de salida.

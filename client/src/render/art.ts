@@ -9,7 +9,7 @@ export function shade(c: number, f: number) {
   return (r << 16) | (g << 8) | b;
 }
 
-const GROUND: Record<GroundType, number> = {
+export const GROUND: Record<GroundType, number> = {
   void: 0x05050a, asphalt: 0x1d1d27, sidewalk: 0x4a4a60, plaza: 0x46405c, market: 0x4b3a46, dirt: 0x4a3f32, water: 0x1a4a78,
   bridge: 0x4c4c5c, wood: 0x5c4232, tile: 0x585a72, metal: 0x46525c, crosswalk: 0x1d1d27, deck: 0x3e3a36, gravel: 0x4b4640, grass: 0x2f5a3a, sand: 0x8a7458, alley: 0x3c3644, data: 0x07142a, grid: 0x1a0610,
 };

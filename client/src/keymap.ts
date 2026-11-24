@@ -36,6 +36,7 @@ export const KEY_ACTIONS: KeyAction[] = [
   { id: 'bounties', label: 'Recompensas', group: 'Menos usadas', def: 'u' },
   { id: 'factions', label: 'Facciones', group: 'Menos usadas', def: 'ñ' },
   { id: 'ambar', label: 'Rescate Ámbar', group: 'Menos usadas', def: '.' },
+  { id: 'camera', label: 'Cambiar de cámara (cenital, tercera y primera persona)', group: 'Cámara', def: 'f5' },
   { id: 'zoomIn', label: 'Acercar', group: 'Cámara', def: '+' },
   { id: 'zoomOut', label: 'Alejar', group: 'Cámara', def: '-' },
 ];

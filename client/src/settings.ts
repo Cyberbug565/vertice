@@ -8,6 +8,8 @@ export interface Settings {
   nudity: boolean;
   /** v0.38 · Qué se ve en pantalla (Ajustes → Interfaz en pantalla). */
   hud: HudPrefs;
+  /** v0.39 · Cámara elegida (cenital, tercera o primera persona). */
+  camera: 'cenital' | 'tercera' | 'primera';
 }
 export interface HudPrefs {
   scan: boolean; hints: boolean; help: boolean; labels: boolean; panels: boolean; stats: boolean; needs: boolean; minimap: boolean; stealth: boolean;
@@ -36,7 +38,7 @@ export const HUD_ITEMS: { id: keyof HudPrefs; name: string; group: string; on: b
   { id: 'chatGlobal', name: 'Chat global', group: 'Chat', on: true },
 ];
 const HUD_DEFAULTS = Object.fromEntries(HUD_ITEMS.map((i) => [i.id, i.on])) as unknown as HudPrefs;
-const DEFAULTS: Settings = { quality: 'high', fpsCap: 60, resScale: 1, reduceFlashes: false, reduceMotion: false, textSize: 'normal', showNames: true, music: 0.5, ambient: 0.4, sfx: 0.7, ui: 0.5, chars3d: true, nudity: true, hud: { ...HUD_DEFAULTS } };
+const DEFAULTS: Settings = { quality: 'high', fpsCap: 60, resScale: 1, reduceFlashes: false, reduceMotion: false, textSize: 'normal', showNames: true, music: 0.5, ambient: 0.4, sfx: 0.7, ui: 0.5, chars3d: true, nudity: true, hud: { ...HUD_DEFAULTS }, camera: 'cenital' };
 const KEY = 'vertice.settings.v1';
 
 function load(): Settings {

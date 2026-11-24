@@ -1,7 +1,7 @@
 {
   "name": "vertice",
   "private": true,
-  "version": "0.38.0",
+  "version": "0.39.0",
   "type": "module",
   "description": "RPG multijugador persistente isométrico de ambientación cyberpunk (universo original: Ciudad Vértice)",
   "workspaces": [
