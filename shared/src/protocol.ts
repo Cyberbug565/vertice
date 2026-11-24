@@ -286,7 +286,8 @@ export interface HiringView { place: string; posts: { id: string; name: string; 
 export interface ElevatorView { tower: string; name: string; current: number; floors: { floor: number; zone: string; name: string; access: string; allowed: boolean }[] }
 
 export interface JournalEntry {
-  contract: string; title: string; summary: string; state: 'active' | 'completed' | 'abandoned'; outcome?: string;
+  contract: string; title: string; summary: string; state: 'lead' | 'active' | 'completed' | 'abandoned'; outcome?: string;
+  category?: import('./content-schema.js').ContractDef['category']; outcomeText?: string; lead?: string; shared?: boolean;
   objectives: { id: string; text: string; done: boolean }[]; participants: number;
 }
 

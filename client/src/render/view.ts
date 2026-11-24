@@ -746,6 +746,20 @@ export class GameView {
         g.circle(p.x-6,p.y+1,1.5).fill(0xea7e87);g.circle(p.x+6,p.y+1,1.5).fill(0x75e4ba);});
     } else if (s.objKind === 'computer') {
       rel((g) => { drawBox(g, fx + 0.1, fy + 0.2, 0.8, 0.6, 0, 0.75, 0x2a2a36); const t = worldToScreen(fx + 0.5, fy + 0.6, 0.75); g.rect(t.x - 8, t.y - 13, 16, 11).fill(0x101018); g.rect(t.x - 7, t.y - 12, 14, 9).fill(0x43f3ff); g.rect(t.x - 6, t.y - 10, 8, 1).fill(0x101018); g.rect(t.x - 6, t.y - 7, 10, 1).fill(0x101018); });
+    } else if (s.objKind === 'mission-ufo') {
+      rel(g => {
+        const { x, y } = o;
+        g.ellipse(x + 20, y + 12, 93, 22).fill({ color: 0x594457, alpha: .47 });
+        g.ellipse(x + 24, y + 9, 70, 12).fill({ color: 0x2a2230, alpha: .7 });
+        g.ellipse(x, y - 4, 63, 21).fill(0x1a2536).stroke({ color: 0x1f444d, width: 2 });
+        g.ellipse(x - 5, y - 12, 61, 18).fill(0x3d6570).stroke({ color: 0x93aeba, width: 2 });
+        g.ellipse(x - 10, y - 17, 51, 12).stroke({ color: 0x76b1a8, width: 3 });
+        g.ellipse(x - 12, y - 22, 27, 14).fill(0x15294a).stroke({ color: 0x75eadf, width: 2 });
+        g.moveTo(x - 30,y - 25).lineTo(x - 9,y - 32).lineTo(x + 2,y - 29).stroke({ color: 0xd2fff6, width: 1.3 });
+        g.moveTo(x + 22,y - 13).lineTo(x + 13,y - 7).lineTo(x + 36,y - 3).lineTo(x + 27,y + 2).stroke({ color: 0x221f2d, width: 3 });
+        for (let i = -4; i <= 4; i++) g.circle(x + i*11, y + 5 - i*i*.6, i === 3 ? 1 : 2.2).fill(i === 3 ? 0xffaa86 : 0x69ffee);
+        g.poly([x - 68,y + 4,x - 84,y + 9,x - 77,y + 14,x - 63,y + 9]).fill(0x596b73);
+      });
     } else if (s.objKind === 'mycar') {
       const car = s.vehicle ? content.cars.find((x) => x.id === s.vehicle) : undefined;
       if (car) {

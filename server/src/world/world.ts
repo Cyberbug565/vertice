@@ -31,6 +31,7 @@ import { Corpses } from './corpses.js';
 import { Street } from './street.js';
 import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
+import { Missions } from './missions.js';
 import { Nightlife } from './nightlife.js';
 import { Casino } from './casino.js';
 import { Prison } from './prison.js';
@@ -95,6 +96,7 @@ export class World {
   readonly cityPeople: CityPeople;
   readonly admin: Admin;
   readonly nightlife: Nightlife;
+  readonly missions: Missions;
   readonly underworld: Underworld;
   readonly casino: Casino;
   readonly prison: Prison;
@@ -122,6 +124,7 @@ export class World {
     this.cityPeople = new CityPeople(this);
     this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
+    this.missions = new Missions(this);
     this.underworld = new Underworld(this);
     this.casino = new Casino(this);
     this.prison = new Prison(this);
@@ -194,6 +197,7 @@ export class World {
     await this.mythics.load();
     this.combat.spawnPopulation();
     this.nightlife.populate();
+    this.missions.populate();
     this.underworld.populate();
     if (this.cfg.threats !== false) await this.threats.init(); else this.threats.enabled = false;
     for(const n of this.c.npcs)if(n.resident)this.spawnScheduled(n);
@@ -343,6 +347,7 @@ export class World {
     for (const [k, l] of this.lingering) if (l.p === p) { clearTimeout(l.timer); this.lingering.delete(k); }
     const c = e.conn;
     if (c) {
+      this.missions.disconnect(c);
       if (this.conns.get(c.accountId) === c) this.conns.delete(c.accountId);
       c.closed = true;
       try { c.ws.close(4005, 'dead'); } catch {}
@@ -443,6 +448,7 @@ export class World {
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.underworld.everySecond();
+    if (this.tick % 100 === 17) this.missions.tick();
     if (this.tick % 20 === 14) { try { this.street.everySecond(); } catch (err) { console.error('[calle]', err); } }
     if (this.tick % 20 === 8) { try { this.corpses.everySecond(); } catch (err) { console.error('[cadáveres]', err); } }
     if (this.tick % 20 === 10) { try { this.stealth.tick(); } catch (err) { console.error('[sigilo]', err); } }
@@ -456,6 +462,7 @@ export class World {
   }
 
   private moveEntity(e: Entity, dt: number) {
+    if (e.missionRide && (e.state === 'downed' || (e.stunUntil ?? 0) > Date.now())) { this.missions.finishRide(e); return; }
     if (this.waitsForLight(e)) { if (e.moving) { e.moving = false; e.lastMoveTick = this.tick; } return; }
     this.nightlife.stop(e);
     let budget = e.speed * dt * (e.timeScale ?? 1);
@@ -545,6 +552,7 @@ export class World {
 
   private onArrive(e: Entity) {
     if (e.kind !== 'player' || !e.conn) return;
+    if (e.missionRide) this.missions.finishRide(e, true);
     if (e.pendingInteract !== undefined) {
       const target = this.entities.get(e.pendingInteract);
       e.pendingInteract = undefined;
@@ -589,6 +597,7 @@ export class World {
   }
 
   cancelActivity(e: Entity, reason?: string) {
+    this.missions.finishRide(e);
     this.nightlife.stop(e);
     const had = !!(e.task || e.channel || e.path.length);
     e.task = undefined; e.channel = undefined; e.path = []; e.pendingInteract = undefined; e.moving = false;
@@ -703,6 +712,7 @@ export class World {
     if (old) {
       // Reconexión desde otra pestaña: la nueva sesión toma el control de la MISMA entidad; la anterior se cierra.
       old.closed = true;
+      this.missions.disconnect(old);
       try { old.ws.send(JSON.stringify({ t: 'kicked', reason: 'Has abierto el juego en otra pestaña o dispositivo.' })); old.ws.close(4001, 'replaced'); } catch {}
       this.metrics.inc('kicks');
       await old.queue.catch(() => {});
@@ -760,6 +770,7 @@ export class World {
     if (this.conns.get(conn.accountId) !== conn) return;
     this.conns.delete(conn.accountId);
     this.casino.disconnect(conn);
+    this.missions.disconnect(conn);
     const e = conn.e, p = conn.p;
     if (!e || !p) return;
     this.nightlife.stop(e);
@@ -944,6 +955,7 @@ export class World {
         }
       });
       case 'car': return guarded(m.seq, async () => {
+        if (e.missionRide) throw new GameError('Vas de pasajero. Muévete para bajarte primero.');
         const pr = this.property;
         switch (m.action) {
           case 'dealer': this.send(c, { t: 'dealer', view: pr.dealerView(p, m.dealer ?? '') }); break;
@@ -1031,7 +1043,7 @@ export class World {
     if (e.transit) return this.send(c, { t: 'ack', seq, ok: false, reason: 'Cruzando una puerta…' });
     const target = this.entities.get(targetId);
     if (e.ghostOf && target?.kind !== 'door') return this.send(c, { t: 'ack', seq, ok: false, reason: 'Eres una proyección: nadie te ve y no puedes tocar nada. Espía, atraviesa paredes y cruza puertas.' });
-    if (!target || target.zone !== e.zone || !target.interactive || target === e) return this.send(c, { t: 'ack', seq, ok: false, reason: 'No puedes interactuar con eso.' });
+    if (!target || (target.privateTo && target.privateTo !== c) || target.zone !== e.zone || !target.interactive || target === e) return this.send(c, { t: 'ack', seq, ok: false, reason: 'No puedes interactuar con eso.' });
     // v0.9 · Clic del jugador: nunca camina. Interactúa a distancia (REMOTE_RANGE) o pide acercarse con WASD.
     if (remote) {
       const d = Math.hypot(target.x - e.x, target.y - e.y);
@@ -1077,6 +1089,7 @@ export class World {
 
   /** Abre la interacción si está al alcance. `retries` permite perseguir a un PNJ que se ha movido. */
   private tryInteract(c: PlayerConn, target: Entity, retries: number, reach = INTERACT_RANGE): boolean {
+    if (target.privateTo && target.privateTo !== c) return false;
     const e = c.e!;
     const d = Math.hypot(target.x - e.x, target.y - e.y);
     if (target.kind === 'door') {
@@ -1151,6 +1164,7 @@ export class World {
     if(e.transit)return;
     if (deny) { this.send(c, { t: 'notice', kind: 'warn', text: deny }); return; }
     this.nightlife.stop(e);
+    this.missions.finishRide(e);
     if (p.driving && to.def.kind !== 'exterior') this.property.park(c, true);
     if (door.hiddenDoc) this.combat.discover(c, door.hiddenDoc);
     e.transit = true;
@@ -1360,6 +1374,7 @@ export class World {
       }
     }
     if (out.factsChanged) this.broadcastFacts();
+    if (out.missionRide) this.missions.startRide(c, out.missionRide);
     for (const tk of out.startTasks) this.startTask(c, tk);
     if (out.wanted) void this.survival.addWanted(c, out.wanted, 'delito');
     if (out.open) {

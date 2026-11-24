@@ -1,18 +1,62 @@
 import { VIP } from './casino.js';
 // Ensamblado y validación cruzada del contenido: puertas, condiciones, traducciones, objetos y requisitos.
-import { ContentSchema, type Content, type Condition, type Effect } from './content-schema.js';
+import { ContentSchema, type Content, type Condition, type Effect, type DialogDef, type ContractDef, type MissionContact, type MissionEncounter } from './content-schema.js';
 import { buildZoneGrid, isWalkable } from './zonegrid.js';
+import { findPath } from './nav.js';
 import { hashString } from './rules.js';
 
 /** Recibe un mapa ruta→JSON (p. ej. 'zones/ferro.json') y devuelve el contenido tipado y su huella. */
 export function assembleContent(files: Record<string, unknown>): { content: Content; hash: string } {
   const get = (k: string) => { if (!(k in files)) throw new Error(`Falta el fichero de contenido ${k}`); return files[k]; };
   const zones = Object.keys(files).filter((k) => k.startsWith('zones/')).sort().map((k) => files[k]);
+  // Un módulo puede añadir escenas y opciones a contactos existentes sin reescribir su ficha.
+  type MissionFile = {
+    locale: Record<string, string>;
+    contracts?: ContractDef[];
+    contacts?: MissionContact[];
+    encounters?: MissionEncounter[];
+    dialogs?: Record<string, DialogDef>;
+    extend?: Record<string, {
+      entries?: DialogDef['entries'];
+      nodes?: DialogDef['nodes'];
+      options?: Record<string, DialogDef['nodes'][string]['options']>;
+    }>;
+  };
+  const dialogs = structuredClone(get('dialogs.json')) as Record<string, DialogDef>;
+  const locale = { ...get('locale/es.json') as Record<string, string> };
+  const contracts = [...get('contracts.json') as ContractDef[]];
+  const missionContacts: MissionContact[] = [], missionEncounters: MissionEncounter[] = [];
+  for (const path of Object.keys(files).filter(k => k.startsWith('missions/')).sort()) {
+    const module = files[path] as MissionFile;
+    const mergeNew = <T>(target: Record<string, T>, entries: Record<string, T>) => {
+      for (const [key, value] of Object.entries(entries)) {
+        if (Object.hasOwn(target, key)) throw new Error(`${path}: clave duplicada ${key}`);
+        target[key] = value;
+      }
+    };
+    mergeNew(locale, module.locale);
+    mergeNew(dialogs, module.dialogs ?? {});
+    contracts.push(...module.contracts ?? []);
+    missionContacts.push(...module.contacts ?? []);
+    missionEncounters.push(...module.encounters ?? []);
+    for (const [id, patch] of Object.entries(module.extend ?? {})) {
+      const dialogue = dialogs[id];
+      if (!dialogue) throw new Error(`${path}: diálogo desconocido ${id}`);
+      mergeNew(dialogue.nodes, patch.nodes ?? {});
+      dialogue.entries = [...patch.entries ?? [], ...dialogue.entries];
+      for (const [node, options] of Object.entries(patch.options ?? {})) {
+        const current = dialogue.nodes[node]?.options;
+        if (!current) throw new Error(`${path}: escena desconocida ${id}/${node}`);
+        const leave = current.findIndex(o => o.goto == null && !o.effects?.length);
+        current.splice(leave < 0 ? current.length : leave, 0, ...options);
+      }
+    }
+  }
   const raw = {
     manifest: get('manifest.json'), attributes: get('attributes.json'), skills: get('skills.json'), roles: get('roles.json'),
     origins: get('origins.json'), factions: get('factions.json'), npcs: [get('npcs.json'), ...Object.keys(files).filter(k=>k.startsWith('npcs/')).sort().map(k=>files[k])].flat(),
     items: [get('items.json'), ...Object.keys(files).filter((k) => k.startsWith('items/')).sort().map((k) => files[k])].flat(),
-    zones, dialogs: get('dialogs.json'), tasks: get('tasks.json'), contracts: get('contracts.json'), locale: get('locale/es.json'),
+    zones, dialogs, tasks: get('tasks.json'), contracts, locale, missionContacts, missionEncounters,
     needs: get('needs.json'), market: get('market.json'), shops: get('shops.json'), cyberware: [get('cyberware.json'), ...Object.keys(files).filter(k=>k.startsWith('cyberware/')).sort().map(k=>files[k])].flat(), ripperdocs: get('ripperdocs.json'),
     professions: get('professions.json'), workplaces: get('workplaces.json'), jobs: get('jobs.json'), fugitives: get('fugitives.json'),
     quickhacks: get('quickhacks.json'), ambar: get('ambar.json'), world: get('world.json'),
@@ -38,6 +82,10 @@ export function validateContent(c: Content): string[] {
   const taskIds = new Set(c.tasks.map((t) => t.id));
   const contractIds = new Set(c.contracts.map((t) => t.id));
   const objectiveIds = new Set(c.contracts.flatMap((t) => t.objectives.map((o) => o.id)));
+  const encounterIds = new Set(c.missionEncounters.map(e => e.id));
+  if (contractIds.size !== c.contracts.length) errs.push('Misiones: contratos duplicados');
+  if (objectiveIds.size !== c.contracts.reduce((n, x) => n + x.objectives.length, 0)) errs.push('Misiones: objetivos duplicados');
+  if (encounterIds.size !== c.missionEncounters.length) errs.push('Misiones: eventos duplicados');
   const loc = (key: string, where: string) => { if (!(key in c.locale)) errs.push(`${where}: falta traducción "${key}"`); };
   const walk = (zone: string, at: readonly number[], where: string) => {
     const g = grids.get(zone);
@@ -117,6 +165,11 @@ export function validateContent(c: Content): string[] {
     if ('completeContract' in e && !contractIds.has(e.completeContract)) errs.push(`${where}: encargo ${e.completeContract}`);
     if ('completeObjective' in e && !objectiveIds.has(e.completeObjective)) errs.push(`${where}: objetivo ${e.completeObjective}`);
     if ('notice' in e) loc(e.notice, where);
+    if ('missionRide' in e && !c.missionEncounters.some(x => x.id === e.missionRide && x.ride)) errs.push(`${where}: trayecto desconocido ${e.missionRide}`);
+    if ('completeContract' in e) {
+      const outcomes = c.contracts.find(x => x.id === e.completeContract)?.outcomes;
+      if (outcomes && Object.keys(outcomes).length && !(e.outcome in outcomes)) errs.push(`${where}: desenlace desconocido ${e.outcome}`);
+    }
   };
   for (const [id, d] of Object.entries(c.dialogs)) {
     for (const en of d.entries) { if (!(en.node in d.nodes)) errs.push(`diálogo ${id}: entrada a nodo ${en.node} inexistente`); en.if.forEach((x) => checkCond(x, `diálogo ${id}`)); }
@@ -124,6 +177,7 @@ export function validateContent(c: Content): string[] {
     for (const [nid, n] of Object.entries(d.nodes)) {
       const w = `diálogo ${id}/${nid}`;
       loc(n.text, w);
+      if (new Set(n.options.map(o => o.id)).size !== n.options.length) errs.push(`${w}: opciones duplicadas`);
       for (const o of n.options) {
         loc(o.text, `${w}/${o.id}`);
         if (o.failText) loc(o.failText, `${w}/${o.id}`);
@@ -145,7 +199,29 @@ export function validateContent(c: Content): string[] {
     t.onComplete.forEach((x) => checkEff(x, `tarea ${t.id}`));
     loc(t.label, `tarea ${t.id}`);
   }
-  for (const k of c.contracts) { loc(k.title, k.id); loc(k.summary, k.id); k.objectives.forEach((o) => loc(o.text, `${k.id}/${o.id}`)); }
+  for (const k of c.contracts) {
+    loc(k.title, k.id); loc(k.summary, k.id);
+    if (k.lead) loc(k.lead, k.id);
+    for (const text of Object.values(k.outcomes)) loc(text, k.id);
+    k.objectives.forEach(o => loc(o.text, `${k.id}/${o.id}`));
+  }
+  const contacts = [...c.missionContacts, ...c.missionEncounters.flatMap(e => [e.contact, ...e.sites])];
+  if (new Set(contacts.map(s => s.id)).size !== contacts.length) errs.push('Misiones: contactos duplicados');
+  for (const site of contacts) {
+    walk(site.zone, site.at, site.id);
+    if (!(site.dialogue in c.dialogs)) errs.push(`${site.id}: diálogo desconocido ${site.dialogue}`);
+  }
+  for (const encounter of c.missionEncounters) {
+    loc(encounter.rumor, encounter.id);
+    if (c.contracts.find(k => k.id === encounter.contract)?.category !== 'evento') errs.push(`${encounter.id}: contrato de evento inválido`);
+    if (encounter.ride) {
+      if (!c.cars.some(car => car.id === encounter.ride?.car)) errs.push(`${encounter.id}: coche de evento inválido`);
+      for (const at of encounter.ride.route) walk(encounter.contact.zone, at, encounter.id);
+      const grid = grids.get(encounter.contact.zone), points = encounter.ride.route;
+      if (grid && points.some(([x,y], i) => i > 0 && !findPath(grid, points[i-1][0]+.5, points[i-1][1]+.5, x+.5, y+.5, 8000).ok))
+        errs.push(`${encounter.id}: trayecto bloqueado`);
+    }
+  }
 
   // ---- Sistemas de la v0.2: mercado, tiendas, ciberware, matasanos, oficios, empleos y fugitivos.
   const shopIds = new Set(c.shops.map((x) => x.id));

@@ -1,0 +1,1167 @@
+{
+ "locale": {
+  "m.04-sucesos.luz-del-barranco.titulo": "El cromo cayó del cielo",
+  "m.04-sucesos.luz-del-barranco.resumen": "Milo asegura que los primeros implantes llegaron en una nave. Dice que hay una luz verde bajo la arena de Barranco Seco.",
+  "m.04-sucesos.luz-del-barranco.final.secreto": "Milo conserva su grabación y la ubicación se queda entre vosotros. La señal sigue emitiendo.",
+  "m.04-sucesos.luz-del-barranco.final.testigo": "Pasa al barrio una grabación sin coordenadas. La conversación sigue y el lugar queda protegido.",
+  "m.04-sucesos.luz-del-barranco.final.archivo": "El número de serie queda en manos de un archivo civil. El objeto aún emite una señal que no saben fechar.",
+  "m.04-sucesos.luz-del-barranco.objetivo.mirar": "Revisa la luz junto al terraplén, al sureste del cruce. Milo puede llevarte en coche.",
+  "m.04-sucesos.luz-del-barranco.objetivo.resolver": "Decide qué hacer con la grabación del objeto.",
+  "m.04-sucesos.milo-barranco.inicio": "¡Oye! ¿Quién te vendió la idea de que el primer ojo de cromo lo hizo una empresa? Mi abuela trabajaba en un taller antes de que existieran los talleres. Cada año, por estas fechas, sale una luz de donde cayó la cosa que ella soldaba sin saber abrir.",
+  "m.04-sucesos.milo-barranco.inicio.broma": "Sí, claro. Y las prótesis pagan peaje interplanetario.",
+  "m.04-sucesos.milo-barranco.inicio.abuela": "¿Qué te contaba tu abuela?",
+  "m.04-sucesos.milo-barranco.inicio.ver": "¿Se puede ver esa luz?",
+  "m.04-sucesos.milo-barranco.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.milo-barranco.risa": "Milo se ríe tan fuerte que se le cae una llave al suelo. «El peaje no. Mi abuela me mandaba caminar cuando el coche se me paraba. La luz sigue ahí, por si quieres reírte de más cerca».",
+  "m.04-sucesos.milo-barranco.risa.ver": "Me has convencido. ¿Dónde es?",
+  "m.04-sucesos.milo-barranco.risa.salir": "Seguir mi camino.",
+  "m.04-sucesos.milo-barranco.abuela": "Contaba que una cosa tan pequeña hizo temblar un banco de herramientas. Que después todo el mundo necesitó un nombre nuevo para lo que acababa de ver. A mi abuela la echaron por no darles el nombre correcto. Era buenísima soldando.",
+  "m.04-sucesos.milo-barranco.abuela.ver": "Me gustaría verla contigo.",
+  "m.04-sucesos.milo-barranco.abuela.salir": "Seguir mi camino.",
+  "m.04-sucesos.milo-barranco.viaje": "Mi coche está junto al cruce. Podemos bajar por la ronda y te dejo en el terraplén, o te digo por dónde llegar si prefieres andar. Cuando oigas tres golpes, espera al cuarto. A veces la arena devuelve uno de más.",
+  "m.04-sucesos.milo-barranco.viaje.coche": "Subir al coche de Milo.",
+  "m.04-sucesos.milo-barranco.viaje.pie": "Mejor a pie. Dime qué lado del cruce.",
+  "m.04-sucesos.milo-barranco.viaje.salir": "Seguir mi camino.",
+  "m.04-sucesos.milo-barranco.vuelve": "Sigue por la ronda desde este cruce hacia el este. En la siguiente carretera, gira hacia el sur. Después del terraplén, en la arena del lado este, verás el destello. Si yo todavía estoy aquí puedo dejarte al lado en el coche.",
+  "m.04-sucesos.milo-barranco.vuelve.coche": "¿Puedes acercarme en el coche?",
+  "m.04-sucesos.milo-barranco.vuelve.salir": "Seguir mi camino.",
+  "m.04-sucesos.objeto-barranco.inicio": "La arena dibuja un surco ancho. La cosa parece un disco hasta que te acercas y ves que le falta un lado. Debajo del borde brillan letras que no forman una palabra. A la cuarta pulsación responde un altavoz con la grabación de alguien probando un micrófono.",
+  "m.04-sucesos.objeto-barranco.inicio.chapa": "Buscar un número de serie.",
+  "m.04-sucesos.objeto-barranco.inicio.sonido": "Escuchar hasta que se repita la señal.",
+  "m.04-sucesos.objeto-barranco.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.objeto-barranco.serie": "La chapa tiene huecos donde deberían asomar tornillos. Una parte lleva un número que serviría en cualquier taller. La otra parte está soldada de dentro hacia fuera. En la arena hay un anillo de herramientas de alguien que conocía el metal.",
+  "m.04-sucesos.objeto-barranco.serie.examinar": "Anotar el número y preparar la copia.",
+  "m.04-sucesos.objeto-barranco.serie.examinar-otra": "Anotar el número junto al resto de la grabación.",
+  "m.04-sucesos.objeto-barranco.serie.guardar": "Volver a la grabación.",
+  "m.04-sucesos.objeto-barranco.serie.salir": "Seguir mi camino.",
+  "m.04-sucesos.objeto-barranco.voz": "La voz cuenta hasta tres. Luego dice «ahora dilo como en casa» y se corta. Milo no recuerda que su abuela hablara en una grabación. Puede recordar exactamente el ruido de la pausa que deja antes de decir cualquier cosa difícil.",
+  "m.04-sucesos.objeto-barranco.voz.escuchar": "Guardar el sonido sin grabar la posición.",
+  "m.04-sucesos.objeto-barranco.voz.guardar": "Volver a la grabación.",
+  "m.04-sucesos.objeto-barranco.voz.salir": "Seguir mi camino.",
+  "m.04-sucesos.objeto-barranco.decision": "Si publicas la posición, mañana habrá gente arrancando metal. Puedes guardar el secreto, compartir solo el sonido o dejar a alguien que compare las marcas. Mientras piensas, vuelve a encenderse un punto debajo de tu bota.",
+  "m.04-sucesos.objeto-barranco.decision.secreto": "Dejarle la grabación a Milo y tapar el rastro.",
+  "m.04-sucesos.objeto-barranco.decision.testigo": "Compartir el sonido sin coordenadas.",
+  "m.04-sucesos.objeto-barranco.decision.archivo": "Mandar el número a un archivo civil sin revelar el sitio.",
+  "m.04-sucesos.objeto-barranco.decision.volver": "Quiero volver a mirar el objeto.",
+  "m.04-sucesos.objeto-barranco.decision.salir": "Seguir mi camino.",
+  "m.04-sucesos.objeto-barranco.eco": "Una de las luces tarda algo más en apagarse. Milo te espera fuera del surco, mira la chapa y dice que mañana tiene que arreglar un espejo que no le va a dar tanta conversación.",
+  "m.04-sucesos.objeto-barranco.eco.salir": "Seguir mi camino.",
+  "m.04-sucesos.objeto-barranco.fin": "La luz responde cuatro veces. Por lo demás, el terraplén guarda el secreto tan bien como ayer.",
+  "m.04-sucesos.objeto-barranco.fin.salir": "Seguir mi camino.",
+  "m.04-sucesos.barranco.aviso": "En el cruce de Barranco Seco, Milo levanta una llave inglesa y pregunta quién fabricó el primer ojo de cromo.",
+  "m.04-sucesos.cafe-azar.titulo": "Café para una persona ausente",
+  "m.04-sucesos.cafe-azar.resumen": "Olga quiere dar un destino al café que compraba para alguien que ya no ocupa el banco.",
+  "m.04-sucesos.cafe-azar.final.regreso": "Olga cuenta cómo se conocieron. El segundo vaso se queda en el banco.",
+  "m.04-sucesos.cafe-azar.final.cocina": "El café se reparte en dos tazas. Olga guarda el papel para leerlo el jueves.",
+  "m.04-sucesos.cafe-azar.objetivo.encontrar": "Ve a banco de los jueves cerca de donde oíste el rumor.",
+  "m.04-sucesos.olga-banco.inicio": "Siempre compro dos cafés por costumbre. El hombre que tomaba el otro lleva una semana sin venir por el banco. Le estoy echando azúcar al vaso sin saber qué hacer con el resto de la mañana.",
+  "m.04-sucesos.olga-banco.inicio.aceptar": "Tengo tiempo. Vamos a ver.",
+  "m.04-sucesos.olga-banco.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.olga-banco.activa": "Está aquí cerca, al norte. Cuando veas «Banco de los jueves», lo habrás encontrado.",
+  "m.04-sucesos.olga-banco.activa.salir": "Seguir mi camino.",
+  "m.04-sucesos.vaso-olga.inicio": "El vaso lleva papel doblado debajo. Solo dice «Si me cambian el turno, se lo dices a quien venga antes».",
+  "m.04-sucesos.vaso-olga.inicio.regreso": "Sentarte con Olga y reservar el segundo vaso.",
+  "m.04-sucesos.vaso-olga.inicio.cocina": "Llevar el vaso a la cocina nocturna en nombre del banco.",
+  "m.04-sucesos.vaso-olga.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.vaso-olga.regreso": "Olga cuenta cómo se conocieron. El segundo vaso se queda en el banco.",
+  "m.04-sucesos.vaso-olga.regreso.salir": "Seguir mi camino.",
+  "m.04-sucesos.vaso-olga.cocina": "El café se reparte en dos tazas. Olga guarda el papel para leerlo el jueves.",
+  "m.04-sucesos.vaso-olga.cocina.salir": "Seguir mi camino.",
+  "m.04-sucesos.cafe-azar.aviso": "Una vecina lleva una taza extra hacia el Mercado Lumen.",
+  "m.04-sucesos.luces-lluvia.titulo": "Lluvia en seco",
+  "m.04-sucesos.luces-lluvia.resumen": "Entre las naves de Astilleros hay un invento que convierte un chubasco en luz.",
+  "m.04-sucesos.luces-lluvia.final.taller": "Quienes llegan al taller prueban el panel. Las instrucciones se comparten con la firma de Brisa.",
+  "m.04-sucesos.luces-lluvia.final.alarma": "Las naves reciben una señal visual de emergencia. Brisa se lleva la placa original a casa.",
+  "m.04-sucesos.luces-lluvia.objetivo.encontrar": "Ve a panel de lluvia cerca de donde oíste el rumor.",
+  "m.04-sucesos.brisa-taller.inicio": "Mi hermano nunca oyó el metal cuando llueve. Hice una placa con luces para que lo vea. Funciona demasiado bien: el supervisor quiere venderlo como sirena de emergencia.",
+  "m.04-sucesos.brisa-taller.inicio.aceptar": "Tengo tiempo. Vamos a ver.",
+  "m.04-sucesos.brisa-taller.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.brisa-taller.activa": "Está aquí cerca, al sur. Cuando veas «Panel de lluvia», lo habrás encontrado.",
+  "m.04-sucesos.brisa-taller.activa.salir": "Seguir mi camino.",
+  "m.04-sucesos.placa-brisa.inicio": "Diez gotas caen en el mismo lugar y la placa dibuja diez círculos distintos. En una esquina hay un interruptor con un dibujo de oreja.",
+  "m.04-sucesos.placa-brisa.inicio.taller": "Convencer a Brisa de que lo comparta en el taller comunitario.",
+  "m.04-sucesos.placa-brisa.inicio.alarma": "Ayudar a adaptar una copia como aviso de evacuación.",
+  "m.04-sucesos.placa-brisa.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.placa-brisa.taller": "Quienes llegan al taller prueban el panel. Las instrucciones se comparten con la firma de Brisa.",
+  "m.04-sucesos.placa-brisa.taller.salir": "Seguir mi camino.",
+  "m.04-sucesos.placa-brisa.alarma": "Las naves reciben una señal visual de emergencia. Brisa se lleva la placa original a casa.",
+  "m.04-sucesos.placa-brisa.alarma.salir": "Seguir mi camino.",
+  "m.04-sucesos.luces-lluvia.aviso": "Una aprendiz en Astilleros enseña un panel que imita la lluvia.",
+  "m.04-sucesos.cumple-aleatorio.titulo": "El cumpleaños de un desconocido",
+  "m.04-sucesos.cumple-aleatorio.resumen": "La Vega tiene una tarta sin destinatario y una repartidora que se niega a tirarla.",
+  "m.04-sucesos.cumple-aleatorio.final.llamar": "Un chico llega con la última dirección y se queda a repartir. Han guardado el trozo de la esquina.",
+  "m.04-sucesos.cumple-aleatorio.final.repartir": "Quienes esperaban el último autobús celebran un cumpleaños sin nombre. La tarta se acaba al llegar el bus.",
+  "m.04-sucesos.cumple-aleatorio.objetivo.encontrar": "Ve a mesa plegable cerca de donde oíste el rumor.",
+  "m.04-sucesos.paloma-vega.inicio": "La caja pone «para papá» y alguien ha reescrito la dirección dos veces. El pedido está pagado. Si la devuelvo, la tirarán. Si me la como, mi madre me va a oler el bizcocho desde la puerta.",
+  "m.04-sucesos.paloma-vega.inicio.aceptar": "Tengo tiempo. Vamos a ver.",
+  "m.04-sucesos.paloma-vega.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.paloma-vega.activa": "Está aquí cerca, al este. Cuando veas «Mesa plegable», lo habrás encontrado.",
+  "m.04-sucesos.paloma-vega.activa.salir": "Seguir mi camino.",
+  "m.04-sucesos.mesa-tarta.inicio": "Sobre la mesa hay servilletas para veinte y velas para noventa y nueve. En la tapa se lee, en lápiz, «aunque llegues tarde».",
+  "m.04-sucesos.mesa-tarta.inicio.llamar": "Preguntar en los portales antes de partir la tarta.",
+  "m.04-sucesos.mesa-tarta.inicio.repartir": "Invitar a quienes esperan el autobús y guardar el primer trozo.",
+  "m.04-sucesos.mesa-tarta.inicio.salir": "Seguir mi camino.",
+  "m.04-sucesos.mesa-tarta.llamar": "Un chico llega con la última dirección y se queda a repartir. Han guardado el trozo de la esquina.",
+  "m.04-sucesos.mesa-tarta.llamar.salir": "Seguir mi camino.",
+  "m.04-sucesos.mesa-tarta.repartir": "Quienes esperaban el último autobús celebran un cumpleaños sin nombre. La tarta se acaba al llegar el bus.",
+  "m.04-sucesos.mesa-tarta.repartir.salir": "Seguir mi camino.",
+  "m.04-sucesos.cumple-aleatorio.aviso": "Una repartidora en La Vega ofrece una tarta con domicilio tachado."
+ },
+ "contracts": [
+  {
+   "id": "luz-del-barranco",
+   "category": "evento",
+   "version": 1,
+   "giver": "milo-barranco",
+   "title": "m.04-sucesos.luz-del-barranco.titulo",
+   "summary": "m.04-sucesos.luz-del-barranco.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "secreto": "m.04-sucesos.luz-del-barranco.final.secreto",
+    "testigo": "m.04-sucesos.luz-del-barranco.final.testigo",
+    "archivo": "m.04-sucesos.luz-del-barranco.final.archivo"
+   },
+   "objectives": [
+    {
+     "id": "luz-del-barranco-mirar",
+     "text": "m.04-sucesos.luz-del-barranco.objetivo.mirar",
+     "shared": false
+    },
+    {
+     "id": "luz-del-barranco-resolver",
+     "text": "m.04-sucesos.luz-del-barranco.objetivo.resolver",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "cafe-azar",
+   "category": "evento",
+   "version": 1,
+   "giver": "olga-banco",
+   "title": "m.04-sucesos.cafe-azar.titulo",
+   "summary": "m.04-sucesos.cafe-azar.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "regreso": "m.04-sucesos.cafe-azar.final.regreso",
+    "cocina": "m.04-sucesos.cafe-azar.final.cocina"
+   },
+   "objectives": [
+    {
+     "id": "cafe-azar-encontrar",
+     "text": "m.04-sucesos.cafe-azar.objetivo.encontrar",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "luces-lluvia",
+   "category": "evento",
+   "version": 1,
+   "giver": "brisa-taller",
+   "title": "m.04-sucesos.luces-lluvia.titulo",
+   "summary": "m.04-sucesos.luces-lluvia.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "taller": "m.04-sucesos.luces-lluvia.final.taller",
+    "alarma": "m.04-sucesos.luces-lluvia.final.alarma"
+   },
+   "objectives": [
+    {
+     "id": "luces-lluvia-encontrar",
+     "text": "m.04-sucesos.luces-lluvia.objetivo.encontrar",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "cumple-aleatorio",
+   "category": "evento",
+   "version": 1,
+   "giver": "paloma-vega",
+   "title": "m.04-sucesos.cumple-aleatorio.titulo",
+   "summary": "m.04-sucesos.cumple-aleatorio.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "llamar": "m.04-sucesos.cumple-aleatorio.final.llamar",
+    "repartir": "m.04-sucesos.cumple-aleatorio.final.repartir"
+   },
+   "objectives": [
+    {
+     "id": "cumple-aleatorio-encontrar",
+     "text": "m.04-sucesos.cumple-aleatorio.objetivo.encontrar",
+     "shared": false
+    }
+   ]
+  }
+ ],
+ "dialogs": {
+  "milo-barranco": {
+   "speaker": "milo-barranco",
+   "entries": [
+    {
+     "node": "vuelve",
+     "if": [
+      {
+       "contract": "luz-del-barranco",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.milo-barranco.inicio",
+     "options": [
+      {
+       "id": "broma",
+       "text": "m.04-sucesos.milo-barranco.inicio.broma",
+       "goto": "risa"
+      },
+      {
+       "id": "abuela",
+       "text": "m.04-sucesos.milo-barranco.inicio.abuela",
+       "goto": "abuela"
+      },
+      {
+       "id": "ver",
+       "text": "m.04-sucesos.milo-barranco.inicio.ver",
+       "goto": "viaje"
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.milo-barranco.inicio.salir"
+      }
+     ]
+    },
+    "risa": {
+     "text": "m.04-sucesos.milo-barranco.risa",
+     "options": [
+      {
+       "id": "ver",
+       "text": "m.04-sucesos.milo-barranco.risa.ver",
+       "goto": "viaje"
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.milo-barranco.risa.salir"
+      }
+     ]
+    },
+    "abuela": {
+     "text": "m.04-sucesos.milo-barranco.abuela",
+     "options": [
+      {
+       "id": "ver",
+       "text": "m.04-sucesos.milo-barranco.abuela.ver",
+       "goto": "viaje"
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.milo-barranco.abuela.salir"
+      }
+     ]
+    },
+    "viaje": {
+     "text": "m.04-sucesos.milo-barranco.viaje",
+     "options": [
+      {
+       "id": "coche",
+       "text": "m.04-sucesos.milo-barranco.viaje.coche",
+       "goto": "vuelve",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "luz-del-barranco"
+        },
+        {
+         "missionRide": "suceso-barranco"
+        }
+       ]
+      },
+      {
+       "id": "pie",
+       "text": "m.04-sucesos.milo-barranco.viaje.pie",
+       "goto": "vuelve",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "luz-del-barranco"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.milo-barranco.viaje.salir"
+      }
+     ]
+    },
+    "vuelve": {
+     "text": "m.04-sucesos.milo-barranco.vuelve",
+     "options": [
+      {
+       "id": "coche",
+       "text": "m.04-sucesos.milo-barranco.vuelve.coche",
+       "goto": "vuelve",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "missionRide": "suceso-barranco"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.milo-barranco.vuelve.salir"
+      }
+     ]
+    }
+   }
+  },
+  "objeto-barranco": {
+   "speaker": "objeto-barranco",
+   "entries": [
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "luz-del-barranco",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.objeto-barranco.inicio",
+     "options": [
+      {
+       "id": "chapa",
+       "text": "m.04-sucesos.objeto-barranco.inicio.chapa",
+       "goto": "serie",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        }
+       ]
+      },
+      {
+       "id": "sonido",
+       "text": "m.04-sucesos.objeto-barranco.inicio.sonido",
+       "goto": "voz",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.objeto-barranco.inicio.salir"
+      }
+     ]
+    },
+    "serie": {
+     "text": "m.04-sucesos.objeto-barranco.serie",
+     "options": [
+      {
+       "id": "examinar",
+       "text": "m.04-sucesos.objeto-barranco.serie.examinar",
+       "goto": "decision",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "ovni-numero",
+         "value": true
+        },
+        {
+         "completeObjective": "luz-del-barranco-mirar"
+        }
+       ]
+      },
+      {
+       "id": "examinar-otra",
+       "text": "m.04-sucesos.objeto-barranco.serie.examinar-otra",
+       "goto": "decision",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": true
+        },
+        {
+         "flag": "ovni-numero",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "ovni-numero",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "guardar",
+       "text": "m.04-sucesos.objeto-barranco.serie.guardar",
+       "goto": "decision",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.objeto-barranco.serie.salir"
+      }
+     ]
+    },
+    "voz": {
+     "text": "m.04-sucesos.objeto-barranco.voz",
+     "options": [
+      {
+       "id": "escuchar",
+       "text": "m.04-sucesos.objeto-barranco.voz.escuchar",
+       "goto": "decision",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "luz-del-barranco-mirar"
+        }
+       ]
+      },
+      {
+       "id": "guardar",
+       "text": "m.04-sucesos.objeto-barranco.voz.guardar",
+       "goto": "decision",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.objeto-barranco.voz.salir"
+      }
+     ]
+    },
+    "decision": {
+     "text": "m.04-sucesos.objeto-barranco.decision",
+     "options": [
+      {
+       "id": "secreto",
+       "text": "m.04-sucesos.objeto-barranco.decision.secreto",
+       "goto": "eco",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "luz-del-barranco-resolver"
+        },
+        {
+         "completeContract": "luz-del-barranco",
+         "outcome": "secreto"
+        }
+       ]
+      },
+      {
+       "id": "testigo",
+       "text": "m.04-sucesos.objeto-barranco.decision.testigo",
+       "goto": "eco",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "luz-del-barranco-resolver"
+        },
+        {
+         "completeContract": "luz-del-barranco",
+         "outcome": "testigo"
+        }
+       ]
+      },
+      {
+       "id": "archivo",
+       "text": "m.04-sucesos.objeto-barranco.decision.archivo",
+       "goto": "eco",
+       "if": [
+        {
+         "contract": "luz-del-barranco",
+         "state": "active"
+        },
+        {
+         "objective": "luz-del-barranco-mirar",
+         "done": true
+        },
+        {
+         "flag": "ovni-numero",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "luz-del-barranco-resolver"
+        },
+        {
+         "completeContract": "luz-del-barranco",
+         "outcome": "archivo"
+        }
+       ]
+      },
+      {
+       "id": "volver",
+       "text": "m.04-sucesos.objeto-barranco.decision.volver",
+       "goto": "inicio"
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.objeto-barranco.decision.salir"
+      }
+     ]
+    },
+    "eco": {
+     "text": "m.04-sucesos.objeto-barranco.eco",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.objeto-barranco.eco.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.04-sucesos.objeto-barranco.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.objeto-barranco.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "olga-banco": {
+   "speaker": "olga-banco",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cafe-azar",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.olga-banco.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.04-sucesos.olga-banco.inicio.aceptar",
+       "goto": "activa",
+       "if": [
+        {
+         "contract": "cafe-azar",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "cafe-azar"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.olga-banco.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.04-sucesos.olga-banco.activa",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.olga-banco.activa.salir"
+      }
+     ]
+    }
+   }
+  },
+  "vaso-olga": {
+   "speaker": "vaso-olga",
+   "entries": [
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.vaso-olga.inicio",
+     "options": [
+      {
+       "id": "regreso",
+       "text": "m.04-sucesos.vaso-olga.inicio.regreso",
+       "goto": "regreso",
+       "if": [
+        {
+         "contract": "cafe-azar",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cafe-azar-encontrar"
+        },
+        {
+         "completeContract": "cafe-azar",
+         "outcome": "regreso"
+        }
+       ]
+      },
+      {
+       "id": "cocina",
+       "text": "m.04-sucesos.vaso-olga.inicio.cocina",
+       "goto": "cocina",
+       "if": [
+        {
+         "contract": "cafe-azar",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cafe-azar-encontrar"
+        },
+        {
+         "completeContract": "cafe-azar",
+         "outcome": "cocina"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.vaso-olga.inicio.salir"
+      }
+     ]
+    },
+    "regreso": {
+     "text": "m.04-sucesos.vaso-olga.regreso",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.vaso-olga.regreso.salir"
+      }
+     ]
+    },
+    "cocina": {
+     "text": "m.04-sucesos.vaso-olga.cocina",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.vaso-olga.cocina.salir"
+      }
+     ]
+    }
+   }
+  },
+  "brisa-taller": {
+   "speaker": "brisa-taller",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "luces-lluvia",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.brisa-taller.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.04-sucesos.brisa-taller.inicio.aceptar",
+       "goto": "activa",
+       "if": [
+        {
+         "contract": "luces-lluvia",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "luces-lluvia"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.brisa-taller.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.04-sucesos.brisa-taller.activa",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.brisa-taller.activa.salir"
+      }
+     ]
+    }
+   }
+  },
+  "placa-brisa": {
+   "speaker": "placa-brisa",
+   "entries": [
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.placa-brisa.inicio",
+     "options": [
+      {
+       "id": "taller",
+       "text": "m.04-sucesos.placa-brisa.inicio.taller",
+       "goto": "taller",
+       "if": [
+        {
+         "contract": "luces-lluvia",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "luces-lluvia-encontrar"
+        },
+        {
+         "completeContract": "luces-lluvia",
+         "outcome": "taller"
+        }
+       ]
+      },
+      {
+       "id": "alarma",
+       "text": "m.04-sucesos.placa-brisa.inicio.alarma",
+       "goto": "alarma",
+       "if": [
+        {
+         "contract": "luces-lluvia",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "luces-lluvia-encontrar"
+        },
+        {
+         "completeContract": "luces-lluvia",
+         "outcome": "alarma"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.placa-brisa.inicio.salir"
+      }
+     ]
+    },
+    "taller": {
+     "text": "m.04-sucesos.placa-brisa.taller",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.placa-brisa.taller.salir"
+      }
+     ]
+    },
+    "alarma": {
+     "text": "m.04-sucesos.placa-brisa.alarma",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.placa-brisa.alarma.salir"
+      }
+     ]
+    }
+   }
+  },
+  "paloma-vega": {
+   "speaker": "paloma-vega",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cumple-aleatorio",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.paloma-vega.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.04-sucesos.paloma-vega.inicio.aceptar",
+       "goto": "activa",
+       "if": [
+        {
+         "contract": "cumple-aleatorio",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "cumple-aleatorio"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.paloma-vega.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.04-sucesos.paloma-vega.activa",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.paloma-vega.activa.salir"
+      }
+     ]
+    }
+   }
+  },
+  "mesa-tarta": {
+   "speaker": "mesa-tarta",
+   "entries": [
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.04-sucesos.mesa-tarta.inicio",
+     "options": [
+      {
+       "id": "llamar",
+       "text": "m.04-sucesos.mesa-tarta.inicio.llamar",
+       "goto": "llamar",
+       "if": [
+        {
+         "contract": "cumple-aleatorio",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cumple-aleatorio-encontrar"
+        },
+        {
+         "completeContract": "cumple-aleatorio",
+         "outcome": "llamar"
+        }
+       ]
+      },
+      {
+       "id": "repartir",
+       "text": "m.04-sucesos.mesa-tarta.inicio.repartir",
+       "goto": "repartir",
+       "if": [
+        {
+         "contract": "cumple-aleatorio",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cumple-aleatorio-encontrar"
+        },
+        {
+         "completeContract": "cumple-aleatorio",
+         "outcome": "repartir"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.mesa-tarta.inicio.salir"
+      }
+     ]
+    },
+    "llamar": {
+     "text": "m.04-sucesos.mesa-tarta.llamar",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.mesa-tarta.llamar.salir"
+      }
+     ]
+    },
+    "repartir": {
+     "text": "m.04-sucesos.mesa-tarta.repartir",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.04-sucesos.mesa-tarta.repartir.salir"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "encounters": [
+  {
+   "id": "suceso-barranco",
+   "contract": "luz-del-barranco",
+   "rumor": "m.04-sucesos.barranco.aviso",
+   "contact": {
+    "id": "milo-barranco",
+    "name": "Milo Talavera",
+    "title": "Trastos, luces y otras historias",
+    "kind": "npc",
+    "dialogue": "milo-barranco",
+    "zone": "vertice",
+    "at": [
+     667,
+     465
+    ]
+   },
+   "sites": [
+    {
+     "id": "objeto-barranco",
+     "name": "Disco semienterrado",
+     "title": "Chatarra de origen desconocido",
+     "kind": "mission-ufo",
+     "dialogue": "objeto-barranco",
+     "zone": "vertice",
+     "at": [
+      713,
+      477
+     ]
+    }
+   ],
+   "ride": {
+    "car": "brennan-bisonte",
+    "route": [
+     [
+      669,
+      466
+     ],
+     [
+      670,
+      469
+     ],
+     [
+      702,
+      469
+     ],
+     [
+      710,
+      469
+     ],
+     [
+      712,
+      471
+     ],
+     [
+      712,
+      475
+     ]
+    ]
+   }
+  },
+  {
+   "id": "suceso-cafe-azar",
+   "contract": "cafe-azar",
+   "rumor": "m.04-sucesos.cafe-azar.aviso",
+   "contact": {
+    "id": "olga-banco",
+    "name": "Olga Otero",
+    "title": "Vecina de Ferro",
+    "kind": "npc",
+    "dialogue": "olga-banco",
+    "zone": "vertice",
+    "at": [
+     38,
+     174
+    ],
+    "body": "femenino"
+   },
+   "sites": [
+    {
+     "id": "vaso-olga",
+     "name": "Banco de los jueves",
+     "title": "Suceso del barrio",
+     "kind": "board",
+     "dialogue": "vaso-olga",
+     "zone": "vertice",
+     "at": [
+      43,
+      168
+     ]
+    }
+   ]
+  },
+  {
+   "id": "suceso-luces-lluvia",
+   "contract": "luces-lluvia",
+   "rumor": "m.04-sucesos.luces-lluvia.aviso",
+   "contact": {
+    "id": "brisa-taller",
+    "name": "Brisa Monzón",
+    "title": "Aprendiz en Astilleros",
+    "kind": "npc",
+    "dialogue": "brisa-taller",
+    "zone": "vertice",
+    "at": [
+     493,
+     433
+    ],
+    "body": "femenino"
+   },
+   "sites": [
+    {
+     "id": "placa-brisa",
+     "name": "Panel de lluvia",
+     "title": "Suceso del barrio",
+     "kind": "board",
+     "dialogue": "placa-brisa",
+     "zone": "vertice",
+     "at": [
+      494,
+      437
+     ]
+    }
+   ]
+  },
+  {
+   "id": "suceso-cumple-aleatorio",
+   "contract": "cumple-aleatorio",
+   "rumor": "m.04-sucesos.cumple-aleatorio.aviso",
+   "contact": {
+    "id": "paloma-vega",
+    "name": "Paloma Sanz",
+    "title": "Repartidora en La Vega",
+    "kind": "npc",
+    "dialogue": "paloma-vega",
+    "zone": "vertice",
+    "at": [
+     43,
+     466
+    ],
+    "body": "femenino"
+   },
+   "sites": [
+    {
+     "id": "mesa-tarta",
+     "name": "Mesa plegable",
+     "title": "Suceso del barrio",
+     "kind": "board",
+     "dialogue": "mesa-tarta",
+     "zone": "vertice",
+     "at": [
+      46,
+      465
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,2885 @@
+{
+ "locale": {
+  "m.01-principales.lista-kanal.titulo": "La lista de Kanal",
+  "m.01-principales.lista-kanal.resumen": "Alguien usa nombres de apagones viejos para cobrar deudas nuevas. Iria vio de dónde salió la primera lista.",
+  "m.01-principales.lista-kanal.final.vecindad": "La declaración queda bajo custodia vecinal. Iria conserva la llave y decide cuándo hablar.",
+  "m.01-principales.lista-kanal.final.oficial": "Alma incorpora la declaración a un expediente con copia para el barrio.",
+  "m.01-principales.lista-kanal.final.bisagra": "Nadia guarda el original. Iria acepta su protección, consciente del precio del favor.",
+  "m.01-principales.lista-kanal.objetivo.declarar": "Averigua qué salió de Kanal y quién puede responder por ello.",
+  "m.01-principales.lista-kanal.objetivo.custodia": "Decide quién guardará la declaración.",
+  "m.01-principales.lista-kanal.pista": "Busca a Nadia en El Relé, junto al Bloque 9. Si la luz ya volvió, pregúntale por Kanal.",
+  "m.01-principales.nombres-prestados.titulo": "Nombres prestados",
+  "m.01-principales.nombres-prestados.resumen": "Una lista de pacientes se convirtió en un activo. Averigua quién autorizó la cesión y qué se puede revelar sin señalar a las víctimas.",
+  "m.01-principales.nombres-prestados.final.anonimo": "El registro público contiene importes y firmas, con identidades protegidas. El barrio puede reclamar por los cobros.",
+  "m.01-principales.nombres-prestados.final.cuidado": "El registro completo queda cifrado en la clínica. Los pacientes pueden reclamar individualmente sin aparecer en prensa.",
+  "m.01-principales.nombres-prestados.final.trato": "El intermediario recibe el original a cambio de cancelar las deudas. La comunidad pierde parte de su capacidad de reclamar.",
+  "m.01-principales.nombres-prestados.objetivo.prueba": "Consigue una prueba que conecte los cobros con el sistema clínico.",
+  "m.01-principales.nombres-prestados.objetivo.entrega": "Decide qué hacer con el registro y los nombres.",
+  "m.01-principales.nombres-prestados.pista": "Doc Sato te espera en su clínica de Ferro. Pregúntale por el lote 44.",
+  "m.01-principales.apagon-nombres.titulo": "El apagón de los nombres",
+  "m.01-principales.apagon-nombres.resumen": "Un cierre programado amenaza al Mercado Lumen. Nadia propone salvar la luz y dejar resuelto quién podrá cortarla mañana.",
+  "m.01-principales.apagon-nombres.final.cooperativa": "Tres comercios comparten las llaves del mercado. Los vecinos pagan la primera guardia con una cena en la calle.",
+  "m.01-principales.apagon-nombres.final.moratoria": "La revisión pública detiene el corte y congela las deudas. El suministro sigue bajo supervisión externa.",
+  "m.01-principales.apagon-nombres.final.pacto": "Nadia garantiza la corriente por contrato. A la hora del cierre, cada puesto encendido le debe un favor.",
+  "m.01-principales.apagon-nombres.objetivo.corriente": "Prepara una fuente de corriente o una orden de suspensión.",
+  "m.01-principales.apagon-nombres.objetivo.resolucion": "Decide cómo quedará el control del mercado.",
+  "m.01-principales.apagon-nombres.pista": "Vuelve a El Relé tras decidir qué hacer con los nombres del lote 44.",
+  "m.01-principales.reme.root.pista-lista-kanal": "¿Quién organiza las cosas cuando falla la luz?",
+  "m.01-principales.reme.pista-lista-kanal": "¿Socorro? Pregúntale a Nadia Bisagra. El Relé está al salir, por la puerta con el letrero de bobina. Si ya arreglaron la luz, pregunta igual: Iria dejó un recado de Kanal. En esta ciudad arreglar un cable suele destapar tres deudas.",
+  "m.01-principales.reme.pista-lista-kanal.salir": "Me voy por ahora.",
+  "m.01-principales.lin.default.pista-lista-kanal": "¿Dónde encuentro a quien investiga los cobros de Kanal?",
+  "m.01-principales.lin.pista-lista-kanal": "Yo vi a Iria contar las monedas de las ollas y a un hombre cobrar por limpiarlas. Pregunta primero a Nadia en El Relé. Y si saludas a Iria, dile que Lin le guarda una mesa; que no tiene que pedir perdón para sentarse.",
+  "m.01-principales.lin.pista-lista-kanal.salir": "Me voy por ahora.",
+  "m.01-principales.lin.lit.pista-lista-kanal": "¿Dónde encuentro a quien investiga los cobros de Kanal?",
+  "m.01-principales.lin.friend.pista-lista-kanal": "¿Dónde encuentro a quien investiga los cobros de Kanal?",
+  "m.01-principales.tablon.lit.pista-lista-kanal": "Leer la nota debajo del aviso de reapertura.",
+  "m.01-principales.tablon.pista-lista-kanal": "«Quien esté cobrando por luz durante el apagón, por favor traiga recibo. No otra persona para amenazar. Nadia Ortuño, El Relé». Alguien ha escrito «Kanal» en el margen.",
+  "m.01-principales.tablon.pista-lista-kanal.salir": "Me voy por ahora.",
+  "m.01-principales.sato.root.pista-lista-kanal": "Preguntar por las derivaciones entre la clínica y Kanal.",
+  "m.01-principales.sato.pista-lista-kanal": "Un apagón es noticia. Una fila que desaparece del registro son treinta personas que dejan de existir para el seguro. Habla con Nadia en El Relé. Si te han dado un lote, tráemelo por el número: no repitas esos nombres aquí.",
+  "m.01-principales.sato.pista-lista-kanal.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.offer.lumen-familias": "¿A quién está dejando en la calle este apagón?",
+  "m.01-principales.nadia.details.lumen-familias": "¿A quién está dejando en la calle este apagón?",
+  "m.01-principales.nadia.active.lumen-familias": "¿A quién está dejando en la calle este apagón?",
+  "m.01-principales.nadia.accepted.lumen-familias": "¿A quién está dejando en la calle este apagón?",
+  "m.01-principales.nadia.lumen-familias": "Lin lleva tres noches echando hielo comprado a sus ollas para no perder el caldo. A Reme le trajeron un respirador prestado y una factura que vale más que el respirador. Si quieres saber para quién trabajas, ve al mercado y habla con ellos. El dinero te lo doy yo; la luz se queda allí.",
+  "m.01-principales.nadia.lumen-familias.aceptar": "Cuenta conmigo.",
+  "m.01-principales.nadia.lumen-familias.contacto": "¿Cómo encuentro a Tomás?",
+  "m.01-principales.nadia.lumen-familias.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.lumen-tomas": "Cruza Ferro hacia el desguace del sur. Busca la chapa que dice AC-7, junto al camión de cajas, y ábrele la conversación hablando de una devolución. Tomás se pone duro con quien llega exigiendo. Si lo escuchas, igual haces negocio antes de sacar la cartera.",
+  "m.01-principales.nadia.lumen-tomas.salir": "Me voy por ahora.",
+  "m.01-principales.tomas.deal.procedencia": "¿Quién vendió la pieza, Tomás?",
+  "m.01-principales.tomas.idle.procedencia": "¿Quién vendió la pieza, Tomás?",
+  "m.01-principales.tomas.done.procedencia": "¿Quién vendió la pieza, Tomás?",
+  "m.01-principales.tomas.lumen-cambio": "Un tipo con botas de oficina vino de noche. No preguntó cuánto valía. Preguntó si todavía llevaba el sello del mercado. Lo anoté porque la última vez que dejé salir una pieza sin preguntar mi hija cenó tres días en casa de Lin. Ésa es mi versión. El terminal guarda la del inventario.",
+  "m.01-principales.tomas.lumen-cambio.salir": "Me voy por ahora.",
+  "m.01-principales.tomas.deal.acuerdo-lin": "[Recado de Lin] «Te cubrió la cena. Déjame devolver el favor.»",
+  "m.01-principales.tomas.lumen-fiado": "Tomás se queda quieto. Abre un cajón, saca la pieza y la envuelve en un recibo viejo. «Me cubrió la cena, sí. No me cubrió el orgullo. Dile que el próximo viernes friego yo».",
+  "m.01-principales.tomas.lumen-fiado.trato": "Aceptar la pieza y hacer llegar el recado.",
+  "m.01-principales.tomas.lumen-fiado.salir": "Me voy por ahora.",
+  "m.01-principales.tomas.lumen-recibo": "En el reverso del recibo hay un sello del mercado y una fecha anterior al apagón. Tienes la pieza. El recibo se queda en el bolsillo; Tomás tiene más que contar cuando vuelva la luz.",
+  "m.01-principales.tomas.lumen-recibo.salir": "Me voy por ahora.",
+  "m.01-principales.lin.default.lumen-acuerdo": "¿Qué favor podrías pedirme para hablar con Tomás?",
+  "m.01-principales.lin.lit.lumen-acuerdo": "¿Qué favor podrías pedirme para hablar con Tomás?",
+  "m.01-principales.lin.friend.lumen-acuerdo": "¿Qué favor podrías pedirme para hablar con Tomás?",
+  "m.01-principales.lin.rumor.lumen-acuerdo": "¿Qué favor podrías pedirme para hablar con Tomás?",
+  "m.01-principales.lin.lumen-aval": "A Tomás le da vergüenza que ayudáramos a su hija cuando andaban mal. Puedes decirle que hoy pierde el mercado, mañana le vuelve a tocar a otro. Pronuncia «recado de Lin» y espera. Si se niega, el ojo al inventario o las cajas siguen siendo buena idea.",
+  "m.01-principales.lin.lumen-aval.recado": "Llevarle el recado de Lin.",
+  "m.01-principales.lin.lumen-aval.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.report.preguntar-kanal": "¿Qué pasó en Kanal durante el apagón?",
+  "m.01-principales.nadia.after_fixer.preguntar-kanal": "¿Qué pasó en Kanal durante el apagón?",
+  "m.01-principales.nadia.after_market.preguntar-kanal": "¿Qué pasó en Kanal durante el apagón?",
+  "m.01-principales.nadia.closed.preguntar-kanal": "¿Qué pasó en Kanal durante el apagón?",
+  "m.01-principales.nadia.report_fixer.preguntar-kanal": "¿Qué pasó en Kanal durante el apagón?",
+  "m.01-principales.nadia.report_market.preguntar-kanal": "¿Qué pasó en Kanal durante el apagón?",
+  "m.01-principales.nadia.lista-oferta": "Una mujer llamada Iria vino con una lista. La leí. Estaba el nombre de mi hermano, que lleva seis años muerto, junto a un cargo por una conexión de ayer. Iria ahora se guarda en el bar Última Luz. Tiene dos miedos: que no la creamos y que la creamos en voz demasiado alta.",
+  "m.01-principales.nadia.lista-oferta.aceptar": "Buscaré a Iria. Empecemos por escucharla.",
+  "m.01-principales.nadia.lista-oferta.preguntar": "¿Qué ganabas tú si esos cobros seguían?",
+  "m.01-principales.nadia.lista-oferta.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.lista-nadia": "Una caja con dinero. Nunca acepté esa caja. Tampoco hice preguntas a la primera persona que me enseñó un recibo, porque el precio de llevarle la contraria a un cliente grande era perder otro trabajo para el barrio. Hay una parte de la historia en la que tengo que pedir perdón. A Iria, primero.",
+  "m.01-principales.nadia.lista-nadia.seguir": "Quiero oír su parte.",
+  "m.01-principales.nadia.lista-nadia.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.lista-encargo": "Última Luz, al otro lado del mercado. Iria trabajó con los empaques del turno trece. Si no quiere darte el original, busca a Alma en comisaría de Ferro o el libro del muelle al salir del desguace. Con una pista firme será más fácil hablar de su seguridad.",
+  "m.01-principales.nadia.lista-encargo.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.lista-informe": "Hay tres maneras de guardar una declaración en Vértice: en un cajón con llave, en un expediente con sello o en la cabeza de personas que no se conocen entre sí. Iria no quiere una cuarta, debajo de tierra. ¿A quién le dejas decidir qué pasa con el original?",
+  "m.01-principales.nadia.lista-informe.vecindad": "Custodia comunitaria. Iria elige cuándo firmar en público.",
+  "m.01-principales.nadia.lista-informe.oficial": "Alma registra una copia formal y le devuelve el original.",
+  "m.01-principales.nadia.lista-informe.bisagra": "Tú lo guardas, Nadia. Que Iria sepa qué protección ofreces.",
+  "m.01-principales.nadia.lista-informe.ofrecer": "¿Cómo consigo garantías de Alma?",
+  "m.01-principales.nadia.lista-informe.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.lista-garantia": "En comisaría de Ferro pide a Alma una copia con sello frente a ti. No le lleves a Iria a la sala de espera. Lleva el número de entrada del turno trece y Alma reconocerá la fecha.",
+  "m.01-principales.nadia.lista-garantia.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.lista-fin": "Sigue el 44. Doc Sato está en la clínica de Ferro y usa lápiz cuando tiene miedo de que desaparezca algo. Dale el número, no la lista de personas. Iria me pidió que te dijera que anoche, por primera vez en semanas, se olvidó de mirar por la ventana.",
+  "m.01-principales.nadia.lista-fin.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.inicio": "Tengo la silla ocupada. Si es por la cuenta, dile a quien te envió que el recibo no lleva mi firma.",
+  "m.01-principales.iria-kanal.inicio.pista": "¿Te refieres a los cobros de Kanal?",
+  "m.01-principales.iria-kanal.inicio.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.nombre": "En El Relé, Nadia se sabe mi nombre sin mirar el recibo. Pregúntale a ella. Tú aquí no me has visto todavía.",
+  "m.01-principales.iria-kanal.nombre.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.activa": "El turno trece no existe en la hoja de asistencia. Teníamos uno porque cuando se apagaba el mercado alguien tenía que quedarse a vigilar la nevera. Yo era «Iria 13» hasta que el sistema empezó a cargarle los cortes a mi madre. Lleva años sin salir de casa.",
+  "m.01-principales.iria-kanal.activa.escuchar": "¿Qué viste exactamente cuando te quedaste?",
+  "m.01-principales.iria-kanal.activa.miedo": "¿Qué tendría que pasar para que te sientas a salvo?",
+  "m.01-principales.iria-kanal.activa.recibo": "[Libro del muelle] Reconozco el sello. ¿Puedo verificarlo contigo?",
+  "m.01-principales.iria-kanal.activa.garantia": "[Alma] Tengo la garantía que pediste.",
+  "m.01-principales.iria-kanal.activa.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.miedo": "Que mi madre siga cobrando la pensión y que a mí dejen de llamarme «la chica de los recibos». Yo sé el nombre del tipo que vino por el sello. Si lo escribo y me lo guardas tú, prométeme que primero podré leérmelo en voz alta.",
+  "m.01-principales.iria-kanal.miedo.leer": "Escríbelo tú y lo leemos antes de salir.",
+  "m.01-principales.iria-kanal.miedo.volver": "Quiero hablar de otra cosa.",
+  "m.01-principales.iria-kanal.miedo.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.noche": "Llegó la furgoneta cuando el mercado cerraba. Bajo el sello de entrega estaba escrito «44» con lápiz. El chofer me preguntó si los del turno trece podíamos volver solos. Yo pensé que hablaba del autobús; ahora es lo que más rabia me da.",
+  "m.01-principales.iria-kanal.noche.copia": "Déjame tomar nota. Tu nombre queda fuera hasta que me lo pidas.",
+  "m.01-principales.iria-kanal.noche.volver": "Quiero hablar de otra cosa.",
+  "m.01-principales.iria-kanal.noche.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.copia": "Iria tacha tres nombres, arranca el margen con el número y firma con dos iniciales. «Así. Pon que aquí trabajábamos, en pasado, pero que seguimos vivos, en presente».",
+  "m.01-principales.iria-kanal.copia.guardar": "Guardar la declaración y volver a El Relé.",
+  "m.01-principales.iria-kanal.copia.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.hecho": "No la dobles por el medio: ahí están las horas. Y para la próxima, pregunta si alguien ha cenado antes de preguntarle por su madre.",
+  "m.01-principales.iria-kanal.hecho.salir": "Me voy por ahora.",
+  "m.01-principales.iria-kanal.libre": "He vuelto a comprar pintura. Todo lo que arreglaba desde el apagón era para poder irme. Ahora estoy pintando una pared para quedarme.",
+  "m.01-principales.iria-kanal.libre.salir": "Me voy por ahora.",
+  "m.01-principales.alma-ferro.inicio": "Aquí hay dos sellos: «recibido» y «resuelto». Cuando solo me falta el segundo, la gente viene y piensa que no quiero ayudar. Cuando me faltan los dos, sí me preocupo.",
+  "m.01-principales.alma-ferro.inicio.trato": "¿Puede declarar una persona sin aparecer en la puerta?",
+  "m.01-principales.alma-ferro.inicio.plazo": "[Lote 44] ¿Se puede frenar una orden de corte?",
+  "m.01-principales.alma-ferro.inicio.ronda": "¿Qué está pasando en Ferro?",
+  "m.01-principales.alma-ferro.inicio.salir": "Me voy por ahora.",
+  "m.01-principales.alma-ferro.sello": "A la gente de Kanal le han devuelto denuncias porque el formulario pedía «propietario de la instalación». Puedo registrarla bajo mi firma. Para que no la entierren, dame un número que pueda defender: el del registro del muelle, por ejemplo.",
+  "m.01-principales.alma-ferro.sello.dar": "[Libro del muelle] Adjunta el turno trece.",
+  "m.01-principales.alma-ferro.sello.sin": "¿Puedes emitir un acuse antes de que traiga el original?",
+  "m.01-principales.alma-ferro.sello.sin.fallo": "Alma necesita un número de entrada verificable.",
+  "m.01-principales.alma-ferro.sello.salir": "Me voy por ahora.",
+  "m.01-principales.alma-ferro.espera": "Te doy el nombre del libro, aunque hoy no puedo darte el sello. Junto al desguace, por las cajas del muelle: busca «Entrada 13». También puedes llevar a Iria una alternativa civil.",
+  "m.01-principales.alma-ferro.espera.salir": "Me voy por ahora.",
+  "m.01-principales.alma-ferro.sellado": "Escribo «testigo protegida» antes de escribir «expediente». Mira, que se lea bien. Si te dicen que aquí nadie quiere saber, repite mi nombre completo.",
+  "m.01-principales.alma-ferro.sellado.salir": "Me voy por ahora.",
+  "m.01-principales.alma-ferro.pista": "Nadia, en El Relé. Mi nombre no hace falta para decírselo. El suyo sí hace falta para que el próximo formulario salga de un cajón.",
+  "m.01-principales.alma-ferro.pista.salir": "Me voy por ahora.",
+  "m.01-principales.alma-ferro.reclamo": "Un corte que mata un frigorífico no es delito hasta que esa nevera contiene medicación. Tu acuse tiene ambas cosas escritas. Puedo firmar una suspensión provisional. Alguien tendrá que sostenerla cuando yo acabe turno.",
+  "m.01-principales.alma-ferro.reclamo.tramitar": "Pedir la suspensión y llevarla a Nadia.",
+  "m.01-principales.alma-ferro.reclamo.tramitar-paralela": "Pedir el acta aunque el mercado ya tenga corriente.",
+  "m.01-principales.alma-ferro.reclamo.salir": "Me voy por ahora.",
+  "m.01-principales.alma-ferro.remesa": "Suspensión enviada. No te hablo de héroes porque luego se olvidan del personal de turno. Dile al mercado que, si cortan, me llame mientras todavía tienen luz en el teléfono.",
+  "m.01-principales.alma-ferro.remesa.salir": "Me voy por ahora.",
+  "m.01-principales.libro-muelle.inicio": "Las tapas tienen una marca de agua del mercado y un nombre escrito con marcador: «Tomás avisa cuando se acabe el papel».",
+  "m.01-principales.libro-muelle.inicio.salir": "Me voy por ahora.",
+  "m.01-principales.libro-muelle.busca": "Inventario: cables, sellos de inspección, una caja sin peso. Falta una esquina del asiento del turno trece. Al levantar la página se ve el duplicado, escrito al revés.",
+  "m.01-principales.libro-muelle.busca.copiar": "Copiar el número y dejar aquí el duplicado.",
+  "m.01-principales.libro-muelle.busca.salir": "Me voy por ahora.",
+  "m.01-principales.libro-muelle.numero": "Lote 44. Entrada 13. Firma de una clínica con el código parcialmente borrado. Iria te podrá decir dónde estaba el chofer; Alma puede contrastarlo con sus formularios.",
+  "m.01-principales.libro-muelle.numero.salir": "Me voy por ahora.",
+  "m.01-principales.sato.root.lote": "Traigo una declaración y un número: lote 44.",
+  "m.01-principales.sato.root.investigar": "Volver al asunto del lote 44.",
+  "m.01-principales.sato.root.resolver": "Ya sé de dónde salieron los cobros.",
+  "m.01-principales.sato.root.memoria": "¿Qué ha cambiado desde que salió el registro?",
+  "m.01-principales.sato.lote-44": "Sato deja el lápiz sobre la mesa. «Yo firmé para que entregaran implantes a crédito. Luego alguien vendió la tabla que relacionaba nuestros implantes con las facturas. Me enteré cuando trajeron a un niño a quien habían dejado sin oído por la deuda de su abuelo».",
+  "m.01-principales.sato.lote-44.aceptar": "Voy a averiguar quién se llevó la tabla.",
+  "m.01-principales.sato.lote-44.resp": "¿Qué parte de la firma era tuya?",
+  "m.01-principales.sato.lote-44.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-firma": "La primera, la de la compra. La segunda tiene también mi firma, pero mi mano no estaba ahí. El día de la compra estaba tan contento de ver llegar las cajas que a nadie se le ocurrió preguntar qué significaba «cesión de datos derivados». A mí tampoco.",
+  "m.01-principales.sato.lote-firma.atras": "Dime por dónde empiezo.",
+  "m.01-principales.sato.lote-firma.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-rutas": "En mi consulta está la copia que nadie toca porque tiene manchas de café. La Dra. Ito, en la clínica Okami, recibe correcciones de los duplicados. Si quieres una tercera voz, en Cénit sigue al intermediario Vela: compra lo que luego la clínica llama «deuda heredada».",
+  "m.01-principales.sato.lote-rutas.claro": "¿Cómo distingo a Vela de cualquier otro traje?",
+  "m.01-principales.sato.lote-rutas.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-traje": "Vela lleva un paraguas aunque haga sol. Suele esperar dentro de la clínica Okami, junto a la entrada. Habla de «paquetes», «cargos» y «valores». Si no pronuncia «persona» en toda la conversación, es él.",
+  "m.01-principales.sato.lote-traje.salir": "Me voy por ahora.",
+  "m.01-principales.archivo-sato.inicio": "Planillas de mantenimiento. Una mano ha dibujado un pez en cada turno que terminó sin urgencias. Aquí hay semanas enteras sin peces.",
+  "m.01-principales.archivo-sato.inicio.salir": "Me voy por ahora.",
+  "m.01-principales.archivo-sato.activa": "La misma firma aparece en dos documentos separados por once minutos. En uno hay personas y precios. En el otro, los mismos precios y los números de sus implantes. La grapa de la segunda carpeta atraviesa una tercera hoja.",
+  "m.01-principales.archivo-sato.activa.doblez": "Comparar las dos firmas al trasluz.",
+  "m.01-principales.archivo-sato.activa.inventario": "Seguir los números de serie entre hojas.",
+  "m.01-principales.archivo-sato.activa.salir": "Me voy por ahora.",
+  "m.01-principales.archivo-sato.pliegue": "No hay dos firmas: hay una calca. También hay un recibo de impresión, a nombre de Vela, y una etiqueta de verificación con la firma correcta del técnico. Juntos bastan para explicar la compra.",
+  "m.01-principales.archivo-sato.pliegue.tomar": "Llevar la prueba a Sato con las identidades cubiertas.",
+  "m.01-principales.archivo-sato.pliegue.salir": "Me voy por ahora.",
+  "m.01-principales.archivo-sato.serial": "Los números cambian al cruzar la medianoche, salvo los de quienes ya habían muerto. Una pestaña verde señala una remesa de verificación. Parece una manera de extraer datos sin repetir nombres.",
+  "m.01-principales.archivo-sato.serial.tecnica": "Reconstruir la remesa de verificación.",
+  "m.01-principales.archivo-sato.serial.tecnica.fallo": "La remesa digital no abre. La firma física sigue legible.",
+  "m.01-principales.archivo-sato.serial.salir": "Me voy por ahora.",
+  "m.01-principales.archivo-sato.copia": "Guardaste el anexo, el sello y el importe. En el original, alguien había dejado una nota: «Recordar llamar a Paula, le da miedo la escalera». No hay nada de eso en tu copia.",
+  "m.01-principales.archivo-sato.copia.salir": "Me voy por ahora.",
+  "m.01-principales.matasanos-ito.root.duplicados": "[Lote 44] ¿Por qué hay cargos duplicados?",
+  "m.01-principales.matasanos-ito.copias-44": "Ito encuentra la discrepancia en dos segundos. Tarda bastante más en hablar. «Un ejecutivo me dijo que era temporal. A la semana me preguntó qué necesitaba para dejar de hacer el informe mensual. Le pedí otro scanner. Nunca llegó. Supongo que esperaba que le pidiera algo para mí».",
+  "m.01-principales.matasanos-ito.copias-44.sellar": "Sellar una corrección sin exponer a los pacientes.",
+  "m.01-principales.matasanos-ito.copias-44.sello": "¿Puedes firmar un anexo técnico aunque ya tenga una copia?",
+  "m.01-principales.matasanos-ito.copias-44.salir": "Me voy por ahora.",
+  "m.01-principales.matasanos-ito.reparacion-44": "Te llega una corrección firmada que dice «no es necesario identificar al paciente para identificar el cobro». En la clínica, ocho personas vuelven a los turnos con el mismo scanner de siempre.",
+  "m.01-principales.matasanos-ito.reparacion-44.salir": "Me voy por ahora.",
+  "m.01-principales.vela-cenit.inicio": "Le pago a los sitios por mis errores de cálculo. Si lo que quieres es una disculpa, vas a tener que negociar algo más difícil.",
+  "m.01-principales.vela-cenit.inicio.lote": "¿Cuánto vale comprar una fila del turno trece?",
+  "m.01-principales.vela-cenit.inicio.gasto": "Todavía tienes margen para pagar el suministro del mercado.",
+  "m.01-principales.vela-cenit.inicio.salir": "Me voy por ahora.",
+  "m.01-principales.vela-cenit.oferta": "En su terminal no pone «turno». Pone «lote residual». Vela cierra la tapa antes de que puedas leer si su nombre está en el campo de comprador. «¿Yo? Gestiono sucesiones. Habla con quien decidió que las deudas también se heredaban».",
+  "m.01-principales.vela-cenit.oferta.incomprable": "Cancela los cargos y te escucho.",
+  "m.01-principales.vela-cenit.oferta.ver": "Necesito que demuestres quién compró. Un recibo, al menos.",
+  "m.01-principales.vela-cenit.oferta.salir": "Me voy por ahora.",
+  "m.01-principales.vela-cenit.contrato": "«Puedo dar una orden de cancelación y un extracto. Nada de nombres en una pantalla de plaza». Le tiembla la mano al cerrar el paraguas. Al fondo de la sala, alguien le saluda como si fuera una última persona a la que debe pedir permiso.",
+  "m.01-principales.vela-cenit.contrato.extracto": "Quedarme el extracto, sin prometer silencio.",
+  "m.01-principales.vela-cenit.contrato.trato": "Dejar constancia de la oferta de cancelación.",
+  "m.01-principales.vela-cenit.contrato.salir": "Me voy por ahora.",
+  "m.01-principales.vela-cenit.cuenta": "Se queda con el paraguas cerrado bajo los focos. «Dile a Sato que las cifras sí cuadraban. Ojalá hubiera importado más que cuadraran otras cosas».",
+  "m.01-principales.vela-cenit.cuenta.salir": "Me voy por ahora.",
+  "m.01-principales.vela-cenit.garantizar": "Hay una reserva a nombre de los compradores. Puedo cargar el coste del mes ahí. Si te parece una garantía incómoda, ya has aprendido de dónde viene todo esto.",
+  "m.01-principales.vela-cenit.garantizar.firmar": "Pedir un suministro de emergencia con recibo.",
+  "m.01-principales.vela-cenit.garantizar.salir": "Me voy por ahora.",
+  "m.01-principales.vela-cenit.pagado": "Firma el coste y fecha el final de la garantía. La lámpara del mercado tendrá corriente mañana; dentro de cuatro semanas alguien tendrá que volver a esa conversación.",
+  "m.01-principales.vela-cenit.pagado.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-decision": "Con estas cifras alguien puede recuperar lo que le cobraron. Con estos nombres alguien puede volver a cobrarles mañana. Si decides esperar, vigilo el registro yo. Si decides actuar, elige quién lo puede leer y para qué.",
+  "m.01-principales.sato.lote-decision.anonimo": "Publicar importes, fechas y firmas, con los nombres tachados.",
+  "m.01-principales.sato.lote-decision.cuidado": "Custodiar el original aquí. Que cada paciente decida si reclama.",
+  "m.01-principales.sato.lote-decision.trato": "Aceptar la cancelación de Vela a cambio del original.",
+  "m.01-principales.sato.lote-decision.duda": "¿Hay forma de que el caso siga vivo sin que lo sepan todos?",
+  "m.01-principales.sato.lote-decision.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-duda": "Sí. Registrar a cada paciente con permiso. Tarda más que soltar un documento entero, pero a veces la parte importante de curar es preguntar si la otra persona quiere que la vean.",
+  "m.01-principales.sato.lote-duda.volver": "Quiero decidir.",
+  "m.01-principales.sato.lote-duda.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-publicado": "Una mujer del mercado llama para pedir otro ejemplar del informe. Dice que quiere ponerlo al lado de la foto de su hijo. Por primera vez, un papel oficial no lleva la palabra «debe» debajo de su apellido.",
+  "m.01-principales.sato.lote-publicado.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-protegido": "Sato cierra el cajón con llave. «Llamaré uno a uno. La primera persona que nos diga que no quiere declarar recibirá el mismo trato que la primera que diga que sí».",
+  "m.01-principales.sato.lote-protegido.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-vendido": "Las terminales devuelven dieciséis saldos a cero. Sato mira dos veces antes de darle al botón de imprimir. «Alivio, sí. Prueba de que alguien se arrepintió, eso tendrá que esperar».",
+  "m.01-principales.sato.lote-vendido.salir": "Me voy por ahora.",
+  "m.01-principales.sato.lote-eco": "Me siguen trayendo hojas. Nota de compra, cartas, el dibujo de una nevera que hizo una niña. No recojo toda la historia. Recojo lo que cada quien ha decidido dejar aquí.",
+  "m.01-principales.sato.lote-eco.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-alerta": "El mercado va a perder la luz otra vez. Esta vez el corte tiene número de expediente y hora de ejecución. El aviso pone «salida regularizada del servicio». Lin lo llama «que no haya cena». Quiero saber qué lo puede parar y quién se queda con las llaves.",
+  "m.01-principales.nadia.apagon-alerta.aceptar": "Voy a buscar cómo mantener el mercado abierto.",
+  "m.01-principales.nadia.apagon-alerta.culpa": "¿Por qué no haces tú el trato de una vez?",
+  "m.01-principales.nadia.apagon-alerta.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-culpa": "Porque una vez ya lo hice. Conseguí luz fiada para mi calle. Cuando nos cobraron, en el contrato había un alquiler de equipos que nadie recordaba ver. Un favor sin testigos se termina pareciendo demasiado a una deuda.",
+  "m.01-principales.nadia.apagon-culpa.volver": "Veamos qué opciones tiene el barrio.",
+  "m.01-principales.nadia.apagon-culpa.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-plan": "Lin sabe quién tiene equipos que todavía funcionan. Alma puede suspender el corte si llevas un acuse; Vela puede cargárselo a una cuenta de reserva si te conoce. Lo primero es que sigan funcionando la nevera y la clínica. Después hablamos de las llaves.",
+  "m.01-principales.nadia.apagon-plan.puertas": "¿Dónde busco a Lin a estas horas?",
+  "m.01-principales.nadia.apagon-plan.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-horario": "De día atiende en Lumen, al oeste. Por la noche come aquí en El Relé. Después del cierre vuelve al Bloque 9. Habla con la gente a la que abastece; ya sabe quién tiene cable, manos y ganas.",
+  "m.01-principales.nadia.apagon-horario.salir": "Me voy por ahora.",
+  "m.01-principales.lin.default.turno-luz": "¿Quién puede mantener la nevera funcionando?",
+  "m.01-principales.lin.lit.turno-luz": "¿Quién puede mantener la nevera funcionando?",
+  "m.01-principales.lin.friend.turno-luz": "¿Quién puede mantener la nevera funcionando?",
+  "m.01-principales.lin.turno-luz": "Mi vecina tiene una batería de reparto. Reme tiene los cables. Y mi hija hizo una lista de los que pueden venir por la noche sin perder su trabajo. Son tres llaves distintas; es mejor tener que discutir antes de poder apagarlas todas.",
+  "m.01-principales.lin.turno-luz.juntar": "Organizar la guardia y montar una alimentación compartida.",
+  "m.01-principales.lin.turno-luz.llaves": "Apuntar los nombres de los tres responsables.",
+  "m.01-principales.lin.turno-luz.salir": "Me voy por ahora.",
+  "m.01-principales.lin.turno-hecho": "Reservé la primera olla para la gente de guardia. Si no da para todos, que la pongan con agua y fideos. Así empezó este puesto, y con eso se vuelve a empezar si hace falta.",
+  "m.01-principales.lin.turno-hecho.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-voto": "Tenemos luz para esta noche. Falta decidir qué pasará cuando te vayas. Si quieres una salida distinta, aún puedes hablar con la gente que te falta. Yo no voy a firmar nada con el mercado en silencio.",
+  "m.01-principales.nadia.apagon-voto.cooperativa": "Que Lin y la asociación repartan las llaves.",
+  "m.01-principales.nadia.apagon-voto.moratoria": "Que la suspensión conste y que el mercado pueda reclamar.",
+  "m.01-principales.nadia.apagon-voto.pacto": "Firma tú la garantía. Que cada puesto tenga una copia.",
+  "m.01-principales.nadia.apagon-voto.pendiente": "Quiero buscar otro acuerdo antes de decidir.",
+  "m.01-principales.nadia.apagon-voto.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-cena": "Alguien pone una mesa de plástico encima de la alcantarilla para alargar la fila de mesas. El primer plato se enfría esperando a quienes terminaron la instalación. Nadia está sentada al final y, por una vez, llega sin saber qué le van a pedir.",
+  "m.01-principales.nadia.apagon-cena.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-acta": "Alma deja el sello encima del acta y avisa de que a partir de mañana ya no estará en el turno de tarde. Lin cuelga la copia junto a los precios. A algunos les tranquiliza. Otros quieren saber cuánto durará la tinta.",
+  "m.01-principales.nadia.apagon-acta.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-firmas": "Nadia firma de pie. Dos puestos aplauden. Otro baja la persiana sin decir nada. Antes de irse, ella deja por escrito que su gente también va a pagar por enchufar una máquina. No estaba en el primer borrador.",
+  "m.01-principales.nadia.apagon-firmas.salir": "Me voy por ahora.",
+  "m.01-principales.nadia.apagon-despues": "Hoy he entrado al mercado solo para comprar peras. Me he dado cuenta de que hacía años que entraba pensando en a quién le debía algo. Si tienes prisa, llévate una. Está madura.",
+  "m.01-principales.nadia.apagon-despues.visita": "¿Qué tal va la guardia vecinal?",
+  "m.01-principales.nadia.apagon-despues.visita-acta": "¿Quién está revisando el expediente?",
+  "m.01-principales.nadia.apagon-despues.visita-pacto": "¿Se están respetando las copias?",
+  "m.01-principales.nadia.apagon-despues.salir": "Me voy por ahora.",
+  "m.01-principales.lin.lit.cena-final": "¿Puedo ayudar a servir?",
+  "m.01-principales.lin.lit.papel-final": "¿Alguien lee el acta del mercado?",
+  "m.01-principales.lin.lit.cuenta-final": "¿Qué tal te va con el pacto de Nadia?",
+  "m.01-principales.lin.friend.cena-final": "¿Puedo ayudar a servir?",
+  "m.01-principales.lin.friend.papel-final": "¿Alguien lee el acta del mercado?",
+  "m.01-principales.lin.friend.cuenta-final": "¿Qué tal te va con el pacto de Nadia?",
+  "m.01-principales.lin.cena-final": "Claro. Primero sirve a quien no esté hablando. Siempre se tarda más en pensar si tienes la cuchara vacía.",
+  "m.01-principales.lin.cena-final.salir": "Me voy por ahora.",
+  "m.01-principales.lin.papel-final": "La gente lee sobre todo el margen, porque ahí anotamos dónde llamar si el expediente se pierde. Ya se lo sabe de memoria mi hija.",
+  "m.01-principales.lin.papel-final.salir": "Me voy por ahora.",
+  "m.01-principales.lin.cuenta-final": "Pago lo que pone en la copia. Ni más ni menos. Nadia me trajo una pera el martes. La pagó. Me pareció buena señal.",
+  "m.01-principales.lin.cuenta-final.salir": "Me voy por ahora."
+ },
+ "contracts": [
+  {
+   "id": "lista-kanal",
+   "category": "principal",
+   "version": 1,
+   "giver": "nadia",
+   "title": "m.01-principales.lista-kanal.titulo",
+   "summary": "m.01-principales.lista-kanal.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "vecindad": "m.01-principales.lista-kanal.final.vecindad",
+    "oficial": "m.01-principales.lista-kanal.final.oficial",
+    "bisagra": "m.01-principales.lista-kanal.final.bisagra"
+   },
+   "objectives": [
+    {
+     "id": "lista-kanal-declarar",
+     "text": "m.01-principales.lista-kanal.objetivo.declarar",
+     "shared": false
+    },
+    {
+     "id": "lista-kanal-custodia",
+     "text": "m.01-principales.lista-kanal.objetivo.custodia",
+     "shared": false
+    }
+   ],
+   "lead": "m.01-principales.lista-kanal.pista"
+  },
+  {
+   "id": "nombres-prestados",
+   "category": "principal",
+   "version": 1,
+   "giver": "sato",
+   "title": "m.01-principales.nombres-prestados.titulo",
+   "summary": "m.01-principales.nombres-prestados.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "anonimo": "m.01-principales.nombres-prestados.final.anonimo",
+    "cuidado": "m.01-principales.nombres-prestados.final.cuidado",
+    "trato": "m.01-principales.nombres-prestados.final.trato"
+   },
+   "objectives": [
+    {
+     "id": "nombres-prestados-prueba",
+     "text": "m.01-principales.nombres-prestados.objetivo.prueba",
+     "shared": false
+    },
+    {
+     "id": "nombres-prestados-entrega",
+     "text": "m.01-principales.nombres-prestados.objetivo.entrega",
+     "shared": false
+    }
+   ],
+   "lead": "m.01-principales.nombres-prestados.pista"
+  },
+  {
+   "id": "apagon-nombres",
+   "category": "principal",
+   "version": 1,
+   "giver": "nadia",
+   "title": "m.01-principales.apagon-nombres.titulo",
+   "summary": "m.01-principales.apagon-nombres.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "cooperativa": "m.01-principales.apagon-nombres.final.cooperativa",
+    "moratoria": "m.01-principales.apagon-nombres.final.moratoria",
+    "pacto": "m.01-principales.apagon-nombres.final.pacto"
+   },
+   "objectives": [
+    {
+     "id": "apagon-nombres-corriente",
+     "text": "m.01-principales.apagon-nombres.objetivo.corriente",
+     "shared": false
+    },
+    {
+     "id": "apagon-nombres-resolucion",
+     "text": "m.01-principales.apagon-nombres.objetivo.resolucion",
+     "shared": false
+    }
+   ],
+   "lead": "m.01-principales.apagon-nombres.pista"
+  }
+ ],
+ "dialogs": {
+  "iria-kanal": {
+   "speaker": "iria",
+   "entries": [
+    {
+     "node": "libre",
+     "if": [
+      {
+       "contract": "lista-kanal",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "lista-kanal",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.01-principales.iria-kanal.inicio",
+     "options": [
+      {
+       "id": "pista",
+       "text": "m.01-principales.iria-kanal.inicio.pista",
+       "goto": "nombre",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "flag": "pista:lista-kanal",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.inicio.salir"
+      }
+     ]
+    },
+    "nombre": {
+     "text": "m.01-principales.iria-kanal.nombre",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.nombre.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.01-principales.iria-kanal.activa",
+     "options": [
+      {
+       "id": "escuchar",
+       "text": "m.01-principales.iria-kanal.activa.escuchar",
+       "goto": "noche"
+      },
+      {
+       "id": "miedo",
+       "text": "m.01-principales.iria-kanal.activa.miedo",
+       "goto": "miedo"
+      },
+      {
+       "id": "recibo",
+       "text": "m.01-principales.iria-kanal.activa.recibo",
+       "goto": "copia",
+       "if": [
+        {
+         "flag": "kanal-libro",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "garantia",
+       "text": "m.01-principales.iria-kanal.activa.garantia",
+       "goto": "copia",
+       "if": [
+        {
+         "flag": "kanal-sello",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.activa.salir"
+      }
+     ]
+    },
+    "miedo": {
+     "text": "m.01-principales.iria-kanal.miedo",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.01-principales.iria-kanal.miedo.leer",
+       "goto": "copia"
+      },
+      {
+       "id": "volver",
+       "text": "m.01-principales.iria-kanal.miedo.volver",
+       "goto": "activa"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.miedo.salir"
+      }
+     ]
+    },
+    "noche": {
+     "text": "m.01-principales.iria-kanal.noche",
+     "options": [
+      {
+       "id": "copia",
+       "text": "m.01-principales.iria-kanal.noche.copia",
+       "goto": "copia"
+      },
+      {
+       "id": "volver",
+       "text": "m.01-principales.iria-kanal.noche.volver",
+       "goto": "activa"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.noche.salir"
+      }
+     ]
+    },
+    "copia": {
+     "text": "m.01-principales.iria-kanal.copia",
+     "options": [
+      {
+       "id": "guardar",
+       "text": "m.01-principales.iria-kanal.copia.guardar",
+       "goto": "hecho",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "active"
+        },
+        {
+         "objective": "lista-kanal-declarar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "kanal-testigo",
+         "value": true
+        },
+        {
+         "completeObjective": "lista-kanal-declarar"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.copia.salir"
+      }
+     ]
+    },
+    "hecho": {
+     "text": "m.01-principales.iria-kanal.hecho",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.hecho.salir"
+      }
+     ]
+    },
+    "libre": {
+     "text": "m.01-principales.iria-kanal.libre",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.iria-kanal.libre.salir"
+      }
+     ]
+    }
+   }
+  },
+  "alma-ferro": {
+   "speaker": "alma",
+   "entries": [
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.01-principales.alma-ferro.inicio",
+     "options": [
+      {
+       "id": "trato",
+       "text": "m.01-principales.alma-ferro.inicio.trato",
+       "goto": "sello",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "active"
+        }
+       ]
+      },
+      {
+       "id": "plazo",
+       "text": "m.01-principales.alma-ferro.inicio.plazo",
+       "goto": "reclamo",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "flag": "corte-acuse",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "ronda",
+       "text": "m.01-principales.alma-ferro.inicio.ronda",
+       "goto": "pista",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "flag": "pista:lista-kanal",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.alma-ferro.inicio.salir"
+      }
+     ]
+    },
+    "sello": {
+     "text": "m.01-principales.alma-ferro.sello",
+     "options": [
+      {
+       "id": "dar",
+       "text": "m.01-principales.alma-ferro.sello.dar",
+       "goto": "sellado",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "active"
+        },
+        {
+         "flag": "kanal-libro",
+         "is": true
+        },
+        {
+         "flag": "kanal-sello",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "kanal-sello",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "sin",
+       "text": "m.01-principales.alma-ferro.sello.sin",
+       "goto": "sellado",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "active"
+        },
+        {
+         "flag": "kanal-sello",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "kanal-sello",
+         "value": true
+        }
+       ],
+       "check": {
+        "key": "kanal-acuse",
+        "attr": "COOL",
+        "skill": "negociacion",
+        "dv": 13
+       },
+       "failGoto": "espera",
+       "failText": "m.01-principales.alma-ferro.sello.sin.fallo"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.alma-ferro.sello.salir"
+      }
+     ]
+    },
+    "espera": {
+     "text": "m.01-principales.alma-ferro.espera",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.alma-ferro.espera.salir"
+      }
+     ]
+    },
+    "sellado": {
+     "text": "m.01-principales.alma-ferro.sellado",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.alma-ferro.sellado.salir"
+      }
+     ]
+    },
+    "pista": {
+     "text": "m.01-principales.alma-ferro.pista",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.alma-ferro.pista.salir"
+      }
+     ]
+    },
+    "reclamo": {
+     "text": "m.01-principales.alma-ferro.reclamo",
+     "options": [
+      {
+       "id": "tramitar",
+       "text": "m.01-principales.alma-ferro.reclamo.tramitar",
+       "goto": "remesa",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": false
+        },
+        {
+         "flag": "corte-acuse",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "flag": "corriente-legal",
+         "value": true
+        },
+        {
+         "completeObjective": "apagon-nombres-corriente"
+        }
+       ]
+      },
+      {
+       "id": "tramitar-paralela",
+       "text": "m.01-principales.alma-ferro.reclamo.tramitar-paralela",
+       "goto": "remesa",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": true
+        },
+        {
+         "flag": "corte-acuse",
+         "is": true
+        },
+        {
+         "flag": "corriente-legal",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "corriente-legal",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.alma-ferro.reclamo.salir"
+      }
+     ]
+    },
+    "remesa": {
+     "text": "m.01-principales.alma-ferro.remesa",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.alma-ferro.remesa.salir"
+      }
+     ]
+    }
+   }
+  },
+  "libro-muelle": {
+   "speaker": "libro",
+   "entries": [
+    {
+     "node": "busca",
+     "if": [
+      {
+       "contract": "lista-kanal",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.01-principales.libro-muelle.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.libro-muelle.inicio.salir"
+      }
+     ]
+    },
+    "busca": {
+     "text": "m.01-principales.libro-muelle.busca",
+     "options": [
+      {
+       "id": "copiar",
+       "text": "m.01-principales.libro-muelle.busca.copiar",
+       "goto": "numero",
+       "if": [
+        {
+         "flag": "kanal-libro",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "kanal-libro",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.libro-muelle.busca.salir"
+      }
+     ]
+    },
+    "numero": {
+     "text": "m.01-principales.libro-muelle.numero",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.libro-muelle.numero.salir"
+      }
+     ]
+    }
+   }
+  },
+  "archivo-sato": {
+   "speaker": "archivo",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "nombres-prestados",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.01-principales.archivo-sato.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.archivo-sato.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.01-principales.archivo-sato.activa",
+     "options": [
+      {
+       "id": "doblez",
+       "text": "m.01-principales.archivo-sato.activa.doblez",
+       "goto": "pliegue"
+      },
+      {
+       "id": "inventario",
+       "text": "m.01-principales.archivo-sato.activa.inventario",
+       "goto": "serial"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.archivo-sato.activa.salir"
+      }
+     ]
+    },
+    "pliegue": {
+     "text": "m.01-principales.archivo-sato.pliegue",
+     "options": [
+      {
+       "id": "tomar",
+       "text": "m.01-principales.archivo-sato.pliegue.tomar",
+       "goto": "copia",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "lote-papel",
+         "value": true
+        },
+        {
+         "completeObjective": "nombres-prestados-prueba"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.archivo-sato.pliegue.salir"
+      }
+     ]
+    },
+    "serial": {
+     "text": "m.01-principales.archivo-sato.serial",
+     "options": [
+      {
+       "id": "tecnica",
+       "text": "m.01-principales.archivo-sato.serial.tecnica",
+       "goto": "copia",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "lote-sellado",
+         "value": true
+        },
+        {
+         "completeObjective": "nombres-prestados-prueba"
+        }
+       ],
+       "check": {
+        "key": "lote-cifrado",
+        "attr": "TECH",
+        "skill": "interfaz",
+        "dv": 14
+       },
+       "failGoto": "pliegue",
+       "failText": "m.01-principales.archivo-sato.serial.tecnica.fallo"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.archivo-sato.serial.salir"
+      }
+     ]
+    },
+    "copia": {
+     "text": "m.01-principales.archivo-sato.copia",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.archivo-sato.copia.salir"
+      }
+     ]
+    }
+   }
+  },
+  "vela-cenit": {
+   "speaker": "vela",
+   "entries": [
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.01-principales.vela-cenit.inicio",
+     "options": [
+      {
+       "id": "lote",
+       "text": "m.01-principales.vela-cenit.inicio.lote",
+       "goto": "oferta",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        }
+       ]
+      },
+      {
+       "id": "gasto",
+       "text": "m.01-principales.vela-cenit.inicio.gasto",
+       "goto": "garantizar",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "flag": "lote-vela",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.vela-cenit.inicio.salir"
+      }
+     ]
+    },
+    "oferta": {
+     "text": "m.01-principales.vela-cenit.oferta",
+     "options": [
+      {
+       "id": "incomprable",
+       "text": "m.01-principales.vela-cenit.oferta.incomprable",
+       "goto": "contrato"
+      },
+      {
+       "id": "ver",
+       "text": "m.01-principales.vela-cenit.oferta.ver",
+       "goto": "contrato"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.vela-cenit.oferta.salir"
+      }
+     ]
+    },
+    "contrato": {
+     "text": "m.01-principales.vela-cenit.contrato",
+     "options": [
+      {
+       "id": "extracto",
+       "text": "m.01-principales.vela-cenit.contrato.extracto",
+       "goto": "cuenta",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "lote-vela",
+         "value": true
+        },
+        {
+         "completeObjective": "nombres-prestados-prueba"
+        }
+       ]
+      },
+      {
+       "id": "trato",
+       "text": "m.01-principales.vela-cenit.contrato.trato",
+       "goto": "cuenta",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": true
+        },
+        {
+         "flag": "lote-vela",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "lote-vela",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.vela-cenit.contrato.salir"
+      }
+     ]
+    },
+    "cuenta": {
+     "text": "m.01-principales.vela-cenit.cuenta",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.vela-cenit.cuenta.salir"
+      }
+     ]
+    },
+    "garantizar": {
+     "text": "m.01-principales.vela-cenit.garantizar",
+     "options": [
+      {
+       "id": "firmar",
+       "text": "m.01-principales.vela-cenit.garantizar.firmar",
+       "goto": "pagado",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "corriente-pagada",
+         "value": true
+        },
+        {
+         "completeObjective": "apagon-nombres-corriente"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.vela-cenit.garantizar.salir"
+      }
+     ]
+    },
+    "pagado": {
+     "text": "m.01-principales.vela-cenit.pagado",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.vela-cenit.pagado.salir"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "contacts": [
+  {
+   "id": "iria-kanal",
+   "name": "Iria Montal",
+   "title": "Testigo del turno trece",
+   "kind": "npc",
+   "dialogue": "iria-kanal",
+   "zone": "bar-ultima-luz",
+   "at": [
+    7,
+    7
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "alma-ferro",
+   "name": "Alma Serrano",
+   "title": "Agente de registros",
+   "kind": "npc",
+   "dialogue": "alma-ferro",
+   "zone": "comisaria-ferro",
+   "at": [
+    7,
+    7
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "libro-muelle",
+   "name": "Libro de entradas del muelle",
+   "title": "Turno trece",
+   "kind": "terminal",
+   "dialogue": "libro-muelle",
+   "zone": "vertice",
+   "at": [
+    64,
+    206
+   ]
+  },
+  {
+   "id": "archivo-sato",
+   "name": "Copias del turno de noche",
+   "title": "Carpeta clínica",
+   "kind": "terminal",
+   "dialogue": "archivo-sato",
+   "zone": "clinica-sato",
+   "at": [
+    6,
+    3
+   ]
+  },
+  {
+   "id": "vela-cenit",
+   "name": "Vela Bastida",
+   "title": "Intermediario de crédito",
+   "kind": "npc",
+   "dialogue": "vela-cenit",
+   "zone": "clinica-okami-int",
+   "at": [
+    8,
+    3
+   ]
+  }
+ ],
+ "extend": {
+  "reme": {
+   "options": {
+    "root": [
+     {
+      "id": "pista-lista-kanal",
+      "text": "m.01-principales.reme.root.pista-lista-kanal",
+      "goto": "pista-lista-kanal",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "pista-lista-kanal": {
+     "text": "m.01-principales.reme.pista-lista-kanal",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.reme.pista-lista-kanal.salir"
+      }
+     ]
+    }
+   }
+  },
+  "lin": {
+   "options": {
+    "default": [
+     {
+      "id": "pista-lista-kanal",
+      "text": "m.01-principales.lin.default.pista-lista-kanal",
+      "goto": "pista-lista-kanal",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     },
+     {
+      "id": "lumen-acuerdo",
+      "text": "m.01-principales.lin.default.lumen-acuerdo",
+      "goto": "lumen-aval",
+      "if": [
+       {
+        "contract": "generador-lumen",
+        "state": "active"
+       },
+       {
+        "objective": "coupling",
+        "done": false
+       }
+      ]
+     },
+     {
+      "id": "turno-luz",
+      "text": "m.01-principales.lin.default.turno-luz",
+      "goto": "turno-luz",
+      "if": [
+       {
+        "contract": "apagon-nombres",
+        "state": "active"
+       }
+      ]
+     }
+    ],
+    "lit": [
+     {
+      "id": "pista-lista-kanal",
+      "text": "m.01-principales.lin.lit.pista-lista-kanal",
+      "goto": "pista-lista-kanal",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     },
+     {
+      "id": "lumen-acuerdo",
+      "text": "m.01-principales.lin.lit.lumen-acuerdo",
+      "goto": "lumen-aval",
+      "if": [
+       {
+        "contract": "generador-lumen",
+        "state": "active"
+       },
+       {
+        "objective": "coupling",
+        "done": false
+       }
+      ]
+     },
+     {
+      "id": "turno-luz",
+      "text": "m.01-principales.lin.lit.turno-luz",
+      "goto": "turno-luz",
+      "if": [
+       {
+        "contract": "apagon-nombres",
+        "state": "active"
+       }
+      ]
+     },
+     {
+      "id": "cena-final",
+      "text": "m.01-principales.lin.lit.cena-final",
+      "goto": "cena-final",
+      "if": [
+       {
+        "flag": "apagon-final",
+        "is": "cooperativa"
+       }
+      ]
+     },
+     {
+      "id": "papel-final",
+      "text": "m.01-principales.lin.lit.papel-final",
+      "goto": "papel-final",
+      "if": [
+       {
+        "flag": "apagon-final",
+        "is": "moratoria"
+       }
+      ]
+     },
+     {
+      "id": "cuenta-final",
+      "text": "m.01-principales.lin.lit.cuenta-final",
+      "goto": "cuenta-final",
+      "if": [
+       {
+        "flag": "apagon-final",
+        "is": "pacto"
+       }
+      ]
+     }
+    ],
+    "friend": [
+     {
+      "id": "pista-lista-kanal",
+      "text": "m.01-principales.lin.friend.pista-lista-kanal",
+      "goto": "pista-lista-kanal",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     },
+     {
+      "id": "lumen-acuerdo",
+      "text": "m.01-principales.lin.friend.lumen-acuerdo",
+      "goto": "lumen-aval",
+      "if": [
+       {
+        "contract": "generador-lumen",
+        "state": "active"
+       },
+       {
+        "objective": "coupling",
+        "done": false
+       }
+      ]
+     },
+     {
+      "id": "turno-luz",
+      "text": "m.01-principales.lin.friend.turno-luz",
+      "goto": "turno-luz",
+      "if": [
+       {
+        "contract": "apagon-nombres",
+        "state": "active"
+       }
+      ]
+     },
+     {
+      "id": "cena-final",
+      "text": "m.01-principales.lin.friend.cena-final",
+      "goto": "cena-final",
+      "if": [
+       {
+        "flag": "apagon-final",
+        "is": "cooperativa"
+       }
+      ]
+     },
+     {
+      "id": "papel-final",
+      "text": "m.01-principales.lin.friend.papel-final",
+      "goto": "papel-final",
+      "if": [
+       {
+        "flag": "apagon-final",
+        "is": "moratoria"
+       }
+      ]
+     },
+     {
+      "id": "cuenta-final",
+      "text": "m.01-principales.lin.friend.cuenta-final",
+      "goto": "cuenta-final",
+      "if": [
+       {
+        "flag": "apagon-final",
+        "is": "pacto"
+       }
+      ]
+     }
+    ],
+    "rumor": [
+     {
+      "id": "lumen-acuerdo",
+      "text": "m.01-principales.lin.rumor.lumen-acuerdo",
+      "goto": "lumen-aval",
+      "if": [
+       {
+        "contract": "generador-lumen",
+        "state": "active"
+       },
+       {
+        "objective": "coupling",
+        "done": false
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "pista-lista-kanal": {
+     "text": "m.01-principales.lin.pista-lista-kanal",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.lin.pista-lista-kanal.salir"
+      }
+     ]
+    },
+    "lumen-aval": {
+     "text": "m.01-principales.lin.lumen-aval",
+     "options": [
+      {
+       "id": "recado",
+       "text": "m.01-principales.lin.lumen-aval.recado",
+       "if": [
+        {
+         "contract": "generador-lumen",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "flag": "lumen_aval_lin",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.lin.lumen-aval.salir"
+      }
+     ]
+    },
+    "turno-luz": {
+     "text": "m.01-principales.lin.turno-luz",
+     "options": [
+      {
+       "id": "juntar",
+       "text": "m.01-principales.lin.turno-luz.juntar",
+       "goto": "turno-hecho",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "corriente-vecinal",
+         "value": true
+        },
+        {
+         "completeObjective": "apagon-nombres-corriente"
+        }
+       ]
+      },
+      {
+       "id": "llaves",
+       "text": "m.01-principales.lin.turno-luz.llaves",
+       "goto": "turno-hecho",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": true
+        },
+        {
+         "flag": "corriente-vecinal",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "corriente-vecinal",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.lin.turno-luz.salir"
+      }
+     ]
+    },
+    "turno-hecho": {
+     "text": "m.01-principales.lin.turno-hecho",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.lin.turno-hecho.salir"
+      }
+     ]
+    },
+    "cena-final": {
+     "text": "m.01-principales.lin.cena-final",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.lin.cena-final.salir"
+      }
+     ]
+    },
+    "papel-final": {
+     "text": "m.01-principales.lin.papel-final",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.lin.papel-final.salir"
+      }
+     ]
+    },
+    "cuenta-final": {
+     "text": "m.01-principales.lin.cuenta-final",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.lin.cuenta-final.salir"
+      }
+     ]
+    }
+   }
+  },
+  "tablon": {
+   "options": {
+    "lit": [
+     {
+      "id": "pista-lista-kanal",
+      "text": "m.01-principales.tablon.lit.pista-lista-kanal",
+      "goto": "pista-lista-kanal",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "pista-lista-kanal": {
+     "text": "m.01-principales.tablon.pista-lista-kanal",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.tablon.pista-lista-kanal.salir"
+      }
+     ]
+    }
+   }
+  },
+  "sato": {
+   "options": {
+    "root": [
+     {
+      "id": "pista-lista-kanal",
+      "text": "m.01-principales.sato.root.pista-lista-kanal",
+      "goto": "pista-lista-kanal",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     },
+     {
+      "id": "lote",
+      "text": "m.01-principales.sato.root.lote",
+      "goto": "lote-44",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "completed"
+       },
+       {
+        "contract": "nombres-prestados",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:nombres-prestados",
+        "value": true
+       }
+      ]
+     },
+     {
+      "id": "investigar",
+      "text": "m.01-principales.sato.root.investigar",
+      "goto": "lote-rutas",
+      "if": [
+       {
+        "contract": "nombres-prestados",
+        "state": "active"
+       },
+       {
+        "objective": "nombres-prestados-prueba",
+        "done": false
+       }
+      ]
+     },
+     {
+      "id": "resolver",
+      "text": "m.01-principales.sato.root.resolver",
+      "goto": "lote-decision",
+      "if": [
+       {
+        "contract": "nombres-prestados",
+        "state": "active"
+       },
+       {
+        "objective": "nombres-prestados-prueba",
+        "done": true
+       }
+      ]
+     },
+     {
+      "id": "memoria",
+      "text": "m.01-principales.sato.root.memoria",
+      "goto": "lote-eco",
+      "if": [
+       {
+        "contract": "nombres-prestados",
+        "state": "completed"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "pista-lista-kanal": {
+     "text": "m.01-principales.sato.pista-lista-kanal",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.pista-lista-kanal.salir"
+      }
+     ]
+    },
+    "lote-44": {
+     "text": "m.01-principales.sato.lote-44",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.01-principales.sato.lote-44.aceptar",
+       "goto": "lote-rutas",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "nombres-prestados"
+        }
+       ]
+      },
+      {
+       "id": "resp",
+       "text": "m.01-principales.sato.lote-44.resp",
+       "goto": "lote-firma"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-44.salir"
+      }
+     ]
+    },
+    "lote-firma": {
+     "text": "m.01-principales.sato.lote-firma",
+     "options": [
+      {
+       "id": "atras",
+       "text": "m.01-principales.sato.lote-firma.atras",
+       "goto": "lote-44"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-firma.salir"
+      }
+     ]
+    },
+    "lote-rutas": {
+     "text": "m.01-principales.sato.lote-rutas",
+     "options": [
+      {
+       "id": "claro",
+       "text": "m.01-principales.sato.lote-rutas.claro",
+       "goto": "lote-traje"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-rutas.salir"
+      }
+     ]
+    },
+    "lote-traje": {
+     "text": "m.01-principales.sato.lote-traje",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-traje.salir"
+      }
+     ]
+    },
+    "lote-decision": {
+     "text": "m.01-principales.sato.lote-decision",
+     "options": [
+      {
+       "id": "anonimo",
+       "text": "m.01-principales.sato.lote-decision.anonimo",
+       "goto": "lote-publicado",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "nombres-prestados-entrega"
+        },
+        {
+         "flag": "corte-acuse",
+         "value": true
+        },
+        {
+         "rep": "asociacion-lumen",
+         "delta": 2
+        },
+        {
+         "completeContract": "nombres-prestados",
+         "outcome": "anonimo"
+        },
+        {
+         "flag": "pista:apagon-nombres",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "cuidado",
+       "text": "m.01-principales.sato.lote-decision.cuidado",
+       "goto": "lote-protegido",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "nombres-prestados-entrega"
+        },
+        {
+         "flag": "lote-cuidado",
+         "value": true
+        },
+        {
+         "rep": "calle",
+         "delta": 2
+        },
+        {
+         "completeContract": "nombres-prestados",
+         "outcome": "cuidado"
+        },
+        {
+         "flag": "pista:apagon-nombres",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "trato",
+       "text": "m.01-principales.sato.lote-decision.trato",
+       "goto": "lote-vendido",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": true
+        },
+        {
+         "flag": "lote-vela",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "nombres-prestados-entrega"
+        },
+        {
+         "completeContract": "nombres-prestados",
+         "outcome": "trato"
+        },
+        {
+         "flag": "pista:apagon-nombres",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "duda",
+       "text": "m.01-principales.sato.lote-decision.duda",
+       "goto": "lote-duda"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-decision.salir"
+      }
+     ]
+    },
+    "lote-duda": {
+     "text": "m.01-principales.sato.lote-duda",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.01-principales.sato.lote-duda.volver",
+       "goto": "lote-decision"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-duda.salir"
+      }
+     ]
+    },
+    "lote-publicado": {
+     "text": "m.01-principales.sato.lote-publicado",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-publicado.salir"
+      }
+     ]
+    },
+    "lote-protegido": {
+     "text": "m.01-principales.sato.lote-protegido",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-protegido.salir"
+      }
+     ]
+    },
+    "lote-vendido": {
+     "text": "m.01-principales.sato.lote-vendido",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-vendido.salir"
+      }
+     ]
+    },
+    "lote-eco": {
+     "text": "m.01-principales.sato.lote-eco",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.sato.lote-eco.salir"
+      }
+     ]
+    }
+   }
+  },
+  "nadia": {
+   "options": {
+    "offer": [
+     {
+      "id": "lumen-familias",
+      "text": "m.01-principales.nadia.offer.lumen-familias",
+      "goto": "lumen-familias"
+     }
+    ],
+    "details": [
+     {
+      "id": "lumen-familias",
+      "text": "m.01-principales.nadia.details.lumen-familias",
+      "goto": "lumen-familias"
+     }
+    ],
+    "active": [
+     {
+      "id": "lumen-familias",
+      "text": "m.01-principales.nadia.active.lumen-familias",
+      "goto": "lumen-familias"
+     }
+    ],
+    "accepted": [
+     {
+      "id": "lumen-familias",
+      "text": "m.01-principales.nadia.accepted.lumen-familias",
+      "goto": "lumen-familias"
+     }
+    ],
+    "report": [
+     {
+      "id": "preguntar-kanal",
+      "text": "m.01-principales.nadia.report.preguntar-kanal",
+      "goto": "lista-oferta",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ],
+    "after_fixer": [
+     {
+      "id": "preguntar-kanal",
+      "text": "m.01-principales.nadia.after_fixer.preguntar-kanal",
+      "goto": "lista-oferta",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ],
+    "after_market": [
+     {
+      "id": "preguntar-kanal",
+      "text": "m.01-principales.nadia.after_market.preguntar-kanal",
+      "goto": "lista-oferta",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ],
+    "closed": [
+     {
+      "id": "preguntar-kanal",
+      "text": "m.01-principales.nadia.closed.preguntar-kanal",
+      "goto": "lista-oferta",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ],
+    "report_fixer": [
+     {
+      "id": "preguntar-kanal",
+      "text": "m.01-principales.nadia.report_fixer.preguntar-kanal",
+      "goto": "lista-oferta",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ],
+    "report_market": [
+     {
+      "id": "preguntar-kanal",
+      "text": "m.01-principales.nadia.report_market.preguntar-kanal",
+      "goto": "lista-oferta",
+      "if": [
+       {
+        "contract": "lista-kanal",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:lista-kanal",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "lumen-familias": {
+     "text": "m.01-principales.nadia.lumen-familias",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.01-principales.nadia.lumen-familias.aceptar",
+       "goto": "accepted",
+       "if": [
+        {
+         "contract": "generador-lumen",
+         "state": "none"
+        },
+        {
+         "fact": "lumen_power",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "generador-lumen"
+        }
+       ]
+      },
+      {
+       "id": "contacto",
+       "text": "m.01-principales.nadia.lumen-familias.contacto",
+       "goto": "lumen-tomas"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lumen-familias.salir"
+      }
+     ]
+    },
+    "lumen-tomas": {
+     "text": "m.01-principales.nadia.lumen-tomas",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lumen-tomas.salir"
+      }
+     ]
+    },
+    "lista-oferta": {
+     "text": "m.01-principales.nadia.lista-oferta",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.01-principales.nadia.lista-oferta.aceptar",
+       "goto": "lista-encargo",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "lista-kanal"
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.01-principales.nadia.lista-oferta.preguntar",
+       "goto": "lista-nadia"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lista-oferta.salir"
+      }
+     ]
+    },
+    "lista-nadia": {
+     "text": "m.01-principales.nadia.lista-nadia",
+     "options": [
+      {
+       "id": "seguir",
+       "text": "m.01-principales.nadia.lista-nadia.seguir",
+       "goto": "lista-oferta"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lista-nadia.salir"
+      }
+     ]
+    },
+    "lista-encargo": {
+     "text": "m.01-principales.nadia.lista-encargo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lista-encargo.salir"
+      }
+     ]
+    },
+    "lista-informe": {
+     "text": "m.01-principales.nadia.lista-informe",
+     "options": [
+      {
+       "id": "vecindad",
+       "text": "m.01-principales.nadia.lista-informe.vecindad",
+       "goto": "lista-fin",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "active"
+        },
+        {
+         "objective": "lista-kanal-declarar",
+         "done": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "lista-kanal-custodia"
+        },
+        {
+         "flag": "kanal-custodia",
+         "value": "vecindad"
+        },
+        {
+         "rep": "asociacion-lumen",
+         "delta": 2
+        },
+        {
+         "completeContract": "lista-kanal",
+         "outcome": "vecindad"
+        },
+        {
+         "flag": "pista:nombres-prestados",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "oficial",
+       "text": "m.01-principales.nadia.lista-informe.oficial",
+       "goto": "lista-fin",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "active"
+        },
+        {
+         "objective": "lista-kanal-declarar",
+         "done": true
+        },
+        {
+         "flag": "kanal-sello",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "lista-kanal-custodia"
+        },
+        {
+         "flag": "kanal-custodia",
+         "value": "oficial"
+        },
+        {
+         "rep": "pcv",
+         "delta": 2
+        },
+        {
+         "completeContract": "lista-kanal",
+         "outcome": "oficial"
+        },
+        {
+         "flag": "pista:nombres-prestados",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "bisagra",
+       "text": "m.01-principales.nadia.lista-informe.bisagra",
+       "goto": "lista-fin",
+       "if": [
+        {
+         "contract": "lista-kanal",
+         "state": "active"
+        },
+        {
+         "objective": "lista-kanal-declarar",
+         "done": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "lista-kanal-custodia"
+        },
+        {
+         "flag": "kanal-custodia",
+         "value": "bisagra"
+        },
+        {
+         "rep": "red-bisagra",
+         "delta": 2
+        },
+        {
+         "completeContract": "lista-kanal",
+         "outcome": "bisagra"
+        },
+        {
+         "flag": "pista:nombres-prestados",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "ofrecer",
+       "text": "m.01-principales.nadia.lista-informe.ofrecer",
+       "goto": "lista-garantia"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lista-informe.salir"
+      }
+     ]
+    },
+    "lista-garantia": {
+     "text": "m.01-principales.nadia.lista-garantia",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lista-garantia.salir"
+      }
+     ]
+    },
+    "lista-fin": {
+     "text": "m.01-principales.nadia.lista-fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.lista-fin.salir"
+      }
+     ]
+    },
+    "apagon-alerta": {
+     "text": "m.01-principales.nadia.apagon-alerta",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.01-principales.nadia.apagon-alerta.aceptar",
+       "goto": "apagon-plan",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "apagon-nombres"
+        }
+       ]
+      },
+      {
+       "id": "culpa",
+       "text": "m.01-principales.nadia.apagon-alerta.culpa",
+       "goto": "apagon-culpa"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-alerta.salir"
+      }
+     ]
+    },
+    "apagon-culpa": {
+     "text": "m.01-principales.nadia.apagon-culpa",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.01-principales.nadia.apagon-culpa.volver",
+       "goto": "apagon-alerta"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-culpa.salir"
+      }
+     ]
+    },
+    "apagon-plan": {
+     "text": "m.01-principales.nadia.apagon-plan",
+     "options": [
+      {
+       "id": "puertas",
+       "text": "m.01-principales.nadia.apagon-plan.puertas",
+       "goto": "apagon-horario"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-plan.salir"
+      }
+     ]
+    },
+    "apagon-horario": {
+     "text": "m.01-principales.nadia.apagon-horario",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-horario.salir"
+      }
+     ]
+    },
+    "apagon-voto": {
+     "text": "m.01-principales.nadia.apagon-voto",
+     "options": [
+      {
+       "id": "cooperativa",
+       "text": "m.01-principales.nadia.apagon-voto.cooperativa",
+       "goto": "apagon-cena",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": true
+        },
+        {
+         "flag": "corriente-vecinal",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "apagon-nombres-resolucion"
+        },
+        {
+         "flag": "apagon-final",
+         "value": "cooperativa"
+        },
+        {
+         "rep": "asociacion-lumen",
+         "delta": 3
+        },
+        {
+         "fact": "lumen_power",
+         "value": true,
+         "ttlMinutes": 90
+        },
+        {
+         "completeContract": "apagon-nombres",
+         "outcome": "cooperativa"
+        }
+       ]
+      },
+      {
+       "id": "moratoria",
+       "text": "m.01-principales.nadia.apagon-voto.moratoria",
+       "goto": "apagon-acta",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": true
+        },
+        {
+         "flag": "corriente-legal",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "apagon-nombres-resolucion"
+        },
+        {
+         "flag": "apagon-final",
+         "value": "moratoria"
+        },
+        {
+         "rep": "pcv",
+         "delta": 2
+        },
+        {
+         "fact": "lumen_power",
+         "value": true,
+         "ttlMinutes": 90
+        },
+        {
+         "completeContract": "apagon-nombres",
+         "outcome": "moratoria"
+        }
+       ]
+      },
+      {
+       "id": "pacto",
+       "text": "m.01-principales.nadia.apagon-voto.pacto",
+       "goto": "apagon-firmas",
+       "if": [
+        {
+         "contract": "apagon-nombres",
+         "state": "active"
+        },
+        {
+         "objective": "apagon-nombres-corriente",
+         "done": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "apagon-nombres-resolucion"
+        },
+        {
+         "flag": "apagon-final",
+         "value": "pacto"
+        },
+        {
+         "rep": "red-bisagra",
+         "delta": 3
+        },
+        {
+         "fact": "lumen_power",
+         "value": true,
+         "ttlMinutes": 90
+        },
+        {
+         "completeContract": "apagon-nombres",
+         "outcome": "pacto"
+        }
+       ]
+      },
+      {
+       "id": "pendiente",
+       "text": "m.01-principales.nadia.apagon-voto.pendiente",
+       "goto": "apagon-plan"
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-voto.salir"
+      }
+     ]
+    },
+    "apagon-cena": {
+     "text": "m.01-principales.nadia.apagon-cena",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-cena.salir"
+      }
+     ]
+    },
+    "apagon-acta": {
+     "text": "m.01-principales.nadia.apagon-acta",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-acta.salir"
+      }
+     ]
+    },
+    "apagon-firmas": {
+     "text": "m.01-principales.nadia.apagon-firmas",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-firmas.salir"
+      }
+     ]
+    },
+    "apagon-despues": {
+     "text": "m.01-principales.nadia.apagon-despues",
+     "options": [
+      {
+       "id": "visita",
+       "text": "m.01-principales.nadia.apagon-despues.visita",
+       "goto": "apagon-cena",
+       "if": [
+        {
+         "flag": "apagon-final",
+         "is": "cooperativa"
+        }
+       ]
+      },
+      {
+       "id": "visita-acta",
+       "text": "m.01-principales.nadia.apagon-despues.visita-acta",
+       "goto": "apagon-acta",
+       "if": [
+        {
+         "flag": "apagon-final",
+         "is": "moratoria"
+        }
+       ]
+      },
+      {
+       "id": "visita-pacto",
+       "text": "m.01-principales.nadia.apagon-despues.visita-pacto",
+       "goto": "apagon-firmas",
+       "if": [
+        {
+         "flag": "apagon-final",
+         "is": "pacto"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.nadia.apagon-despues.salir"
+      }
+     ]
+    }
+   },
+   "entries": [
+    {
+     "node": "lista-informe",
+     "if": [
+      {
+       "contract": "lista-kanal",
+       "state": "active"
+      },
+      {
+       "objective": "lista-kanal-declarar",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "lista-encargo",
+     "if": [
+      {
+       "contract": "lista-kanal",
+       "state": "active"
+      },
+      {
+       "objective": "lista-kanal-declarar",
+       "done": false
+      }
+     ]
+    },
+    {
+     "node": "apagon-plan",
+     "if": [
+      {
+       "contract": "apagon-nombres",
+       "state": "active"
+      },
+      {
+       "objective": "apagon-nombres-corriente",
+       "done": false
+      }
+     ]
+    },
+    {
+     "node": "apagon-voto",
+     "if": [
+      {
+       "contract": "apagon-nombres",
+       "state": "active"
+      },
+      {
+       "objective": "apagon-nombres-corriente",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "apagon-despues",
+     "if": [
+      {
+       "contract": "apagon-nombres",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "apagon-alerta",
+     "if": [
+      {
+       "contract": "nombres-prestados",
+       "state": "completed"
+      },
+      {
+       "contract": "apagon-nombres",
+       "state": "none"
+      }
+     ]
+    }
+   ]
+  },
+  "tomas": {
+   "options": {
+    "deal": [
+     {
+      "id": "procedencia",
+      "text": "m.01-principales.tomas.deal.procedencia",
+      "goto": "lumen-cambio"
+     },
+     {
+      "id": "acuerdo-lin",
+      "text": "m.01-principales.tomas.deal.acuerdo-lin",
+      "goto": "lumen-fiado",
+      "if": [
+       {
+        "flag": "lumen_aval_lin",
+        "is": true
+       },
+       {
+        "objective": "coupling",
+        "done": false
+       }
+      ]
+     }
+    ],
+    "idle": [
+     {
+      "id": "procedencia",
+      "text": "m.01-principales.tomas.idle.procedencia",
+      "goto": "lumen-cambio"
+     }
+    ],
+    "done": [
+     {
+      "id": "procedencia",
+      "text": "m.01-principales.tomas.done.procedencia",
+      "goto": "lumen-cambio"
+     }
+    ]
+   },
+   "nodes": {
+    "lumen-cambio": {
+     "text": "m.01-principales.tomas.lumen-cambio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.tomas.lumen-cambio.salir"
+      }
+     ]
+    },
+    "lumen-fiado": {
+     "text": "m.01-principales.tomas.lumen-fiado",
+     "options": [
+      {
+       "id": "trato",
+       "text": "m.01-principales.tomas.lumen-fiado.trato",
+       "goto": "lumen-recibo",
+       "if": [
+        {
+         "contract": "generador-lumen",
+         "state": "active"
+        },
+        {
+         "objective": "coupling",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "item": "acoplamiento",
+         "qty": 1
+        },
+        {
+         "completeObjective": "coupling"
+        },
+        {
+         "flag": "lumen_pago_lin",
+         "value": true
+        },
+        {
+         "rep": "chatarreros",
+         "delta": 1
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.tomas.lumen-fiado.salir"
+      }
+     ]
+    },
+    "lumen-recibo": {
+     "text": "m.01-principales.tomas.lumen-recibo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.tomas.lumen-recibo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "matasanos-ito": {
+   "options": {
+    "root": [
+     {
+      "id": "duplicados",
+      "text": "m.01-principales.matasanos-ito.root.duplicados",
+      "goto": "copias-44",
+      "if": [
+       {
+        "contract": "nombres-prestados",
+        "state": "active"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "copias-44": {
+     "text": "m.01-principales.matasanos-ito.copias-44",
+     "options": [
+      {
+       "id": "sellar",
+       "text": "m.01-principales.matasanos-ito.copias-44.sellar",
+       "goto": "reparacion-44",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "lote-sellado",
+         "value": true
+        },
+        {
+         "completeObjective": "nombres-prestados-prueba"
+        }
+       ]
+      },
+      {
+       "id": "sello",
+       "text": "m.01-principales.matasanos-ito.copias-44.sello",
+       "goto": "reparacion-44",
+       "if": [
+        {
+         "contract": "nombres-prestados",
+         "state": "active"
+        },
+        {
+         "objective": "nombres-prestados-prueba",
+         "done": true
+        },
+        {
+         "flag": "lote-sellado",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "lote-sellado",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.01-principales.matasanos-ito.copias-44.salir"
+      }
+     ]
+    },
+    "reparacion-44": {
+     "text": "m.01-principales.matasanos-ito.reparacion-44",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.01-principales.matasanos-ito.reparacion-44.salir"
+      }
+     ]
+    }
+   }
+  }
+ }
+}
