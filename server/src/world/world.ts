@@ -1241,7 +1241,9 @@ export class World {
       .sort((a,b)=>Math.hypot(a.x-door.doorTo!.at[0]-.5,a.y-door.doorTo!.at[1]-.5)
         -Math.hypot(b.x-door.doorTo!.at[0]-.5,b.y-door.doorTo!.at[1]-.5))[0] : undefined;
     let nx = door.doorTo.at[0]+.5, ny = door.doorTo.at[1]+.5;
-    if (crossing && reciprocal && to.def.kind==='interior' && e.zone.def.kind==='exterior') {
+    // Solo separar al jugador del umbral si el plano no define un punto más adentro.
+    if (reciprocal && to.def.kind==='interior' && e.zone.def.kind==='exterior' &&
+      Math.hypot(reciprocal.x-nx,reciprocal.y-ny)<.5) {
       const normal=edgeDirection(to.def,[Math.floor(reciprocal.x),Math.floor(reciprocal.y)]);
       if(normal){
         const ix=reciprocal.x-normal[0]*.85, iy=reciprocal.y-normal[1]*.85;
