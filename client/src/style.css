@@ -777,7 +777,32 @@ html[data-hide~="file"] .hud-file { display: none !important; }
 
 /* v0.39 · Cámaras cercanas: aviso al cambiar y mirilla en primera persona. */
 .cam-hint { position: fixed; top: 18%; left: 50%; transform: translateX(-50%); background: var(--panel-solid, #0d0d18); border: 1px solid #43f3ff66; border-radius: 6px; padding: 6px 14px; text-align: center; z-index: 30; pointer-events: none; letter-spacing: 0.04em; }
-.crosshair { position: fixed; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; pointer-events: none; z-index: 20; }
-.crosshair::before, .crosshair::after { content: ''; position: absolute; background: #e8fbffcc; box-shadow: 0 0 3px #000; }
-.crosshair::before { left: 8px; top: 0; width: 2px; height: 18px; }
-.crosshair::after { top: 8px; left: 0; height: 2px; width: 18px; }
+.crosshair { position: fixed; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: #f4fbff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.75), 0 0 4px rgba(0, 0, 0, 0.6); pointer-events: none; z-index: 20; transition: transform 0.12s; }
+.crosshair.aiming { transform: scale(0.75); }
+/* v0.44 · Vista a través de la mira */
+.sight-ov { position: fixed; inset: 0; pointer-events: none; z-index: 19; display: grid; place-items: center; }
+.sight-ov .sight-ret { width: 86vmin; height: 86vmin; filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5)); }
+.sight-ov .sight-ret svg { width: 100%; height: 100%; overflow: visible; }
+.sight-ov .sight-glass { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 0 38vmin, rgba(0, 0, 0, 0.35) 70vmin); }
+.sight-ov.scope .sight-glass { background: radial-gradient(circle at center, rgba(120, 170, 200, 0.06) 0 41.6vmin, #000 42.4vmin); }
+.sight-ov[data-reticle="francotirador"] .sight-glass { background: radial-gradient(circle at center, rgba(120, 170, 200, 0.05) 0 41.6vmin, #000 42.4vmin); }
+.sight-ov.scope .sight-glass::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 0 34vmin, rgba(0, 0, 0, 0.55) 42vmin, transparent 42.1vmin); }
+
+/* v0.44 · Barras de estadísticas de armas (blancas, 1–10) y banco de armero */
+.wstats { display: grid; gap: 2px; margin: 4px 0; max-width: 340px; }
+.wstat { display: grid; grid-template-columns: 74px 1fr 78px; align-items: center; gap: 6px; font-size: 0.78em; }
+.wstat-n { color: var(--muted, #9aa); text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.92em; }
+.wstat-bar { position: relative; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 1px; overflow: hidden; }
+.wstat-bar i { position: absolute; left: 0; top: 0; bottom: 0; background: #f4f4f4; }
+.wstat-bar b { position: absolute; top: 0; bottom: 0; }
+.wstat-bar b.up { background: #4dff9a; } .wstat-bar b.down { background: #ff4d5e; }
+.wstat-v { text-align: right; }
+.armero-head { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; margin: 6px 0 8px; padding: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: #0d1018; position: sticky; top: 38px; z-index: 1; }
+.armero-head .wstats { min-width: 280px; }
+.armero-slots { display: grid; gap: 10px; }
+.armero-slot { border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 6px; }
+.armero-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px; margin-top: 4px; }
+.armero-opt { padding: 6px 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.03); font-size: 0.88em; }
+.armero-opt:hover { border-color: rgba(67, 200, 255, 0.6); }
+.armero-opt.on { border-color: #4dff9a; background: rgba(77, 255, 154, 0.07); }
+#armero-panel { width: min(860px, calc(100vw - 24px)); }

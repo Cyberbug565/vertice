@@ -35,6 +35,7 @@ import { Admin } from './admin.js';
 import { Missions } from './missions.js';
 import { Debts } from './debt.js';
 import { Scanner } from './scanner.js';
+import { Armero } from './armero.js';
 import { Nightlife } from './nightlife.js';
 import { Casino } from './casino.js';
 import { Prison } from './prison.js';
@@ -111,6 +112,7 @@ export class World {
   readonly interiors: Interiors;
   readonly debts: Debts;
   readonly scanner: Scanner;
+  readonly armero: Armero;
   private spawnAmbientFn: (z: Zone, near?: { x: number; y: number }) => Entity | undefined = () => undefined;
 
   constructor(readonly c: Content, readonly contentHash: string, readonly db: Db, readonly cfg: Config, readonly metrics: Metrics) {
@@ -144,6 +146,7 @@ export class World {
     this.crowds = new Crowds(this);
     this.debts = new Debts(this);
     this.scanner = new Scanner(this);
+    this.armero = new Armero(this);
     sheetHooks.loan = (p) => this.debts.view(p);
     sheetHooks.post = (p) => this.posts.status(p);
     sheetHooks.objective = (p) => objectiveStatus(p).text;
@@ -1006,6 +1009,7 @@ export class World {
       case 'loan': return guarded(m.seq, () => this.debts.pay(c, m.amount));
       case 'look': return void this.scanner.scan(c, m.target).catch((err) => console.error('[escáner]', err));
       case 'camera': c.nearCam = m.mode !== 'cenital'; return;
+      case 'weaponMod': return guarded(m.seq, () => this.armero.command(c, m));
       case 'dossier': return guarded(m.seq, () => this.scanner.command(c, m.action, m.offer));
       case 'perkBuy': return guarded(m.seq, () => this.progress.perkBuy(c, m.perk));
       case 'wear': return guarded(m.seq, async () => sv.wear(c, m.slot, m.item, (m as any).confirm === true));

@@ -1,0 +1,129 @@
+{
+ "id": "armeria-precision-int",
+ "name": "Precisión Cívica",
+ "kind": "interior",
+ "width": 12,
+ "height": 9,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#2a3446",
+ "blocks": [],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    1
+   ]
+  },
+  {
+   "type": "shelf",
+   "at": [
+    5,
+    1
+   ]
+  },
+  {
+   "type": "desk",
+   "at": [
+    5,
+    2
+   ],
+   "color": "#2a3040"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    1,
+    4
+   ],
+   "color": "#2a2a3a"
+  },
+  {
+   "type": "column",
+   "at": [
+    2,
+    5
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "column",
+   "at": [
+    6,
+    6
+   ],
+   "color": "#4a4a5a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    7
+   ],
+   "color": "#2a3040"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-armeria-precision-int",
+   "name": "Salida a la calle (Colinas)",
+   "at": [
+    11,
+    4
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     250,
+     53
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-armeria-precision",
+   "name": "Mostrador de Precisión Cívica",
+   "at": [
+    7,
+    4
+   ],
+   "kind": "shop",
+   "shop": "armeria-precision"
+  }
+ ],
+ "waypoints": [
+  [
+   9,
+   4
+  ]
+ ],
+ "safePoint": [
+  9,
+  4
+ ],
+ "furnished": true
+}

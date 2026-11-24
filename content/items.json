@@ -293,7 +293,7 @@
    "noise": 0.05,
    "tech": "clasica"
   },
-  "price": 30
+  "price": 50
  },
  {
   "id": "bate",
@@ -315,7 +315,7 @@
    "noise": 0.2,
    "tech": "clasica"
   },
-  "price": 45
+  "price": 70
  },
  {
   "id": "machete",
@@ -337,7 +337,7 @@
    "noise": 0.1,
    "tech": "clasica"
   },
-  "price": 90
+  "price": 150
  },
  {
   "id": "porra-electrica",
@@ -359,7 +359,7 @@
    "noise": 0.2,
    "tech": "tecnica"
   },
-  "price": 120
+  "price": 200
  },
  {
   "id": "punos-choque",
@@ -381,7 +381,7 @@
    "noise": 0.2,
    "tech": "tecnica"
   },
-  "price": 240
+  "price": 410
  },
  {
   "id": "katana-termica",
@@ -403,7 +403,7 @@
    "noise": 0.1,
    "tech": "potencia"
   },
-  "price": 1400
+  "price": 3020
  },
  {
   "id": "pistola-ligera",
@@ -427,7 +427,7 @@
    "ammo": "bala-pistola",
    "mag": 12
   },
-  "price": 300
+  "price": 660
  },
  {
   "id": "revolver-pesado",
@@ -451,7 +451,7 @@
    "ammo": "bala-pistola",
    "mag": 6
   },
-  "price": 520
+  "price": 1220
  },
  {
   "id": "pistola-inteligente",
@@ -475,7 +475,7 @@
    "ammo": "bala-pistola",
    "mag": 15
   },
-  "price": 900
+  "price": 2340
  },
  {
   "id": "subfusil",
@@ -499,7 +499,7 @@
    "ammo": "bala-pistola",
    "mag": 30
   },
-  "price": 700
+  "price": 1730
  },
  {
   "id": "escopeta-corta",
@@ -523,7 +523,7 @@
    "ammo": "cartucho",
    "mag": 2
   },
-  "price": 620
+  "price": 1500
  },
  {
   "id": "rifle-asalto",
@@ -547,7 +547,7 @@
    "ammo": "bala-rifle",
    "mag": 30
   },
-  "price": 1200
+  "price": 3360
  },
  {
   "id": "rifle-precision",
@@ -571,7 +571,7 @@
    "ammo": "bala-rifle",
    "mag": 5
   },
-  "price": 1900
+  "price": 6210
  },
  {
   "id": "rifle-riel",
@@ -595,7 +595,7 @@
    "ammo": "celula-energia",
    "mag": 4
   },
-  "price": 3600
+  "price": 15840
  },
  {
   "id": "taser",
@@ -619,7 +619,7 @@
    "ammo": "carga-taser",
    "mag": 3
   },
-  "price": 260
+  "price": 570
  },
  {
   "id": "cuchillas-antebrazo-arma",

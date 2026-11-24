@@ -189,6 +189,15 @@ export class GameView {
       this.tapAt(pt.x, pt.y);
     });
     window.addEventListener('pointerup', (e) => { if (e.button === 2 && this.guarding) { this.guarding = false; this.onGuard(false); } });
+    // v0.44 · Apuntando en tercera o primera persona, el ratón mueve la vista (bloqueado en el centro, como un visor):
+    // más aumento, giro más fino.
+    this.app.canvas.addEventListener('pointerdown', (e) => { if (e.button === 2 && this.ads) { try { (this.app.canvas.requestPointerLock() as any)?.catch?.(() => {}); } catch { /* sin bloqueo */ } } });
+    window.addEventListener('pointerup', (e) => { if (e.button === 2 && document.pointerLockElement === this.app.canvas) document.exitPointerLock(); });
+    window.addEventListener('mousemove', (e) => {
+      if (!this.ads || document.pointerLockElement !== this.app.canvas) return;
+      const z = 1 + ((this.scope?.zoom ?? 1.15) - 1) * (this.chars3d?.ads ?? 0);
+      this.turnCam(e.movementX * 0.0032 / z, e.movementY * 0.0028 / z);
+    });
     window.addEventListener('blur', () => { if (this.guarding) { this.guarding = false; this.onGuard(false); } });
     this.app.canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
@@ -1422,12 +1431,14 @@ export class GameView {
     this.tapAt(ev.global.x, ev.global.y);
   }
   private tapAt(gx: number, gy: number) {
+    if (this.ads) { gx = this.app.screen.width / 2; gy = this.app.screen.height / 2; } // apuntando: al centro de la mira
     const e = this.pick(gx, gy);
     if (e) return this.onEntityClick(e);
     const w = this.toWorld(gx, gy);
     this.onGroundClick(w.x, w.y);
   }
   private onMove(ev: FederatedPointerEvent) {
+    if (this.ads) return; // (apuntando, el cursor es el centro: se actualiza cada fotograma)
     const w = this.toWorld(ev.global.x, ev.global.y);
     this.cursor = { x: w.x, y: w.y, sx: ev.global.x, sy: ev.global.y };
     const e = this.pick(ev.global.x, ev.global.y);
@@ -1626,6 +1637,18 @@ export class GameView {
         const b=this.zone!.buildings[i], faded=!this.near&&coversActor(b.rect,o.height!,this.me.x,this.me.y);
         this.chars3d!.setBuildingFaded(i,faded,faded?.22:1);
       });
+    }
+    // v0.44 · Mira: al apuntar, la cámara pasa al ojo con el aumento de la mira y el cursor es el centro de la pantalla.
+    {
+      const ads = this.ads, c = this.chars3d;
+      c.adsOn = ads; c.adsZoom = this.scope?.zoom ?? 1.15;
+      if (ads) {
+        const cx = this.app.screen.width / 2, cy = this.app.screen.height / 2, f = this.camForward();
+        const g = c.groundAt(cx, cy);
+        const w = g && Math.hypot(g.x - this.me.x, g.y - this.me.y) < 60 ? g : { x: this.me.x + f.x * 12, y: this.me.y + f.y * 12 };
+        this.cursor = { x: w.x, y: w.y, sx: cx, sy: cy };
+      }
+      this.onSight({ near: this.near, ads: c.ads, sight: this.scope, ranged: this.combat.ranged });
     }
     // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).
     this.pending3d = [[...this.ents.values(), ...this.companions.filter((c) => c.ent3d).map((c) => c.ent3d)] as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
@@ -1846,6 +1869,12 @@ export class GameView {
 
   /** Alcance de tu arma (rojo) y de tiro seguro apuntando (verde); lo rellena la ficha del personaje. */
   combat = { range: 1.5, aim: 0, ranged: false };
+  /** v0.44 · Mira del arma en la mano (null: sin mira, se apunta con el punto). */
+  scope: { zoom: number; reticle: string } | null = null;
+  /** ¿Apuntando con la mira? (clic derecho con un arma de fuego en tercera o primera persona) */
+  get ads() { return this.near && this.guarding && this.combat.ranged && !this.driving; }
+  /** Cada fotograma: estado de la mira para el HUD (punto, retícula y transición). */
+  onSight: (s: { near: boolean; ads: number; sight: { zoom: number; reticle: string } | null; ranged: boolean }) => void = () => {};
   // ================================================================ v0.8 · Kairós, compañeros, fantasma y alucinaciones
   private kairosTier(e: CEnt) { const b = e.s.buffs?.find((x) => x.startsWith('kairos')); return b ? Number(b.slice(6)) || 0 : 0; }
   /** Escala de tiempo en un punto para las balas de `shooter` (más lentas dentro de una zona Kairós ajena; más rápidas si dispara quien lo lleva). */

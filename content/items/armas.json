@@ -4,7 +4,7 @@
   "name": "Nunchakus",
   "desc": "Rápidos y difíciles de esquivar. Aturden.",
   "weight": 0.8,
-  "price": 260,
+  "price": 440,
   "category": "arma",
   "rarity": "comun",
   "weapon": {
@@ -29,7 +29,7 @@
   "name": "Tonfa aturdidora",
   "desc": "Reglamentaria de la PCV. Solo deja KO.",
   "weight": 0.9,
-  "price": 450,
+  "price": 800,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -55,7 +55,7 @@
   "name": "Lanza eléctrica",
   "desc": "Alcance largo para un arma de mano.",
   "weight": 3,
-  "price": 1900,
+  "price": 4480,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -80,7 +80,7 @@
   "name": "Martillo neumático",
   "desc": "Cada golpe sacude a todo el que esté cerca.",
   "weight": 7,
-  "price": 2400,
+  "price": 6140,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -106,7 +106,7 @@
   "name": "Hacha de plasma",
   "desc": "El filo de plasma ignora el blindaje y quema.",
   "weight": 3.5,
-  "price": 3200,
+  "price": 9220,
   "category": "arma",
   "rarity": "epico",
   "weapon": {
@@ -132,7 +132,7 @@
   "name": "Espada de monofilamento",
   "desc": "Un hilo de una molécula sobre una hoja de carbono.",
   "weight": 1.5,
-  "price": 5500,
+  "price": 20900,
   "category": "arma",
   "rarity": "legendario",
   "weapon": {
@@ -158,7 +158,7 @@
   "name": "Pistola silenciada",
   "desc": "Los delitos con ella suben la búsqueda la mitad.",
   "weight": 1.2,
-  "price": 900,
+  "price": 2340,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -184,7 +184,7 @@
   "name": "Pistola de plasma",
   "desc": "Dispara plasma que sigue quemando.",
   "weight": 1.4,
-  "price": 2600,
+  "price": 9710,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -202,7 +202,8 @@
    "tech": "tecnica",
    "traits": [
     "quemadura"
-   ]
+   ],
+   "noise": 0.6
   }
  },
  {
@@ -210,7 +211,7 @@
   "name": "Revólver de riel",
   "desc": "Atraviesa paredes, blindajes y lo que haya detrás.",
   "weight": 2.2,
-  "price": 4200,
+  "price": 20160,
   "category": "arma",
   "rarity": "epico",
   "weapon": {
@@ -228,7 +229,8 @@
    "tech": "tecnica",
    "traits": [
     "perforante"
-   ]
+   ],
+   "noise": 0.85
   }
  },
  {
@@ -236,7 +238,7 @@
   "name": "Pistola de agujas",
   "desc": "Agujas guiadas que no hacen ruido.",
   "weight": 0.9,
-  "price": 1700,
+  "price": 5330,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -263,7 +265,7 @@
   "name": "Subfusil inteligente",
   "desc": "Balas autoguiadas: ni la distancia las despista.",
   "weight": 2.8,
-  "price": 3100,
+  "price": 12610,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -281,7 +283,8 @@
    "tech": "inteligente",
    "traits": [
     "inteligente"
-   ]
+   ],
+   "noise": 0.85
   }
  },
  {
@@ -289,7 +292,7 @@
   "name": "Escopeta tecnológica",
   "desc": "Perdigones cargados que atraviesan y abren en abanico.",
   "weight": 4,
-  "price": 3600,
+  "price": 15840,
   "category": "arma",
   "rarity": "epico",
   "weapon": {
@@ -308,7 +311,8 @@
    "traits": [
     "perforante",
     "area"
-   ]
+   ],
+   "noise": 0.95
   }
  },
  {
@@ -316,7 +320,7 @@
   "name": "Rifle de pulsos",
   "desc": "Descargas que fríen nervios y circuitos.",
   "weight": 3.6,
-  "price": 3900,
+  "price": 17940,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -334,7 +338,8 @@
    "tech": "tecnica",
    "traits": [
     "electrica"
-   ]
+   ],
+   "noise": 0.6
   }
  },
  {
@@ -342,7 +347,7 @@
   "name": "Ballesta de carbono",
   "desc": "Silenciosa y letal: los virotes desgarran.",
   "weight": 2.5,
-  "price": 1500,
+  "price": 4500,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -369,7 +374,7 @@
   "name": "Rifle de dardos sedantes",
   "desc": "Para cazar con vida.",
   "weight": 3,
-  "price": 1300,
+  "price": 3730,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -396,7 +401,7 @@
   "name": "Cañón sónico",
   "desc": "Onda de choque que derriba a varios a la vez.",
   "weight": 4.5,
-  "price": 2900,
+  "price": 11410,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -415,7 +420,8 @@
    "traits": [
     "aturdidora",
     "area"
-   ]
+   ],
+   "noise": 0.9
   }
  },
  {
@@ -423,7 +429,7 @@
   "name": "Ametralladora rotativa",
   "desc": "Lluvia de plomo. Pesa una barbaridad.",
   "weight": 14,
-  "price": 6900,
+  "price": 45540,
   "category": "arma",
   "rarity": "epico",
   "weapon": {
@@ -441,7 +447,8 @@
    "tech": "potencia",
    "traits": [
     "area"
-   ]
+   ],
+   "noise": 1
   }
  },
  {
@@ -449,7 +456,7 @@
   "name": "Francotirador inteligente",
   "desc": "La bala dobla esquinas para encontrar a su objetivo.",
   "weight": 6,
-  "price": 7800,
+  "price": 56160,
   "category": "arma",
   "rarity": "legendario",
   "weapon": {
@@ -468,7 +475,8 @@
    "traits": [
     "inteligente",
     "perforante"
-   ]
+   ],
+   "noise": 1
   }
  },
  {
@@ -476,7 +484,7 @@
   "name": "Lanzagranadas PEM",
   "desc": "Funde el cromo y aturde a todo el grupo.",
   "weight": 6,
-  "price": 6400,
+  "price": 40110,
   "category": "arma",
   "rarity": "epico",
   "weapon": {
@@ -496,7 +504,8 @@
     "emp",
     "area",
     "aturdidora"
-   ]
+   ],
+   "noise": 0.9
   }
  },
  {
@@ -610,7 +619,7 @@
   "name": "Pistola compacta",
   "desc": "Distancia 10 m · pequeña y fácil de esconder.",
   "weight": 0.7,
-  "price": 240,
+  "price": 520,
   "category": "arma",
   "rarity": "comun",
   "weapon": {
@@ -636,7 +645,7 @@
   "name": "Subfusil compacto",
   "desc": "Distancia 11 m · ráfagas cortas y culata plegable.",
   "weight": 2.1,
-  "price": 820,
+  "price": 2090,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -662,7 +671,7 @@
   "name": "Carabina de culata de madera",
   "desc": "Distancia 16 m · vieja, robusta y precisa.",
   "weight": 3.1,
-  "price": 900,
+  "price": 2340,
   "category": "arma",
   "rarity": "comun",
   "weapon": {
@@ -688,7 +697,7 @@
   "name": "Escopeta de corredera",
   "desc": "Distancia 8 m · seis cartuchos y un chasquido que asusta.",
   "weight": 3.4,
-  "price": 760,
+  "price": 1910,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -714,7 +723,7 @@
   "name": "Ametralladora ligera",
   "desc": "Distancia 17 m · caja de 80 balas y bípode.",
   "weight": 8.5,
-  "price": 4200,
+  "price": 20160,
   "category": "arma",
   "rarity": "raro",
   "weapon": {
@@ -740,7 +749,7 @@
   "name": "Cuchillo de combate",
   "desc": "Cuerpo a cuerpo · hoja de 17 cm con sierra. Silencioso.",
   "weight": 0.4,
-  "price": 120,
+  "price": 200,
   "category": "arma",
   "rarity": "comun",
   "weapon": {
@@ -767,7 +776,7 @@
   "name": "Katana",
   "desc": "Cuerpo a cuerpo · acero plegado, sin trucos.",
   "weight": 1.2,
-  "price": 1400,
+  "price": 3020,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -793,7 +802,7 @@
   "name": "Hacha de bombero",
   "desc": "Cuerpo a cuerpo · pesada; abre puertas y cráneos.",
   "weight": 2.6,
-  "price": 180,
+  "price": 300,
   "category": "arma",
   "rarity": "comun",
   "weapon": {
@@ -819,7 +828,7 @@
   "name": "Tubería de plomo",
   "desc": "Cuerpo a cuerpo · lo que había en el callejón.",
   "weight": 1.8,
-  "price": 15,
+  "price": 20,
   "category": "arma",
   "rarity": "comun",
   "weapon": {
@@ -845,7 +854,7 @@
   "name": "Mazo de demolición",
   "desc": "Cuerpo a cuerpo · lento y brutal: derriba de un golpe.",
   "weight": 5,
-  "price": 220,
+  "price": 370,
   "category": "arma",
   "rarity": "poco-comun",
   "weapon": {
@@ -871,7 +880,7 @@
   "name": "Cuchilla serrada de desguace",
   "desc": "Cuerpo a cuerpo pesada a dos manos: una hoja de acero oxidado con dientes y gancho en la punta. Barrido giratorio, doble tajo y salto con golpe. Abre heridas que sangran mucho.",
   "weight": 6,
-  "price": 3400,
+  "price": 10060,
   "category": "arma",
   "rarity": "raro",
   "weapon": {

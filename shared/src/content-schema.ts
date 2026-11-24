@@ -222,7 +222,7 @@ export const RoleSchema = z.object({
 });
 export type RoleDef = z.infer<typeof RoleSchema>;
 
-export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'herramienta', 'arma', 'ropa', 'chatarra', 'mision', 'equipo', 'contrabando', 'municion', 'matriz'] as const;
+export const ITEM_CATEGORIES = ['comida', 'bebida', 'medicina', 'ciberware', 'herramienta', 'arma', 'ropa', 'chatarra', 'mision', 'equipo', 'contrabando', 'municion', 'matriz', 'accesorio'] as const;
 
 export const WEAPON_TRAITS = ['perforante', 'inteligente', 'quemadura', 'sangrado', 'electrica', 'emp', 'area', 'silenciosa', 'aturdidora'] as const;
 export const RARITIES = ['comun', 'poco-comun', 'raro', 'epico', 'legendario', 'mitico'] as const;
@@ -258,6 +258,15 @@ export const ItemSchema = z.object({
   ]).optional(),
   confront: z.number().int().optional(),
   weapon: WeaponSchema.optional(),
+  /** v0.44 · Accesorio de arma: hueco, clases de arma en las que encaja, cambios en sus valores y, si es mira, su aumento. */
+  attachment: z.object({
+    slot: z.enum(['mira', 'boca', 'canon', 'empunadura', 'culata', 'cargador', 'tactico']),
+    classes: z.array(z.enum(['pistola', 'subfusil', 'fusil', 'tirador', 'escopeta', 'ametralladora', 'energia'])).min(1),
+    mods: z.object({ dmg: z.number().optional(), range: z.number().optional(), acc: z.number().optional(), rate: z.number().optional(), noise: z.number().optional(), weight: z.number().optional() }),
+    sight: z.object({ zoom: z.number().min(1).max(12), reticle: z.enum(['hierro', 'holo', 'holo-anillo', 'tactica', 'francotirador']) }).optional(),
+    /** Ilegal: solo lo venden los armeros del mercado negro (silenciadores, cargadores de gran capacidad…). */
+    legal: z.boolean().default(true),
+  }).optional(),
   armor: z.number().int().optional(),
   rarity: z.enum(RARITIES).default('comun'),
   /** Ropa: hueco donde se lleva, estilo y color con que se dibuja y mejoras. */
@@ -304,6 +313,8 @@ export const ShopSchema = z.object({
   security: z.number().int().min(8).max(25),
   fence: z.boolean().default(false),
   discounts: z.array(z.object({ flag: z.string(), pct: z.number() })).default([]),
+  /** v0.44 · Tiene banco de armero: aquí se ponen y quitan accesorios. */
+  taller: z.boolean().default(false),
 });
 export type ShopDef = z.infer<typeof ShopSchema>;
 

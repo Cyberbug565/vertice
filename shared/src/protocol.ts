@@ -83,6 +83,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('look'), target: z.number().int() }),
   // v0.40 · Cámara del cliente: con la tercera o la primera persona los PNJ cercanos se ven aunque no estén delante.
   z.object({ t: z.literal('camera'), mode: z.enum(['cenital', 'tercera', 'primera']) }),
+  // v0.44 · Banco de armero: poner o quitar un accesorio (solo junto a una armería con taller).
+  z.object({ t: z.literal('weaponMod'), seq, action: z.enum(['install', 'remove']), weapon: z.string().max(64), attachment: z.string().max(64).optional(), slot: z.enum(['mira', 'boca', 'canon', 'empunadura', 'culata', 'cargador', 'tactico']).optional(), opId }),
   z.object({ t: z.literal('dossier'), seq, action: z.enum(['view', 'wipe', 'accept', 'decline']).default('view'), offer: z.string().max(64).optional() }),
   z.object({ t: z.literal('perkBuy'), seq, perk: z.string().max(48), opId }),
   z.object({ t: z.literal('wear'), seq, slot: z.string().max(16), item: z.string().max(64).nullable(), confirm: z.boolean().optional() }),
@@ -182,6 +184,8 @@ export interface ScanView {
 
 export interface ShopView {
   shop: string; name: string; owner: string; ownerName: string; security: number; fence: boolean; money: number; bar?: boolean;
+  /** v0.44 · Tiene banco de armero (accesorios). */
+  taller?: boolean;
   items: { item: string; name: string; desc: string; category: string; price: number; base: number; stock: number; trend: number; stealChance: number; discount: number; owned?: number }[];
   sell: { item: string; name: string; qty: number; price: number }[];
 }
@@ -260,7 +264,9 @@ export interface CharacterSheet {
   profession: string; professionName: string; professionRank: number; professionXp: number; activeJob: string | null;
   cyber: { id: string; def: string; name: string; slot: string; grade: number; capacity: number; humanity: number; family: string; maker: string; desc: string; location: 'inventory' | 'installed'; stolen: boolean; region: string; part: string | null; ability?: string; unique?: string; passive?: string; rarity?: string }[];
   bonuses: { confront: number; defense: number; steal: number; surgery: number };
-  weapon: { id: string; name: string; kind: string; family: string; damage: [number, number]; range: number; cooldown: number; accuracy: number; ammo?: string; ammoName?: string; ammoCount?: number; nonlethal: string; tech: string } | null;
+  weapon: { id: string; name: string; kind: string; family: string; damage: [number, number]; range: number; cooldown: number; accuracy: number; ammo?: string; ammoName?: string; ammoCount?: number; nonlethal: string; tech: string;
+    /** v0.44 · Barras de 1 a 10, accesorios puestos y mira (si la hay). */
+    stats?: import('./weapon-mods.js').WeaponStats; attachments?: Record<string, string>; sight?: { zoom: number; reticle: string } | null } | null;
   weapons: { id: string; name: string; integrated: boolean }[];
   armor: number; encumbrance: 'normal' | 'cargado' | 'sobrecargado'; carrying: string | null;
   net: { rank: number; xp: number; xpNext: number; ram: number; ramMax: number; canHack: boolean };
@@ -282,6 +288,8 @@ export interface CharacterSheet {
   bio: { objective: string; objectiveName: string; childhood: string; event: string; done: boolean; progress: string } | null;
   /** v0.38 · Préstamo de los Kuro (si lo tienes): deuda, cuota diaria, minutos de juego hasta la próxima y cuotas impagadas. */
   loan?: { owed: number; daily: number; inMin: number; missed: number; hunted: boolean };
+  /** v0.44 · Accesorios puestos en cada arma: { arma: { hueco: accesorio } }. */
+  weaponMods?: Record<string, Partial<Record<import('./weapon-mods.js').AttachSlot, string>>>;
   identified: { crime: string; district: string } | null;
   psychosis: 'Inquieto' | 'Inestable' | 'Ciberpsicosis' | null;
   psyche: { level: number; episode: { grave: boolean; days: number } | null };

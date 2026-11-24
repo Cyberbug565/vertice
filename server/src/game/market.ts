@@ -123,7 +123,7 @@ export class MarketService {
       }
     }
     const owner = this.c.factions.find((f) => f.id === sh.owner)?.name ?? sh.owner;
-    return { shop: shopId, name: sh.name, owner: sh.owner, ownerName: owner, security: sh.security, fence: sh.fence, money: p.money, bar, items, sell };
+    return { shop: shopId, name: sh.name, owner: sh.owner, ownerName: owner, security: sh.security, fence: sh.fence, taller: sh.taller, money: p.money, bar, items, sell };
   }
 
   /** Compra atómica: dinero, inventario y libro económico en la misma transacción. */

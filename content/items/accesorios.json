@@ -1,0 +1,1048 @@
+[
+ {
+  "id": "mira-hierro-tritio",
+  "name": "Miras de tritio Nocturna",
+  "desc": "Alza y punto de mira con insertos de tritio que brillan en la oscuridad. Sin aumento: lo justo para alinear.",
+  "weight": 0.02,
+  "price": 450,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "mira",
+   "classes": [
+    "pistola",
+    "subfusil",
+    "fusil",
+    "escopeta",
+    "ametralladora",
+    "tirador"
+   ],
+   "mods": {
+    "acc": 1
+   },
+   "legal": true,
+   "sight": {
+    "zoom": 1.1,
+    "reticle": "hierro"
+   }
+  }
+ },
+ {
+  "id": "mira-holo-12",
+  "name": "Holográfico Halo 1,2×",
+  "desc": "Retícula holográfica de punto y círculo con un leve aumento. Se apunta con los dos ojos abiertos.",
+  "weight": 0.15,
+  "price": 1800,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "mira",
+   "classes": [
+    "pistola",
+    "subfusil",
+    "fusil",
+    "escopeta",
+    "ametralladora",
+    "energia"
+   ],
+   "mods": {
+    "acc": 1,
+    "range": 1
+   },
+   "legal": true,
+   "sight": {
+    "zoom": 1.2,
+    "reticle": "holo"
+   }
+  }
+ },
+ {
+  "id": "mira-holo-14",
+  "name": "Holográfico Vanguardia 1,4×",
+  "desc": "Holográfico de doble anillo con algo más de aumento para media distancia.",
+  "weight": 0.3,
+  "price": 3200,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "mira",
+   "classes": [
+    "subfusil",
+    "fusil",
+    "escopeta",
+    "ametralladora",
+    "energia"
+   ],
+   "mods": {
+    "acc": 2,
+    "range": 2
+   },
+   "legal": true,
+   "sight": {
+    "zoom": 1.4,
+    "reticle": "holo-anillo"
+   }
+  }
+ },
+ {
+  "id": "mira-recortada-4x",
+  "name": "Óptica recortada Corsario 4×",
+  "desc": "Visor compacto de 4 aumentos con retícula en chevrón iluminado. Para fusiles que tiran lejos.",
+  "weight": 0.5,
+  "price": 7400,
+  "category": "accesorio",
+  "rarity": "epico",
+  "attachment": {
+   "slot": "mira",
+   "classes": [
+    "fusil",
+    "tirador",
+    "ametralladora",
+    "energia"
+   ],
+   "mods": {
+    "acc": 2,
+    "range": 5
+   },
+   "legal": true,
+   "sight": {
+    "zoom": 4,
+    "reticle": "tactica"
+   }
+  }
+ },
+ {
+  "id": "mira-francotirador-8x",
+  "name": "Visor de francotirador Vigía 8×",
+  "desc": "Visor de 8 aumentos con retícula de puntos de corrección. Solo para armas de tirador.",
+  "weight": 0.9,
+  "price": 16500,
+  "category": "accesorio",
+  "rarity": "legendario",
+  "attachment": {
+   "slot": "mira",
+   "classes": [
+    "tirador"
+   ],
+   "mods": {
+    "acc": 3,
+    "range": 9
+   },
+   "legal": true,
+   "sight": {
+    "zoom": 8,
+    "reticle": "francotirador"
+   }
+  }
+ },
+ {
+  "id": "silenciador-susurro-9",
+  "name": "Silenciador Susurro-9",
+  "desc": "Supresor roscado para 9 mm y .45. El disparo pasa de trueno a palmada.",
+  "weight": 0.2,
+  "price": 2600,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "pistola",
+    "subfusil"
+   ],
+   "mods": {
+    "noise": -0.75,
+    "range": -1,
+    "dmg": -0.04
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "silenciador-monolito",
+  "name": "Silenciador monolítico Mudo-45",
+  "desc": "Tubo integral que envuelve el cañón entero del subfusil. Lo más silencioso que se fabrica.",
+  "weight": 0.35,
+  "price": 3400,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "subfusil"
+   ],
+   "mods": {
+    "noise": -0.8,
+    "range": -1,
+    "dmg": -0.02
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "supresor-tormenta",
+  "name": "Supresor Tormenta-556",
+  "desc": "Supresor de titanio para calibres de fusil. Se calienta, pero calla.",
+  "weight": 0.45,
+  "price": 4800,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "fusil",
+    "ametralladora"
+   ],
+   "mods": {
+    "noise": -0.7,
+    "range": -2
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "supresor-sombra",
+  "name": "Supresor de tirador Sombra",
+  "desc": "Supresor largo para rifles de precisión: nadie sabe de dónde vino el disparo.",
+  "weight": 0.5,
+  "price": 7900,
+  "category": "accesorio",
+  "rarity": "epico",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "tirador"
+   ],
+   "mods": {
+    "noise": -0.65,
+    "range": -2,
+    "dmg": -0.03
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "compensador-corvo",
+  "name": "Compensador Corvo",
+  "desc": "Ranuras que desvían el gas hacia arriba: la pistola apenas levanta la boca.",
+  "weight": 0.08,
+  "price": 900,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "pistola"
+   ],
+   "mods": {
+    "acc": 1,
+    "noise": 0.1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "compensador-tripuerto",
+  "name": "Compensador de tres puertos",
+  "desc": "Tres salidas de gas por lado que sujetan la ráfaga.",
+  "weight": 0.15,
+  "price": 1600,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "subfusil",
+    "fusil"
+   ],
+   "mods": {
+    "acc": 2,
+    "noise": 0.1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "freno-muralla",
+  "name": "Freno de boca Muralla",
+  "desc": "Freno de boca agresivo: menos retroceso, más estruendo y fogonazo.",
+  "weight": 0.25,
+  "price": 2100,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "fusil",
+    "tirador",
+    "ametralladora"
+   ],
+   "mods": {
+    "acc": 1,
+    "rate": -0.05,
+    "noise": 0.15
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "estrangulador-completo",
+  "name": "Estrangulador completo",
+  "desc": "Choke cerrado: los perdigones viajan juntos más lejos.",
+  "weight": 0.1,
+  "price": 1100,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "escopeta"
+   ],
+   "mods": {
+    "range": 2,
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "boca-de-pato",
+  "name": "Boca de pato Ancha",
+  "desc": "Abre los perdigones en abanico horizontal. Para pasillos y portales.",
+  "weight": 0.1,
+  "price": 950,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "escopeta"
+   ],
+   "mods": {
+    "range": -1,
+    "dmg": 0.08
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "bobina-enfoque",
+  "name": "Bobina de enfoque Lente Fría",
+  "desc": "Anillos magnéticos que concentran el haz o el proyectil de energía.",
+  "weight": 0.2,
+  "price": 5200,
+  "category": "accesorio",
+  "rarity": "epico",
+  "attachment": {
+   "slot": "boca",
+   "classes": [
+    "energia"
+   ],
+   "mods": {
+    "range": 3,
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "canon-competicion",
+  "name": "Cañón de competición Galgo",
+  "desc": "Cañón ajustado de tiro deportivo, con contrapeso.",
+  "weight": 0.2,
+  "price": 1400,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "canon",
+   "classes": [
+    "pistola"
+   ],
+   "mods": {
+    "range": 2,
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "canon-largo-magnum",
+  "name": "Cañón largo Magnum de 6\"",
+  "desc": "Cañón largo de revólver de caza: más velocidad de salida, más pesado de mover.",
+  "weight": 0.35,
+  "price": 2200,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "canon",
+   "classes": [
+    "pistola"
+   ],
+   "mods": {
+    "dmg": 0.1,
+    "range": 2,
+    "rate": 0.08
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "canon-comando",
+  "name": "Cañón corto Comando",
+  "desc": "Cañón recortado para interiores: el arma se mueve como un cuchillo.",
+  "weight": 0.02,
+  "price": 1300,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "canon",
+   "classes": [
+    "subfusil",
+    "fusil"
+   ],
+   "mods": {
+    "range": -2,
+    "rate": -0.06,
+    "weight": -0.3
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "canon-pesado-arquero",
+  "name": "Cañón pesado Arquero de 20\"",
+  "desc": "Cañón largo y grueso que no se calienta. Alcance y pegada a cambio de peso.",
+  "weight": 0.6,
+  "price": 3900,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "canon",
+   "classes": [
+    "fusil",
+    "tirador"
+   ],
+   "mods": {
+    "range": 4,
+    "dmg": 0.06,
+    "rate": 0.05
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "canon-estriado-hielo",
+  "name": "Cañón estriado de precisión Hielo",
+  "desc": "Estriado forjado en frío y flotante: la bala va donde apuntas.",
+  "weight": 0.5,
+  "price": 8800,
+  "category": "accesorio",
+  "rarity": "epico",
+  "attachment": {
+   "slot": "canon",
+   "classes": [
+    "tirador"
+   ],
+   "mods": {
+    "range": 5,
+    "acc": 2
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "canon-recortado-ratonero",
+  "name": "Cañón recortado Ratonero",
+  "desc": "Escopeta serrada: cabe bajo el abrigo y es ilegal en toda la ciudad.",
+  "weight": 0.02,
+  "price": 700,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "canon",
+   "classes": [
+    "escopeta"
+   ],
+   "mods": {
+    "range": -2,
+    "dmg": 0.05,
+    "weight": -0.6
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "canon-yunque",
+  "name": "Cañón de servicio pesado Yunque",
+  "desc": "Cañón de recambio de ametralladora pesada, con disipador de aletas.",
+  "weight": 1.2,
+  "price": 5600,
+  "category": "accesorio",
+  "rarity": "epico",
+  "attachment": {
+   "slot": "canon",
+   "classes": [
+    "ametralladora"
+   ],
+   "mods": {
+    "range": 3,
+    "dmg": 0.05
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "cachas-vibora",
+  "name": "Cachas de goma Víbora",
+  "desc": "Cachas de goma con textura de escama. No resbala ni con sangre.",
+  "weight": 0.05,
+  "price": 350,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "empunadura",
+   "classes": [
+    "pistola"
+   ],
+   "mods": {
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "agarre-vertical-explorador",
+  "name": "Agarre vertical Explorador",
+  "desc": "Empuñadura delantera recta para dominar la ráfaga.",
+  "weight": 0.15,
+  "price": 800,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "empunadura",
+   "classes": [
+    "subfusil",
+    "fusil",
+    "ametralladora"
+   ],
+   "mods": {
+    "acc": 1,
+    "rate": -0.03
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "agarre-angulado-bisel",
+  "name": "Agarre angulado Bisel",
+  "desc": "Agarre inclinado que deja el arma lista para apuntar antes.",
+  "weight": 0.1,
+  "price": 950,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "empunadura",
+   "classes": [
+    "subfusil",
+    "fusil"
+   ],
+   "mods": {
+    "acc": 1,
+    "weight": -0.05
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "bipode-titan",
+  "name": "Bípode Titán",
+  "desc": "Patas plegables para tirar tumbado o apoyado. Precisión de banco de pruebas.",
+  "weight": 0.6,
+  "price": 2400,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "empunadura",
+   "classes": [
+    "ametralladora",
+    "tirador"
+   ],
+   "mods": {
+    "acc": 3
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "corredera-pulgar",
+  "name": "Corredera táctica Pulgar",
+  "desc": "Corredera con tope para el pulgar: se recarga el bombeo sin pensar.",
+  "weight": 0.15,
+  "price": 1200,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "empunadura",
+   "classes": [
+    "escopeta"
+   ],
+   "mods": {
+    "rate": -0.1,
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "culata-plegable-zorro",
+  "name": "Culata plegable Zorro",
+  "desc": "Se pliega de lado: el arma cabe en una bolsa de deporte.",
+  "weight": 0.02,
+  "price": 1000,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "culata",
+   "classes": [
+    "subfusil",
+    "fusil"
+   ],
+   "mods": {
+    "weight": -0.4,
+    "acc": -1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "kit-sin-culata-correcaminos",
+  "name": "Kit sin culata Correcaminos",
+  "desc": "Fuera culata: ligerísimo y saltarín.",
+  "weight": 0.02,
+  "price": 600,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "culata",
+   "classes": [
+    "subfusil"
+   ],
+   "mods": {
+    "weight": -0.8,
+    "acc": -2
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "culata-tactica-bastion",
+  "name": "Culata táctica ajustable Bastión",
+  "desc": "Culata de seis posiciones con apoyo de mejilla.",
+  "weight": 0.2,
+  "price": 1500,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "culata",
+   "classes": [
+    "subfusil",
+    "fusil",
+    "ametralladora"
+   ],
+   "mods": {
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "culata-mejilla-paciente",
+  "name": "Culata de mejilla Tirador Paciente",
+  "desc": "Culata regulable en altura y largo para esperar horas en la misma postura.",
+  "weight": 0.4,
+  "price": 3100,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "culata",
+   "classes": [
+    "tirador"
+   ],
+   "mods": {
+    "acc": 2
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "culata-pistola-maton",
+  "name": "Culata de pistola Matón",
+  "desc": "Empuñadura de pistola en lugar de culata: se dispara desde la cadera.",
+  "weight": 0.02,
+  "price": 750,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "culata",
+   "classes": [
+    "escopeta"
+   ],
+   "mods": {
+    "weight": -0.7,
+    "acc": -1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "culata-acolchada-cero",
+  "name": "Culata acolchada Retroceso Cero",
+  "desc": "Cantonera de gel que se come el culatazo.",
+  "weight": 0.3,
+  "price": 1400,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "culata",
+   "classes": [
+    "escopeta",
+    "ametralladora"
+   ],
+   "mods": {
+    "acc": 1,
+    "rate": -0.03
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "culatin-llavero",
+  "name": "Culatín de pistola Llavero",
+  "desc": "Culata desmontable para pistola. La convierte en una carabina de bolsillo; ilegal.",
+  "weight": 0.3,
+  "price": 1700,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "culata",
+   "classes": [
+    "pistola"
+   ],
+   "mods": {
+    "acc": 2
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "cargador-extendido-17",
+  "name": "Cargador extendido 17+5",
+  "desc": "Cinco balas más en la empuñadura: se recarga menos.",
+  "weight": 0.1,
+  "price": 700,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "pistola"
+   ],
+   "mods": {
+    "rate": -0.06
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "cargador-gemelo",
+  "name": "Cargador de cambio rápido Gemelo",
+  "desc": "Dos cargadores unidos por una pinza: cambio en medio segundo.",
+  "weight": 0.1,
+  "price": 1300,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "pistola",
+    "subfusil",
+    "fusil"
+   ],
+   "mods": {
+    "rate": -0.08
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "tambor-panal",
+  "name": "Tambor de 50 Panal",
+  "desc": "Cargador de tambor para subfusil. Ilegal: es para no soltar el gatillo.",
+  "weight": 0.6,
+  "price": 2600,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "subfusil"
+   ],
+   "mods": {
+    "rate": -0.12
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "cargador-larga-jornada",
+  "name": "Cargador de 45 Larga Jornada",
+  "desc": "Cargador de gran capacidad para fusil. Prohibido fuera del ejército.",
+  "weight": 0.35,
+  "price": 2100,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "fusil"
+   ],
+   "mods": {
+    "rate": -0.08
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "tambor-diluvio",
+  "name": "Tambor de 100 Diluvio",
+  "desc": "Cien cartuchos en un tambor doble. Para cuando no hay prisa por recargar.",
+  "weight": 1.4,
+  "price": 4300,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "ametralladora"
+   ],
+   "mods": {
+    "rate": -0.15
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "tubo-hambre",
+  "name": "Tubo extendido de 8 Hambre",
+  "desc": "Depósito tubular largo: tres cartuchos más.",
+  "weight": 0.3,
+  "price": 1000,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "escopeta"
+   ],
+   "mods": {
+    "rate": -0.1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "municion-siseo",
+  "name": "Cargador de subsónica Siseo",
+  "desc": "Munición más lenta que el sonido: el disparo se oye mucho menos y pega menos.",
+  "weight": 0.02,
+  "price": 1800,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "pistola",
+    "subfusil",
+    "fusil",
+    "tirador"
+   ],
+   "mods": {
+    "noise": -0.3,
+    "dmg": -0.08,
+    "range": -2
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "municion-punta-negra",
+  "name": "Cargador perforante Punta Negra",
+  "desc": "Balas con núcleo de tungsteno que atraviesan chalecos. Ilegales para civiles.",
+  "weight": 0.02,
+  "price": 3600,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "pistola",
+    "fusil",
+    "tirador",
+    "ametralladora"
+   ],
+   "mods": {
+    "dmg": 0.12,
+    "rate": 0.04
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "celula-ascua",
+  "name": "Célula de sobrecarga Ascua",
+  "desc": "Célula de energía trucada: más potencia por disparo, más tiempo de recarga.",
+  "weight": 0.2,
+  "price": 6200,
+  "category": "accesorio",
+  "rarity": "epico",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "energia"
+   ],
+   "mods": {
+    "dmg": 0.15,
+    "rate": 0.1,
+    "noise": 0.1
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "disipador-glaciar",
+  "name": "Disipador térmico Glaciar",
+  "desc": "Aletas de grafeno: el arma de energía enfría antes y dispara más seguido.",
+  "weight": 0.3,
+  "price": 4400,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "cargador",
+   "classes": [
+    "energia"
+   ],
+   "mods": {
+    "rate": -0.15
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "laser-rubi",
+  "name": "Láser táctico Rubí",
+  "desc": "Puntero láser rojo visible: lo ves tú y lo ve el otro.",
+  "weight": 0.08,
+  "price": 1100,
+  "category": "accesorio",
+  "rarity": "poco-comun",
+  "attachment": {
+   "slot": "tactico",
+   "classes": [
+    "pistola",
+    "subfusil",
+    "fusil",
+    "escopeta"
+   ],
+   "mods": {
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "linterna-faro",
+  "name": "Linterna táctica Faro 900",
+  "desc": "Linterna de 900 lúmenes que ciega a corta distancia.",
+  "weight": 0.12,
+  "price": 650,
+  "category": "accesorio",
+  "rarity": "comun",
+  "attachment": {
+   "slot": "tactico",
+   "classes": [
+    "pistola",
+    "subfusil",
+    "fusil",
+    "escopeta",
+    "ametralladora"
+   ],
+   "mods": {
+    "range": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "laser-fantasma",
+  "name": "Láser infrarrojo Fantasma",
+  "desc": "Láser invisible a simple vista. Solo lo ve tu ciberóptica (y quien tenga una).",
+  "weight": 0.1,
+  "price": 3800,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "tactico",
+   "classes": [
+    "subfusil",
+    "fusil",
+    "tirador",
+    "ametralladora"
+   ],
+   "mods": {
+    "acc": 2
+   },
+   "legal": false
+  }
+ },
+ {
+  "id": "telemetro-agrimensor",
+  "name": "Telémetro balístico Agrimensor",
+  "desc": "Mide la distancia y corrige la caída de la bala en la retícula.",
+  "weight": 0.25,
+  "price": 4600,
+  "category": "accesorio",
+  "rarity": "raro",
+  "attachment": {
+   "slot": "tactico",
+   "classes": [
+    "fusil",
+    "tirador"
+   ],
+   "mods": {
+    "range": 3,
+    "acc": 1
+   },
+   "legal": true
+  }
+ },
+ {
+  "id": "modulo-ojo-halcon",
+  "name": "Módulo de puntería Ojo de Halcón",
+  "desc": "Enlace inteligente arma-ciberóptica: la retícula sigue al blanco.",
+  "weight": 0.1,
+  "price": 5400,
+  "category": "accesorio",
+  "rarity": "epico",
+  "attachment": {
+   "slot": "tactico",
+   "classes": [
+    "pistola",
+    "subfusil",
+    "energia"
+   ],
+   "mods": {
+    "acc": 2
+   },
+   "legal": true
+  }
+ }
+]

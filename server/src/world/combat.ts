@@ -1,4 +1,5 @@
 // Combate automático por armas, red (quickhacks), facciones, policía, Rescate Ámbar y transporte de cuerpos.
+import { moddedWeapon } from '../game/weapons.js';
 import { isSick, substanceEffects } from '../game/substances.js';
 import { randomUUID } from 'node:crypto';
 import { AIM, COVER_FULL, COVER_HALF, PART_NAMES, hitPart, type AimZone, type BodyPart, diversifyAppearance, facingToIdx } from '@vertice/shared';
@@ -113,7 +114,8 @@ export class Combat {
   // ================================================================ armas y estadísticas
   weaponOf(p: PlayerState) {
     const ef = effective(this.c, p);
-    return ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, w: ef.weapon.weapon } : FISTS;
+    // v0.44 · Con sus accesorios (silenciador, cañón, cargador…): cambian daño, alcance, precisión, cadencia y ruido.
+    return ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, w: moddedWeapon(this.c, p, ef.weapon) ?? ef.weapon.weapon } : FISTS;
   }
   /** Arma usada para un ataque: con un arma de fuego sin modo no letal, dejar KO es un culatazo cuerpo a cuerpo. */
   weaponFor(p: PlayerState, lethal: boolean) {

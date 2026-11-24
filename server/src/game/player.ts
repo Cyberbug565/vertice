@@ -1,9 +1,10 @@
 // Estado en memoria de una vida de personaje y su persistencia básica.
+import { moddedWeapon, modsOf, weaponCard } from './weapons.js';
 import { randomUUID } from 'node:crypto';
 import {
   visibleParts, dressedAppearance, editableAppearance, ATTRIBUTE_IDS, RULES, normalizeAppearance, carryCapacity, chromeCapacity, humanityBase, levelForXp, maxHp, maxStamina, validateAttributes, xpForLevel,
   LEVEL_GAINS, SKILL_MAX, legacySkillLevel, levelNeedsMult, skillBonus, skillLevelForXp, skillXpFor, WEAR_SLOTS,
-  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, bioExtraPoints, LOAN, WEAPON_SLOTS, newBody, woundList, effectiveBleed, painOf, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
+  CHILDHOODS, CREATION_SKILL_MAX, CREATION_SKILL_POINTS, EVENTS, OBJECTIVES, bioExtraPoints, LOAN, weaponClass, WEAPON_SLOTS, newBody, woundList, effectiveBleed, painOf, twoHanded, MATRICES, SOCKET_BASE, SOCKET_MAX, type BodyPart, weaponSize, type BodyState, SKILL_POINT_CAP,
   type Appearance, type Attributes, type CharacterSheet, type Content, type JournalEntry, t,
 } from '@vertice/shared';
 import type { Db, Queryable } from '../db/db.js';
@@ -421,10 +422,12 @@ export function buildSheet(c: Content, p: PlayerState): CharacterSheet {
     activeJob: p.activeJob,
     cyber: p.cyber.map((ci) => { const d = c.cyberware.find((x) => x.id === ci.def)!; return { id: ci.id, def: ci.def, name: d.name, slot: d.slot, grade: d.grade, capacity: d.capacity, humanity: d.humanity, family: d.family, maker: d.maker, desc: d.desc, location: ci.location, stolen: ci.stolen, region: d.region ?? 'corteza', part: ci.part ?? null, ability: d.ability?.name, unique: d.unique, passive: d.passive, rarity: d.rarity ?? (d.grade <= 1 ? 'comun' : d.grade === 2 ? 'raro' : d.grade === 3 ? 'epico' : 'legendario') }; }),
     bonuses: { confront: ef.confront, defense: ef.defense, steal: ef.steal, surgery: Math.round(ef.surgery * 100) },
-    weapon: ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, kind: ef.weapon.weapon.kind, family: ef.weapon.weapon.family, damage: ef.weapon.weapon.damage, range: ef.weapon.weapon.range, cooldown: ef.weapon.weapon.cooldown, accuracy: ef.weapon.weapon.accuracy,
+    weapon: ef.weapon?.weapon ? { id: ef.weapon.id, name: ef.weapon.name, kind: ef.weapon.weapon.kind, family: ef.weapon.weapon.family, ...(() => { const mw = moddedWeapon(c, p, ef.weapon!)!; return { damage: mw.damage, range: mw.range, cooldown: mw.cooldown, accuracy: mw.accuracy }; })(),
+      ...(weaponClass(ef.weapon) ? (() => { const card = weaponCard(c, p, ef.weapon!); return { stats: card.stats, attachments: card.attachments, sight: card.sight }; })() : {}),
       ammo: ef.weapon.weapon.ammo, ammoName: ef.weapon.weapon.ammo ? c.items.find((i) => i.id === ef.weapon!.weapon!.ammo)?.name : undefined, ammoCount: ef.weapon.weapon.ammo ? p.inventory.get(ef.weapon.weapon.ammo) ?? 0 : undefined, nonlethal: ef.weapon.weapon.nonlethal, tech: ef.weapon.weapon.tech } : null,
     weapons: [...[...p.inventory].filter(([it, q]) => q > 0 && c.items.find((i) => i.id === it)?.weapon).map(([it]) => ({ id: it, name: c.items.find((i) => i.id === it)!.name, integrated: false })),
       ...ef.integrated.map((it) => ({ id: it, name: c.items.find((i) => i.id === it)!.name, integrated: true }))],
+    weaponMods: modsOf(p),
     armor: ef.armor, encumbrance: ef.weight > ef.carryMax * 1.5 ? 'sobrecargado' : ef.weight > ef.carryMax ? 'cargado' : 'normal', carrying: null,
     net: { rank: p.netRank, xp: p.netXp, xpNext: NET_RANKS[Math.min(NET_RANKS.length - 1, p.netRank + 1)], ram: Math.floor(Math.min(p.ram, ef.ram)), ramMax: ef.ram, canHack: ef.ram > 0 },
     ambar: p.ambar && p.ambar.expiresAt > Date.now() ? { plan: p.ambar.plan, name: c.ambar.find((x) => x.id === p.ambar!.plan)?.name ?? p.ambar.plan, usesLeft: p.ambar.usesLeft, expiresInMin: Math.round((p.ambar.expiresAt - Date.now()) / 60000) } : null,

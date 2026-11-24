@@ -1,4 +1,13 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.40)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.44)
+
+La v0.44 trae armas que se modifican:
+- **Punto de mira y miras:** en tercera y primera persona hay un punto de mira. Al apuntar se ve a través de la mira: hierro, holográfico 1,2×, holográfico 1,4×, óptica recortada 4× o visor de francotirador 8×, con su aumento.
+- **Estadísticas:** cada arma tiene barras blancas del 1 al 10: daño, alcance, manejo, movilidad, ruido y cadencia.
+- **49 accesorios con nombre propio:** silenciadores, cañones, empuñaduras, culatas, cargadores, tácticos y miras. Cada uno solo encaja en ciertos tipos de arma y sube o baja las barras.
+- **Armerías:** dos nuevas, una legal y otra de mercado negro, con **banco de armero** para montar accesorios.
+- **Precios:** las armas son más caras, sobre todo las mejores.
+
+[Novedades](docs/NOVEDADES-v0.44.md).
 
 La v0.40 arregla las cámaras cercanas:
 - **PNJ:** en tercera y primera persona se ven siempre, aunque estén a tu espalda. Los jugadores siguen con el cono de visión, la regla de equilibrio de la cenital.

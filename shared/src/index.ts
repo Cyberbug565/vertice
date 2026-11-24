@@ -26,3 +26,4 @@ export * from './driving.js';
 export * from './residential.js';
 export * from './interfaz.js';
 export * from './interiors.js';
+export * from './weapon-mods.js';

@@ -30,6 +30,8 @@ import { lootPanel } from './ui/loot';
 import { closeRecordPanel, recordPanel } from './ui/record';
 /** v0.13 · Gestos que no son bailes (sentado, manos arriba…): no cuentan como «estás bailando». */
 const isDance = (m: string) => !['nausea', 'sentado', 'manos-arriba', 'telefono', 'fumar', 'gesto'].includes(m);
+import { armeroRefresh } from './ui/armero';
+import { createSights } from './ui/sights';
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Segura (verde)', public: 'Vigilada (amarilla)', disputed: 'Peligrosa (roja)', lawless: 'Sin ley (negra)' };
@@ -701,13 +703,13 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   // v0.39 · Cámaras: cenital → tercera persona → primera persona (tecla configurable, F5 por defecto). Se recuerda la última.
   const CAMS: CamMode[] = ['cenital', 'tercera', 'primera'];
   const camHint = h('div', { class: 'cam-hint', style: { display: 'none' } });
-  const crosshair = h('div', { class: 'crosshair', style: { display: 'none' } });
-  $ui().append(camHint, crosshair);
+  const sights = createSights();
+  $ui().append(camHint, ...sights.els);
+  view.onSight = (s) => sights.update(s);
   let camHintT = 0;
   const applyCamera = (m: CamMode, announce: boolean) => {
     const got = view.setCamMode(m);
     net.send({ t: 'camera', mode: got } as any);
-    crosshair.style.display = got === 'primera' ? '' : 'none';
     document.documentElement.dataset.cam = got;
     if (announce) {
       camHint.replaceChildren(h('b', {}, `Cámara: ${CAM_NAMES[got]}`), got === 'cenital' ? '' : h('div', { class: 'small' }, `Arrastra con el ratón para mirar · W hacia donde miras${got === 'tercera' ? ' · rueda: distancia' : ''} · ${keyOf('camera')}: cambiar`));
@@ -929,7 +931,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if(casino?.root.isConnected&&casino.table===m.view.table)casino.receive(m.view,m.seq);
         else if(m.open)casino=casinoPanel(net,m.view);
         break;
-      case 'shop': shopPanel(life, m.view); break;
+      case 'shop': if (!armeroRefresh(m.view)) shopPanel(life, m.view); break;
       case 'market': marketPanel(life, m.view); break;
       case 'jobs': jobsPanel(life, m.view); break;
       case 'clinic': clinicPanel(life, m.view); break;
@@ -957,7 +959,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if (m.target) goalEl.replaceChildren(h('span', {}, '🎯 ', m.target.label), h('button', { class: 'btn small', title: 'Desmarcar destino', 'aria-label': 'Desmarcar destino', onclick: () => net.send({ t: 'goto', kind: 'cancel' } as any) }, '✕'));
         break;
       }
-      case 'sheet': st.sheet = m.sheet; view.thermal = m.sheet.uniques.includes('vision-termica') || 'marcar' in (m.sheet.buffs ?? {}); view.combat = { range: m.sheet.weapon?.range ?? 1.5, aim: m.sheet.aim?.range ?? 0, ranged: m.sheet.weapon?.kind === 'ranged' }; renderSheet(); break;
+      case 'sheet': st.sheet = m.sheet; view.thermal = m.sheet.uniques.includes('vision-termica') || 'marcar' in (m.sheet.buffs ?? {}); view.combat = { range: m.sheet.weapon?.range ?? 1.5, aim: m.sheet.aim?.range ?? 0, ranged: m.sheet.weapon?.kind === 'ranged' }; view.scope = m.sheet.weapon?.sight ?? null; renderSheet(); armeroRefresh(); break;
       case 'skillxp': xpPop(m); break;
       case 'building': buildingPanel(pctx, m.view); break;
       case 'realty': realtyPanel(pctx, m.view); break;

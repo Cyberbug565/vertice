@@ -57243,6 +57243,44 @@
    },
    "sign": "Penal de las Salinas",
    "signColor": "#e4c18c"
+  },
+  {
+   "id": "puerta-armeria-precision-int",
+   "name": "Precisión Cívica",
+   "at": [
+    250,
+    52
+   ],
+   "to": {
+    "zone": "armeria-precision-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "public",
+   "sign": "ARMERÍA",
+   "signColor": "#43c8ff",
+   "signIcon": "diana"
+  },
+  {
+   "id": "puerta-taller-brecha-int",
+   "name": "El Taller de Brecha",
+   "at": [
+    58,
+    248
+   ],
+   "to": {
+    "zone": "taller-brecha-int",
+    "at": [
+     9,
+     4
+    ]
+   },
+   "danger": "public",
+   "sign": "TALLER",
+   "signColor": "#ff3fa4",
+   "signIcon": "diana"
   }
  ],
  "objects": [

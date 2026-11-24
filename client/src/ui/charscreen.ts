@@ -1,5 +1,6 @@
 // v0.4 · Pantalla de personaje a pantalla completa: inventario con huecos de ropa y armas, ciberware sobre la silueta,
 // habilidades 1–25 con barras de experiencia y árbol de perks.
+import { statBars } from './armero';
 import { MATRICES, RARITY_COLOR, RARITY_LABEL, bodyKindOf, hashString, HARD_SKILLS, SCAN_TIERS, skillPointCost, type CharacterSheet, type DossierView } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
@@ -135,7 +136,9 @@ function invTab(s: CharacterSheet, ctx: CharCtx) {
   const weapons = h('div', { class: 'cs-col' }, h('h3', {}, 'Armas'),
     h('div', { class: 'cs-grid small' }, ...s.weapons.map((w) => tile(w.id, 1, { equipped: s.weapon?.id === w.id, onClick: () => { net.send({ t: 'equip', item: s.weapon?.id === w.id ? null : w.id } as any); blip('step'); } })),
       s.weapons.length ? null : h('p', { class: 'muted' }, 'Sin armas: puños.')),
-    s.weapon ? h('div', { class: 'cs-weapon' }, h('b', {}, s.weapon.name), h('div', { class: 'mono small' }, `Daño ${s.weapon.damage[0]}–${s.weapon.damage[1]} · ${s.weapon.kind === 'melee' ? 'cuerpo a cuerpo' : `${s.weapon.range} m`}${s.weapon.ammo ? ` · ${s.weapon.ammoName}: ${s.weapon.ammoCount}` : ''}`)) : null,
+    s.weapon ? h('div', { class: 'cs-weapon' }, h('b', {}, s.weapon.name), h('div', { class: 'mono small' }, `Daño ${s.weapon.damage[0]}–${s.weapon.damage[1]} · ${s.weapon.kind === 'melee' ? 'cuerpo a cuerpo' : `${s.weapon.range} m`}${s.weapon.ammo ? ` · ${s.weapon.ammoName}: ${s.weapon.ammoCount}` : ''}`),
+      s.weapon.stats ? statBars(s.weapon.stats) : null,
+      s.weapon.attachments && Object.keys(s.weapon.attachments).length ? h('div', { class: 'small cy' }, Object.values(s.weapon.attachments).map((id) => content.items.find((i) => i.id === id)?.name ?? id).join(' · ')) : null) : null,
     h('h3', {}, 'Ropa'),
     h('div', { class: 'cs-slots' }, ...Object.keys(SLOT_NAMES).map((slot) => {
       const id = s.wear[slot];

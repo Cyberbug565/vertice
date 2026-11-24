@@ -222,6 +222,9 @@ export class Chars3D {
   camMode: CamMode = 'cenital';
   /** Hacia dónde mira la cámara cercana (radianes; 0 = +y de la rejilla) y cuánto sube o baja. */
   camYaw = 0; camPitch = -0.18; camDist = 3.2;
+  /** v0.44 · Apuntar con la mira (clic derecho con un arma de fuego en las cámaras cercanas): la vista pasa al ojo y se
+   *  acerca según el aumento de la mira. `ads` es la transición (0 = cadera, 1 = mirando por la mira). */
+  adsOn = false; adsZoom = 1; ads = 0;
   /** Luz del día (0 noche, 1 mediodía): en las vistas cercanas no hay capa de oscuridad 2D encima. */
   daylight = 1;
   /** v0.40 · Distancia de dibujado de las cámaras cercanas (losetas): hasta ahí se ve; antes, la neblina de contaminación. */
@@ -1143,13 +1146,18 @@ export class Chars3D {
     const tall = me.mech ? 1.65 : 1;
     const cam = this.pcam;
     this.world.updateMatrixWorld(true);
-    if (this.camMode === 'primera') {
-      // Ojos: la cabeza del modelo (sigue al cuerpo al andar, agacharse o rodar); un pelín por delante para no ver el pelo.
+    // Ojos: la cabeza del modelo (sigue al cuerpo al andar, agacharse o rodar); un pelín por delante para no ver el pelo.
+    const eyeAt = () => {
       const head = me.human?.bones.get('Head');
-      const eye = head && !me.mech ? head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0.07, 0)) : new THREE.Vector3(p.x, p.y+1.42 * tall * 1.5, p.z);
-      eye.addScaledVector(new THREE.Vector3(fwd.x, 0, fwd.z).normalize(), 0.12);
-      cam.position.copy(eye);
-      cam.fov = 70; me.root.visible = false;
+      const eye = head && !me.mech ? head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0.07, 0)) : new THREE.Vector3(p.x, p.y + 1.42 * tall * 1.5, p.z);
+      return eye.addScaledVector(new THREE.Vector3(fwd.x, 0, fwd.z).normalize(), 0.12);
+    };
+    this.ads += ((this.adsOn ? 1 : 0) - this.ads) * Math.min(1, dt * 11);
+    if (this.ads < 0.002) this.ads = 0;
+    const zoomFov = (base: number) => { const z = 1 + (this.adsZoom - 1) * this.ads; return THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(base) / 2) / z)); };
+    if (this.camMode === 'primera') {
+      cam.position.copy(eyeAt());
+      cam.fov = zoomFov(70); me.root.visible = false;
     } else {
       // Tercera persona: detrás y un poco a la derecha del hombro; si algo se interpone, la cámara se acerca.
       const pivot = new THREE.Vector3(this.pivot.x, p.y+1.32 * tall, this.pivot.z).addScaledVector(right, 0.38 * tall);
@@ -1161,6 +1169,11 @@ export class Chars3D {
       }
       cam.position.copy(pivot).addScaledVector(fwd, -d);
       cam.fov = 62;
+      if (this.ads > 0) { // al apuntar, la cámara va del hombro al ojo
+        cam.position.lerp(eyeAt(), this.ads);
+        cam.fov = THREE.MathUtils.lerp(62, zoomFov(70), this.ads);
+        if (this.ads > 0.55) me.root.visible = false;
+      }
     }
     cam.aspect = opts.W / Math.max(1, opts.H); cam.near = 0.05; cam.far = far; // (más allá, la niebla ya lo tapa)
     this.sky.mesh.scale.setScalar(far * 0.9); // el cielo, siempre dentro de lo que se dibuja (si no, se ven huecos negros)

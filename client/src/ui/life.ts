@@ -9,17 +9,19 @@ import { recordPanel } from './record';
 import { blip } from '../audio';
 import { tryClothingRoom, tryCyberRoom } from './fitting-room';
 import { garmentFits } from './fitting-model';
+import { armeroPanel, attachmentSummary, statBars, statsOf } from './armero';
+import { weaponClass } from '@vertice/shared';
 
 export interface LifeCtx { sheet?: () => CharacterSheet | null; stopForPreview?: () => void; net: Net; toast: (t: string, k?: 'info' | 'good' | 'warn' | 'bad') => void }
 
 const pct = (p: number) => (p > 0.99 && p < 1 ? `${(p * 100).toFixed(1).replace('.', ',')} %` : `${Math.round(p * 100)} %`);
-const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medicina: 'Medicina', ciberware: 'Ciberware', herramienta: 'Herramientas', arma: 'Armas', ropa: 'Ropa', chatarra: 'Chatarra', mision: 'Misión', equipo: 'Equipo', contrabando: 'Contrabando' };
+const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medicina: 'Medicina', ciberware: 'Ciberware', herramienta: 'Herramientas', arma: 'Armas', ropa: 'Ropa', chatarra: 'Chatarra', mision: 'Misión', equipo: 'Equipo', contrabando: 'Contrabando', municion: 'Munición', accesorio: 'Accesorio de arma' };
 
 /** Muestra o reemplaza un panel sin alternar (para refrescos tras comprar u operar). */
 export function showPanel(id: string, title: string, ...body: (Node | string | null)[]) {
   const old = document.getElementById(id);
   const scroll = old?.scrollTop ?? 0;
-  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'search-panel', 'trunk-panel', 'underworld-panel', 'legend-panel', 'cheat-panel']) if (pid !== id) document.getElementById(pid)?.remove();
+  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'search-panel', 'trunk-panel', 'underworld-panel', 'legend-panel', 'cheat-panel', 'armero-panel']) if (pid !== id) document.getElementById(pid)?.remove();
   const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body.filter(Boolean) as Node[]);
   if (old) old.replaceWith(p); else $ui().append(p);
   p.scrollTop = scroll;
@@ -33,7 +35,9 @@ export function shopPanel(ctx: LifeCtx, v: ShopView) {
     const implant = it.item.startsWith('cyber:') ? content.cyberware.find(x => x.id === it.item.slice(6)) : undefined;
     const fits = sheet && d && garmentFits(sheet, d);
     return h('tr', {},
-      h('td', {}, h('b', {}, it.name), h('div', { class: 'muted', style: { fontSize: '0.85em' } }, `${CAT[it.category] ?? it.category} · ${it.desc}`)),
+      h('td', {}, h('b', {}, it.name), h('div', { class: 'muted', style: { fontSize: '0.85em' } }, `${CAT[it.category] ?? it.category} · ${it.desc}`),
+        d && weaponClass(d) ? statBars(statsOf(d, [])) : null,
+        d?.attachment ? h('div', { class: 'small cy', style: { fontSize: '0.8em' } }, attachmentSummary(d)) : null),
       h('td', { class: 'mono' }, `${it.price} €$`, it.discount ? h('div', { class: 'cy', style: { fontSize: '0.8em' } }, `−${it.discount} %`) : '', h('div', { class: it.trend > 5 ? 'netbad' : it.trend < -5 ? 'netok' : 'muted', style: { fontSize: '0.8em' } }, it.trend > 0 ? `▲ ${it.trend} %` : it.trend < 0 ? `▼ ${-it.trend} %` : '= precio corp.')),
       h('td', { class: 'mono' }, `${it.stock} uds.`),
       h('td', {}, h('div', { class: 'row' },
@@ -49,6 +53,8 @@ export function shopPanel(ctx: LifeCtx, v: ShopView) {
     h('td', {}, h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'sell', shop: v.shop, item: s.item, qty: 1, opId: newOpId() } as any) }, 'Vender 1'))))) : h('p', { class: 'muted' }, 'Aquí no compran nada de lo que llevas.');
   showPanel('shop-panel', v.name,
     h('p', { class: 'muted' }, `Propiedad: ${v.ownerName} · Seguridad ${v.security}${v.fence ? ' · Perista: compra de todo, sin preguntas' : ''} · Tu saldo: `, h('b', { class: 'cy' }, fmtMoney(v.money))),
+    v.taller ? h('div', { class: 'row', style: { gap: '8px', alignItems: 'center' } }, h('button', { class: 'btn primary', 'data-armero': '1', onclick: () => armeroPanel({ net: ctx.net, sheet: ctx.sheet, back: (sv) => shopPanel(ctx, sv) }, v) }, '🔧 Banco de armero'),
+      h('span', { class: 'muted small' }, 'Monta miras, silenciadores, cañones, empuñaduras, culatas y cargadores en tus armas.')) : null,
     h('p', { class: 'muted', style: { fontSize: '0.85em' } }, v.bar ? 'Compra una bebida y pulsa Beber para tomarla en el local. También puedes llevártela en el inventario.' : 'Precios en eurodólares fijados por la corporación de cada categoría y ajustados por las existencias de esta tienda: cuando los jugadores compran sube, cuando venden baja.'),
     h('table', { class: 'sheet' }, h('tr', {}, h('th', {}, 'Artículo'), h('th', {}, 'Precio'), h('th', {}, 'Existencias'), h('th', {}, '')), ...rows),
     h('h3', {}, 'Vender'), sell);
