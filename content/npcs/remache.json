@@ -1,0 +1,31 @@
+[
+ {
+  "id": "remache",
+  "name": "Iria «Remache» Lobo",
+  "title": "Protésica de Fundición Sur",
+  "dialog": "matasanos-remache",
+  "essential": true,
+  "appearance": {
+   "skin": "#b88060",
+   "hair": "#39332c",
+   "jacket": "#2f3c3a",
+   "accent": "#ff8a3d",
+   "body": "femenino",
+   "hairStyle": "corto",
+   "top": "mono"
+  },
+  "schedule": [
+   {
+    "from": 0,
+    "to": 24,
+    "zone": "remache-int",
+    "at": [
+     5,
+     4
+    ],
+    "state": "work",
+    "label": "Calibrando prótesis"
+   }
+  ]
+ }
+]

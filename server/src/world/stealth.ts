@@ -108,8 +108,11 @@ export class Stealth {
     return p.wanted >= 4 && o.npcType === 'hierro';
   }
 
-  /** ¿Restringido? Comisarías, bancos, cárceles, torres corporativas y laboratorios. */
-  restricted(zoneId: string) { return (this.w.zones.get(zoneId)?.def as any)?.restricted as string | undefined; }
+  /** Los vestíbulos públicos admiten visitas, aunque conserven guardias y detector de armas. */
+  restricted(zoneId: string) {
+    const zone = this.w.zones.get(zoneId)?.def;
+    return zone?.tower?.access === 'publico' ? undefined : zone?.restricted;
+  }
 
   /** Arco detector en la entrada de un lugar restringido. Devuelve true si salta la alarma. */
   detector(c: PlayerConn, zoneId: string): boolean {
@@ -143,7 +146,7 @@ export class Stealth {
       if (!p || !e || p.status !== 'alive' || e.ghostOf) continue;
       const st = this.st(c);
       const zone = e.zone, lvl = dangerAt(zone.grid, e.x, e.y);
-      const restricted = (zone.def as any).restricted as string | undefined;
+      const restricted = this.restricted(zone.id);
       const ef = effective(this.w.c, p);
       const dis = this.disguise(p);
       const fitsHere = !!(restricted && dis && DISGUISE_OK[dis]?.includes(restricted));

@@ -1,0 +1,129 @@
+{
+ "id": "remache-int",
+ "name": "Taller Remache · Fundición Sur",
+ "kind": "interior",
+ "width": 14,
+ "height": 10,
+ "danger": "disputed",
+ "base": "metal",
+ "wallColor": "#403b35",
+ "safePoint": [
+  11,
+  5
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ],
+  [
+   7,
+   5
+  ],
+  [
+   4,
+   4
+  ]
+ ],
+ "furnished": true,
+ "props": [
+  {
+   "type": "bed",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#7c8076"
+  },
+  {
+   "type": "locker",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#635c50"
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    3
+   ],
+   "color": "#60554a"
+  },
+  {
+   "type": "shelf",
+   "at": [
+    8,
+    2
+   ],
+   "color": "#564536"
+  },
+  {
+   "type": "crate",
+   "at": [
+    9,
+    8
+   ],
+   "color": "#7f5141"
+  },
+  {
+   "type": "pipe",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#9f6240"
+  },
+  {
+   "type": "barrel",
+   "at": [
+    3,
+    7
+   ],
+   "color": "#6e4936"
+  },
+  {
+   "type": "bench",
+   "at": [
+    9,
+    6
+   ],
+   "color": "#3c525a"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    7,
+    2
+   ],
+   "color": "#ff984f"
+  },
+  {
+   "type": "screen",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#e3a160"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-remache",
+   "name": "Salir a Fundición Sur",
+   "at": [
+    13,
+    5
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     357,
+     380
+    ]
+   },
+   "danger": "disputed"
+  }
+ ]
+}

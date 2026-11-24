@@ -7,6 +7,7 @@ import type { World, PlayerConn } from './world.js';
 import type { Entity } from './entity.js';
 import type { Survival } from './survival.js';
 import { ambientBrain } from './npc.js';
+import { districtProfile } from './crowds.js';
 import { GameError } from '../game/effects.js';
 import { NET_RANKS, aimOf, chromeParts, effective, perkMods, skillLevel, weaponFits, type PlayerState } from '../game/player.js';
 import { recordActivity } from '../game/records.js';
@@ -45,10 +46,16 @@ export class Combat {
       // Ciudad única: bandas y patrullas por distrito.
       for (const d of z.def.districts) {
         for (const g of d.gangs) for (let i = 0; i < g.count; i++) this.spawnFactionNpc(z, g.faction, 'gang', g.area);
-        for (let i = 0; i < d.police; i++) { const wp = d.waypoints[Math.floor(this.rng() * d.waypoints.length)]; this.spawnFactionNpc(z, 'pcv', 'police', wp ? [wp[0], wp[1], 6] : undefined); }
+        const offset = Math.floor(this.rng() * d.waypoints.length);
+        for (let i = 0; i < d.police; i++) {
+          const wp = d.waypoints[(offset + Math.floor(i * d.waypoints.length / d.police)) % d.waypoints.length];
+          this.spawnFactionNpc(z, 'pcv', 'police', wp ? [wp[0], wp[1], 6] : undefined);
+        }
       }
-      // v0.10 · En los lugares restringidos privados, los guardias son de seguridad privada.
-      if (!z.def.districts.length) for (let i = 0; i < z.def.police; i++) { const g = this.spawnFactionNpc(z, 'pcv', 'police'); const r = (z.def as any).restricted; if (g && (r === 'corporativo' || r === 'banco' || r === 'laboratorio')) { g.title = 'Seguridad privada'; g.name = g.name.replace('Agente', 'Guardia'); } }
+      if (!z.def.districts.length) for (let i = 0; i < z.def.police; i++) {
+        const wp = z.def.waypoints[i % z.def.waypoints.length];
+        this.spawnFactionNpc(z, 'pcv', 'police', wp ? [wp[0], wp[1], 4] : undefined);
+      }
     }
   }
   spawnFactionNpc(z: Zone, faction: string, type: Entity['npcType'], area?: [number, number, number], at?: { x: number; y: number }): Entity | null {
@@ -56,6 +63,7 @@ export class Combat {
     let pos = at ?? null;
     for (let tries = 0; !pos && tries < 12; tries++) {
       const wp = area ? [area[0] + (this.rng() * 2 - 1) * area[2], area[1] + (this.rng() * 2 - 1) * area[2]] : z.def.waypoints[Math.floor(this.rng() * z.def.waypoints.length)];
+      if (!wp) break;
       pos = nearestWalkable(z.grid, wp[0] + 0.5, wp[1] + 0.5, 3);
     }
     if (!pos) return null;
@@ -74,6 +82,22 @@ export class Combat {
     const lv = type === 'hierro' ? 18 + Math.floor(this.rng() * 7) : type === 'police' ? 8 + Math.floor(this.rng() * 7) : type === 'ambar' ? 15 : faction === 'engranajes' || faction === 'saqueadores' ? 9 + Math.floor(this.rng() * 8) : 4 + Math.floor(this.rng() * 10);
     const hpScaled = Math.round(f.hp * (1 + (lv - 6) * 0.04));
     e.npcType = type; e.faction = faction; e.npcMax = hpScaled; e.npcHp = hpScaled; e.defense = f.defense + Math.floor((lv - 6) / 4); e.weaponId = f.weapon; e.chrome = [...f.chrome]; e.level = lv;
+    const district = this.w.districtDef(z, e.x, e.y);
+    const profile = districtProfile(district?.id ?? z.id, district?.ambient);
+    const privateSecurity = type === 'police' && (z.id === 'clinica-okami-int' ||
+      z.def.restricted === 'corporativo' || z.def.restricted === 'banco' || z.def.restricted === 'laboratorio');
+    if (privateSecurity) {
+      e.title = 'Seguridad privada';
+      e.name = e.name.replace('Agente', 'Guardia');
+    }
+    if (e.appearance && type === 'police' && (privateSecurity || profile === 'corporativo')) {
+      e.appearance.chromeModels = { ojo_der: 'optico', brazo_izq: 'bastion' };
+      e.chrome = [...new Set([...e.chrome, 'ojos', 'ojo_der', 'brazo_izq'])];
+    } else if (e.appearance && type === 'gang' && profile === 'periferia') {
+      const side = e.id % 2 === 0 ? 'der' : 'izq';
+      e.appearance.chromeModels = { ['brazo_' + side]: 'circuito', ['mano_' + side]: 'pinza' };
+      e.chrome = [...new Set([...e.chrome, 'brazo_' + side, 'mano_' + side])];
+    }
     e.dialog = undefined;
     e.npc = ambientBrain(this.w.cfg.seed + e.id * 7, area ? [area[0], area[1]] : undefined, area?.[2]);
     e.respawn = { zone: z.id, template: { faction, type, area } };
@@ -842,7 +866,7 @@ export class Combat {
     if (lvl === 'disputed' && !cops) return;
     const police = lvl === 'public' ? 1 : this.policeAt(c.e!);
     if (!police) return;
-    if ((kind === 'kill' || (kind === 'down' && lethal)) && this.cameraSees(c.e!) && !((p.buffs.invisible ?? 0) > Date.now()) && !effective(this.c, p).matrix.cameraGhost && !(effective(this.c, p).flags.has('anticamaras') && this.rng() < 0.5)) void this.identify(c, kind === 'kill' ? 'asesinato' : 'intento de asesinato');
+    if ((kind === 'kill' || (kind === 'down' && lethal)) && camera && !((p.buffs.invisible ?? 0) > Date.now()) && !effective(this.c, p).matrix.cameraGhost && !(effective(this.c, p).flags.has('anticamaras') && this.rng() < 0.5)) void this.identify(c, kind === 'kill' ? 'asesinato' : 'intento de asesinato');
     const flags = perkMods(this.c, p).flags;
     if (flags.has('fantasma') && ![...c.e!.zone.query(c.e!.x, c.e!.y, 18)].some((o) => o.npcType === 'police' || o.npcType === 'hierro')) return;
     if ((p.buffs.invisible ?? 0) > Date.now()) return;
@@ -1505,7 +1529,7 @@ export class Combat {
     const now = Date.now();
     this.wounds.tick();
     // Daño continuado (quemaduras y sangrado).
-    for (const z of this.w.zones.values()) for (const e of [...z.entities]) {
+    for (const z of this.w.zones.values()) for (const e of [...z.actors]) {
       if (!e.dots?.length) continue;
       e.dots = e.dots.filter((d) => d.until > now);
       for (const d of e.dots) if (now >= d.next) {
@@ -1516,7 +1540,7 @@ export class Combat {
         else if (e.state !== 'downed' && e.npcMax) { this.damageNpc(e, d.dmg, true, by?.conn); if ((e.state as string) === 'downed' && by?.conn) await this.onNeutralized(by.conn, e, true, `dot-${randomUUID()}`); }
       }
     }
-    for (const z of this.w.zones.values()) for (const e of [...z.entities]) {
+    for (const z of this.w.zones.values()) for (const e of [...z.actors]) {
       if (e.kind !== 'npc' || e.state !== 'downed' || !e.downedUntil || e.carriedBy) continue;
       if (now < e.downedUntil) continue;
       if (e.dead) { if (e.carriedBy) { const carrier = this.w.entities.get(e.carriedBy); if (carrier?.conn?.p) carrier.conn.p.carrying = null; } this.w.removeEntity(e); continue; }

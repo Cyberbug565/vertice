@@ -33,11 +33,8 @@ it('cada modelo tiene estadísticas activas, un color oficial y se vende en una 
     expect(c.ripperdocs.some((doc) => doc.stock.includes(d.id) && doc.maxGrade >= d.grade)).toBe(true);
   }
   expect(
-    catalog
-      .filter((d) => d.rarity === 'legendario')
-      .map((d) => d.model)
-      .sort(),
-  ).toEqual(['asedio', 'coloso', 'optico', 'titan']);
+    [...new Set(catalog.filter((d) => d.rarity === 'legendario').map((d) => d.model))].sort(),
+  ).toEqual(['asedio', 'atlas', 'coloso', 'optico', 'titan']);
 });
 
 it('el lado, el modelo y sus bonificaciones sobreviven a la instalación, retirada, guardado y reimplante', async () => {

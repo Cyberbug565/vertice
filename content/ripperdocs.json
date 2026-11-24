@@ -520,6 +520,11 @@
   "faction": "okami",
   "maxGrade": 5,
   "stock": [
+   "okami-iris-nacar",
+   "okami-brazo-caligrafia",
+   "okami-pierna-seda",
+   "okami-velo-porcelana",
+   "okami-cortex-orbita",
    "optica-inspeccion",
    "filtro-neural",
    "coprocesador",
@@ -639,7 +644,7 @@
    "ojo-horizonte",
    "ojo-panorama"
   ],
-  "desc": "La mejor y la más cara. Procedencia verificada.",
+  "desc": "Clínica de Cénit. Distribuidor de Okami Signature, implantes de precisión certificados con instalación de primera.",
   "hidden": false,
   "rumor": ""
  },
@@ -930,5 +935,31 @@
   "desc": "Cromo de combate para el Clan Kitsune y para quien pague. Tu fama con el Clan cuenta.",
   "hidden": true,
   "rumor": "En Neón Rojo hay una doctora, Yuki, que trabaja para el Clan. Su puerta no tiene letrero."
+ },
+ {
+  "id": "remache",
+  "name": "Taller Remache",
+  "npc": "remache",
+  "zone": "remache-int",
+  "skill": 3,
+  "priceMult": 0.72,
+  "morality": "sin_escrupulos",
+  "danger": 0.22,
+  "maxGrade": 3,
+  "stock": [
+   "remache-mano-garra",
+   "remache-brazo-matarife",
+   "remache-pierna-mazo",
+   "remache-mordaza-chapa",
+   "remache-optica-carbu",
+   "brazo-protesico",
+   "pierna-protesica",
+   "cromo-circuito",
+   "cromo-pinza",
+   "cromo-protesis"
+  ],
+  "desc": "Clínica clandestina de Fundición Sur. Prótesis de desguace y modificaciones de combate. Cobran poco, pero la cirugía tiene más riesgo.",
+  "hidden": true,
+  "rumor": "En Fundición Sur, busca la puerta de servicio al sur de la nave grande junto a la acera. Si oyes la radio de Remache, has llegado."
  }
 ]

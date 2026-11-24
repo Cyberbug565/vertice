@@ -112,7 +112,8 @@ export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
   const row = (o: ClinicOffer) => {
     const implant = content.cyberware.find(x => x.id === o.def);
     return h('tr', {},
-      h('td', {}, h('b', { style: { color: RARITY_COLOR[o.rarity ?? 'comun'] } }, o.name), ` · ${RARITY_LABEL[o.rarity ?? 'comun']}${o.part ? (o.part.endsWith('izq') ? ' · izq.' : ' · der.') : ''} · grado ${['I', 'II', 'III', 'IV', 'V'][o.grade - 1]}`, o.stolen ? h('span', { class: 'netbad' }, ' · robado') : '',
+      h('td', {}, h('b', { style: { color: RARITY_COLOR[o.rarity ?? 'comun'] } }, o.name), ` · ${RARITY_LABEL[o.rarity ?? 'comun']}${o.part ? (o.part.endsWith('izq') ? ' · izq.' : ' · der.') : ''} · grado ${['I', 'II', 'III', 'IV', 'V'][o.grade - 1]}`, o.line === 'taller' ? h('span', { class: 'netbad' }, ' · sin licencia') : o.line === 'certificado' ? h('span', { class: 'netok' }, ' · certificado') : '',
+        o.stolen ? h('span', { class: 'netbad' }, ' · robado') : '',
         h('div', { class: 'muted', style: { fontSize: '0.82em' } }, `${o.family} · ranura ${o.slot} · ${o.desc} · capacidad ${o.capacity}, Humanidad −${o.humanity}`)),
       h('td', { class: 'mono' }, fmtMoney(o.price)),
       h('td', { class: 'mono' }, h('span', { class: o.survival > 0.97 ? 'netok' : o.survival > 0.9 ? 'netmid' : 'netbad' }, pct(o.survival)), h('div', { class: 'muted' }, o.danger)),
@@ -121,7 +122,9 @@ export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
         o.blocked ? h('span', { class: 'muted', style: { fontSize: '0.8em' } }, o.blocked) : h('button', { class: 'btn small', onclick: () => confirmOp(o) }, o.action === 'install' ? 'Instalar…' : 'Retirar…'))));
   };
   const groups: [string, ClinicOffer[]][] = [
-    ['Catálogo (procedencia verificada)', v.offers.filter((o) => o.source === 'stock')],
+    ['Gama certificada', v.offers.filter((o) => o.source === 'stock' && o.line === 'certificado')],
+    ['Catálogo general', v.offers.filter((o) => o.source === 'stock' && !o.line)],
+    ['Modificaciones sin licencia', v.offers.filter((o) => o.source === 'stock' && o.line === 'taller')],
     ['Bajo el mostrador (robado)', v.offers.filter((o) => o.source === 'stolen')],
     ['Traído por ti', v.offers.filter((o) => o.source === 'inventory')],
     ['Instalado (retirada)', v.offers.filter((o) => o.source === 'installed')],

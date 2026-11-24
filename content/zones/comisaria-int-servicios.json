@@ -1,4 +1,16 @@
 {
+ "objects": [
+  {
+   "id": "vigilancia-comisaria-int-servicios",
+   "name": "Cámara de vigilancia interior",
+   "at": [
+    8,
+    1
+   ],
+   "kind": "camera"
+  }
+ ],
+ "police": 2,
  "id": "comisaria-int-servicios",
  "name": "Comisaría PCV Cénit · Investigación",
  "kind": "interior",

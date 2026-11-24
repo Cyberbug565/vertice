@@ -7,6 +7,7 @@ export type NpcState = 'rest' | 'travel' | 'work' | 'talk' | 'alert' | 'search' 
 
 export interface NpcBrain {
   type: 'scheduled' | 'ambient';
+  localCrowd?: boolean;
   state: NpcState;
   nextThink: number;
   def?: NpcDef;

@@ -55256,6 +55256,23 @@
  ],
  "doors": [
   {
+   "id": "puerta-remache",
+   "name": "Puerta de servicio",
+   "at": [
+    357,
+    380
+   ],
+   "to": {
+    "zone": "remache-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "disputed",
+   "hidden": "remache"
+  },
+  {
    "id": "puerta-ambar-hq-int",
    "name": "Sede de Rescate Ámbar",
    "at": [
@@ -57229,6 +57246,60 @@
   }
  ],
  "objects": [
+  {
+   "id": "vigilancia-estacion-central-6",
+   "name": "Cámara PCV de Estación Central",
+   "at": [
+    343,
+    532
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "vigilancia-estacion-central-5",
+   "name": "Cámara PCV de Estación Central",
+   "at": [
+    412,
+    516
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "vigilancia-estacion-central-4",
+   "name": "Cámara PCV de Estación Central",
+   "at": [
+    372,
+    490
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "vigilancia-estacion-central-3",
+   "name": "Cámara PCV de Estación Central",
+   "at": [
+    418,
+    507
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "vigilancia-estacion-central-2",
+   "name": "Cámara PCV de Estación Central",
+   "at": [
+    382,
+    451
+   ],
+   "kind": "camera"
+  },
+  {
+   "id": "vigilancia-estacion-central-1",
+   "name": "Cámara PCV de Estación Central",
+   "at": [
+    343,
+    466
+   ],
+   "kind": "camera"
+  },
   {
    "id": "colinas-cajero-1",
    "name": "Cajero automático",
@@ -69118,7 +69189,7 @@
     141,
     98
    ],
-   "police": 3,
+   "police": 5,
    "ambient": 20,
    "sleepQuality": 0.4,
    "gangs": [],
@@ -69935,7 +70006,7 @@
     141,
     98
    ],
-   "police": 4,
+   "police": 8,
    "ambient": 55,
    "sleepQuality": 0.3,
    "gangs": [],
@@ -71306,7 +71377,7 @@
     120
    ],
    "ambient": 40,
-   "police": 3,
+   "police": 6,
    "danger": "public",
    "waypoints": [
     [

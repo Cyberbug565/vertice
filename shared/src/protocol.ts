@@ -198,7 +198,7 @@ export interface JobsView {
 export interface ClinicOffer {
   source: 'stock' | 'stolen' | 'inventory' | 'installed'; ref: string; action: 'install' | 'remove'; def: string; name: string; grade: number; slot: string; family: string; desc: string; stolen: boolean;
   capacity: number; humanity: number; price: number; survival: number; clean: number; theft: number; danger: string; humanityAfter: number; capacityAfter: number; blocked?: string; replaces?: string;
- rarity?: string; sides?: CyberSide[]; part?: string | null; warning?: string;}
+ line?: 'certificado' | 'taller'; rarity?: string; sides?: CyberSide[]; part?: string | null; warning?: string;}
 export interface ClinicView { doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[]; repair?: { parts: string[]; price: number } | null; heal?: { wounds: number; price: number; amputations: number } | null }
 export interface BountyView {
   money: number;
