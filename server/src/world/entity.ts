@@ -19,7 +19,7 @@ export interface Entity {
   interactive: boolean; objKind?: string; dialog?: string; danger?: string;
   doorTo?: { zone: string; at: [number, number] };
   conn?: PlayerConn; npc?: NpcBrain;
-  task?: RunningTask; channel?: Channel; pendingInteract?: number; transit?: boolean;
+  task?: RunningTask; channel?: Channel; pendingInteract?: number; transit?: boolean; doorRetry?: number; doorLatch?: number;
   talkingUntil?: number;
   // ---- v0.2
   state?: 'alive' | 'downed' | 'sleeping'; bounty?: number; fugitive?: FugitiveDef; npcHp?: number; npcShop?: string;

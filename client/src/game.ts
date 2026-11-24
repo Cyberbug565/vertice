@@ -637,6 +637,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     let dx = sx + sy, dy = sy - sx;
     // v0.39 · Con la cámara cercana, W va hacia donde mira la cámara y A/D de lado.
     if (view.near && (sx || sy)) { const f = view.camForward(); dx = -sy * f.x - sx * f.y; dy = -sy * f.y + sx * f.x; }
+    else if (sx || sy) [dx,dy]=view.isoMove(dx,dy);
     const len = Math.hypot(dx, dy); if (len) { dx /= len; dy /= len; }
     view.steer = { dx, dy };
     if (dx || dy) lastSteerDir = { dx, dy };
@@ -864,7 +865,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         document.getElementById('underworld-panel')?.remove();
         st.zone = m.zone; st.sector = m.sector; st.danger = m.danger; st.dialog = null; renderDialog();
         document.body.classList.toggle('cyber-zone', !!zoneDef(m.zone)?.cyber);
-        view.setZone(m.zone, m.x, m.y); minimap.setZone(zoneDef(m.zone)!); view.setFacts(st.facts);
+        view.setZone(m.zone, m.x, m.y, m.crossing, m.facing); minimap.setZone(zoneDef(m.zone)!); view.setFacts(st.facts);
         st.destination = ''; renderLocation(); setAction(''); refreshScore(); blip('step');
         // v0.35 · Cruzar una puerta es instantáneo: sin cartel de «Entras en…» (el nombre sale en la barra de lugar). Solo se avisa si el sitio es peligroso.
         if (m.danger === 'disputed' || m.danger === 'lawless') toast(`${zoneDef(m.zone)?.name} · zona ${DANGER_TXT[m.danger]}`, 'warn');

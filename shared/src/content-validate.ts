@@ -105,6 +105,11 @@ export function validateContent(c: Content): string[] {
   if (c.roles.length !== 10) errs.push(`Se esperan 10 roles, hay ${c.roles.length}`);
   for (const r of c.roles) for (const s of Object.keys(r.skills)) if (!skillIds.has(s)) errs.push(`rol ${r.id}: habilidad ${s} desconocida`);
   for (const z of c.zones) {
+    if (z.storey) {
+      const parent = c.zones.find(q => q.id === z.storey!.of);
+      if (!parent || parent.storey || parent.width !== z.width || parent.height !== z.height || z.kind !== 'interior')
+        errs.push(z.id + ': planta sin edificio base compatible');
+    }
     const g = grids.get(z.id)!;
     walk(z.id, z.safePoint, `${z.id}.safePoint`);
     for (const d of z.doors) {

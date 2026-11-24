@@ -1,0 +1,223 @@
+{
+ "id": "comisaria-ferro-servicios",
+ "name": "Comisaría de Ferro · Investigación",
+ "kind": "interior",
+ "storey": {
+  "of": "comisaria-ferro",
+  "level": 1
+ },
+ "width": 16,
+ "height": 11,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#3a526a",
+ "safePoint": [
+  3,
+  1
+ ],
+ "waypoints": [
+  [
+   3,
+   1
+  ],
+  [
+   12,
+   5
+  ],
+  [
+   7,
+   5
+  ]
+ ],
+ "ground": [
+  {
+   "type": "metal",
+   "rect": [
+    2,
+    1,
+    3,
+    2
+   ]
+  },
+  {
+   "type": "deck",
+   "rect": [
+    10,
+    2,
+    5,
+    3
+   ]
+  },
+  {
+   "type": "wood",
+   "rect": [
+    10,
+    7,
+    5,
+    3
+   ]
+  }
+ ],
+ "doors": [
+  {
+   "id": "comisaria-ferro-servicios-bajar",
+   "name": "Bajar a Recepción",
+   "at": [
+    3,
+    0
+   ],
+   "to": {
+    "zone": "comisaria-ferro",
+    "at": [
+     3,
+     1
+    ]
+   },
+   "danger": "public",
+   "sign": "00 · RECEPCIÓN",
+   "signColor": "#68caff",
+   "signIcon": "bajar"
+  }
+ ],
+ "blocks": [
+  {
+   "type": "wall",
+   "rect": [
+    7,
+    1,
+    1,
+    3
+   ],
+   "height": 2.65,
+   "color": "#4c6278"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    7,
+    6,
+    1,
+    4
+   ],
+   "height": 2.65,
+   "color": "#4c6278"
+  },
+  {
+   "type": "wall",
+   "rect": [
+    9,
+    5,
+    3,
+    1
+   ],
+   "height": 2.65,
+   "color": "#4c6278"
+  }
+ ],
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    2
+   ],
+   "blocking": true
+  },
+  {
+   "type": "shelf",
+   "at": [
+    1,
+    4
+   ],
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    5,
+    3
+   ],
+   "blocking": true
+  },
+  {
+   "type": "locker",
+   "at": [
+    5,
+    4
+   ],
+   "blocking": true
+  },
+  {
+   "type": "plant",
+   "at": [
+    6,
+    1
+   ],
+   "blocking": false
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    7
+   ],
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    1,
+    7
+   ],
+   "blocking": false
+  },
+  {
+   "type": "table",
+   "at": [
+    12,
+    3
+   ],
+   "blocking": true
+  },
+  {
+   "type": "desk",
+   "at": [
+    13,
+    8
+   ],
+   "blocking": true
+  },
+  {
+   "type": "sofa",
+   "at": [
+    14,
+    8
+   ],
+   "blocking": true
+  },
+  {
+   "type": "screen",
+   "at": [
+    14,
+    2
+   ],
+   "blocking": false
+  },
+  {
+   "type": "bench",
+   "at": [
+    9,
+    9
+   ],
+   "blocking": false
+  },
+  {
+   "type": "plant",
+   "at": [
+    14,
+    9
+   ],
+   "blocking": false
+  }
+ ]
+}

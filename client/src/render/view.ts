@@ -1,3 +1,5 @@
+import { architecture } from './architecture3d';
+import { sceneGrid } from './world3d';
 // Vista isométrica: bloques de suelo bajo demanda, orden por profundidad topológica, atenuación de edificios,
 // interpolación de entidades remotas y predicción del personaje propio.
 import { capturedLegs, gaitCapture, loadCapture } from './captured-motion';
@@ -10,7 +12,7 @@ import { BUILDING_H, Chars3D, type CamMode } from './chars3d';
 import { megaHeight, setCityNight } from './city3d';
 import { urbanForm } from './urban-form';
 import {
-  canSee, coversActor, facingToIdx, UNAIDED_SIGHT, GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, stepCar, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
+  canSee, coversActor, cityToRoom, roomToCity, rotateFloor, facingToIdx, UNAIDED_SIGHT, GROUND_TYPES, RULES, buildZoneGrid, findPath, isWalkable, stepWithCollision, stepCar, screenToWorld, worldToScreen, walkSpeed, nearestWalkable,
   type CarTuning, type EntitySpawn, type ZoneDef, type ZoneGrid, type Attributes,
 } from '@vertice/shared';
 import { content, zoneDef } from '../content';
@@ -43,7 +45,7 @@ const CHUNK = 16;
 
 interface CachedScene {
   zone: ZoneDef; quality: string; lightSrc: { sx: number; sy: number; r: number; k: number }[]; buildingObjs: SortObj[]; signPairs: [Container, SortObj][];
-  statics: SortObj[]; stallObjs: SortObj[]; ground: Container[]; chunks: Map<string, Container>; backdrop: Container[]; signs: Container[]; lights: Container[]; sky: Container[];
+  statics: SortObj[]; stallObjs: SortObj[]; ground: Container[]; chunks: Map<string, Container>; chunkLights: Map<string, Container>; backdrop: Container[]; signs: Container[]; lights: Container[]; sky: Container[];
   trafficSys: Traffic | null; beacons: { x: number; y: number }[]; holos: Container[]; cars: { lane: number; t: number; v: number; g: Sprite }[];
   occluder: (x0: number, y0: number, x1: number, y1: number) => Occl;
 }
@@ -52,6 +54,10 @@ export class GameView {
   sight = UNAIDED_SIGHT;
   private sightShade = new SightShade();
   private facing = 2;
+  private projectGround=(x:number,y:number)=>{
+    const f=this.zone && this.chars3d && architecture.frame(this.zone);
+    return f?worldToScreen(...roomToCity(f,x,y)):worldToScreen(x,y);
+  };
   private inSight = (x: number, y: number) => !!this.grid && canSee(this.grid, this.me.x, this.me.y, this.facing, this.sight, x, y);
   world = new Container();
   ground = new Container();
@@ -224,21 +230,35 @@ export class GameView {
   private sceneCache = new Map<string, CachedScene>();
   /** Tiempo (ms) que costó el último cambio de zona, para el indicador de rendimiento y las pruebas. */
   lastZoneMs = 0;
-  setZone(zoneId: string, x: number, y: number) {
+  setZone(zoneId: string, x: number, y: number, crossing = false, facing?: number) {
     this.carMotion.speed = 0;
     const t0 = performance.now();
     const prev = this.zone;
-    if (prev && prev.id !== zoneId && prev.kind === 'exterior' && !this.sceneCache.has(prev.id)) this.sceneCache.set(prev.id, this.stash());
-    this.zone = zoneDef(zoneId)!;
-    this.grid = buildZoneGrid(this.zone);
+    const same = prev?.id === zoneId;
+    if (prev && !same && prev.kind === 'exterior' && !this.sceneCache.has(prev.id)) this.sceneCache.set(prev.id, this.stash());
+    this.zone = same ? prev! : zoneDef(zoneId)!;
+    this.grid = sceneGrid(this.zone);
+    const from = crossing && prev ? architecture.frame(prev) : undefined;
+    const to = crossing ? architecture.frame(this.zone) : undefined;
+    const turns = (from?.turns ?? 0) - (to?.turns ?? 0);
+    const start = from ? roomToCity(from,this.cam.x,this.cam.y) : [this.cam.x,this.cam.y];
+    const cam = to ? cityToRoom(to,start[0],start[1]) : start;
+    const smooth = crossing && (from || to) && Math.hypot(cam[0]-x,cam[1]-y)<9;
+    if(facing!==undefined)this.facing=facing;
+    if(crossing && turns) {
+      const [dx,dy]=rotateFloor(this.steer.dx,this.steer.dy,turns);
+      this.steer={dx,dy};
+    }
     for (const e of this.ents.values()) this.destroyEnt(e);
     this.ents.clear();
     this.hovered = null; this.onHover(null, 0, 0);
-    this.cam.x = x; this.cam.y = y;
+    this.cam.x = smooth ? cam[0] : x; this.cam.y = smooth ? cam[1] : y;
     this.me.x = x; this.me.y = y; this.me.path = []; this.me.serverX = x; this.me.serverY = y;
     const cached = this.sceneCache.get(zoneId);
-    if (cached && cached.quality === settings.quality && cached.zone === this.zone) { this.sceneCache.delete(zoneId); this.teardown(); this.unstash(cached); }
+    if (same) this.ensureChunks();
+    else if (cached && cached.quality === settings.quality && cached.zone === this.zone) { this.sceneCache.delete(zoneId); this.teardown(); this.unstash(cached); }
     else { if (cached) { this.sceneCache.delete(zoneId); this.destroyScene(cached); } this.rebuild(false); }
+    if(crossing) this.chars3d?.preserveCamera(turns,this.cam.x,this.cam.y);
     this.lastZoneMs = performance.now() - t0;
   }
   /** Olvida las escenas guardadas (cambio de calidad, edificios 3D recién cargados…). */
@@ -251,18 +271,18 @@ export class GameView {
     for (const g of this.outlines.values()) g.destroy(); this.outlines.clear();
     const sc: CachedScene = {
       zone: this.zone!, quality: settings.quality, lightSrc: this.lightSrc, buildingObjs: this.buildingObjs, signPairs: this.signPairs, statics: this.statics, stallObjs: this.stallObjs,
-      ground: take(this.ground), chunks: this.chunks, backdrop: take(this.backdrop), signs: take(this.signsLayer), lights: take(this.lightsLayer, [this.marketLights, this.beaconG]), sky: take(this.sky),
+      ground: take(this.ground), chunks: this.chunks, chunkLights: this.chunkLights, backdrop: take(this.backdrop), signs: take(this.signsLayer), lights: take(this.lightsLayer, [this.marketLights, this.beaconG]), sky: take(this.sky),
       trafficSys: this.trafficSys, beacons: this.beacons, holos: this.holos, cars: this.cars, occluder: this.occluder,
     };
     this.lightsLayer.addChild(this.marketLights, this.beaconG);
-    this.statics = []; this.buildingObjs = []; this.signPairs = []; this.stallObjs = []; this.chunks = new Map(); this.trafficSys = null;
+    this.statics = []; this.buildingObjs = []; this.signPairs = []; this.stallObjs = []; this.chunks = new Map(); this.chunkLights = new Map(); this.trafficSys = null;
     this.beacons = []; this.holos = []; this.cars = []; this.lightSrc = [];
     return sc;
   }
   private unstash(sc: CachedScene) {
     this.chars3d?.setZone(sc.zone, false);
     this.lightSrc = sc.lightSrc; this.buildingObjs = sc.buildingObjs; this.signPairs = sc.signPairs; this.statics = sc.statics; this.stallObjs = sc.stallObjs;
-    this.chunks = sc.chunks; this.beacons = sc.beacons; this.holos = sc.holos; this.cars = sc.cars; this.occluder = sc.occluder; this.trafficSys = sc.trafficSys;
+    this.chunks = sc.chunks; this.chunkLights = sc.chunkLights; this.beacons = sc.beacons; this.holos = sc.holos; this.cars = sc.cars; this.occluder = sc.occluder; this.trafficSys = sc.trafficSys;
     for (const st of this.statics) this.objects.addChild(st.view);
     if (sc.ground.length) this.ground.addChild(...sc.ground);
     if (sc.backdrop.length) this.backdrop.addChild(...sc.backdrop);
@@ -340,12 +360,17 @@ export class GameView {
   /** Dibuja la zona actual desde cero (`force`: rehace también la ciudad 3D aunque estuviera guardada). */
   rebuild(force = true) {
     if (!this.zone) return;
+    this.lastFade='';
     this.teardown();
     this.buildLights();
     const city3d = this.chars3d?.setZone(this.zone, force) ?? false;
     this.buildingObjs = [];
     const z = this.zone, q = settings.quality;
     this.buildDanceFloor();
+    if(this.chars3d?.embeddedRoom) {
+      this.occluder=()=>()=>false;
+      return;
+    }
     if (z.kind === 'interior') {
       // Paredes del fondo (siempre detrás) y barandilla frontal baja con huecos en las puertas.
       const wallCol = HEX(z.wallColor ?? '#3a3a5a');
@@ -474,7 +499,7 @@ export class GameView {
 
   /** Construye los bloques de suelo cercanos a la cámara y libera los lejanos. */
   private ensureChunks(force = false) {
-    if (!this.zone || !this.grid) return;
+    if (!this.zone || !this.grid || this.chars3d?.embeddedRoom) return;
     const z = this.zone;
     const cx = Math.floor(this.cam.x / CHUNK), cy = Math.floor(this.cam.y / CHUNK);
     const want = new Set<string>();
@@ -599,9 +624,14 @@ export class GameView {
       dir = fx === z.width - 1 ? [1, 0] : fy === z.height - 1 ? [0, 1] : fx === 0 ? [-1, 0] : fy === 0 ? [0, -1] : null;
       if (!dir) return false;
       // Bordes de delante (derecha, abajo): en el canto; paredes del fondo: en su cara interior.
-      const k = dir[0] + dir[1] > 0 ? 0.5 : -0.5;
-      at = [fx + 0.5 + dir[0] * k, fy + 0.5 + dir[1] * k];
+      at = [fx + .5 + dir[0] * .5, fy + .5 + dir[1] * .5];
+      dir=[-dir[0],-dir[1]];
     } else {
+      const connected = architecture.atStreet(z.id,[fx,fy]);
+      if(connected){
+        c3.doors.set(s.id,kind,connected.threshold[0],connected.threshold[1],-connected.out[0],-connected.out[1]);
+        return true;
+      }
       // El edificio de al lado: el que tenga el muro más cerca (rayo contra el edificio 3D; si aún no hay, el borde de la casilla).
       let best = Infinity;
       for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]] as const) {
@@ -1271,13 +1301,17 @@ export class GameView {
 
   // ------------------------------------------------------------------ entrada
   private toWorld(gx: number, gy: number) {
-    if (this.near) return this.chars3d!.groundAt(gx, gy) ?? { x: this.me.x, y: this.me.y };
+    if (this.near || this.chars3d?.embeddedRoom) return this.chars3d!.groundAt(gx, gy) ?? { x: this.me.x, y: this.me.y };
     const l = this.world.toLocal({ x: gx, y: gy });
     return screenToWorld(l.x, l.y);
   }
   // ------------------------------------------------------------------ v0.39 · cámaras
   /** ¿Se está mirando con una cámara cercana (tercera o primera persona)? */
   get near() { return !!this.chars3d && this.chars3d.camMode !== 'cenital'; }
+  isoMove(dx:number,dy:number){
+    const f=this.zone && this.chars3d && architecture.frame(this.zone);
+    return f?rotateFloor(dx,dy,-f.turns):[dx,dy];
+  }
   get camMode(): CamMode { return this.chars3d?.camMode ?? 'cenital'; }
   /** Cambia de cámara. Sin personajes 3D solo existe la cenital. */
   setCamMode(m: CamMode) {
@@ -1295,7 +1329,7 @@ export class GameView {
   camForward() { const y = this.chars3d?.camYaw ?? 0; return { x: Math.sin(y), y: Math.cos(y) }; }
   /** Punto del mundo (x, y y altura en losetas como worldToScreen) en la pantalla, con la cámara que toque. */
   screenOf(x: number, y: number, z = 0): { x: number; y: number; d?: number } | null {
-    if (!this.near) { const g = this.world.toGlobal(worldToScreen(x, y, z)); return { x: g.x, y: g.y }; }
+    if (!this.near && !this.chars3d?.embeddedRoom) { const g = this.world.toGlobal(worldToScreen(x, y, z)); return { x: g.x, y: g.y }; }
     const p = this.chars3d!.project(x, 0.45 + z, y);
     return p ? { x: p.x, y: p.y, d: p.depth } : null;
   }
@@ -1306,7 +1340,7 @@ export class GameView {
       if (!e.view.visible || !e.s.interactive || (!includeSelf && e.s.id === this.meId)) continue;
       const tall = e.s.kind === 'door' ? 2.2 : e.s.kind === 'object' ? 1.4 : 1.55;
       const top = this.chars3d!.project(e.x, tall, e.y), foot = this.chars3d!.project(e.x, 0, e.y);
-      if (!top || !foot || foot.depth > 40) continue;
+      if (!top || !foot || (this.near && foot.depth > 40)) continue;
       const half = Math.max(10, (foot.y - top.y) * (e.s.kind === 'door' ? 0.45 : 0.3));
       if (gx < foot.x - half || gx > foot.x + half || gy < top.y - 6 || gy > foot.y + 6) continue;
       if (foot.depth < bestD) { best = e; bestD = foot.depth; }
@@ -1314,7 +1348,7 @@ export class GameView {
     return best;
   }
   private pick(gx: number, gy: number, includeSelf = false): CEnt | null {
-    if (this.near) return this.pick3d(gx, gy, includeSelf);
+    if (this.near || this.chars3d?.embeddedRoom) return this.pick3d(gx, gy, includeSelf);
     const l = this.world.toLocal({ x: gx, y: gy });
     let best: CEnt | null = null, bestDepth = -Infinity;
     for (const e of this.ents.values()) {
@@ -1530,7 +1564,7 @@ export class GameView {
     // Cámara: sigue al personaje activo con zoom acotado.
     const k = settings.reduceMotion ? 1 : Math.min(1, dt * 6);
     this.cam.x += (me.x - this.cam.x) * k; this.cam.y += (me.y - this.cam.y) * k;
-    const c = worldToScreen(this.cam.x, this.cam.y);
+    const c = this.projectGround(this.cam.x, this.cam.y);
     const W = this.app.screen.width, H = this.app.screen.height;
     this.world.scale.set(this.zoom);
     const sh = performance.now() < this.shakeUntil ? this.shakeAmp : (this.shakeAmp = 0);
@@ -1541,7 +1575,7 @@ export class GameView {
     if ((this.sortCounter++ & 15) === 0) this.ensureChunks();
     for (const c of this.chunks.values()) c.visible = true;
 
-    this.sightShade.update(this.grid!, me.x, me.y, this.facing, this.sight, this.world, W, H);
+    this.sightShade.update(this.grid!, me.x, me.y, this.facing, this.sight, this.world, W, H, this.projectGround, this.chars3d?.embeddedRoom ? .62 : .94);
     this.depthSort();
     for (const [sg, o] of this.signPairs) { sg.alpha = o.view.alpha; sg.visible = o.view.visible; }
     this.drawKairos(now);
@@ -1556,10 +1590,11 @@ export class GameView {
     this.drawBlood();
     // v0.39 · Con una cámara cercana, el mundo 2D isométrico no cuadra: se deja de pintar (la lógica sigue igual).
     const near = this.near;
-    this.world.renderable = !near;
+    this.world.renderable = !near && !this.chars3d?.embeddedRoom;
     for (const l of [this.signsLayer, this.nightOverlay, this.darkness, this.lightsLayer, this.sightShade.layer]) l.renderable = !near;
     this.render3d(now, dt, W, H);
   }
+  private lastFade = '';
   private render3d(now: number, dt: number, W: number, H: number) {
     const vehicles = this.chars3d?.vehicles;
     for (const e of this.ents.values()) {
@@ -1584,11 +1619,14 @@ export class GameView {
     if (key !== this.c3dSize) { this.c3dSize = key; this.chars3d.setSize(W, H, res); }
     this.chars3d.drawDist = settings.drawDist ?? 120;
     { const h = this.cityHourFn(); this.chars3d.daylight = Math.max(0, Math.min(1, (h - 5) / 2.5)) * Math.max(0, Math.min(1, (20.5 - h) / 2.5)); }
-    this.buildingObjs.forEach((o, i) => {
-      const b = this.zone!.buildings[i];
-      const faded = !this.near && coversActor(b.rect, o.height!, this.me.x, this.me.y);
-      this.chars3d!.setBuildingFaded(i, faded, faded ? .22 : 1);
-    });
+    const fadeKey=[this.zone?.id,this.near,this.me.x,this.me.y].join('|');
+    if(fadeKey!==this.lastFade){
+      this.lastFade=fadeKey;
+      this.buildingObjs.forEach((o,i)=>{
+        const b=this.zone!.buildings[i], faded=!this.near&&coversActor(b.rect,o.height!,this.me.x,this.me.y);
+        this.chars3d!.setBuildingFaded(i,faded,faded?.22:1);
+      });
+    }
     // Se dibuja después de que Pixi pinte el mundo (en el mismo fotograma).
     this.pending3d = [[...this.ents.values(), ...this.companions.filter((c) => c.ent3d).map((c) => c.ent3d)] as any, { W, H, zoom: this.zoom, worldX: this.world.position.x, worldY: this.world.position.y, meId: this.meId, guarding: this.guarding, now, dt, serverNow: this.serverTime(),
       hidden: (e: any) => e.view?.visible === false || !!e.s.vehicle || !!e.s.carried || !!e.vehX, traffic: this.near ? this.trafficSys?.liveCars() ?? [] : [] }];

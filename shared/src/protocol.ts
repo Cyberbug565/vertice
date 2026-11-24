@@ -313,7 +313,7 @@ export type ServerMsg =
   | {t:'casino';view:CasinoView;open?:boolean; seq?:number}
   | { t: 'atlas'; map: import('./atlas.js').MapKnowledge; reset?: boolean }
   | { t: 'welcome'; you: number; sheet: CharacterSheet; zone: string; x: number; y: number; tick: number; cityHourMs: number; cityEpoch: number; journal: JournalEntry[]; facts: Record<string, unknown>; sector: string; danger: string }
-  | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string }
+  | { t: 'zone'; zone: string; x: number; y: number; sector: string; danger: string; crossing?: boolean; facing?: number }
   | { t: 'spawn'; e: EntitySpawn[] }
   | { t: 'despawn'; ids: number[] }
   | { t: 'label'; id: number; label: string; bounty?: number; state?: 'alive' | 'downed' | 'sleeping'; chrome?: string[]; hpPct?: number; carried?: boolean; appearance?: Appearance; vehicle?: string | null; level?: number; buffs?: string[]; lost?: string[]; bleeding?: boolean; weapon?: string; dead?: boolean; emote?: EmoteState | null; carry?: string[] }

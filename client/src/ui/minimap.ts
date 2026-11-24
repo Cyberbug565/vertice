@@ -1,22 +1,38 @@
 // Minimapa y mapa grande por planta, proyectados en isométrico para coincidir con la vista.
-import { Atlas, MAP_CELL, GROUND_TYPES, buildZoneGrid, type ZoneDef } from '@vertice/shared';
+import { Atlas, MAP_CELL, GROUND_TYPES, type ZoneDef } from '@vertice/shared';
+
+import { sceneGrid } from '../render/world3d';
 
 const COL: Record<string, string> = { asphalt: '#2a2a3a', sidewalk: '#44445a', plaza: '#4e4868', market: '#6a4a5a', water: '#0d3050', bridge: '#5a5a6a', deck: '#4a4640', gravel: '#5a5448', crosswalk: '#3a3a4a', wood: '#6a4a36', tile: '#5e6078', metal: '#4e5a64', dirt: '#5a4a3a', void: '#000', alley: '#1c1a24', grass: '#2f5a3a', sand: '#8a7458', data: '#0a2a4a', grid: '#3a0a18' };
 
-const DANGER_TINT = ['rgba(90,255,140,0.22)', '', 'rgba(255,48,64,0.22)', 'rgba(0,0,0,0.5)'];
+const DANGER_TINT = [
+  { r:90,g:255,b:140,a:.22 }, { r:0,g:0,b:0,a:0 },
+  { r:255,g:48,b:64,a:.22 }, { r:0,g:0,b:0,a:.5 },
+];
 export function renderZoneMap(zone: ZoneDef, canvas: HTMLCanvasElement, scale: number) {
-  const g = buildZoneGrid(zone);
-  const w = (zone.width + zone.height) * scale, hgt = ((zone.width + zone.height) * scale) / 2;
-  canvas.width = Math.ceil(w); canvas.height = Math.ceil(hgt);
+  const grid = sceneGrid(zone);
+  canvas.width = Math.ceil((zone.width + zone.height) * scale);
+  canvas.height = Math.ceil((zone.width + zone.height) * scale / 2);
   const ctx = canvas.getContext('2d')!;
-  ctx.setTransform(scale, scale / 2, -scale, scale / 2, zone.height * scale, 0);
-  for (let y = 0; y < zone.height; y++) for (let x = 0; x < zone.width; x++) {
-    const i = y * zone.width + x;
-    ctx.fillStyle = g.walk[i] ? COL[GROUND_TYPES[g.ground[i]]] ?? '#333' : g.buildingAt[i] >= 0 ? '#404251' : GROUND_TYPES[g.ground[i]] === 'water' ? COL.water : '#6a6a7a';
-    ctx.fillRect(x, y, 1.05, 1.05);
-    // Zonas de color: verde segura, amarilla vigilada (sin tinte), roja peligrosa y negra sin ley.
-    if (zone.kind === 'exterior') { const dg = g.danger[i]; if (dg !== 1) { ctx.fillStyle = DANGER_TINT[dg]; ctx.fillRect(x, y, 1.05, 1.05); } }
+  const raster=document.createElement('canvas');
+  raster.width=zone.width; raster.height=zone.height;
+  const painter=raster.getContext('2d')!, pixels=painter.createImageData(grid.w,grid.h);
+  const colors=GROUND_TYPES.map(t=>t==='void'?0:parseInt((COL[t]??'#333333').slice(1),16));
+  const exterior=zone.kind==='exterior';
+  for(let i=0;i<grid.ground.length;i++){
+    const type=grid.ground[i];
+    const c=grid.walk[i] ? colors[type] : grid.buildingAt[i]>=0 ? 0x404251 :
+      GROUND_TYPES[type]==='water'?0x0d3050:0x6a6a7a;
+    const tint=DANGER_TINT[exterior?grid.danger[i]:1];
+    pixels.data[i*4]=((c>>16)&255)*(1-tint.a)+tint.r*tint.a;
+    pixels.data[i*4+1]=((c>>8)&255)*(1-tint.a)+tint.g*tint.a;
+    pixels.data[i*4+2]=(c&255)*(1-tint.a)+tint.b*tint.a;
+    pixels.data[i*4+3]=255;
   }
+  painter.putImageData(pixels,0,0);
+  ctx.setTransform(scale, scale / 2, -scale, scale / 2, zone.height * scale, 0);
+  ctx.imageSmoothingEnabled=false;
+  ctx.drawImage(raster,0,0);
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   return { project: (x: number, y: number) => ({ x: (x - y) * scale + zone.height * scale, y: ((x + y) * scale) / 2 }) };
 }

@@ -72,6 +72,7 @@ export const ZoneSchema = z.object({
   /** Base de una banda o de narcos: sus miembros atacan a quien no sea de los suyos. */
   gangBase: z.object({ faction: z.string(), boss: z.string() }).optional(),
   skywalk: z.boolean().optional(),
+  storey: z.object({ of: z.string(), level: z.number().int().positive() }).optional(),
   /** v0.10 · Lugar restringido (vigilancia, uniformes que encajan) y arco detector de armas en la entrada. */
   restricted: z.enum(['policia', 'banco', 'carcel', 'corporativo', 'laboratorio']).optional(), detector: z.boolean().optional(),
   furnished: z.boolean().optional(),
