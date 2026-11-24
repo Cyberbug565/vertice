@@ -13,6 +13,7 @@ export interface Entity {
   path: [number, number][]; speed: number; facing: number; moving: boolean; lastMoveTick: number;
   /** v0.7: dirección de WASD (con marca de tiempo para cortar si el cliente deja de avisar) y guardia con clic derecho. */
   carMotion?: CarMotion;
+  missionRide?: number;
   steer?: { dx: number; dy: number; at: number }; guard?: boolean; guardFacing?:number; guardSince?: number; dodgeUntil?: number; dodgeReadyAt?: number; sign?: { text: string; color?: string; icon?: string }; carry?: string[]; lastDir?: { dx: number; dy: number }; markedUntil?: number;
   appearance?: Appearance; role?: string; label: string; labelVer: number;
   interactive: boolean; objKind?: string; dialog?: string; danger?: string;

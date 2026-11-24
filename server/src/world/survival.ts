@@ -74,11 +74,11 @@ export class Survival {
     }
     if (gait.join() !== (e.gaitFlags ?? []).join()) { e.gaitFlags = gait; e.labelVer++; }
     const now = Date.now();
-    const speed = car ? vehicleSpeed(car.speed, ef.carSpeed) : Math.min(RULES.maxFootSpeed,
+    const speed = e.missionRide ?? (car ? vehicleSpeed(car.speed, ef.carSpeed) : Math.min(RULES.maxFootSpeed,
       walkSpeed(ef.attrs) * (1 + (ef.mods.speed ?? 0) + ef.speed) * (p.fatigue >= 80 ? 0.8 : 1)
       * (p.hunger >= 100 || p.thirst >= 100 ? 0.85 : 1) * this.w.combat.speedFactor(p)
       * ((p.buffs.esprint ?? 0) > now ? 1.7 : 1) * (run ? RULES.runSpeedFactor : 1)
-      * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > now ? 0.55 : 1));
+      * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > now ? 0.55 : 1)));
     e.speed = speed * this.w.cfg.speedScale;
     const x = this.x(c), v = Math.round(e.speed * (e.timeScale ?? 1) * 1000) / 1000;
     if (x.sentSpeed !== v || x.sentGuard !== !!e.guard || x.sentCar !== car?.id) {

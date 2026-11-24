@@ -1,0 +1,2062 @@
+{
+ "locale": {
+  "m.03-encargos.ruta-nueve.titulo": "Una luz para el nueve",
+  "m.03-encargos.ruta-nueve.resumen": "La cinta del pasamanos ya no se ve cuando se va la luz. Hay un rollo reflectante en la caja de la escalera.",
+  "m.03-encargos.ruta-nueve.final.hecho": "Ahora el borde de la escalera brilla. Quien baje con las dos manos ocupadas podrá encontrarlo.",
+  "m.03-encargos.ruta-nueve.objetivo.hacer": "Pegar la cinta reflectante al pasamanos.",
+  "m.03-encargos.reme.root.breve-ruta-nueve": "¿Te hace falta algo en el bloque?",
+  "m.03-encargos.reme.breve-ruta-nueve": "La cinta del pasamanos ya no se ve cuando se va la luz. Hay un rollo reflectante en la caja de la escalera.",
+  "m.03-encargos.reme.breve-ruta-nueve.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.reme.breve-ruta-nueve.salir": "Marcharme.",
+  "m.03-encargos.enc-ruta-nueve.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Guía del pasamanos».",
+  "m.03-encargos.enc-ruta-nueve.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-ruta-nueve.activa": "La cinta del pasamanos ya no se ve cuando se va la luz. Hay un rollo reflectante en la caja de la escalera.",
+  "m.03-encargos.enc-ruta-nueve.activa.hacer": "Pegar la cinta reflectante al pasamanos.",
+  "m.03-encargos.enc-ruta-nueve.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-ruta-nueve.fin": "Ahora el borde de la escalera brilla. Quien baje con las dos manos ocupadas podrá encontrarlo.",
+  "m.03-encargos.enc-ruta-nueve.fin.salir": "Marcharme.",
+  "m.03-encargos.buzon-remite.titulo": "Remite desconocido",
+  "m.03-encargos.buzon-remite.resumen": "Hay un buzón que marca el piso 13 y aquí nunca hubo una planta 13. Cambia la ficha por «Preguntar a Reme».",
+  "m.03-encargos.buzon-remite.final.hecho": "Con la ficha puesta, los vecinos dejarán de subir y bajar con cartas de cuya existencia nadie quiere hacerse cargo.",
+  "m.03-encargos.buzon-remite.objetivo.hacer": "Cambiar la ficha del buzón.",
+  "m.03-encargos.reme.root.breve-buzon-remite": "¿Sigue sin venir nadie por el buzón del fondo?",
+  "m.03-encargos.reme.breve-buzon-remite": "Hay un buzón que marca el piso 13 y aquí nunca hubo una planta 13. Cambia la ficha por «Preguntar a Reme».",
+  "m.03-encargos.reme.breve-buzon-remite.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.reme.breve-buzon-remite.salir": "Marcharme.",
+  "m.03-encargos.enc-buzon-remite.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Buzón sin planta».",
+  "m.03-encargos.enc-buzon-remite.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-buzon-remite.activa": "Hay un buzón que marca el piso 13 y aquí nunca hubo una planta 13. Cambia la ficha por «Preguntar a Reme».",
+  "m.03-encargos.enc-buzon-remite.activa.hacer": "Cambiar la ficha del buzón.",
+  "m.03-encargos.enc-buzon-remite.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-buzon-remite.fin": "Con la ficha puesta, los vecinos dejarán de subir y bajar con cartas de cuya existencia nadie quiere hacerse cargo.",
+  "m.03-encargos.enc-buzon-remite.fin.salir": "Marcharme.",
+  "m.03-encargos.cartel-frio.titulo": "Se busca hielo",
+  "m.03-encargos.cartel-frio.resumen": "Lin necesita que se indique dónde entregar el hielo. El aviso viejo manda a la puerta que ya cerró.",
+  "m.03-encargos.cartel-frio.final.hecho": "El próximo envío llegará al puesto correcto. Alguien dibujó un cubito feliz en la esquina.",
+  "m.03-encargos.cartel-frio.objetivo.hacer": "Marcar la puerta que sigue abierta.",
+  "m.03-encargos.tablon.root.breve-cartel-frio": "Leer el aviso de la nevera de Lin.",
+  "m.03-encargos.tablon.breve-cartel-frio": "Lin necesita que se indique dónde entregar el hielo. El aviso viejo manda a la puerta que ya cerró.",
+  "m.03-encargos.tablon.breve-cartel-frio.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.tablon.breve-cartel-frio.salir": "Marcharme.",
+  "m.03-encargos.enc-cartel-frio.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Cartel de la nevera».",
+  "m.03-encargos.enc-cartel-frio.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-cartel-frio.activa": "Lin necesita que se indique dónde entregar el hielo. El aviso viejo manda a la puerta que ya cerró.",
+  "m.03-encargos.enc-cartel-frio.activa.hacer": "Marcar la puerta que sigue abierta.",
+  "m.03-encargos.enc-cartel-frio.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-cartel-frio.fin": "El próximo envío llegará al puesto correcto. Alguien dibujó un cubito feliz en la esquina.",
+  "m.03-encargos.enc-cartel-frio.fin.salir": "Marcharme.",
+  "m.03-encargos.cobros-mesa.titulo": "Cuentas sobre la mesa",
+  "m.03-encargos.cobros-mesa.resumen": "Dejé una cifra mal puesta en la pizarra. A la clienta del paraguas le devolví de menos. Pon una nota para que lo sepa al llegar.",
+  "m.03-encargos.cobros-mesa.final.hecho": "La pizarra ya muestra el precio y avisa de que hay cambio reservado. No hacía falta escribir su nombre.",
+  "m.03-encargos.cobros-mesa.objetivo.hacer": "Escribir el importe correcto junto al total.",
+  "m.03-encargos.lin.friend.breve-cobros-mesa": "¿Quieres que alguien revise el cambio?",
+  "m.03-encargos.lin.breve-cobros-mesa": "Dejé una cifra mal puesta en la pizarra. A la clienta del paraguas le devolví de menos. Pon una nota para que lo sepa al llegar.",
+  "m.03-encargos.lin.breve-cobros-mesa.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.lin.breve-cobros-mesa.salir": "Marcharme.",
+  "m.03-encargos.enc-cobros-mesa.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Pizarra de precios».",
+  "m.03-encargos.enc-cobros-mesa.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-cobros-mesa.activa": "Dejé una cifra mal puesta en la pizarra. A la clienta del paraguas le devolví de menos. Pon una nota para que lo sepa al llegar.",
+  "m.03-encargos.enc-cobros-mesa.activa.hacer": "Escribir el importe correcto junto al total.",
+  "m.03-encargos.enc-cobros-mesa.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-cobros-mesa.fin": "La pizarra ya muestra el precio y avisa de que hay cambio reservado. No hacía falta escribir su nombre.",
+  "m.03-encargos.enc-cobros-mesa.fin.salir": "Marcharme.",
+  "m.03-encargos.bandeja-fria.titulo": "Papel en la bandeja fría",
+  "m.03-encargos.bandeja-fria.resumen": "Cambia la etiqueta de la bandeja fría: ese implante está reservado para el primer turno de la mañana.",
+  "m.03-encargos.bandeja-fria.final.hecho": "La etiqueta queda visible a la altura de los ojos. Esta mañana nadie tendrá que abrir la bandeja para buscar el nombre.",
+  "m.03-encargos.bandeja-fria.objetivo.hacer": "Poner la etiqueta de primer turno.",
+  "m.03-encargos.sato.root.breve-bandeja-fria": "¿Hay algo que pueda preparar mientras espero?",
+  "m.03-encargos.sato.breve-bandeja-fria": "Cambia la etiqueta de la bandeja fría: ese implante está reservado para el primer turno de la mañana.",
+  "m.03-encargos.sato.breve-bandeja-fria.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.sato.breve-bandeja-fria.salir": "Marcharme.",
+  "m.03-encargos.enc-bandeja-fria.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Bandeja de recepción».",
+  "m.03-encargos.enc-bandeja-fria.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-bandeja-fria.activa": "Cambia la etiqueta de la bandeja fría: ese implante está reservado para el primer turno de la mañana.",
+  "m.03-encargos.enc-bandeja-fria.activa.hacer": "Poner la etiqueta de primer turno.",
+  "m.03-encargos.enc-bandeja-fria.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-bandeja-fria.fin": "La etiqueta queda visible a la altura de los ojos. Esta mañana nadie tendrá que abrir la bandeja para buscar el nombre.",
+  "m.03-encargos.enc-bandeja-fria.fin.salir": "Marcharme.",
+  "m.03-encargos.placa-carga.titulo": "La placa del muelle",
+  "m.03-encargos.placa-carga.resumen": "La nueva placa está en la caseta. La vieja manda a los camiones por donde pasan los que vienen andando. Intercámbialas.",
+  "m.03-encargos.placa-carga.final.hecho": "El aviso queda a la vista desde el carril. El borde cortado de la placa vieja parece tinta de tantos años al sol.",
+  "m.03-encargos.placa-carga.objetivo.hacer": "Cambiar la placa por la que separa peatones y camiones.",
+  "m.03-encargos.tomas.idle.breve-placa-carga": "¿Quién cuenta las cajas reutilizables?",
+  "m.03-encargos.tomas.breve-placa-carga": "La nueva placa está en la caseta. La vieja manda a los camiones por donde pasan los que vienen andando. Intercámbialas.",
+  "m.03-encargos.tomas.breve-placa-carga.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.tomas.breve-placa-carga.salir": "Marcharme.",
+  "m.03-encargos.enc-placa-carga.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Placa del portón».",
+  "m.03-encargos.enc-placa-carga.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-placa-carga.activa": "La nueva placa está en la caseta. La vieja manda a los camiones por donde pasan los que vienen andando. Intercámbialas.",
+  "m.03-encargos.enc-placa-carga.activa.hacer": "Cambiar la placa por la que separa peatones y camiones.",
+  "m.03-encargos.enc-placa-carga.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-placa-carga.fin": "El aviso queda a la vista desde el carril. El borde cortado de la placa vieja parece tinta de tantos años al sol.",
+  "m.03-encargos.enc-placa-carga.fin.salir": "Marcharme.",
+  "m.03-encargos.radio-quiosco.titulo": "Señal de las cinco",
+  "m.03-encargos.radio-quiosco.resumen": "La frecuencia que usa el quiosco a las cinco cambió ayer. Lleva la nota a la mesa de relevos; si no se apunta, mañana volverán a llamarme.",
+  "m.03-encargos.radio-quiosco.final.hecho": "La radio contesta en la primera prueba: «Te oigo. Antes oía una emisora que hace descuentos en soldadura».",
+  "m.03-encargos.radio-quiosco.objetivo.hacer": "Anotar la nueva frecuencia en el parte.",
+  "m.03-encargos.alma-ferro.inicio.breve-radio-quiosco": "¿Hay algo pendiente en comisaría?",
+  "m.03-encargos.alma-ferro.breve-radio-quiosco": "La frecuencia que usa el quiosco a las cinco cambió ayer. Lleva la nota a la mesa de relevos; si no se apunta, mañana volverán a llamarme.",
+  "m.03-encargos.alma-ferro.breve-radio-quiosco.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.alma-ferro.breve-radio-quiosco.salir": "Marcharme.",
+  "m.03-encargos.enc-radio-quiosco.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Mesa de relevos».",
+  "m.03-encargos.enc-radio-quiosco.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-radio-quiosco.activa": "La frecuencia que usa el quiosco a las cinco cambió ayer. Lleva la nota a la mesa de relevos; si no se apunta, mañana volverán a llamarme.",
+  "m.03-encargos.enc-radio-quiosco.activa.hacer": "Anotar la nueva frecuencia en el parte.",
+  "m.03-encargos.enc-radio-quiosco.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-radio-quiosco.fin": "La radio contesta en la primera prueba: «Te oigo. Antes oía una emisora que hace descuentos en soldadura».",
+  "m.03-encargos.enc-radio-quiosco.fin.salir": "Marcharme.",
+  "m.03-encargos.copa-autobus.titulo": "Una copa para el autobús",
+  "m.03-encargos.copa-autobus.resumen": "Sí, son para el transporte nocturno. Pide que los dejen fuera de la cocina. Si esperan que abra alguien, perderán el último viaje.",
+  "m.03-encargos.copa-autobus.final.hecho": "La caja queda a mano de los conductores de noche. La primera copa lleva una pegatina con un autobús azul.",
+  "m.03-encargos.copa-autobus.objetivo.hacer": "Dejar la caja en el estante de recogida.",
+  "m.03-encargos.alba-voz.inicio.breve-copa-autobus": "¿Es tuya la caja de vasos junto a la puerta?",
+  "m.03-encargos.alba-voz.breve-copa-autobus": "Sí, son para el transporte nocturno. Pide que los dejen fuera de la cocina. Si esperan que abra alguien, perderán el último viaje.",
+  "m.03-encargos.alba-voz.breve-copa-autobus.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.alba-voz.breve-copa-autobus.salir": "Marcharme.",
+  "m.03-encargos.enc-copa-autobus.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Caja de vasos lavados».",
+  "m.03-encargos.enc-copa-autobus.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-copa-autobus.activa": "Sí, son para el transporte nocturno. Pide que los dejen fuera de la cocina. Si esperan que abra alguien, perderán el último viaje.",
+  "m.03-encargos.enc-copa-autobus.activa.hacer": "Dejar la caja en el estante de recogida.",
+  "m.03-encargos.enc-copa-autobus.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-copa-autobus.fin": "La caja queda a mano de los conductores de noche. La primera copa lleva una pegatina con un autobús azul.",
+  "m.03-encargos.enc-copa-autobus.fin.salir": "Marcharme.",
+  "m.03-encargos.ritmo-dos.titulo": "Dos minutos de prueba",
+  "m.03-encargos.ritmo-dos.resumen": "La toma dos tiene un zumbido justo cuando respira el coro. Hay un cable suelto en la mesa de retorno. Encájalo sin tocar los volúmenes.",
+  "m.03-encargos.ritmo-dos.final.hecho": "El zumbido para y, por primera vez, se oye que alguien llevaba el ritmo con una botella.",
+  "m.03-encargos.ritmo-dos.objetivo.hacer": "Fijar el cable de retorno.",
+  "m.03-encargos.assaya-kitsune.inicio.breve-ritmo-dos": "¿Por qué tienes conectada esa segunda toma?",
+  "m.03-encargos.assaya-kitsune.breve-ritmo-dos": "La toma dos tiene un zumbido justo cuando respira el coro. Hay un cable suelto en la mesa de retorno. Encájalo sin tocar los volúmenes.",
+  "m.03-encargos.assaya-kitsune.breve-ritmo-dos.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.assaya-kitsune.breve-ritmo-dos.salir": "Marcharme.",
+  "m.03-encargos.enc-ritmo-dos.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Mesa de retorno».",
+  "m.03-encargos.enc-ritmo-dos.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-ritmo-dos.activa": "La toma dos tiene un zumbido justo cuando respira el coro. Hay un cable suelto en la mesa de retorno. Encájalo sin tocar los volúmenes.",
+  "m.03-encargos.enc-ritmo-dos.activa.hacer": "Fijar el cable de retorno.",
+  "m.03-encargos.enc-ritmo-dos.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-ritmo-dos.fin": "El zumbido para y, por primera vez, se oye que alguien llevaba el ritmo con una botella.",
+  "m.03-encargos.enc-ritmo-dos.fin.salir": "Marcharme.",
+  "m.03-encargos.poste-niveles.titulo": "Nivel de ayer",
+  "m.03-encargos.poste-niveles.resumen": "Tengo los datos de ayer y el marcador, pero ya no escribo con la mano que usaba. Apunta dónde llegó a las seis.",
+  "m.03-encargos.poste-niveles.final.hecho": "Quien llegue en el próximo aguacero podrá comparar con una fecha. Ya hay dos alturas que el temporal no puede borrar.",
+  "m.03-encargos.poste-niveles.objetivo.hacer": "Anotar el nivel de las seis.",
+  "m.03-encargos.vera-alameda.inicio.breve-poste-niveles": "¿Quién actualiza la marca en el poste de lluvias?",
+  "m.03-encargos.vera-alameda.breve-poste-niveles": "Tengo los datos de ayer y el marcador, pero ya no escribo con la mano que usaba. Apunta dónde llegó a las seis.",
+  "m.03-encargos.vera-alameda.breve-poste-niveles.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.vera-alameda.breve-poste-niveles.salir": "Marcharme.",
+  "m.03-encargos.enc-poste-niveles.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Poste de lluvia».",
+  "m.03-encargos.enc-poste-niveles.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-poste-niveles.activa": "Tengo los datos de ayer y el marcador, pero ya no escribo con la mano que usaba. Apunta dónde llegó a las seis.",
+  "m.03-encargos.enc-poste-niveles.activa.hacer": "Anotar el nivel de las seis.",
+  "m.03-encargos.enc-poste-niveles.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-poste-niveles.fin": "Quien llegue en el próximo aguacero podrá comparar con una fecha. Ya hay dos alturas que el temporal no puede borrar.",
+  "m.03-encargos.enc-poste-niveles.fin.salir": "Marcharme.",
+  "m.03-encargos.bolsa-vacio.titulo": "Se abre por el lado corto",
+  "m.03-encargos.bolsa-vacio.resumen": "La bolsa azul de billetes anulados era para que los niños hicieran carteras de papel. Alguien la dejó donde se lleva el vidrio.",
+  "m.03-encargos.bolsa-vacio.final.hecho": "Hay un billete para cada mano que quiera hacer una cartera. El último dice «ida y vuelta».",
+  "m.03-encargos.bolsa-vacio.objetivo.hacer": "Dejar los billetes en el estante del andén.",
+  "m.03-encargos.eli-trenes.inicio.breve-bolsa-vacio": "¿Llevas algo que tenga que ir al andén?",
+  "m.03-encargos.eli-trenes.breve-bolsa-vacio": "La bolsa azul de billetes anulados era para que los niños hicieran carteras de papel. Alguien la dejó donde se lleva el vidrio.",
+  "m.03-encargos.eli-trenes.breve-bolsa-vacio.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.eli-trenes.breve-bolsa-vacio.salir": "Marcharme.",
+  "m.03-encargos.enc-bolsa-vacio.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Bolsa de billetes viejos».",
+  "m.03-encargos.enc-bolsa-vacio.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-bolsa-vacio.activa": "La bolsa azul de billetes anulados era para que los niños hicieran carteras de papel. Alguien la dejó donde se lleva el vidrio.",
+  "m.03-encargos.enc-bolsa-vacio.activa.hacer": "Dejar los billetes en el estante del andén.",
+  "m.03-encargos.enc-bolsa-vacio.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-bolsa-vacio.fin": "Hay un billete para cada mano que quiera hacer una cartera. El último dice «ida y vuelta».",
+  "m.03-encargos.enc-bolsa-vacio.fin.salir": "Marcharme.",
+  "m.03-encargos.banco-tuercas.titulo": "Un surtido de tuercas",
+  "m.03-encargos.banco-tuercas.resumen": "Claro. Las tuercas del muestrario se ordenan por rosca. Si dejas las dos parecidas en cajones distintos, me ahorras un tornillo partido.",
+  "m.03-encargos.banco-tuercas.final.hecho": "Las cajas quedan marcadas. A la última, Jan le había escrito «cosas que parecen lo mismo hasta que importa».",
+  "m.03-encargos.banco-tuercas.objetivo.hacer": "Ordenar las piezas por tipo de rosca.",
+  "m.03-encargos.jan-astillero.inicio.breve-banco-tuercas": "¿Tienes un encargo para alguien que no sepa soldar?",
+  "m.03-encargos.jan-astillero.breve-banco-tuercas": "Claro. Las tuercas del muestrario se ordenan por rosca. Si dejas las dos parecidas en cajones distintos, me ahorras un tornillo partido.",
+  "m.03-encargos.jan-astillero.breve-banco-tuercas.aceptar": "Puedo ocuparme.",
+  "m.03-encargos.jan-astillero.breve-banco-tuercas.salir": "Marcharme.",
+  "m.03-encargos.enc-banco-tuercas.inicio": "Entre documentos y notas se ve una etiqueta con el nombre «Banco de piezas».",
+  "m.03-encargos.enc-banco-tuercas.inicio.salir": "Marcharme.",
+  "m.03-encargos.enc-banco-tuercas.activa": "Claro. Las tuercas del muestrario se ordenan por rosca. Si dejas las dos parecidas en cajones distintos, me ahorras un tornillo partido.",
+  "m.03-encargos.enc-banco-tuercas.activa.hacer": "Ordenar las piezas por tipo de rosca.",
+  "m.03-encargos.enc-banco-tuercas.activa.salir": "Marcharme.",
+  "m.03-encargos.enc-banco-tuercas.fin": "Las cajas quedan marcadas. A la última, Jan le había escrito «cosas que parecen lo mismo hasta que importa».",
+  "m.03-encargos.enc-banco-tuercas.fin.salir": "Marcharme.",
+  "m.03-encargos.tablon.lit.breve-cartel-frio": "Leer el aviso de la nevera de Lin.",
+  "m.03-encargos.lin.lit.breve-cobros-mesa": "¿Quieres que alguien revise el cambio?",
+  "m.03-encargos.lin.default.breve-cobros-mesa": "¿Quieres que alguien revise el cambio?"
+ },
+ "contracts": [
+  {
+   "id": "ruta-nueve",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "reme",
+   "title": "m.03-encargos.ruta-nueve.titulo",
+   "summary": "m.03-encargos.ruta-nueve.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.ruta-nueve.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "ruta-nueve-hacer",
+     "text": "m.03-encargos.ruta-nueve.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "buzon-remite",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "reme",
+   "title": "m.03-encargos.buzon-remite.titulo",
+   "summary": "m.03-encargos.buzon-remite.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.buzon-remite.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "buzon-remite-hacer",
+     "text": "m.03-encargos.buzon-remite.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "cartel-frio",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "tablon",
+   "title": "m.03-encargos.cartel-frio.titulo",
+   "summary": "m.03-encargos.cartel-frio.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.cartel-frio.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "cartel-frio-hacer",
+     "text": "m.03-encargos.cartel-frio.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "cobros-mesa",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "lin",
+   "title": "m.03-encargos.cobros-mesa.titulo",
+   "summary": "m.03-encargos.cobros-mesa.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.cobros-mesa.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "cobros-mesa-hacer",
+     "text": "m.03-encargos.cobros-mesa.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "bandeja-fria",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "sato",
+   "title": "m.03-encargos.bandeja-fria.titulo",
+   "summary": "m.03-encargos.bandeja-fria.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.bandeja-fria.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "bandeja-fria-hacer",
+     "text": "m.03-encargos.bandeja-fria.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "placa-carga",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "tomas",
+   "title": "m.03-encargos.placa-carga.titulo",
+   "summary": "m.03-encargos.placa-carga.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.placa-carga.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "placa-carga-hacer",
+     "text": "m.03-encargos.placa-carga.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "radio-quiosco",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "alma-ferro",
+   "title": "m.03-encargos.radio-quiosco.titulo",
+   "summary": "m.03-encargos.radio-quiosco.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.radio-quiosco.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "radio-quiosco-hacer",
+     "text": "m.03-encargos.radio-quiosco.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "copa-autobus",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "alba-voz",
+   "title": "m.03-encargos.copa-autobus.titulo",
+   "summary": "m.03-encargos.copa-autobus.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.copa-autobus.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "copa-autobus-hacer",
+     "text": "m.03-encargos.copa-autobus.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "ritmo-dos",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "assaya-kitsune",
+   "title": "m.03-encargos.ritmo-dos.titulo",
+   "summary": "m.03-encargos.ritmo-dos.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.ritmo-dos.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "ritmo-dos-hacer",
+     "text": "m.03-encargos.ritmo-dos.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "poste-niveles",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "vera-alameda",
+   "title": "m.03-encargos.poste-niveles.titulo",
+   "summary": "m.03-encargos.poste-niveles.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.poste-niveles.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "poste-niveles-hacer",
+     "text": "m.03-encargos.poste-niveles.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "bolsa-vacio",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "eli-trenes",
+   "title": "m.03-encargos.bolsa-vacio.titulo",
+   "summary": "m.03-encargos.bolsa-vacio.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.bolsa-vacio.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "bolsa-vacio-hacer",
+     "text": "m.03-encargos.bolsa-vacio.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  },
+  {
+   "id": "banco-tuercas",
+   "category": "terciaria",
+   "version": 1,
+   "giver": "jan-astillero",
+   "title": "m.03-encargos.banco-tuercas.titulo",
+   "summary": "m.03-encargos.banco-tuercas.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "hecho": "m.03-encargos.banco-tuercas.final.hecho"
+   },
+   "objectives": [
+    {
+     "id": "banco-tuercas-hacer",
+     "text": "m.03-encargos.banco-tuercas.objetivo.hacer",
+     "shared": false
+    }
+   ]
+  }
+ ],
+ "dialogs": {
+  "enc-ruta-nueve": {
+   "speaker": "enc-ruta-nueve",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "ruta-nueve",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "ruta-nueve",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-ruta-nueve.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-ruta-nueve.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-ruta-nueve.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-ruta-nueve.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "ruta-nueve",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "ruta-nueve-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "ruta-nueve",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-ruta-nueve.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-ruta-nueve.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-ruta-nueve.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-buzon-remite": {
+   "speaker": "enc-buzon-remite",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "buzon-remite",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "buzon-remite",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-buzon-remite.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-buzon-remite.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-buzon-remite.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-buzon-remite.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "buzon-remite",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "buzon-remite-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "buzon-remite",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-buzon-remite.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-buzon-remite.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-buzon-remite.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-cartel-frio": {
+   "speaker": "enc-cartel-frio",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cartel-frio",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "cartel-frio",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-cartel-frio.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-cartel-frio.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-cartel-frio.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-cartel-frio.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "cartel-frio",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cartel-frio-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "cartel-frio",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-cartel-frio.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-cartel-frio.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-cartel-frio.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-cobros-mesa": {
+   "speaker": "enc-cobros-mesa",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cobros-mesa",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "cobros-mesa",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-cobros-mesa.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-cobros-mesa.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-cobros-mesa.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-cobros-mesa.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "cobros-mesa",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cobros-mesa-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "cobros-mesa",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-cobros-mesa.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-cobros-mesa.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-cobros-mesa.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-bandeja-fria": {
+   "speaker": "enc-bandeja-fria",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "bandeja-fria",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "bandeja-fria",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-bandeja-fria.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-bandeja-fria.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-bandeja-fria.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-bandeja-fria.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "bandeja-fria",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "bandeja-fria-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "bandeja-fria",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-bandeja-fria.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-bandeja-fria.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-bandeja-fria.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-placa-carga": {
+   "speaker": "enc-placa-carga",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "placa-carga",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "placa-carga",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-placa-carga.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-placa-carga.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-placa-carga.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-placa-carga.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "placa-carga",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "placa-carga-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "placa-carga",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-placa-carga.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-placa-carga.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-placa-carga.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-radio-quiosco": {
+   "speaker": "enc-radio-quiosco",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "radio-quiosco",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "radio-quiosco",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-radio-quiosco.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-radio-quiosco.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-radio-quiosco.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-radio-quiosco.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "radio-quiosco",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "radio-quiosco-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "radio-quiosco",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-radio-quiosco.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-radio-quiosco.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-radio-quiosco.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-copa-autobus": {
+   "speaker": "enc-copa-autobus",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "copa-autobus",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "copa-autobus",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-copa-autobus.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-copa-autobus.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-copa-autobus.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-copa-autobus.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "copa-autobus",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "copa-autobus-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "copa-autobus",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-copa-autobus.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-copa-autobus.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-copa-autobus.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-ritmo-dos": {
+   "speaker": "enc-ritmo-dos",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "ritmo-dos",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "ritmo-dos",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-ritmo-dos.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-ritmo-dos.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-ritmo-dos.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-ritmo-dos.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "ritmo-dos",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "ritmo-dos-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "ritmo-dos",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-ritmo-dos.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-ritmo-dos.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-ritmo-dos.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-poste-niveles": {
+   "speaker": "enc-poste-niveles",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "poste-niveles",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "poste-niveles",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-poste-niveles.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-poste-niveles.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-poste-niveles.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-poste-niveles.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "poste-niveles",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "poste-niveles-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "poste-niveles",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-poste-niveles.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-poste-niveles.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-poste-niveles.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-bolsa-vacio": {
+   "speaker": "enc-bolsa-vacio",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "bolsa-vacio",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "bolsa-vacio",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-bolsa-vacio.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-bolsa-vacio.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-bolsa-vacio.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-bolsa-vacio.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "bolsa-vacio",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "bolsa-vacio-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "bolsa-vacio",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-bolsa-vacio.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-bolsa-vacio.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-bolsa-vacio.fin.salir"
+      }
+     ]
+    }
+   }
+  },
+  "enc-banco-tuercas": {
+   "speaker": "enc-banco-tuercas",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "banco-tuercas",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "fin",
+     "if": [
+      {
+       "contract": "banco-tuercas",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.03-encargos.enc-banco-tuercas.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-banco-tuercas.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.03-encargos.enc-banco-tuercas.activa",
+     "options": [
+      {
+       "id": "hacer",
+       "text": "m.03-encargos.enc-banco-tuercas.activa.hacer",
+       "goto": "fin",
+       "if": [
+        {
+         "contract": "banco-tuercas",
+         "state": "active"
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "banco-tuercas-hacer"
+        },
+        {
+         "xp": 8
+        },
+        {
+         "completeContract": "banco-tuercas",
+         "outcome": "hecho"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-banco-tuercas.activa.salir"
+      }
+     ]
+    },
+    "fin": {
+     "text": "m.03-encargos.enc-banco-tuercas.fin",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.03-encargos.enc-banco-tuercas.fin.salir"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "contacts": [
+  {
+   "id": "enc-ruta-nueve",
+   "name": "Guía del pasamanos",
+   "title": "Encargo de barrio",
+   "kind": "terminal",
+   "dialogue": "enc-ruta-nueve",
+   "zone": "bloque9",
+   "at": [
+    9,
+    9
+   ]
+  },
+  {
+   "id": "enc-buzon-remite",
+   "name": "Buzón sin planta",
+   "title": "Encargo de barrio",
+   "kind": "board",
+   "dialogue": "enc-buzon-remite",
+   "zone": "bloque9",
+   "at": [
+    15,
+    9
+   ]
+  },
+  {
+   "id": "enc-cartel-frio",
+   "name": "Cartel de la nevera",
+   "title": "Encargo de barrio",
+   "kind": "board",
+   "dialogue": "enc-cartel-frio",
+   "zone": "vertice",
+   "at": [
+    36,
+    164
+   ]
+  },
+  {
+   "id": "enc-cobros-mesa",
+   "name": "Pizarra de precios",
+   "title": "Encargo de barrio",
+   "kind": "board",
+   "dialogue": "enc-cobros-mesa",
+   "zone": "bar-rele",
+   "at": [
+    3,
+    3
+   ]
+  },
+  {
+   "id": "enc-bandeja-fria",
+   "name": "Bandeja de recepción",
+   "title": "Encargo de barrio",
+   "kind": "crates",
+   "dialogue": "enc-bandeja-fria",
+   "zone": "clinica-sato",
+   "at": [
+    6,
+    7
+   ]
+  },
+  {
+   "id": "enc-placa-carga",
+   "name": "Placa del portón",
+   "title": "Encargo de barrio",
+   "kind": "terminal",
+   "dialogue": "enc-placa-carga",
+   "zone": "vertice",
+   "at": [
+    75,
+    201
+   ]
+  },
+  {
+   "id": "enc-radio-quiosco",
+   "name": "Mesa de relevos",
+   "title": "Encargo de barrio",
+   "kind": "terminal",
+   "dialogue": "enc-radio-quiosco",
+   "zone": "comisaria-ferro",
+   "at": [
+    11,
+    5
+   ]
+  },
+  {
+   "id": "enc-copa-autobus",
+   "name": "Caja de vasos lavados",
+   "title": "Encargo de barrio",
+   "kind": "crates",
+   "dialogue": "enc-copa-autobus",
+   "zone": "bar-ultima-luz",
+   "at": [
+    12,
+    9
+   ]
+  },
+  {
+   "id": "enc-ritmo-dos",
+   "name": "Mesa de retorno",
+   "title": "Encargo de barrio",
+   "kind": "terminal",
+   "dialogue": "enc-ritmo-dos",
+   "zone": "club-kitsune-int",
+   "at": [
+    8,
+    9
+   ]
+  },
+  {
+   "id": "enc-poste-niveles",
+   "name": "Poste de lluvia",
+   "title": "Encargo de barrio",
+   "kind": "board",
+   "dialogue": "enc-poste-niveles",
+   "zone": "vertice",
+   "at": [
+    221,
+    449
+   ]
+  },
+  {
+   "id": "enc-bolsa-vacio",
+   "name": "Bolsa de billetes viejos",
+   "title": "Encargo de barrio",
+   "kind": "crates",
+   "dialogue": "enc-bolsa-vacio",
+   "zone": "vertice",
+   "at": [
+    508,
+    285
+   ]
+  },
+  {
+   "id": "enc-banco-tuercas",
+   "name": "Banco de piezas",
+   "title": "Encargo de barrio",
+   "kind": "crates",
+   "dialogue": "enc-banco-tuercas",
+   "zone": "vertice",
+   "at": [
+    494,
+    465
+   ]
+  }
+ ],
+ "extend": {
+  "reme": {
+   "options": {
+    "root": [
+     {
+      "id": "breve-ruta-nueve",
+      "text": "m.03-encargos.reme.root.breve-ruta-nueve",
+      "goto": "breve-ruta-nueve",
+      "if": [
+       {
+        "contract": "ruta-nueve",
+        "state": "none"
+       }
+      ]
+     },
+     {
+      "id": "breve-buzon-remite",
+      "text": "m.03-encargos.reme.root.breve-buzon-remite",
+      "goto": "breve-buzon-remite",
+      "if": [
+       {
+        "contract": "buzon-remite",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-ruta-nueve": {
+     "text": "m.03-encargos.reme.breve-ruta-nueve",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.reme.breve-ruta-nueve.aceptar",
+       "if": [
+        {
+         "contract": "ruta-nueve",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "ruta-nueve"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.reme.breve-ruta-nueve.salir"
+      }
+     ]
+    },
+    "breve-buzon-remite": {
+     "text": "m.03-encargos.reme.breve-buzon-remite",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.reme.breve-buzon-remite.aceptar",
+       "if": [
+        {
+         "contract": "buzon-remite",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "buzon-remite"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.reme.breve-buzon-remite.salir"
+      }
+     ]
+    }
+   }
+  },
+  "tablon": {
+   "options": {
+    "root": [
+     {
+      "id": "breve-cartel-frio",
+      "text": "m.03-encargos.tablon.root.breve-cartel-frio",
+      "goto": "breve-cartel-frio",
+      "if": [
+       {
+        "contract": "cartel-frio",
+        "state": "none"
+       }
+      ]
+     }
+    ],
+    "lit": [
+     {
+      "id": "breve-cartel-frio",
+      "text": "m.03-encargos.tablon.lit.breve-cartel-frio",
+      "goto": "breve-cartel-frio",
+      "if": [
+       {
+        "contract": "cartel-frio",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-cartel-frio": {
+     "text": "m.03-encargos.tablon.breve-cartel-frio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.tablon.breve-cartel-frio.aceptar",
+       "if": [
+        {
+         "contract": "cartel-frio",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "cartel-frio"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.tablon.breve-cartel-frio.salir"
+      }
+     ]
+    }
+   }
+  },
+  "lin": {
+   "options": {
+    "friend": [
+     {
+      "id": "breve-cobros-mesa",
+      "text": "m.03-encargos.lin.friend.breve-cobros-mesa",
+      "goto": "breve-cobros-mesa",
+      "if": [
+       {
+        "contract": "cobros-mesa",
+        "state": "none"
+       }
+      ]
+     }
+    ],
+    "lit": [
+     {
+      "id": "breve-cobros-mesa",
+      "text": "m.03-encargos.lin.lit.breve-cobros-mesa",
+      "goto": "breve-cobros-mesa",
+      "if": [
+       {
+        "contract": "cobros-mesa",
+        "state": "none"
+       }
+      ]
+     }
+    ],
+    "default": [
+     {
+      "id": "breve-cobros-mesa",
+      "text": "m.03-encargos.lin.default.breve-cobros-mesa",
+      "goto": "breve-cobros-mesa",
+      "if": [
+       {
+        "contract": "cobros-mesa",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-cobros-mesa": {
+     "text": "m.03-encargos.lin.breve-cobros-mesa",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.lin.breve-cobros-mesa.aceptar",
+       "if": [
+        {
+         "contract": "cobros-mesa",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "cobros-mesa"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.lin.breve-cobros-mesa.salir"
+      }
+     ]
+    }
+   }
+  },
+  "sato": {
+   "options": {
+    "root": [
+     {
+      "id": "breve-bandeja-fria",
+      "text": "m.03-encargos.sato.root.breve-bandeja-fria",
+      "goto": "breve-bandeja-fria",
+      "if": [
+       {
+        "contract": "bandeja-fria",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-bandeja-fria": {
+     "text": "m.03-encargos.sato.breve-bandeja-fria",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.sato.breve-bandeja-fria.aceptar",
+       "if": [
+        {
+         "contract": "bandeja-fria",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "bandeja-fria"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.sato.breve-bandeja-fria.salir"
+      }
+     ]
+    }
+   }
+  },
+  "tomas": {
+   "options": {
+    "idle": [
+     {
+      "id": "breve-placa-carga",
+      "text": "m.03-encargos.tomas.idle.breve-placa-carga",
+      "goto": "breve-placa-carga",
+      "if": [
+       {
+        "contract": "placa-carga",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-placa-carga": {
+     "text": "m.03-encargos.tomas.breve-placa-carga",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.tomas.breve-placa-carga.aceptar",
+       "if": [
+        {
+         "contract": "placa-carga",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "placa-carga"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.tomas.breve-placa-carga.salir"
+      }
+     ]
+    }
+   }
+  },
+  "alma-ferro": {
+   "options": {
+    "inicio": [
+     {
+      "id": "breve-radio-quiosco",
+      "text": "m.03-encargos.alma-ferro.inicio.breve-radio-quiosco",
+      "goto": "breve-radio-quiosco",
+      "if": [
+       {
+        "contract": "radio-quiosco",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-radio-quiosco": {
+     "text": "m.03-encargos.alma-ferro.breve-radio-quiosco",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.alma-ferro.breve-radio-quiosco.aceptar",
+       "if": [
+        {
+         "contract": "radio-quiosco",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "radio-quiosco"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.alma-ferro.breve-radio-quiosco.salir"
+      }
+     ]
+    }
+   }
+  },
+  "alba-voz": {
+   "options": {
+    "inicio": [
+     {
+      "id": "breve-copa-autobus",
+      "text": "m.03-encargos.alba-voz.inicio.breve-copa-autobus",
+      "goto": "breve-copa-autobus",
+      "if": [
+       {
+        "contract": "copa-autobus",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-copa-autobus": {
+     "text": "m.03-encargos.alba-voz.breve-copa-autobus",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.alba-voz.breve-copa-autobus.aceptar",
+       "if": [
+        {
+         "contract": "copa-autobus",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "copa-autobus"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.alba-voz.breve-copa-autobus.salir"
+      }
+     ]
+    }
+   }
+  },
+  "assaya-kitsune": {
+   "options": {
+    "inicio": [
+     {
+      "id": "breve-ritmo-dos",
+      "text": "m.03-encargos.assaya-kitsune.inicio.breve-ritmo-dos",
+      "goto": "breve-ritmo-dos",
+      "if": [
+       {
+        "contract": "ritmo-dos",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-ritmo-dos": {
+     "text": "m.03-encargos.assaya-kitsune.breve-ritmo-dos",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.assaya-kitsune.breve-ritmo-dos.aceptar",
+       "if": [
+        {
+         "contract": "ritmo-dos",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "ritmo-dos"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.assaya-kitsune.breve-ritmo-dos.salir"
+      }
+     ]
+    }
+   }
+  },
+  "vera-alameda": {
+   "options": {
+    "inicio": [
+     {
+      "id": "breve-poste-niveles",
+      "text": "m.03-encargos.vera-alameda.inicio.breve-poste-niveles",
+      "goto": "breve-poste-niveles",
+      "if": [
+       {
+        "contract": "poste-niveles",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-poste-niveles": {
+     "text": "m.03-encargos.vera-alameda.breve-poste-niveles",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.vera-alameda.breve-poste-niveles.aceptar",
+       "if": [
+        {
+         "contract": "poste-niveles",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "poste-niveles"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.vera-alameda.breve-poste-niveles.salir"
+      }
+     ]
+    }
+   }
+  },
+  "eli-trenes": {
+   "options": {
+    "inicio": [
+     {
+      "id": "breve-bolsa-vacio",
+      "text": "m.03-encargos.eli-trenes.inicio.breve-bolsa-vacio",
+      "goto": "breve-bolsa-vacio",
+      "if": [
+       {
+        "contract": "bolsa-vacio",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-bolsa-vacio": {
+     "text": "m.03-encargos.eli-trenes.breve-bolsa-vacio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.eli-trenes.breve-bolsa-vacio.aceptar",
+       "if": [
+        {
+         "contract": "bolsa-vacio",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "bolsa-vacio"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.eli-trenes.breve-bolsa-vacio.salir"
+      }
+     ]
+    }
+   }
+  },
+  "jan-astillero": {
+   "options": {
+    "inicio": [
+     {
+      "id": "breve-banco-tuercas",
+      "text": "m.03-encargos.jan-astillero.inicio.breve-banco-tuercas",
+      "goto": "breve-banco-tuercas",
+      "if": [
+       {
+        "contract": "banco-tuercas",
+        "state": "none"
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "breve-banco-tuercas": {
+     "text": "m.03-encargos.jan-astillero.breve-banco-tuercas",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.03-encargos.jan-astillero.breve-banco-tuercas.aceptar",
+       "if": [
+        {
+         "contract": "banco-tuercas",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "banco-tuercas"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.03-encargos.jan-astillero.breve-banco-tuercas.salir"
+      }
+     ]
+    }
+   }
+  }
+ }
+}

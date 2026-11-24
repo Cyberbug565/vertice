@@ -425,10 +425,17 @@ export function buildJournal(c: Content, p: PlayerState, participants: (instance
     out.push({
       contract: def.id, title: t(c, def.title), summary: t(c, def.summary), state: cp.state, outcome: cp.outcome ?? undefined,
       objectives: def.objectives.map((o) => ({ id: o.id, text: t(c, o.text), done: !!cp.objectives[o.id] })),
-      participants: participants(cp.instanceId),
+      participants: participants(cp.instanceId), category: def.category, shared: def.shared,
+      outcomeText: cp.outcome && def.outcomes[cp.outcome] ? t(c, def.outcomes[cp.outcome]) : undefined,
     });
   }
-  return out;
+  for (const def of c.contracts) {
+    if (!def.lead || p.contracts.has(def.id) || flagValue(p, 'pista:' + def.id) !== true) continue;
+    out.push({ contract: def.id, title: t(c, def.title), summary: t(c, def.summary), state: 'lead',
+      lead: t(c, def.lead), category: def.category, objectives: [], participants: 0 });
+  }
+  const order = ['active', 'lead', 'completed', 'abandoned'];
+  return out.sort((a, b) => order.indexOf(a.state) - order.indexOf(b.state));
 }
 
 export async function savePlayerVitals(db: Queryable, p: PlayerState) {

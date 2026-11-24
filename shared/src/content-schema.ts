@@ -117,6 +117,7 @@ const Effect = z.union([
   z.object({ contribute: z.string() }),
   z.object({ open: z.enum(['shop', 'clinic', 'jobs', 'bounties', 'market']), id: z.string().optional() }),
   z.object({ wanted: z.number().int() }),
+  z.object({ missionRide: z.string() }),
 ]);
 export type Effect = z.infer<typeof Effect>;
 
@@ -155,18 +156,37 @@ export const TaskSchema = z.object({
 });
 export type TaskDef = z.infer<typeof TaskSchema>;
 
+export const MISSION_CATEGORIES = ['principal', 'secundaria', 'terciaria', 'evento'] as const;
 export const ContractSchema = z.object({
   id: z.string(),
   version: z.number().int().positive(),
   title: z.string(),
   summary: z.string(),
   giver: z.string(),
+  category: z.enum(MISSION_CATEGORIES).default('principal'),
+  lead: z.string().optional(),
+  outcomes: z.record(z.string(), z.string()).default({}),
   legal: z.boolean(),
   shared: z.boolean(),
   objectives: z.array(z.object({ id: z.string(), text: z.string(), shared: z.boolean() })),
   closedWhileFact: z.object({ fact: z.string(), is: z.union([z.boolean(), z.string(), z.number()]) }).optional(),
 });
 export type ContractDef = z.infer<typeof ContractSchema>;
+
+const MissionContact = z.object({
+  id: z.string(), name: z.string(), title: z.string(), dialogue: z.string(), zone: z.string(), at: xy,
+  kind: z.enum(['npc', 'terminal', 'board', 'crates', 'mission-ufo']),
+  body: z.enum(['femenino', 'masculino']).optional(),
+});
+const MissionEncounter = z.object({
+  id: z.string(), contract: z.string(), rumor: z.string(),
+  contact: MissionContact,
+  sites: z.array(MissionContact).min(1),
+  ride: z.object({ car: z.string(), route: z.array(xy).min(2) }).optional(),
+});
+export type MissionEncounter = z.infer<typeof MissionEncounter>;
+export type MissionContact = z.infer<typeof MissionContact>;
+
 
 export const NpcResidentSchema = z.object({
   job:z.enum(['seguridad','policia','venta','reparto','limpieza','crupier','tecnico','vecino']),
@@ -406,6 +426,8 @@ export const ContentSchema = z.object({
   items: z.array(ItemSchema),
   npcs: z.array(NpcSchema),
   zones: z.array(ZoneSchema),
+  missionContacts: z.array(MissionContact).default([]),
+  missionEncounters: z.array(MissionEncounter).default([]),
   dialogs: z.record(z.string(), DialogSchema),
   tasks: z.array(TaskSchema),
   contracts: z.array(ContractSchema),

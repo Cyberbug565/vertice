@@ -1,0 +1,3426 @@
+{
+ "locale": {
+  "m.02-secundarias.cinta-espera.titulo": "La cinta que esperaba",
+  "m.02-secundarias.cinta-espera.resumen": "Una viuda busca una grabación que conserva la voz de su marido y las últimas palabras de una estación.",
+  "m.02-secundarias.cinta-espera.final.privada": "Alba guarda la voz en casa y deja al archivo conservar los anuncios públicos.",
+  "m.02-secundarias.cinta-espera.final.barrio": "El barrio escucha el anuncio. Alba decide en privado qué hacer con la parte familiar.",
+  "m.02-secundarias.cinta-espera.objetivo.indagar": "Habla con quienes estuvieron allí o revisa lo que dejaron.",
+  "m.02-secundarias.cinta-espera.objetivo.resolver": "Vuelve con una propuesta.",
+  "m.02-secundarias.cinta-espera.pista": "Busca a Alba en Última Luz. Se sienta lejos de los altavoces.",
+  "m.02-secundarias.alba-voz.inicio": "Mi marido grabó el anuncio de cierre de la Línea 6. Lo enviaron al archivo de los tornos; me gustaría oír la parte que no sale en las noticias.",
+  "m.02-secundarias.alba-voz.inicio.aceptar": "Déjame averiguar qué se puede hacer.",
+  "m.02-secundarias.alba-voz.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.alba-voz.en-marcha": "La taquilla está en Ferro, al este del desguace. Nico suele sentarse junto al ventanal de Última Luz.",
+  "m.02-secundarias.alba-voz.en-marcha.volver": "Repíteme qué te preocupa.",
+  "m.02-secundarias.alba-voz.en-marcha.salir": "Hasta luego.",
+  "m.02-secundarias.alba-voz.decidir": "Puedo oírlo sola o puedo organizar una escucha con el barrio. ¿Sabes lo raro que es echar de menos que alguien diga «demasiada sal»?",
+  "m.02-secundarias.alba-voz.decidir.privada": "Entregar la copia solo a Alba.",
+  "m.02-secundarias.alba-voz.decidir.barrio": "Ayudar a organizar una escucha para antiguas familias de la línea.",
+  "m.02-secundarias.alba-voz.decidir.considerar": "Voy a consultar la otra opción.",
+  "m.02-secundarias.alba-voz.decidir.salir": "Hasta luego.",
+  "m.02-secundarias.alba-voz.privada": "Primero me pongo agua a hervir. Quiero que me encuentre haciendo algo normal.",
+  "m.02-secundarias.alba-voz.privada.salir": "Hasta luego.",
+  "m.02-secundarias.alba-voz.barrio": "Haré caldo. Esta vez pondré la sal que me dé la gana.",
+  "m.02-secundarias.alba-voz.barrio.salir": "Hasta luego.",
+  "m.02-secundarias.alba-voz.despues": "Me alegra verte de nuevo. Quedaba algo por decirte.",
+  "m.02-secundarias.alba-voz.despues.privada": "¿Cómo quedó aquello?",
+  "m.02-secundarias.alba-voz.despues.barrio": "¿Cómo quedó aquello?",
+  "m.02-secundarias.alba-voz.despues.salir": "Hasta luego.",
+  "m.02-secundarias.cinta-taquilla.inicio": "Al darle al botón, oyes a Alba y a su marido discutir sobre cuánto sal se pone en la sopa. Debo conservarlo, dice una tercera voz. Mañana ponen máquinas nuevas.",
+  "m.02-secundarias.cinta-taquilla.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.cinta-taquilla.activa": "Ves una cinta dentro de una bolsa que pone «alimentar al gato». Hay una lista de objetos entregados, firmada por personas que no llegaron al tren.",
+  "m.02-secundarias.cinta-taquilla.activa.leer": "Rebobinar hasta la conversación grabada antes del anuncio.",
+  "m.02-secundarias.cinta-taquilla.activa.contrastar": "Rebobinar hasta la conversación grabada antes del anuncio.",
+  "m.02-secundarias.cinta-taquilla.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.cinta-taquilla.activa.salir": "Hasta luego.",
+  "m.02-secundarias.cinta-taquilla.hallazgo": "Al darle al botón, oyes a Alba y a su marido discutir sobre cuánto sal se pone en la sopa. Debo conservarlo, dice una tercera voz. Mañana ponen máquinas nuevas.",
+  "m.02-secundarias.cinta-taquilla.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.cinta-ensayo.inicio": "Nico reconoce el ruido del torno y copia la parte íntima en una cinta separada. Los mensajes oficiales se pueden archivar sin tocar esa grabación.",
+  "m.02-secundarias.cinta-ensayo.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.cinta-ensayo.activa": "Me quedé con la segunda toma. La primera no decía «servicio cancelado». Decía: «Alba, vuelve por la panadería. El gato tiene pienso hasta el martes».",
+  "m.02-secundarias.cinta-ensayo.activa.leer": "Pedir que separe las dos tomas.",
+  "m.02-secundarias.cinta-ensayo.activa.contrastar": "Pedir que separe las dos tomas.",
+  "m.02-secundarias.cinta-ensayo.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.cinta-ensayo.activa.salir": "Hasta luego.",
+  "m.02-secundarias.cinta-ensayo.hallazgo": "Nico reconoce el ruido del torno y copia la parte íntima en una cinta separada. Los mensajes oficiales se pueden archivar sin tocar esa grabación.",
+  "m.02-secundarias.cinta-ensayo.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.ultima-olla.titulo": "La última olla",
+  "m.02-secundarias.ultima-olla.resumen": "Busca una forma de abastecer una cocina nocturna que respete a quienes vienen a cenar.",
+  "m.02-secundarias.ultima-olla.final.vecinal": "La cocina abre sin listas de comensales y las tiendas rotan la aportación.",
+  "m.02-secundarias.ultima-olla.final.fondo": "El anticipo financia más cenas desde el primer día. Nuri deja a la vista la deuda y su fecha de vencimiento.",
+  "m.02-secundarias.ultima-olla.objetivo.indagar": "Habla con quienes estuvieron allí o revisa lo que dejaron.",
+  "m.02-secundarias.ultima-olla.objetivo.resolver": "Vuelve con una propuesta.",
+  "m.02-secundarias.ultima-olla.pista": "Nuri está en El Relé, junto a las mesas del fondo.",
+  "m.02-secundarias.nuri-cocina.inicio": "Desde que pusimos el cartel de «gratis» vienen menos personas que antes. A algunas les da miedo que alguien tome nota. Para mañana me falta una olla, me sobran opiniones.",
+  "m.02-secundarias.nuri-cocina.inicio.aceptar": "Déjame averiguar qué se puede hacer.",
+  "m.02-secundarias.nuri-cocina.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.nuri-cocina.en-marcha": "El cuaderno se guarda en El Relé. Sonia vende fruta junto al tablón del Mercado Lumen.",
+  "m.02-secundarias.nuri-cocina.en-marcha.volver": "Repíteme qué te preocupa.",
+  "m.02-secundarias.nuri-cocina.en-marcha.salir": "Hasta luego.",
+  "m.02-secundarias.nuri-cocina.decidir": "Con una de las dos salimos mañana. La que elijas decide a quién tendremos que darle las gracias dentro de un mes.",
+  "m.02-secundarias.nuri-cocina.decidir.vecinal": "Poner una caja común y publicar el coste de cada olla.",
+  "m.02-secundarias.nuri-cocina.decidir.fondo": "Aceptar el anticipo y fijar una fecha para devolverlo.",
+  "m.02-secundarias.nuri-cocina.decidir.considerar": "Voy a consultar la otra opción.",
+  "m.02-secundarias.nuri-cocina.decidir.salir": "Hasta luego.",
+  "m.02-secundarias.nuri-cocina.vecinal": "Vamos a necesitar más cucharas. Si alguien pregunta, también acepto que me lleven la contra.",
+  "m.02-secundarias.nuri-cocina.vecinal.salir": "Hasta luego.",
+  "m.02-secundarias.nuri-cocina.fondo": "No me gusta mirar una marca mientras ceno. Haré sitio para taparla cuando acabemos de pagar.",
+  "m.02-secundarias.nuri-cocina.fondo.salir": "Hasta luego.",
+  "m.02-secundarias.nuri-cocina.despues": "Me alegra verte de nuevo. Quedaba algo por decirte.",
+  "m.02-secundarias.nuri-cocina.despues.vecinal": "¿Cómo quedó aquello?",
+  "m.02-secundarias.nuri-cocina.despues.fondo": "¿Cómo quedó aquello?",
+  "m.02-secundarias.nuri-cocina.despues.salir": "Hasta luego.",
+  "m.02-secundarias.olla-tratos.inicio": "Al dorso hay una cuenta a nombre de la tienda de hielo. Alguien ofrece un crédito si le dejan poner su marca encima de la puerta.",
+  "m.02-secundarias.olla-tratos.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.olla-tratos.activa": "El cuaderno asigna bancos de trabajo, pero también tiene huecos para quien llega sin nombre. El dinero alcanza para un turno, si el reparto se hace por platos.",
+  "m.02-secundarias.olla-tratos.activa.leer": "Copiar la propuesta y comprobar qué pide la empresa.",
+  "m.02-secundarias.olla-tratos.activa.contrastar": "Copiar la propuesta y comprobar qué pide la empresa.",
+  "m.02-secundarias.olla-tratos.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.olla-tratos.activa.salir": "Hasta luego.",
+  "m.02-secundarias.olla-tratos.hallazgo": "Al dorso hay una cuenta a nombre de la tienda de hielo. Alguien ofrece un crédito si le dejan poner su marca encima de la puerta.",
+  "m.02-secundarias.olla-tratos.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.olla-vecinas.inicio": "Sonia reúne firmas para cubrir dos noches, con una regla: primero se sirve, luego se cuenta lo que queda. Nadie pasa lista de personas.",
+  "m.02-secundarias.olla-vecinas.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.olla-vecinas.activa": "Si hacemos una colecta, la gente va a preguntar quién se lleva qué. Yo pongo verdura fea. Y la vecina del cuarto pone un arroz que está muy rico, aunque yo diga que no.",
+  "m.02-secundarias.olla-vecinas.activa.leer": "Acordar con Sonia que se cuenten raciones, sin registrar nombres.",
+  "m.02-secundarias.olla-vecinas.activa.contrastar": "Acordar con Sonia que se cuenten raciones, sin registrar nombres.",
+  "m.02-secundarias.olla-vecinas.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.olla-vecinas.activa.salir": "Hasta luego.",
+  "m.02-secundarias.olla-vecinas.hallazgo": "Sonia reúne firmas para cubrir dos noches, con una regla: primero se sirve, luego se cuenta lo que queda. Nadie pasa lista de personas.",
+  "m.02-secundarias.olla-vecinas.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.radio-assaya.titulo": "La frecuencia de Assaya",
+  "m.02-secundarias.radio-assaya.resumen": "Una cantante quiere recuperar una toma propia y decidir dónde se escuchará su primera canción.",
+  "m.02-secundarias.radio-assaya.final.escenario": "Assaya estrena su voz sin alquilarla. El cartel nombra a todo el equipo.",
+  "m.02-secundarias.radio-assaya.final.casa": "Assaya guarda el original. Su primera grabación no queda atada al contrato.",
+  "m.02-secundarias.radio-assaya.objetivo.indagar": "Habla con quienes estuvieron allí o revisa lo que dejaron.",
+  "m.02-secundarias.radio-assaya.objetivo.resolver": "Vuelve con una propuesta.",
+  "m.02-secundarias.radio-assaya.pista": "Assaya ensaya en el Club Kitsune. Entra por la puerta principal y busca la zona junto a la pista.",
+  "m.02-secundarias.assaya-kitsune.inicio": "Me han ofrecido mi primer contrato. Entré cantando como mi madre y salí obligada a cantar como una voz que alquilan. El club guarda una toma anterior a la oferta.",
+  "m.02-secundarias.assaya-kitsune.inicio.aceptar": "Déjame averiguar qué se puede hacer.",
+  "m.02-secundarias.assaya-kitsune.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-kitsune.en-marcha": "La consola queda al otro lado de la pista. Noé vigila las mesas de sonido en el mismo club.",
+  "m.02-secundarias.assaya-kitsune.en-marcha.volver": "Repíteme qué te preocupa.",
+  "m.02-secundarias.assaya-kitsune.en-marcha.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-kitsune.decidir": "Ya puedo decir que la primera toma es mía. Ahora falta saber si quiero cantarla para todo el mundo o si todavía puedo quedármela un rato.",
+  "m.02-secundarias.assaya-kitsune.decidir.escenario": "Reservar el estreno en el club y acreditar a los músicos.",
+  "m.02-secundarias.assaya-kitsune.decidir.casa": "Devolverle la copia para que decida más adelante.",
+  "m.02-secundarias.assaya-kitsune.decidir.considerar": "Voy a consultar la otra opción.",
+  "m.02-secundarias.assaya-kitsune.decidir.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-kitsune.escenario": "Lo primero que voy a decir cuando me den el micro es cómo se escribe el nombre de mi abuela.",
+  "m.02-secundarias.assaya-kitsune.escenario.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-kitsune.casa": "Vaya. Me había olvidado de la posibilidad de poder esperar.",
+  "m.02-secundarias.assaya-kitsune.casa.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-kitsune.despues": "Me alegra verte de nuevo. Quedaba algo por decirte.",
+  "m.02-secundarias.assaya-kitsune.despues.escenario": "¿Cómo quedó aquello?",
+  "m.02-secundarias.assaya-kitsune.despues.casa": "¿Cómo quedó aquello?",
+  "m.02-secundarias.assaya-kitsune.despues.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-consola.inicio": "La copia tiene fecha anterior al contrato. Si Assaya se la queda, puede acreditar que la voz estaba grabada antes de que se la intentaran alquilar.",
+  "m.02-secundarias.assaya-consola.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-consola.activa": "Hay un archivo guardado como «respiración». Son quince segundos de aire, después un tarareo y el golpe de una pulsera contra un brazo de micrófono.",
+  "m.02-secundarias.assaya-consola.activa.leer": "Guardar la copia con su fecha original.",
+  "m.02-secundarias.assaya-consola.activa.contrastar": "Guardar la copia con su fecha original.",
+  "m.02-secundarias.assaya-consola.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.assaya-consola.activa.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-consola.hallazgo": "La copia tiene fecha anterior al contrato. Si Assaya se la queda, puede acreditar que la voz estaba grabada antes de que se la intentaran alquilar.",
+  "m.02-secundarias.assaya-consola.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-banda.inicio": "Noé admite que arregló el error de la discográfica en vez de corregir su copia. Está dispuesto a firmar quién tuvo el archivo primero.",
+  "m.02-secundarias.assaya-banda.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-banda.activa": "La toma buena es la del ensayo. La que les mandé tiene los agudos limpios y una palabra mal. Su abuela la cantaba con una palabra que aquí nadie espera.",
+  "m.02-secundarias.assaya-banda.activa.leer": "Pedir a Noé que firme la hoja de grabación.",
+  "m.02-secundarias.assaya-banda.activa.contrastar": "Pedir a Noé que firme la hoja de grabación.",
+  "m.02-secundarias.assaya-banda.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.assaya-banda.activa.salir": "Hasta luego.",
+  "m.02-secundarias.assaya-banda.hallazgo": "Noé admite que arregló el error de la discográfica en vez de corregir su copia. Está dispuesto a firmar quién tuvo el archivo primero.",
+  "m.02-secundarias.assaya-banda.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.puerta-agua.titulo": "La puerta contra el agua",
+  "m.02-secundarias.puerta-agua.resumen": "Investiga la filtración de Alameda antes de que se cierre el peritaje.",
+  "m.02-secundarias.puerta-agua.final.peritaje": "Los vecinos cobran por las reparaciones. El informe conserva la fecha del aviso de Héctor.",
+  "m.02-secundarias.puerta-agua.final.compuerta": "Se retira el automatismo y se fija un aviso para futuros cierres. La reclamación de daños queda abierta.",
+  "m.02-secundarias.puerta-agua.objetivo.indagar": "Habla con quienes estuvieron allí o revisa lo que dejaron.",
+  "m.02-secundarias.puerta-agua.objetivo.resolver": "Vuelve con una propuesta.",
+  "m.02-secundarias.puerta-agua.pista": "En Alameda del Sur, Vera está en el borde norte de la ronda, junto al cruce del barrio.",
+  "m.02-secundarias.vera-alameda.inicio": "Me piden que certifique que el agua no entró. Llevo dos noches durmiendo con las botas puestas. A mí me basta mi palabra; para que los demás cobren hace falta otra cosa.",
+  "m.02-secundarias.vera-alameda.inicio.aceptar": "Déjame averiguar qué se puede hacer.",
+  "m.02-secundarias.vera-alameda.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.vera-alameda.en-marcha": "El contador está junto a la ronda. Busca a Héctor al norte, entre las dos primeras manzanas de Alameda.",
+  "m.02-secundarias.vera-alameda.en-marcha.volver": "Repíteme qué te preocupa.",
+  "m.02-secundarias.vera-alameda.en-marcha.salir": "Hasta luego.",
+  "m.02-secundarias.vera-alameda.decidir": "Podemos pedir el dinero de las reparaciones cuanto antes o detener el cierre de la compuerta para el próximo temporal. Ojalá el plazo de las dos cosas fuera el mismo.",
+  "m.02-secundarias.vera-alameda.decidir.peritaje": "Presentar un peritaje colectivo para reparar las viviendas.",
+  "m.02-secundarias.vera-alameda.decidir.compuerta": "Presentar el fallo de la compuerta ante la asociación.",
+  "m.02-secundarias.vera-alameda.decidir.considerar": "Voy a consultar la otra opción.",
+  "m.02-secundarias.vera-alameda.decidir.salir": "Hasta luego.",
+  "m.02-secundarias.vera-alameda.peritaje": "Voy a gastar lo primero en un mueble alto y lo segundo en invitar a cenar a quien me prestó sus botas.",
+  "m.02-secundarias.vera-alameda.peritaje.salir": "Hasta luego.",
+  "m.02-secundarias.vera-alameda.compuerta": "Que conste: prefiero esperar un pago a volver a despertar con agua en la puerta.",
+  "m.02-secundarias.vera-alameda.compuerta.salir": "Hasta luego.",
+  "m.02-secundarias.vera-alameda.despues": "Me alegra verte de nuevo. Quedaba algo por decirte.",
+  "m.02-secundarias.vera-alameda.despues.peritaje": "¿Cómo quedó aquello?",
+  "m.02-secundarias.vera-alameda.despues.compuerta": "¿Cómo quedó aquello?",
+  "m.02-secundarias.vera-alameda.despues.salir": "Hasta luego.",
+  "m.02-secundarias.agua-marcas.inicio": "El contador conserva una hora de máxima carga que coincide con el cierre de la compuerta. La foto puede quedarse donde está; basta copiar la hora y la cota.",
+  "m.02-secundarias.agua-marcas.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.agua-marcas.activa": "Una marca naranja deja claro hasta dónde subió el agua. A la altura del enchufe queda una foto familiar pegada al muro por la humedad.",
+  "m.02-secundarias.agua-marcas.activa.leer": "Medir la cota y guardar el registro del contador.",
+  "m.02-secundarias.agua-marcas.activa.contrastar": "Medir la cota y guardar el registro del contador.",
+  "m.02-secundarias.agua-marcas.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.agua-marcas.activa.salir": "Hasta luego.",
+  "m.02-secundarias.agua-marcas.hallazgo": "El contador conserva una hora de máxima carga que coincide con el cierre de la compuerta. La foto puede quedarse donde está; basta copiar la hora y la cota.",
+  "m.02-secundarias.agua-marcas.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.agua-turno.inicio": "Héctor muestra la orden de cierre y señala el minuto en que pidió que avisaran al bloque. Si alguien firma que vio la orden, la aseguradora no podrá echarle toda la culpa.",
+  "m.02-secundarias.agua-turno.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.agua-turno.activa": "Bajamos la compuerta para que no reventara la estación. Nadie nos dijo que había gente en el bajo. La parte que nadie quiere escribir es que esto volverá a pasar.",
+  "m.02-secundarias.agua-turno.activa.leer": "Pedir un duplicado de la orden junto con su aviso.",
+  "m.02-secundarias.agua-turno.activa.contrastar": "Pedir un duplicado de la orden junto con su aviso.",
+  "m.02-secundarias.agua-turno.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.agua-turno.activa.salir": "Hasta luego.",
+  "m.02-secundarias.agua-turno.hallazgo": "Héctor muestra la orden de cierre y señala el minuto en que pidió que avisaran al bloque. Si alguien firma que vio la orden, la aseguradora no podrá echarle toda la culpa.",
+  "m.02-secundarias.agua-turno.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.cartas-sin-via.titulo": "Cartas sin vía",
+  "m.02-secundarias.cartas-sin-via.resumen": "Recupera una correspondencia del patio ferroviario y ayuda a Eli a decidir cómo devolverla.",
+  "m.02-secundarias.cartas-sin-via.final.puerta": "Las cartas llegan a casa en sobres sin remitente. Eli guarda la que quedó sin dirección.",
+  "m.02-secundarias.cartas-sin-via.final.mesa": "Quienes quieren volver al andén pueden recoger allí su correspondencia. Los sobres sobrantes quedan bajo custodia.",
+  "m.02-secundarias.cartas-sin-via.objetivo.indagar": "Habla con quienes estuvieron allí o revisa lo que dejaron.",
+  "m.02-secundarias.cartas-sin-via.objetivo.resolver": "Vuelve con una propuesta.",
+  "m.02-secundarias.cartas-sin-via.pista": "Eli espera entre los raíles de la entrada del Cementerio de Trenes.",
+  "m.02-secundarias.eli-trenes.inicio": "Mi hijo se fue con el último tren. Años después me llega una saca que nadie quiso abrir por si el matasellos era falso. Las direcciones son de aquí.",
+  "m.02-secundarias.eli-trenes.inicio.aceptar": "Déjame averiguar qué se puede hacer.",
+  "m.02-secundarias.eli-trenes.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.eli-trenes.en-marcha": "La saca está hacia el este, en el andén con los equipajes. Mateo habla con quien pasa por la entrada oeste.",
+  "m.02-secundarias.eli-trenes.en-marcha.volver": "Repíteme qué te preocupa.",
+  "m.02-secundarias.eli-trenes.en-marcha.salir": "Hasta luego.",
+  "m.02-secundarias.eli-trenes.decidir": "A algunos les entrará alegría y a otros se les romperá otra vez el viernes. ¿Dejo las cartas con cada familia o les dejo elegir si vienen por ellas?",
+  "m.02-secundarias.eli-trenes.decidir.puerta": "Entregar discretamente las cartas en sus direcciones.",
+  "m.02-secundarias.eli-trenes.decidir.mesa": "Organizar una mesa de recogida a nombre de los destinatarios.",
+  "m.02-secundarias.eli-trenes.decidir.considerar": "Voy a consultar la otra opción.",
+  "m.02-secundarias.eli-trenes.decidir.salir": "Hasta luego.",
+  "m.02-secundarias.eli-trenes.puerta": "La primera la llevo yo. Quiero presentarme antes de pedirle a nadie que abra nada.",
+  "m.02-secundarias.eli-trenes.puerta.salir": "Hasta luego.",
+  "m.02-secundarias.eli-trenes.mesa": "Sacaré las sillas de la cabina. A ver si volvemos a usar la estación un sábado.",
+  "m.02-secundarias.eli-trenes.mesa.salir": "Hasta luego.",
+  "m.02-secundarias.eli-trenes.despues": "Me alegra verte de nuevo. Quedaba algo por decirte.",
+  "m.02-secundarias.eli-trenes.despues.puerta": "¿Cómo quedó aquello?",
+  "m.02-secundarias.eli-trenes.despues.mesa": "¿Cómo quedó aquello?",
+  "m.02-secundarias.eli-trenes.despues.salir": "Hasta luego.",
+  "m.02-secundarias.cartas-saca.inicio": "El primer sobre está mojado por fuera. Las demás cartas conservan direcciones y una fecha común: el último viernes del servicio.",
+  "m.02-secundarias.cartas-saca.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.cartas-saca.activa": "Hay una bolsa forrada en hule. En una esquina se lee: «si nadie abre, dejar dentro del buzón; no confundir con si nadie vive».",
+  "m.02-secundarias.cartas-saca.activa.leer": "Ordenar las cartas por calle y dejar cerrados los sobres.",
+  "m.02-secundarias.cartas-saca.activa.contrastar": "Ordenar las cartas por calle y dejar cerrados los sobres.",
+  "m.02-secundarias.cartas-saca.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.cartas-saca.activa.salir": "Hasta luego.",
+  "m.02-secundarias.cartas-saca.hallazgo": "El primer sobre está mojado por fuera. Las demás cartas conservan direcciones y una fecha común: el último viernes del servicio.",
+  "m.02-secundarias.cartas-saca.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.cartas-inspector.inicio": "Mateo saca el listado y acepta ayudar con las direcciones. Muchas fincas cambiaron de número desde entonces.",
+  "m.02-secundarias.cartas-inspector.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.cartas-inspector.activa": "Si alguien pregunta por esa saca, yo dije que se había perdido. La orden era quemarla. Antes guardé la hoja de reparto en la bota.",
+  "m.02-secundarias.cartas-inspector.activa.leer": "Cruzar las direcciones antiguas con la hoja de reparto.",
+  "m.02-secundarias.cartas-inspector.activa.contrastar": "Cruzar las direcciones antiguas con la hoja de reparto.",
+  "m.02-secundarias.cartas-inspector.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.cartas-inspector.activa.salir": "Hasta luego.",
+  "m.02-secundarias.cartas-inspector.hallazgo": "Mateo saca el listado y acepta ayudar con las direcciones. Muchas fincas cambiaron de número desde entonces.",
+  "m.02-secundarias.cartas-inspector.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.taller-domingo.titulo": "Un taller en domingo",
+  "m.02-secundarias.taller-domingo.resumen": "Ayuda a abrir un taller comunitario sin cargar la responsabilidad a aprendices ni a obreros.",
+  "m.02-secundarias.taller-domingo.final.nave": "El taller abre después de cambiar el filtro. Los primeros aprendices diseñan sus propios carteles.",
+  "m.02-secundarias.taller-domingo.final.local": "Las primeras clases se celebran en el local limpio. El arreglo del extractor queda a cargo de la empresa.",
+  "m.02-secundarias.taller-domingo.objetivo.indagar": "Habla con quienes estuvieron allí o revisa lo que dejaron.",
+  "m.02-secundarias.taller-domingo.objetivo.resolver": "Vuelve con una propuesta.",
+  "m.02-secundarias.taller-domingo.pista": "Jan espera en la acera de las naves de Astilleros de Óxido.",
+  "m.02-secundarias.jan-astillero.inicio": "Quiero abrir el taller para chavales los domingos. La empresa dice que en una nave con humo nadie debería aprender nada. Podría empezar enseñándoles a arreglar el extractor.",
+  "m.02-secundarias.jan-astillero.inicio.aceptar": "Déjame averiguar qué se puede hacer.",
+  "m.02-secundarias.jan-astillero.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.jan-astillero.en-marcha": "Junto al acceso norte de Astilleros hay un archivador de mantenimiento. Nando lleva el local al este del cruce.",
+  "m.02-secundarias.jan-astillero.en-marcha.volver": "Repíteme qué te preocupa.",
+  "m.02-secundarias.jan-astillero.en-marcha.salir": "Hasta luego.",
+  "m.02-secundarias.jan-astillero.decidir": "Con un filtro puedo abrir aquí y tener las herramientas a la mano. Con el espacio de Nando puedo empezar mañana y enseñarles con pedales y chatarra blanda.",
+  "m.02-secundarias.jan-astillero.decidir.nave": "Abrir en la nave tras la revisión y montar turnos de supervisión.",
+  "m.02-secundarias.jan-astillero.decidir.local": "Empezar en el local pequeño y preparar el taller grande con calma.",
+  "m.02-secundarias.jan-astillero.decidir.considerar": "Voy a consultar la otra opción.",
+  "m.02-secundarias.jan-astillero.decidir.salir": "Hasta luego.",
+  "m.02-secundarias.jan-astillero.nave": "El que pidió soldar una estrella acabó arreglando una lámpara. La lámpara nos viene mejor, se lo he dicho.",
+  "m.02-secundarias.jan-astillero.nave.salir": "Hasta luego.",
+  "m.02-secundarias.jan-astillero.local": "Vamos a hacer una radio con restos. Hasta que funcione pondremos música con un teléfono debajo de una taza.",
+  "m.02-secundarias.jan-astillero.local.salir": "Hasta luego.",
+  "m.02-secundarias.jan-astillero.despues": "Me alegra verte de nuevo. Quedaba algo por decirte.",
+  "m.02-secundarias.jan-astillero.despues.nave": "¿Cómo quedó aquello?",
+  "m.02-secundarias.jan-astillero.despues.local": "¿Cómo quedó aquello?",
+  "m.02-secundarias.jan-astillero.despues.salir": "Hasta luego.",
+  "m.02-secundarias.taller-etiqueta.inicio": "En una nota de margen hay una referencia de filtro que fabrica otro galpón. Copiarla permite pedirlo sin abrir una máquina que todavía está en uso.",
+  "m.02-secundarias.taller-etiqueta.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.taller-etiqueta.activa": "El manual está limpio excepto donde dice «usar el filtro de reemplazo». La última firma de revisión es de antes de que Jan entrara en el taller.",
+  "m.02-secundarias.taller-etiqueta.activa.leer": "Copiar la referencia para reemplazar el filtro.",
+  "m.02-secundarias.taller-etiqueta.activa.contrastar": "Copiar la referencia para reemplazar el filtro.",
+  "m.02-secundarias.taller-etiqueta.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.taller-etiqueta.activa.salir": "Hasta luego.",
+  "m.02-secundarias.taller-etiqueta.hallazgo": "En una nota de margen hay una referencia de filtro que fabrica otro galpón. Copiarla permite pedirlo sin abrir una máquina que todavía está en uso.",
+  "m.02-secundarias.taller-etiqueta.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.taller-vecino.inicio": "Nando enseña el parte de inspección del local pequeño. Hay un horario de uso que deja el domingo libre, si Jan acepta reunirse con las familias primero.",
+  "m.02-secundarias.taller-vecino.inicio.salir": "Hasta luego.",
+  "m.02-secundarias.taller-vecino.activa": "Puedo prestar el local pequeño de la esquina. Le falta luz en el baño y nadie ha vuelto a pintar un cartel bonito desde que cerró la cooperativa.",
+  "m.02-secundarias.taller-vecino.activa.leer": "Reservar el domingo y pedir una copia del parte.",
+  "m.02-secundarias.taller-vecino.activa.contrastar": "Reservar el domingo y pedir una copia del parte.",
+  "m.02-secundarias.taller-vecino.activa.preguntar": "Volver sobre lo que encontré.",
+  "m.02-secundarias.taller-vecino.activa.salir": "Hasta luego.",
+  "m.02-secundarias.taller-vecino.hallazgo": "Nando enseña el parte de inspección del local pequeño. Hay un horario de uso que deja el domingo libre, si Jan acepta reunirse con las familias primero.",
+  "m.02-secundarias.taller-vecino.hallazgo.salir": "Hasta luego.",
+  "m.02-secundarias.reme.tips.barrio-puerta-agua": "¿Sabes quién ayuda con la inundación de Alameda?",
+  "m.02-secundarias.reme.barrio-puerta-agua": "Vera Palacios está junto al cruce de Alameda del Sur. Si vive de recordar el nivel del agua, esta semana no se le va a olvidar.",
+  "m.02-secundarias.reme.barrio-puerta-agua.salir": "Hasta luego.",
+  "m.02-secundarias.reme.root.barrio-cinta-espera": "Preguntar por la grabación de la Línea 6.",
+  "m.02-secundarias.reme.barrio-cinta-espera": "En Última Luz, pregunta a Alba Ferreiro. Le dijeron que la cinta tenía un aviso pero ella recuerda que tenía una voz.",
+  "m.02-secundarias.reme.barrio-cinta-espera.salir": "Hasta luego.",
+  "m.02-secundarias.sato.root.barrio-ultima-olla": "¿Dónde come la gente cuando acaba el turno tarde?",
+  "m.02-secundarias.sato.barrio-ultima-olla": "Nuri anda montando una cocina de noche. Búscala en El Relé; a veces tiene sopa y siempre tiene una taza que lavar.",
+  "m.02-secundarias.sato.barrio-ultima-olla.salir": "Hasta luego.",
+  "m.02-secundarias.tomas.idle.barrio-taller-domingo": "¿Conoces a quien arregla máquinas en Astilleros?",
+  "m.02-secundarias.tomas.barrio-taller-domingo": "Jan Quiles está en Astilleros de Óxido, junto a la ronda. Dice que el domingo está para enseñar; que yo me acuerdo de cuando me sobró un domingo.",
+  "m.02-secundarias.tomas.barrio-taller-domingo.salir": "Hasta luego.",
+  "m.02-secundarias.nadia.closed.barrio-cartas-sin-via": "Preguntar por el tren que dejó de pasar.",
+  "m.02-secundarias.nadia.barrio-cartas-sin-via": "Eli conoce todos los andenes del Cementerio de Trenes. Lo que quiere esta vez es encontrar a quienes se bajaron, no volver a subir.",
+  "m.02-secundarias.nadia.barrio-cartas-sin-via.salir": "Hasta luego.",
+  "m.02-secundarias.lin.lit.barrio-radio-assaya": "¿Quién está cantando en el Kitsune?",
+  "m.02-secundarias.lin.barrio-radio-assaya": "Assaya Neri va a estrenar algo en el Club Kitsune. Si te pregunta por su canción, espera a oírla antes de decir que ya te suena.",
+  "m.02-secundarias.lin.barrio-radio-assaya.salir": "Hasta luego."
+ },
+ "contracts": [
+  {
+   "id": "cinta-espera",
+   "category": "secundaria",
+   "version": 1,
+   "giver": "alba-voz",
+   "title": "m.02-secundarias.cinta-espera.titulo",
+   "summary": "m.02-secundarias.cinta-espera.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "privada": "m.02-secundarias.cinta-espera.final.privada",
+    "barrio": "m.02-secundarias.cinta-espera.final.barrio"
+   },
+   "objectives": [
+    {
+     "id": "cinta-espera-indagar",
+     "text": "m.02-secundarias.cinta-espera.objetivo.indagar",
+     "shared": false
+    },
+    {
+     "id": "cinta-espera-resolver",
+     "text": "m.02-secundarias.cinta-espera.objetivo.resolver",
+     "shared": false
+    }
+   ],
+   "lead": "m.02-secundarias.cinta-espera.pista"
+  },
+  {
+   "id": "ultima-olla",
+   "category": "secundaria",
+   "version": 1,
+   "giver": "nuri-cocina",
+   "title": "m.02-secundarias.ultima-olla.titulo",
+   "summary": "m.02-secundarias.ultima-olla.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "vecinal": "m.02-secundarias.ultima-olla.final.vecinal",
+    "fondo": "m.02-secundarias.ultima-olla.final.fondo"
+   },
+   "objectives": [
+    {
+     "id": "ultima-olla-indagar",
+     "text": "m.02-secundarias.ultima-olla.objetivo.indagar",
+     "shared": false
+    },
+    {
+     "id": "ultima-olla-resolver",
+     "text": "m.02-secundarias.ultima-olla.objetivo.resolver",
+     "shared": false
+    }
+   ],
+   "lead": "m.02-secundarias.ultima-olla.pista"
+  },
+  {
+   "id": "radio-assaya",
+   "category": "secundaria",
+   "version": 1,
+   "giver": "assaya-kitsune",
+   "title": "m.02-secundarias.radio-assaya.titulo",
+   "summary": "m.02-secundarias.radio-assaya.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "escenario": "m.02-secundarias.radio-assaya.final.escenario",
+    "casa": "m.02-secundarias.radio-assaya.final.casa"
+   },
+   "objectives": [
+    {
+     "id": "radio-assaya-indagar",
+     "text": "m.02-secundarias.radio-assaya.objetivo.indagar",
+     "shared": false
+    },
+    {
+     "id": "radio-assaya-resolver",
+     "text": "m.02-secundarias.radio-assaya.objetivo.resolver",
+     "shared": false
+    }
+   ],
+   "lead": "m.02-secundarias.radio-assaya.pista"
+  },
+  {
+   "id": "puerta-agua",
+   "category": "secundaria",
+   "version": 1,
+   "giver": "vera-alameda",
+   "title": "m.02-secundarias.puerta-agua.titulo",
+   "summary": "m.02-secundarias.puerta-agua.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "peritaje": "m.02-secundarias.puerta-agua.final.peritaje",
+    "compuerta": "m.02-secundarias.puerta-agua.final.compuerta"
+   },
+   "objectives": [
+    {
+     "id": "puerta-agua-indagar",
+     "text": "m.02-secundarias.puerta-agua.objetivo.indagar",
+     "shared": false
+    },
+    {
+     "id": "puerta-agua-resolver",
+     "text": "m.02-secundarias.puerta-agua.objetivo.resolver",
+     "shared": false
+    }
+   ],
+   "lead": "m.02-secundarias.puerta-agua.pista"
+  },
+  {
+   "id": "cartas-sin-via",
+   "category": "secundaria",
+   "version": 1,
+   "giver": "eli-trenes",
+   "title": "m.02-secundarias.cartas-sin-via.titulo",
+   "summary": "m.02-secundarias.cartas-sin-via.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "puerta": "m.02-secundarias.cartas-sin-via.final.puerta",
+    "mesa": "m.02-secundarias.cartas-sin-via.final.mesa"
+   },
+   "objectives": [
+    {
+     "id": "cartas-sin-via-indagar",
+     "text": "m.02-secundarias.cartas-sin-via.objetivo.indagar",
+     "shared": false
+    },
+    {
+     "id": "cartas-sin-via-resolver",
+     "text": "m.02-secundarias.cartas-sin-via.objetivo.resolver",
+     "shared": false
+    }
+   ],
+   "lead": "m.02-secundarias.cartas-sin-via.pista"
+  },
+  {
+   "id": "taller-domingo",
+   "category": "secundaria",
+   "version": 1,
+   "giver": "jan-astillero",
+   "title": "m.02-secundarias.taller-domingo.titulo",
+   "summary": "m.02-secundarias.taller-domingo.resumen",
+   "legal": true,
+   "shared": false,
+   "outcomes": {
+    "nave": "m.02-secundarias.taller-domingo.final.nave",
+    "local": "m.02-secundarias.taller-domingo.final.local"
+   },
+   "objectives": [
+    {
+     "id": "taller-domingo-indagar",
+     "text": "m.02-secundarias.taller-domingo.objetivo.indagar",
+     "shared": false
+    },
+    {
+     "id": "taller-domingo-resolver",
+     "text": "m.02-secundarias.taller-domingo.objetivo.resolver",
+     "shared": false
+    }
+   ],
+   "lead": "m.02-secundarias.taller-domingo.pista"
+  }
+ ],
+ "dialogs": {
+  "alba-voz": {
+   "speaker": "alba-voz",
+   "entries": [
+    {
+     "node": "despues",
+     "if": [
+      {
+       "contract": "cinta-espera",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "decidir",
+     "if": [
+      {
+       "contract": "cinta-espera",
+       "state": "active"
+      },
+      {
+       "objective": "cinta-espera-indagar",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "en-marcha",
+     "if": [
+      {
+       "contract": "cinta-espera",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.alba-voz.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.02-secundarias.alba-voz.inicio.aceptar",
+       "goto": "en-marcha",
+       "if": [
+        {
+         "contract": "cinta-espera",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "cinta-espera"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.alba-voz.inicio.salir"
+      }
+     ]
+    },
+    "en-marcha": {
+     "text": "m.02-secundarias.alba-voz.en-marcha",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.02-secundarias.alba-voz.en-marcha.volver",
+       "goto": "inicio"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.alba-voz.en-marcha.salir"
+      }
+     ]
+    },
+    "decidir": {
+     "text": "m.02-secundarias.alba-voz.decidir",
+     "options": [
+      {
+       "id": "privada",
+       "text": "m.02-secundarias.alba-voz.decidir.privada",
+       "goto": "privada",
+       "if": [
+        {
+         "contract": "cinta-espera",
+         "state": "active"
+        },
+        {
+         "objective": "cinta-espera-indagar",
+         "done": true
+        },
+        {
+         "flag": "cinta-espera-cinta-taquilla",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cinta-espera-resolver"
+        },
+        {
+         "flag": "cinta-espera-final",
+         "value": "privada"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "cinta-espera",
+         "outcome": "privada"
+        }
+       ]
+      },
+      {
+       "id": "barrio",
+       "text": "m.02-secundarias.alba-voz.decidir.barrio",
+       "goto": "barrio",
+       "if": [
+        {
+         "contract": "cinta-espera",
+         "state": "active"
+        },
+        {
+         "objective": "cinta-espera-indagar",
+         "done": true
+        },
+        {
+         "flag": "cinta-espera-cinta-ensayo",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cinta-espera-resolver"
+        },
+        {
+         "flag": "cinta-espera-final",
+         "value": "barrio"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "cinta-espera",
+         "outcome": "barrio"
+        }
+       ]
+      },
+      {
+       "id": "considerar",
+       "text": "m.02-secundarias.alba-voz.decidir.considerar",
+       "goto": "en-marcha"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.alba-voz.decidir.salir"
+      }
+     ]
+    },
+    "privada": {
+     "text": "m.02-secundarias.alba-voz.privada",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.alba-voz.privada.salir"
+      }
+     ]
+    },
+    "barrio": {
+     "text": "m.02-secundarias.alba-voz.barrio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.alba-voz.barrio.salir"
+      }
+     ]
+    },
+    "despues": {
+     "text": "m.02-secundarias.alba-voz.despues",
+     "options": [
+      {
+       "id": "privada",
+       "text": "m.02-secundarias.alba-voz.despues.privada",
+       "goto": "privada",
+       "if": [
+        {
+         "flag": "cinta-espera-final",
+         "is": "privada"
+        }
+       ]
+      },
+      {
+       "id": "barrio",
+       "text": "m.02-secundarias.alba-voz.despues.barrio",
+       "goto": "barrio",
+       "if": [
+        {
+         "flag": "cinta-espera-final",
+         "is": "barrio"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.alba-voz.despues.salir"
+      }
+     ]
+    }
+   }
+  },
+  "cinta-taquilla": {
+   "speaker": "cinta-taquilla",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cinta-espera",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.cinta-taquilla.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cinta-taquilla.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.cinta-taquilla.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.cinta-taquilla.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cinta-espera",
+         "state": "active"
+        },
+        {
+         "objective": "cinta-espera-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cinta-espera-cinta-taquilla",
+         "value": true
+        },
+        {
+         "completeObjective": "cinta-espera-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.cinta-taquilla.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cinta-espera",
+         "state": "active"
+        },
+        {
+         "objective": "cinta-espera-indagar",
+         "done": true
+        },
+        {
+         "flag": "cinta-espera-cinta-taquilla",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cinta-espera-cinta-taquilla",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.cinta-taquilla.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "cinta-espera-cinta-taquilla",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cinta-taquilla.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.cinta-taquilla.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cinta-taquilla.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "cinta-ensayo": {
+   "speaker": "cinta-ensayo",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cinta-espera",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.cinta-ensayo.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cinta-ensayo.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.cinta-ensayo.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.cinta-ensayo.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cinta-espera",
+         "state": "active"
+        },
+        {
+         "objective": "cinta-espera-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cinta-espera-cinta-ensayo",
+         "value": true
+        },
+        {
+         "completeObjective": "cinta-espera-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.cinta-ensayo.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cinta-espera",
+         "state": "active"
+        },
+        {
+         "objective": "cinta-espera-indagar",
+         "done": true
+        },
+        {
+         "flag": "cinta-espera-cinta-ensayo",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cinta-espera-cinta-ensayo",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.cinta-ensayo.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "cinta-espera-cinta-ensayo",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cinta-ensayo.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.cinta-ensayo.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cinta-ensayo.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "nuri-cocina": {
+   "speaker": "nuri-cocina",
+   "entries": [
+    {
+     "node": "despues",
+     "if": [
+      {
+       "contract": "ultima-olla",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "decidir",
+     "if": [
+      {
+       "contract": "ultima-olla",
+       "state": "active"
+      },
+      {
+       "objective": "ultima-olla-indagar",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "en-marcha",
+     "if": [
+      {
+       "contract": "ultima-olla",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.nuri-cocina.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.02-secundarias.nuri-cocina.inicio.aceptar",
+       "goto": "en-marcha",
+       "if": [
+        {
+         "contract": "ultima-olla",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "ultima-olla"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.nuri-cocina.inicio.salir"
+      }
+     ]
+    },
+    "en-marcha": {
+     "text": "m.02-secundarias.nuri-cocina.en-marcha",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.02-secundarias.nuri-cocina.en-marcha.volver",
+       "goto": "inicio"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.nuri-cocina.en-marcha.salir"
+      }
+     ]
+    },
+    "decidir": {
+     "text": "m.02-secundarias.nuri-cocina.decidir",
+     "options": [
+      {
+       "id": "vecinal",
+       "text": "m.02-secundarias.nuri-cocina.decidir.vecinal",
+       "goto": "vecinal",
+       "if": [
+        {
+         "contract": "ultima-olla",
+         "state": "active"
+        },
+        {
+         "objective": "ultima-olla-indagar",
+         "done": true
+        },
+        {
+         "flag": "ultima-olla-olla-tratos",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "ultima-olla-resolver"
+        },
+        {
+         "flag": "ultima-olla-final",
+         "value": "vecinal"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "ultima-olla",
+         "outcome": "vecinal"
+        }
+       ]
+      },
+      {
+       "id": "fondo",
+       "text": "m.02-secundarias.nuri-cocina.decidir.fondo",
+       "goto": "fondo",
+       "if": [
+        {
+         "contract": "ultima-olla",
+         "state": "active"
+        },
+        {
+         "objective": "ultima-olla-indagar",
+         "done": true
+        },
+        {
+         "flag": "ultima-olla-olla-vecinas",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "ultima-olla-resolver"
+        },
+        {
+         "flag": "ultima-olla-final",
+         "value": "fondo"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "ultima-olla",
+         "outcome": "fondo"
+        }
+       ]
+      },
+      {
+       "id": "considerar",
+       "text": "m.02-secundarias.nuri-cocina.decidir.considerar",
+       "goto": "en-marcha"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.nuri-cocina.decidir.salir"
+      }
+     ]
+    },
+    "vecinal": {
+     "text": "m.02-secundarias.nuri-cocina.vecinal",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.nuri-cocina.vecinal.salir"
+      }
+     ]
+    },
+    "fondo": {
+     "text": "m.02-secundarias.nuri-cocina.fondo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.nuri-cocina.fondo.salir"
+      }
+     ]
+    },
+    "despues": {
+     "text": "m.02-secundarias.nuri-cocina.despues",
+     "options": [
+      {
+       "id": "vecinal",
+       "text": "m.02-secundarias.nuri-cocina.despues.vecinal",
+       "goto": "vecinal",
+       "if": [
+        {
+         "flag": "ultima-olla-final",
+         "is": "vecinal"
+        }
+       ]
+      },
+      {
+       "id": "fondo",
+       "text": "m.02-secundarias.nuri-cocina.despues.fondo",
+       "goto": "fondo",
+       "if": [
+        {
+         "flag": "ultima-olla-final",
+         "is": "fondo"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.nuri-cocina.despues.salir"
+      }
+     ]
+    }
+   }
+  },
+  "olla-tratos": {
+   "speaker": "olla-tratos",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "ultima-olla",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.olla-tratos.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.olla-tratos.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.olla-tratos.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.olla-tratos.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "ultima-olla",
+         "state": "active"
+        },
+        {
+         "objective": "ultima-olla-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "ultima-olla-olla-tratos",
+         "value": true
+        },
+        {
+         "completeObjective": "ultima-olla-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.olla-tratos.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "ultima-olla",
+         "state": "active"
+        },
+        {
+         "objective": "ultima-olla-indagar",
+         "done": true
+        },
+        {
+         "flag": "ultima-olla-olla-tratos",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "ultima-olla-olla-tratos",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.olla-tratos.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "ultima-olla-olla-tratos",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.olla-tratos.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.olla-tratos.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.olla-tratos.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "olla-vecinas": {
+   "speaker": "olla-vecinas",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "ultima-olla",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.olla-vecinas.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.olla-vecinas.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.olla-vecinas.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.olla-vecinas.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "ultima-olla",
+         "state": "active"
+        },
+        {
+         "objective": "ultima-olla-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "ultima-olla-olla-vecinas",
+         "value": true
+        },
+        {
+         "completeObjective": "ultima-olla-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.olla-vecinas.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "ultima-olla",
+         "state": "active"
+        },
+        {
+         "objective": "ultima-olla-indagar",
+         "done": true
+        },
+        {
+         "flag": "ultima-olla-olla-vecinas",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "ultima-olla-olla-vecinas",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.olla-vecinas.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "ultima-olla-olla-vecinas",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.olla-vecinas.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.olla-vecinas.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.olla-vecinas.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "assaya-kitsune": {
+   "speaker": "assaya-kitsune",
+   "entries": [
+    {
+     "node": "despues",
+     "if": [
+      {
+       "contract": "radio-assaya",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "decidir",
+     "if": [
+      {
+       "contract": "radio-assaya",
+       "state": "active"
+      },
+      {
+       "objective": "radio-assaya-indagar",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "en-marcha",
+     "if": [
+      {
+       "contract": "radio-assaya",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.assaya-kitsune.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.02-secundarias.assaya-kitsune.inicio.aceptar",
+       "goto": "en-marcha",
+       "if": [
+        {
+         "contract": "radio-assaya",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "radio-assaya"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-kitsune.inicio.salir"
+      }
+     ]
+    },
+    "en-marcha": {
+     "text": "m.02-secundarias.assaya-kitsune.en-marcha",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.02-secundarias.assaya-kitsune.en-marcha.volver",
+       "goto": "inicio"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-kitsune.en-marcha.salir"
+      }
+     ]
+    },
+    "decidir": {
+     "text": "m.02-secundarias.assaya-kitsune.decidir",
+     "options": [
+      {
+       "id": "escenario",
+       "text": "m.02-secundarias.assaya-kitsune.decidir.escenario",
+       "goto": "escenario",
+       "if": [
+        {
+         "contract": "radio-assaya",
+         "state": "active"
+        },
+        {
+         "objective": "radio-assaya-indagar",
+         "done": true
+        },
+        {
+         "flag": "radio-assaya-assaya-consola",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "radio-assaya-resolver"
+        },
+        {
+         "flag": "radio-assaya-final",
+         "value": "escenario"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "radio-assaya",
+         "outcome": "escenario"
+        }
+       ]
+      },
+      {
+       "id": "casa",
+       "text": "m.02-secundarias.assaya-kitsune.decidir.casa",
+       "goto": "casa",
+       "if": [
+        {
+         "contract": "radio-assaya",
+         "state": "active"
+        },
+        {
+         "objective": "radio-assaya-indagar",
+         "done": true
+        },
+        {
+         "flag": "radio-assaya-assaya-banda",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "radio-assaya-resolver"
+        },
+        {
+         "flag": "radio-assaya-final",
+         "value": "casa"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "radio-assaya",
+         "outcome": "casa"
+        }
+       ]
+      },
+      {
+       "id": "considerar",
+       "text": "m.02-secundarias.assaya-kitsune.decidir.considerar",
+       "goto": "en-marcha"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-kitsune.decidir.salir"
+      }
+     ]
+    },
+    "escenario": {
+     "text": "m.02-secundarias.assaya-kitsune.escenario",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-kitsune.escenario.salir"
+      }
+     ]
+    },
+    "casa": {
+     "text": "m.02-secundarias.assaya-kitsune.casa",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-kitsune.casa.salir"
+      }
+     ]
+    },
+    "despues": {
+     "text": "m.02-secundarias.assaya-kitsune.despues",
+     "options": [
+      {
+       "id": "escenario",
+       "text": "m.02-secundarias.assaya-kitsune.despues.escenario",
+       "goto": "escenario",
+       "if": [
+        {
+         "flag": "radio-assaya-final",
+         "is": "escenario"
+        }
+       ]
+      },
+      {
+       "id": "casa",
+       "text": "m.02-secundarias.assaya-kitsune.despues.casa",
+       "goto": "casa",
+       "if": [
+        {
+         "flag": "radio-assaya-final",
+         "is": "casa"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-kitsune.despues.salir"
+      }
+     ]
+    }
+   }
+  },
+  "assaya-consola": {
+   "speaker": "assaya-consola",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "radio-assaya",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.assaya-consola.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-consola.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.assaya-consola.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.assaya-consola.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "radio-assaya",
+         "state": "active"
+        },
+        {
+         "objective": "radio-assaya-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "radio-assaya-assaya-consola",
+         "value": true
+        },
+        {
+         "completeObjective": "radio-assaya-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.assaya-consola.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "radio-assaya",
+         "state": "active"
+        },
+        {
+         "objective": "radio-assaya-indagar",
+         "done": true
+        },
+        {
+         "flag": "radio-assaya-assaya-consola",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "radio-assaya-assaya-consola",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.assaya-consola.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "radio-assaya-assaya-consola",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-consola.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.assaya-consola.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-consola.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "assaya-banda": {
+   "speaker": "assaya-banda",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "radio-assaya",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.assaya-banda.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-banda.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.assaya-banda.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.assaya-banda.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "radio-assaya",
+         "state": "active"
+        },
+        {
+         "objective": "radio-assaya-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "radio-assaya-assaya-banda",
+         "value": true
+        },
+        {
+         "completeObjective": "radio-assaya-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.assaya-banda.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "radio-assaya",
+         "state": "active"
+        },
+        {
+         "objective": "radio-assaya-indagar",
+         "done": true
+        },
+        {
+         "flag": "radio-assaya-assaya-banda",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "radio-assaya-assaya-banda",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.assaya-banda.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "radio-assaya-assaya-banda",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-banda.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.assaya-banda.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.assaya-banda.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "vera-alameda": {
+   "speaker": "vera-alameda",
+   "entries": [
+    {
+     "node": "despues",
+     "if": [
+      {
+       "contract": "puerta-agua",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "decidir",
+     "if": [
+      {
+       "contract": "puerta-agua",
+       "state": "active"
+      },
+      {
+       "objective": "puerta-agua-indagar",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "en-marcha",
+     "if": [
+      {
+       "contract": "puerta-agua",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.vera-alameda.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.02-secundarias.vera-alameda.inicio.aceptar",
+       "goto": "en-marcha",
+       "if": [
+        {
+         "contract": "puerta-agua",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "puerta-agua"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.vera-alameda.inicio.salir"
+      }
+     ]
+    },
+    "en-marcha": {
+     "text": "m.02-secundarias.vera-alameda.en-marcha",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.02-secundarias.vera-alameda.en-marcha.volver",
+       "goto": "inicio"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.vera-alameda.en-marcha.salir"
+      }
+     ]
+    },
+    "decidir": {
+     "text": "m.02-secundarias.vera-alameda.decidir",
+     "options": [
+      {
+       "id": "peritaje",
+       "text": "m.02-secundarias.vera-alameda.decidir.peritaje",
+       "goto": "peritaje",
+       "if": [
+        {
+         "contract": "puerta-agua",
+         "state": "active"
+        },
+        {
+         "objective": "puerta-agua-indagar",
+         "done": true
+        },
+        {
+         "flag": "puerta-agua-agua-marcas",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "puerta-agua-resolver"
+        },
+        {
+         "flag": "puerta-agua-final",
+         "value": "peritaje"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "puerta-agua",
+         "outcome": "peritaje"
+        }
+       ]
+      },
+      {
+       "id": "compuerta",
+       "text": "m.02-secundarias.vera-alameda.decidir.compuerta",
+       "goto": "compuerta",
+       "if": [
+        {
+         "contract": "puerta-agua",
+         "state": "active"
+        },
+        {
+         "objective": "puerta-agua-indagar",
+         "done": true
+        },
+        {
+         "flag": "puerta-agua-agua-turno",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "puerta-agua-resolver"
+        },
+        {
+         "flag": "puerta-agua-final",
+         "value": "compuerta"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "puerta-agua",
+         "outcome": "compuerta"
+        }
+       ]
+      },
+      {
+       "id": "considerar",
+       "text": "m.02-secundarias.vera-alameda.decidir.considerar",
+       "goto": "en-marcha"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.vera-alameda.decidir.salir"
+      }
+     ]
+    },
+    "peritaje": {
+     "text": "m.02-secundarias.vera-alameda.peritaje",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.vera-alameda.peritaje.salir"
+      }
+     ]
+    },
+    "compuerta": {
+     "text": "m.02-secundarias.vera-alameda.compuerta",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.vera-alameda.compuerta.salir"
+      }
+     ]
+    },
+    "despues": {
+     "text": "m.02-secundarias.vera-alameda.despues",
+     "options": [
+      {
+       "id": "peritaje",
+       "text": "m.02-secundarias.vera-alameda.despues.peritaje",
+       "goto": "peritaje",
+       "if": [
+        {
+         "flag": "puerta-agua-final",
+         "is": "peritaje"
+        }
+       ]
+      },
+      {
+       "id": "compuerta",
+       "text": "m.02-secundarias.vera-alameda.despues.compuerta",
+       "goto": "compuerta",
+       "if": [
+        {
+         "flag": "puerta-agua-final",
+         "is": "compuerta"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.vera-alameda.despues.salir"
+      }
+     ]
+    }
+   }
+  },
+  "agua-marcas": {
+   "speaker": "agua-marcas",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "puerta-agua",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.agua-marcas.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.agua-marcas.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.agua-marcas.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.agua-marcas.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "puerta-agua",
+         "state": "active"
+        },
+        {
+         "objective": "puerta-agua-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "puerta-agua-agua-marcas",
+         "value": true
+        },
+        {
+         "completeObjective": "puerta-agua-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.agua-marcas.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "puerta-agua",
+         "state": "active"
+        },
+        {
+         "objective": "puerta-agua-indagar",
+         "done": true
+        },
+        {
+         "flag": "puerta-agua-agua-marcas",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "puerta-agua-agua-marcas",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.agua-marcas.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "puerta-agua-agua-marcas",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.agua-marcas.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.agua-marcas.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.agua-marcas.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "agua-turno": {
+   "speaker": "agua-turno",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "puerta-agua",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.agua-turno.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.agua-turno.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.agua-turno.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.agua-turno.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "puerta-agua",
+         "state": "active"
+        },
+        {
+         "objective": "puerta-agua-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "puerta-agua-agua-turno",
+         "value": true
+        },
+        {
+         "completeObjective": "puerta-agua-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.agua-turno.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "puerta-agua",
+         "state": "active"
+        },
+        {
+         "objective": "puerta-agua-indagar",
+         "done": true
+        },
+        {
+         "flag": "puerta-agua-agua-turno",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "puerta-agua-agua-turno",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.agua-turno.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "puerta-agua-agua-turno",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.agua-turno.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.agua-turno.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.agua-turno.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "eli-trenes": {
+   "speaker": "eli-trenes",
+   "entries": [
+    {
+     "node": "despues",
+     "if": [
+      {
+       "contract": "cartas-sin-via",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "decidir",
+     "if": [
+      {
+       "contract": "cartas-sin-via",
+       "state": "active"
+      },
+      {
+       "objective": "cartas-sin-via-indagar",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "en-marcha",
+     "if": [
+      {
+       "contract": "cartas-sin-via",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.eli-trenes.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.02-secundarias.eli-trenes.inicio.aceptar",
+       "goto": "en-marcha",
+       "if": [
+        {
+         "contract": "cartas-sin-via",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "cartas-sin-via"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.eli-trenes.inicio.salir"
+      }
+     ]
+    },
+    "en-marcha": {
+     "text": "m.02-secundarias.eli-trenes.en-marcha",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.02-secundarias.eli-trenes.en-marcha.volver",
+       "goto": "inicio"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.eli-trenes.en-marcha.salir"
+      }
+     ]
+    },
+    "decidir": {
+     "text": "m.02-secundarias.eli-trenes.decidir",
+     "options": [
+      {
+       "id": "puerta",
+       "text": "m.02-secundarias.eli-trenes.decidir.puerta",
+       "goto": "puerta",
+       "if": [
+        {
+         "contract": "cartas-sin-via",
+         "state": "active"
+        },
+        {
+         "objective": "cartas-sin-via-indagar",
+         "done": true
+        },
+        {
+         "flag": "cartas-sin-via-cartas-saca",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cartas-sin-via-resolver"
+        },
+        {
+         "flag": "cartas-sin-via-final",
+         "value": "puerta"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "cartas-sin-via",
+         "outcome": "puerta"
+        }
+       ]
+      },
+      {
+       "id": "mesa",
+       "text": "m.02-secundarias.eli-trenes.decidir.mesa",
+       "goto": "mesa",
+       "if": [
+        {
+         "contract": "cartas-sin-via",
+         "state": "active"
+        },
+        {
+         "objective": "cartas-sin-via-indagar",
+         "done": true
+        },
+        {
+         "flag": "cartas-sin-via-cartas-inspector",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "cartas-sin-via-resolver"
+        },
+        {
+         "flag": "cartas-sin-via-final",
+         "value": "mesa"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "cartas-sin-via",
+         "outcome": "mesa"
+        }
+       ]
+      },
+      {
+       "id": "considerar",
+       "text": "m.02-secundarias.eli-trenes.decidir.considerar",
+       "goto": "en-marcha"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.eli-trenes.decidir.salir"
+      }
+     ]
+    },
+    "puerta": {
+     "text": "m.02-secundarias.eli-trenes.puerta",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.eli-trenes.puerta.salir"
+      }
+     ]
+    },
+    "mesa": {
+     "text": "m.02-secundarias.eli-trenes.mesa",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.eli-trenes.mesa.salir"
+      }
+     ]
+    },
+    "despues": {
+     "text": "m.02-secundarias.eli-trenes.despues",
+     "options": [
+      {
+       "id": "puerta",
+       "text": "m.02-secundarias.eli-trenes.despues.puerta",
+       "goto": "puerta",
+       "if": [
+        {
+         "flag": "cartas-sin-via-final",
+         "is": "puerta"
+        }
+       ]
+      },
+      {
+       "id": "mesa",
+       "text": "m.02-secundarias.eli-trenes.despues.mesa",
+       "goto": "mesa",
+       "if": [
+        {
+         "flag": "cartas-sin-via-final",
+         "is": "mesa"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.eli-trenes.despues.salir"
+      }
+     ]
+    }
+   }
+  },
+  "cartas-saca": {
+   "speaker": "cartas-saca",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cartas-sin-via",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.cartas-saca.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cartas-saca.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.cartas-saca.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.cartas-saca.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cartas-sin-via",
+         "state": "active"
+        },
+        {
+         "objective": "cartas-sin-via-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cartas-sin-via-cartas-saca",
+         "value": true
+        },
+        {
+         "completeObjective": "cartas-sin-via-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.cartas-saca.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cartas-sin-via",
+         "state": "active"
+        },
+        {
+         "objective": "cartas-sin-via-indagar",
+         "done": true
+        },
+        {
+         "flag": "cartas-sin-via-cartas-saca",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cartas-sin-via-cartas-saca",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.cartas-saca.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "cartas-sin-via-cartas-saca",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cartas-saca.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.cartas-saca.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cartas-saca.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "cartas-inspector": {
+   "speaker": "cartas-inspector",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "cartas-sin-via",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.cartas-inspector.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cartas-inspector.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.cartas-inspector.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.cartas-inspector.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cartas-sin-via",
+         "state": "active"
+        },
+        {
+         "objective": "cartas-sin-via-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cartas-sin-via-cartas-inspector",
+         "value": true
+        },
+        {
+         "completeObjective": "cartas-sin-via-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.cartas-inspector.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "cartas-sin-via",
+         "state": "active"
+        },
+        {
+         "objective": "cartas-sin-via-indagar",
+         "done": true
+        },
+        {
+         "flag": "cartas-sin-via-cartas-inspector",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "cartas-sin-via-cartas-inspector",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.cartas-inspector.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "cartas-sin-via-cartas-inspector",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cartas-inspector.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.cartas-inspector.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.cartas-inspector.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "jan-astillero": {
+   "speaker": "jan-astillero",
+   "entries": [
+    {
+     "node": "despues",
+     "if": [
+      {
+       "contract": "taller-domingo",
+       "state": "completed"
+      }
+     ]
+    },
+    {
+     "node": "decidir",
+     "if": [
+      {
+       "contract": "taller-domingo",
+       "state": "active"
+      },
+      {
+       "objective": "taller-domingo-indagar",
+       "done": true
+      }
+     ]
+    },
+    {
+     "node": "en-marcha",
+     "if": [
+      {
+       "contract": "taller-domingo",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.jan-astillero.inicio",
+     "options": [
+      {
+       "id": "aceptar",
+       "text": "m.02-secundarias.jan-astillero.inicio.aceptar",
+       "goto": "en-marcha",
+       "if": [
+        {
+         "contract": "taller-domingo",
+         "state": "none"
+        }
+       ],
+       "effects": [
+        {
+         "acceptContract": "taller-domingo"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.jan-astillero.inicio.salir"
+      }
+     ]
+    },
+    "en-marcha": {
+     "text": "m.02-secundarias.jan-astillero.en-marcha",
+     "options": [
+      {
+       "id": "volver",
+       "text": "m.02-secundarias.jan-astillero.en-marcha.volver",
+       "goto": "inicio"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.jan-astillero.en-marcha.salir"
+      }
+     ]
+    },
+    "decidir": {
+     "text": "m.02-secundarias.jan-astillero.decidir",
+     "options": [
+      {
+       "id": "nave",
+       "text": "m.02-secundarias.jan-astillero.decidir.nave",
+       "goto": "nave",
+       "if": [
+        {
+         "contract": "taller-domingo",
+         "state": "active"
+        },
+        {
+         "objective": "taller-domingo-indagar",
+         "done": true
+        },
+        {
+         "flag": "taller-domingo-taller-etiqueta",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "taller-domingo-resolver"
+        },
+        {
+         "flag": "taller-domingo-final",
+         "value": "nave"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "taller-domingo",
+         "outcome": "nave"
+        }
+       ]
+      },
+      {
+       "id": "local",
+       "text": "m.02-secundarias.jan-astillero.decidir.local",
+       "goto": "local",
+       "if": [
+        {
+         "contract": "taller-domingo",
+         "state": "active"
+        },
+        {
+         "objective": "taller-domingo-indagar",
+         "done": true
+        },
+        {
+         "flag": "taller-domingo-taller-vecino",
+         "is": true
+        }
+       ],
+       "effects": [
+        {
+         "completeObjective": "taller-domingo-resolver"
+        },
+        {
+         "flag": "taller-domingo-final",
+         "value": "local"
+        },
+        {
+         "xp": 30
+        },
+        {
+         "completeContract": "taller-domingo",
+         "outcome": "local"
+        }
+       ]
+      },
+      {
+       "id": "considerar",
+       "text": "m.02-secundarias.jan-astillero.decidir.considerar",
+       "goto": "en-marcha"
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.jan-astillero.decidir.salir"
+      }
+     ]
+    },
+    "nave": {
+     "text": "m.02-secundarias.jan-astillero.nave",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.jan-astillero.nave.salir"
+      }
+     ]
+    },
+    "local": {
+     "text": "m.02-secundarias.jan-astillero.local",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.jan-astillero.local.salir"
+      }
+     ]
+    },
+    "despues": {
+     "text": "m.02-secundarias.jan-astillero.despues",
+     "options": [
+      {
+       "id": "nave",
+       "text": "m.02-secundarias.jan-astillero.despues.nave",
+       "goto": "nave",
+       "if": [
+        {
+         "flag": "taller-domingo-final",
+         "is": "nave"
+        }
+       ]
+      },
+      {
+       "id": "local",
+       "text": "m.02-secundarias.jan-astillero.despues.local",
+       "goto": "local",
+       "if": [
+        {
+         "flag": "taller-domingo-final",
+         "is": "local"
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.jan-astillero.despues.salir"
+      }
+     ]
+    }
+   }
+  },
+  "taller-etiqueta": {
+   "speaker": "taller-etiqueta",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "taller-domingo",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.taller-etiqueta.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.taller-etiqueta.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.taller-etiqueta.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.taller-etiqueta.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "taller-domingo",
+         "state": "active"
+        },
+        {
+         "objective": "taller-domingo-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "taller-domingo-taller-etiqueta",
+         "value": true
+        },
+        {
+         "completeObjective": "taller-domingo-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.taller-etiqueta.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "taller-domingo",
+         "state": "active"
+        },
+        {
+         "objective": "taller-domingo-indagar",
+         "done": true
+        },
+        {
+         "flag": "taller-domingo-taller-etiqueta",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "taller-domingo-taller-etiqueta",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.taller-etiqueta.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "taller-domingo-taller-etiqueta",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.taller-etiqueta.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.taller-etiqueta.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.taller-etiqueta.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "taller-vecino": {
+   "speaker": "taller-vecino",
+   "entries": [
+    {
+     "node": "activa",
+     "if": [
+      {
+       "contract": "taller-domingo",
+       "state": "active"
+      }
+     ]
+    },
+    {
+     "node": "inicio"
+    }
+   ],
+   "nodes": {
+    "inicio": {
+     "text": "m.02-secundarias.taller-vecino.inicio",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.taller-vecino.inicio.salir"
+      }
+     ]
+    },
+    "activa": {
+     "text": "m.02-secundarias.taller-vecino.activa",
+     "options": [
+      {
+       "id": "leer",
+       "text": "m.02-secundarias.taller-vecino.activa.leer",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "taller-domingo",
+         "state": "active"
+        },
+        {
+         "objective": "taller-domingo-indagar",
+         "done": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "taller-domingo-taller-vecino",
+         "value": true
+        },
+        {
+         "completeObjective": "taller-domingo-indagar"
+        }
+       ]
+      },
+      {
+       "id": "contrastar",
+       "text": "m.02-secundarias.taller-vecino.activa.contrastar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "contract": "taller-domingo",
+         "state": "active"
+        },
+        {
+         "objective": "taller-domingo-indagar",
+         "done": true
+        },
+        {
+         "flag": "taller-domingo-taller-vecino",
+         "is": false
+        }
+       ],
+       "effects": [
+        {
+         "flag": "taller-domingo-taller-vecino",
+         "value": true
+        }
+       ]
+      },
+      {
+       "id": "preguntar",
+       "text": "m.02-secundarias.taller-vecino.activa.preguntar",
+       "goto": "hallazgo",
+       "if": [
+        {
+         "flag": "taller-domingo-taller-vecino",
+         "is": true
+        }
+       ]
+      },
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.taller-vecino.activa.salir"
+      }
+     ]
+    },
+    "hallazgo": {
+     "text": "m.02-secundarias.taller-vecino.hallazgo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.taller-vecino.hallazgo.salir"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "contacts": [
+  {
+   "id": "alba-voz",
+   "name": "Alba Ferreiro",
+   "title": "Viuda de la Línea 6",
+   "kind": "npc",
+   "dialogue": "alba-voz",
+   "zone": "bar-ultima-luz",
+   "at": [
+    5,
+    9
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "cinta-taquilla",
+   "name": "Taquilla de objetos perdidos",
+   "title": "Archivo de la Línea 6",
+   "kind": "crates",
+   "dialogue": "cinta-taquilla",
+   "zone": "vertice",
+   "at": [
+    94,
+    175
+   ]
+  },
+  {
+   "id": "cinta-ensayo",
+   "name": "Nico Palés",
+   "title": "Locutor de estación jubilado",
+   "kind": "npc",
+   "dialogue": "cinta-ensayo",
+   "zone": "bar-ultima-luz",
+   "at": [
+    8,
+    3
+   ]
+  },
+  {
+   "id": "nuri-cocina",
+   "name": "Nuri Bao",
+   "title": "Cocina nocturna",
+   "kind": "npc",
+   "dialogue": "nuri-cocina",
+   "zone": "bar-rele",
+   "at": [
+    7,
+    7
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "olla-tratos",
+   "name": "Cuaderno de turnos de cocina",
+   "title": "Notas de Nuri",
+   "kind": "terminal",
+   "dialogue": "olla-tratos",
+   "zone": "bar-rele",
+   "at": [
+    5,
+    3
+   ]
+  },
+  {
+   "id": "olla-vecinas",
+   "name": "Sonia Cifuentes",
+   "title": "Frutera de Lumen",
+   "kind": "npc",
+   "dialogue": "olla-vecinas",
+   "zone": "vertice",
+   "at": [
+    34,
+    165
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "assaya-kitsune",
+   "name": "Assaya Neri",
+   "title": "Cantante del Kitsune",
+   "kind": "npc",
+   "dialogue": "assaya-kitsune",
+   "zone": "club-kitsune-int",
+   "at": [
+    5,
+    7
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "assaya-consola",
+   "name": "Consola de sonido",
+   "title": "Toma 02",
+   "kind": "terminal",
+   "dialogue": "assaya-consola",
+   "zone": "club-kitsune-int",
+   "at": [
+    9,
+    7
+   ]
+  },
+  {
+   "id": "assaya-banda",
+   "name": "Noé Pardo",
+   "title": "Técnico del club",
+   "kind": "npc",
+   "dialogue": "assaya-banda",
+   "zone": "club-kitsune-int",
+   "at": [
+    6,
+    3
+   ]
+  },
+  {
+   "id": "vera-alameda",
+   "name": "Vera Palacios",
+   "title": "Ingeniera de la asociación residencial",
+   "kind": "npc",
+   "dialogue": "vera-alameda",
+   "zone": "vertice",
+   "at": [
+    193,
+    466
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "agua-marcas",
+   "name": "Marcas sobre el contador",
+   "title": "Bajo inundado",
+   "kind": "terminal",
+   "dialogue": "agua-marcas",
+   "zone": "vertice",
+   "at": [
+    190,
+    467
+   ]
+  },
+  {
+   "id": "agua-turno",
+   "name": "Héctor Mena",
+   "title": "Mantenimiento de Alameda",
+   "kind": "npc",
+   "dialogue": "agua-turno",
+   "zone": "vertice",
+   "at": [
+    221,
+    448
+   ]
+  },
+  {
+   "id": "eli-trenes",
+   "name": "Eli Ventura",
+   "title": "Antigua revisora",
+   "kind": "npc",
+   "dialogue": "eli-trenes",
+   "zone": "vertice",
+   "at": [
+    508,
+    284
+   ],
+   "body": "femenino"
+  },
+  {
+   "id": "cartas-saca",
+   "name": "Saca de correspondencia",
+   "title": "Andén de equipajes",
+   "kind": "crates",
+   "dialogue": "cartas-saca",
+   "zone": "vertice",
+   "at": [
+    549,
+    285
+   ]
+  },
+  {
+   "id": "cartas-inspector",
+   "name": "Mateo Linde",
+   "title": "Antiguo inspector ferroviario",
+   "kind": "npc",
+   "dialogue": "cartas-inspector",
+   "zone": "vertice",
+   "at": [
+    477,
+    289
+   ]
+  },
+  {
+   "id": "jan-astillero",
+   "name": "Jan Quiles",
+   "title": "Soldador de Astilleros",
+   "kind": "npc",
+   "dialogue": "jan-astillero",
+   "zone": "vertice",
+   "at": [
+    494,
+    466
+   ]
+  },
+  {
+   "id": "taller-etiqueta",
+   "name": "Manual del extractor",
+   "title": "Hoja de mantenimiento",
+   "kind": "terminal",
+   "dialogue": "taller-etiqueta",
+   "zone": "vertice",
+   "at": [
+    493,
+    433
+   ]
+  },
+  {
+   "id": "taller-vecino",
+   "name": "Nando Umbral",
+   "title": "Conserje de Astilleros",
+   "kind": "npc",
+   "dialogue": "taller-vecino",
+   "zone": "vertice",
+   "at": [
+    523,
+    448
+   ]
+  }
+ ],
+ "extend": {
+  "reme": {
+   "options": {
+    "tips": [
+     {
+      "id": "barrio-puerta-agua",
+      "text": "m.02-secundarias.reme.tips.barrio-puerta-agua",
+      "goto": "barrio-puerta-agua",
+      "if": [
+       {
+        "contract": "puerta-agua",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:puerta-agua",
+        "value": true
+       }
+      ]
+     }
+    ],
+    "root": [
+     {
+      "id": "barrio-cinta-espera",
+      "text": "m.02-secundarias.reme.root.barrio-cinta-espera",
+      "goto": "barrio-cinta-espera",
+      "if": [
+       {
+        "contract": "cinta-espera",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:cinta-espera",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "barrio-puerta-agua": {
+     "text": "m.02-secundarias.reme.barrio-puerta-agua",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.reme.barrio-puerta-agua.salir"
+      }
+     ]
+    },
+    "barrio-cinta-espera": {
+     "text": "m.02-secundarias.reme.barrio-cinta-espera",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.reme.barrio-cinta-espera.salir"
+      }
+     ]
+    }
+   }
+  },
+  "sato": {
+   "options": {
+    "root": [
+     {
+      "id": "barrio-ultima-olla",
+      "text": "m.02-secundarias.sato.root.barrio-ultima-olla",
+      "goto": "barrio-ultima-olla",
+      "if": [
+       {
+        "contract": "ultima-olla",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:ultima-olla",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "barrio-ultima-olla": {
+     "text": "m.02-secundarias.sato.barrio-ultima-olla",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.sato.barrio-ultima-olla.salir"
+      }
+     ]
+    }
+   }
+  },
+  "tomas": {
+   "options": {
+    "idle": [
+     {
+      "id": "barrio-taller-domingo",
+      "text": "m.02-secundarias.tomas.idle.barrio-taller-domingo",
+      "goto": "barrio-taller-domingo",
+      "if": [
+       {
+        "contract": "taller-domingo",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:taller-domingo",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "barrio-taller-domingo": {
+     "text": "m.02-secundarias.tomas.barrio-taller-domingo",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.tomas.barrio-taller-domingo.salir"
+      }
+     ]
+    }
+   }
+  },
+  "nadia": {
+   "options": {
+    "closed": [
+     {
+      "id": "barrio-cartas-sin-via",
+      "text": "m.02-secundarias.nadia.closed.barrio-cartas-sin-via",
+      "goto": "barrio-cartas-sin-via",
+      "if": [
+       {
+        "contract": "cartas-sin-via",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:cartas-sin-via",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "barrio-cartas-sin-via": {
+     "text": "m.02-secundarias.nadia.barrio-cartas-sin-via",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.nadia.barrio-cartas-sin-via.salir"
+      }
+     ]
+    }
+   }
+  },
+  "lin": {
+   "options": {
+    "lit": [
+     {
+      "id": "barrio-radio-assaya",
+      "text": "m.02-secundarias.lin.lit.barrio-radio-assaya",
+      "goto": "barrio-radio-assaya",
+      "if": [
+       {
+        "contract": "radio-assaya",
+        "state": "none"
+       }
+      ],
+      "effects": [
+       {
+        "flag": "pista:radio-assaya",
+        "value": true
+       }
+      ]
+     }
+    ]
+   },
+   "nodes": {
+    "barrio-radio-assaya": {
+     "text": "m.02-secundarias.lin.barrio-radio-assaya",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.02-secundarias.lin.barrio-radio-assaya.salir"
+      }
+     ]
+    }
+   }
+  }
+ }
+}

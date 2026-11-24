@@ -321,12 +321,17 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   };
   const journalPanel = () => {
     const u = st.sheet?.underworld;
+    const category = { principal: 'Principal', secundaria: 'Secundaria', terciaria: 'Encargo breve', evento: 'Suceso' };
+    const status = { lead: 'Pista', active: 'En curso', completed: 'Completada', abandoned: 'Abandonada' };
     panel('journal-panel', 'Diario de encargos',
       ...(u && (u.rep > 0 || u.membership) ? [h('h3', {}, 'Bajos fondos'), undergroundStanding(u)] : []),
       ...(u?.job ? [jobBrief(u.job, net)] : []),
     ...(st.journal.length ? st.journal.map((j) => h('div', { class: 'choice', style: { marginBottom: '8px' } },
-      h('h4', {}, `${j.title} — ${j.state === 'active' ? 'activo' : j.state === 'completed' ? `completado (${j.outcome === 'fixer' ? 'control para Nadia' : 'control para el mercado'})` : 'abandonado'}`),
-      h('p', {}, j.summary), h('p', {}, `Participantes en la instancia compartida: ${j.participants}`),
+      h('h4', {}, j.title, h('span', { class: 'chip' }, `${category[j.category ?? 'principal']} · ${status[j.state]}`)),
+      h('p', {}, j.lead ?? j.summary),
+      j.outcomeText ? h('p', {}, j.outcomeText) : j.outcome === 'fixer' ? h('p', {}, 'Nadia controla el generador.') :
+        j.outcome === 'market' ? h('p', {}, 'La asociación del mercado controla el generador.') : null,
+      j.shared ? h('p', {}, `Participantes: ${j.participants}`) : null,
       h('ul', {}, ...j.objectives.map((o) => h('li', { class: o.done ? 'obj-done' : 'obj-todo' }, `${o.done ? '✔' : '○'} ${o.text}`)))))
       : [h('p', {}, 'Para buscar encargos de la ciudad, habla con Reme en el vestíbulo o con Nadia en el bar El Relé.')]));
     updateDeliveryClock(view.serverTime());

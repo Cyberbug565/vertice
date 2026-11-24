@@ -13,6 +13,7 @@ export interface EffectOutcome {
   objectiveDone: { instanceId: string; objective: string; shared: boolean }[];
   open?: { kind: 'shop' | 'clinic' | 'jobs' | 'bounties' | 'market'; id?: string };
   wanted?: number;
+  missionRide?: string;
 }
 
 export interface OpContext { opId: string; kind: string; dialogId?: string; nodeId?: string; optionId?: string; extra?: Record<string, unknown> }
@@ -72,6 +73,11 @@ export class EffectEngine {
           await q.query(`INSERT INTO character_flags (character_id, key, value, expires_at) VALUES ($1,$2,$3,$4)
                          ON CONFLICT (character_id, key) DO UPDATE SET value = EXCLUDED.value, expires_at = EXCLUDED.expires_at`, [p.charId, e.flag, JSON.stringify(e.value), exp]);
           mem.push(() => p.flags.set(e.flag, { value: e.value, expiresAt: exp ? exp.getTime() : null }));
+          if (e.flag.startsWith('pista:')) {
+            out.journalChanged = true;
+            const mission = this.c.contracts.find(k => k.id === e.flag.slice('pista:'.length));
+            if (mission && !p.flags.has(e.flag)) out.notices.push(`Nueva pista en el diario: ${t(this.c, mission.title)}`);
+          }
         } else if ('rep' in e) {
           rep.set(e.rep, (rep.get(e.rep) ?? 0) + e.delta);
           await q.query(`INSERT INTO reputation (character_id, faction_id, value) VALUES ($1,$2,$3)
@@ -140,7 +146,9 @@ export class EffectEngine {
           await q.query("UPDATE contract_progress SET state='completed', outcome=$3, updated_at=now() WHERE character_id=$1 AND instance_id=$2", [p.charId, cp.instanceId, e.outcome]);
           cp.state = 'completed'; cp.outcome = e.outcome;
           decisionContract = { id: cp.contractId, version: cp.version, instance: cp.instanceId };
-          out.completed = { contract: cp.contractId, title: t(this.c, this.c.contracts.find((k) => k.id === cp.contractId)!.title), outcome: e.outcome };
+          const definition = this.c.contracts.find(k => k.id === cp.contractId)!;
+          out.completed = { contract: cp.contractId, title: t(this.c, definition.title), outcome: e.outcome };
+          if (definition.outcomes[e.outcome]) out.lines.push(t(this.c, definition.outcomes[e.outcome]));
           out.journalChanged = true;
         } else if ('task' in e) {
           out.startTasks.push(e.task);
@@ -155,7 +163,7 @@ export class EffectEngine {
           out.notices.push(t(this.c, e.notice));
         } else if ('contribute' in e) {
           // Contribución verificable sin completar el objetivo (p. ej. el Netrunner que consigue la prueba).
-          const cp = [...contracts.values()].find((x) => x.state === 'active');
+          const cp = [...contracts.values()].find(x => x.state === 'active' && this.c.contracts.some(k => k.id === x.contractId && k.objectives.some(o => o.id === e.contribute)));
           if (cp) {
             await q.query(`UPDATE contract_instances SET contributors = jsonb_set(contributors, $2, COALESCE(contributors->$3, '[]'::jsonb) || $4::jsonb) WHERE id = $1`,
               [cp.instanceId, `{${e.contribute}}`, e.contribute, JSON.stringify([p.charId])]);
@@ -164,6 +172,8 @@ export class EffectEngine {
           }
         } else if ('open' in e) {
           out.open = { kind: e.open, id: e.id };
+        } else if ('missionRide' in e) {
+          out.missionRide = e.missionRide;
         } else if ('wanted' in e) {
           out.wanted = (out.wanted ?? 0) + e.wanted;
         }

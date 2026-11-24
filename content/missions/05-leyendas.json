@@ -1,0 +1,132 @@
+{
+ "locale": {
+  "m.05-leyendas.matasanos-iruka.root.rumor-iris": "¿A quién buscarías si una clínica comprara tus recuerdos?",
+  "m.05-leyendas.matasanos-iruka.rumor-iris": "En El Arrabal hay un local que se llama Nodo del Vacío. Busca la puerta sin rótulo. La mujer del otro lado se hace llamar Iris Fantasma. No le digas que la mando yo. Dile que quieres aprender a salir de un recuerdo antes de entrar en él.",
+  "m.05-leyendas.matasanos-iruka.rumor-iris.umbral": "¿Qué hace falta para que me reciba?",
+  "m.05-leyendas.matasanos-iruka.rumor-iris.salir": "Gracias. Iré a buscarlo.",
+  "m.05-leyendas.matasanos-iruka.rumor-iris-umbral": "Iris abre a quien tenga el respaldo de la Red Bisagra o un rango de red de al menos 3. Si insiste en dejarte fuera, ten paciencia. A ella también la dejaron al otro lado de una puerta.",
+  "m.05-leyendas.matasanos-iruka.rumor-iris-umbral.salir": "Entendido.",
+  "m.05-leyendas.reme.tips.rumor-sable": "¿Quién conoce el trabajo de las recompensas?",
+  "m.05-leyendas.reme.rumor-sable": "Sable duerme en la habitación del fondo del Motel Atardecer. Si encuentras dos tazas fuera de la puerta, no bebas de la que está boca abajo. Era de su compañero y se la pone por costumbre.",
+  "m.05-leyendas.reme.rumor-sable.umbral": "¿Qué hace falta para que me reciba?",
+  "m.05-leyendas.reme.rumor-sable.salir": "Gracias. Iré a buscarlo.",
+  "m.05-leyendas.reme.rumor-sable-umbral": "Solo trabaja con gente con reputación callejera 20 o nivel 8. En el tablón hay recompensas para hacerte un nombre; fíjate en qué pide la persona que la colgó.",
+  "m.05-leyendas.reme.rumor-sable-umbral.salir": "Entendido.",
+  "m.05-leyendas.tomas.idle.rumor-teo": "¿Sabes quién sigue reparando coches en el Descampado Norte?",
+  "m.05-leyendas.tomas.rumor-teo": "Teo Cometa. Dale un cable, dos pinzas y una tarde, y te devuelve algo que anda. Su garaje está dentro de la base de los Saqueadores en el Descampado Norte. Antes conseguía recambios con una llamada; ahora casi todos le cuelgan.",
+  "m.05-leyendas.tomas.rumor-teo.umbral": "¿Qué hace falta para que me reciba?",
+  "m.05-leyendas.tomas.rumor-teo.salir": "Gracias. Iré a buscarlo.",
+  "m.05-leyendas.tomas.rumor-teo-umbral": "Necesitas que te conozcan los Saqueadores (reputación 20) o que hablen de ti en la calle (40). Si no, no insistas en la verja. En el taller conocían bien la diferencia entre una persona que quiere trabajar y una que viene a cobrar una deuda.",
+  "m.05-leyendas.tomas.rumor-teo-umbral.salir": "Entendido."
+ },
+ "extend": {
+  "matasanos-iruka": {
+   "options": {
+    "root": [
+     {
+      "id": "rumor-iris",
+      "text": "m.05-leyendas.matasanos-iruka.root.rumor-iris",
+      "goto": "rumor-iris"
+     }
+    ]
+   },
+   "nodes": {
+    "rumor-iris": {
+     "text": "m.05-leyendas.matasanos-iruka.rumor-iris",
+     "options": [
+      {
+       "id": "umbral",
+       "text": "m.05-leyendas.matasanos-iruka.rumor-iris.umbral",
+       "goto": "rumor-iris-umbral"
+      },
+      {
+       "id": "salir",
+       "text": "m.05-leyendas.matasanos-iruka.rumor-iris.salir"
+      }
+     ]
+    },
+    "rumor-iris-umbral": {
+     "text": "m.05-leyendas.matasanos-iruka.rumor-iris-umbral",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.05-leyendas.matasanos-iruka.rumor-iris-umbral.salir"
+      }
+     ]
+    }
+   }
+  },
+  "reme": {
+   "options": {
+    "tips": [
+     {
+      "id": "rumor-sable",
+      "text": "m.05-leyendas.reme.tips.rumor-sable",
+      "goto": "rumor-sable"
+     }
+    ]
+   },
+   "nodes": {
+    "rumor-sable": {
+     "text": "m.05-leyendas.reme.rumor-sable",
+     "options": [
+      {
+       "id": "umbral",
+       "text": "m.05-leyendas.reme.rumor-sable.umbral",
+       "goto": "rumor-sable-umbral"
+      },
+      {
+       "id": "salir",
+       "text": "m.05-leyendas.reme.rumor-sable.salir"
+      }
+     ]
+    },
+    "rumor-sable-umbral": {
+     "text": "m.05-leyendas.reme.rumor-sable-umbral",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.05-leyendas.reme.rumor-sable-umbral.salir"
+      }
+     ]
+    }
+   }
+  },
+  "tomas": {
+   "options": {
+    "idle": [
+     {
+      "id": "rumor-teo",
+      "text": "m.05-leyendas.tomas.idle.rumor-teo",
+      "goto": "rumor-teo"
+     }
+    ]
+   },
+   "nodes": {
+    "rumor-teo": {
+     "text": "m.05-leyendas.tomas.rumor-teo",
+     "options": [
+      {
+       "id": "umbral",
+       "text": "m.05-leyendas.tomas.rumor-teo.umbral",
+       "goto": "rumor-teo-umbral"
+      },
+      {
+       "id": "salir",
+       "text": "m.05-leyendas.tomas.rumor-teo.salir"
+      }
+     ]
+    },
+    "rumor-teo-umbral": {
+     "text": "m.05-leyendas.tomas.rumor-teo-umbral",
+     "options": [
+      {
+       "id": "salir",
+       "text": "m.05-leyendas.tomas.rumor-teo-umbral.salir"
+      }
+     ]
+    }
+   }
+  }
+ }
+}
