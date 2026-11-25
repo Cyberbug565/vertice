@@ -39,6 +39,7 @@ legendId?: string;
   respawn?: { zone: string; template: Record<string, unknown> }; hunting?: string; expiresAt?: number;
   pendingAction?: { target: number; action: string; opId: string; part?: import('@vertice/shared').AimZone };
   // ---- v0.4
+  businessSite?: string; businessJob?: string; businessGuard?: string;
   objId?: string; dealer?: string; hiddenDoc?: string; vehicle?: string | null; level?: number; stunUntil?: number; dots?: { until: number; dmg: number; next: number; by?: number }[];
   gaitFlags?:string[]; buffs?: Record<string, number>; decoyUntil?: number;
   // ---- v0.6

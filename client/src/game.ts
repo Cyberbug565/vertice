@@ -32,7 +32,7 @@ import { closeRecordPanel, recordPanel } from './ui/record';
 const isDance = (m: string) => !['nausea', 'sentado', 'manos-arriba', 'telefono', 'fumar', 'gesto'].includes(m);
 import { armeroRefresh } from './ui/armero';
 import { createSights } from './ui/sights';
-import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, type LifeCtx } from './ui/life';
+import { ambarPanel, bountyPanel, businessPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Segura (verde)', public: 'Vigilada (amarilla)', disputed: 'Peligrosa (roja)', lawless: 'Sin ley (negra)' };
 const STANCES = [
@@ -332,7 +332,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const prisonBadge=h('button',{class:'btn small penal-badge',hidden:true,onclick:()=>net.send({t:'penal',action:'estado',opId:newOpId()})},'Expediente de Las Salinas');
   $ui().append(prisonBadge);
   let casino:ReturnType<typeof casinoPanel>|undefined;
-  const closePanels = () => { closeFittingRoom(); closeDanceMenus(); for (const id of ['casino-panel', 'penal-panel', 'bank-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
+  const closePanels = () => { closeFittingRoom(); closeDanceMenus(); for (const id of ['casino-panel', 'penal-panel', 'bank-panel', 'business-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'target-menu', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'underworld-panel']) document.getElementById(id)?.remove(); };
   const toggleSleep = () => net.send({ t: st.sheet?.sleeping ? 'wake' : 'sleep' } as any);
   const panel = (id: string, title: string, ...body: (Node | string)[]) => {
     const was = document.getElementById(id); closePanels(); if (was) return;
@@ -935,8 +935,9 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'market': marketPanel(life, m.view); break;
       case 'jobs': jobsPanel(life, m.view); break;
       case 'clinic': clinicPanel(life, m.view); break;
+      case 'business': businessPanel(life,m.view); break;
       case 'bounties': bountyPanel(life, m.view); break;
-      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'banco') net.send({ t:'bank', action:'view', target:m.view.target, opId:newOpId() }); else if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target, remote: true } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId(), remote: true } as any); else net.send({ t: 'interact', target: m.view.target, remote: true } as any); }); break; }
+      case 'targetMenu': { const e = view.ents.get(m.view.target); const sp = e ? view.world.toGlobal(worldToScreen(e.x, e.y)) : { x: 400, y: 300 }; targetMenu(life, m.view, sp, (id) => { if (id === 'business') net.send({t:'business',target:m.view.target,action:'view',opId:newOpId()}); else if (id === 'banco') net.send({ t:'bank', action:'view', target:m.view.target, opId:newOpId() }); else if (id === 'talk' && e?.s.kind === 'npc' && (e.s.npcType === 'essential' || !e.s.npcType)) net.send({ t: 'interact', target: m.view.target, remote: true } as any); else if (id === 'talk') net.send({ t: 'hostile', target: m.view.target, action: 'talk', opId: newOpId(), remote: true } as any); else net.send({ t: 'interact', target: m.view.target, remote: true } as any); }); break; }
       case 'death': {
         closeFittingRoom();
         net.close();audioScene(null);

@@ -1125,5 +1125,164 @@
   "security": 15,
   "fence": true,
   "taller": true
+ },
+ {
+  "id": "mini-bloque22",
+  "name": "Mini 24 · Bloque 22",
+  "owner": "independiente",
+  "zone": "mini-bloque22-int",
+  "stock": {
+   "barrita-proteica": 30,
+   "agua-filtrada": 32,
+   "cafe-sintetico": 18,
+   "refresco-neon": 13,
+   "venda": 9,
+   "racion-sintetica": 12
+  },
+  "buys": [],
+  "priceMult": 0.96,
+  "security": 9,
+  "business": "conveniencia",
+  "clerk": "Mar Salcedo"
+ },
+ {
+  "id": "via-seis",
+  "name": "Vía 6 · Autoservicio",
+  "owner": "aurora",
+  "zone": "via-seis-int",
+  "stock": {
+   "barrita-proteica": 30,
+   "agua-filtrada": 32,
+   "cafe-sintetico": 18,
+   "refresco-neon": 13,
+   "venda": 9,
+   "racion-sintetica": 12,
+   "bebida-isotonica": 15
+  },
+  "buys": [],
+  "priceMult": 1.04,
+  "security": 12,
+  "business": "conveniencia",
+  "clerk": "Noah Orbe"
+ },
+ {
+  "id": "la-caldera",
+  "name": "La Caldera · Cocina de Forja",
+  "owner": "independiente",
+  "zone": "la-caldera-int",
+  "stock": {
+   "fideos-krill": 24,
+   "sandwich-algas": 20,
+   "ramen-kanal": 20,
+   "agua-filtrada": 24,
+   "cafe-sintetico": 18,
+   "racion-sintetica": 24
+  },
+  "buys": [],
+  "priceMult": 0.92,
+  "security": 11,
+  "business": "comida",
+  "clerk": "Amalia Soto"
+ },
+ {
+  "id": "mesa-anden",
+  "name": "Mesa de Andén",
+  "owner": "aurora",
+  "zone": "mesa-anden-int",
+  "stock": {
+   "fideos-krill": 24,
+   "sandwich-algas": 20,
+   "ramen-kanal": 20,
+   "agua-filtrada": 24,
+   "cafe-sintetico": 18,
+   "sushi-real": 14
+  },
+  "buys": [],
+  "priceMult": 1.13,
+  "security": 16,
+  "business": "comida",
+  "clerk": "Sami Téllez"
+ },
+ {
+  "id": "ultima-prenda",
+  "name": "Empeños Última Prenda",
+  "owner": "independiente",
+  "zone": "ultima-prenda-int",
+  "stock": {
+   "kit-herramientas": 9,
+   "gafas-sol": 8,
+   "reloj-orbita": 4,
+   "colgante-opalo": 3,
+   "anillo-aurea": 2
+  },
+  "buys": [
+   "equipo",
+   "chatarra",
+   "ropa",
+   "herramienta"
+  ],
+  "priceMult": 1.04,
+  "security": 17,
+  "business": "empenos",
+  "clerk": "Vera Durán"
+ },
+ {
+  "id": "tercer-peso",
+  "name": "Empeños Tercer Peso",
+  "owner": "engranajes",
+  "zone": "tercer-peso-int",
+  "stock": {
+   "kit-herramientas": 9,
+   "gafas-sol": 8,
+   "reloj-orbita": 4,
+   "colgante-opalo": 3,
+   "anillo-aurea": 2
+  },
+  "buys": [
+   "equipo",
+   "chatarra",
+   "ropa",
+   "herramienta"
+  ],
+  "priceMult": 0.88,
+  "security": 19,
+  "business": "empenos",
+  "clerk": "Miro Castaño"
+ },
+ {
+  "id": "opalo",
+  "name": "Joyería Ópalo",
+  "owner": "independiente",
+  "zone": "opalo-int",
+  "stock": {
+   "anillo-aurea": 12,
+   "colgante-opalo": 9,
+   "reloj-orbita": 8
+  },
+  "buys": [
+   "equipo"
+  ],
+  "priceMult": 1.15,
+  "security": 23,
+  "business": "joyeria",
+  "clerk": "Lina Sanz"
+ },
+ {
+  "id": "aurea-colinas",
+  "name": "Joyería Áurea",
+  "owner": "okami",
+  "zone": "aurea-colinas-int",
+  "stock": {
+   "anillo-aurea": 12,
+   "colgante-opalo": 9,
+   "reloj-orbita": 8
+  },
+  "buys": [
+   "equipo"
+  ],
+  "priceMult": 1.27,
+  "security": 25,
+  "business": "joyeria",
+  "clerk": "Adri Soler"
  }
 ]

@@ -1,0 +1,121 @@
+{
+ "id": "tercer-peso-int",
+ "name": "Empeños Tercer Peso",
+ "kind": "interior",
+ "width": 13,
+ "height": 11,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#49374d",
+ "safePoint": [
+  11,
+  5
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ],
+  [
+   8,
+   4
+  ],
+  [
+   8,
+   6
+  ],
+  [
+   7,
+   8
+  ]
+ ],
+ "furnished": true,
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#49374d"
+  },
+  {
+   "type": "shelf",
+   "at": [
+    3,
+    8
+   ],
+   "color": "#49374d"
+  },
+  {
+   "type": "locker",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#49374d"
+  },
+  {
+   "type": "desk",
+   "at": [
+    5,
+    2
+   ],
+   "color": "#49374d"
+  },
+  {
+   "type": "crate",
+   "at": [
+    5,
+    8
+   ],
+   "color": "#49374d"
+  },
+  {
+   "type": "screen",
+   "at": [
+    8,
+    1
+   ],
+   "color": "#49374d"
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#49374d"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-tercer-peso",
+   "name": "Salir a la calle",
+   "at": [
+    12,
+    5
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     356,
+     404
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-tercer-peso",
+   "name": "Mostrador de Empeños Tercer Peso",
+   "at": [
+    4,
+    5
+   ],
+   "kind": "shop",
+   "shop": "tercer-peso"
+  }
+ ]
+}

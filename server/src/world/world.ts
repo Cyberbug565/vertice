@@ -29,6 +29,7 @@ import { Legends } from './legends.js';
 import { Mythics } from './mythics.js';
 import { Corpses } from './corpses.js';
 import { Street } from './street.js';
+import { Robberies } from './robberies.js';
 import { Crowds, districtProfile, regionalChrome } from './crowds.js';
 import { Stealth } from './stealth.js';
 import { Admin } from './admin.js';
@@ -101,6 +102,7 @@ export class World {
   readonly stealth: Stealth;
   readonly corpses: Corpses;
   readonly street: Street;
+  readonly robberies: Robberies;
   readonly cityPeople: CityPeople;
   readonly crowds: Crowds;
   readonly admin: Admin;
@@ -135,6 +137,7 @@ export class World {
     this.stealth = new Stealth(this);
     this.corpses = new Corpses(this);
     this.street = new Street(this);
+    this.robberies = new Robberies(this);
     this.cityPeople = new CityPeople(this);
     this.admin = new Admin(this);
     this.nightlife = new Nightlife(this);
@@ -204,6 +207,7 @@ export class World {
     this.underworld.populate();
     if (this.cfg.threats !== false) await this.threats.init(); else this.threats.enabled = false;
     for(const n of this.c.npcs)if(n.resident)this.spawnScheduled(n);
+    await this.robberies.init();
   }
 
   private createCivil(zone: Zone, x: number, y: number, rng: () => number, home?: [number, number], radius?: number) {
@@ -271,6 +275,7 @@ export class World {
       }
       this.cityPeople.add(e,n);
     }
+    this.robberies.registerStaff(e,n);
     return e;
   }
   private populateZone(z: Zone) {
@@ -493,6 +498,7 @@ export class World {
     if (this.tick % 40 === 0) { try { this.property.pushLive(); } catch (err) { console.error('[mercado vivo]', err); } }
     if (this.tick % 20 === 0) { try { this.survival.everySecond(); } catch (err) { console.error('[supervivencia]', err); } this.combat.everySecond().catch((err) => console.error('[combate]', err)); }
     if (this.tick % 20 === 0) this.underworld.everySecond();
+    if (this.tick % 20 === 16) this.robberies.tick();
     if (this.tick % 100 === 17) this.missions.tick();
     if (this.tick % 20 === 14) { try { this.street.everySecond(); } catch (err) { console.error('[calle]', err); } }
     if (this.tick % 20 === 8) { try { this.corpses.everySecond(); } catch (err) { console.error('[cadáveres]', err); } }
@@ -935,8 +941,8 @@ export class World {
     // Derribado: solo puede hablar, mirar paneles y esperar ayuda.
     const passive = ['ping', 'chat', 'market', 'jobs', 'bounties', 'closeDialog', 'hello', 'autonomy', 'factions', 'ambar', 'props', 'marketLive', 'skillUp', 'perkBuy', 'auto', 'penal', 'look', 'dossier', 'loan', 'camera'];
     // Una orden manual del jugador (no del piloto automático, que usa seq 0) le devuelve el control.
-    if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'retreat', 'stop', 'dance'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
-    if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop', 'dance'].includes(m.t)) this.autopilot.takeOver(c);
+    if ('seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'business', 'retreat', 'stop', 'dance'].includes(m.t)) this.intel.cancel(c, 'Objetivo desmarcado: has tomado el control.');
+    if (p.auto.on && 'seq' in m && m.seq > 0 && ['move', 'interact', 'hostile', 'business', 'hack', 'retreat', 'sleep', 'jobStart', 'car', 'stop', 'dance'].includes(m.t)) this.autopilot.takeOver(c);
     if (p.status === 'downed' && !passive.includes(m.t)) { if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás derribado: espera a que alguien te estabilice.' }); return; }
     if (isSick(p.substances) && !passive.includes(m.t) && !['stop', 'menu'].includes(m.t)) {
       if ('seq' in m) this.send(c, { t: 'ack', seq: m.seq, ok: false, reason: 'Estás vomitando. Espera a recuperarte.' });
@@ -991,6 +997,7 @@ export class World {
       case 'autonomy': p.autoNeeds = m.autoNeeds; this.send(c, { t: 'ack', seq: m.seq, ok: true }); this.send(c, { t: 'sheet', sheet: buildSheet(this.c, p) }); return;
       case 'buy': return guarded(m.seq, () => sv.buy(c, m));
       case 'sell': return guarded(m.seq, () => sv.sell(c, m));
+      case 'business': return guarded(m.seq, () => this.robberies.command(c,m.target,m.action,m.opId));
       case 'steal': return guarded(m.seq, () => sv.steal(c, m));
       case 'market': this.send(c, { t: 'market', view: { ...sv.market.view(), nextPolicyInMin: Math.round(((this.c.market.policyEveryGameHours - ((Date.now() / this.c.manifest.cityHourMs + this.cfg.cityHourOffset) % this.c.market.policyEveryGameHours)) * this.c.manifest.cityHourMs) / 60000) } }); this.send(c, { t: 'ack', seq: m.seq, ok: true }); return;
       case 'jobs': return guarded(m.seq, async () => this.send(c, { t: 'jobs', view: await sv.jobsView(c) }));
@@ -1208,6 +1215,15 @@ export class World {
     }
     if (d > reach) { if (retries > 0) this.reapproach(c, target, retries); return false; }
     if (target.marketSite) { this.underworld.open(c, target); return true; }
+    if (target.objKind === 'business-vault') {
+      try { this.robberies.open(c,target); }
+      catch (err) { if (err instanceof GameError) this.send(c,{t:'notice',kind:'warn',text:err.message}); else throw err; }
+      return true;
+    }
+    if (target.npcType && target.businessJob && (target.dead || target.state === 'downed')) {
+      this.send(c,{t:'targetMenu',view:this.combat.menu(c,target)});
+      return true;
+    }
     if (target.legendId) { this.legends.open(c, target.legendId); return true; }
     if (target.kind === 'object' && target.objKind && !target.dialog) { this.objectAction(c, target); return true; }
     if(target.kind==='npc' && this.cityPeople.interact(c,target))return true;

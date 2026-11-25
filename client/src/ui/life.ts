@@ -1,5 +1,5 @@
 // Paneles de la v0.2: tienda, red de mercado, empleos, matasanos, recompensas, menú de acciones y pantalla de muerte.
-import type { AmbarView, BountyView, ClinicOffer, ClinicView, CharacterSheet, DeathSummary, FactionsView, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
+import type { AmbarView, BountyView, BusinessView, ClinicOffer, ClinicView, CharacterSheet, DeathSummary, FactionsView, JobsView, MarketView, ShopView, TargetMenuView } from '@vertice/shared';
 import { RARITY_COLOR, RARITY_LABEL } from '@vertice/shared';
 import { content } from '../content';
 import type { Net } from '../net';
@@ -21,7 +21,7 @@ const CAT: Record<string, string> = { comida: 'Comida', bebida: 'Bebida', medici
 export function showPanel(id: string, title: string, ...body: (Node | string | null)[]) {
   const old = document.getElementById(id);
   const scroll = old?.scrollTop ?? 0;
-  for (const pid of ['journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'search-panel', 'trunk-panel', 'underworld-panel', 'legend-panel', 'cheat-panel', 'armero-panel']) if (pid !== id) document.getElementById(pid)?.remove();
+  for (const pid of ['business-panel', 'journal-panel', 'sheet-panel', 'inv-panel', 'settings-panel', 'map-panel', 'shop-panel', 'market-panel', 'jobs-panel', 'clinic-panel', 'bounty-panel', 'factions-panel', 'ambar-panel', 'world-panel', 'building-panel', 'realty-panel', 'dealer-panel', 'props-panel', 'stash-panel', 'market-live-panel', 'hiring-panel', 'elevator-panel', 'auto-panel', 'search-panel', 'trunk-panel', 'underworld-panel', 'legend-panel', 'cheat-panel', 'armero-panel']) if (pid !== id) document.getElementById(pid)?.remove();
   const p = h('div', { class: 'panel', id, role: 'dialog', 'aria-label': title }, h('div', { class: 'panel-head' }, h('h2', {}, title), h('button', { class: 'btn small close', onclick: () => p.remove() }, 'Cerrar ✕')), ...body.filter(Boolean) as Node[]);
   if (old) old.replaceWith(p); else $ui().append(p);
   p.scrollTop = scroll;
@@ -47,17 +47,40 @@ export function shopPanel(ctx: LifeCtx, v: ShopView) {
         h('button', { class: 'btn small', disabled: it.price > v.money || it.stock < 1, onclick: () => { ctx.net.send({ t: 'buy', shop: v.shop, item: it.item, qty: 1, opId: newOpId() } as any); blip(); } }, 'Comprar'),
         v.bar && it.category === 'bebida' ? h('button', { class: 'btn small primary', disabled: !it.owned, 'data-bar-drink': it.item,
           'aria-label': `Beber ${it.name}`, onclick: () => ctx.net.send({ t: 'useItem', item: it.item, opId: newOpId() }) }, 'Beber') : null,
-        !it.item.startsWith('cyber:') && it.stock > 0 ? h('button', { class: 'btn small danger', title: `Destreza + Sigilo + 1d10 contra la seguridad (${v.security}). Si fallas: paliza y nivel de búsqueda.`, onclick: () => { ask(`Intentar robar ${it.name}. Probabilidad ${pct(it.stealChance)}. Si fallas, el vigilante te hará daño y subirá tu nivel de búsqueda. ¿Seguir?`, () => { ctx.net.send({ t: 'steal', shop: v.shop, item: it.item, opId: newOpId() } as any); }); } }, `Robar ${pct(it.stealChance)}`) : null)));
+        !it.item.startsWith('cyber:') && it.stock > 0 ? h('button', { class: 'btn small danger', title: `Destreza + Sigilo contra seguridad ${v.security}.`, onclick: () => { ask(`Intentar llevarte ${it.name} sin pagar. Probabilidad ${pct(it.stealChance)}. El local puede dar la alarma si te descubre. ¿Seguir?`, () => { ctx.net.send({ t: 'steal', shop: v.shop, item: it.item, opId: newOpId() } as any); }); } }, `Robar ${pct(it.stealChance)}`) : null)));
   });
   const sell = v.sell.length ? h('table', { class: 'sheet' }, ...v.sell.map((s) => h('tr', {}, h('td', {}, s.name), h('td', { class: 'mono' }, `×${s.qty}`), h('td', { class: 'mono' }, `${s.price} €$/u`),
     h('td', {}, h('button', { class: 'btn small', onclick: () => ctx.net.send({ t: 'sell', shop: v.shop, item: s.item, qty: 1, opId: newOpId() } as any) }, 'Vender 1'))))) : h('p', { class: 'muted' }, 'Aquí no compran nada de lo que llevas.');
   showPanel('shop-panel', v.name,
+    businessButton(ctx,v.businessTarget),
     h('p', { class: 'muted' }, `Propiedad: ${v.ownerName} · Seguridad ${v.security}${v.fence ? ' · Perista: compra de todo, sin preguntas' : ''} · Tu saldo: `, h('b', { class: 'cy' }, fmtMoney(v.money))),
     v.taller ? h('div', { class: 'row', style: { gap: '8px', alignItems: 'center' } }, h('button', { class: 'btn primary', 'data-armero': '1', onclick: () => armeroPanel({ net: ctx.net, sheet: ctx.sheet, back: (sv) => shopPanel(ctx, sv) }, v) }, '🔧 Banco de armero'),
       h('span', { class: 'muted small' }, 'Monta miras, silenciadores, cañones, empuñaduras, culatas y cargadores en tus armas.')) : null,
     h('p', { class: 'muted', style: { fontSize: '0.85em' } }, v.bar ? 'Compra una bebida y pulsa Beber para tomarla en el local. También puedes llevártela en el inventario.' : 'Precios en eurodólares fijados por la corporación de cada categoría y ajustados por las existencias de esta tienda: cuando los jugadores compran sube, cuando venden baja.'),
     h('table', { class: 'sheet' }, h('tr', {}, h('th', {}, 'Artículo'), h('th', {}, 'Precio'), h('th', {}, 'Existencias'), h('th', {}, '')), ...rows),
     h('h3', {}, 'Vender'), sell);
+}
+
+function businessButton(ctx: LifeCtx, target?: number) {
+  return target ? h('button',{class:'btn small',onclick:()=>ctx.net.send({t:'business',target,action:'view',opId:newOpId()})},'Examinar local') : null;
+}
+
+export function businessPanel(ctx: LifeCtx, view: BusinessView) {
+  const guard = view.guards === 0 ? 'Sin vigilantes en pie' : `${view.guards} vigilante${view.guards === 1 ? '' : 's'} en pie`;
+  showPanel('business-panel',view.name,
+    h('p',{class:'muted'},`${view.category} · Seguridad ${view.security}/25 · ${guard}`),
+    h('p',{},h('b',{},view.status),' · ',view.protection),
+    ...view.options.map(option=>h('div',{class:'fcard'},
+      h('h3',{},option.label),
+      h('p',{class:'muted'},option.detail),
+      h('div',{class:'row wrap'},
+        option.chance !== undefined ? h('span',{class:'mono'},pct(option.chance)) : null,
+        option.blocked ? h('span',{class:'muted'},option.blocked) : null,
+        h('button',{class:option.action === 'stealth' ? 'btn small' : 'btn small danger',disabled:!!option.blocked,
+          onclick:()=>ask(`¿Empezar «${option.label}» en ${view.name}?`,()=>{
+            document.getElementById('business-panel')?.remove();
+            ctx.net.send({t:'business',target:view.target,action:option.action,opId:newOpId()});
+          },{danger:option.action !== 'stealth'})},'Intentar')))));
 }
 
 export function marketPanel(_ctx: LifeCtx, v: MarketView) {
@@ -136,6 +159,7 @@ export function clinicPanel(ctx: LifeCtx, v: ClinicView) {
     ['Instalado (retirada)', v.offers.filter((o) => o.source === 'installed')],
   ];
   showPanel('clinic-panel', v.name,
+    businessButton(ctx,v.businessTarget),
     h('p', {}, `Calidad ${'★'.repeat(v.skill)}${'☆'.repeat(5 - v.skill)} · ${v.morality} · `, h('b', { class: v.dangerLabel.startsWith('Peligroso') ? 'netbad' : v.dangerLabel === 'De confianza' ? 'netok' : 'netmid' }, v.dangerLabel)),
     h('p', { class: 'muted' }, v.desc),
     h('p', { class: 'mono' }, `Saldo ${fmtMoney(v.money)} · Humanidad ${v.humanity}/${v.humanityMax} · Cromo ${v.chromeUsed}/${v.chromeCapacity} · Reputación con su gente ${v.rep}`),

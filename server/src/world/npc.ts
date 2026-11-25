@@ -104,6 +104,11 @@ function thinkAmbient(w: World, e: Entity) {
   if (e.path.length) return;
   // v0.13 · Llegó a un mueble con tarea (banco, máquina, parada…): la hace durante un rato.
   if (e.goal) { const len = w.street.arrive(e); b.pauseUntil = w.tick + len; b.state = 'rest'; return; }
+  if (e.businessJob && b.home) {
+    if (Math.hypot(e.x-b.home[0],e.y-b.home[1]) > 1.2) w.npcPath(e,...b.home);
+    else setState(w,e,'work','Atendiendo el mostrador');
+    return;
+  }
   if (b.pauseUntil > w.tick) return;
   // Paradas variadas y naturales: mirar el móvil, un escaparate, charlar, fumar…; a veces solo un respiro.
   // v0.9 · Muchas más rutinas, distintas de día y de noche, algunas con frase en bocadillo o con baile.

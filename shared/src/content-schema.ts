@@ -315,6 +315,8 @@ export const ShopSchema = z.object({
   discounts: z.array(z.object({ flag: z.string(), pct: z.number() })).default([]),
   /** v0.44 · Tiene banco de armero: aquí se ponen y quitan accesorios. */
   taller: z.boolean().default(false),
+  business: z.enum(['conveniencia', 'comida', 'empenos', 'joyeria']).optional(),
+  clerk: z.string().optional(),
 });
 export type ShopDef = z.infer<typeof ShopSchema>;
 

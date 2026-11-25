@@ -88,6 +88,7 @@ export class Survival {
   }
 
   sheetOf(p: PlayerState) { return buildSheet(this.w.c, p); }
+  refreshSheet(c: PlayerConn) { this.sheet(c); }
   private sheet(c: PlayerConn) { this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, c.p!) }); this.x(c).lastSheetAt = Date.now(); }
   private notice(c: PlayerConn | undefined, kind: 'info' | 'good' | 'warn' | 'bad', text: string) { if (c) this.w.send(c, { t: 'notice', kind, text }); }
   private bump(e: Entity) { e.labelVer++; }
@@ -440,6 +441,7 @@ export class Survival {
     const o = this.x(c).openClinic;
     const src = o && this.w.entities.get(o.entity);
     if (!o || o.doc !== docId || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
+    this.w.robberies.checkTrade(src);
     const p = c.p!;
     const doc = this.w.c.ripperdocs.find((d) => d.id === docId)!;
     const parts = mechanicalParts(this.w.c, p).filter((k) => (p.body.wounds[k as BodyPart] ?? 0) > 0) as BodyPart[];
@@ -459,13 +461,14 @@ export class Survival {
     if (c.e) c.e.labelVer++;
     this.notice(c, 'good', `${doc.name} repara tu cromo (${parts.map((k) => PART_NAMES[k]).join(', ')}) por ${price} €$.`);
     this.sheet(c);
-    this.w.send(c, { t: 'clinic', view: this.clinic.view(docId, p) });
+    this.showClinic(c,docId,src);
   }
   /** v0.18 · Curar las heridas en la consulta: venda, sutura, saca balas, desinfecta y da antibióticos. */
   async clinicHeal(c: PlayerConn, docId: string, opId: string) {
     const o = this.x(c).openClinic;
     const src = o && this.w.entities.get(o.entity);
     if (!o || o.doc !== docId || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
+    this.w.robberies.checkTrade(src);
     const p = c.p!;
     const doc = this.w.c.ripperdocs.find((d) => d.id === docId)!;
     const list = woundList(p.body).filter((w) => w.kind !== 'amputacion' && w.kind !== 'contusion');
@@ -487,7 +490,7 @@ export class Survival {
     const amp = woundList(p.body).some((w) => w.kind === 'amputacion');
     this.notice(c, 'good', `${doc.name} te cura ${list.length} herida${list.length === 1 ? '' : 's'} por ${price} €$. Ahora tienen que cerrar: descansa.${amp ? ' El miembro que te falta solo vuelve con una prótesis.' : ''}`);
     this.sheet(c);
-    this.w.send(c, { t: 'clinic', view: this.clinic.view(docId, p) });
+    this.showClinic(c,docId,src);
   }
   chromeRepairPrice(p: PlayerState, mult: number) {
     const dmg = mechanicalParts(this.w.c, p).reduce((acc, k) => acc + (p.body.wounds[k as BodyPart] ?? 0), 0);
@@ -810,47 +813,50 @@ export class Survival {
   }
 
   // ================================================================ tiendas, mercado, basura
+  private showShop(c: PlayerConn, shop: string, source?: Entity) {
+    this.w.send(c, {t:'shop', view:{...this.market.shopView(shop,c.p!),businessTarget:this.w.robberies.target(source)}});
+  }
+
   openShop(c: PlayerConn, shop: string, source: Entity) {
+    try { this.w.robberies.checkTrade(source); }
+    catch (err) { if (err instanceof GameError) { this.notice(c,'warn',err.message); return; } throw err; }
     this.x(c).openShop = { shop, entity: source.id };
-    this.w.send(c, { t: 'shop', view: this.market.shopView(shop, c.p!) });
+    this.showShop(c,shop,source);
   }
   private checkShop(c: PlayerConn, shop: string) {
     const o = this.x(c).openShop;
     const src = o && this.w.entities.get(o.entity);
     if (!o || o.shop !== shop || !src || (this.w.cityPeople.has(src)&&(!this.w.cityPeople.isWorking(src)||src.npcShop!==shop)) || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > SHOP_RANGE) throw new GameError('Tienes que estar en la tienda.');
+    this.w.robberies.checkTrade(src);
+    return src;
   }
   async buy(c: PlayerConn, m: Extract<ClientMsg, { t: 'buy' }>) {
-    this.checkShop(c, m.shop);
+    const src = this.checkShop(c, m.shop);
     const r = await this.market.buy(c.p!, m.shop, m.item, m.qty, m.opId);
     this.w.progress.gain(c.p!, 'negociacion', 2);
     this.notice(c, 'good', `Compras ${m.qty > 1 ? `${m.qty}× ` : ''}${r.name} por ${r.total} €$.`);
     this.sheet(c);
-    this.w.send(c, { t: 'shop', view: this.market.shopView(m.shop, c.p!) });
+    this.showShop(c,m.shop,src);
   }
   async sell(c: PlayerConn, m: Extract<ClientMsg, { t: 'sell' }>) {
-    this.checkShop(c, m.shop);
+    const src = this.checkShop(c, m.shop);
     const r = await this.market.sell(c.p!, m.shop, m.item, m.qty, m.opId);
     this.w.progress.gain(c.p!, 'negociacion', 2);
     for (const [slot, id] of Object.entries(c.p!.wear)) if (id === m.item && (c.p!.inventory.get(m.item) ?? 0) <= 0) { delete c.p!.wear[slot]; c.e!.appearance = wornAppearance(this.w.c, c.p!); this.bump(c.e!); }
     this.notice(c, 'good', `Vendes ${r.name} por ${r.total} €$.`);
     this.sheet(c);
-    this.w.send(c, { t: 'shop', view: this.market.shopView(m.shop, c.p!) });
+    this.showShop(c,m.shop,src);
   }
   async steal(c: PlayerConn, m: Extract<ClientMsg, { t: 'steal' }>) {
-    this.checkShop(c, m.shop);
+    const src = this.checkShop(c, m.shop);
     const p = c.p!;
     const r = await this.market.steal(p, m.shop, m.item, m.opId);
     this.w.progress.gain(p, 'sigilo', r.success ? 6 : 2);
-    if (r.success) { this.notice(c, 'good', `✔ Te llevas ${r.name} sin pagar (tirada ${r.total} contra ${r.dv}).`); await this.addWanted(c, 0.3, 'hurto'); }
-    else {
-      const dmg = 5 + Math.floor(this.rng() * 8);
-      p.hp -= dmg;
-      this.notice(c, 'bad', `✘ Te pillan robando ${r.name} (tirada ${r.total} contra ${r.dv}): el vigilante te zarandea (−${dmg} de salud).`);
-      await this.addWanted(c, 1.2, 'hurto en una tienda');
-      if (p.hp <= 0) this.downed(c, 'paliza de un vigilante');
-    }
+    if (r.success) this.notice(c, 'good', `Te llevas ${r.name} sin pagar (tirada ${r.total} contra ${r.dv}).`);
+    else this.notice(c, 'bad', `Te descubren intentando llevarte ${r.name} (tirada ${r.total} contra ${r.dv}).`);
+    await this.w.robberies.shoplifting(c,src,r.success);
     this.sheet(c);
-    this.w.send(c, { t: 'shop', view: this.market.shopView(m.shop, p) });
+    this.showShop(c,m.shop,src);
   }
 
   async rummage(c: PlayerConn, trash: Entity) {
@@ -989,14 +995,21 @@ export class Survival {
   }
 
   // ================================================================ matasanos
+  private showClinic(c: PlayerConn, doc: string, source?: Entity) {
+    this.w.send(c,{t:'clinic',view:{...this.clinic.view(doc,c.p!),businessTarget:this.w.robberies.target(source)}});
+  }
+
   openClinic(c: PlayerConn, doc: string, source: Entity) {
+    try { this.w.robberies.checkTrade(source); }
+    catch (err) { if (err instanceof GameError) { this.notice(c,'warn',err.message); return; } throw err; }
     this.x(c).openClinic = { doc, entity: source.id };
-    this.w.send(c, { t: 'clinic', view: this.clinic.view(doc, c.p!) });
+    this.showClinic(c,doc,source);
   }
   async clinicDo(c: PlayerConn, m: Extract<ClientMsg, { t: 'clinicDo' }>) {
     const o = this.x(c).openClinic;
     const src = o && this.w.entities.get(o.entity);
     if (!o || o.doc !== m.doc || !src || src.zone !== c.e!.zone || Math.hypot(src.x - c.e!.x, src.y - c.e!.y) > REMOTE_RANGE + 1) throw new GameError('Tienes que estar en la consulta.');
+    this.w.robberies.checkTrade(src);
     const p = c.p!;
     if (p.sleeping) this.wake(c);
     const r = await this.clinic.operate(p, m.doc, m.action, m.source, m.ref, m.opId, m.side);
@@ -1015,7 +1028,7 @@ export class Survival {
     this.bump(c.e!);
     this.w.send(c, { t: 'reward', title: r.outcome === 'clean' ? `Operación limpia: ${r.def.name}` : `Operación con complicaciones: ${r.def.name}`, lines: r.lines });
     this.sheet(c);
-    this.w.send(c, { t: 'clinic', view: this.clinic.view(m.doc, p) });
+    this.showClinic(c,m.doc,src);
   }
 }
 
