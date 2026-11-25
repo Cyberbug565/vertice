@@ -81,9 +81,10 @@ export class Survival {
       * ef.limbMult * substances.speed * ((p.buffs.exhausto ?? 0) > now ? 0.55 : 1)));
     e.speed = speed * this.w.cfg.speedScale;
     const x = this.x(c), v = Math.round(e.speed * (e.timeScale ?? 1) * 1000) / 1000;
-    if (x.sentSpeed !== v || x.sentGuard !== !!e.guard || x.sentCar !== car?.id) {
-      x.sentSpeed = v; x.sentGuard = !!e.guard; x.sentCar = car?.id;
-      this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard, tuning: car ? { acceleration: car.acceleration, braking: car.braking, handling: car.handling } : null });
+    const tk = car ? `${car.id}:${JSON.stringify(this.w.property.tuningOf(p, car).tune)}` : undefined;
+    if (x.sentSpeed !== v || x.sentGuard !== !!e.guard || x.sentCar !== tk) {
+      x.sentSpeed = v; x.sentGuard = !!e.guard; x.sentCar = tk;
+      this.w.send(c, { t: 'selfSpeed', v, guard: !!e.guard, tuning: car ? this.w.property.tuningOf(p, car) : null, heading: e.carMotion?.heading });
     }
   }
 

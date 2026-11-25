@@ -225,6 +225,11 @@ export class Chars3D {
   /** v0.44 · Apuntar con la mira (clic derecho con un arma de fuego en las cámaras cercanas): la vista pasa al ojo y se
    *  acerca según el aumento de la mira. `ads` es la transición (0 = cadera, 1 = mirando por la mira). */
   adsOn = false; adsZoom = 1; ads = 0;
+  /** v0.45 · Al volante: velocidad, peso y deriva del coche propio (para la cámara de persecución). Null a pie. */
+  drive: { speed: number; mass: number; slip: number; reverse: boolean } | null = null;
+  /** Temblor de cámara por golpes (se va apagando) y última vez que el jugador giró la vista a mano. */
+  shake = 0; camUserAt = 0;
+  private chaseYaw = 0;
   /** Luz del día (0 noche, 1 mediodía): en las vistas cercanas no hay capa de oscuridad 2D encima. */
   daylight = 1;
   /** v0.40 · Distancia de dibujado de las cámaras cercanas (losetas): hasta ahí se ve; antes, la neblina de contaminación. */
@@ -1126,7 +1131,8 @@ export class Chars3D {
     this.lastMode = this.camMode;
     this.resetWorldSpace(1); this.occl.visible = false;
     this.bullets.group.visible = true; this.bullets.update(opts.dt);
-    if (!me) { this.camReady = false; return; }
+    const carG = this.drive ? this.vehicles.groupOf(opts.meId) : undefined;
+    if (!me && !carG) { this.camReady = false; return; }
     const interior = this.zoneDef?.kind !== 'exterior' && !this.embeddedRoom;
     // Luz y cielo según la hora (en los interiores, siempre luz de dentro).
     const day = interior ? 0.85 : this.daylight;
@@ -1136,6 +1142,8 @@ export class Chars3D {
     const far = interior ? Math.min(60, this.drawDist) : this.drawDist;
     this.fog3d.color.copy(hor); this.fog3d.near = far * (interior ? 0.3 : 0.22); this.fog3d.far = far * 0.97;
     this.scene.fog = this.fog3d; this.sky.mesh.visible = true;
+    if (carG) { this.chaseCam(carG, first, Math.min(0.1, opts.dt)); this.finishNear(opts, far); return; }
+    if (!me) return;
     const p = me.root.position, dt = Math.min(0.1, opts.dt);
     // Al entrar en la vista cercana, la cámara se pone detrás del personaje, mirando hacia donde mira él.
     if (first || !this.camReady) { this.camYaw = me.heading; this.camPitch = this.camMode === 'primera' ? -0.05 : -0.18; this.pivot.set(p.x, 0, p.z); this.camReady = true; }
@@ -1175,12 +1183,17 @@ export class Chars3D {
         if (this.ads > 0.55) me.root.visible = false;
       }
     }
+    cam.up.set(0, 1, 0); cam.lookAt(cam.position.clone().add(fwd));
+    this.finishNear(opts, far);
+    void sc;
+  }
+  /** Ajustes finales de la cámara cercana y dibujo de la escena. */
+  private finishNear(opts: { W: number; H: number }, far: number) {
+    const cam = this.pcam;
     cam.aspect = opts.W / Math.max(1, opts.H); cam.near = 0.05; cam.far = far; // (más allá, la niebla ya lo tapa)
     this.sky.mesh.scale.setScalar(far * 0.9); // el cielo, siempre dentro de lo que se dibuja (si no, se ven huecos negros)
-    cam.up.set(0, 1, 0); cam.lookAt(cam.position.clone().add(fwd));
     cam.updateProjectionMatrix();
     this.sky.mesh.position.copy(cam.position);
-    void sc;
     const gl = this.renderer.getContext();
     const vp = gl.getParameter(gl.VIEWPORT) as Int32Array;
     this.renderer.resetState();
@@ -1189,6 +1202,55 @@ export class Chars3D {
     this.renderer.render(this.scene, cam);
     this.renderer.resetState();
     gl.viewport(vp[0], vp[1], vp[2], vp[3]);
+  }
+  /**
+   * v0.45 · Cámara de persecución (tercera persona) o de capó (primera) al volante. Sigue al coche con un poco de retraso
+   * (los pesados giran la cámara más despacio), mira un poco hacia donde derrapas, se aleja y abre el ángulo con la
+   * velocidad y tiembla con los golpes. Si giras la vista con el ratón, te deja mirar un momento y luego vuelve detrás.
+   */
+  private chaseCam(carG: THREE.Object3D, first: boolean, dt: number) {
+    const d = this.drive!, cam = this.pcam;
+    const carYaw = carG.rotation.y;
+    const p = carG.position;
+    if (first || !this.camReady) { this.chaseYaw = carYaw; this.camYaw = carYaw; this.camPitch = -0.16; this.camReady = true; }
+    // Hacia dónde apunta la cámara: el morro, con algo de la dirección real del coche cuando derrapa.
+    const want = carYaw + THREE.MathUtils.clamp(d.slip, -0.9, 0.9) * 0.4 + (d.reverse && d.speed > 2 ? 0 : 0);
+    const lag = Math.min(1, dt * (2.2 + Math.min(4, d.speed * 0.22)) * Math.pow(1300 / Math.max(300, d.mass), 0.25));
+    this.chaseYaw += Math.atan2(Math.sin(want - this.chaseYaw), Math.cos(want - this.chaseYaw)) * lag;
+    const free = performance.now() - this.camUserAt < 1600;
+    if (!free) {
+      this.camYaw += Math.atan2(Math.sin(this.chaseYaw - this.camYaw), Math.cos(this.chaseYaw - this.camYaw)) * Math.min(1, dt * 6);
+      this.camPitch += (-0.16 - this.camPitch) * Math.min(1, dt * 3);
+    }
+    const speedK = Math.min(1, d.speed / 16);
+    this.shake *= Math.exp(-dt * 7);
+    const jitter = () => (Math.random() - 0.5) * this.shake * 0.12;
+    if (this.camMode === 'primera') {
+      // Capó: un poco por delante del parabrisas, a la altura de los ojos.
+      const fx = Math.sin(carYaw), fz = Math.cos(carYaw);
+      cam.position.set(p.x + fx * 0.55 + jitter(), p.y + 1.08 + jitter(), p.z + fz * 0.55);
+      const look = new THREE.Vector3(Math.sin(this.camYaw) * Math.cos(this.camPitch + 0.1), Math.sin(this.camPitch + 0.1), Math.cos(this.camYaw) * Math.cos(this.camPitch + 0.1));
+      cam.up.set(0, 1, 0); cam.lookAt(cam.position.clone().add(look));
+      cam.fov = 70 + speedK * 12;
+      return;
+    }
+    const heavy = THREE.MathUtils.clamp((d.mass - 1200) / 3000, 0, 1);
+    const dist = (4.4 + heavy * 2.2 + speedK * 1.6) * (this.camDist / 3.2);
+    const height = 1.55 + heavy * 0.8 + speedK * 0.15;
+    const cy = Math.cos(this.camPitch);
+    const fwd = new THREE.Vector3(Math.sin(this.camYaw) * cy, Math.sin(this.camPitch), Math.cos(this.camYaw) * cy);
+    const target = new THREE.Vector3(p.x, p.y + 0.9 + heavy * 0.4, p.z);
+    let dd = dist;
+    for (let t = 0.6; t <= dist; t += 0.15) {
+      const q = target.clone().addScaledVector(fwd, -t); q.y += height * (t / dist) * 0.6;
+      if (this.solidAt(q.x, q.z) > q.y - 0.1) { dd = Math.max(1.2, t - 0.3); break; }
+    }
+    cam.position.copy(target).addScaledVector(fwd, -dd);
+    cam.position.y += height * (dd / dist) * 0.6;
+    cam.position.x += jitter(); cam.position.y += jitter(); cam.position.z += jitter();
+    // Mira un poco por delante del coche (más cuanto más rápido): el coche queda en el tercio inferior, con la calle delante.
+    cam.up.set(0, 1, 0); cam.lookAt(target.clone().add(new THREE.Vector3(0, 0.35, 0)).addScaledVector(new THREE.Vector3(fwd.x, 0, fwd.z).normalize(), 1.2 + speedK * 2.2));
+    cam.fov = 60 + speedK * 16; // sensación de velocidad
   }
   /** v0.40 · Disparo en 3D: de la boca del arma de `fromId` a `toId` (a la altura de la parte del cuerpo) o a un punto. */
   shoot(fromId: number, fromXY: { x: number; y: number }, to: { id?: number; x: number; y: number; part?: string }, weapon: string, ammo: string | undefined, family: string | undefined, hit: boolean, burst: number) {

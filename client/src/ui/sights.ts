@@ -59,6 +59,8 @@ export function createSights() {
     els: [dot, view] as HTMLElement[],
     update(s: { near: boolean; ads: number; sight: { zoom: number; reticle: string } | null; ranged: boolean }) {
       const through = s.near && s.ranged && !!s.sight && s.ads > 0.35;
+      // v0.45 · Mirando por la mira: fuera todo el HUD menos las barras de salud y aguante.
+      document.body.classList.toggle('scoped', through);
       dot.style.display = s.near && !through ? '' : 'none';
       dot.classList.toggle('aiming', s.near && s.ads > 0.5);
       if (!through) { if (view.style.display !== 'none') view.style.display = 'none'; return; }

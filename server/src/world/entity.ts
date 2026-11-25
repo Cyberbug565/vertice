@@ -14,7 +14,7 @@ export interface Entity {
   /** v0.7: dirección de WASD (con marca de tiempo para cortar si el cliente deja de avisar) y guardia con clic derecho. */
   carMotion?: CarMotion;
   missionRide?: number;
-  steer?: { dx: number; dy: number; at: number }; guard?: boolean; guardFacing?:number; guardSince?: number; dodgeUntil?: number; dodgeReadyAt?: number; sign?: { text: string; color?: string; icon?: string }; carry?: string[]; lastDir?: { dx: number; dy: number }; markedUntil?: number;
+  steer?: { dx: number; dy: number; at: number }; drive?: { throttle: number; steer: number; handbrake: boolean; at: number }; guard?: boolean; guardFacing?:number; guardSince?: number; dodgeUntil?: number; dodgeReadyAt?: number; sign?: { text: string; color?: string; icon?: string }; carry?: string[]; lastDir?: { dx: number; dy: number }; markedUntil?: number;
   appearance?: Appearance; role?: string; label: string; labelVer: number;
   interactive: boolean; objKind?: string; dialog?: string; danger?: string;
   doorTo?: { zone: string; at: [number, number] };

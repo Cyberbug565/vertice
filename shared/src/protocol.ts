@@ -26,6 +26,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('stop'), seq }),
   // v0.7 · movimiento con WASD (dirección en el mundo; 0,0 = parar), guardia con clic derecho, curar una zona del cuerpo y reparar cromo.
   z.object({ t: z.literal('steer'), seq, dx: z.number().finite().min(-1).max(1), dy: z.number().finite().min(-1).max(1) }),
+  // v0.45 · Mandos del coche: acelerador/freno (−1 frena y da marcha atrás), volante (−1 izquierda) y freno de mano.
+  z.object({ t: z.literal('drive'), seq, throttle: z.number().finite().min(-1).max(1), steer: z.number().finite().min(-1).max(1), handbrake: z.boolean().optional() }),
   z.object({ t: z.literal('guard'), seq, on: z.boolean(), facing:z.number().int().min(0).max(7).optional() }),
   // v0.8 · matrices del zócalo, leyendas y menú de trucos (solo cuentas de administración).
   z.object({ t: z.literal('matrix'), seq, action: z.enum(['equip', 'remove']), item: z.string().max(64) }),
@@ -92,7 +94,8 @@ export const ClientMsg = z.discriminatedUnion('t', [
   z.object({ t: z.literal('house'), seq, action: z.enum(['view', 'buy', 'sell', 'enter', 'ring', 'answer', 'permit', 'revoke', 'stashIn', 'stashOut', 'stash', 'realty']),
     house: z.string().max(80).optional(), building: z.string().max(80).optional(), name: z.string().max(24).optional(), who: z.number().int().optional(), allow: z.boolean().optional(),
     item: z.string().max(64).optional(), qty: z.number().int().min(1).max(999).optional(), filter: z.string().max(32).optional(), opId: opId.optional() }),
-  z.object({ t: z.literal('car'), seq, action: z.enum(['dealer', 'buy', 'sell', 'drive', 'park', 'travel']), dealer: z.string().max(48).optional(), car: z.string().max(64).optional(), zone: z.string().max(48).optional(), opId: opId.optional() }),
+  z.object({ t: z.literal('car'), seq, action: z.enum(['dealer', 'buy', 'sell', 'drive', 'park', 'travel', 'tune']), dealer: z.string().max(48).optional(), car: z.string().max(64).optional(), zone: z.string().max(48).optional(), opId: opId.optional(),
+    /** v0.45 · Taller: pieza y nivel o tipo. */ part: z.enum(['motor', 'frenos', 'suspension', 'neumaticos', 'peso']).optional(), value: z.union([z.number().int().min(0).max(3), z.string().max(16)]).optional() }),
   z.object({ t: z.literal('props'), seq }),
   z.object({ t: z.literal('marketLive'), seq, on: z.boolean() }),
   // ---- v0.5
@@ -162,7 +165,7 @@ export interface TrunkView { car: string; name: string; capacity: number; used: 
 export interface SkillProg { id: string; name: string; attr: string; level: number; xp: number; from: number; to: number; bonus: number }
 export interface BuildingView { building: string; name: string; zone: string; units: { id: string; name: string; size: string; floor: number; price: number; owner: string | null; mine: boolean; allowed: boolean }[] }
 export interface RealtyView { houses: { id: string; name: string; size: string; zone: string; zoneName: string; price: number; floor: number }[]; index: Record<string, number>; mine: string[] }
-export interface DealerView { dealer: string; name: string; desc: string; cars: (CarTuning & { id: string; name: string; maker: string; class: string; speed: number; model: string; trunk: number; seats: number; armor: number; price: number; color: string; desc: string })[]; owned: { id: string; car: string; name: string; value: number }[] }
+export interface DealerView { dealer: string; name: string; desc: string; cars: (CarTuning & { id: string; name: string; maker: string; class: string; speed: number; model: string; trunk: number; seats: number; armor: number; price: number; color: string; desc: string })[]; owned: { id: string; car: string; name: string; value: number; tune?: import('./driving.js').CarTune; tunePrices?: Record<string, number> }[] }
 export interface PropsView {
   houses: { id: string; name: string; zone: string; zoneName: string; size: string; value: number; paid: number; permits: string[] }[];
   cars: (CarTuning & { id: string; car: string; name: string; class: string; value: number; speed: number })[];
@@ -370,7 +373,9 @@ export type ServerMsg =
   | { t: 'sector'; sector: string; danger: string }
   | { t: 'facts'; facts: Record<string, unknown> }
   | { t: 'chat'; from: string; fromId: number; channel: 'local' | 'global'; text: string }
-  | { t: 'selfSpeed'; v: number; guard: boolean; tuning?: CarTuning | null }
+  | { t: 'selfSpeed'; v: number; guard: boolean; tuning?: CarTuning | null; /** v0.45 · rumbo del coche al subirte */ heading?: number }
+  /** v0.45 · Coches a la vista: [id, rumbo×1000, deriva×1000, bits (1 frena, 2 freno de mano, 4 patina, 8 golpe)]. */
+  | { t: 'carState'; v: [number, number, number, number][] }
   | { t: 'possess'; you: number; zone: string; x: number; y: number; ghost: boolean }
   | { t: 'legend'; view: import('./relics.js').LegendView; open: boolean }
   | { t: 'cheatInfo'; items: { id: string; name: string; kind: string }[]; npcs: string[]; places: { id: string; name: string }[] }

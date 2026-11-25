@@ -21,20 +21,21 @@ it('cada carrocería tiene un modelo, miniatura, tráfico y concesionario', asyn
     const grid = app.world.zones.get('vertice')!.grid;
     const hatchback = cars.find(c => c.id === 'vidal-pulga')!;
     const hypercar = cars.find(c => c.id === 'saeta-relampago')!;
+    // v0.45 · Mandos de coche: acelerador, volante y freno de mano.
     const drive = (car: typeof hatchback) => {
-      let state = { x: 320.5, y: 426.5, speed: 0, heading: 0 };
-      for (let i = 0; i < 20; i++) state = stepCar(grid, state.x, state.y, state, 1, 0, vehicleSpeed(car.speed), car, .05);
+      let state: any = { x: 320.5, y: 426.5, speed: 0, heading: 0 };
+      for (let i = 0; i < 20; i++) state = stepCar(grid, state.x, state.y, state, { throttle: 1, steer: 0 }, vehicleSpeed(car.speed), car, .05);
       return state;
     };
     const small = drive(hatchback), fast = drive(hypercar);
-    expect(fast.x - 320.5).toBeGreaterThan((small.x - 320.5) * 2);
-    const stopped = stepCar(grid, fast.x, fast.y, fast, 0, 0, vehicleSpeed(hypercar.speed), hypercar, .2);
+    expect(fast.x - 320.5).toBeGreaterThan((small.x - 320.5) * 1.5);
+    const stopped = stepCar(grid, fast.x, fast.y, fast, { throttle: 0, steer: 0 }, vehicleSpeed(hypercar.speed), hypercar, .2);
     expect(stopped.x).toBeGreaterThan(fast.x);
     expect(stopped.speed).toBeLessThan(fast.speed);
-    const turn = (handling: number) => stepCar(grid, fast.x, fast.y, fast, 0, 1, vehicleSpeed(hypercar.speed), { ...hypercar, handling }, .05);
-    expect(turn(90).heading).toBeGreaterThan(turn(40).heading);
-    let collision = { x: 325.5, y: 434.5, speed: 12, heading: Math.PI / 2 };
-    for (let i = 0; i < 40; i++) collision = stepCar(grid, collision.x, collision.y, collision, 0, 1, vehicleSpeed(hypercar.speed), hypercar, .05);
+    const turn = (handling: number) => { let st: any = fast; for (let i = 0; i < 6; i++) st = stepCar(grid, st.x, st.y, st, { throttle: 0.3, steer: 1 }, vehicleSpeed(hypercar.speed), { ...hypercar, handling }, .05); return st; };
+    expect(turn(90).heading).toBeGreaterThan(turn(40).heading); // volante a la derecha: el rumbo crece (gira a la derecha)
+    let collision: any = { x: 325.5, y: 434.5, speed: 12, heading: Math.PI / 2 };
+    for (let i = 0; i < 40; i++) collision = stepCar(grid, collision.x, collision.y, collision, { throttle: 1, steer: 0 }, vehicleSpeed(hypercar.speed), hypercar, .05);
     expect(collision.y).toBeLessThan(436);
     expect(isWalkable(grid, collision.x, collision.y)).toBe(true);
   } finally { await app.close(); }

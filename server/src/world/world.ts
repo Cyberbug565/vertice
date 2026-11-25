@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import {
-  installedSight, canSee, Interiors, edgeDirection, rotateFloor, pedestrianGrid, hashString,RULES, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, lineWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
+  installedSight, canSee, Interiors, edgeDirection, rotateFloor, pedestrianGrid, hashString,RULES, steerToInput, BUILDS, HAIR_STYLES, FACE_SHAPES, NOSES, MOUTHS, BIN_POSITIONS, POS_SCALE, facingToIdx, findPath, stepWithCollision, stepCar, nearestWalkable, isWalkable, lineWalkable, sectorOf, dangerAt, walkSpeed, t, seededRng,
   type ClientMsg, type Content, type EntitySpawn, type ServerMsg, type DialogOption, REMOTE_RANGE, REMOTE_DOOR_RANGE, diversifyAppearance, roadMap, crossingAxis, walkLight, portalZoneDef, isPortalZone, parsePortalZone } from '@vertice/shared';
 import type { Config } from '../config.js';
 import type { Db, Queryable } from '../db/db.js';
@@ -459,10 +459,10 @@ export class World {
         if (e.npc && e.npcType !== 'essential' && e.aggro === undefined && (!anyone || !z.isActive(e))) continue;
         const edt = e.conn ? dt + catchUp : dt;
         if (e.path.length) {
-          if (e.carMotion) { e.carMotion.speed = 0; e.carMotion.heading = e.facing * Math.PI / 4; }
+          if (e.carMotion) e.carMotion = { speed: 0, heading: e.facing * Math.PI / 4 };
           this.moveEntity(e, edt);
         }
-        else if (e.carMotion && (e.steer || e.carMotion.speed > 0)) this.driveEntity(e, edt);
+        else if (e.carMotion && (e.steer || e.drive || e.carMotion.speed > 0)) this.driveEntity(e, edt);
         else if (e.steer) { for (let left = edt; left > 1e-6 && e.steer; left -= dt) this.steerEntity(e, Math.min(dt, left)); }
         if (e.pendingAction && e.conn) this.combat.checkPending(e.conn);
         if (e.channel && this.tick >= e.channel.endTick) { const ch = e.channel; e.channel = undefined; ch.apply(); }
@@ -558,12 +558,17 @@ export class World {
       return;
     }
     if (e.steer && Date.now() - e.steer.at > 1500) e.steer = undefined;
+    // Los mandos se mantienen hasta que cambian (el cliente avisa de cada tecla y repite cada 200 ms); si en 5 s no llega
+    // nada (cliente colgado o muy a tirones), se sueltan los pedales.
+    if (e.drive && Date.now() - e.drive.at > 5000) e.drive = undefined;
+    const tuning = this.property.tuningOf(p, car);
     for (let remaining = dt; remaining > 1e-6; remaining -= 1 / RULES.tickRate) {
-      const next = stepCar(e.zone.grid, e.x, e.y, motion, e.steer?.dx ?? 0, e.steer?.dy ?? 0,
-        e.speed, car, Math.min(remaining, 1 / RULES.tickRate) * (e.timeScale ?? 1));
+      const input = e.drive ?? (e.steer ? steerToInput(motion, e.steer.dx, e.steer.dy) : { throttle: 0, steer: 0 });
+      const next = stepCar(e.zone.grid, e.x, e.y, motion, input, e.speed, tuning, Math.min(remaining, 1 / RULES.tickRate) * (e.timeScale ?? 1));
       e.moving = next.x !== e.x || next.y !== e.y;
       if (e.moving) { e.x = next.x; e.y = next.y; }
-      motion.speed = next.speed; motion.heading = next.heading;
+      const { x: _x, y: _y, ...rest } = next;
+      Object.assign(motion, rest);
     }
     e.facing = facingToIdx(Math.cos(motion.heading), Math.sin(motion.heading));
     e.lastMoveTick = this.tick;
@@ -718,6 +723,7 @@ export class World {
     const labels: Entity[] = [];
     let np = 0;
     const NEAR2 = 12 * 12;
+    const carStates: [number, number, number, number][] = []; // v0.45 · rumbo y deriva de los coches que se ven
     for (const v of vis) {
       // La población adicional llena el primer plano. A distancia quedan los residentes y grupos normales.
       if (v.npc?.localCrowd && v.aggro === undefined && (v.x-e.x)**2 + (v.y-e.y)**2 > 30**2) continue;
@@ -743,6 +749,7 @@ export class World {
       POS_DV.setUint8(o + 8, (v.moving ? 1 : 0) | (v.facing << 1) | (v.task || v.channel ? 16 : 0) | (v.state === 'sleeping' ? 32 : 0) | (v.state === 'downed' ? 64 : 0) | (v.bounty ? 128 : 0));
       np++;
       k.sent = this.tick;
+      if (v.carMotion && v !== e) { const cm = v.carMotion; carStates.push([v.id, Math.round(cm.heading * 1000), Math.round((cm.slip ?? 0) * 1000), (cm.braking ? 1 : 0) | (cm.handbrake ? 2 : 0) | ((cm.spin ?? 0) > 0.15 ? 4 : 0) | ((cm.impact ?? 0) > 2 ? 8 : 0)]); }
     }
     const gone: number[] = [];
     for (const id of c.known.keys()) if (!visIds.has(id)) gone.push(id);
@@ -754,6 +761,7 @@ export class World {
       if (gone.length) this.send(c, { t: 'despawn', ids: gone });
       if (spawns.length) this.send(c, { t: 'spawn', e: spawns });
       for (const l of labels) { const sp = spawnOf(l); this.send(c, { t: 'label', id: l.id, label: l.label, bounty: l.bounty ?? 0, state: l.state ?? 'alive', chrome: sp.chrome ?? [], hpPct: sp.hpPct, carried: sp.carried, appearance: l.kind === 'player' ? l.appearance : undefined, vehicle: l.vehicle ?? null, level: l.level, buffs: sp.buffs, lost: sp.lost ?? [], bleeding: sp.bleeding ?? false, weapon: sp.weapon, dead: sp.dead ?? false, emote: sp.emote ?? null, carry: sp.carry ?? [] }); }
+      if (carStates.length) this.send(c, { t: 'carState', v: carStates });
       if (np) {
         POS_DV.setUint8(0, BIN_POSITIONS); POS_DV.setUint32(1, this.tick >>> 0); POS_DV.setUint16(5, np);
         const buf = Buffer.from(POS_BUF.subarray(0, 7 + np * 9)); // copia: el búfer compartido se reutiliza
@@ -965,6 +973,15 @@ export class World {
         if (!moving && !e.carMotion) { e.moving = false; e.lastMoveTick = this.tick; }
         return;
       }
+      case 'drive': {
+        // v0.45 · Al volante, los mandos de verdad (los manda el cliente mientras conduces).
+        if (!e.carMotion) return;
+        const active = m.throttle !== 0 || m.steer !== 0 || !!m.handbrake;
+        if (active && (e.path.length || e.pendingAction)) { e.path = []; e.pendingInteract = undefined; e.pendingAction = undefined; }
+        e.drive = { throttle: m.throttle, steer: m.steer, handbrake: !!m.handbrake, at: Date.now() };
+        e.steer = undefined;
+        return;
+      }
       case 'dodge': return guarded(m.seq, async () => this.combat.dodge(c, m.dx, m.dy));
       case 'swing': return guarded(m.seq, async () => this.combat.swing(c, m.dx, m.dy, !!m.heavy, m.opId));
       case 'guard': {
@@ -1052,6 +1069,7 @@ export class World {
           case 'drive': pr.drive(c, m.car); break;
           case 'park': pr.park(c); break;
           case 'travel': await pr.travel(c, m.zone ?? ''); break;
+          case 'tune': await pr.tune(c, m.dealer ?? '', m.car ?? '', m.part!, m.value ?? 0, m.opId ?? randomUUID()); this.send(c, { t: 'dealer', view: pr.dealerView(p, m.dealer ?? '') }); break;
         }
       });
       case 'drop': return guarded(m.seq, async () => this.combat.drop(c));

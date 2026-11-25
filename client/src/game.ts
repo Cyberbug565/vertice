@@ -1,5 +1,5 @@
 // Partida: conecta red, vista y HUD. El cliente solo envía intenciones; el servidor resuelve y confirma.
-import { installedSight, Atlas, prisonZone, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type ScanInfo, type DossierView, type DanceId, type DialogView, type JournalEntry, type PrisonView, type ServerMsg } from '@vertice/shared';
+import { installedSight, driveStyle, Atlas, prisonZone, facingToIdx, checkChance, chanceBand, worldToScreen, type CharacterSheet, type ScanInfo, type DossierView, type DanceId, type DialogView, type JournalEntry, type PrisonView, type ServerMsg } from '@vertice/shared';
 import { content, factionName, roleById, zoneDef } from './content';
 import { Net, newOpId } from './net';
 import { GameView, type CEnt } from './render/view';
@@ -32,6 +32,8 @@ import { closeRecordPanel, recordPanel } from './ui/record';
 const isDance = (m: string) => !['nausea', 'sentado', 'manos-arriba', 'telefono', 'fumar', 'gesto'].includes(m);
 import { armeroRefresh } from './ui/armero';
 import { createSights } from './ui/sights';
+import { createVitals } from './ui/vitals';
+import { createCarFeel } from './ui/carfeel';
 import { ambarPanel, bountyPanel, clinicPanel, deathScreen, factionsPanel, jobsPanel, marketPanel, shopPanel, targetMenu, type LifeCtx } from './ui/life';
 
 const DANGER_TXT: Record<string, string> = { protected: 'Segura (verde)', public: 'Vigilada (amarilla)', disputed: 'Peligrosa (roja)', lawless: 'Sin ley (negra)' };
@@ -81,24 +83,23 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   catch (err) { eventScope.abort(); try { view.app.destroy(true); } catch {} throw err; }
 
   // ---------------------------------------------------------------- HUD
-  const hpBar = h('i', { style: { background: 'var(--red)' } }), stBar = h('i', { style: { background: 'var(--green)' } });
-  const needBar = (color: string) => h('i', { style: { background: color } });
-  const hgBar = needBar('#ff8a3d'), thBar = needBar('#43a8ff'), ftBar = needBar('#b46cff');
-  const needsEl = h('div', { class: 'hud-needs', style: { display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 6px', alignItems: 'center', fontSize: '0.8em', margin: '2px 0 4px' } },
-    h('span', {}, 'Hambre'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Hambre' }, hgBar),
-    h('span', {}, 'Sed'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sed' }, thBar),
-    h('span', {}, 'Sueño'), h('div', { class: 'bar', style: { margin: 0 }, role: 'meter', 'aria-label': 'Sueño' }, ftBar));
+  // v0.45 · Salud, aguante y necesidades: barras y anillos sin panel detrás (ui/vitals.ts).
+  const vitals = createVitals();
+  // v0.45 · Motor, neumáticos, golpes y velocímetro al volante.
+  const carFeel = createCarFeel({
+    driving: () => view.driving && !!view.carTune, motion: () => view.carMotion, tuning: () => view.carTune, throttle: () => view.driveInput.throttle,
+    name: () => { const t = view.carTune; const c = t?.id ? content.cars.find((x) => x.id === t.id) : undefined; return c ? `${c.maker} ${c.name} · ${driveStyle(c)}` : ''; },
+  });
+  eventScope.signal.addEventListener('abort', () => carFeel.stop());
+  view.onCarImpact = (k) => { view.carShake(k); carFeel.impact(k); };
   const statusEl = h('div', { style: { fontSize: '0.85em', minHeight: '1.2em' }, 'aria-live': 'polite' });
   const psycheEl = h('div', { class: 'psyche-meter', style: { display: 'none' } });
   const substancesEl = h('div', { class: 'substance-readout', 'aria-label': 'Estado de consumo' });
   const nameEl = h('div', {}), moneyEl = h('div', { class: 'mono' }), statsEl = h('div', { class: 'muted hud-stats', style: { fontSize: '0.85em' } });
-  const hpTxt = h('span', { class: 'mono' }), stTxt = h('span', { class: 'mono' });
   const xpFill = h('i', { style: { background: 'var(--xp)' } }), xpTxt = h('span', { class: 'mono small' });
   const xpEl = h('div', { class: 'hud-xp', title: 'Experiencia de nivel' }, h('div', { class: 'xpbar' }, xpFill), xpTxt);
   const tl = h('div', { class: 'hud hud-tl', 'aria-label': 'Estado del personaje' }, nameEl, xpEl,
-    h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Salud'), hpTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Salud' }, hpBar),
-    h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('span', {}, 'Aguante'), stTxt), h('div', { class: 'bar', role: 'meter', 'aria-label': 'Aguante' }, stBar),
-    needsEl, psycheEl, statusEl, substancesEl, moneyEl, statsEl);
+    psycheEl, statusEl, substancesEl, moneyEl, statsEl);
   const mm = h('canvas', { id: 'minimap', title: 'Mapa grande (M)', onclick: () => bigMap() }) as HTMLCanvasElement;
   const atlas = new Atlas();
   const minimap = new Minimap(mm,atlas);
@@ -212,7 +213,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const tooltip = h('div', { class: 'tooltip', style: { display: 'none' } });
   const dialogEl = h('div', { class: 'dialog', id: 'dialog', role: 'dialog', style: { display: 'none' } });
   const ctxOverlay = h('div', { class: 'overlay', style: { display: 'none' } }, h('div', { class: 'reward' }, h('h2', {}, 'Recuperando gráficos…'), h('p', {}, 'El contexto gráfico se ha perdido. La simulación sigue en el servidor.')));
-  $ui().append(tl, tr, bottom, weaponEl, abilityEl, xpPops, toasts, chat, globalChat, bodyPanel.el, tooltip, dialogEl, ctxOverlay);
+  $ui().append(vitals.el, carFeel.el, tl, tr, bottom, weaponEl, abilityEl, xpPops, toasts, chat, globalChat, bodyPanel.el, tooltip, dialogEl, ctxOverlay);
   queueMicrotask(() => renderToolbar());
 
   const toast = (text: string, kind: 'info' | 'good' | 'warn' | 'bad' = 'info') => {
@@ -242,8 +243,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     view.showLevels = s.uniques.includes('lector');
     renderAbilities(s);
     refreshCharScreen(s);
-    hpBar.style.width = `${(100 * s.hp) / s.hpMax}%`; stBar.style.width = `${(100 * s.stamina) / s.staminaMax}%`;
-    hpTxt.textContent = `${s.hp}/${s.hpMax}`; stTxt.textContent = `${s.stamina}/${s.staminaMax}`;
+    vitals.hp(s.hp, s.hpMax); vitals.stamina(s.stamina, s.staminaMax);
     moneyEl.textContent = `${fmtMoney(s.money)} · Rep. calle ${s.streetRep}`;
     statsEl.textContent = `${s.professionName} (rango ${s.professionRank}) · Suerte ${s.luck}/${s.luckMax} · Carga ${s.carry}/${s.carryMax} kg${s.driving ? ' · 🚗 al volante' : ''}`;
     const w = s.weapon;
@@ -255,8 +255,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       s.encumbrance !== 'normal' ? h('div', { class: 'netbad', style: { fontSize: '0.8em' } }, s.encumbrance === 'sobrecargado' ? '⚠ Sobrecargado: muy lento y torpe' : '⚠ Cargado: más lento') : null,
       s.ambar ? h('div', { style: { fontSize: '0.8em', color: '#ffbf00' } }, `✚ ${s.ambar.name} · ${s.ambar.usesLeft} rescates`) : null,
     ] as (Node | null)[]).filter((x): x is Node => !!x));
-    hgBar.style.width = `${s.needs.hunger}%`; thBar.style.width = `${s.needs.thirst}%`; ftBar.style.width = `${s.needs.fatigue}%`;
-    for (const [b, v] of [[hgBar, s.needs.hunger], [thBar, s.needs.thirst], [ftBar, s.needs.fatigue]] as [HTMLElement, number][]) b.style.filter = v >= 80 ? 'saturate(2) brightness(1.3)' : '';
+    vitals.needs(s.needs);
     const st2: (string | HTMLElement)[] = [];
     if (s.status === 'downed') st2.push(h('b', { class: 'netbad' }, `DERRIBADO · ${s.downedLeft} s`));
     if (s.sleeping) st2.push(h('span', { class: 'cy' }, `Durmiendo (${Math.round(s.sleeping.quality * 100)} %) `));
@@ -632,7 +631,24 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
   const MOVE: Record<string, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   const ARROWS: Record<string, string> = { arrowup: 'up', arrowdown: 'down', arrowleft: 'left', arrowright: 'right' };
   let lastSteer = { dx: 0, dy: 0 }, lastSteerAt = 0;
+  // v0.45 · Al volante, WASD son pedales y volante (como en GTA): W acelera, S frena y da marcha atrás, A/D giran y
+  // Espacio es el freno de mano. Funciona igual con cualquier cámara.
+  let handbrake = false, lastDrive = '', lastDriveAt = 0;
+  const pushDrive = (force = false) => {
+    let thr = 0, str = 0;
+    for (const a of held) { if (a === 'up') thr += 1; if (a === 'down') thr -= 1; if (a === 'left') str -= 1; if (a === 'right') str += 1; }
+    view.driveInput = { throttle: thr, steer: str, handbrake };
+    view.steer = { dx: 0, dy: 0 };
+    const key = `${thr}|${str}|${handbrake}`;
+    const active = thr !== 0 || str !== 0 || handbrake;
+    if (key !== lastDrive || force || (active && performance.now() - lastDriveAt > 200)) {
+      if (key !== lastDrive && active) { view.cancelPrediction(); st.destination = ''; }
+      net.send({ t: 'drive', throttle: thr, steer: str, handbrake } as any); lastDrive = key; lastDriveAt = performance.now();
+    }
+  };
   const pushSteer = (force = false) => {
+    if (view.driving) { pushDrive(force); return; }
+    if (lastDrive && lastDrive !== '0|0|false') { view.driveInput = { throttle: 0, steer: 0, handbrake: false }; lastDrive = ''; handbrake = false; }
     let sx = 0, sy = 0;
     for (const a of held) { const v = MOVE[a]; if (v) { sx += v[0]; sy += v[1]; } }
     // Pantalla → mundo isométrico: arriba = (−1,−1), derecha = (1,−1). (v0.9: W y S iban al revés.)
@@ -649,7 +665,7 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       net.send({ t: 'steer', dx, dy } as any); lastSteer = { dx, dy }; lastSteerAt = performance.now();
     }
   };
-  timers.push(window.setInterval(() => { if (view.steer.dx || view.steer.dy) pushSteer(); }, 200));
+  timers.push(window.setInterval(() => { if (view.steer.dx || view.steer.dy || (view.driving && (view.driveInput.throttle || view.driveInput.steer || view.driveInput.handbrake))) pushSteer(); }, 200));
   // v0.12/v0.13 · Qué hace la E ahora mismo: salir del escondite, meter el cadáver que llevas en un contenedor, lo señalado
   // con el ratón, lo más cercano (puerta, objeto, persona o cuerpo) o el contenedor de al lado (rebuscar / esconderte).
   let lootTarget = -1;
@@ -695,9 +711,14 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
     if (view.near) { ePrompt.style.left = `${Math.round(window.innerWidth / 2)}px`; ePrompt.style.top = `${Math.round(window.innerHeight * 0.6)}px`; }
     else { const sp = view.world.toGlobal(worldToScreen(view.me.x, view.me.y)); ePrompt.style.left = `${Math.round(sp.x)}px`; ePrompt.style.top = `${Math.round(sp.y - 95 * view.zoom)}px`; }
   }, 150));
-  window.addEventListener('blur', () => { held.clear(); pushSteer(true); }, { signal: eventScope.signal });
+  window.addEventListener('blur', () => { held.clear(); handbrake = false; pushSteer(true); }, { signal: eventScope.signal });
+  // v0.45 · Mantener la tecla de cifras (Alt) enseña los números de salud, aguante, hambre, sed y sueño.
+  window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === keymap.vitals) { e.preventDefault(); vitals.numbers(true); } }, { signal: eventScope.signal });
+  window.addEventListener('blur', () => vitals.numbers(false), { signal: eventScope.signal });
+  window.addEventListener('keyup', (e) => { if (e.key.toLowerCase() === keymap.vitals) { e.preventDefault(); vitals.numbers(false); } }, { signal: eventScope.signal });
   window.addEventListener('keyup', (e) => {
     const a = ARROWS[e.key.toLowerCase()] ?? actionFor(e.key.toLowerCase());
+    if (a === 'dodge' && (handbrake || view.driving)) { e.preventDefault(); if (handbrake) { handbrake = false; pushDrive(); } }
     if (a && MOVE[a] && held.delete(a)) pushSteer();
   }, { signal: eventScope.signal });
   // v0.39 · Cámaras: cenital → tercera persona → primera persona (tecla configurable, F5 por defecto). Se recuerda la última.
@@ -751,7 +772,12 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
       case 'run': toggleRun(); break;
       case 'hack': if (onWorld()) setHackMode(!hackMode); break;
       case 'wheel': if (onWorld() && st.sheet) { e.preventDefault(); if (document.getElementById('weapon-wheel')) { wheelRef?.pickHovered(); wheelRef = null; } else wheelRef = weaponWheel(st.sheet, (item) => { net.send({ t: 'equip', item } as any); blip('ui'); toast(item ? `Empuñas: ${content.items.find((i) => i.id === item)?.name ?? item}.` : 'Guardas el arma: manos vacías.', 'info'); }); } break;
-      case 'dodge': if (onWorld()) { e.preventDefault(); dodge(); } break;
+      case 'dodge':
+        // Al volante, Espacio es siempre el freno de mano (aunque el foco se haya quedado en un botón del HUD: se le quita,
+        // para que Espacio no lo pulse).
+        if (view.driving) { e.preventDefault(); const f = document.activeElement as HTMLElement | null; if (f && f !== document.body && f.tagName === 'BUTTON') f.blur(); if (!handbrake) { handbrake = true; pushDrive(); } }
+        else if (onWorld()) { e.preventDefault(); dodge(); }
+        break;
       case 'kick': if (onWorld()) kick(); break;
       case 'interact': if (onWorld() && !st.dialog) {
         e.preventDefault();
@@ -1000,7 +1026,8 @@ export async function startGame(token: string, onExit0: (reason?: string) => voi
         if (m.channel !== 'global') view.say(m.fromId, m.text);
         break;
       }
-      case 'selfSpeed': view.setSpeed(m.v, m.tuning); break;
+      case 'selfSpeed': view.setSpeed(m.v, m.tuning, m.heading); break;
+      case 'carState': view.setCarStates(m.v); break;
       case 'kicked': break;
       case 'error': if (m.reason === 'mensaje_invalido') toast('El servidor rechazó un mensaje mal formado.', 'bad'); break;
     }

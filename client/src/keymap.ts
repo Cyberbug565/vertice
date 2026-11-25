@@ -19,6 +19,7 @@ export const KEY_ACTIONS: KeyAction[] = [
   { id: 'dance', label: 'Bailar', group: 'Acción', def: 'b' },
   { id: 'sleep', label: 'Dormir / despertar', group: 'Acción', def: 'z' },
   { id: 'drive', label: 'Conducir / aparcar', group: 'Acción', def: 'v' },
+  { id: 'vitals', label: 'Ver cifras de salud, aguante y necesidades (mantener)', group: 'Personaje', def: 'alt' },
   { id: 'inventory', label: 'Inventario', group: 'Personaje', def: 'i' },
   { id: 'character', label: 'Ficha del personaje', group: 'Personaje', def: 'c' },
   { id: 'cyber', label: 'Ciberware', group: 'Personaje', def: 'x' },

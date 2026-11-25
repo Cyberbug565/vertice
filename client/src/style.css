@@ -806,3 +806,46 @@ html[data-hide~="file"] .hud-file { display: none !important; }
 .armero-opt:hover { border-color: rgba(67, 200, 255, 0.6); }
 .armero-opt.on { border-color: #4dff9a; background: rgba(77, 255, 154, 0.07); }
 #armero-panel { width: min(860px, calc(100vw - 24px)); }
+
+/* v0.45 · Constantes vitales sin panel: barras continuas y anillos de necesidades */
+.vitals { position: fixed; top: 14px; left: 16px; width: 270px; z-index: 6; pointer-events: none; display: grid; gap: 6px; }
+.vbar { position: relative; height: 7px; background: rgba(255, 255, 255, 0.13); border-radius: 4px; overflow: visible; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.55); }
+.vbar.st { height: 5px; }
+.vbar > i, .vbar > em { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; }
+.vbar > i { background: linear-gradient(90deg, #ff2d4a, #ff5a5f); box-shadow: 0 0 10px rgba(255, 45, 74, 0.55); transition: width 0.25s ease-out; }
+.vbar.st > i { background: linear-gradient(90deg, #26e0a0, #5affc8); box-shadow: 0 0 8px rgba(38, 224, 160, 0.45); }
+.vbar > em { background: rgba(255, 235, 235, 0.55); transition: width 0.9s ease-in 0.45s; }
+.vbar.low > i { animation: vlow 0.9s ease-in-out infinite; }
+@keyframes vlow { 50% { filter: brightness(1.6); } }
+.vnum { position: absolute; right: 0; top: -15px; font-size: 0.72em; color: #f2f6ff; text-shadow: 0 1px 2px #000, 0 0 4px #000; opacity: 0; transition: opacity 0.15s; }
+.vitals.nums .vnum { opacity: 1; }
+.vrings { display: flex; gap: 10px; margin-top: 3px; }
+.vring { --p: 100; --c: #ffae5a; position: relative; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--c); filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7)); }
+.vring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: rgba(8, 10, 20, 0.35); }
+.vring svg { position: absolute; inset: 7px; width: 16px; height: 16px; z-index: 1; filter: drop-shadow(0 1px 1px #000); }
+.vring.thirst { --c: #4fb4ff; } .vring.fatigue { --c: #b98cff; }
+.vring.low { --c: #ff5a5f; } .vring.crit { animation: vlow 0.7s ease-in-out infinite; }
+.vring .vnum { top: auto; bottom: -14px; right: 50%; transform: translateX(50%); }
+/* El anillo es una capa con máscara; el icono y la cifra van encima, sin máscara. */
+.vring::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--c) calc(var(--p) * 1%), rgba(255, 255, 255, 0.14) 0);
+  -webkit-mask: radial-gradient(circle, transparent 0 11px, #000 11.5px); mask: radial-gradient(circle, transparent 0 11px, #000 11.5px); }
+.hud-tl { top: 84px; }
+/* v0.45 · Apuntando con mira: solo quedan las barras de salud y aguante */
+body.scoped #ui > *:not(.vitals):not(.sight-ov):not(.crosshair):not(#ask-modal):not(.panel) { opacity: 0 !important; visibility: hidden !important; transition: opacity 0.15s, visibility 0s 0.15s; }
+body.scoped .vitals .vrings { opacity: 0; }
+body.scoped .vitals { z-index: 25; } /* por encima del visor negro de las ópticas */
+/* v0.45 · Velocímetro al volante (en el sitio del arma, que al conducir no se usa) */
+.speedo { position: fixed; right: 22px; bottom: 22px; width: 190px; z-index: 6; pointer-events: none; text-align: center; color: #eef6ff; text-shadow: 0 1px 3px #000; }
+.speedo svg { width: 190px; height: 110px; display: block; filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7)); }
+.speedo .rpm { transition: stroke-dasharray 0.08s linear; }
+.speedo-read { margin-top: -66px; display: flex; align-items: baseline; justify-content: center; gap: 6px; }
+.speedo-num { font-size: 2.5em; font-weight: 700; letter-spacing: -0.02em; }
+.speedo-read small { opacity: 0.75; }
+.speedo-gear { font-size: 1.15em; padding: 0 6px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 4px; margin-left: 6px; }
+.speedo-name { font-size: 0.72em; opacity: 0.8; margin-top: 18px; }
+body.driving .hud-weapon { display: none; }
+/* v0.45 · Taller del concesionario */
+.taller { margin: 8px 0 12px; padding: 8px 10px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.25); }
+.taller summary { cursor: pointer; }
+.taller-car { border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 6px; margin-top: 6px; }
+.taller-part { margin: 6px 0; }

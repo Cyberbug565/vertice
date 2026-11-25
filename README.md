@@ -1,4 +1,11 @@
-# Vértice — RPG multijugador persistente isométrico (alfa v0.44)
+# Vértice — RPG multijugador persistente isométrico (alfa v0.45)
+
+La v0.45 trae una conducción nueva y un HUD más limpio:
+- **Conducción con peso:** W acelera, S frena y da marcha atrás, A/D giran y Espacio es el freno de mano. Cada tipo se conduce distinto: los superdeportivos agarran mucho y se van de golpe, los propulsión trasera sueltan la cola con gas, los utilitarios se van de morro, los rally derrapan largo y fácil, y los pesados tardan en todo. La carrocería se balancea y cabecea, los neumáticos chirrían y dejan marcas, el motor cambia de marcha y hay velocímetro y cámara de persecución.
+- **Taller:** en los concesionarios se mejoran el motor, los frenos, la suspensión, los neumáticos y el peso de cada coche, y se nota al conducir.
+- **HUD:** salud y aguante son barras limpias sin panel. Hambre, sed y sueño son tres anillos con icono que se vacían; las cifras salen al mantener Alt. Al mirar por una mira solo quedan la salud y el aguante.
+
+[Novedades](docs/NOVEDADES-v0.45.md).
 
 La v0.44 trae armas que se modifican:
 - **Punto de mira y miras:** en tercera y primera persona hay un punto de mira. Al apuntar se ve a través de la mira: hierro, holográfico 1,2×, holográfico 1,4×, óptica recortada 4× o visor de francotirador 8×, con su aumento.

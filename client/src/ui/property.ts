@@ -1,7 +1,7 @@
 import { vehiclePreview } from '../render/vehicle-art';
 // v0.4 · Paneles de viviendas, inmobiliaria, concesionarios, propiedades, alijo, mercado en tiempo real y análisis de objetivos.
 import type { BuildingView, DealerView, MarketLiveView, PropsView, RealtyView, ScanView, StashView } from '@vertice/shared';
-import { vehicleSpeed } from '@vertice/shared';
+import { carSpec, driveStyle, vehicleSpeed, TIRE_TYPES, WEIGHT_KITS, type CarTune } from '@vertice/shared';
 import { content } from '../content';
 import { newOpId, type Net } from '../net';
 import { $ui, fmtMoney, h, ask } from './dom';
@@ -66,6 +66,7 @@ export function dealerPanel(ctx: PropCtx, v: DealerView) {
     h('div', { class: 'carpaint', style: { background: `linear-gradient(135deg, ${c.color}, #101018)` } }, h('img', { src: vehiclePreview(c.model), alt: '', loading: 'lazy', decoding: 'async' }), h('span', {}, CLASS[c.class])),
     h('div', { class: 'row', style: { justifyContent: 'space-between' } }, h('b', {}, `${c.maker} ${c.name}`)),
     h('div', { class: 'small muted' }, c.desc),
+    h('div', { class: 'small cy' }, driveStyle({ class: c.class, id: c.id, hover: content.cars.find((x) => x.id === c.id)?.hover })),
     h('div', { class: 'carstats' }, cstat('Velocidad', c.speed / 5, `${vehicleSpeed(c.speed).toFixed(1)} l/s`),
       cstat('Aceleración', c.acceleration / 17, `${c.acceleration.toFixed(1)} l/s²`),
       cstat('Frenada', c.braking / 16, `${c.braking.toFixed(1)} l/s²`), cstat('Manejo', c.handling / 100, `${c.handling}/100`), cstat('Maletero', c.trunk / 400, `${c.trunk} kg`), cstat('Blindaje', c.armor / 7, String(c.armor)), cstat('Plazas', c.seats / 8, String(c.seats))),
@@ -73,7 +74,47 @@ export function dealerPanel(ctx: PropCtx, v: DealerView) {
       h('button', { class: 'btn small primary', disabled: ctx.money() < c.price, onclick: () => { ask(`¿Comprar ${c.maker} ${c.name} por ${fmtMoney(c.price)}?`, () => { ctx.net.send({ t: 'car', action: 'buy', dealer: v.dealer, car: c.id, opId: newOpId() } as any); }); } }, 'Comprar'))));
   showPanel('dealer-panel', v.name, h('p', { class: 'muted' }, `${v.desc} Los precios siguen al índice de vehículos del mercado.`),
     v.owned.length ? h('p', {}, `Tu garaje: ${v.owned.map((o) => o.name).join(', ')}`) : null,
+    v.owned.length ? tallerSection(ctx, v) : null,
+    h('h3', {}, 'En venta'),
     h('div', { class: 'cards' }, ...cars));
+}
+
+// ---------------------------------------------------------------- v0.45 · taller del concesionario
+const PART_NAMES: Record<string, string> = { motor: 'Motor', frenos: 'Frenos', suspension: 'Suspensión', neumaticos: 'Neumáticos', peso: 'Peso' };
+const LEVELS: Record<string, string[]> = { motor: ['De serie', 'Admisión y escape', 'Turbo y centralita', 'Preparación de carreras'], frenos: ['De serie', 'Pastillas deportivas', 'Discos perforados', 'Carbono-cerámicos'], suspension: ['De serie', 'Muelles cortos', 'Coilovers', 'Suspensión de competición'] };
+const TIRE_NAMES: Record<string, string> = { serie: 'De serie', deportivos: 'Deportivos', rally: 'Rally (de tacos)', semislick: 'Semislick' };
+const KIT_NAMES: Record<string, string> = { serie: 'De serie', aligerado: 'Aligerado (fibra, sin asientos traseros)', reforzado: 'Reforzado (chapas y jaula)' };
+const PART_HELP: Record<string, string> = {
+  motor: 'Más empuje y algo más de punta. Con mucha potencia y propulsión trasera, la cola se suelta más al dar gas en curva.',
+  frenos: 'Frenas en menos metros.',
+  suspension: 'Menos balanceo y cabeceo, más agarre y el coche responde antes al volante.',
+  neumaticos: 'Deportivos: más agarre. Semislick: mucho agarre, pero cuando se va, se va de golpe. Rally: algo menos de agarre y derrapes largos y fáciles de controlar.',
+  peso: 'Aligerado: acelera, frena y gira mejor. Reforzado: pesa más (inercia, frenadas largas) pero aguanta los golpes y rebota menos.',
+};
+function tallerSection(ctx: PropCtx, v: DealerView) {
+  const rows = v.owned.map((o) => {
+    const def = content.cars.find((x) => x.id === o.car); if (!def) return null;
+    const tune: CarTune = o.tune ?? {};
+    const spec = (t: CarTune) => carSpec({ acceleration: def.acceleration, braking: def.braking, handling: def.handling, class: def.class, id: def.id, armor: def.armor, hover: def.hover, tune: t });
+    const cur = spec(tune);
+    const stats = h('div', { class: 'small mono' }, `${Math.round(cur.mass)} kg · empuje ${cur.accel.toFixed(1)} · frenada ${cur.brake.toFixed(1)} · agarre ${cur.grip.toFixed(1)} · balanceo ${cur.roll.toFixed(2)}`);
+    const part = (key: string, values: readonly (number | string)[], label: (x: number | string) => string) => {
+      const now = (tune as Record<string, unknown>)[key] ?? (typeof values[0] === 'number' ? 0 : 'serie');
+      return h('div', { class: 'taller-part' }, h('b', {}, PART_NAMES[key]), h('div', { class: 'small muted' }, PART_HELP[key]),
+        h('div', { class: 'row', style: { gap: '6px', flexWrap: 'wrap' } }, ...values.map((x) => {
+          const price = o.tunePrices?.[`${key}:${x}`] ?? 0, on = now === x;
+          const after = spec({ ...tune, [key]: x });
+          const tip = `Con esto: ${Math.round(after.mass)} kg · empuje ${after.accel.toFixed(1)} · frenada ${after.brake.toFixed(1)} · agarre ${after.grip.toFixed(1)}`;
+          return h('button', { class: `btn small${on ? ' primary' : ''}`, disabled: on || ctx.money() < price, title: tip,
+            onclick: () => ask(`${PART_NAMES[key]} del ${o.name}: ${label(x)}${price ? ` por ${fmtMoney(price)}` : ' (gratis)'}. ¿Montarlo?`, () => { ctx.net.send({ t: 'car', action: 'tune', dealer: v.dealer, car: o.id, part: key, value: x, opId: newOpId() } as any); blip('good'); }) },
+            `${label(x)}${on ? ' ✓' : price ? ` · ${fmtMoney(price)}` : ''}`);
+        })));
+    };
+    return h('div', { class: 'taller-car' }, h('h4', { style: { margin: '4px 0' } }, o.name), h('div', { class: 'small cy' }, driveStyle(def)), stats,
+      part('motor', [0, 1, 2, 3], (x) => LEVELS.motor[Number(x)]), part('frenos', [0, 1, 2, 3], (x) => LEVELS.frenos[Number(x)]),
+      part('suspension', [0, 1, 2, 3], (x) => LEVELS.suspension[Number(x)]), part('neumaticos', TIRE_TYPES, (x) => TIRE_NAMES[String(x)]), part('peso', WEIGHT_KITS, (x) => KIT_NAMES[String(x)]));
+  });
+  return h('details', { class: 'taller', open: true }, h('summary', {}, h('b', {}, '🔧 Taller: mejora tus coches'), h('span', { class: 'muted small' }, ' · el peso y las piezas cambian cómo se conduce')), ...rows.filter(Boolean) as HTMLElement[]);
 }
 const cstat = (k: string, f: number, v: string) => h('div', { class: 'cstat' }, h('span', { class: 'small muted' }, k), h('div', { class: 'xpbar thin' }, h('i', { style: { width: `${Math.min(100, f * 100)}%`, background: '#43f3ff' } })), h('span', { class: 'mono small' }, v));
 

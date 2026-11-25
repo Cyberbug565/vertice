@@ -1,6 +1,6 @@
 // v0.4 · Propiedades: viviendas (instancias privadas con permisos y alijo), coches, viaje en coche e índices de mercado en tiempo real.
 import { randomUUID } from 'node:crypto';
-import { nearestWalkable, vehicleSpeed, parsePortalZone, portalZoneId, portalStreet, PORTAL_IN, type BuildingView, type DealerView, type HouseDef, type MarketLiveView, type PropsView, type RealtyView, type StashView, type TrunkView } from '@vertice/shared';
+import { nearestWalkable, vehicleSpeed, TIRE_TYPES, WEIGHT_KITS, type CarDef, type CarTune, type CarTuning, type TunePart, parsePortalZone, portalZoneId, portalStreet, PORTAL_IN, type BuildingView, type DealerView, type HouseDef, type MarketLiveView, type PropsView, type RealtyView, type StashView, type TrunkView } from '@vertice/shared';
 import { GameError } from '../game/effects.js';
 import { buildSheet, perkMods, weaponFits, type PlayerState } from '../game/player.js';
 import type { Entity } from './entity.js';
@@ -287,13 +287,75 @@ export class Property {
   }
 
   // ---------------------------------------------------------------- coches
+  // ---------------------------------------------------------------- v0.45: taller (mejoras de cada coche)
+  static readonly TUNE_FLAG = 'coches:tune';
+  tunesOf(p: PlayerState): Record<string, CarTune> {
+    const v = p.flags.get(Property.TUNE_FLAG)?.value;
+    return v && typeof v === 'object' ? (v as Record<string, CarTune>) : {};
+  }
+  /** Lo que necesita la física: estadísticas del coche, su clase, blindaje, levitación y las mejoras de tu unidad. */
+  tuningOf(p: PlayerState, car: CarDef): CarTuning {
+    const own = p.cars.find((x) => x.id === p.driving && x.car === car.id) ?? p.cars.find((x) => x.car === car.id);
+    return { acceleration: car.acceleration, braking: car.braking, handling: car.handling, class: car.class, id: car.id, armor: car.armor, hover: car.hover, tune: own ? this.tunesOf(p)[own.id] ?? {} : {} };
+  }
+  /** Precio de dejar una pieza en un nivel o tipo (las mejoras de un hiperdeportivo cuestan como un coche barato). */
+  tunePrice(car: CarDef, part: TunePart, value: number | string) {
+    const base = Math.max(9000, car.price);
+    const f = part === 'motor' ? [0, 0.05, 0.11, 0.19][Number(value)] : part === 'frenos' ? [0, 0.025, 0.055, 0.09][Number(value)]
+      : part === 'suspension' ? [0, 0.03, 0.06, 0.1][Number(value)]
+      : part === 'neumaticos' ? ({ serie: 0, deportivos: 0.025, rally: 0.025, semislick: 0.05 } as Record<string, number>)[String(value)]
+      : ({ serie: 0, aligerado: 0.07, reforzado: 0.06 } as Record<string, number>)[String(value)];
+    if (f === undefined) throw new GameError('Esa mejora no existe.');
+    return Math.round((base * f) / 50) * 50;
+  }
+  tunePrices(car: CarDef) {
+    const out: Record<string, number> = {};
+    for (const [part, vals] of [['motor', [0, 1, 2, 3]], ['frenos', [0, 1, 2, 3]], ['suspension', [0, 1, 2, 3]], ['neumaticos', TIRE_TYPES], ['peso', WEIGHT_KITS]] as [TunePart, readonly (number | string)[]][])
+      for (const v of vals) out[`${part}:${v}`] = this.tunePrice(car, part, v);
+    return out;
+  }
+  async tune(c: PlayerConn, dealerId: string, ownedId: string, part: TunePart, value: number | string, opId: string) {
+    const p = c.p!, e = c.e!;
+    const desk = [...e.zone.entities].find((o) => o.dealer === dealerId);
+    if (!desk || Math.hypot(desk.x - e.x, desk.y - e.y) > 5) throw new GameError('Las mejoras se montan en el taller de un concesionario.');
+    const own = p.cars.find((x) => x.id === ownedId);
+    if (!own) throw new GameError('Ese coche no es tuyo.');
+    const car = this.w.c.cars.find((x) => x.id === own.car)!;
+    if (part === 'neumaticos' && !(TIRE_TYPES as readonly string[]).includes(String(value))) throw new GameError('Neumáticos desconocidos.');
+    if (part === 'peso' && !(WEIGHT_KITS as readonly string[]).includes(String(value))) throw new GameError('Kit desconocido.');
+    if (['motor', 'frenos', 'suspension'].includes(part) && !(Number.isInteger(value) && Number(value) >= 0 && Number(value) <= 3)) throw new GameError('Nivel de 0 a 3.');
+    const tunes = structuredClone(this.tunesOf(p));
+    const cur = (tunes[ownedId] ??= {});
+    if ((cur as Record<string, unknown>)[part] === value) throw new GameError('Ya lo lleva montado.');
+    const price = this.tunePrice(car, part, value);
+    if (p.money < price) throw new GameError(`Cuesta ${price.toLocaleString('es-ES')} €$.`);
+    const label = `${car.maker} ${car.name}: ${part} → ${value}`;
+    await this.w.db.tx(async (q) => {
+      const dup = await q.query('SELECT 1 FROM ops WHERE op_id = $1', [opId]);
+      if (dup.rows.length) throw new GameError('Operación ya procesada');
+      const bal = p.money - price;
+      if (price) {
+        await q.query('INSERT INTO ledger (op_id, character_id, delta, balance_after, reason) VALUES ($1,$2,$3,$4,$5)', [`${opId}:taller`, p.charId, -price, bal, `Taller: ${label}`]);
+        await q.query('UPDATE characters SET money=$2 WHERE id=$1', [p.charId, bal]);
+      }
+      (cur as Record<string, unknown>)[part] = value;
+      await q.query('INSERT INTO character_flags (character_id, key, value) VALUES ($1,$2,$3) ON CONFLICT (character_id, key) DO UPDATE SET value = EXCLUDED.value', [p.charId, Property.TUNE_FLAG, JSON.stringify(tunes)]);
+      await q.query('INSERT INTO ops (op_id, character_id, kind, result) VALUES ($1,$2,$3,$4)', [opId, p.charId, 'tune', JSON.stringify({ ownedId, part, value, price })]);
+    });
+    p.money -= price;
+    p.flags.set(Property.TUNE_FLAG, { value: tunes, expiresAt: null });
+    if (p.driving === ownedId) this.w.survival.refreshMovement(c);
+    this.w.send(c, { t: 'notice', kind: 'good', text: `Taller: ${label}${price ? ` (${price.toLocaleString('es-ES')} €$)` : ''}.` });
+    this.w.send(c, { t: 'sheet', sheet: buildSheet(this.w.c, p) });
+  }
+
   dealerView(p: PlayerState, dealerId: string): DealerView {
     const d = this.w.c.dealers.find((x) => x.id === dealerId);
     if (!d) throw new GameError('Concesionario desconocido.');
     return {
       dealer: d.id, name: d.name, desc: d.desc,
       cars: this.w.c.cars.filter((x) => d.classes.includes(x.class)).map((x) => ({ id: x.id, name: x.name, maker: x.maker, class: x.class, speed: x.speed, acceleration: x.acceleration, handling: x.handling, braking: x.braking, model: x.model, trunk: x.trunk, seats: x.seats, armor: x.armor, price: this.carPrice(x.id, d.id, p), color: x.color, desc: x.desc })).sort((a, b) => a.price - b.price),
-      owned: p.cars.map((x) => { const k = this.w.c.cars.find((c) => c.id === x.car)!; return { id: x.id, car: x.car, name: `${k.maker} ${k.name}`, value: Math.round(this.carPrice(k.id) * 0.6) }; }),
+      owned: p.cars.map((x) => { const k = this.w.c.cars.find((c) => c.id === x.car)!; return { id: x.id, car: x.car, name: `${k.maker} ${k.name}`, value: Math.round(this.carPrice(k.id) * 0.6), tune: this.tunesOf(p)[x.id] ?? {}, tunePrices: this.tunePrices(k) }; }),
     };
   }
   async buyCar(c: PlayerConn, dealerId: string, carId: string, opId: string) {
@@ -360,7 +422,7 @@ export class Property {
     if (p.driving === own.id) return;
     if (p.driving) this.park(c, true);
     this.w.cancelActivity(e);
-    e.carMotion = { speed: 0, heading: e.facing * Math.PI / 4 };
+    e.carMotion = { speed: 0, heading: e.facing * Math.PI / 4 }; e.drive = undefined;
     p.driving = own.id;
     e.vehicle = own.car; e.guard = false; e.guardFacing = undefined; e.guardSince = undefined; e.labelVer++;
     this.w.survival.refreshMovement(c);
@@ -375,7 +437,7 @@ export class Property {
     const p = c.p!, e = c.e!;
     if (!p.driving) return;
     const ownedId = p.driving;
-    p.driving = null; e.vehicle = null; e.carMotion = undefined; e.labelVer++;
+    p.driving = null; e.vehicle = null; e.carMotion = undefined; e.drive = undefined; e.labelVer++;
     this.w.survival.refreshMovement(c);
     if (e.zone.def.kind === 'exterior') this.spawnParked(p, ownedId, e.zone.id, e.x, e.y, true, e.facing);
     if (!quiet) this.w.send(c, { t: 'notice', kind: 'info', text: 'Aparcas y bajas del coche. Haz clic en él para abrir el maletero.' });
