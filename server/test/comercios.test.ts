@@ -113,6 +113,25 @@ it('la fuerza exige neutralizar al personal y guardias, y activa una patrulla de
   await w.teleport(c,'bloque9',[8,8]);
 });
 
+it('registra el pago aunque una central corrupta rechace el aviso',async () => {
+  const a=await join('AvisoOpalo'), c=connect(a), w=app.world, key='tienda:opalo';
+  const store=await atCounter(a,key);
+  for (const npc of [...store.zone.actors].filter(e=>e.businessGuard===key || e.businessJob===key)) npc.state='downed';
+  const old=w.survival.rng;
+  try {
+    w.survival.rng=()=>.999;
+    const result=waitResult(a);
+    expect((await a.cmd({t:'business',target:store.id,action:'force',opId:randomUUID()})).ok).toBe(true);
+    await result;
+    expect(a.log.some(m=>m.t==='notice' && /pagó el aviso.*no asignó/.test(m.text))).toBe(true);
+    const paid=await app.db.query<{calls_spent:number}>('SELECT calls_spent FROM business_reserves WHERE site=$1',[key]);
+    expect(Number(paid.rows[0].calls_spent)).toBeGreaterThan(0);
+    w.robberies.tick(Date.now()+120000);
+    expect([...store.zone.actors].some(e=>e.dispatchedUntil)).toBe(false);
+    expect(c.p!.wanted).toBe(0);
+  } finally { w.survival.rng=old; }
+});
+
 it('un matasanos puede morir y la reserva entrega ciberware robado con procedencia',async () => {
   const a=await join('CromoSombra'), c=connect(a), w=app.world, key='consulta:remache';
   const safe=await atCounter(a,key);

@@ -73,7 +73,7 @@ export class Robberies {
       if (!zone || this.byZone.get(zone.id)?.some(s => s.shop?.id === shop.id)) continue;
       const staff = this.w.c.npcs.find(n => n.shop === shop.id);
       const pos = staff?.schedule.find(s => s.zone === zone.id)?.at ?? zone.def.safePoint;
-      this.addSite(zone, this.counter(zone, shop.id, shop.name, pos), shop);
+      this.addSite(zone, this.counter(zone, shop.id, 'Caja del comercio', pos), shop);
     }
     for (const clinic of this.doctors.values()) {
       const zone = this.w.zones.get(clinic.zone);
@@ -144,7 +144,7 @@ export class Robberies {
     if (!site || standing(site.clerk)) return;
     const at = nearestWalkable(site.zone.grid, site.anchor.x-1.5, site.anchor.y, 3);
     if (!at) return;
-    const e = this.w.spawnNpc(site.zone, { name: site.shop?.clerk ?? `Dependiente · ${site.name}`,
+    const e = this.w.spawnNpc(site.zone, { name: site.shop?.clerk ?? 'Dependiente del local',
       title: 'Dependiente', ...at, label: 'Atendiendo el mostrador', speed: 1.65,
       appearance: { body: site.security % 2 ? 'femenino' : 'masculino', skin: '#bd8969', hair: '#252329',
         jacket: site.security >= 21 ? '#243559' : '#55423b', accent: '#50e8c5', top: site.security >= 21 ? 'traje' : 'camisa' } });
@@ -265,6 +265,7 @@ export class Robberies {
       throw new GameError('Comercio fuera de alcance.');
     if (action === 'view') { this.open(c,source); return; }
     if (e.channel) throw new GameError('Ya estás haciendo otra acción.');
+    if (e.steer) throw new GameError('Detente antes de empezar.');
     const option = this.options(c,site).find(o => o.action === action)!;
     if (option.blocked) throw new GameError(option.blocked);
     if (c.p.sleeping) this.w.survival.wake(c);

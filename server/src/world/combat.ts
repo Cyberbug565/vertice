@@ -971,7 +971,7 @@ export class Combat {
   }
 
   private talk(c: PlayerConn, target: Entity) {
-    if (target.kind === 'npc' && (target.npcType === 'essential' || (!target.npcType && target.dialog))) { this.w.handle(c, { t: 'interact', seq: 0, target: target.id } as any); return; }
+    if (target.kind === 'npc' && (target.npcType === 'essential' || target.businessJob?.startsWith('consulta:') || (!target.npcType && target.dialog))) { this.w.handle(c, { t: 'interact', seq: 0, target: target.id } as any); return; }
     const p = c.p!;
     let line = CIVIL_LINES[Math.floor(this.rng() * CIVIL_LINES.length)];
     const f = target.faction ? this.c.factions.find((x) => x.id === target.faction) : undefined;
