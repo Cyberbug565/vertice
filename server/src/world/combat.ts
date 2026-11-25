@@ -156,8 +156,10 @@ export class Combat {
   menu(c: PlayerConn, target: Entity): TargetMenuView {
     const p = c.p!, e = c.e!;
     const prot = dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected';
-    const block = prot ? 'Zona protegida: aquí no se permiten agresiones.' : undefined;
+    const block = prot && !this.w.robberies.acceptsViolence(target) ? 'Zona protegida: aquí no se permiten agresiones.' : undefined;
     const opts: TargetMenuView['options'] = [];
+    const business = this.w.robberies.target(target);
+    if (business && !target.businessGuard) opts.push({ id:'business', kind:'interact', group:'combate', label:'Examinar local', danger:true });
     const tp = this.w.playerOf(target);
     const downed = tp ? tp.status === 'downed' : target.state === 'downed';
     const wp = this.weaponOf(p);
@@ -195,6 +197,7 @@ export class Combat {
     // v0.13 · Cadáver: se registra entero en el panel de saqueo (dinero, armas, objetos y cromo) y se puede cargar para
     // esconderlo en un contenedor antes de que alguien lo encuentre.
     if (target.dead) return { target: target.id, name: target.name, subtitle: target.corpse?.reportedAt ? 'Cadáver · ya lo han encontrado' : 'Cadáver', options: [
+      ...opts,
       { id: 'search', kind: 'action', group: 'ayuda', label: target.searched ? 'Registrar el cuerpo (vacío)' : 'Registrar el cuerpo', detail: 'Abre lo que lleva: dinero, armas, objetos y cromo.' },
       { id: 'carry', kind: 'action', group: 'ayuda', label: 'Cargar el cadáver', detail: 'Para esconderlo en un contenedor de basura, una taquilla o un bidón (E junto al contenedor). Suma unos 70 kg.', disabled: p.carrying ? 'Ya llevas a alguien' : undefined }] };
     if (downed) {
@@ -350,7 +353,7 @@ export class Combat {
       const distA = Math.hypot(target.x - e.x, target.y - e.y);
       if (distA > aim.range) return fail(`Demasiado lejos para un tiro seguro (${distA.toFixed(0)} m de ${aim.range} m). Acércate o dispara sin apuntar.`);
       if (!this.lineClear(e, target)) return fail('No tienes línea de tiro.');
-      if (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected') return fail('Zona protegida: aquí no se permiten agresiones.');
+      if (!this.w.robberies.acceptsViolence(target) && (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected')) return fail('Zona protegida: aquí no se permiten agresiones.');
       e.path = []; e.moving = false;
       this.w.cancelActivity(e);
       e.channel = { startTick: this.w.tick, endTick: this.w.tick + Math.round(aim.time * 20), label: `Apuntando a ${target.name}`, targetId: target.id, apply: () => this.w.enqueue(c, async () => {
@@ -365,7 +368,7 @@ export class Combat {
     }
     if (target.npcType === 'essential' || (target.kind === 'npc' && !target.npcMax && !target.fugitive)) return fail('Esta persona no se puede atacar.');
     const hostile = ['rob', 'knockout', 'attack', 'finish', 'heavy', 'kick'].includes(action);
-    if (hostile && (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected')) return fail('Zona protegida: aquí no se permiten agresiones.');
+    if (hostile && !this.w.robberies.acceptsViolence(target) && (dangerAt(e.zone.grid, e.x, e.y) === 'protected' || dangerAt(target.zone.grid, target.x, target.y) === 'protected')) return fail('Zona protegida: aquí no se permiten agresiones.');
     const wp = this.weaponFor(p, action !== 'knockout');
     const range = action === 'knockout' || action === 'attack' || action === 'heavy' ? wp.w.range : action === 'kick' ? 1.9 : action === 'rob' || action === 'carry' || action === 'finish' ? 1.8 : 2.6;
     const dist = Math.hypot(target.x - e.x, target.y - e.y);
@@ -864,7 +867,8 @@ export class Combat {
     // v0.10 · Solo cuenta si alguien lo VE o lo OYE (o lo graba una cámara). En sigilo, nadie se entera.
     const wit = this.w.stealth.witnesses(c.e!, (c as any).lastNoise ?? 2.5, kind === 'kill' || kind === 'down' || target.state === 'downed' || target.dead ? target : undefined);
     const camera = this.cameraSees(c.e!);
-    if (kind !== 'attempt' || lethal) this.w.threats.violence(c.e!, target, wit.civs);
+    const business = this.w.robberies.assault(c,target,kind);
+    if (!business && (kind !== 'attempt' || lethal)) this.w.threats.violence(c.e!, target, wit.civs);
     if (wit.seen.length) this.w.stealth.remember(c, wit.seen, kind === 'kill' ? 'asesinato' : 'agresión');
     // v0.6: zona negra, sin ley; zona roja, solo si hay agentes cerca; zona amarilla, vigilada (cámaras y patrullas).
     const lvl = dangerAt(c.e!.zone.grid, c.e!.x, c.e!.y);
@@ -1300,6 +1304,7 @@ export class Combat {
       return true;
     }
     // Vigilancia: policía busca a los buscados; bandas, a quien tienen fichado en su territorio.
+    if (e.businessGuard) return false;
     if ((e.npcType === 'police' && (!this.w.cityPeople.has(e)||this.w.cityPeople.isWorking(e))) || e.npcType === 'gang') {
       const f = this.c.factions.find((x) => x.id === e.faction);
       for (const o of e.zone.query(e.x, e.y, e.npcType === 'police' ? 12 : 7)) {
@@ -1599,6 +1604,8 @@ export class Combat {
       this.respawnQueue.splice(this.respawnQueue.indexOf(r), 1);
       const z = this.w.zones.get(r.zone);
       const t = r.template as any;
+      if (t.commerceClerk) { this.w.robberies.spawnClerk(t.commerceClerk); continue; }
+      if (t.commerceGuard) { this.w.robberies.respawnGuard(t.commerceGuard); continue; }
       if(t.resident){
         const def=this.c.npcs.find(n=>n.id===t.resident);
         if(def)this.w.spawnScheduled(def);

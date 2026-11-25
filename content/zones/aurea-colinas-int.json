@@ -1,0 +1,121 @@
+{
+ "id": "aurea-colinas-int",
+ "name": "Joyería Áurea",
+ "kind": "interior",
+ "width": 13,
+ "height": 11,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#404667",
+ "safePoint": [
+  11,
+  5
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ],
+  [
+   8,
+   4
+  ],
+  [
+   8,
+   6
+  ],
+  [
+   7,
+   8
+  ]
+ ],
+ "furnished": true,
+ "props": [
+  {
+   "type": "desk",
+   "at": [
+    6,
+    3
+   ],
+   "color": "#404667"
+  },
+  {
+   "type": "desk",
+   "at": [
+    6,
+    7
+   ],
+   "color": "#404667"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    6,
+    1
+   ],
+   "color": "#404667"
+  },
+  {
+   "type": "planter",
+   "at": [
+    10,
+    2
+   ],
+   "color": "#404667"
+  },
+  {
+   "type": "sofa",
+   "at": [
+    9,
+    8
+   ],
+   "color": "#404667"
+  },
+  {
+   "type": "locker",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#404667"
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#404667"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-aurea-colinas",
+   "name": "Salir a la calle",
+   "at": [
+    12,
+    5
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     256,
+     102
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-aurea-colinas",
+   "name": "Mostrador de Joyería Áurea",
+   "at": [
+    4,
+    5
+   ],
+   "kind": "shop",
+   "shop": "aurea-colinas"
+  }
+ ]
+}

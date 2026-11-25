@@ -1,0 +1,26 @@
+[
+ {
+  "id": "anillo-aurea",
+  "name": "Anillo Áurea",
+  "desc": "Anillo de aleación dorada con un sello de Colinas Doradas.",
+  "weight": 0.03,
+  "price": 750,
+  "category": "equipo"
+ },
+ {
+  "id": "colgante-opalo",
+  "name": "Colgante de ópalo luminiscente",
+  "desc": "Una joya de Estación Central hecha con ópalo de laboratorio.",
+  "weight": 0.08,
+  "price": 1190,
+  "category": "equipo"
+ },
+ {
+  "id": "reloj-orbita",
+  "name": "Reloj Órbita",
+  "desc": "Esfera de cristal oscuro y correa de titanio.",
+  "weight": 0.12,
+  "price": 1850,
+  "category": "equipo"
+ }
+]

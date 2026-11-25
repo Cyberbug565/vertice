@@ -12,7 +12,10 @@ export const MAX_CLIENT_MESSAGE_BYTES = 2048;
 const seq = z.number().int().nonnegative();
 const opId = z.string().min(8).max(64).regex(/^[A-Za-z0-9_-]+$/);
 
+export const BUSINESS_ACTIONS = ['view','stealth','threat','force'] as const;
+export type BusinessAction = typeof BUSINESS_ACTIONS[number];
 export const ClientMsg = z.discriminatedUnion('t', [
+  z.object({ t: z.literal('business'), seq, target: z.number().int().positive(), action: z.enum(BUSINESS_ACTIONS), opId }),
   z.object({ t:z.literal('penal'),seq,action:z.enum(PRISON_ACTIONS),target:z.number().int().positive().optional(),opId }),
   z.object({ t:z.literal('bank'),seq,action:z.enum(['view','deposit','withdraw']),target:z.number().int().positive(),
     amount:z.number().int().positive().max(10000000).optional(),opId }),
@@ -182,10 +185,16 @@ export interface ScanView {
   attributes?: Record<string, number>; skills?: { name: string; level: number }[]; weapon?: string; armor?: number; chrome?: string[]; bounty?: number; wanted?: number; money?: string; rep?: number; threat: string;
 }
 
+export interface BusinessView {
+  target: number; name: string; security: number; guards: number;
+  status: string; protection: string; category: string;
+  options: { action: Exclude<BusinessAction, 'view'>; label: string; detail: string; chance?: number; blocked?: string }[];
+}
 export interface ShopView {
   shop: string; name: string; owner: string; ownerName: string; security: number; fence: boolean; money: number; bar?: boolean;
   /** v0.44 · Tiene banco de armero (accesorios). */
   taller?: boolean;
+  businessTarget?: number;
   items: { item: string; name: string; desc: string; category: string; price: number; base: number; stock: number; trend: number; stealChance: number; discount: number; owned?: number }[];
   sell: { item: string; name: string; qty: number; price: number }[];
 }
@@ -204,7 +213,7 @@ export interface ClinicOffer {
   source: 'stock' | 'stolen' | 'inventory' | 'installed'; ref: string; action: 'install' | 'remove'; def: string; name: string; grade: number; slot: string; family: string; desc: string; stolen: boolean;
   capacity: number; humanity: number; price: number; survival: number; clean: number; theft: number; danger: string; humanityAfter: number; capacityAfter: number; blocked?: string; replaces?: string;
  line?: 'certificado' | 'taller'; rarity?: string; sides?: CyberSide[]; part?: string | null; warning?: string;}
-export interface ClinicView { doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[]; repair?: { parts: string[]; price: number } | null; heal?: { wounds: number; price: number; amputations: number } | null }
+export interface ClinicView { businessTarget?: number; doc: string; name: string; skill: number; morality: string; dangerLabel: string; desc: string; money: number; humanity: number; humanityMax: number; chromeUsed: number; chromeCapacity: number; rep: number; offers: ClinicOffer[]; repair?: { parts: string[]; price: number } | null; heal?: { wounds: number; price: number; amputations: number } | null }
 export interface BountyView {
   money: number;
   active: { id: string; targetName: string; kind: 'player' | 'npc'; amount: number; poster: string; reason: string; zone?: string; online?: boolean; mine: boolean; onMe: boolean; aliveOnly: boolean }[];
@@ -341,6 +350,7 @@ export type ServerMsg =
   | { t: 'market'; view: MarketView }
   | { t: 'jobs'; view: JobsView }
   | { t: 'clinic'; view: ClinicView }
+  | { t: 'business'; view: BusinessView }
   | { t: 'bounties'; view: BountyView }
   | { t: 'targetMenu'; view: TargetMenuView }
   | { t: 'death'; summary: DeathSummary }

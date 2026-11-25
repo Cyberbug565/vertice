@@ -1,0 +1,121 @@
+{
+ "id": "mesa-anden-int",
+ "name": "Mesa de Andén",
+ "kind": "interior",
+ "width": 13,
+ "height": 11,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#613c2a",
+ "safePoint": [
+  11,
+  5
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ],
+  [
+   8,
+   4
+  ],
+  [
+   8,
+   6
+  ],
+  [
+   8,
+   8
+  ]
+ ],
+ "furnished": true,
+ "props": [
+  {
+   "type": "table",
+   "at": [
+    6,
+    3
+   ],
+   "color": "#613c2a"
+  },
+  {
+   "type": "table",
+   "at": [
+    7,
+    7
+   ],
+   "color": "#613c2a"
+  },
+  {
+   "type": "bench",
+   "at": [
+    6,
+    4
+   ],
+   "color": "#613c2a"
+  },
+  {
+   "type": "bench",
+   "at": [
+    7,
+    8
+   ],
+   "color": "#613c2a"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    2,
+    7
+   ],
+   "color": "#613c2a"
+  },
+  {
+   "type": "plant",
+   "at": [
+    11,
+    2
+   ],
+   "color": "#613c2a"
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#613c2a"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-mesa-anden",
+   "name": "Salir a la calle",
+   "at": [
+    12,
+    5
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     358,
+     444
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-mesa-anden",
+   "name": "Mostrador de Mesa de Andén",
+   "at": [
+    4,
+    5
+   ],
+   "kind": "shop",
+   "shop": "mesa-anden"
+  }
+ ]
+}

@@ -96,7 +96,7 @@ export class Crowds {
     } else {
       const casino = floor.casino && floor.casino.room !== 'vip' && !floor.id.endsWith('-vip');
       const publicTower = floor.tower?.access === 'publico';
-      const shop = /(?:super|tienda-24h)/.test(floor.id);
+      const shop = floor.objects.some(object=>object.kind === 'shop');
       const station = floor.restricted === 'policia' && !floor.storey;
       if (!(casino || publicTower || shop || station || floor.nightlife)) return [];
       const district = this.world.districtDef(zone, floor.safePoint[0], floor.safePoint[1]);

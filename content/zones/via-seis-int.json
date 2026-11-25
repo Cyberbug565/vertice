@@ -1,0 +1,113 @@
+{
+ "id": "via-seis-int",
+ "name": "Vía 6 · Autoservicio",
+ "kind": "interior",
+ "width": 13,
+ "height": 11,
+ "danger": "public",
+ "base": "tile",
+ "wallColor": "#294f51",
+ "safePoint": [
+  11,
+  5
+ ],
+ "waypoints": [
+  [
+   11,
+   5
+  ],
+  [
+   8,
+   4
+  ],
+  [
+   8,
+   6
+  ],
+  [
+   7,
+   8
+  ]
+ ],
+ "furnished": true,
+ "props": [
+  {
+   "type": "shelf",
+   "at": [
+    2,
+    2
+   ],
+   "color": "#294f51"
+  },
+  {
+   "type": "shelf",
+   "at": [
+    4,
+    2
+   ],
+   "color": "#294f51"
+  },
+  {
+   "type": "fridge",
+   "at": [
+    2,
+    8
+   ],
+   "color": "#294f51"
+  },
+  {
+   "type": "planter",
+   "at": [
+    11,
+    2
+   ],
+   "color": "#294f51"
+  },
+  {
+   "type": "neonstrip",
+   "at": [
+    8,
+    1
+   ],
+   "color": "#294f51"
+  },
+  {
+   "type": "desk",
+   "at": [
+    3,
+    5
+   ],
+   "color": "#294f51"
+  }
+ ],
+ "doors": [
+  {
+   "id": "salida-via-seis",
+   "name": "Salir a la calle",
+   "at": [
+    12,
+    5
+   ],
+   "to": {
+    "zone": "vertice",
+    "at": [
+     94,
+     201
+    ]
+   },
+   "danger": "public"
+  }
+ ],
+ "objects": [
+  {
+   "id": "mostrador-via-seis",
+   "name": "Mostrador de Vía 6 · Autoservicio",
+   "at": [
+    4,
+    5
+   ],
+   "kind": "shop",
+   "shop": "via-seis"
+  }
+ ]
+}

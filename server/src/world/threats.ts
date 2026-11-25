@@ -126,6 +126,12 @@ export class Threats {
   /** Una víctima civil reacciona: huye (lo normal), planta cara o llama a la policía. */
   react(victim: Entity, attacker: Entity) {
     if (victim.state === 'downed' || victim.callingUntil) return;
+    if (victim.businessJob) {
+      victim.fleeUntil = Date.now() + 12000;
+      victim.path = [];
+      this.say(victim, '¡Han atacado el local!');
+      return;
+    }
     const r = this.rng();
     if (r < 0.2 && (victim.npcHp ?? 0) > (victim.npcMax ?? 35) * 0.5) {
       victim.aggro = attacker.id; victim.aggroLethal = false; victim.label = 'Plantando cara'; victim.labelVer++;

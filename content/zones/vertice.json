@@ -55256,6 +55256,150 @@
  ],
  "doors": [
   {
+   "id": "puerta-mini-bloque22",
+   "name": "Mini 24 · Bloque 22",
+   "at": [
+    56,
+    262
+   ],
+   "to": {
+    "zone": "mini-bloque22-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "ABIERTO 24 H",
+   "signColor": "#7dffc8"
+  },
+  {
+   "id": "puerta-via-seis",
+   "name": "Vía 6 · Autoservicio",
+   "at": [
+    94,
+    201
+   ],
+   "to": {
+    "zone": "via-seis-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "ABIERTO 24 H",
+   "signColor": "#7dffc8"
+  },
+  {
+   "id": "puerta-la-caldera",
+   "name": "La Caldera · Cocina de Forja",
+   "at": [
+    351,
+    150
+   ],
+   "to": {
+    "zone": "la-caldera-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "COCINA",
+   "signColor": "#ffbd75"
+  },
+  {
+   "id": "puerta-mesa-anden",
+   "name": "Mesa de Andén",
+   "at": [
+    358,
+    444
+   ],
+   "to": {
+    "zone": "mesa-anden-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "COCINA",
+   "signColor": "#ffbd75"
+  },
+  {
+   "id": "puerta-ultima-prenda",
+   "name": "Empeños Última Prenda",
+   "at": [
+    176,
+    445
+   ],
+   "to": {
+    "zone": "ultima-prenda-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "EMPEÑOS",
+   "signColor": "#dea5ff"
+  },
+  {
+   "id": "puerta-tercer-peso",
+   "name": "Empeños Tercer Peso",
+   "at": [
+    356,
+    404
+   ],
+   "to": {
+    "zone": "tercer-peso-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "EMPEÑOS",
+   "signColor": "#dea5ff"
+  },
+  {
+   "id": "puerta-opalo",
+   "name": "Joyería Ópalo",
+   "at": [
+    326,
+    445
+   ],
+   "to": {
+    "zone": "opalo-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "JOYERÍA",
+   "signColor": "#80cfff"
+  },
+  {
+   "id": "puerta-aurea-colinas",
+   "name": "Joyería Áurea",
+   "at": [
+    256,
+    102
+   ],
+   "to": {
+    "zone": "aurea-colinas-int",
+    "at": [
+     11,
+     5
+    ]
+   },
+   "danger": "public",
+   "sign": "JOYERÍA",
+   "signColor": "#80cfff"
+  },
+  {
    "id": "puerta-remache",
    "name": "Puerta de servicio",
    "at": [
